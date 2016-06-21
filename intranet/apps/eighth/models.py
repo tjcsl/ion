@@ -256,8 +256,8 @@ class EighthActivity(AbstractBaseEighthModel):
         name += self.name
         if title:
             name += " - {}".format(title)
-        if include_restricted:
-            name += " (R)" if self.restricted else ""
+        if include_restricted and self.restricted:
+            name += " (R)"
         name += " (BB)" if self.both_blocks else ""
         name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
@@ -269,19 +269,13 @@ class EighthActivity(AbstractBaseEighthModel):
         """Find the restricted activities available to the given user."""
         activities = set(user.restricted_activity_set.values_list("id", flat=True))
 
-        if user and user.grade and user.grade.number:
-            grade = user.grade.number
+        if user and user.grade and user.grade.number and user.grade.name:
+            grade = user.grade
         else:
             grade = None
 
-        if grade == 9:
-            activities |= set(EighthActivity.objects.filter(freshmen_allowed=True).values_list("id", flat=True))
-        elif grade == 10:
-            activities |= set(EighthActivity.objects.filter(sophomores_allowed=True).values_list("id", flat=True))
-        elif grade == 11:
-            activities |= set(EighthActivity.objects.filter(juniors_allowed=True).values_list("id", flat=True))
-        elif grade == 12:
-            activities |= set(EighthActivity.objects.filter(seniors_allowed=True).values_list("id", flat=True))
+        if grade is not None and 9 <= grade.number <= 12:
+            activities |= set(EighthActivity.objects.filter(**{'{}s_allowed'.format(grade.name): True}).values_list("id", flat=True))
 
         for group in user.groups.all():
             activities |= set(group.restricted_activity_set.values_list("id", flat=True))
@@ -292,9 +286,9 @@ class EighthActivity(AbstractBaseEighthModel):
     def available_ids(cls):
         id_min = 1
         id_max = 3200
-        nums = [i for i in range(id_min, id_max)]
-        used = [row[0] for row in EighthActivity.objects.values_list("id")]
-        avail = set(nums) - set(used)
+        nums = set(range(id_min, id_max))
+        used = set([row[0] for row in EighthActivity.objects.values_list("id")])
+        avail = nums - used
         return list(avail)
 
     def change_id_to(self, new_id):
@@ -356,10 +350,11 @@ class EighthBlockManager(models.Manager):
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
         blocks = self.order_by("date", "block_letter").filter(date__gte=now)
-        if max_number > 0:
-            return blocks[:max_number]
 
-        return blocks
+        if max_number == -1:
+            return blocks
+
+        return blocks[:max_number]
 
     def get_first_upcoming_block(self):
         """Gets the first upcoming block (the first block that will take place in the future). If
@@ -369,14 +364,7 @@ class EighthBlockManager(models.Manager):
 
         """
 
-        now = datetime.datetime.now()
-
-        # Show same day if it's before 17:00
-        if now.hour < 17:
-            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
-
-        block = self.order_by("date", "block_letter").filter(date__gte=now).first()
-        return block
+        return self.get_upcoming_blocks().first()
 
     def get_next_upcoming_blocks(self):
         """Gets the next upccoming blocks. (Finds the other blocks that are occurring on the day of
