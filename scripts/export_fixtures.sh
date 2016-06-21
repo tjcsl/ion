@@ -22,6 +22,7 @@ for x in $TABLES; do
     if [[ $x == board* ]]; then continue; fi
     if [[ $x == feedback* ]]; then continue; fi
     if [[ $x == ionldap* ]]; then continue; fi
+    if [[ $x == corsheaders* ]]; then continue; fi
     if [[ $x == *historical* ]]; then continue; fi
     pg_dump -d ion -t $x -O -a --disable-triggers > fixtures/$x.sql
     echo "Exported $x"
