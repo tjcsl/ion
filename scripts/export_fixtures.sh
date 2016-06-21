@@ -27,3 +27,8 @@ for x in $TABLES; do
     pg_dump -d ion -t $x -O -a --disable-triggers > fixtures/$x.sql
     echo "Exported $x"
 done
+
+if [ -c "fixtures/users_user.sql" ]; then
+    sed -i -E 's/\t\![a-zA-Z0-9]+\t/\t\!\t/g' fixtures/users_user.sql
+    echo "Cleaned users_user"
+fi
