@@ -74,7 +74,7 @@ def get_numpages(tmpfile_name):
         output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
-        return False
+        return -1
 
     lines = output.splitlines()
     num_pages = -1
@@ -163,6 +163,8 @@ def print_job(obj, do_print=True):
         raise Exception("Could not convert file.")
 
     num_pages = get_numpages(tmpfile_name)
+    if num_pages < 0:
+        raise Exception("Could not get number of pages in %s" % filebase)
     obj.num_pages = num_pages
     obj.page_range = "".join(obj.page_range.split())  # remove all spaces
     obj.save()
