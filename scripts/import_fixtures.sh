@@ -12,9 +12,9 @@ if [ "$(whoami)" != "postgres" ]; then
     exit
 fi
 
-FIXTURES=$(ls fixtures)
+FIXTURES=$(find fixtures -type f -name "*.sql")
 
 for x in $FIXTURES; do
-    psql -U postgres ion < "fixtures/$x" > /dev/null
+    psql -U postgres ion < $x > /dev/null
     echo "Imported $x"
 done
