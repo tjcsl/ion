@@ -45,8 +45,14 @@ class EighthBlockList(generics.ListAPIView):
         queryset = EighthBlock.objects.get_current_blocks()
         blk_ids = [b.id for b in queryset]
 
+        if "start_date" in self.request.GET and "end_date" in self.request.GET:
+            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date"), date__lte=self.request.GET.get("end_date"))
+
         if "start_date" in self.request.GET:
             return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date"))
+
+        if "end_date" in self.request.GET:
+            return EighthBlock.objects.filter(id__in=blk_ids, date__lte=self.request.GET.get("end_date"))
 
         if "date" in self.request.GET:
             return EighthBlock.objects.filter(id__in=blk_ids, date=self.request.GET.get("date"))
