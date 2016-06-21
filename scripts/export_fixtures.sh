@@ -6,7 +6,7 @@ if ! [ -d "fixtures" ]; then
     exit
 fi
 
-TABLES=$(psql -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';" -t)
+TABLES=$(psql -d ion -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';" -t)
 
 for x in $TABLES; do
     if [[ $x == oauth* ]]; then continue; fi
@@ -23,6 +23,6 @@ for x in $TABLES; do
     if [[ $x == feedback* ]]; then continue; fi
     if [[ $x == ionldap* ]]; then continue; fi
     if [[ $x == *historical* ]]; then continue; fi
-    pg_dump ion -t $x -O -a --disable-triggers > fixtures/$x.sql
+    pg_dump -d ion -t $x -O -a --disable-triggers > fixtures/$x.sql
     echo "Exported $x"
 done
