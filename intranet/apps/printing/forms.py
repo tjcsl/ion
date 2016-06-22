@@ -39,4 +39,4 @@ class PrintJobForm(forms.ModelForm):
 
     class Meta:
         model = PrintJob
-        fields = ["file", "printer", "page_range"]
+        fields = ["file", "printer", "page_range", "duplex"]

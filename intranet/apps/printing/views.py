@@ -185,6 +185,10 @@ def print_job(obj, do_print=True):
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+        if obj.duplex:
+            args.extend(["-o", "sides=two-sided-long-edge"])
+        else:
+            args.extend(["-o", "sides=one-sided"])
         try:
             subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:

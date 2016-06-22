@@ -13,6 +13,7 @@ class PrintJob(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     printed = models.BooleanField(default=False)
     num_pages = models.IntegerField(default=0)
+    duplex = models.BooleanField(default=True)
 
     def __str__(self):
         return "{} by {} to {}".format(self.file, self.user, self.printer)
