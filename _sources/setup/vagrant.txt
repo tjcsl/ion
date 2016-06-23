@@ -17,6 +17,8 @@ Note: if your host machine is running Windows, please run ``git config core.auto
 
 In the ``config`` directory, copy the file ``devconfig.json.sample`` to ``devconfig.json`` and edit the properties in ``devconfig.json`` as appropriate. Ensure ``ssh_key`` is set to the same SSH key registered with GitHub (e.g. ``id_rsa``). Obtain the proper value for ``ldap_simple_bind_password`` from another Intranet developer of from the ``ion.tjhsst.edu`` VM.
 
+Run ``vagrant plugin install vagrant-vbguest``
+
 Run ``vagrant up && vagrant reload`` and wait while the development environment is set up. When asked to select a network interface for bridging, enter the number corresponding to one that is active. To automatically select this interface in the future, set the "network_interface" key in ``devconfig.json`` to the name of the interface you selected (e.g. ``"en0: Wi-Fi (AirPort)"``). There may be repeated warnings similar to "``Remote connection disconnect`` on the second ``vagrant up``. After several minutes they will stop. Once the provisioning process is complete, run ``vagrant ssh`` to log in to the development box.
 
 Move into the ``intranet`` directory and run ``workon ion`` to load the Python dependencies. ``workon ion`` should always be the first thing you run after you SSH into the development box.

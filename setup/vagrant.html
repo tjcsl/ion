@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Setting up Vagrant &mdash; TJ Intranet v3 (Build #2716) documentation</title>
+    <title>Setting up Vagrant &mdash; TJ Intranet v3 (Build #2755) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #2716)',
+        VERSION:     'v3 (Build #2755)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2716) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2755) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Architecture" href="../architecture/index.html" />
     <link rel="prev" title="Setting up the Server" href="server.html" />
@@ -72,7 +72,9 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Setup</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Creating Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html#importing-ion-fixtures">Importing Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Setting up Your Sandbox Manually</a></li>
@@ -163,6 +165,7 @@ $ <span class="nb">cd</span> intranet
 </pre></div>
 </div>
 <p>In the <code class="docutils literal"><span class="pre">config</span></code> directory, copy the file <code class="docutils literal"><span class="pre">devconfig.json.sample</span></code> to <code class="docutils literal"><span class="pre">devconfig.json</span></code> and edit the properties in <code class="docutils literal"><span class="pre">devconfig.json</span></code> as appropriate. Ensure <code class="docutils literal"><span class="pre">ssh_key</span></code> is set to the same SSH key registered with GitHub (e.g. <code class="docutils literal"><span class="pre">id_rsa</span></code>). Obtain the proper value for <code class="docutils literal"><span class="pre">ldap_simple_bind_password</span></code> from another Intranet developer of from the <code class="docutils literal"><span class="pre">ion.tjhsst.edu</span></code> VM.</p>
+<p>Run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">plugin</span> <span class="pre">install</span> <span class="pre">vagrant-vbguest</span></code></p>
 <p>Run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span> <span class="pre">&amp;&amp;</span> <span class="pre">vagrant</span> <span class="pre">reload</span></code> and wait while the development environment is set up. When asked to select a network interface for bridging, enter the number corresponding to one that is active. To automatically select this interface in the future, set the &#8220;network_interface&#8221; key in <code class="docutils literal"><span class="pre">devconfig.json</span></code> to the name of the interface you selected (e.g. <code class="docutils literal"><span class="pre">&quot;en0:</span> <span class="pre">Wi-Fi</span> <span class="pre">(AirPort)&quot;</span></code>). There may be repeated warnings similar to &#8220;<code class="docutils literal"><span class="pre">Remote</span> <span class="pre">connection</span> <span class="pre">disconnect</span></code> on the second <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span></code>. After several minutes they will stop. Once the provisioning process is complete, run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">ssh</span></code> to log in to the development box.</p>
 <p>Move into the <code class="docutils literal"><span class="pre">intranet</span></code> directory and run <code class="docutils literal"><span class="pre">workon</span> <span class="pre">ion</span></code> to load the Python dependencies. <code class="docutils literal"><span class="pre">workon</span> <span class="pre">ion</span></code> should always be the first thing you run after you SSH into the development box.</p>
 <p>The Git repository on the host computer is synced with <code class="docutils literal"><span class="pre">~/intranet</span></code> on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.</p>

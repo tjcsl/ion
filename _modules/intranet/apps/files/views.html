@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.files.views &mdash; TJ Intranet v3 (Build #2716) documentation</title>
+    <title>intranet.apps.files.views &mdash; TJ Intranet v3 (Build #2755) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2716)',
+        VERSION:     'v3 (Build #2755)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2716) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2755) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -70,7 +70,9 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html">Creating Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#importing-ion-fixtures">Importing Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
@@ -166,9 +168,10 @@
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">StreamingHttpResponse</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.views.decorators.debug</span> <span class="kn">import</span> <span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">,</span> <span class="n">sensitive_variables</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="kn">import</span> <span class="n">slugify</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.debug</span> <span class="kn">import</span> <span class="n">sensitive_post_parameters</span><span class="p">,</span> <span class="n">sensitive_variables</span>
 
-<span class="kn">from</span> <span class="nn">paramiko</span> <span class="kn">import</span> <span class="n">SSHException</span>
+<span class="kn">from</span> <span class="nn">paramiko</span> <span class="kn">import</span> <span class="n">SSHException</span><span class="p">,</span> <span class="n">SFTPError</span>
 
 <span class="kn">import</span> <span class="nn">pysftp</span>
 
@@ -179,7 +182,7 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="n">exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="ne">EOFError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">SSHException</span><span class="p">)</span>
+<span class="n">exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="ne">EOFError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">PermissionError</span><span class="p">,</span> <span class="n">SSHException</span><span class="p">,</span> <span class="n">SFTPError</span><span class="p">)</span>
 
 
 <span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
@@ -353,8 +356,7 @@
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">normpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
         <span class="n">filebase</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-        <span class="n">filebase_escaped</span> <span class="o">=</span> <span class="n">filebase</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">filebase_escaped</span> <span class="o">=</span> <span class="n">filebase_escaped</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">filebase_escaped</span> <span class="o">=</span> <span class="n">slugify</span><span class="p">(</span><span class="n">filebase</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">can_access_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">fstat</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
@@ -397,8 +399,8 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/files/{}/?dir={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fstype</span><span class="p">,</span> <span class="n">default_dir</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="s2">&quot;zip&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">dirbase_escaped</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fsdir</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">dirbase_escaped</span> <span class="o">=</span> <span class="n">dirbase_escaped</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">dirbase_escaped</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fsdir</span><span class="p">)</span>
+        <span class="n">dirbase_escaped</span> <span class="o">=</span> <span class="n">slugify</span><span class="p">(</span><span class="n">dirbase_escaped</span><span class="p">)</span>
         <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_filecenter_{}_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">dirbase_escaped</span><span class="p">))</span>
 
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_filecenter_{}_{}_zip&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">dirbase_escaped</span><span class="p">))</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
@@ -406,7 +408,11 @@
             <span class="n">totalsize</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">while</span> <span class="n">remote_directories</span><span class="p">:</span>
                 <span class="n">rd</span> <span class="o">=</span> <span class="n">remote_directories</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                <span class="n">remotelist</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">remotelist</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">PermissionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exception </span><span class="si">%s</span><span class="s2"> on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rd</span><span class="p">))</span>
+                    <span class="k">continue</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">remotelist</span><span class="p">:</span>
                     <span class="n">itempath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rd</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
@@ -444,6 +450,8 @@
         <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">8192</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">StreamingHttpResponse</span><span class="p">(</span><span class="n">FileWrapper</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">),</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/octet-stream&quot;</span><span class="p">)</span>
         <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_len</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirbase_escaped</span><span class="p">:</span>
+            <span class="n">dirbase_escaped</span> <span class="o">=</span> <span class="s2">&quot;files&quot;</span>
         <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dirbase_escaped</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span>
 

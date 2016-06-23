@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.activities &mdash; TJ Intranet v3 (Build #2716) documentation</title>
+    <title>intranet.apps.eighth.views.activities &mdash; TJ Intranet v3 (Build #2755) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #2716)',
+        VERSION:     'v3 (Build #2755)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2716) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2755) documentation" href="../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -70,7 +70,9 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../setup/index.html">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html">Creating Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html#importing-ion-fixtures">Importing Ion fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../setup/postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
@@ -197,13 +199,23 @@
     <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">past_start_date</span> <span class="o">=</span> <span class="mi">0</span>
 
+    <span class="n">filtered_activities</span> <span class="o">=</span> <span class="p">[]</span>
+
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">activities</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
-            <span class="n">cancelled_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">is_this_year</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">is_this_year</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="n">start_date</span><span class="p">:</span>
                 <span class="n">past_start_date</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">continue</span>
+            <span class="n">filtered_activities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">old_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">activities</span> <span class="o">=</span> <span class="n">filtered_activities</span>
+
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">activities</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
+            <span class="n">cancelled_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">members</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
@@ -215,23 +227,28 @@
             <span class="n">chart_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">)][</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)]</span> <span class="o">=</span> <span class="n">members</span>
             <span class="k">if</span> <span class="n">members</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
                 <span class="n">empty_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">old_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">signups</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
-    <span class="n">total_blocks</span> <span class="o">=</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">total_blocks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
     <span class="n">scheduled_blocks</span> <span class="o">=</span> <span class="n">total_blocks</span> <span class="o">-</span> <span class="n">cancelled_blocks</span>
     <span class="n">total_signups</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">scheduled_blocks</span><span class="p">:</span>
         <span class="n">average_signups</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_signups</span> <span class="o">/</span> <span class="n">scheduled_blocks</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">average_signups</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">signups</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">average_user_signups</span> <span class="o">=</span> <span class="n">total_signups</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signups</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">average_user_signups</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
                <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="p">,</span>
                <span class="s2">&quot;total_blocks&quot;</span><span class="p">:</span> <span class="n">total_blocks</span><span class="p">,</span>
                <span class="s2">&quot;total_signups&quot;</span><span class="p">:</span> <span class="n">total_signups</span><span class="p">,</span>
                <span class="s2">&quot;average_signups&quot;</span><span class="p">:</span> <span class="n">average_signups</span><span class="p">,</span>
+               <span class="s2">&quot;average_user_signups&quot;</span><span class="p">:</span> <span class="n">average_user_signups</span><span class="p">,</span>
                <span class="s2">&quot;old_blocks&quot;</span><span class="p">:</span> <span class="n">old_blocks</span><span class="p">,</span>
                <span class="s2">&quot;cancelled_blocks&quot;</span><span class="p">:</span> <span class="n">cancelled_blocks</span><span class="p">,</span>
                <span class="s2">&quot;scheduled_blocks&quot;</span><span class="p">:</span> <span class="n">scheduled_blocks</span><span class="p">,</span>
