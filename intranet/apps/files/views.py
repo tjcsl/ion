@@ -19,9 +19,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
+from django.utils.text import slugify
+from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 
-from paramiko import SSHException
+from paramiko import SSHException, SFTPError
 
 import pysftp
 
@@ -32,7 +33,7 @@ from .models import Host
 
 logger = logging.getLogger(__name__)
 
-exceptions = (EOFError, OSError, SSHException)
+exceptions = (EOFError, OSError, PermissionError, SSHException, SFTPError)
 
 
 @sensitive_variables('password')
@@ -206,8 +207,7 @@ def files_type(request, fstype=None):
         filepath = request.GET.get("file")
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
-        filebase_escaped = filebase.replace(",", "")
-        filebase_escaped = filebase_escaped.encode("ascii", "ignore").decode()
+        filebase_escaped = slugify(filebase)
         if can_access_path(filepath):
             try:
                 fstat = sftp.stat(filepath)
@@ -250,8 +250,8 @@ def files_type(request, fstype=None):
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
     if "zip" in request.GET:
-        dirbase_escaped = os.path.basename(fsdir).replace(",", "")
-        dirbase_escaped = dirbase_escaped.encode("ascii", "ignore").decode()
+        dirbase_escaped = os.path.basename(fsdir)
+        dirbase_escaped = slugify(dirbase_escaped)
         tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
 
         with tempfile.TemporaryDirectory(prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)) as tmpdir:
@@ -259,7 +259,11 @@ def files_type(request, fstype=None):
             totalsize = 0
             while remote_directories:
                 rd = remote_directories.pop()
-                remotelist = sftp.listdir(rd)
+                try:
+                    remotelist = sftp.listdir(rd)
+                except PermissionError as e:
+                    logger.debug("Exception %s on %s" % (e, rd))
+                    continue
                 for item in remotelist:
                     itempath = os.path.join(rd, item)
                     try:
@@ -297,6 +301,8 @@ def files_type(request, fstype=None):
         chunk_size = 8192
         response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
         response["Content-Length"] = content_len
+        if not dirbase_escaped:
+            dirbase_escaped = "files"
         response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
         return response
 

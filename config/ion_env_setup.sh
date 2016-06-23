@@ -7,14 +7,13 @@ export WORKON_HOME=~/.virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source /usr/local/bin/virtualenvwrapper.sh
 
-export PATH=$PATH:/usr/lib/postgresql/9.3/bin
+export PATH=$PATH:/usr/lib/postgresql/9.5/bin
 
 function devconfig() {
     python3 -c "
 import json
-f = open('/home/vagrant/intranet/config/devconfig.json', 'r')
-print(json.load(f)['$1'])
-f.close()"
+with open('/home/ubuntu/intranet/config/devconfig.json', 'r') as f:
+	print(json.load(f)['$1'])"
 }
 
 export PGUSER="ion"

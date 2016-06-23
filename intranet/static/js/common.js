@@ -116,7 +116,7 @@ try {
                         udlr.iphone.start_y = evt.changedTouches[0].pageY;
                         udlr.iphone.tap = true;
                         udlr.iphone.capture = true;
-                    })
+                    });
                 },
                 check_direction: function(link) {
                     x_magnitude = Math.abs(this.start_x - this.stop_x);
@@ -124,9 +124,9 @@ try {
                     x = ((this.start_x - this.stop_x) < 0) ? "RIGHT" : "LEFT";
                     y = ((this.start_y - this.stop_y) < 0) ? "DOWN" : "UP";
                     result = (x_magnitude > y_magnitude) ? x : y;
-                    result = (this.tap == true) ? "TAP" : result;
-                    if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
-                    if (this.keys.length == 0) {
+                    result = (this.tap === true) ? "TAP" : result;
+                    if (result === this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
+                    if (this.keys.length === 0) {
                         this.keys = this.orig_keys;
                         this.code(link);
                     }
@@ -189,7 +189,7 @@ runEgg = function(q) {
 eggTdfw = function() {
     $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3?2' preload autoplay></audio>");
     var e = $("input, .schedule, .footer a, ul.right");
-    var ip = $(".announcement,.event,.widget")
+    var ip = $(".announcement, .event, .widget");
     var p = $(".header");
     var s = $(".search,button,input[type=button],.button");
     p.addClass("bounce");
@@ -209,7 +209,7 @@ eggTdfw = function() {
             $(".logo,.nav").removeClass("flip180");
             ip.removeClass("scaleflip");
             clearInterval(i);
-        }, 5000)
+        }, 5000);
     }, 6000);
 }
 

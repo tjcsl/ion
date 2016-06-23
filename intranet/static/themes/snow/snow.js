@@ -15,7 +15,7 @@ var fastbrowser = !ie;
 //Config
 //Number of flakes
 
-if (typeof snowmax === 'undefined') {
+if (typeof snowmax === "undefined") {
     var snowmax = mobile ? 15 : 100;
 }
 
@@ -26,32 +26,32 @@ if (!window.requestAnimationFrame) {
 }
 
 //Colors possible for flakes
-var snowcolor = ["#aaaacc", "#ddddFF", "#ccccDD"];
+var snowcolor = ["#aac", "#ddF", "#ccD"];
 //Number of snowflake characters in following array
 var numsnowletters = 3;
 //Fonts possible for flakes
 var snowtype = ["Arial Black", "Arial Narrow", "Times", "Comic Sans MS"];
 
 //Character to be used for flakes
-if (typeof snowletter === 'undefined') {
+if (typeof snowletter === "undefined") {
     //IE doesnt' like it for some reason
     var snowletter = ie ? "*" : ["❄", "❅", "❆"];
 }
 
 //Speed multiplier for the snow falling
-if (typeof sinkspeed === 'undefined') {
+if (typeof sinkspeed === "undefined") {
     //They have more elements and do piling. This increases the amount of time it takes for significant slowdown.
     var sinkspeed = fastbrowser ? 0.5 : 1;
 }
 
-if (typeof snowmaxsize === 'undefined' || typeof snowminsize === 'undefined') {
+if (typeof snowmaxsize === "undefined" || typeof snowminsize === "undefined") {
     //Maximum size of snowflakes
     var snowmaxsize = mobile ? 44 : 22;
     //Miniumum size of snowflakes
     var snowminsize = mobile ? 16 : 8;
 }
 
-if (typeof snowfps === 'undefined') {
+if (typeof snowfps === "undefined") {
     snowfps = 30;
 }
 
@@ -115,16 +115,16 @@ function set_urlvars() {
     var results = regex.exec(window.location.href);
 
     if (results !== null)
-        snowletter = url_decode(results[1]);
+        snowletter = urlDecode(results[1]);
 
     regex = /[\?&]colors=([^&#]*)/;
     results = regex.exec(window.location.href);
 
     if (results !== null)
-        snowcolor = extract_color(url_decode(results[1]));
+        snowcolor = extract_color(urlDecode(results[1]));
 }
 
-function url_decode(utftext) {
+function urlDecode(utftext) {
     /*
      * Credit for the base for this function
      * goes to the people at webtoolkit
@@ -158,7 +158,7 @@ function url_decode(utftext) {
 }
 
 function extract_color(urlstr) {
-    var hex = '0123456789abcdef';
+    var hex = "0123456789abcdef";
     var ranges = urlstr.split(',');
 
     ranges = ranges.map(function(el) {
@@ -191,9 +191,6 @@ function extract_color(urlstr) {
     return outarr;
 }
 
-window.onresize = resize;
-resize();
-
 function resize() {
     //realscreenwidth = document.all ? document.documentElement.clientWidth : window.innerWidth;
     realscreenwidth = $(window).width();
@@ -205,6 +202,9 @@ function resize() {
     if (pile) heightacc = heightbuckets / screenwidth;
     if (fastpile) fastfillheight = 150;
 }
+
+window.onresize = resize;
+resize();
 
 function initsnow() {
     set_urlvars();

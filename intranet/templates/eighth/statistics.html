@@ -20,6 +20,21 @@
         padding:5px;
         background-color:rgba(100,100,200,0.5);
     }
+    @media print
+    {
+        a.button, .sparkline
+        {
+            display:none;
+        }
+        #members-table
+        {
+            font-size:10px;
+        }
+        #members-table td
+        {
+            padding:3px 5px;
+        }
+    }
     </style>
 {% endblock %}
 
@@ -67,32 +82,34 @@
     <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br />
     <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
     <b>Total signups:</b> {{ total_signups }}<br />
-    <b>Average signups:</b> {{ average_signups }}<br />
+    <b>Average signups per block:</b> {{ average_signups }}<br />
+    <b>Average signups per student:</b> {{ average_user_signups }}<br />
     <b>Capacity:</b> {{ capacity }}<br />
 
     <br />
 
-    <h3>Block Signups</h3>
+    <div id="blocks-chart-container">
+        <h3>Block Signups</h3>
 
-    <div style="max-width:500px"><canvas id="blocks-chart" width="500" height="300"></canvas></div>
+        <div style="max-width:500px"><canvas id="blocks-chart" width="500" height="300"></canvas></div>
+    </div>
 
     <table id="members-table" class="fancy-table">
         <thead>
-            <tr><th>Student</th><th>ID</th><th>Total Signups</th></tr>
+            <tr><th>Name</th><th>Student ID</th><th>Signups</th></tr>
         </thead>
         <tbody>
             {% for user, signups in members %}
-                <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
-                {% empty %}
-                <tr><td colspan="3">No one has signed up for this activity yet.</td></tr>
+            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3">There are no signups for this activity.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 
     <br />
-    The statistics shown on this page are not guaranteed to be accurate.<br />
-    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} exist that are past the start date and not included in these calculations.<br />
-    <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} exist that are from previous years and not included in these calculations.<br />
+    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {% if past_start_date != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
+    <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} from previous years {% if old_blocks != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
     <br />
 </div>
 {% endblock %}

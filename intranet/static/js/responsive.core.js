@@ -12,7 +12,7 @@ function toggleNavbar() {
         $(".c-hamburger").removeClass("is-active");
     } else { // show
         $n.animate({
-            left: "0px"
+            left: "0"
         }, 200);
         $g.addClass("close-l").fadeIn(200);
         $("body").addClass("disable-scroll").addClass("mobile-nav-show");
@@ -29,5 +29,5 @@ $(function() {
         if ($(this).hasClass("close-l")) {
             $(".left > .dropdown-taparea").click();
         }
-    })
-})
+    });
+});

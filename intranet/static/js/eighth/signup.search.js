@@ -45,7 +45,7 @@ $(function() {
         var results = [];
         var activities = window.activityModels._byId;
 
-        var show_adminact = false;
+        var showAdminact = false;
 
         $("#activity-list li[data-activity-id]").each(function() {
             var aid = $(this).data("activity-id");
@@ -132,7 +132,7 @@ $(function() {
                     // admin
                     if (cmd[1].substring(0, 2) === "ad" && activity.administrative === fl) {
                         show = true;
-                        show_adminact = true;
+                        showAdminact = true;
                     }
                     // presign
                     if (cmd[1].substring(0, 1) === "p" && activity.presign === fl) {
@@ -153,7 +153,7 @@ $(function() {
                     // selected
                     if (cmd[1].substring(0, 2) === "se" && activity.selected === fl) {
                         show = true;
-                        show_adminact = true;
+                        showAdminact = true;
                     }
                 } else if (inv) {
                     show = !show;
@@ -168,7 +168,7 @@ $(function() {
             /* imply OR:
             if (shows.indexOf("and") !== -1) {
                 var nshows = [];
-                for (i in shows) {
+                for (var i in shows) {
                     if (shows[i] === "and") {
                         console.debug("AND:", i);
                         i = parseInt(i);
@@ -180,13 +180,13 @@ $(function() {
                 }
                 show = true;
                 for (i in nshows) {
-                    if (!nshows[i]) {show = false;}
+                    if (!nshows[i]) show = false;
                 }
             } */
 
             if (queries.indexOf("or") !== -1) {
                 var nshows = [];
-                for (i in queries) {
+                for (var i in queries) {
                     if (queries[i] === "or") {
                         //console.debug("OR:", i);
                         i = parseInt(i);
@@ -198,7 +198,7 @@ $(function() {
                     }
                 }
 
-                for (i in nshows) {
+                for (var i in nshows) {
                     if (nshows[i]) show = true;
                 }
             } else {
@@ -257,7 +257,7 @@ $(function() {
             $("#activity-list ul.search-noresults").hide();
         }
 
-        if (show_adminact) {
+        if (showAdminact) {
             $("#activity-list").addClass("show-administrative");
         } else {
             $("#activity-list").removeClass("show-administrative");

@@ -133,8 +133,9 @@ $(function() {
                 nsel.setValue(modItems);
             });
         } else {
+            var modVal;
             if (el.attr("type") === "checkbox") {
-                var modVal = el.prop("checked");
+                modVal = el.prop("checked");
                 rows.each(function() {
                     var ntd = $("td[data-field='" + field + "']", $(this));
                     var ninp = $("input", ntd);
@@ -159,6 +160,17 @@ $(function() {
             sel.on('item_add', function() {
                 sel.close();
             });
+        }
+    });
+    $(".schedule-form input[type='submit']").click(function(e) {
+        var activities = "";
+        $("tr.form-row:not(.hidden)").each(function(i, el) {
+            if (!$("td[data-field='sponsors'] .selectize-input", el).hasClass("has-items")) {
+                activities += "\n    " + $(".block-name a.ui-link", el).text().trim();
+            }
+        });
+        if (activities !== "" && !confirm("Are you sure you want to add the following activities without a sponsor?\n" + activities)) {
+            e.preventDefault();
         }
     });
 });

@@ -46,7 +46,7 @@ $(function() {
 
 
     // Set up checkboxes on activity scheduling and other pages
-    var $selectAllBlocksCheckbox = $(".checkboxes-grid thead input[type='checkbox']")
+    var $selectAllBlocksCheckbox = $(".checkboxes-grid thead input[type='checkbox']");
     var $blockCheckboxes = $(".checkboxes-grid tbody td.block-checkbox input[type='checkbox']");
 
     var updateSelectAllCheckbox = function() {
@@ -91,9 +91,9 @@ $(function() {
         $popover.toggleClass("closed");
 
         if ($popover.hasClass("closed")) {
-            $toggle.html("Select All <i class=\"fa fa-caret-down\"></i>")
+            $toggle.html("Select All <i class=\"fa fa-caret-down\"></i>");
         } else {
-            $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>")
+            $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>");
         }
     });
 

@@ -9,4 +9,4 @@ $(function() {
             location.href = dataView;
         });
     });
-})
+});

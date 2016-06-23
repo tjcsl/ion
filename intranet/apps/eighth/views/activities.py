@@ -50,13 +50,23 @@ def statistics_view(request, activity_id=None):
     start_date = get_start_date(request)
     past_start_date = 0
 
+    filtered_activities = []
+
     for a in activities:
-        if a.cancelled:
-            cancelled_blocks += 1
-        elif a.block.is_this_year:
+        if a.block.is_this_year:
             if a.block.date > start_date:
                 past_start_date += 1
                 continue
+            filtered_activities.append(a)
+        else:
+            old_blocks += 1
+
+    activities = filtered_activities
+
+    for a in activities:
+        if a.cancelled:
+            cancelled_blocks += 1
+        else:
             members = a.members.count()
             for user in a.members.all():
                 if user in signups:
@@ -68,23 +78,28 @@ def statistics_view(request, activity_id=None):
             chart_data[str(a.block.date)][str(a.block.block_letter)] = members
             if members == 0 and not a.cancelled:
                 empty_blocks += 1
-        else:
-            old_blocks += 1
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
-    total_blocks = activities.count()
+    total_blocks = len(activities)
     scheduled_blocks = total_blocks - cancelled_blocks
     total_signups = sum(n for _, n in signups)
+
     if scheduled_blocks:
         average_signups = round(total_signups / scheduled_blocks, 2)
     else:
         average_signups = 0
+
+    if len(signups) > 0:
+        average_user_signups = total_signups / len(signups)
+    else:
+        average_user_signups = 0
 
     context = {"activity": activity,
                "members": signups,
                "total_blocks": total_blocks,
                "total_signups": total_signups,
                "average_signups": average_signups,
+               "average_user_signups": average_user_signups,
                "old_blocks": old_blocks,
                "cancelled_blocks": cancelled_blocks,
                "scheduled_blocks": scheduled_blocks,

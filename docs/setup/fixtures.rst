@@ -1,3 +1,21 @@
+Creating Ion fixtures
+=====================
+
+After you run the command below, the fixtures will be located in the fixtures folder.
+
+.. code-block:: bash
+
+    $ ./scripts/export_fixtures.sh
+
+Importing Ion fixtures
+======================
+
+Place all of the fixture files in the fixtures folder and run the command below.
+
+.. code-block:: bash
+
+    $ ./scripts/import_fixtures.sh
+
 Creating Iodine fixtures
 ========================
 
@@ -11,6 +29,7 @@ Copy create_fixtures.py to Iodine
 
 Importing Iodine fixtures
 =========================
+
 Copy fixtures to Ion
 
 .. code-block:: bash

@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.text import slugify
 
 import magic
 
@@ -73,7 +74,7 @@ def get_numpages(tmpfile_name):
         output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
-        return False
+        return -1
 
     lines = output.splitlines()
     num_pages = -1
@@ -147,11 +148,8 @@ def print_job(obj, do_print=True):
     fileobj = obj.file
 
     filebase = os.path.basename(fileobj.name)
-    filebase_escaped = filebase.replace(",", "")
-    filebase_escaped = filebase_escaped.encode("ascii", "ignore")
-    filebase_escaped = filebase_escaped.decode()
+    filebase_escaped = slugify(filebase)
     tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
-
     with open(tmpfile_name, 'wb+') as dest:
         for chunk in fileobj.chunks():
             dest.write(chunk)
@@ -165,6 +163,8 @@ def print_job(obj, do_print=True):
         raise Exception("Could not convert file.")
 
     num_pages = get_numpages(tmpfile_name)
+    if num_pages < 0:
+        raise Exception("Could not get number of pages in %s" % filebase)
     obj.num_pages = num_pages
     obj.page_range = "".join(obj.page_range.split())  # remove all spaces
     obj.save()
@@ -185,6 +185,10 @@ def print_job(obj, do_print=True):
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+        if obj.duplex:
+            args.extend(["-o", "sides=two-sided-long-edge"])
+        else:
+            args.extend(["-o", "sides=one-sided"])
         try:
             subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:

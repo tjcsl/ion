@@ -8,6 +8,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
     <script type="text/javascript">
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
         window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
@@ -47,9 +48,10 @@
                 } else {
                     sch.prop("checked", true);
                 }
-
             }
-        })
+        });
+        var sact = $(".schedule-activity-buttons");
+        $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: sact.offset().top + sact.height() });
     });
     </script>
 
@@ -124,7 +126,6 @@
                 {% endif %}
             </div>
 
-
             <div class="propagate-direction">
                 <b>Propagate Direction:</b>
                 <select onchange="window.updatePropagateDirection(this.value)">
@@ -188,6 +189,11 @@
             </thead>
             <tbody>
                 {% for block, form in rows %}
+                    {% if forloop.first %}
+                        <tr class="spacer">
+                            <td colspan="30"></td>
+                        </tr>
+                    {% endif %}
                     {% if form.errors %}
                         <tr>
                             <td></td>

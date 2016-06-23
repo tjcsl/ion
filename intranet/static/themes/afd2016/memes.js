@@ -38,5 +38,5 @@ $(function() {
             btn.html('<i class="fa fa-refresh"></i> Get more memes');
             memeBinds();
         });
-    })
-})
+    });
+});

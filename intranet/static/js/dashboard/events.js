@@ -20,8 +20,8 @@ $(function() {
         });
 
         if (action === "show") {
-            icon.removeClass("fa-toggle-off")
-                .addClass("fa-toggle-on")
+            icon.removeClass("fa-expand")
+                .addClass("fa-compress")
                 .attr("title", icon.attr("data-visible-title"));
 
             setTimeout(function() {
@@ -31,8 +31,8 @@ $(function() {
             eventContent.css("display", "");
             eventContent.slideDown(350);
         } else {
-            icon.removeClass("fa-toggle-on")
-                .addClass("fa-toggle-off")
+            icon.removeClass("fa-compress")
+                .addClass("fa-expand")
                 .attr("title", icon.attr("data-hidden-title"));
 
             setTimeout(function() {

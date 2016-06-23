@@ -1,13 +1,6 @@
 intranet.apps.api package
 =========================
 
-Subpackages
------------
-
-.. toctree::
-
-    intranet.apps.api.management
-
 Submodules
 ----------
 
