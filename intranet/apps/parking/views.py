@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def parking_intro_view(request):
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
+        return redirect('index')
+    
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("/")
@@ -22,6 +26,9 @@ def parking_intro_view(request):
 
 @login_required
 def parking_form_view(request):
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
+        return redirect('index')
+
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
@@ -68,6 +75,9 @@ def parking_form_view(request):
 
 @login_required
 def parking_car_view(request):
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
+        return redirect('index')
+    
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
@@ -79,7 +89,7 @@ def parking_car_view(request):
         if not request.user.has_admin_permission('parking') and car.user != request.user:
             messages.error(request, "This isn't your car!")
             return redirect("parking")
-
+    
     if "delete" in request.POST and car:
         car.delete()
         messages.success(request, "Deleted car")
@@ -118,6 +128,9 @@ def parking_car_view(request):
 
 @login_required
 def parking_joint_view(request):
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
+        return redirect('index')
+        
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")

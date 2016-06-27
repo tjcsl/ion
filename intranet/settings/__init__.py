@@ -25,6 +25,7 @@ TWITTER_KEYS = None  # type: Dict[str,str]
 ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
 NO_CACHE = False
+PARKING_ENABLED = False
 try:
     from .secret import *  # noqa
 except ImportError:
