@@ -4,6 +4,7 @@ from .models import ParkingApplication, CarApplication
 
 
 class ParkingApplicationForm(forms.ModelForm):
+
     class Meta:
         model = ParkingApplication
         fields = [
@@ -13,6 +14,7 @@ class ParkingApplicationForm(forms.ModelForm):
 
 
 class CarApplicationForm(forms.ModelForm):
+
     class Meta:
         model = CarApplication
         fields = [

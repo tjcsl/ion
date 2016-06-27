@@ -21,6 +21,7 @@ for u in group.user_set.all():
 
 
 class ParkingAdmin(admin.ModelAdmin):
+
     def get_user(self, obj):
         u = obj.user
         return mark_safe("{} {} ({})<br />{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
