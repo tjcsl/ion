@@ -23,15 +23,15 @@ class Command(BaseCommand):
 
         def parse(ical):
             cal = Calendar.from_ical(ical)
-            map = {}
+            calmap = {}
             for event in cal.walk('vevent'):
                 date = event.get('dtstart')
                 summary = event.get('summary')
                 categories = event.get('categories')
                 if categories in ['Blue Day', 'Red Day', 'Anchor Day']:
                     print("{} {} {}".format(date.to_ical(), summary, categories))
-                    map[date.to_ical()] = str(summary)
-            return map
+                    calmap[date.to_ical()] = str(summary)
+            return calmap
 
         # FIXME I'M BROKEN
         def add(ical_map):

@@ -509,12 +509,12 @@ class EighthBlock(AbstractBaseEighthModel):
         """
         now = datetime.datetime.now()
         two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
-        return (now.date() <= two_weeks)
+        return now.date() <= two_weeks
 
     def attendance_locked(self):
         """Is it past 10PM on the day of the block?"""
         now = datetime.datetime.now()
-        return (now.date() > self.date or (now.date() == self.date and now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0)))
+        return now.date() > self.date or (now.date() == self.date and now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0))
 
     def num_signups(self):
         """How many people have signed up?"""
