@@ -56,7 +56,7 @@ def signup_status_email(user, next_blocks):
         "info_link": base_url + "eighth/signup"
     }
 
-    email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, subject, emails)
+    return email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, subject, emails)
 
 
 def absence_email(signup):
@@ -76,4 +76,4 @@ def absence_email(signup):
     base_url = "https://ion.tjhsst.edu/"  # request.build_absolute_uri(reverse('index'))
     data = {"user": user, "signup": signup, "num_absences": num_absences, "base_url": base_url, "info_link": base_url + "eighth/absences"}
 
-    email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, subject, emails)
+    return email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, subject, emails)

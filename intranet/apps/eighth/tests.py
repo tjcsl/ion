@@ -3,10 +3,11 @@
 from django.core.urlresolvers import reverse
 
 from ..eighth.exceptions import SignupException
-from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity
+from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ..groups.models import Group
 from ..users.models import User
 from ...test.ion_test import IonTestCase
+from .notifications import signup_status_email, absence_email
 """
 Tests for the eighth module.
 """
@@ -182,3 +183,47 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
         response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact2.id]), {'confirm': True})
         self.assertEqual(response.status_code, 302)
+
+    def test_signup_status_email(self):
+        self.make_admin()
+        user1 = User.objects.create(username="user1")
+        user1.emails = ["awilliam@tjhsst.edu"]
+        block1 = self.add_block(date="2015-01-01", block_letter='A')
+        block2 = self.add_block(date="2015-01-01", block_letter='B')
+        act1 = self.add_activity(name='Test Activity 1')
+        room1 = self.add_room(name="room1", capacity=1)
+        act1.rooms.add(room1)
+
+        msg = signup_status_email(user1, [block1, block2])
+        self.assertIn('Jan. 1, 2015 (B): No activity selected', msg.body)
+        self.assertIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+
+        sa1 = EighthScheduledActivity.objects.get_or_create(block=block1, activity=act1)[0]
+        sa1.add_user(user1)
+
+        msg = signup_status_email(user1, [block1, block2])
+        self.assertIn('Jan. 1, 2015 (B): No activity selected', msg.body)
+        self.assertNotIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+
+        sa2 = EighthScheduledActivity.objects.get_or_create(block=block2, activity=act1)[0]
+        sa2.add_user(user1)
+
+        msg = signup_status_email(user1, [block1, block2])
+        self.assertNotIn('Jan. 1, 2015 (B): No activity selected', msg.body)
+        self.assertNotIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+
+    def test_absence_email(self):
+        self.make_admin()
+        user1 = User.objects.create(username="user1")
+        user1.emails = ["awilliam@tjhsst.edu"]
+        block1 = self.add_block(date="2015-01-01", block_letter='A')
+        act1 = self.add_activity(name='Test Activity 1')
+        room1 = self.add_room(name="room1", capacity=1)
+        act1.rooms.add(room1)
+
+        sa1 = EighthScheduledActivity.objects.get_or_create(block=block1, activity=act1)[0]
+        sa1.attendance_taken = True
+        es1 = EighthSignup.objects.get_or_create(user=user1, was_absent=True, scheduled_activity=sa1)[0]
+
+        msg = absence_email(es1)
+        self.assertIn("Jan. 1, 2015 (A)", msg.body)
