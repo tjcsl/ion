@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.urlresolvers import reverse
+from django.utils.http import urlencode
 
 from ..eighth.exceptions import SignupException
 from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
@@ -227,3 +228,52 @@ class EighthTest(IonTestCase):
 
         msg = absence_email(es1)
         self.assertIn("Jan. 1, 2015 (A)", msg.body)
+
+    def test_take_attendance_zero(self):
+        """ Make sure all activities with zero students are marked as having attendance taken when button is pressed. """
+        self.make_admin()
+        block1 = self.add_block(date='3000-11-11', block_letter='A')
+
+        room1 = self.add_room(name="room1", capacity=1)
+
+        act1 = self.add_activity(name='Test Activity 1')
+        act1.rooms.add(room1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
+        schact1.attendance_taken = False
+        schact1.save()
+
+        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({"block": block1.id}), {"take_attendance_zero": "1"})
+        self.assertEqual(response.status_code, 302)
+
+        # Make sure activity is marked as attendance taken.
+        self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
+
+    def test_take_attendance_cancelled(self):
+        """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
+        self.make_admin()
+        user1 = User.objects.create(username="user1")
+        block1 = self.add_block(date='3000-11-11', block_letter='A')
+
+        room1 = self.add_room(name="room1", capacity=1)
+
+        act1 = self.add_activity(name='Test Activity 1')
+        act1.rooms.add(room1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
+        schact1.attendance_taken = False
+
+        schact1.add_user(user1)
+
+        schact1.cancelled = True
+        schact1.save()
+
+        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({"block": block1.id}), {"take_attendance_cancelled": "1"})
+        self.assertEqual(response.status_code, 302)
+
+        # Make sure attendance has been marked as taken.
+        self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
+
+        # Make sure EighthSignup object has been marked as absent.
+        self.assertTrue(EighthSignup.objects.get(user=user1, scheduled_activity=schact1).was_absent)
+
+        # Make sure student has correct number of absences.
+        self.assertEqual(User.objects.get(id=user1.id).absence_count(), 1)

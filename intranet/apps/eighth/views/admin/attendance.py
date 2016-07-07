@@ -292,8 +292,8 @@ def activities_without_attendance_view(request):
             signups = EighthSignup.objects.filter(scheduled_activity__in=cancelled)
             logger.debug(cancelled)
             logger.debug(signups)
-            cancelled.update(attendance_taken=True)
             signups.update(was_absent=True)
+            cancelled.update(attendance_taken=True)
             messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(), signups.count()))
             return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
 
