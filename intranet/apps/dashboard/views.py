@@ -76,7 +76,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         # cancelled flag (red activity text) if cancelled
         flags = "locked" if b.locked else "open"
         blk_today = b.is_today()
-        if (blk_today and not current_signup):
+        if blk_today and not current_signup:
             flags += " warning"
         if current_signup_cancelled:
             flags += " cancelled warning"

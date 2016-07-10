@@ -144,7 +144,7 @@ class LoginView(View):
     def post(self, request):
         """Validate and process the login POST request."""
         """Before September 1st, do not allow Class of [year+4] to log in."""
-        if (request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today().month < 9):
+        if request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today().month < 9:
             return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
 
         form = AuthenticateForm(data=request.POST)

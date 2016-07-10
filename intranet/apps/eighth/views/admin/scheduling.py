@@ -95,10 +95,7 @@ def schedule_activity_view(request):
                 if form["scheduled"].value() or cancelled:
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
-                    if not form["scheduled"].value():
-                        instance.cancelled = True
-                    else:
-                        instance.cancelled = False
+                    instance.cancelled = not form["scheduled"].value()
 
                     # If an activity has already been cancelled and the
                     # unschedule checkbox has been checked, delete the

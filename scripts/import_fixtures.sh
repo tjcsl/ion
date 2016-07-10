@@ -18,3 +18,5 @@ for x in $FIXTURES; do
     psql -U postgres ion < $x > /dev/null
     echo "Imported $x"
 done
+
+redis-cli flushall

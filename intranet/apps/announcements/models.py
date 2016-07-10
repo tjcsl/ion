@@ -124,7 +124,7 @@ class Announcement(models.Model):
         return is_current_year(self.added.date())
 
     def is_visible(self, user):
-        return (self in Announcement.objects.visible_to_user(user))
+        return self in Announcement.objects.visible_to_user(user)
 
     _announcementrequest = None  # type: AnnouncementRequest
 
