@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.tests &mdash; TJ Intranet v3 (Build #2766) documentation</title>
+    <title>intranet.apps.eighth.tests &mdash; TJ Intranet v3 (Build #2788) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2766)',
+        VERSION:     'v3 (Build #2788)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2766) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2788) documentation" href="../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,12 +150,14 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.utils.http</span> <span class="kn">import</span> <span class="n">urlencode</span>
 
 <span class="kn">from</span> <span class="nn">..eighth.exceptions</span> <span class="kn">import</span> <span class="n">SignupException</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">.notifications</span> <span class="kn">import</span> <span class="n">signup_status_email</span><span class="p">,</span> <span class="n">absence_email</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Tests for the eighth module.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -330,7 +332,100 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_signup_group_action&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;confirm&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_signup_group_action&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">schact2</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;confirm&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthTest.test_signup_status_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_signup_status_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_status_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+        <span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">)</span>
+        <span class="n">user1</span><span class="o">.</span><span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;awilliam@tjhsst.edu&quot;</span><span class="p">]</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+        <span class="n">block2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">)</span>
+        <span class="n">room1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_room</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">signup_status_email</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="p">[</span><span class="n">block1</span><span class="p">,</span> <span class="n">block2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (B): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (A): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+
+        <span class="n">sa1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block1</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sa1</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">signup_status_email</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="p">[</span><span class="n">block1</span><span class="p">,</span> <span class="n">block2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (B): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (A): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+
+        <span class="n">sa2</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block2</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sa2</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">signup_status_email</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="p">[</span><span class="n">block1</span><span class="p">,</span> <span class="n">block2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (B): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s1">&#39;Jan. 1, 2015 (A): No activity selected&#39;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthTest.test_absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_absence_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_absence_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+        <span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">)</span>
+        <span class="n">user1</span><span class="o">.</span><span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;awilliam@tjhsst.edu&quot;</span><span class="p">]</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">)</span>
+        <span class="n">room1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_room</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+
+        <span class="n">sa1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block1</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sa1</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">es1</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user1</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sa1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">absence_email</span><span class="p">(</span><span class="n">es1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;Jan. 1, 2015 (A)&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthTest.test_take_attendance_zero"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_take_attendance_zero">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Make sure all activities with zero students are marked as having attendance taken when button is pressed. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;3000-11-11&#39;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+
+        <span class="n">room1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_room</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">)</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+        <span class="n">schact1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">schact1</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">schact1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_zero&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+
+        <span class="c1"># Make sure activity is marked as attendance taken.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">attendance_taken</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthTest.test_take_attendance_cancelled"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_take_attendance_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Make sure students in a cancelled activity are marked as absent when the button is pressed. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+        <span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">)</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;3000-11-11&#39;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+
+        <span class="n">room1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_room</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">)</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+        <span class="n">schact1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">schact1</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="n">schact1</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+
+        <span class="n">schact1</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">schact1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_cancelled&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+
+        <span class="c1"># Make sure attendance has been marked as taken.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">attendance_taken</span><span class="p">)</span>
+
+        <span class="c1"># Make sure EighthSignup object has been marked as absent.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user1</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span>
+
+        <span class="c1"># Make sure student has correct number of absences.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">absence_count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
