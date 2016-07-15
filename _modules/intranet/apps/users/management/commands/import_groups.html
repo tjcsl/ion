@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.management.commands.import_groups &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.users.management.commands.import_groups &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,10 +151,10 @@
 
 <span class="kn">import</span> <span class="nn">csv</span>
 
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.groups.models</span> <span class="k">import</span> <span class="n">Group</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.import_groups.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -172,10 +172,10 @@
                     <span class="n">mappings</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span> <span class="o">=</span> <span class="n">gexist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ngrp</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">gname</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Created group {} with new id {}, old id {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gname</span><span class="p">,</span> <span class="n">ngrp</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">gid</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Created group </span><span class="si">{}</span><span class="s2"> with new id </span><span class="si">{}</span><span class="s2">, old id </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gname</span><span class="p">,</span> <span class="n">ngrp</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">gid</span><span class="p">))</span>
                     <span class="n">mappings</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span> <span class="o">=</span> <span class="n">ngrp</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappings</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappings</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;groups_static.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">staticopen</span><span class="p">:</span>
             <span class="n">static</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">staticopen</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">static</span><span class="p">:</span>
@@ -183,7 +183,7 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">usrobj</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UID {} doesn&#39;t exist, for adding to group {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">gid</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UID </span><span class="si">{}</span><span class="s2"> doesn&#39;t exist, for adding to group </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">gid</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">grp</span> <span class="o">=</span> <span class="n">mappings</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span>
                     <span class="n">usrobj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>

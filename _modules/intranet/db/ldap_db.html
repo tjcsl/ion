@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,12 +151,12 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">local</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.core.handlers.wsgi</span> <span class="kn">import</span> <span class="n">WSGIHandler</span>
-<span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="kn">import</span> <span class="n">request_finished</span>
-<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.core.handlers.wsgi</span> <span class="k">import</span> <span class="n">WSGIHandler</span>
+<span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="k">import</span> <span class="n">request_finished</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="k">import</span> <span class="n">receiver</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">gssapi</span>
@@ -219,8 +219,8 @@
             <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPSocketOpenError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Failed to connect to ldap server: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">True</span></div>
+            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="kc">True</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">conn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -236,14 +236,14 @@
         <span class="k">if</span> <span class="s1">&#39;gssapi&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
             <span class="n">ldap_exceptions</span> <span class="o">+=</span> <span class="p">(</span><span class="n">gssapi</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">GSSError</span><span class="p">,)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;ldap_conn&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;ldap_conn&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connecting to LDAP...&quot;</span><span class="p">)</span>
             <span class="n">server</span> <span class="o">=</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">Server</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LDAP_SERVER</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_SASL</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">authentication</span><span class="o">=</span><span class="n">ldap3</span><span class="o">.</span><span class="n">SASL</span><span class="p">,</span> <span class="n">sasl_mechanism</span><span class="o">=</span><span class="s1">&#39;GSSAPI&#39;</span><span class="p">)</span>
                     <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
-                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully connected to LDAP.&quot;</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">ldap_exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;SASL bind failed - using simple bind&quot;</span><span class="p">)</span>
@@ -252,7 +252,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simple_bind</span><span class="p">(</span><span class="n">server</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to connect to ldap.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span>
@@ -260,7 +260,7 @@
 <div class="viewcode-block" id="LDAPConnection.did_use_simple_bind"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.did_use_simple_bind">[docs]</a>    <span class="k">def</span> <span class="nf">did_use_simple_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns whether a simple bind was used, or ``False`` for an uninitialized connection.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;simple_bind&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;simple_bind&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LDAPConnection.search"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search LDAP and return an :class:`LDAPResult`.</span>
@@ -285,7 +285,7 @@
 <span class="sd">            Should raise stuff but it doesn&#39;t yet</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching ldap - dn: {}, filter: {}, &quot;</span> <span class="s2">&quot;attributes: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching ldap - dn: </span><span class="si">{}</span><span class="s2">, filter: </span><span class="si">{}</span><span class="s2">, &quot;</span> <span class="s2">&quot;attributes: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">))</span>
 
         <span class="c1"># ldap3 requires the filter to be in parenthesis</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">filter</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">):</span>
@@ -311,7 +311,7 @@
 <span class="sd">            :class:`LDAPResult` object (empty if no results)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching attributes &#39;{}&#39; of user &quot;</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">dn</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching attributes &#39;</span><span class="si">{}</span><span class="s2">&#39; of user &quot;</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">dn</span><span class="p">))</span>
 
         <span class="nb">filter</span> <span class="o">=</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">all_users</span><span class="p">()</span>
 
@@ -338,7 +338,7 @@
 <span class="sd">            :class:`LDAPResult` object (empty if no results)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching attributes &#39;{}&#39; of photo &quot;</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">dn</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching attributes &#39;</span><span class="si">{}</span><span class="s2">&#39; of photo &quot;</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">dn</span><span class="p">))</span>
 
         <span class="nb">filter</span> <span class="o">=</span> <span class="s2">&quot;(objectClass=iodinePhoto)&quot;</span>
 
@@ -425,10 +425,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;ldap_conn&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">bound</span><span class="p">:</span>
                 <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">unbind</span><span class="p">()</span>
-            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;LDAP connection closed.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;simple_bind&quot;</span><span class="p">):</span>
         <span class="k">del</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span></div>

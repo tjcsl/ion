@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.profiler &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.middleware.profiler &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -159,14 +159,14 @@
 <span class="kn">import</span> <span class="nn">resource</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span>  <span class="c1"># noqa</span>
 
 <span class="kn">import</span> <span class="nn">cProfile</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">connections</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">connections</span>
 
 <span class="kn">import</span> <span class="nn">pstats</span>
 
@@ -192,9 +192,9 @@
 <span class="c1"># We put this profiling module on both ends of the middleware stack to obtain</span>
 <span class="c1"># the time spent in middleware. Consequently we have one imported module but</span>
 <span class="c1"># two instances so most state is maintained at the module level.</span>
-<span class="n">_start_time</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_current_stats</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="n">words_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;\s+&#39;</span><span class="p">)</span>
 <span class="n">group_prefix_re</span> <span class="o">=</span> <span class="p">[</span>
@@ -202,9 +202,9 @@
     <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^(.*)/[^/]+$&quot;</span><span class="p">),</span>  <span class="c1"># extract module path</span>
     <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">),</span>  <span class="c1"># catch strange entries</span>
 <span class="p">]</span>
-<span class="n">_log_file_path</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">_prof</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">_profile_layer</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">_log_file_path</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_prof</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_profile_layer</span> <span class="o">=</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="ProfileMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware">[docs]</a><span class="k">class</span> <span class="nc">ProfileMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -228,14 +228,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ProfileMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_request">[docs]</a>    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="c1"># outer layer of middleware onion</span>
-                <span class="k">if</span> <span class="n">_middleware_start_time</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_middleware_start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># inner layer of onion</span>
@@ -248,9 +248,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_start_rusage</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">getrusage</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RUSAGE_SELF</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="s1">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">_prof</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_prof</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">_prof</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
-                <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">get_log_file_path</span><span class="p">(</span><span class="s1">&#39;middleware.profile&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="ProfileMiddleware.process_view"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_view">[docs]</a>    <span class="k">def</span> <span class="nf">process_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">callback_args</span><span class="p">,</span> <span class="n">callback_kwargs</span><span class="p">):</span>
@@ -261,31 +261,31 @@
         <span class="k">global</span> <span class="n">_current_stats</span><span class="p">,</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_profile_layer</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">_current_stats</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_current_stats</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># inner layer of onion</span>
                     <span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_time</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># outer layer of onion</span>
                     <span class="n">_current_stats</span><span class="p">[</span><span class="s1">&#39;middleware_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">_middleware_start_time</span> <span class="o">-</span> <span class="n">_current_stats</span><span class="p">[</span><span class="s1">&#39;total_time&#39;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_display_time</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-                    <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="bp">None</span>
-                    <span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">_current_stats</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">elif</span> <span class="s1">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_profile_layer</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_profile</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-                    <span class="n">_prof</span> <span class="o">=</span> <span class="bp">None</span>
-                    <span class="n">_log_file_path</span> <span class="o">=</span> <span class="bp">None</span>
-                    <span class="n">_profile_layer</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">_prof</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">_log_file_path</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">_profile_layer</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">_profile_layer</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">_profile_layer</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
     <span class="c1"># detect when we start timing a different page and auto-reset stats</span>
     <span class="c1"># (another option would be to maintain separate stats)</span>
     <span class="k">def</span> <span class="nf">_auto_reset_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_real_uri</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="n">uri</span>
         <span class="k">elif</span> <span class="n">uri</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span><span class="p">:</span>
             <span class="n">time_stats</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -296,7 +296,7 @@
     <span class="k">def</span> <span class="nf">_get_real_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">()</span>
         <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reUri</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -350,7 +350,7 @@
 
     <span class="k">def</span> <span class="nf">_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_prof</span><span class="o">.</span><span class="n">dump_stats</span><span class="p">(</span><span class="n">_log_file_path</span><span class="p">)</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">_log_file_path</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -367,7 +367,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="s1">&#39;cumulative&#39;</span><span class="p">)</span>
         <span class="n">limit</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">limit</span> <span class="o">=</span> <span class="mi">40</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -395,7 +395,7 @@
 
     <span class="k">def</span> <span class="nf">_get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">results_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-        <span class="n">items</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="p">[:</span><span class="mi">40</span><span class="p">]</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;      tottime</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -455,7 +455,7 @@
 <span class="sd">        std = sqrt(\sum_i (x_i - mean)^2 \over n-1)</span>
 <span class="sd">        https://wiki.python.org/moin/NumericAndScientificRecipes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">mean</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>

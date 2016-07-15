@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.fields.files &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>django.db.models.fields.files &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,27 +151,27 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">checks</span>
-<span class="kn">from</span> <span class="nn">django.core.files.base</span> <span class="kn">import</span> <span class="n">File</span>
-<span class="kn">from</span> <span class="nn">django.core.files.images</span> <span class="kn">import</span> <span class="n">ImageFile</span>
-<span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="kn">import</span> <span class="n">default_storage</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">signals</span>
-<span class="kn">from</span> <span class="nn">django.db.models.fields</span> <span class="kn">import</span> <span class="n">Field</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="kn">import</span> <span class="n">RemovedInDjango110Warning</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">force_str</span><span class="p">,</span> <span class="n">force_text</span>
-<span class="kn">from</span> <span class="nn">django.utils.inspect</span> <span class="kn">import</span> <span class="n">func_supports_parameter</span>
-<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.core</span> <span class="k">import</span> <span class="n">checks</span>
+<span class="kn">from</span> <span class="nn">django.core.files.base</span> <span class="k">import</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">django.core.files.images</span> <span class="k">import</span> <span class="n">ImageFile</span>
+<span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="k">import</span> <span class="n">default_storage</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">signals</span>
+<span class="kn">from</span> <span class="nn">django.db.models.fields</span> <span class="k">import</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="k">import</span> <span class="n">RemovedInDjango110Warning</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">force_str</span><span class="p">,</span> <span class="n">force_text</span>
+<span class="kn">from</span> <span class="nn">django.utils.inspect</span> <span class="k">import</span> <span class="n">func_supports_parameter</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
 
 
 <span class="k">class</span> <span class="nc">FieldFile</span><span class="p">(</span><span class="n">File</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">FieldFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FieldFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">field</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">storage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="c1"># Older code may be expecting FileField values to be simple strings.</span>
@@ -196,17 +196,17 @@
 
     <span class="k">def</span> <span class="nf">_get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_require_file</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span>
 
-    <span class="k">def</span> <span class="nf">_set_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">file</span>
+    <span class="k">def</span> <span class="nf">_set_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="n">file</span>
 
     <span class="k">def</span> <span class="nf">_del_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span>
 
-    <span class="nb">file</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_file</span><span class="p">,</span> <span class="n">_set_file</span><span class="p">,</span> <span class="n">_del_file</span><span class="p">)</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_file</span><span class="p">,</span> <span class="n">_set_file</span><span class="p">,</span> <span class="n">_del_file</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_require_file</span><span class="p">()</span>
@@ -229,13 +229,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_require_file</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
     <span class="c1"># open() doesn&#39;t alter the file&#39;s contents, but it does reset the pointer</span>
-    <span class="nb">open</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="nb">open</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># In addition to the standard File API, FieldFiles have extra methods</span>
     <span class="c1"># to further manipulate the underlying file, as well as update the</span>
     <span class="c1"># associated model instance.</span>
 
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">generate_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">func_supports_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save</span><span class="p">,</span> <span class="s1">&#39;max_length&#39;</span><span class="p">):</span>
@@ -253,14 +253,14 @@
 
         <span class="c1"># Update the filesize cache</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Save the object because it has changed, unless save is False</span>
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="n">save</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">save</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="c1"># Only close the file if it&#39;s already open, which we know by the</span>
@@ -271,34 +271,34 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Delete the filesize cache</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_size&#39;</span><span class="p">):</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="n">delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_get_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">file</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">file</span><span class="o">.</span><span class="n">closed</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">file</span><span class="o">.</span><span class="n">closed</span>
     <span class="n">closed</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_closed</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># FieldFile needs access to its associated model field and an instance</span>
         <span class="c1"># it&#39;s attached to in order to work properly, but the only necessary</span>
         <span class="c1"># data to be pickled is the file&#39;s name itself. Everything else will</span>
         <span class="c1"># be restored later, by FileDescriptor below.</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;closed&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s1">&#39;_committed&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;closed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;_committed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
 
 <span class="k">class</span> <span class="nc">FileDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -318,8 +318,8 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">field</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; attribute can only be accessed from </span><span class="si">%s</span><span class="s2"> instances.&quot;</span>
                 <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">owner</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
@@ -336,7 +336,7 @@
 
         <span class="c1"># The instance dict contains whatever was originally assigned</span>
         <span class="c1"># in __set__.</span>
-        <span class="nb">file</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
 
         <span class="c1"># If this value is a string (instance.file = &quot;path/to/file&quot;) or None</span>
         <span class="c1"># then we simply wrap it with the appropriate attribute class according</span>
@@ -345,27 +345,27 @@
         <span class="c1"># subclasses might also want to subclass the attribute class]. This</span>
         <span class="c1"># object understands how to convert a path to a file, and also how to</span>
         <span class="c1"># handle None.</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">attr_class</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="nb">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">or</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">attr_class</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
             <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr</span>
 
         <span class="c1"># Other types of files may be assigned as well, but they need to have</span>
         <span class="c1"># the FieldFile interface added to them. Thus, we wrap any other type of</span>
         <span class="c1"># File inside a FieldFile (well, the field&#39;s attr_class, which is</span>
         <span class="c1"># usually FieldFile).</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">):</span>
-            <span class="n">file_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">attr_class</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="nb">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">file_copy</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">file</span>
-            <span class="n">file_copy</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">):</span>
+            <span class="n">file_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">attr_class</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">file_copy</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="n">file_copy</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_copy</span>
 
         <span class="c1"># Finally, because of the (some would say boneheaded) way pickle works,</span>
         <span class="c1"># the underlying FieldFile might not actually itself have an associated</span>
         <span class="c1"># file. So we need to reset the details of the FieldFile in those cases.</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">):</span>
-            <span class="nb">file</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
-            <span class="nb">file</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span>
-            <span class="nb">file</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">storage</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">):</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">storage</span>
 
         <span class="c1"># That was fun, wasn&#39;t it?</span>
         <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
@@ -385,7 +385,7 @@
 
     <span class="n">description</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;File&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">upload_to</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upload_to</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_primary_key_set_explicitly</span> <span class="o">=</span> <span class="s1">&#39;primary_key&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_unique_set_explicitly</span> <span class="o">=</span> <span class="s1">&#39;unique&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span>
 
@@ -406,7 +406,7 @@
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">checks</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
                     <span class="s2">&quot;&#39;unique&#39; is not a valid argument for a </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                    <span class="n">hint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">hint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;fields.E200&#39;</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -419,7 +419,7 @@
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">checks</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
                     <span class="s2">&quot;&#39;primary_key&#39; is not a valid argument for a </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                    <span class="n">hint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">hint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;fields.E201&#39;</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -448,17 +448,17 @@
         <span class="s2">&quot;Returns field&#39;s value prepared for saving into a database.&quot;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_prep_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="c1"># Need to convert File objects provided via a form to unicode for database insertion</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">pre_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_instance</span><span class="p">,</span> <span class="n">add</span><span class="p">):</span>
         <span class="s2">&quot;Returns field&#39;s value just before saving.&quot;</span>
-        <span class="nb">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">pre_save</span><span class="p">(</span><span class="n">model_instance</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">file</span><span class="o">.</span><span class="n">_committed</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">pre_save</span><span class="p">(</span><span class="n">model_instance</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">_committed</span><span class="p">:</span>
             <span class="c1"># Commit the file to storage prior to saving the model</span>
-            <span class="nb">file</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="nb">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">file</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">file</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">file</span>
 
     <span class="k">def</span> <span class="nf">contribute_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">contribute_to_class</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -473,7 +473,7 @@
     <span class="k">def</span> <span class="nf">generate_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="c1"># If upload_to is a callable, make sure that the path it returns is</span>
         <span class="c1"># passed through get_valid_name() of the underlying storage.</span>
-        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">):</span>
             <span class="n">directory_name</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get_valid_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory_name</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
@@ -485,7 +485,7 @@
         <span class="c1"># This subtle distinction (rather than a more explicit marker) is</span>
         <span class="c1"># needed because we need to consume values that are also sane for a</span>
         <span class="c1"># regular (non Model-) Form to find in its cleaned_data dictionary.</span>
-        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># This value will be converted to unicode and stored in the</span>
             <span class="c1"># database, so leaving False as-is is not acceptable.</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
@@ -500,7 +500,7 @@
         <span class="c1"># form_for_instance, but can probably be removed once form_for_instance</span>
         <span class="c1"># is gone. ModelForm uses a different method to check for an existing file.</span>
         <span class="k">if</span> <span class="s1">&#39;initial&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">formfield</span><span class="p">(</span><span class="o">**</span><span class="n">defaults</span><span class="p">)</span>
 
@@ -523,12 +523,12 @@
         <span class="c1"># hooked up to the post_init signal handles the Model.__init__() cases.</span>
         <span class="c1"># Assignment happening outside of Model.__init__() will trigger the</span>
         <span class="c1"># update right here.</span>
-        <span class="k">if</span> <span class="n">previous_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">update_dimension_fields</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">previous_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">update_dimension_fields</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ImageFieldFile</span><span class="p">(</span><span class="n">ImageFile</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="c1"># Clear the image dimensions cache</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_dimensions_cache&#39;</span><span class="p">):</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dimensions_cache</span>
@@ -540,8 +540,8 @@
     <span class="n">descriptor_class</span> <span class="o">=</span> <span class="n">ImageFileDescriptor</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Image&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">width_field</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">height_field</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">height_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_field</span> <span class="o">=</span> <span class="n">width_field</span><span class="p">,</span> <span class="n">height_field</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">verbose_name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -552,7 +552,7 @@
 
     <span class="k">def</span> <span class="nf">_check_image_library_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>  <span class="c1"># NOQA</span>
+            <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>  <span class="c1"># NOQA</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">checks</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
@@ -583,7 +583,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">abstract</span><span class="p">:</span>
             <span class="n">signals</span><span class="o">.</span><span class="n">post_init</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_dimension_fields</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">update_dimension_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_dimension_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates field&#39;s width and height fields, if defined.</span>
 
@@ -604,10 +604,10 @@
         <span class="c1"># getattr will call the ImageFileDescriptor&#39;s __get__ method, which</span>
         <span class="c1"># coerces the assigned value into an instance of self.attr_class</span>
         <span class="c1"># (ImageFieldFile in this case).</span>
-        <span class="nb">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
 
         <span class="c1"># Nothing to update if we have no file and not being forced to update.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="n">dimension_fields_filled</span> <span class="o">=</span> <span class="ow">not</span><span class="p">(</span>
@@ -625,13 +625,13 @@
             <span class="k">return</span>
 
         <span class="c1"># file should be an instance of ImageFieldFile or should be None.</span>
-        <span class="k">if</span> <span class="nb">file</span><span class="p">:</span>
-            <span class="n">width</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">width</span>
-            <span class="n">height</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">if</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">height</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># No file, so clear dimensions fields.</span>
-            <span class="n">width</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">height</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Update the width and height fields.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span><span class="p">:</span>

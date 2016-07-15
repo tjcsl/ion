@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.seniors.models &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.seniors.models &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -149,17 +149,17 @@
   <h1>Source code for intranet.apps.seniors.models</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="College"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.College">[docs]</a><span class="k">class</span> <span class="nc">College</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-    <span class="n">ceeb</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ceeb</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceeb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceeb</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
@@ -168,13 +168,13 @@
 <div class="viewcode-block" id="SeniorManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager">[docs]</a><span class="k">class</span> <span class="nc">SeniorManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
 
 <div class="viewcode-block" id="SeniorManager.filled"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager.filled">[docs]</a>    <span class="k">def</span> <span class="nf">filled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">college</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">college</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Senior"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.Senior">[docs]</a><span class="k">class</span> <span class="nc">Senior</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">SeniorManager</span><span class="p">()</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-    <span class="n">college</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">College</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">college</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">College</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">MAJORS</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;Computer Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Education&quot;</span><span class="p">,</span> <span class="s2">&quot;Mathematics&quot;</span><span class="p">,</span> <span class="s2">&quot;Physics&quot;</span><span class="p">,</span> <span class="s2">&quot;Biology&quot;</span><span class="p">,</span> <span class="s2">&quot;Chemistry&quot;</span><span class="p">,</span> <span class="s2">&quot;Geology&quot;</span><span class="p">,</span> <span class="s2">&quot;History&quot;</span><span class="p">,</span> <span class="s2">&quot;Literature&quot;</span><span class="p">,</span>
         <span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">,</span> <span class="s2">&quot;Language&quot;</span><span class="p">,</span> <span class="s2">&quot;Drama/Theater&quot;</span><span class="p">,</span> <span class="s2">&quot;Undecided&quot;</span><span class="p">,</span> <span class="s2">&quot;Music&quot;</span><span class="p">,</span> <span class="s2">&quot;Political Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Neuroscience&quot;</span><span class="p">,</span> <span class="s2">&quot;Business&quot;</span><span class="p">,</span> <span class="s2">&quot;Economics&quot;</span><span class="p">,</span>
@@ -191,12 +191,12 @@
         <span class="s2">&quot;Pre-Dental&quot;</span><span class="p">,</span> <span class="s2">&quot;Aerospace Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;French&quot;</span><span class="p">,</span> <span class="s2">&quot;German&quot;</span><span class="p">,</span> <span class="s2">&quot;Spanish&quot;</span><span class="p">,</span> <span class="s2">&quot;Italian&quot;</span><span class="p">,</span> <span class="s2">&quot;Chinese&quot;</span><span class="p">,</span> <span class="s2">&quot;Operations Research&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Game Design and Development&quot;</span><span class="p">,</span> <span class="s2">&quot;Software Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;International Development&quot;</span><span class="p">,</span> <span class="s2">&quot;Mechanical Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Mathematics &amp; Computer Science&quot;</span>
     <span class="p">]</span>
-    <span class="n">major</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MAJORS</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Undecided&#39;</span><span class="p">)],</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">college_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">major_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">major</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MAJORS</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Undecided&#39;</span><span class="p">)],</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">college_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">major_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span></div>

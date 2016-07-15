@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.query &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>django.db.models.query &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -154,26 +154,26 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">deque</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.core</span> <span class="k">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DJANGO_VERSION_PICKLE_KEY</span><span class="p">,</span> <span class="n">IntegrityError</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">router</span><span class="p">,</span>
     <span class="n">transaction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">sql</span>
-<span class="kn">from</span> <span class="nn">django.db.models.constants</span> <span class="kn">import</span> <span class="n">LOOKUP_SEP</span>
-<span class="kn">from</span> <span class="nn">django.db.models.deletion</span> <span class="kn">import</span> <span class="n">Collector</span>
-<span class="kn">from</span> <span class="nn">django.db.models.expressions</span> <span class="kn">import</span> <span class="n">Date</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">F</span>
-<span class="kn">from</span> <span class="nn">django.db.models.fields</span> <span class="kn">import</span> <span class="n">AutoField</span>
-<span class="kn">from</span> <span class="nn">django.db.models.query_utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">sql</span>
+<span class="kn">from</span> <span class="nn">django.db.models.constants</span> <span class="k">import</span> <span class="n">LOOKUP_SEP</span>
+<span class="kn">from</span> <span class="nn">django.db.models.deletion</span> <span class="k">import</span> <span class="n">Collector</span>
+<span class="kn">from</span> <span class="nn">django.db.models.expressions</span> <span class="k">import</span> <span class="n">Date</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">F</span>
+<span class="kn">from</span> <span class="nn">django.db.models.fields</span> <span class="k">import</span> <span class="n">AutoField</span>
+<span class="kn">from</span> <span class="nn">django.db.models.query_utils</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">InvalidQuery</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">check_rel_lookup_compatibility</span><span class="p">,</span> <span class="n">deferred_class_factory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">django.db.models.sql.constants</span> <span class="kn">import</span> <span class="n">CURSOR</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">six</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="kn">import</span> <span class="n">partition</span>
-<span class="kn">from</span> <span class="nn">django.utils.version</span> <span class="kn">import</span> <span class="n">get_version</span>
+<span class="kn">from</span> <span class="nn">django.db.models.sql.constants</span> <span class="k">import</span> <span class="n">CURSOR</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">six</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="k">import</span> <span class="n">partition</span>
+<span class="kn">from</span> <span class="nn">django.utils.version</span> <span class="k">import</span> <span class="n">get_version</span>
 
 <span class="c1"># The maximum number of items to display in a QuerySet.__repr__</span>
 <span class="n">REPR_OUTPUT_SIZE</span> <span class="o">=</span> <span class="mi">20</span>
@@ -201,7 +201,7 @@
         <span class="n">results</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">()</span>
         <span class="n">select</span><span class="p">,</span> <span class="n">klass_info</span><span class="p">,</span> <span class="n">annotation_col_map</span> <span class="o">=</span> <span class="p">(</span><span class="n">compiler</span><span class="o">.</span><span class="n">select</span><span class="p">,</span> <span class="n">compiler</span><span class="o">.</span><span class="n">klass_info</span><span class="p">,</span>
                                                   <span class="n">compiler</span><span class="o">.</span><span class="n">annotation_col_map</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">klass_info</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">klass_info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">model_cls</span> <span class="o">=</span> <span class="n">klass_info</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
         <span class="n">select_fields</span> <span class="o">=</span> <span class="n">klass_info</span><span class="p">[</span><span class="s1">&#39;select_fields&#39;</span><span class="p">]</span>
@@ -313,27 +313,27 @@
 <span class="sd">    Represents a lazy database lookup for a set of objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">using</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hints</span> <span class="o">=</span> <span class="n">hints</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="ow">or</span> <span class="n">sql</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_known_related_objects</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># {rel_field, {pk: rel_obj}}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_iterable_class</span> <span class="o">=</span> <span class="n">ModelIterable</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">as_manager</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="c1"># Address the circular dependency between `Queryset` and `Manager`.</span>
-        <span class="kn">from</span> <span class="nn">django.db.models.manager</span> <span class="kn">import</span> <span class="n">Manager</span>
+        <span class="kn">from</span> <span class="nn">django.db.models.manager</span> <span class="k">import</span> <span class="n">Manager</span>
         <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">from_queryset</span><span class="p">(</span><span class="n">cls</span><span class="p">)()</span>
-        <span class="n">manager</span><span class="o">.</span><span class="n">_built_with_as_manager</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">_built_with_as_manager</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">manager</span>
-    <span class="n">as_manager</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">as_manager</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">as_manager</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">as_manager</span><span class="p">)</span>
 
     <span class="c1">########################</span>
@@ -347,7 +347,7 @@
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;_result_cache&#39;</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
@@ -363,7 +363,7 @@
         <span class="k">return</span> <span class="n">obj_dict</span>
 
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">pickled_version</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DJANGO_VERSION_PICKLE_KEY</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pickled_version</span><span class="p">:</span>
             <span class="n">current_version</span> <span class="o">=</span> <span class="n">get_version</span><span class="p">()</span>
@@ -421,23 +421,23 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="nb">slice</span><span class="p">,)</span> <span class="o">+</span> <span class="n">six</span><span class="o">.</span><span class="n">integer_types</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span>
         <span class="k">assert</span> <span class="p">((</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))</span> <span class="ow">or</span>
-                <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
-                 <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))),</span> \
+                <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
+                 <span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))),</span> \
             <span class="s2">&quot;Negative indexing is not supported.&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
             <span class="n">qs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">stop</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">stop</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">qs</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">set_limits</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">qs</span><span class="p">)[::</span><span class="n">k</span><span class="o">.</span><span class="n">step</span><span class="p">]</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">step</span> <span class="k">else</span> <span class="n">qs</span>
 
@@ -501,7 +501,7 @@
 
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">alias</span><span class="p">,</span> <span class="n">aggregate_expr</span><span class="p">)</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">query</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">aggregate_expr</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">is_summary</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">query</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">aggregate_expr</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">is_summary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span><span class="o">.</span><span class="n">contains_aggregate</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not an aggregate expression&quot;</span> <span class="o">%</span> <span class="n">alias</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">get_aggregation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -514,7 +514,7 @@
 <span class="sd">        If the QuerySet is already fully cached this simply returns the length</span>
 <span class="sd">        of the cached results set to avoid multiple SELECT COUNT(*) calls.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_count</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
@@ -546,16 +546,16 @@
 <span class="sd">        and returning the created object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">force_insert</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">force_insert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
     <span class="k">def</span> <span class="nf">_populate_pk_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">pk</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">pk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">get_pk_value_on_save</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">bulk_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">bulk_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inserts each of the instances into the database. This does *not* call</span>
 <span class="sd">        save() on each of the instances, does not send any pre/post save</span>
@@ -571,7 +571,7 @@
         <span class="c1"># insert into the childmost table. Some databases might allow doing</span>
         <span class="c1"># this by using RETURNING clause for the insert query. We&#39;re punting</span>
         <span class="c1"># on these for now because they are relatively rare cases.</span>
-        <span class="k">assert</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">batch_size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">batch_size</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="c1"># Check that the parents share the same concrete model with the our</span>
         <span class="c1"># model to detect the inheritance pattern ConcreteGrandParent -&gt;</span>
         <span class="c1"># MultiTableParent -&gt; ProxyChild. Simply checking self.model._meta.proxy</span>
@@ -581,17 +581,17 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t bulk create a multi-table inherited model&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">objs</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">objs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">connection</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">]</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span>
         <span class="n">objs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_populate_pk_values</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">can_combine_inserts_with_and_without_auto_increment_pk</span>
                     <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">has_auto_field</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_batched_insert</span><span class="p">(</span><span class="n">objs</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">objs_with_pk</span><span class="p">,</span> <span class="n">objs_without_pk</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">pk</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> <span class="n">objs</span><span class="p">)</span>
+                <span class="n">objs_with_pk</span><span class="p">,</span> <span class="n">objs_without_pk</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">pk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">objs</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">objs_with_pk</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_batched_insert</span><span class="p">(</span><span class="n">objs_with_pk</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">objs_without_pk</span><span class="p">:</span>
@@ -600,7 +600,7 @@
 
         <span class="k">return</span> <span class="n">objs</span>
 
-    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Looks up an object with the given kwargs, creating one if necessary.</span>
 <span class="sd">        Returns a tuple of (object, created), where created is a boolean</span>
@@ -609,13 +609,13 @@
         <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_model_params</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># The get() needs to be targeted at the write database in order</span>
         <span class="c1"># to avoid potential transaction consistency problems.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_from_params</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Looks up an object with the given kwargs, updating one with defaults</span>
 <span class="sd">        if it exists, otherwise creates a new one.</span>
@@ -624,7 +624,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_model_params</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">)</span>
         <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -634,9 +634,9 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">defaults</span><span class="p">):</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_create_object_from_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -646,11 +646,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">):</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="kc">True</span>
         <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
             <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="bp">False</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="kc">False</span>
             <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">pass</span>
             <span class="n">six</span><span class="o">.</span><span class="n">reraise</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">)</span>
@@ -670,7 +670,7 @@
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span>
 
-    <span class="k">def</span> <span class="nf">_earliest_or_latest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_earliest_or_latest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the latest object, according to the model&#39;s</span>
 <span class="sd">        &#39;get_latest_by&#39; option or optional given field_name.</span>
@@ -682,14 +682,14 @@
             <span class="s2">&quot;Cannot change a query once a slice has been taken.&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">set_limits</span><span class="p">(</span><span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_ordering</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">order_by</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">earliest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">earliest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_earliest_or_latest</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">latest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">latest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_earliest_or_latest</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -699,7 +699,7 @@
         <span class="n">objects</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="bp">self</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">))[:</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">objects</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -708,7 +708,7 @@
         <span class="n">objects</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-pk&#39;</span><span class="p">))[:</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">objects</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">in_bulk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -729,7 +729,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">can_filter</span><span class="p">(),</span> \
             <span class="s2">&quot;Cannot use &#39;limit&#39; or &#39;offset&#39; with delete.&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot call delete() after .values() or .values_list()&quot;</span><span class="p">)</span>
 
         <span class="n">del_query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
@@ -737,23 +737,23 @@
         <span class="c1"># The delete is actually 2 queries - one to find related objects,</span>
         <span class="c1"># and one to delete. Make sure that the discovery of related</span>
         <span class="c1"># objects is performed on the same database as the deletion.</span>
-        <span class="n">del_query</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">del_query</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Disable non-supported fields.</span>
-        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_for_update</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_for_update</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">del_query</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">collector</span> <span class="o">=</span> <span class="n">Collector</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="n">del_query</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">del_query</span><span class="p">)</span>
         <span class="n">deleted</span><span class="p">,</span> <span class="n">_rows_count</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="c1"># Clear the result cache, in case this QuerySet gets reused.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">deleted</span><span class="p">,</span> <span class="n">_rows_count</span>
 
-    <span class="n">delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="n">delete</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">delete</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_raw_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">using</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -761,7 +761,7 @@
 <span class="sd">        query. No signals are sent, and there is no protection for cascades.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">sql</span><span class="o">.</span><span class="n">DeleteQuery</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">delete_qs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">using</span><span class="p">)</span>
-    <span class="n">_raw_delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">_raw_delete</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -770,14 +770,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">can_filter</span><span class="p">(),</span> \
             <span class="s2">&quot;Cannot update a query once a slice has been taken.&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">sql</span><span class="o">.</span><span class="n">UpdateQuery</span><span class="p">)</span>
         <span class="n">query</span><span class="o">.</span><span class="n">add_update_values</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">get_compiler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">CURSOR</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">rows</span>
-    <span class="n">update</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">update</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -790,27 +790,27 @@
             <span class="s2">&quot;Cannot update a query once a slice has been taken.&quot;</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">sql</span><span class="o">.</span><span class="n">UpdateQuery</span><span class="p">)</span>
         <span class="n">query</span><span class="o">.</span><span class="n">add_update_fields</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">get_compiler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">CURSOR</span><span class="p">)</span>
-    <span class="n">_update</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="n">_update</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_update</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_update</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">has_results</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_prefetch_related_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># This method can only be called once the result cache has been filled.</span>
         <span class="n">prefetch_related_objects</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1">##################################################</span>
     <span class="c1"># PUBLIC METHODS THAT RETURN A QUERYSET SUBCLASS #</span>
     <span class="c1">##################################################</span>
 
-    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_query</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">translations</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">using</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_query</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">translations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">using</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">using</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
         <span class="k">return</span> <span class="n">RawQuerySet</span><span class="p">(</span><span class="n">raw_query</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">translations</span><span class="o">=</span><span class="n">translations</span><span class="p">,</span>
@@ -821,12 +821,12 @@
         <span class="n">clone</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span>
 
         <span class="n">query</span> <span class="o">=</span> <span class="n">clone</span><span class="o">.</span><span class="n">query</span>
-        <span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">query</span><span class="o">.</span><span class="n">clear_deferred_loading</span><span class="p">()</span>
         <span class="n">query</span><span class="o">.</span><span class="n">clear_select_fields</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">query</span><span class="o">.</span><span class="n">add_fields</span><span class="p">((</span><span class="n">f</span><span class="o">.</span><span class="n">attname</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span><span class="p">),</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">query</span><span class="o">.</span><span class="n">add_fields</span><span class="p">((</span><span class="n">f</span><span class="o">.</span><span class="n">attname</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
             <span class="n">query</span><span class="o">.</span><span class="n">set_group_by</span><span class="p">()</span>
             <span class="n">query</span><span class="o">.</span><span class="n">clear_select_fields</span><span class="p">()</span>
 
@@ -839,7 +839,7 @@
                 <span class="c1"># the values() clause must be just field names.</span>
                 <span class="n">field_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">query</span><span class="o">.</span><span class="n">default_cols</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">query</span><span class="o">.</span><span class="n">default_cols</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">extra_select</span><span class="p">:</span>
                         <span class="n">extra_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -853,7 +853,7 @@
             <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">attname</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span><span class="p">]</span>
 
         <span class="n">query</span><span class="o">.</span><span class="n">values_select</span> <span class="o">=</span> <span class="n">field_names</span>
-        <span class="n">query</span><span class="o">.</span><span class="n">add_fields</span><span class="p">(</span><span class="n">field_names</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">query</span><span class="o">.</span><span class="n">add_fields</span><span class="p">(</span><span class="n">field_names</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">clone</span>
 
@@ -863,7 +863,7 @@
         <span class="k">return</span> <span class="n">clone</span>
 
     <span class="k">def</span> <span class="nf">values_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">flat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">flat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unexpected keyword arguments to values_list: </span><span class="si">%s</span><span class="s1">&#39;</span>
                     <span class="o">%</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="p">),))</span>
@@ -888,10 +888,10 @@
             <span class="n">datefield</span><span class="o">=</span><span class="n">Date</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">kind</span><span class="p">),</span>
             <span class="n">plain_field</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
         <span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span>
-            <span class="s1">&#39;datefield&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">plain_field__isnull</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">((</span><span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s1">&#39;DESC&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;datefield&#39;</span><span class="p">)</span>
+            <span class="s1">&#39;datefield&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">plain_field__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">((</span><span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s1">&#39;DESC&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;datefield&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">datetimes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;ASC&#39;</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">datetimes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;ASC&#39;</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of datetime objects representing all available</span>
 <span class="sd">        datetimes for the given field_name, scoped to &#39;kind&#39;.</span>
@@ -901,16 +901,16 @@
         <span class="k">assert</span> <span class="n">order</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ASC&#39;</span><span class="p">,</span> <span class="s1">&#39;DESC&#39;</span><span class="p">),</span> \
             <span class="s2">&quot;&#39;order&#39; must be either &#39;ASC&#39; or &#39;DESC&#39;.&quot;</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_TZ</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">tzinfo</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">tzinfo</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">get_current_timezone</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tzinfo</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">tzinfo</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
             <span class="n">datetimefield</span><span class="o">=</span><span class="n">DateTime</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">tzinfo</span><span class="p">),</span>
             <span class="n">plain_field</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
         <span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span>
-            <span class="s1">&#39;datetimefield&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">plain_field__isnull</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">((</span><span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s1">&#39;DESC&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;datetimefield&#39;</span><span class="p">)</span>
+            <span class="s1">&#39;datetimefield&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">plain_field__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">((</span><span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s1">&#39;DESC&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;datetimefield&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -936,14 +936,14 @@
 <span class="sd">        Returns a new QuerySet instance with the args ANDed to the existing</span>
 <span class="sd">        set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a new QuerySet instance with NOT (args) ANDed to the existing</span>
 <span class="sd">        set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_filter_or_exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">negate</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -972,16 +972,16 @@
             <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_q</span><span class="p">(</span><span class="n">filter_obj</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">clone</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_obj</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_or_exclude</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_obj</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">select_for_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">select_for_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a new QuerySet instance that will select objects with a</span>
 <span class="sd">        FOR UPDATE lock.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_for_update</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_for_update</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_for_update_nowait</span> <span class="o">=</span> <span class="n">nowait</span>
         <span class="k">return</span> <span class="n">obj</span>
 
@@ -995,16 +995,16 @@
 <span class="sd">        If select_related(None) is called, the list is cleared.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot call select_related() after .values() or .values_list()&quot;</span><span class="p">)</span>
 
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="bp">None</span><span class="p">,):</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">fields</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_select_related</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">select_related</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">obj</span>
 
     <span class="k">def</span> <span class="nf">prefetch_related</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">lookups</span><span class="p">):</span>
@@ -1018,7 +1018,7 @@
 <span class="sd">        is cleared.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">lookups</span> <span class="o">==</span> <span class="p">(</span><span class="bp">None</span><span class="p">,):</span>
+        <span class="k">if</span> <span class="n">lookups</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,):</span>
             <span class="n">clone</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">clone</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lookups</span><span class="p">)</span>
@@ -1047,19 +1047,19 @@
 
         <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
         <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
-        <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()}</span>
 
         <span class="k">for</span> <span class="n">alias</span><span class="p">,</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The annotation &#39;</span><span class="si">%s</span><span class="s2">&#39; conflicts with a field on &quot;</span>
                                  <span class="s2">&quot;the model.&quot;</span> <span class="o">%</span> <span class="n">alias</span><span class="p">)</span>
-            <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">is_summary</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">is_summary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">alias</span><span class="p">,</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">annotations</span> <span class="ow">and</span> <span class="n">annotation</span><span class="o">.</span><span class="n">contains_aggregate</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">clone</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">if</span> <span class="n">clone</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">set_group_by</span><span class="p">()</span>
                 <span class="k">break</span>
@@ -1073,7 +1073,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">can_filter</span><span class="p">(),</span> \
             <span class="s2">&quot;Cannot reorder a query once a slice has been taken.&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_ordering</span><span class="p">(</span><span class="n">force_empty</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_ordering</span><span class="p">(</span><span class="o">*</span><span class="n">field_names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
@@ -1087,8 +1087,8 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_distinct_fields</span><span class="p">(</span><span class="o">*</span><span class="n">field_names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
-    <span class="k">def</span> <span class="nf">extra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tables</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-              <span class="n">order_by</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">select_params</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds extra SQL fragments to the query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1114,10 +1114,10 @@
 <span class="sd">        parameter, in which case all deferrals are removed (None acts as a</span>
 <span class="sd">        reset option).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot call defer() after .values() or .values_list()&quot;</span><span class="p">)</span>
         <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="bp">None</span><span class="p">,):</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,):</span>
             <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clear_deferred_loading</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_deferred_loading</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
@@ -1129,9 +1129,9 @@
 <span class="sd">        method and that are not already specified as deferred are loaded</span>
 <span class="sd">        immediately when the queryset is evaluated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot call only() after .values() or .values_list()&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="bp">None</span><span class="p">,):</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,):</span>
             <span class="c1"># Can only pass None to defer(), not only(), as the rest option.</span>
             <span class="c1"># That won&#39;t stop people trying to do this, so let&#39;s be explicit.</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot pass None as an argument to only().&quot;</span><span class="p">)</span>
@@ -1157,11 +1157,11 @@
 <span class="sd">        clause or a default ordering on the model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">extra_order_by</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">order_by</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">default_ordering</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_meta</span><span class="p">()</span><span class="o">.</span><span class="n">ordering</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
     <span class="n">ordered</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">ordered</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -1175,19 +1175,19 @@
     <span class="c1"># PRIVATE METHODS #</span>
     <span class="c1">###################</span>
 
-    <span class="k">def</span> <span class="nf">_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">return_id</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">return_id</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inserts a new record for the given model. This provides an interface to</span>
 <span class="sd">        the InsertQuery class and is how Model.save() is implemented.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="k">if</span> <span class="n">using</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">using</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">using</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">InsertQuery</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
         <span class="n">query</span><span class="o">.</span><span class="n">insert_values</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="n">raw</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">get_compiler</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">)</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">return_id</span><span class="p">)</span>
-    <span class="n">_insert</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="n">_insert</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_insert</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_insert</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_batched_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1207,7 +1207,7 @@
     <span class="k">def</span> <span class="nf">_clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span><span class="p">:</span>
-            <span class="n">query</span><span class="o">.</span><span class="n">filter_is_sticky</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">query</span><span class="o">.</span><span class="n">filter_is_sticky</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span><span class="p">[:]</span>
@@ -1219,7 +1219,7 @@
         <span class="k">return</span> <span class="n">clone</span>
 
     <span class="k">def</span> <span class="nf">_fetch_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterator</span><span class="p">())</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_done</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_objects</span><span class="p">()</span>
@@ -1235,14 +1235,14 @@
 <span class="sd">        &quot;self&quot;). The method is only used internally and should be immediately</span>
 <span class="sd">        followed by a filter() that does create a clone.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">_merge_sanity_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks that we are merging two comparable QuerySet classes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
                 <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">values_select</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">values_select</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">extra_select</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">extra_select</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">annotation_select</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">annotation_select</span><span class="p">)):</span>
@@ -1257,7 +1257,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_known_related_objects</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># values() queryset can only be used as nested queries</span>
             <span class="c1"># if they are set up to select only a single field.</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1274,7 +1274,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the internal query&#39;s SQL and parameters (as a tuple).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># values() queryset can only be used as nested queries</span>
             <span class="c1"># if they are set up to select only a single field.</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1283,13 +1283,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">clone</span><span class="o">.</span><span class="n">_db</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">connection</span> <span class="o">==</span> <span class="n">connections</span><span class="p">[</span><span class="n">clone</span><span class="o">.</span><span class="n">_db</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">clone</span><span class="o">.</span><span class="n">_db</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">connection</span> <span class="o">==</span> <span class="n">connections</span><span class="p">[</span><span class="n">clone</span><span class="o">.</span><span class="n">_db</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">clone</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_compiler</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span><span class="o">.</span><span class="n">as_nested_sql</span><span class="p">()</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t do subqueries with queries on different DBs.&quot;</span><span class="p">)</span>
 
     <span class="c1"># When used as part of a nested query, a queryset will never be an &quot;always</span>
     <span class="c1"># empty&quot; result.</span>
-    <span class="n">value_annotation</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">value_annotation</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_add_hints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1317,10 +1317,10 @@
 <span class="sd">        the related field on the lhs side.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># We trust that users of values() know what they are doing.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">check_rel_lookup_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-    <span class="n">is_compatible_query_object_type</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">is_compatible_query_object_type</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">True</span>
 
 
 <span class="k">class</span> <span class="nc">InstanceCheckMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
@@ -1343,8 +1343,8 @@
 <span class="sd">    Provides an iterator which converts the results of raw SQL queries into</span>
 <span class="sd">    annotated model instances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_query</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">translations</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_query</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">translations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raw_query</span> <span class="o">=</span> <span class="n">raw_query</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">using</span>
@@ -1389,7 +1389,7 @@
                 <span class="n">model_cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
             <span class="n">converters</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">get_converters</span><span class="p">([</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">get_col</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span> <span class="k">else</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">get_col</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span>
             <span class="p">])</span>
             <span class="k">for</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">converters</span><span class="p">:</span>
@@ -1461,7 +1461,7 @@
 
 
 <span class="k">class</span> <span class="nc">Prefetch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">to_attr</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># `prefetch_through` is the path we traverse to perform the prefetch.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prefetch_through</span> <span class="o">=</span> <span class="n">lookup</span>
         <span class="c1"># `prefetch_to` is the path to the attribute that stores the result.</span>
@@ -1491,18 +1491,18 @@
     <span class="k">def</span> <span class="nf">get_current_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_prefetch_to</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefetch_to</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryset</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Prefetch</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefetch_to</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">prefetch_to</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_to</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">normalize_prefetch_lookups</span><span class="p">(</span><span class="n">lookups</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">normalize_prefetch_lookups</span><span class="p">(</span><span class="n">lookups</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function that normalize lookups into Prefetch objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1564,7 +1564,7 @@
                 <span class="k">continue</span>
 
             <span class="c1"># Prepare objects:</span>
-            <span class="n">good_objects</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">good_objects</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span>
                 <span class="c1"># Since prefetching can re-use instances, it is possible to have</span>
                 <span class="c1"># the same instance multiple times in obj_list, so obj might</span>
@@ -1577,7 +1577,7 @@
                         <span class="c1"># Model instances, either in Django or 3rd</span>
                         <span class="c1"># party. prefetch_related() doesn&#39;t make sense, so quit</span>
                         <span class="c1"># now.</span>
-                        <span class="n">good_objects</span> <span class="o">=</span> <span class="bp">False</span>
+                        <span class="n">good_objects</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="k">break</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">good_objects</span><span class="p">:</span>
                 <span class="k">break</span>
@@ -1594,7 +1594,7 @@
                                      <span class="s2">&quot;parameter to prefetch_related()&quot;</span> <span class="o">%</span>
                                      <span class="p">(</span><span class="n">through_attr</span><span class="p">,</span> <span class="n">first_obj</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">lookup</span><span class="o">.</span><span class="n">prefetch_through</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">through_attrs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">prefetcher</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">through_attrs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">prefetcher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Last one, this *must* resolve to something that supports</span>
                 <span class="c1"># prefetching, otherwise there is no point adding it and the</span>
                 <span class="c1"># developer asking for it has made a mistake.</span>
@@ -1602,7 +1602,7 @@
                                  <span class="s2">&quot;prefetching - this is an invalid parameter to &quot;</span>
                                  <span class="s2">&quot;prefetch_related().&quot;</span> <span class="o">%</span> <span class="n">lookup</span><span class="o">.</span><span class="n">prefetch_through</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">prefetcher</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_fetched</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prefetcher</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_fetched</span><span class="p">:</span>
                 <span class="n">obj_list</span><span class="p">,</span> <span class="n">additional_lookups</span> <span class="o">=</span> <span class="n">prefetch_one_level</span><span class="p">(</span><span class="n">obj_list</span><span class="p">,</span> <span class="n">prefetcher</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
                 <span class="c1"># We need to ensure we don&#39;t keep adding lookups from the</span>
                 <span class="c1"># same relationships to stop infinite recursion. So, if we</span>
@@ -1628,7 +1628,7 @@
                         <span class="n">new_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">through_attr</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ObjectDoesNotExist</span><span class="p">:</span>
                         <span class="k">continue</span>
-                    <span class="k">if</span> <span class="n">new_obj</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">new_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="k">continue</span>
                     <span class="c1"># We special-case `list` rather than something more generic</span>
                     <span class="c1"># like `Iterable` because we don&#39;t want to accidentally match</span>
@@ -1650,24 +1650,24 @@
 <span class="sd">     a boolean that is False if the attribute was not found at all,</span>
 <span class="sd">     a boolean that is True if the attribute has already been fetched)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">prefetcher</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">is_fetched</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">prefetcher</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_fetched</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="c1"># For singly related objects, we have to avoid getting the attribute</span>
     <span class="c1"># from the object, as this will trigger the query. So we first try</span>
     <span class="c1"># on the class, in order to get the descriptor object.</span>
-    <span class="n">rel_obj_descriptor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">rel_obj_descriptor</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">rel_obj_descriptor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rel_obj_descriptor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">attr_found</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">attr_found</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">attr_found</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">rel_obj_descriptor</span><span class="p">:</span>
             <span class="c1"># singly related object, descriptor object has the</span>
             <span class="c1"># get_prefetch_queryset() method.</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rel_obj_descriptor</span><span class="p">,</span> <span class="s1">&#39;get_prefetch_queryset&#39;</span><span class="p">):</span>
                 <span class="n">prefetcher</span> <span class="o">=</span> <span class="n">rel_obj_descriptor</span>
                 <span class="k">if</span> <span class="n">rel_obj_descriptor</span><span class="o">.</span><span class="n">is_cached</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
-                    <span class="n">is_fetched</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">is_fetched</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># descriptor doesn&#39;t support prefetching, so we go ahead and get</span>
                 <span class="c1"># the attribute on the instance rather than the class to</span>
@@ -1737,7 +1737,7 @@
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FieldDoesNotExist</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;to_attr={} conflicts with a field on the {} model.&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;to_attr=</span><span class="si">{}</span><span class="s1"> conflicts with a field on the </span><span class="si">{}</span><span class="s1"> model.&#39;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_attr</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
@@ -1745,7 +1745,7 @@
         <span class="n">vals</span> <span class="o">=</span> <span class="n">rel_obj_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance_attr_val</span><span class="p">,</span> <span class="p">[])</span>
 
         <span class="k">if</span> <span class="n">single</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">vals</span> <span class="k">else</span> <span class="bp">None</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">vals</span> <span class="k">else</span> <span class="kc">None</span>
             <span class="n">to_attr</span> <span class="o">=</span> <span class="n">to_attr</span> <span class="k">if</span> <span class="n">as_attr</span> <span class="k">else</span> <span class="n">cache_name</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">to_attr</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1757,7 +1757,7 @@
                 <span class="n">qs</span><span class="o">.</span><span class="n">_result_cache</span> <span class="o">=</span> <span class="n">vals</span>
                 <span class="c1"># We don&#39;t want the individual qs doing prefetch_related now,</span>
                 <span class="c1"># since we have merged this into the current work.</span>
-                <span class="n">qs</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">qs</span><span class="o">.</span><span class="n">_prefetch_done</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">_prefetched_objects_cache</span><span class="p">[</span><span class="n">cache_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">qs</span>
     <span class="k">return</span> <span class="n">all_related_objects</span><span class="p">,</span> <span class="n">additional_lookups</span>
 
@@ -1810,7 +1810,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">init_list</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">attname</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">select</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_end</span><span class="p">]</span>
             <span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reorder_for_init</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reorder_for_init</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">model_init_attnames</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">attname</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">klass_info</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_fields</span>
@@ -1833,7 +1833,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">related_populators</span> <span class="o">=</span> <span class="n">get_related_populators</span><span class="p">(</span><span class="n">klass_info</span><span class="p">,</span> <span class="n">select</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">klass_info</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
         <span class="n">reverse</span> <span class="o">=</span> <span class="n">klass_info</span><span class="p">[</span><span class="s1">&#39;reverse&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_cache_name</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_cache_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">get_cache_name</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reverse_cache_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get_cache_name</span><span class="p">()</span>
@@ -1858,8 +1858,8 @@
             <span class="n">obj_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reorder_for_init</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">obj_data</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_end</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">obj_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pk_idx</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">obj_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pk_idx</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_cls</span><span class="o">.</span><span class="n">from_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_list</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">related_populators</span><span class="p">:</span>

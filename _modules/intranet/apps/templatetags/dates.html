@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.templatetags.dates &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.templatetags.dates &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,34 +150,34 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span> <span class="k">as</span> <span class="n">datetime_date</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span> <span class="k">as</span> <span class="n">datetime_date</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">template</span>
 
 <span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
-<span class="nd">@register.filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nd">@register</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <div class="viewcode-block" id="fuzzy_time"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.dates.fuzzy_time">[docs]</a><span class="k">def</span> <span class="nf">fuzzy_time</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Formats a `datetime.time` object relative to the current time.&quot;&quot;&quot;</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="n">time_to_date</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fuzzy_date</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span></div>
 
 
-<span class="nd">@register.filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nd">@register</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <div class="viewcode-block" id="time_to_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.dates.time_to_date">[docs]</a><span class="k">def</span> <span class="nf">time_to_date</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a `datetime.datetime` object from a `datetime.time` object using the current date.&quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">datetime_date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
 
 
-<span class="nd">@register.filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nd">@register</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expects_localtime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <div class="viewcode-block" id="fuzzy_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.dates.fuzzy_date">[docs]</a><span class="k">def</span> <span class="nf">fuzzy_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Formats a `datetime.datetime` object relative to the current time.&quot;&quot;&quot;</span>
 
-    <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">date</span> <span class="o">&lt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">():</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">date</span>
@@ -189,14 +189,14 @@
         <span class="k">if</span> <span class="n">minutes</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;moments ago&quot;</span>
         <span class="k">elif</span> <span class="n">minutes</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;{} minutes ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> minutes ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">hours</span> <span class="o">&lt;</span> <span class="mi">24</span><span class="p">:</span>
             <span class="n">hrs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
-            <span class="k">return</span> <span class="s2">&quot;{} hour{} ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hrs</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">hrs</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> hour</span><span class="si">{}</span><span class="s2"> ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hrs</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">hrs</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;yesterday&quot;</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;{} days ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> days ago&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)))</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">14</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;last %A&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -211,14 +211,14 @@
         <span class="k">if</span> <span class="n">minutes</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;moments ago&quot;</span>
         <span class="k">elif</span> <span class="n">minutes</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;in {} minutes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s2">&quot;in </span><span class="si">{}</span><span class="s2"> minutes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">hours</span> <span class="o">&lt;</span> <span class="mi">24</span><span class="p">:</span>
             <span class="n">hrs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
-            <span class="k">return</span> <span class="s2">&quot;in {} hour{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hrs</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">hrs</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;in </span><span class="si">{}</span><span class="s2"> hour</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hrs</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">hrs</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;tomorrow&quot;</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;in {} days&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="s2">&quot;in </span><span class="si">{}</span><span class="s2"> days&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)))</span>
         <span class="k">elif</span> <span class="n">diff</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">14</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;next %A&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

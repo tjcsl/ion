@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.parking.views &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.parking.views &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,13 +150,13 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">ParkingApplication</span><span class="p">,</span> <span class="n">CarApplication</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">ParkingApplicationForm</span><span class="p">,</span> <span class="n">CarApplicationForm</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">ParkingApplication</span><span class="p">,</span> <span class="n">CarApplication</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">ParkingApplicationForm</span><span class="p">,</span> <span class="n">CarApplicationForm</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -190,12 +190,12 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">app</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">in_joint</span> <span class="o">=</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">joint_user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">in_joint</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">in_joint</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
@@ -204,7 +204,7 @@
             <span class="n">form</span> <span class="o">=</span> <span class="n">ParkingApplicationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
@@ -231,9 +231,9 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You can&#39;t request a parking space.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">car</span> <span class="o">=</span> <span class="n">CarApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+        <span class="n">car</span> <span class="o">=</span> <span class="n">CarApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="k">except</span> <span class="n">CarApplication</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">car</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">car</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;parking&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">car</span><span class="o">.</span><span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;This isn&#39;t your car!&quot;</span><span class="p">)</span>
@@ -258,7 +258,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">app</span><span class="o">.</span><span class="n">cars</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
@@ -293,23 +293,23 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">app</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please fill in the first stage of the form by clicking &#39;Submit&#39; first.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;parking_form&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">in_joint</span> <span class="o">=</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">joint_user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParkingApplication</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">in_joint</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">in_joint</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">in_joint</span> <span class="ow">and</span> <span class="s2">&quot;disagree&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">in_joint</span><span class="o">.</span><span class="n">joint_user</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">in_joint</span><span class="o">.</span><span class="n">joint_user</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">in_joint</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Removed the joint application created with your name.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;parking_form&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="n">app</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">joint_user</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">joint_user</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">app</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Removed joint application.&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s2">&quot;joint&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>

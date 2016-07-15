@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,20 +151,20 @@
 
 <span class="kn">import</span> <span class="nn">calendar</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span><span class="p">,</span> <span class="n">user_passes_test</span>
-<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
-<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="kn">import</span> <span class="n">xframe_options_exempt</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span><span class="p">,</span> <span class="n">user_passes_test</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="k">import</span> <span class="n">xframe_options_exempt</span>
 
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">DayForm</span><span class="p">,</span> <span class="n">DayTypeForm</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Day</span><span class="p">,</span> <span class="n">DayType</span><span class="p">,</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">DayForm</span><span class="p">,</span> <span class="n">DayTypeForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Day</span><span class="p">,</span> <span class="n">DayType</span><span class="p">,</span> <span class="n">Time</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 <span class="n">schedule_admin_required</span> <span class="o">=</span> <span class="n">user_passes_test</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="ow">not</span> <span class="n">u</span><span class="o">.</span><span class="n">is_anonymous</span><span class="p">()</span> <span class="ow">and</span> <span class="n">u</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;schedule&quot;</span><span class="p">))</span>
@@ -174,7 +174,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
 
@@ -182,7 +182,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
 
@@ -190,13 +190,13 @@
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="schedule_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.schedule_context">[docs]</a><span class="k">def</span> <span class="nf">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_tomorrow</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="schedule_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.schedule_context">[docs]</a><span class="k">def</span> <span class="nf">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_tomorrow</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">monday</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">friday</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="k">if</span> <span class="n">request</span> <span class="ow">and</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="mi">17</span> <span class="ow">and</span> <span class="n">show_tomorrow</span><span class="p">:</span>
@@ -207,20 +207,20 @@
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">date_fmt</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;bell_schedule:{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;bell_schedule:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">)</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">use_cache</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Returning schedule context for {} from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Returning schedule context for </span><span class="si">{}</span><span class="s2"> from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">cached</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">dayobj</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;day_type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
             <span class="n">comment</span> <span class="o">=</span> <span class="n">dayobj</span><span class="o">.</span><span class="n">comment</span>
         <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">dayobj</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">comment</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">dayobj</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">dayobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dayobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;start__hour&quot;</span><span class="p">,</span> <span class="s2">&quot;start__minute&quot;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -234,21 +234,21 @@
             <span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span> <span class="k">if</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="o">==</span> <span class="n">monday</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
             <span class="n">date_yesterday</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
-            <span class="n">date_tomorrow</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">date_yesterday</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">date_today</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">date_tomorrow</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">date_yesterday</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">date_today</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">()</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;day_type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date_tomorrow</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;tomorrow: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schedule_tomorrow</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;tomorrow: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schedule_tomorrow</span><span class="p">))</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">schedule_tomorrow</span><span class="o">.</span><span class="n">day_type</span><span class="p">:</span>
-                    <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">schedule_tomorrow</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;sched_ctx&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -264,7 +264,7 @@
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;bell_schedule&#39;</span><span class="p">])</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cached schedule context for {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cached schedule context for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
 <span class="c1"># does NOT require login</span>
@@ -277,7 +277,7 @@
 <span class="c1"># does NOT require login</span>
 
 
-<div class="viewcode-block" id="week_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.week_view">[docs]</a><span class="k">def</span> <span class="nf">week_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="week_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.week_view">[docs]</a><span class="k">def</span> <span class="nf">week_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="p">:</span>
         <span class="n">given_date</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">given_date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
@@ -309,11 +309,11 @@
         <span class="n">first_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">first_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">week1</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">first_date</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">week1</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">first_date</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">month</span> <span class="o">=</span> <span class="n">first_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)</span>
     <span class="n">one_month</span> <span class="o">=</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">next_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">first_date</span> <span class="o">+</span> <span class="n">one_month</span><span class="p">)</span>
@@ -340,7 +340,7 @@
 
 <div class="viewcode-block" id="get_day_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.get_day_data">[docs]</a><span class="k">def</span> <span class="nf">get_day_data</span><span class="p">(</span><span class="n">firstday</span><span class="p">,</span> <span class="n">daynum</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">daynum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;empty&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;empty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 
     <span class="n">date</span> <span class="o">=</span> <span class="n">firstday</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">daynum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="n">daynum</span><span class="p">,</span> <span class="s2">&quot;formatted_date&quot;</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">),</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">}</span>
@@ -350,8 +350,8 @@
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dayobj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dayobj</span>
     <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dayobj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dayobj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -389,13 +389,13 @@
             <span class="k">if</span> <span class="s2">&quot;empty&quot;</span> <span class="ow">in</span> <span class="n">day</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="s2">&quot;schedule&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">day</span> <span class="ow">or</span> <span class="n">day</span><span class="p">[</span><span class="s2">&quot;schedule&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;schedule&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">day</span> <span class="ow">or</span> <span class="n">day</span><span class="p">[</span><span class="s2">&quot;schedule&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">day_of_week</span> <span class="o">=</span> <span class="n">day</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">weekday</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">day_of_week</span> <span class="ow">in</span> <span class="n">daymap</span><span class="p">:</span>
                     <span class="n">type_obj</span> <span class="o">=</span> <span class="n">daymap</span><span class="p">[</span><span class="n">day_of_week</span><span class="p">]</span>
 
                     <span class="n">day_obj</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">day</span><span class="p">[</span><span class="s2">&quot;formatted_date&quot;</span><span class="p">],</span> <span class="n">day_type</span><span class="o">=</span><span class="n">type_obj</span><span class="p">)</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;{} is now a {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="s2">&quot;formatted_date&quot;</span><span class="p">],</span> <span class="n">day_obj</span><span class="o">.</span><span class="n">day_type</span><span class="p">)</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is now a </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="s2">&quot;formatted_date&quot;</span><span class="p">],</span> <span class="n">day_obj</span><span class="o">.</span><span class="n">day_type</span><span class="p">)</span>
                     <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/fill.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;msgs&quot;</span><span class="p">:</span> <span class="n">msgs</span><span class="p">})</span></div>
 
@@ -468,10 +468,10 @@
         <span class="n">form</span> <span class="o">=</span> <span class="n">DayForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{} is now a {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;day_type&quot;</span><span class="p">]))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is now a </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;day_type&quot;</span><span class="p">]))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_admin&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{} has no schedule assigned&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> has no schedule assigned&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_admin&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">DayForm</span><span class="p">()</span>
@@ -496,8 +496,8 @@
             <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
             <span class="n">comment</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">comment</span>
         <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">day</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">comment</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="n">day</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="n">comment</span><span class="p">}</span>
 
@@ -505,7 +505,7 @@
 
 
 <span class="nd">@schedule_admin_required</span>
-<div class="viewcode-block" id="admin_daytype_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.admin_daytype_view">[docs]</a><span class="k">def</span> <span class="nf">admin_daytype_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="admin_daytype_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.admin_daytype_view">[docs]</a><span class="k">def</span> <span class="nf">admin_daytype_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">delete_cache</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
@@ -514,7 +514,7 @@
             <span class="k">if</span> <span class="s2">&quot;make_copy&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
                 <span class="n">blocks</span> <span class="o">=</span> <span class="n">daytype</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                <span class="n">daytype</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">daytype</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (Copy)&quot;</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
@@ -528,9 +528,9 @@
 
             <span class="k">if</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">daytype</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">daytype</span><span class="p">)</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Deleted {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Deleted </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_admin&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
@@ -538,7 +538,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;instance: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">daytype</span><span class="p">)</span>
             <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">daytype</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">daytype</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">daytype</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -568,9 +568,9 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span> <span class="o">=</span> <span class="n">model</span>
                     <span class="n">dayobj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{} is now a {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dayobj</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span><span class="p">))</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is now a </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dayobj</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span><span class="p">))</span>
 
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully {} Day Type.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;modified&quot;</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="s2">&quot;added&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully </span><span class="si">{}</span><span class="s2"> Day Type.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;modified&quot;</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="s2">&quot;added&quot;</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_daytype&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding Day Type&quot;</span><span class="p">)</span>
@@ -578,7 +578,7 @@
         <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">daytype</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">daytype</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">daytype</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;daytype&quot;</span><span class="p">:</span> <span class="n">daytype</span><span class="p">}</span>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -154,14 +154,14 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="c1"># from django.utils.decorators import method_decorator</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.hashers</span> <span class="kn">import</span> <span class="n">check_password</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.hashers</span> <span class="k">import</span> <span class="n">check_password</span>
 <span class="c1"># from django.views.decorators.debug import sensitive_variables</span>
 
 <span class="kn">import</span> <span class="nn">pexpect</span>
 
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -182,10 +182,10 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;kinit timed out for {}@{} (invalid user)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2"> (invalid user)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
             <span class="k">return</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;kinit timed out for {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="c1"># @sensitive_variables(&#39;password&#39;)</span>
@@ -205,12 +205,12 @@
 
         <span class="n">cache</span> <span class="o">=</span> <span class="s2">&quot;/tmp/ion-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting KRB5CCNAME to &#39;FILE:{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cache</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting KRB5CCNAME to &#39;FILE:</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cache</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;FILE:&quot;</span> <span class="o">+</span> <span class="n">cache</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CSL_REALM</span>
-            <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
+            <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
@@ -223,7 +223,7 @@
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">AD_REALM</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
+                <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
@@ -234,16 +234,16 @@
                 <span class="n">exitstatus</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos authorized {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos authorized </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
             <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="bp">False</span></div>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
     <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
-<div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
@@ -270,14 +270,14 @@
         <span class="n">krb_ticket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">krb_ticket</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication successful&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="c1"># Shouldn&#39;t happen</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;User {} successfully authenticated but not found in LDAP.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2"> successfully authenticated but not found in LDAP.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
 
                 <span class="n">user</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;INVALID_USER&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">99999</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">user</span></div>
@@ -296,7 +296,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span></div></div>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
 
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">MasterPasswordAuthenticationBackend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -307,7 +307,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
-<div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
@@ -326,15 +326,15 @@
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_NOTIFY</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication FAILED due to invalid username {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication FAILED due to invalid username </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password correct, user does not exist&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_NOTIFY</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication SUCCEEDED with username {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication SUCCEEDED with username </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication with master password successful&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">user</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password authentication failed&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
@@ -350,7 +350,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span></div></div>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>
 
     </div>

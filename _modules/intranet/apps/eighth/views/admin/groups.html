@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.groups &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.eighth.views.admin.groups &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -154,25 +154,25 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_model</span><span class="p">,</span> <span class="n">invalidate_obj</span>
+<span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_model</span><span class="p">,</span> <span class="n">invalidate_obj</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
-<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
-<span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
+<span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="k">import</span> <span class="n">SessionWizardView</span>
 
-<span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ActivitySelectionForm</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
-<span class="kn">from</span> <span class="nn">...forms.admin.groups</span> <span class="kn">import</span> <span class="n">GroupForm</span><span class="p">,</span> <span class="n">QuickGroupForm</span><span class="p">,</span> <span class="n">UploadGroupForm</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
-<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
-<span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
-<span class="kn">from</span> <span class="nn">....groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">....search.views</span> <span class="kn">import</span> <span class="n">get_search_results</span>
-<span class="kn">from</span> <span class="nn">....users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="k">import</span> <span class="p">(</span><span class="n">ActivitySelectionForm</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="k">import</span> <span class="n">BlockSelectionForm</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.groups</span> <span class="k">import</span> <span class="n">GroupForm</span><span class="p">,</span> <span class="n">QuickGroupForm</span><span class="p">,</span> <span class="n">UploadGroupForm</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
+<span class="kn">from</span> <span class="nn">....groups.models</span> <span class="k">import</span> <span class="n">Group</span>
+<span class="kn">from</span> <span class="nn">....search.views</span> <span class="k">import</span> <span class="n">get_search_results</span>
+<span class="kn">from</span> <span class="nn">....users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -215,7 +215,7 @@
                 <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
             <span class="n">group</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted {} members of the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted </span><span class="si">{}</span><span class="s2"> members of the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">GroupForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -250,7 +250,7 @@
     <span class="n">linked_activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups_allowed</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">parse_int</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
@@ -302,12 +302,12 @@
                     <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># Try last name</span>
-                <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Try first name</span>
-                    <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
+                    <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
                         <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[]</span></div>
@@ -324,7 +324,7 @@
     <span class="n">sure_users</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">unsure_users</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-        <span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -336,7 +336,7 @@
                         <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
                             <span class="n">sure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">u</span><span class="p">])</span>
-                            <span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+                            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
@@ -349,7 +349,7 @@
             <span class="n">r</span> <span class="o">=</span> <span class="n">get_user_info</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">sure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-                <span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -358,7 +358,7 @@
             <span class="n">r</span> <span class="o">=</span> <span class="n">get_user_info</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">new_line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">sure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-                <span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
             <span class="n">unsure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">])</span>
@@ -379,7 +379,7 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
     <span class="n">stage</span> <span class="o">=</span> <span class="s2">&quot;upload&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">filetext</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">filetext</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
@@ -393,14 +393,14 @@
             <span class="n">num_added</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">userids</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;User with ID {} does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;User with ID </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
                     <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="n">num_added</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{} added to group {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_added</span><span class="p">,</span> <span class="n">group</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> added to group </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_added</span><span class="p">,</span> <span class="n">group</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="s2">&quot;import_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -413,10 +413,10 @@
                     <span class="n">member</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
                     <span class="n">member</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Added {} users from {} to {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_users</span><span class="p">,</span> <span class="n">import_group</span><span class="p">,</span> <span class="n">group</span><span class="p">))</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2"> users from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_users</span><span class="p">,</span> <span class="n">import_group</span><span class="p">,</span> <span class="n">group</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/upload_group.html&quot;</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Import Group Members: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+                <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Import Group Members: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
                 <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;import_confirm&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
                 <span class="s2">&quot;import_group&quot;</span><span class="p">:</span> <span class="n">import_group</span><span class="p">,</span>
@@ -426,7 +426,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">()</span>
     <span class="n">all_groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Upload/Import Group Members: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Upload/Import Group Members: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
                <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
                <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
@@ -469,7 +469,7 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
-    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="s2">{}.csv</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="si">{}</span><span class="s2">.csv</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Last Name&quot;</span><span class="p">,</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Student ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">])</span>
@@ -483,7 +483,7 @@
         <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span>
         <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">grade</span> <span class="k">else</span> <span class="s2">&quot;Staff&quot;</span><span class="p">)</span>
         <span class="n">emails</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span>
-        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">emails</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">emails</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">response</span></div>
@@ -550,7 +550,7 @@
 
     <span class="k">if</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
-            <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully signed up group for activity.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
 
@@ -571,12 +571,12 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.dispatch"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group_id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group_id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
@@ -588,7 +588,7 @@
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cleaned block: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cleaned block: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]))</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
                 <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
@@ -617,7 +617,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
             <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;users_type&quot;</span><span class="p">:</span> <span class="s2">&quot;unsigned&quot;</span><span class="p">})</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Distribute Group Members Among Activities&quot;</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">context</span></div>
@@ -640,16 +640,16 @@
 
         <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">said</span> <span class="ow">in</span> <span class="n">schact_ids</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;schact={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">said</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;schact=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">said</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;group_id&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">gid</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">]</span>
-            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;group={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;group=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;unsigned=1&amp;block={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="s2">&quot;&amp;unsigned=1&amp;block=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/admin/groups/distribute_action?{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/admin/groups/distribute_action?</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div></div>
 
 
 <span class="n">eighth_admin_distribute_group</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
@@ -668,7 +668,7 @@
                     <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">6</span><span class="p">:])</span>
                     <span class="n">schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">sid</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ScheduledActivity does not exist with id {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sid</span><span class="p">))</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ScheduledActivity does not exist with id </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sid</span><span class="p">))</span>
 
                 <span class="n">userids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">activity_user_map</span><span class="p">[</span><span class="n">schact</span><span class="p">]</span> <span class="o">=</span> <span class="n">userids</span>
@@ -678,9 +678,9 @@
         <span class="k">for</span> <span class="n">schact</span><span class="p">,</span> <span class="n">userids</span> <span class="ow">in</span> <span class="n">activity_user_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">userids</span><span class="p">:</span>
                 <span class="n">changes</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">schact</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">uid</span><span class="p">)),</span> <span class="n">request</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">schact</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">uid</span><span class="p">)),</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully completed {} activity signups.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">changes</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully completed </span><span class="si">{}</span><span class="s2"> activity signups.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">changes</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s2">&quot;schact&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
@@ -724,11 +724,11 @@
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Distribute Group Members Across Activities&quot;</span><span class="p">,</span>
             <span class="s2">&quot;users_type&quot;</span><span class="p">:</span> <span class="n">users_type</span><span class="p">,</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;group&quot;</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
-            <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;unsigned&quot;</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;group&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;unsigned&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;schacts&quot;</span><span class="p">:</span> <span class="n">schacts</span><span class="p">,</span>
             <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
-            <span class="s2">&quot;show_selection&quot;</span><span class="p">:</span> <span class="bp">True</span>
+            <span class="s2">&quot;show_selection&quot;</span><span class="p">:</span> <span class="kc">True</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -756,9 +756,9 @@
             <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
             <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
-                <span class="n">next_url</span> <span class="o">+=</span> <span class="s2">&quot;added={}&amp;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">next_url</span> <span class="o">+=</span> <span class="s2">&quot;added=</span><span class="si">{}</span><span class="s2">&amp;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added {} user{} to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">),</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added </span><span class="si">{}</span><span class="s2"> user</span><span class="si">{}</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">),</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;query&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
@@ -769,19 +769,19 @@
     <span class="k">if</span> <span class="n">from_sid</span><span class="p">:</span>
         <span class="n">from_sid</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
         <span class="n">from_sid</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added user </span><span class="se">\&quot;</span><span class="s2">{}</span><span class="se">\&quot;</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">from_sid</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added user </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">from_sid</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?added=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">from_sid</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
 
     <span class="n">errors</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">get_search_results</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;User id: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;User id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 
         <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added user </span><span class="se">\&quot;</span><span class="s2">{}</span><span class="se">\&quot;</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added user </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?added=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=n&quot;</span><span class="p">)</span>
@@ -813,7 +813,7 @@
     <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully removed user </span><span class="se">\&quot;</span><span class="s2">{}</span><span class="se">\&quot;</span><span class="s2"> from the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully removed user </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> from the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span></div>
 </pre></div>

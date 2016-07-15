@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.ionldap.management.commands.ionldap_student_id &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.ionldap.management.commands.ionldap_student_id &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,9 +151,9 @@
 
 <span class="kn">import</span> <span class="nn">csv</span>
 
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.ionldap.management.commands.html#intranet.apps.ionldap.management.commands.ionldap_student_id.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -162,14 +162,14 @@
 
 <div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.ionldap.management.commands.html#intranet.apps.ionldap.management.commands.ionldap_student_id.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--csv&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;csv_file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;import.csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Import CSV file&#39;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--add&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Add to database.&#39;</span><span class="p">)</span></div>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--add&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Add to database.&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.ionldap.management.commands.html#intranet.apps.ionldap.management.commands.ionldap_student_id.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
 
         <span class="n">csv_file</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;csv_file&quot;</span><span class="p">]</span>
         <span class="n">add_db</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">]</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;CSV file&quot;</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV file&quot;</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">)</span>
 
         <span class="n">users_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -183,7 +183,7 @@
                 <span class="n">uid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">uname</span> <span class="ow">and</span> <span class="n">uid</span> <span class="ow">and</span> <span class="n">uname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">users_dict</span><span class="p">:</span>
                     <span class="n">users_dict</span><span class="p">[</span><span class="n">uname</span><span class="p">]</span> <span class="o">=</span> <span class="n">uid</span>
-                    <span class="k">print</span><span class="p">(</span><span class="n">uname</span><span class="p">,</span> <span class="n">uid</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">uname</span><span class="p">,</span> <span class="n">uid</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">add_db</span><span class="p">:</span>
             <span class="k">return</span>
@@ -194,7 +194,7 @@
                 <span class="n">u</span><span class="o">.</span><span class="n">_student_id</span> <span class="o">=</span> <span class="n">fcpsid</span>
                 <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;USER {} {} DOES NOT EXIST&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tjuser</span><span class="p">,</span> <span class="n">fcpsid</span><span class="p">))</span></div></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;USER </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> DOES NOT EXIST&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tjuser</span><span class="p">,</span> <span class="n">fcpsid</span><span class="p">))</span></div></div>
 </pre></div>
 
     </div>

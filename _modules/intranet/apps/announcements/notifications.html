@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.notifications &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.announcements.notifications &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -153,17 +153,17 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.core</span> <span class="k">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">reverse</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth1</span>
+<span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="k">import</span> <span class="n">OAuth1</span>
 
-<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="kn">import</span> <span class="n">email_send</span><span class="p">,</span> <span class="n">email_send_bcc</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span><span class="p">,</span> <span class="n">email_send_bcc</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -184,7 +184,7 @@
     <span class="n">teachers</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">teacher_ids</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">teachers</span><span class="p">)</span>
 
-    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;News Post Confirmation Request from {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;News Post Confirmation Request from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
     <span class="n">emails</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">:</span>
         <span class="n">emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">teacher</span><span class="o">.</span><span class="n">tj_email</span><span class="p">)</span>
@@ -208,7 +208,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;News Post Approval Needed ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;News Post Approval Needed (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
     <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">APPROVAL_EMAIL</span><span class="p">]</span>
     <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
@@ -226,7 +226,7 @@
 <span class="sd">    req: the AnnouncementRequest object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Announcement Approved: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Announcement Approved: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot; Email to teachers who approved. &quot;&quot;&quot;</span>
     <span class="n">teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_approved</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
@@ -242,7 +242,7 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;approved&quot;</span><span class="p">}</span>
         <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">teacher_emails</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)))</span>
     <span class="sd">&quot;&quot;&quot; Email to submitter. &quot;&quot;&quot;</span>
     <span class="n">submitter</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">user</span>
     <span class="n">submitter_email</span> <span class="o">=</span> <span class="n">submitter</span><span class="o">.</span><span class="n">tj_email</span>
@@ -251,10 +251,10 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;submitted&quot;</span><span class="p">}</span>
         <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span>
                    <span class="n">submitter_emails</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">submitter_emails</span><span class="p">)))</span></div>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">submitter_emails</span><span class="p">)))</span></div>
 
 
-<div class="viewcode-block" id="announcement_posted_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.announcement_posted_email">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">send_all</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="announcement_posted_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.announcement_posted_email">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">send_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Send a notification posted email.</span>
 
 <span class="sd">    obj: The announcement object</span>
@@ -262,11 +262,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_ANNOUNCEMENTS</span><span class="p">:</span>
-        <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Announcement: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Announcement: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">send_all</span><span class="p">:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">receive_news_emails</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">receive_news_emails</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">send_groups</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="n">emails</span> <span class="o">=</span> <span class="p">[]</span>
@@ -299,13 +299,13 @@
         <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;view_announcement&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">}</span>
         <span class="n">email_send_bcc</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_posted.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_posted.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users_send</span><span class="p">)))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users_send</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Emailing announcements disabled&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="announcement_posted_twitter"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.announcement_posted_twitter">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_twitter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">TWITTER_KEYS</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">TWITTER_KEYS</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Publicly available&quot;</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">title</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
@@ -314,17 +314,17 @@
             <span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&lt;[^&gt;]*&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">content_len</span> <span class="o">=</span> <span class="mi">139</span> <span class="o">-</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">22</span><span class="p">)</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;{}: {}... - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="p">[:</span><span class="n">content_len</span><span class="p">],</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">... - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="p">[:</span><span class="n">content_len</span><span class="p">],</span> <span class="n">url</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;{}... - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">[:</span><span class="mi">110</span><span class="p">],</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">... - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">[:</span><span class="mi">110</span><span class="p">],</span> <span class="n">url</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Posting tweet: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
         <span class="n">resp</span> <span class="o">=</span> <span class="n">notify_twitter</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">respobj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">respobj</span> <span class="ow">and</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">respobj</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Posted tweet: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;https://twitter.com/tjintranet/status/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">respobj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Posted tweet: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;https://twitter.com/tjintranet/status/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">respobj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">resp</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
@@ -339,7 +339,7 @@
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TWITTER_KEYS</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="n">auth</span> <span class="o">=</span> <span class="n">OAuth1</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_key&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_secret&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_key&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_secret&quot;</span><span class="p">])</span>
 

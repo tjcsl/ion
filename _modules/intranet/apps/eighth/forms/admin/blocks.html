@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.forms.admin.blocks &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.eighth.forms.admin.blocks &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -149,10 +149,10 @@
   <h1>Source code for intranet.apps.eighth.forms.admin.blocks</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">RegexValidator</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="k">import</span> <span class="n">RegexValidator</span>
 
-<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthBlock</span>
 
 <span class="n">block_letter_validator</span> <span class="o">=</span> <span class="n">RegexValidator</span><span class="p">(</span><span class="s2">r&quot;^[a-z A-Z0-9_-]{1,10}$&quot;</span><span class="p">,</span>
                                         <span class="s2">&quot;A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces.&quot;</span><span class="p">)</span>
@@ -161,21 +161,21 @@
 <div class="viewcode-block" id="BlockDisplayField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.blocks.BlockDisplayField">[docs]</a><span class="k">class</span> <span class="nc">BlockDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">):</span>
 
 <div class="viewcode-block" id="BlockDisplayField.label_from_instance"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.blocks.BlockDisplayField.label_from_instance">[docs]</a>    <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="BlockSelectionForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm">[docs]</a><span class="k">class</span> <span class="nc">BlockSelectionForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Block&quot;</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Block&quot;</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BlockSelectionForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">filter_params</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">exclude_before_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">exclude_before_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;date__gte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_before_date</span>
 
         <span class="k">if</span> <span class="n">only_locked</span><span class="p">:</span>
-            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_params</span><span class="p">)</span>
 

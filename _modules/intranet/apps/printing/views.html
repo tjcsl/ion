@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.printing.views &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.printing.views &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -154,25 +154,25 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
-<span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="kn">import</span> <span class="n">slugify</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="k">import</span> <span class="n">slugify</span>
 
 <span class="kn">import</span> <span class="nn">magic</span>
 
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">PrintJobForm</span>
-<span class="kn">from</span> <span class="nn">..context_processors</span> <span class="kn">import</span> <span class="n">_get_current_ip</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PrintJobForm</span>
+<span class="kn">from</span> <span class="nn">..context_processors</span> <span class="k">import</span> <span class="n">_get_current_ip</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span> <span class="nf">get_printers</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;lpstat&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">],</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;lpstat&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">],</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># Don&#39;t die if cups isn&#39;t installed.</span>
-    <span class="k">except</span> <span class="n">FileNotFoundError</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -191,38 +191,38 @@
 
 <div class="viewcode-block" id="convert_soffice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_soffice">[docs]</a><span class="k">def</span> <span class="nf">convert_soffice</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;soffice&quot;</span><span class="p">,</span> <span class="s2">&quot;--headless&quot;</span><span class="p">,</span> <span class="s2">&quot;--convert-to&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;soffice&quot;</span><span class="p">,</span> <span class="s2">&quot;--headless&quot;</span><span class="p">,</span> <span class="s2">&quot;--convert-to&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run soffice command (returned {}): {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run soffice command (returned </span><span class="si">{}</span><span class="s2">): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="s2">&quot; -&gt; &quot;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s2">&quot; using &quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
         <span class="n">fileout</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">fileout</span> <span class="o">=</span> <span class="n">fileout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; using &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">fileout</span>
 
-    <span class="k">return</span> <span class="bp">False</span></div>
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="convert_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf">[docs]</a><span class="k">def</span> <span class="nf">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">cmdname</span><span class="o">=</span><span class="s2">&quot;ps2pdf&quot;</span><span class="p">):</span>
-    <span class="n">new_name</span> <span class="o">=</span> <span class="s2">&quot;{}.pdf&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+    <span class="n">new_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.pdf&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run {} command (returned {}): {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run </span><span class="si">{}</span><span class="s2"> command (returned </span><span class="si">{}</span><span class="s2">): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">new_name</span>
 
-    <span class="k">return</span> <span class="bp">False</span></div>
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="get_numpages"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_numpages">[docs]</a><span class="k">def</span> <span class="nf">get_numpages</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;pdfinfo&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;pdfinfo&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run pdfinfo command (returned {}): {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run pdfinfo command (returned </span><span class="si">{}</span><span class="s2">): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 
     <span class="n">lines</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
@@ -239,7 +239,7 @@
 
 
 <div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
-    <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">detected</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
     <span class="n">no_conversion</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">]</span>
@@ -255,7 +255,7 @@
     <span class="k">if</span> <span class="n">detected</span> <span class="o">==</span> <span class="s2">&quot;application/postscript&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;pdf2ps&quot;</span><span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not sure how to handle a file of type {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span></div>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not sure how to handle a file of type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span> <span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">):</span>
@@ -266,25 +266,25 @@
             <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">rr</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># make sure 2 values in range</span>
-                    <span class="k">return</span> <span class="bp">False</span>
+                    <span class="k">return</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                     <span class="n">rh</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rr</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">rl</span> <span class="o">&lt;</span> <span class="n">max_pages</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">rh</span> <span class="o">&lt;</span> <span class="n">max_pages</span><span class="p">:</span>  <span class="c1"># check in page range</span>
-                        <span class="k">return</span> <span class="bp">False</span>
+                        <span class="k">return</span> <span class="kc">False</span>
                     <span class="k">if</span> <span class="n">rl</span> <span class="o">&gt;</span> <span class="n">rh</span><span class="p">:</span>   <span class="c1"># check lower bound &lt;= upper bound</span>
-                        <span class="k">return</span> <span class="bp">False</span>
+                        <span class="k">return</span> <span class="kc">False</span>
                     <span class="n">pages</span> <span class="o">+=</span> <span class="n">rh</span> <span class="o">-</span> <span class="n">rl</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_pages</span><span class="p">:</span>  <span class="c1"># check in page range</span>
-                    <span class="k">return</span> <span class="bp">False</span>
+                    <span class="k">return</span> <span class="kc">False</span>
                 <span class="n">pages</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># catch int parse fail</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="n">pages</span></div>
 
 
-<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">do_print</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">do_print</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
     <span class="n">printer</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">printer</span>
@@ -298,7 +298,7 @@
 
     <span class="n">filebase</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileobj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">filebase_escaped</span> <span class="o">=</span> <span class="n">slugify</span><span class="p">(</span><span class="n">filebase</span><span class="p">)</span>
-    <span class="n">tmpfile_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_print_{}_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">filebase_escaped</span><span class="p">))</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">tmpfile_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_print_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">filebase_escaped</span><span class="p">))</span><span class="o">.</span><span class="n">name</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s1">&#39;wb+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dest</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">chunks</span><span class="p">():</span>
             <span class="n">dest</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
@@ -324,29 +324,29 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">range_count</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified an invalid page range.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">range_count</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified a range of {} pages. You may only print up to {} pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">range_count</span><span class="p">,</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified a range of </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">range_count</span><span class="p">,</span>
                                                                                                                            <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">num_pages</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This file contains {} pages. You may only print up to {} pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_pages</span><span class="p">,</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This file contains </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_pages</span><span class="p">,</span>
                                                                                                                  <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">do_print</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lpr&quot;</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printer</span><span class="p">),</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lpr&quot;</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printer</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">page_range</span><span class="p">:</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;page-ranges={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">page_range</span><span class="p">)])</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;page-ranges=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">page_range</span><span class="p">)])</span>
         <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">duplex</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;sides=two-sided-long-edge&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;sides=one-sided&quot;</span><span class="p">])</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;is not accepting jobs&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run lpr (returned {}): {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run lpr (returned </span><span class="si">{}</span><span class="s2">): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;An error occured while printing your file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
-    <span class="n">obj</span><span class="o">.</span><span class="n">printed</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">printed</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
 
@@ -360,13 +360,13 @@
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">PrintJobForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">,</span> <span class="n">printers</span><span class="o">=</span><span class="n">printers</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Printing failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Your file was printed!&quot;</span><span class="p">)</span>

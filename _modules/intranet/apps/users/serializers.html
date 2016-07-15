@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.serializers &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>intranet.apps.users.serializers &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -149,9 +149,9 @@
   <h1>Source code for intranet.apps.users.serializers</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">serializers</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="UserListSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserListSerializer">[docs]</a><span class="k">class</span> <span class="nc">UserListSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
@@ -211,16 +211,16 @@
 
 <div class="viewcode-block" id="HyperlinkedImageField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.HyperlinkedImageField">[docs]</a><span class="k">class</span> <span class="nc">HyperlinkedImageField</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">):</span>
 
-<div class="viewcode-block" id="HyperlinkedImageField.get_url"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.HyperlinkedImageField.get_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">format</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">HyperlinkedImageField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">format</span><span class="p">)</span>
+<div class="viewcode-block" id="HyperlinkedImageField.get_url"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.HyperlinkedImageField.get_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">HyperlinkedImageField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;format=&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;{}format=jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;format=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">format=jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;format=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">s</span></div></div>
 
 
 <div class="viewcode-block" id="UserSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserSerializer">[docs]</a><span class="k">class</span> <span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="n">grade</span> <span class="o">=</span> <span class="n">GradeSerializer</span><span class="p">()</span>
-    <span class="n">classes</span> <span class="o">=</span> <span class="n">SubClassSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">SubClassSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">AddressSerializer</span><span class="p">()</span>
     <span class="n">counselor</span> <span class="o">=</span> <span class="n">CounselorTeacherSerializer</span><span class="p">()</span>
     <span class="n">ion_username</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
@@ -239,7 +239,7 @@
     <span class="n">mobile_phone</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
     <span class="n">other_phones</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ListField</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">17</span><span class="p">))</span>
     <span class="n">webpages</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ListField</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span>
-    <span class="n">picture</span> <span class="o">=</span> <span class="n">HyperlinkedImageField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_user_profile_picture_default&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpg&quot;</span><span class="p">)</span>
+    <span class="n">picture</span> <span class="o">=</span> <span class="n">HyperlinkedImageField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_user_profile_picture_default&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;jpg&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UserSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
@@ -257,7 +257,7 @@
     <span class="n">periods</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ListField</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">serializers</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">())</span>
     <span class="n">quarters</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ListField</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">serializers</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">())</span>
     <span class="n">teacher</span> <span class="o">=</span> <span class="n">CounselorTeacherSerializer</span><span class="p">()</span>
-    <span class="n">students</span> <span class="o">=</span> <span class="n">StudentSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+    <span class="n">students</span> <span class="o">=</span> <span class="n">StudentSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>simple_history.models &mdash; TJ Intranet v3 (Build #2790) documentation</title>
+    <title>simple_history.models &mdash; TJ Intranet v3 (Build #2804) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #2790)',
+        VERSION:     'v3 (Build #2804)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2790) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2804) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -147,36 +147,36 @@
     <div class="col-md-12 content">
       
   <h1>Source code for simple_history.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">router</span>
-<span class="kn">from</span> <span class="nn">django.db.models.fields.proxy</span> <span class="kn">import</span> <span class="n">OrderWrt</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">python_2_unicode_compatible</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">smart_text</span>
-<span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">now</span>
-<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">string_concat</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">django.db.models.fields.proxy</span> <span class="k">import</span> <span class="n">OrderWrt</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">python_2_unicode_compatible</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">smart_text</span>
+<span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="k">import</span> <span class="n">now</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">string_concat</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">django.apps</span> <span class="kn">import</span> <span class="n">apps</span>
+    <span class="kn">from</span> <span class="nn">django.apps</span> <span class="k">import</span> <span class="n">apps</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># Django &lt; 1.7</span>
-    <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">get_app</span>
+    <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">get_app</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">south.modelsinspector</span> <span class="kn">import</span> <span class="n">add_introspection_rules</span>
+    <span class="kn">from</span> <span class="nn">south.modelsinspector</span> <span class="k">import</span> <span class="n">add_introspection_rules</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># south not present</span>
     <span class="k">pass</span>
 <span class="k">else</span><span class="p">:</span>  <span class="c1"># south configuration for CustomForeignKeyField</span>
     <span class="n">add_introspection_rules</span><span class="p">(</span>
         <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;^simple_history.models.CustomForeignKeyField&quot;</span><span class="p">])</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">.manager</span> <span class="kn">import</span> <span class="n">HistoryDescriptor</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">.manager</span> <span class="k">import</span> <span class="n">HistoryDescriptor</span>
 
 <span class="n">registered_models</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -184,8 +184,8 @@
 <span class="k">class</span> <span class="nc">HistoricalRecords</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bases</span><span class="o">=</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,),</span>
-                 <span class="n">user_related_name</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bases</span><span class="o">=</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,),</span>
+                 <span class="n">user_related_name</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span> <span class="o">=</span> <span class="n">verbose_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span> <span class="o">=</span> <span class="n">user_related_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">table_name</span>
@@ -201,7 +201,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="o">=</span> <span class="n">cls</span>
-        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">class_prepared</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">class_prepared</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_methods</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_extra_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
@@ -211,7 +211,7 @@
 
 <span class="sd">            Make sure you know what you&#39;re doing before you use this method.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">skip_history_when_saving</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skip_history_when_saving</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">finally</span><span class="p">:</span>
@@ -230,7 +230,7 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inherit</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">hint_class</span><span class="p">)):</span>  <span class="c1"># set in abstract</span>
                     <span class="k">return</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="p">,</span> <span class="s1">&#39;simple_history_manager_attribute&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleRegistrationsError</span><span class="p">(</span><span class="s1">&#39;{}.{} registered multiple times for history tracking.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleRegistrationsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> registered multiple times for history tracking.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
                 <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
             <span class="p">))</span>
@@ -241,9 +241,9 @@
         <span class="c1"># The HistoricalRecords object will be discarded,</span>
         <span class="c1"># so the signal handlers can&#39;t use weak references.</span>
         <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-                                         <span class="n">weak</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                                         <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-                                           <span class="n">weak</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                                           <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">HistoryDescriptor</span><span class="p">(</span><span class="n">history_model</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span>
@@ -274,7 +274,7 @@
         <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_extra_fields</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">fields</span><span class="p">))</span>
         <span class="c1"># type in python2 wants str as a first argument</span>
         <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Meta</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;Meta&#39;</span><span class="p">),</span> <span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_meta_options</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Meta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">db_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Historical</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
         <span class="n">registered_models</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
@@ -298,25 +298,25 @@
                 <span class="n">field</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">):</span>
                 <span class="n">old_field</span> <span class="o">=</span> <span class="n">field</span>
-                <span class="n">field_arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;db_constraint&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;one_to_one&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="n">field_arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;db_constraint&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;one_to_one&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span>
                         <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">)):</span>
                     <span class="n">FieldType</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">FieldType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">old_field</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;to_fields&#39;</span><span class="p">,</span> <span class="p">[]):</span>
                     <span class="n">field_arguments</span><span class="p">[</span><span class="s1">&#39;to_field&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">to_fields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;db_column&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;db_column&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
                     <span class="n">field_arguments</span><span class="p">[</span><span class="s1">&#39;db_column&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">db_column</span>
                 <span class="n">field</span> <span class="o">=</span> <span class="n">FieldType</span><span class="p">(</span>
                     <span class="n">old_field</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">to</span><span class="p">,</span>
                     <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span>
-                    <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">primary_key</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                    <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">serialize</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">unique</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                    <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">primary_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">db_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">serialize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">unique</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span>
                     <span class="o">**</span><span class="n">field_arguments</span>
                 <span class="p">)</span>
@@ -331,7 +331,7 @@
 
         <span class="n">user_model</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;AUTH_USER_MODEL&#39;</span><span class="p">,</span> <span class="s1">&#39;auth.User&#39;</span><span class="p">)</span>
 
-        <span class="nd">@models.permalink</span>
+        <span class="nd">@models</span><span class="o">.</span><span class="n">permalink</span>
         <span class="k">def</span> <span class="nf">revert_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;URL for this change in the default admin site.&quot;&quot;&quot;</span>
             <span class="n">opts</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span>
@@ -347,10 +347,10 @@
             <span class="p">})</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;history_id&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+            <span class="s1">&#39;history_id&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="s1">&#39;history_date&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(),</span>
             <span class="s1">&#39;history_user&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
-                <span class="n">user_model</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span><span class="p">,</span>
+                <span class="n">user_model</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span><span class="p">,</span>
                 <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">),</span>
             <span class="s1">&#39;history_type&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span>
                 <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;Created&#39;</span><span class="p">),</span>
@@ -385,7 +385,7 @@
     <span class="k">def</span> <span class="nf">post_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">created</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;skip_history_when_saving&#39;</span><span class="p">):</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_historical_record</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">created</span> <span class="ow">and</span> <span class="s1">&#39;+&#39;</span> <span class="ow">or</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">post_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -409,9 +409,9 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">def</span> <span class="nf">transform_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
@@ -425,16 +425,16 @@
         <span class="n">field</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span>
 
     <span class="c1"># Historical instance shouldn&#39;t change create/update timestamps</span>
-    <span class="n">field</span><span class="o">.</span><span class="n">auto_now</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="n">field</span><span class="o">.</span><span class="n">auto_now_add</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">field</span><span class="o">.</span><span class="n">auto_now</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">field</span><span class="o">.</span><span class="n">auto_now_add</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">primary_key</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">unique</span><span class="p">:</span>
         <span class="c1"># Unique fields can no longer be guaranteed unique,</span>
         <span class="c1"># but they should still be indexed for faster lookups.</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">_unique</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">db_index</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">serialize</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">_unique</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">db_index</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">serialize</span> <span class="o">=</span> <span class="kc">True</span>
 
 
 <span class="k">def</span> <span class="nf">convert_auto_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
