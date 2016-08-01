@@ -654,7 +654,7 @@ if SHOW_DEBUG_TOOLBAR:
         # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
     ]
 
-    DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
+    DEBUG_TOOLBAR_CONFIG = {"DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
