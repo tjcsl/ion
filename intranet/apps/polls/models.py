@@ -131,7 +131,7 @@ class Question(models.Model):
         Access possible choices for this question through question.choice_set.all()
 
     """
-    poll = models.ForeignKey(Poll)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     question = models.CharField(max_length=500)
     num = models.IntegerField()
     STD = 'STD'
@@ -217,7 +217,7 @@ class Choice(models.Model):  # individual answer choices
 
     """
 
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     num = models.IntegerField()
     info = models.CharField(max_length=1000)
     std = models.BooleanField(default=False)
@@ -243,9 +243,9 @@ class Choice(models.Model):  # individual answer choices
 
 
 class Answer(models.Model):  # individual answer choices selected
-    question = models.ForeignKey(Question)
-    user = models.ForeignKey(User)
-    choice = models.ForeignKey(Choice, null=True)  # for multiple choice questions
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, null=True, on_delete=models.CASCADE)  # for multiple choice questions
     answer = models.CharField(max_length=10000, null=True)  # for free response
     clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
@@ -262,9 +262,9 @@ class Answer(models.Model):  # individual answer choices selected
 
 
 class AnswerVotes(models.Model):  # record of total selection of a given answer choice
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     users = models.ManyToManyField(User)
-    choice = models.ForeignKey(Choice)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
     is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers
 

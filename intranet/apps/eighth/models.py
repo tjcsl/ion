@@ -51,7 +51,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     online_attendance = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
 
@@ -632,8 +632,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     # Use model manager
     objects = EighthScheduledActivityManager()
 
-    block = models.ForeignKey(EighthBlock)
-    activity = models.ForeignKey(EighthActivity)
+    block = models.ForeignKey(EighthBlock, on_delete=models.CASCADE)
+    activity = models.ForeignKey(EighthActivity, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
 
     admin_comments = models.CharField(max_length=1000, blank=True)
@@ -1218,8 +1218,8 @@ class EighthSignup(AbstractBaseEighthModel):
 
     time = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=False)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True, on_delete=models.CASCADE)
 
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)

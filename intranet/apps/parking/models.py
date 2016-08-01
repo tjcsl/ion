@@ -4,7 +4,7 @@ from ..users.models import User
 
 
 class CarApplication(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, related_name="carapplication")
+    user = models.ForeignKey(User, null=True, blank=True, related_name="carapplication", on_delete=models.CASCADE)
     license_plate = models.CharField(max_length=20)
     make = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
@@ -17,8 +17,8 @@ class CarApplication(models.Model):
 
 
 class ParkingApplication(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication")
-    joint_user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication_joint")
+    user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication", on_delete=models.CASCADE)
+    joint_user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication_joint", on_delete=models.CASCADE)
     cars = models.ManyToManyField(CarApplication)
     email = models.CharField(max_length=50)
     mentorship = models.BooleanField(default=False)

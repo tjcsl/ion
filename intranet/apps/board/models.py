@@ -8,14 +8,14 @@ from ..users.models import User
 
 
 class Board(models.Model):
-    """A Board is a collection of BoardPosts for a specific eighth period activity, class, class
-    section, or group."""
+    """A Board is a collection of BoardPosts for a specific eighth period activity, class,
+    class section, or group."""
 
     # Identifiers
-    activity = models.OneToOneField(EighthActivity, null=True)
+    activity = models.OneToOneField(EighthActivity, null=True, on_delete=models.CASCADE)
     course_id = models.CharField(max_length=100, blank=True)
     section_id = models.CharField(max_length=100, blank=True)
-    group = models.OneToOneField(DjangoGroup, null=True)
+    group = models.OneToOneField(DjangoGroup, null=True, on_delete=models.CASCADE)
 
     posts = models.ManyToManyField("BoardPost", blank=True)
 
@@ -170,7 +170,7 @@ class BoardPost(models.Model):
     content = models.TextField(max_length=10000)
     safe_html = models.BooleanField(default=False)
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -200,7 +200,7 @@ class BoardPostComment(models.Model):
     """A BoardPostComment is a comment on a BoardPost by a user in a specific Board."""
 
     content = models.TextField(max_length=1000)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     added = models.DateTimeField(auto_now_add=True)
     safe_html = models.BooleanField(default=False)
 

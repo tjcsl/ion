@@ -19,7 +19,7 @@ class LDAPCourse(models.Model):
     course_title = models.CharField(max_length=100, blank=True)
     course_short_title = models.CharField(max_length=100, blank=True)
     teacher_name = models.CharField(max_length=100, blank=True)
-    teacher_user = models.ForeignKey(User, null=True, related_name="ionldap_course_teacher")
+    teacher_user = models.ForeignKey(User, null=True, related_name="ionldap_course_teacher", on_delete=models.CASCADE)
     room_name = models.CharField(max_length=100, blank=True)
     term_code = models.CharField(max_length=10, blank=True)
     period = models.IntegerField()
