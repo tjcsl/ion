@@ -31,7 +31,7 @@ class GCMNotification(models.Model):
     sent_data = models.CharField(max_length=10000)
     sent_to = models.ManyToManyField(NotificationConfig)
     time = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{} at {}".format(self.multicast_id, self.time)

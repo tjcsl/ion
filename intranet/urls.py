@@ -39,15 +39,15 @@ urlpatterns = [
     url(r"^emailfwd", include("intranet.apps.emailfwd.urls")),
     url(r"^parking", include("intranet.apps.parking.urls")),
     url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
-    url(r"^djangoadmin/", include(admin.site.urls)),
-    url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
+    url(r"^djangoadmin/", include(admin.site.urls[:2], namespace=admin.site.urls[2])),  # FIXME: update when admin supports django 1.10+ properly
+    url(r"^oauth/", include(("oauth2_provider.urls", "oauth2_provider"))),
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
-    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls[:2], namespace=debug_toolbar.urls[2]))]  # FIXME: update when debug_toobar supports django 1.10+ properly
 
 handler404 = handle_404_view
 handler500 = handle_500_view
