@@ -28,8 +28,8 @@ class Time(models.Model):
 
 class Block(models.Model):
     name = models.CharField(max_length=100)
-    start = models.ForeignKey('Time', related_name='blockstart')
-    end = models.ForeignKey('Time', related_name='blockend')
+    start = models.ForeignKey('Time', related_name='blockstart', on_delete=models.CASCADE)
+    end = models.ForeignKey('Time', related_name='blockend', on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
 
     def __str__(self):
@@ -91,7 +91,7 @@ class DayManager(models.Manager):
 class Day(models.Model):
     objects = DayManager()
     date = models.DateField(unique=True)
-    day_type = models.ForeignKey('DayType')
+    day_type = models.ForeignKey('DayType', on_delete=models.CASCADE)
     comment = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):

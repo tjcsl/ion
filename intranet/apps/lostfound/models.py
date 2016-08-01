@@ -4,7 +4,7 @@ from ..users.models import User
 
 
 class LostItem(models.Model):
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
     last_seen = models.DateField()
@@ -19,7 +19,7 @@ class LostItem(models.Model):
 
 
 class FoundItem(models.Model):
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
     found = models.DateField()

@@ -68,7 +68,7 @@ class GroupProperties(models.Model):
             Whether the group should be visible to students in group selections.
 
     """
-    group = models.OneToOneField(Group)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
     student_visible = models.BooleanField(default=False)
 
     def __str__(self):

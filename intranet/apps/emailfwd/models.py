@@ -4,7 +4,7 @@ from ..users.models import User
 
 
 class SeniorEmailForward(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
 
     def __str__(self):

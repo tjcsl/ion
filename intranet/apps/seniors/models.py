@@ -24,8 +24,8 @@ class SeniorManager(models.Manager):
 
 class Senior(models.Model):
     objects = SeniorManager()
-    user = models.OneToOneField(User)
-    college = models.ForeignKey(College, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    college = models.ForeignKey(College, blank=True, null=True, on_delete=models.CASCADE)
     MAJORS = [
         "Computer Science", "Engineering", "Education", "Mathematics", "Physics", "Biology", "Chemistry", "Geology", "History", "Literature",
         "English", "Other", "Language", "Drama/Theater", "Undecided", "Music", "Political Science", "Neuroscience", "Business", "Economics",
