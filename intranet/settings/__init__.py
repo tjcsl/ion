@@ -268,6 +268,14 @@ for name in LIST_OF_INDEPENDENT_CSS:
 AUTHENTICATION_BACKENDS = ("intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
                            "intranet.apps.auth.backends.KerberosAuthenticationBackend",
                            "oauth2_provider.backends.OAuth2Backend",)
+# Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
 
 # Use the custom User model defined in apps/users/models.py
 AUTH_USER_MODEL = "users.User"
