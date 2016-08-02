@@ -25,7 +25,11 @@ class KerberosCacheMiddleware(object):
 
     """
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
         """Propogate KRB5CCNAME session variable to the environmental variable."""
         if "KRB5CCNAME" in request.session:
             # It is important to check that the environmental variable
@@ -38,4 +42,4 @@ class KerberosCacheMiddleware(object):
             else:
                 logger.debug("KRB5CCNAME environmental variable not set - setting it to KRB5CCNAME from session vars.")
                 os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
-        return None
+        return response

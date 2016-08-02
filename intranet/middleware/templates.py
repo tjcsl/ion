@@ -11,8 +11,12 @@ logger = logging.getLogger(__name__)
 class StripNewlinesMiddleware(object):
     """Strip extra newlines from rendered templates to enhance readability."""
 
-    def process_response(self, request, response):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         """Process the response and strip extra newlines from HTML."""
+        response = self.get_response(request)
         is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
         if is_html and settings.DEBUG:
             response.content = re.sub(r'\n(\s*)\n', '\n', response.content.decode())
@@ -28,7 +32,11 @@ class AdminSelectizeLoadingIndicatorMiddleware(object):
 
     """
 
-    def process_response(self, request, response):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
         is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
         if is_html and request.path.startswith("/eighth/admin"):
             replacement = """</select>

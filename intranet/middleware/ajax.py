@@ -18,7 +18,11 @@ class AjaxNotAuthenticatedMiddleWare(object):
 
     """
 
-    def process_response(self, request, response):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
         if (request.is_ajax() and not request.user.is_authenticated and isinstance(response, HttpResponseRedirect)):
             response.status_code = 401
         return response

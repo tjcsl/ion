@@ -3,7 +3,10 @@
 
 class FixSlashes(object):
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         """Add or remove trailing slashes where needed.
 
         Note that there is no HTTP redirection actually happening. This
@@ -11,6 +14,7 @@ class FixSlashes(object):
         any URL patterns by changing the request's internal properties.
 
         """
+        response = self.get_response(request)
 
         # We can't remove slashes from these urls - they're included from
         # first/third party apps
@@ -30,3 +34,4 @@ class FixSlashes(object):
                 new_url = request.path.rstrip("/")
                 request.path_info = new_url
                 request.path = new_url
+        return response

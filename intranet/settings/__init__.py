@@ -311,7 +311,7 @@ if PRODUCTION:
 if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
@@ -319,8 +319,10 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "django.contrib.auth.middleware.SessionAuthenticationMiddleware",  # Django session auth
-    "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
-    "maintenancemode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
+    # FIXME: use oauth2_provider.middleware.Oauth2TokenMiddleware directly once it properly supports django 1.10+
+    "intranet.middleware.oauth2_provider.OAuth2TokenMiddleware",  # Django Oauth toolkit
+    # FIXME: use maintenancemode.middleware.MaintenanceModeMiddleware directly once it properly supports django 1.10+
+    "intranet.middleware.maintenancemode.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
@@ -329,10 +331,12 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
-    "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
+    # FIXME: use corsheaders.middleware.CorsMiddleware directly once it properly supports django 1.10+
+    "intranet.middleware.corsheaders.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
-    "simple_history.middleware.HistoryRequestMiddleware"
+    # FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+
+    "intranet.middleware.simple_history.HistoryRequestMiddleware"
 ]
 
 # URLconf at urls.py
@@ -662,9 +666,10 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
     # Add middleware
-    MIDDLEWARE_CLASSES.extend([
+    MIDDLEWARE.extend([
         "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
-        "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
+        # FIXME: use debug_toolbar.middleware.DebugToolbarMiddleware directly once it properly supports django 1.10+
+        "intranet.middleware.debug_toolbar.DebugToolbarMiddleware",  # Debug toolbar
     ])
 
     INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]

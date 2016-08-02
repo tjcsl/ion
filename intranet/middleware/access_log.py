@@ -7,7 +7,12 @@ logger = logging.getLogger("intranet_access")
 
 class AccessLogMiddleWare(object):
 
-    def process_response(self, request, response):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
         if request.user.is_anonymous:
             username = "anonymous_user"
         else:
