@@ -42,6 +42,6 @@ class PreferencesTest(IonTestCase):
         pref_dict.update(self.settings_dict)
         with self.assertLogs("intranet.apps.preferences.views", "DEBUG") as logger:
             response = self.client.post(reverse('preferences'), pref_dict)
-        self.assertNotEquals(logger.output,
-                             ["DEBUG:intranet.apps.preferences.views:Unable to set field phones with value []: Can not set User attribute 'phones' -- not in user attribute list."])
+        self.assertNotEqual(logger.output,
+                            ["DEBUG:intranet.apps.preferences.views:Unable to set field phones with value []: Can not set User attribute 'phones' -- not in user attribute list."])
         self.assertEqual(response.status_code, 200)
