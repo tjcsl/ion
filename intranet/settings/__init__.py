@@ -384,8 +384,6 @@ if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
 # may be removed in the future
 CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
 
-CACHEOPS_DEGRADE_ON_FAILURE = True
-
 # CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
 CACHEOPS = {
