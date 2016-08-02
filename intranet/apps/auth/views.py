@@ -101,7 +101,7 @@ def get_ap_week_warning(request):
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
     """Process and show the main login page or dashboard if logged in."""
-    if request.user.is_authenticated() and not force_login:
+    if request.user.is_authenticated and not force_login:
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()

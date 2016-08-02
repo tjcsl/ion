@@ -61,7 +61,7 @@ def mobile_app(request):
             registered = "appRegistered:False" in ua
             ctx["android_client_registered"] = registered
 
-            if request.user and request.user.is_authenticated():
+            if request.user and request.user.is_authenticated:
                 """Add/update NotificationConfig object."""
                 import binascii
                 import os

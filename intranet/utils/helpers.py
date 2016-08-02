@@ -26,7 +26,7 @@ def debug_toolbar_callback(request):
 
     if not hasattr(request, 'user'):
         return False
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return False
     if not request.user.is_staff:
         return False

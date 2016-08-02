@@ -6,7 +6,7 @@ from .utils import get_start_date
 def start_date(request):
     """Add the start date to the context for eighth admin views."""
 
-    if request.user.is_authenticated() and request.user.is_eighth_admin:
+    if request.user.is_authenticated and request.user.is_eighth_admin:
         return {"admin_start_date": get_start_date(request)}
 
     return {}
@@ -15,7 +15,7 @@ def start_date(request):
 def absence_count(request):
     """Add the absence count to the context for students."""
 
-    if request.user.is_authenticated() and request.user.is_student:
+    if request.user.is_authenticated and request.user.is_student:
         absence_info = request.user.absence_info()
         num_absences = absence_info.count()
         show_notif = False

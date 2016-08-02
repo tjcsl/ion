@@ -31,7 +31,7 @@ def check_show_eighth(now):
 
 def check_internal_ip(request):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
-    if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
+    if not request.user.is_authenticated and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
 

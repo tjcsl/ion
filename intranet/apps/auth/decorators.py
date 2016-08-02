@@ -13,7 +13,7 @@ def admin_required(group):
     """
 
     def in_admin_group(user):
-        return user.is_authenticated() and user.has_admin_permission(group)
+        return user.is_authenticated and user.has_admin_permission(group)
 
     return user_passes_test(in_admin_group)
 
@@ -30,4 +30,4 @@ events_admin_required = admin_required("events")
 board_admin_required = admin_required("board")
 
 #: Restrict the wrapped view to users who can take attendance
-attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous() and u.is_attendance_taker)
+attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous and u.is_attendance_taker)

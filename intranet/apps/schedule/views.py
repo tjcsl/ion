@@ -18,7 +18,7 @@ from .forms import DayForm, DayTypeForm
 from .models import Block, Day, DayType, Time
 
 logger = logging.getLogger(__name__)
-schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous() and u.has_admin_permission("schedule"))
+schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous and u.has_admin_permission("schedule"))
 
 
 def date_format(date):
@@ -90,7 +90,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
             date_today = None
             schedule_tomorrow = None
 
-        if request and request.user.is_authenticated() and request.user.is_eighth_admin:
+        if request and request.user.is_authenticated and request.user.is_eighth_admin:
             try:
                 schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
                 logger.debug("tomorrow: {}".format(schedule_tomorrow))
