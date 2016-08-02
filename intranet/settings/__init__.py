@@ -318,7 +318,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",  # Django session auth
     # FIXME: use oauth2_provider.middleware.Oauth2TokenMiddleware directly once it properly supports django 1.10+
     "intranet.middleware.oauth2_provider.OAuth2TokenMiddleware",  # Django Oauth toolkit
     # FIXME: use maintenancemode.middleware.MaintenanceModeMiddleware directly once it properly supports django 1.10+
