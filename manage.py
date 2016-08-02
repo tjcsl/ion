@@ -16,6 +16,7 @@ warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='oau
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='simple_history')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='rest_framework')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='cacheops')
+warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='pipeline')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")

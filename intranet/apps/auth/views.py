@@ -11,6 +11,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.templatetags.static import static
+from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
@@ -181,7 +182,7 @@ class LoginView(View):
 
             if not request.user.first_login:
                 logger.info("First login")
-                request.user.first_login = datetime.now()
+                request.user.first_login = make_aware(datetime.now())
                 request.user.save()
                 request.session["first_login"] = True
 
