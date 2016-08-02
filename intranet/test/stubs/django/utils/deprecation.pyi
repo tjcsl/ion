@@ -5,21 +5,35 @@
 from typing import Any
 
 class RemovedInDjango20Warning(PendingDeprecationWarning): ...
-class RemovedInDjango110Warning(DeprecationWarning): ...
-
-RemovedInNextVersionWarning = ... # type: Any
+class RemovedInNextVersionWarning(DeprecationWarning): ...
 
 class warn_about_renamed_method:
-    class_name = ... # type: Any
-    old_method_name = ... # type: Any
-    new_method_name = ... # type: Any
-    deprecation_warning = ... # type: Any
+    class_name = ...  # type: Any
+    old_method_name = ...  # type: Any
+    new_method_name = ...  # type: Any
+    deprecation_warning = ...  # type: Any
     def __init__(self, class_name, old_method_name, new_method_name, deprecation_warning): ...
     def __call__(self, f): ...
 
 class RenameMethodsBase(type):
-    renamed_methods = ... # type: Any
+    renamed_methods = ...  # type: Any
     def __new__(cls, name, bases, attrs): ...
 
 class DeprecationInstanceCheck(type):
     def __instancecheck__(self, instance): ...
+
+class CallableBool:
+    do_not_call_in_templates = ...  # type: Any
+    value = ...  # type: Any
+    def __init__(self, value): ...
+    def __bool__(self): ...
+    def __call__(self): ...
+    def __nonzero__(self): ...
+
+CallableFalse = ...  # type: Any
+CallableTrue = ...  # type: Any
+
+class MiddlewareMixin:
+    get_response = ...  # type: Any
+    def __init__(self, get_response=None): ...
+    def __call__(self, request): ...
