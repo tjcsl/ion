@@ -5,6 +5,7 @@ import logging
 from cacheops import invalidate_obj
 
 from django.contrib import messages
+from django.db.models.manager import Manager
 from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -86,7 +87,11 @@ def schedule_activity_view(request):
                     for field_name in fields:
                         obj = form.cleaned_data[field_name]
                         logger.debug("{} {}".format(field_name, obj))
-                        setattr(instance, field_name, obj)
+                        # Properly handle ManyToMany relations in django 1.10+
+                        if isinstance(getattr(instance, field_name), Manager):
+                            getattr(instance, field_name).set(obj)
+                        else:
+                            setattr(instance, field_name, obj)
 
                         if field_name in ["rooms", "sponsors"]:
                             for o in obj:
