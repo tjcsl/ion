@@ -653,7 +653,10 @@ if SHOW_DEBUG_TOOLBAR:
         # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
     ]
 
-    DEBUG_TOOLBAR_CONFIG = {"DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
+    # Only show debug toolbar when requested if in production.
+    DEBUG_TOOLBAR_CONFIG = {"DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled],
+                            "SHOW_TOOLBAR_CALLBACK": "intranet.utils.helpers.debug_toolbar_callback",
+                            }
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
@@ -665,8 +668,6 @@ if SHOW_DEBUG_TOOLBAR:
 
     INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]
 
-    # Only show debug toolbar when requested if in production.
-    DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.utils.helpers.debug_toolbar_callback"
 
 # Maintenance mode
 # This should be adjusted in secrets.py or by running:
