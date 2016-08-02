@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
                                    ('android_gcm_token', models.CharField(max_length=100, null=True, blank=True)),
                                    ('android_gcm_rand', models.CharField(max_length=100, null=True, blank=True)),
                                    ('android_gcm_time', models.DateTimeField(null=True, blank=True)),
-                                   ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                                   ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                                ],),
     ]

@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
                 ('notes', models.TextField()),
                 ('added', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('posted', models.ForeignKey(blank=True, to='announcements.Announcement', null=True)),
+                ('posted', models.ForeignKey(blank=True, to='announcements.Announcement', null=True, on_delete=models.CASCADE)),
                 ('teachers_approved', models.ManyToManyField(related_name='teachers_approved', to=settings.AUTH_USER_MODEL, blank=True)),
                 ('teachers_requested', models.ManyToManyField(related_name='teachers_requested', to=settings.AUTH_USER_MODEL, blank=True)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-added'],

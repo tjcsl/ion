@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
                             field=models.BooleanField(default=False),),
         migrations.AlterField(model_name='answer',
                               name='choice',
-                              field=models.ForeignKey(to='polls.Choice', null=True),),
+                              field=models.ForeignKey(to='polls.Choice', null=True, on_delete=models.CASCADE),),
         migrations.AlterField(
             model_name='question',
             name='type',

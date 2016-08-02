@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                                name='users_seen',),
         migrations.AddField(model_name='announcementusermap',
                             name='announcement',
-                            field=models.OneToOneField(to='announcements.Announcement'),),
+                            field=models.OneToOneField(to='announcements.Announcement', on_delete=models.CASCADE),),
         migrations.AddField(model_name='announcementusermap',
                             name='users_hidden',
                             field=models.ManyToManyField(related_name='announcements_hidden', to=settings.AUTH_USER_MODEL, blank=True),),

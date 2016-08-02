@@ -10,5 +10,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterField(model_name='eighthsponsor',
                                         name='user',
-                                        field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
+                                        field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
                                         preserve_default=True,)]

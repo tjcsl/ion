@@ -65,8 +65,8 @@ class Migration(migrations.Migration):
                 ('capacity', models.SmallIntegerField(null=True, blank=True)),
                 ('attendance_taken', models.BooleanField(default=False)),
                 ('cancelled', models.BooleanField(default=False)),
-                ('activity', models.ForeignKey(to='eighth.EighthActivity')),
-                ('block', models.ForeignKey(to='eighth.EighthBlock')),
+                ('activity', models.ForeignKey(to='eighth.EighthActivity', on_delete=models.CASCADE)),
+                ('block', models.ForeignKey(to='eighth.EighthBlock', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'eighth scheduled activities',
@@ -83,8 +83,8 @@ class Migration(migrations.Migration):
                 ('previous_activity_sponsors', models.CharField(max_length=100, blank=True)),
                 ('pass_accepted', models.BooleanField(default=False)),
                 ('was_absent', models.BooleanField(default=False)),
-                ('scheduled_activity', models.ForeignKey(related_name='eighthsignup_set', to='eighth.EighthScheduledActivity')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('scheduled_activity', models.ForeignKey(related_name='eighthsignup_set', to='eighth.EighthScheduledActivity', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=63)),
                 ('last_name', models.CharField(max_length=63)),
                 ('online_attendance', models.BooleanField(default=True)),
-                ('user', models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },

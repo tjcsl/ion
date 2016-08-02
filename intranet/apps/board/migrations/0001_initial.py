@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('class_id', models.CharField(max_length=100, blank=True)),
                 ('section_id', models.CharField(max_length=100, blank=True)),
-                ('activity', models.OneToOneField(null=True, to='eighth.EighthActivity')),
-                ('group', models.OneToOneField(null=True, to='auth.Group')),
+                ('activity', models.OneToOneField(null=True, to='eighth.EighthActivity', on_delete=models.CASCADE)),
+                ('group', models.OneToOneField(null=True, to='auth.Group', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('content', models.TextField(max_length=1000)),
                 ('added', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='boardpost',
             name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='board',

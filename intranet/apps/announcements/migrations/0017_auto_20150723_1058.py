@@ -9,4 +9,4 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterField(model_name='announcementusermap',
                                         name='announcement',
-                                        field=models.OneToOneField(related_name='_user_map', to='announcements.Announcement'),)]
+                                        field=models.OneToOneField(related_name='_user_map', to='announcements.Announcement', on_delete=models.CASCADE),)]
