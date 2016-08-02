@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 class CheckLDAPBindMiddleware:
 
-    def process_response(self, request, response):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
         bypass = False
         if not hasattr(request, "user"):
             logger.debug("check LDAP bind - No user object")

@@ -20,6 +20,22 @@ intranet.middleware.ajax module
     :undoc-members:
     :show-inheritance:
 
+intranet.middleware.corsheaders module
+--------------------------------------
+
+.. automodule:: intranet.middleware.corsheaders
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.middleware.debug_toolbar module
+----------------------------------------
+
+.. automodule:: intranet.middleware.debug_toolbar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.email_handler module
 ----------------------------------------
 
@@ -44,10 +60,34 @@ intranet.middleware.ldap_db module
     :undoc-members:
     :show-inheritance:
 
+intranet.middleware.maintenancemode module
+------------------------------------------
+
+.. automodule:: intranet.middleware.maintenancemode
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.middleware.oauth2_provider module
+------------------------------------------
+
+.. automodule:: intranet.middleware.oauth2_provider
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.profiler module
 -----------------------------------
 
 .. automodule:: intranet.middleware.profiler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.middleware.simple_history module
+-----------------------------------------
+
+.. automodule:: intranet.middleware.simple_history
     :members:
     :undoc-members:
     :show-inheritance:
