@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from ....eighth.models import User
 from ....groups.models import Group
 
 
 class Command(BaseCommand):
-    args = "<username> <admin_group>"
     help = "Adds the specified user to the specified admin group"
 
-    def handle(self, *args, **options):
-        if len(args) != 2:
-            raise CommandError("Command expects 2 arguments")
+    def add_arguments(self, parser):
+        parser.add_argument('username')
+        parser.add_argument('admin_group')
 
-        username, admin_group = args
-        g = Group.objects.get_or_create(name="admin_" + admin_group)[0]
-        User.get_user(username=username).groups.add(g)
-        self.stdout.write('Added %s to %s' % (username, admin_group))
+    def handle(self, *args, **options):
+        g = Group.objects.get_or_create(name="admin_%s" % options['admin_group'])[0]
+        User.get_user(username=options['username']).groups.add(g)
+        self.stdout.write('Added %s to %s' % (options['username'], options['admin_group']))
