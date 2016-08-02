@@ -13,6 +13,7 @@ from django.core import exceptions
 from django.core.cache import cache
 from django.core.signing import Signer
 from django.db import models
+from django.utils import timezone
 
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
@@ -294,7 +295,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         user.username = user.ion_username
 
                         user.set_unusable_password()
-                        user.last_login = datetime(9999, 1, 1)
+                        user.last_login = timezone.make_aware(datetime(9999, 1, 1))
 
                         user.save()
                     else:
