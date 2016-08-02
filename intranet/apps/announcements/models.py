@@ -5,6 +5,7 @@ from datetime import datetime
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+from django.utils import timezone
 
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
@@ -104,7 +105,7 @@ class Announcement(models.Model):
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
-    expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
+    expiration_date = models.DateTimeField(auto_now=False, default=timezone.make_aware(datetime(3000, 1, 1)))
 
     notify_post = models.BooleanField(default=True)
     notify_email_all = models.BooleanField(default=False)
@@ -209,7 +210,7 @@ class AnnouncementRequest(models.Model):
     content = models.TextField()
     author = models.CharField(max_length=63, blank=True)
 
-    expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
+    expiration_date = models.DateTimeField(auto_now=False, default=timezone.make_aware(datetime(3000, 1, 1)))
     notes = models.TextField(blank=True)
 
     added = models.DateTimeField(auto_now_add=True)
