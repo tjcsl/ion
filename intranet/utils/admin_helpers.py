@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 def export_csv_action(description="Export selected objects as CSV file",
                       fields=None, exclude=None, header=True):
-    """This function returns an export csv action
+    """This function returns an export csv action.
 
     'fields' and 'exclude' work like in django
 
