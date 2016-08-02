@@ -69,8 +69,8 @@ class Migration(migrations.Migration):
                                    ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                                    ('college_sure', models.BooleanField(default=False)),
                                    ('major_sure', models.BooleanField(default=False)),
-                                   ('college', models.ForeignKey(to='seniors.College')),
-                                   ('major', models.ForeignKey(to='seniors.Major')),
-                                   ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                                   ('college', models.ForeignKey(to='seniors.College', on_delete=models.CASCADE)),
+                                   ('major', models.ForeignKey(to='seniors.Major', on_delete=models.CASCADE)),
+                                   ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                                ],),
     ]

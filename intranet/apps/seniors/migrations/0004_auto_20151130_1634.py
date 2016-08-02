@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(model_name='senior',
                               name='college',
-                              field=models.ForeignKey(to='seniors.College', null=True),),
+                              field=models.ForeignKey(to='seniors.College', null=True, on_delete=models.CASCADE),),
         migrations.AlterField(
             model_name='senior',
             name='major',

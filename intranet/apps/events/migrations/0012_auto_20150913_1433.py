@@ -10,4 +10,4 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterField(model_name='event',
                                         name='approved_by',
-                                        field=models.ForeignKey(related_name='rejected_event', to=settings.AUTH_USER_MODEL, null=True),)]
+                                        field=models.ForeignKey(related_name='rejected_event', to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),)]

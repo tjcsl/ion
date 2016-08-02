@@ -10,4 +10,4 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AddField(model_name='announcement',
                                       name='user',
-                                      field=models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL),)]
+                                      field=models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),)]

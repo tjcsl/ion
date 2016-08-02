@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
                             field=models.BooleanField(default=False),),
         migrations.AddField(model_name='event',
                             name='approved_by',
-                            field=models.ForeignKey(related_name='approved_by', to=settings.AUTH_USER_MODEL, null=True),),
+                            field=models.ForeignKey(related_name='approved_by', to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),),
         migrations.AddField(model_name='event',
                             name='rejected',
                             field=models.BooleanField(default=False),),

@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
                                    ('sent_data', models.CharField(max_length=10000)),
                                    ('time', models.DateTimeField(auto_now=True)),
                                    ('sent_to', models.ManyToManyField(to='notifications.NotificationConfig')),
-                                   ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                                   ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                                ],),
     ]

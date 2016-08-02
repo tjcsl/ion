@@ -33,6 +33,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='groupproperties',
             name='group',
-            field=models.OneToOneField(to='groups.Group'),
+            field=models.OneToOneField(to='groups.Group', on_delete=models.CASCADE),
         ),
     ]

@@ -9,4 +9,4 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterField(model_name='event',
                                         name='announcement',
-                                        field=models.ForeignKey(related_name='event', blank=True, to='announcements.Announcement', null=True),)]
+                                        field=models.ForeignKey(related_name='event', blank=True, to='announcements.Announcement', null=True, on_delete=models.CASCADE),)]
