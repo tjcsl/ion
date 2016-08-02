@@ -543,7 +543,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
-            if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated():
+            if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated:
                 return False
             can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
         except (AttributeError, KeyError) as e:
@@ -1164,7 +1164,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
-            if request and request.user and request.user.is_authenticated():
+            if request and request.user and request.user.is_authenticated:
                 requesting_user_id = request.user.id
                 if BACKEND_SESSION_KEY not in request.session:
                     logger.warning("Backend session key not in session")

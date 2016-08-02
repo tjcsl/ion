@@ -22,7 +22,7 @@ class CheckLDAPBindMiddleware:
             logger.debug("check LDAP bind - no backend session")
             bypass = True
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             logger.debug("check LDAP bind - not authenticated")
             bypass = True
 

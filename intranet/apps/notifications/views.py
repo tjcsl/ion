@@ -59,7 +59,7 @@ def chrome_getdata_view(request):
 
     """
     data = {}
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # authenticated session
         notifs = GCMNotification.objects.filter(sent_to__user=request.user).order_by("-time")
         if notifs.count() > 0:

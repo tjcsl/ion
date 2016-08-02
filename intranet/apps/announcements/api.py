@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class IsAnnouncementAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated() and
+        return (request.user and request.user.is_authenticated and
                 (request.method in permissions.SAFE_METHODS or request.user.is_announcements_admin))
 
 

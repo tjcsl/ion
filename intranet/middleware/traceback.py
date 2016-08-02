@@ -12,7 +12,7 @@ class UserTracebackMiddleware(object):
     """
 
     def process_exception(self, request, exception):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             request.META["AUTH_USER"] = "{}".format(request.user.username)
         else:
             request.META["AUTH_USER"] = "(anonymous user)"
