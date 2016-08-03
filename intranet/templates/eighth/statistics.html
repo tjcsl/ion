@@ -76,6 +76,23 @@
     <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
 
     <h3>Activity Information</h3>
+    {% if activity.sponsors.count > 0 %}
+        <b>Default Sponsors:</b>
+        {% for sponsor in activity.sponsors.all %}
+            {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}<br />
+    {% endif %}
+
+    {% if activity.rooms.count > 0 %}
+        <b>Default Rooms:</b>
+        {% for room in activity.rooms.all %}
+            {{ room }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}<br />
+    {% endif %}
+
+    {% if activity.sponsors.count > 0 or activity.rooms.count > 0 %}
+        <br />
+    {% endif %}
 
     <b>Total blocks:</b> {{ total_blocks }}<br />
     <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br />
