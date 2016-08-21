@@ -117,7 +117,10 @@ def gcm_list_view(request):
     gcm_notifs = GCMNotification.objects.all().order_by("-time")
     posts = []
     for n in gcm_notifs:
-        posts.append({"gcm": n, "data": json.loads(n.sent_data)["data"]})
+        data = json.loads(n.sent_data)
+        if "data" not in data:
+            continue
+        posts.append({"gcm": n, "data": data["data"]})
 
     context = {"posts": posts}
 
