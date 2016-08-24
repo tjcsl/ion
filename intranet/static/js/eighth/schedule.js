@@ -165,7 +165,8 @@ $(function() {
     $(".schedule-form input[type='submit']").click(function(e) {
         var activities = "";
         $("tr.form-row:not(.hidden)").each(function(i, el) {
-            if (!$("td[data-field='sponsors'] .selectize-input", el).hasClass("has-items")) {
+            var input = $("td[data-field='sponsors'] .selectize-input", el);
+            if (!input.hasClass("has-items") && input.attr('placeholder') != "No default") {
                 activities += "\n    " + $(".block-name a.ui-link", el).text().trim();
             }
         });
