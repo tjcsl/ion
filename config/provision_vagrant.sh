@@ -93,9 +93,11 @@ master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
 grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
 
+# cffi needs to be installed before we can install argon2-cffi (in requirements.txt)
 sudo -i -u ubuntu bash -c "
     source /etc/ion_env_setup.sh &&
     mkvirtualenv --python=python3 ion && workon ion &&
+    pip install cffi &&
     pip install -U -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate
