@@ -191,6 +191,10 @@ class LoginView(View):
                 else:
                     pass  # exclude eighth office/special accounts
 
+            # if the student has not seen the 8th agreement yet, redirect them
+            if request.user.is_student and not request.user.seen_welcome:
+                return redirect("welcome")
+
             next_page = request.POST.get("next", request.GET.get("next", default_next_page))
             return redirect(next_page)
         else:

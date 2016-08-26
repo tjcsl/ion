@@ -424,7 +424,7 @@ def add_widgets_context(request, context):
 
 
 @login_required
-def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None):
+def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None, show_welcome=False):
     """Process and show the dashboard, which includes activities, events, and widgets."""
 
     user = request.user
@@ -542,4 +542,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "self_awaiting_teacher": self_awaiting_teacher
     })
 
-    return render(request, "dashboard/dashboard.html", context)
+    if show_welcome:
+        return render(request, "welcome/student.html", context)
+    else:
+        return render(request, "dashboard/dashboard.html", context)
