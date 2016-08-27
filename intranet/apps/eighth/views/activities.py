@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
+from django.db.models import Count
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ..utils import get_start_date
@@ -60,9 +62,15 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name="Indent", leftIndent=15))
 
+    empty_activities = []
+
     for act in activities:
         lelements = []
         relements = []
+        act_stats = calculate_statistics(act, start_date=start_date, all_years=all_years)
+        if act_stats["total_blocks"] == 0:
+            empty_activities.append(act.name)
+            continue
         elements.append(Paragraph(act.name, styles["Title"]))
         sponsor_str = (", ".join([x.name for x in act.sponsors.all()])) if act.sponsors.count() > 0 else "None"
         lelements.append(Paragraph("<b>Default Sponsors:</b> " + sponsor_str, styles["Normal"]))
@@ -71,7 +79,6 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
         relements.append(Paragraph("<b>Default Rooms:</b> " + room_str, styles["Normal"]))
         relements.append(Spacer(0, 0.025 * inch))
 
-        act_stats = calculate_statistics(act, start_date=start_date, all_years=all_years)
         relements.append(Paragraph("<b>Total blocks:</b> {}".format(act_stats["total_blocks"]), styles["Normal"]))
         relements.append(Paragraph("<b>Scheduled blocks:</b> {}".format(act_stats["scheduled_blocks"]), styles["Indent"]))
         relements.append(Paragraph("<b>Empty blocks:</b> {}".format(act_stats["empty_blocks"]), styles["Indent"]))
@@ -104,6 +111,23 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
 
         elements.append(PageBreak())
 
+    if empty_activities:
+        empty_activities = [[x] for x in empty_activities]
+        empty_activities = list(chunks(empty_activities, 30))
+        empty_activities = [[["Activity"]] + x for x in empty_activities]
+        empty_activities = [Table(x, style=[
+            ('FONT', (0, 0), (-1, 0), 'Helvetica-Bold')
+        ]) for x in empty_activities]
+        for i in range(0, len(empty_activities), 2):
+            elements.append(Paragraph("Empty Activities (Page {})".format(i//2), styles["Title"]))
+            elements.append(Paragraph("The following activities have no 8th period blocks assigned to them.", styles["Normal"]))
+            elements.append(Spacer(0, 0.20 * inch))
+            ea = [empty_activities[i]]
+            if i + 1 < len(empty_activities):
+                ea.append(empty_activities[i + 1])
+            elements.append(Table([ea], style=[('VALIGN', (-1, -1), (-1, -1), 'TOP')]))
+            elements.append(PageBreak())
+
     def firstPage(canvas, doc):
         if len(activities) == 1:
             canvas.setTitle("{} Statistics".format(activities[0].name))
@@ -124,8 +148,8 @@ def calculate_statistics(activity, start_date=None, all_years=False):
 
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
-    signups = {}
-    chart_data = {}
+    signups = defaultdict(int)
+    chart_data = defaultdict(dict)
 
     old_blocks = 0
     cancelled_blocks = 0
@@ -133,16 +157,15 @@ def calculate_statistics(activity, start_date=None, all_years=False):
 
     past_start_date = 0
 
-    filtered_activities = []
-
-    for a in activities:
-        if a.block.is_this_year or all_years:
-            if a.block.date > start_date:
-                past_start_date += 1
-                continue
-            filtered_activities.append(a)
-        else:
-            old_blocks += 1
+    filtered_activities = activities.filter(block__date__lt=start_date)
+    past_start_date = activities.count() - filtered_activities.count()
+    year_filtered_activities = []
+    if not all_years:
+        for a in filtered_activities:
+            if a.block.is_this_year:
+                year_filtered_activities.append(a)
+        old_blocks = filtered_activities.count() - len(year_filtered_activities)
+        filtered_activities = year_filtered_activities
 
     activities = filtered_activities
 
@@ -152,14 +175,9 @@ def calculate_statistics(activity, start_date=None, all_years=False):
         else:
             members = a.members.count()
             for user in a.members.all():
-                if user in signups:
-                    signups[user] += 1
-                else:
-                    signups[user] = 1
-            if str(a.block.date) not in chart_data:
-                chart_data[str(a.block.date)] = {}
+                signups[user] += 1
             chart_data[str(a.block.date)][str(a.block.block_letter)] = members
-            if members == 0 and not a.cancelled:
+            if members == 0:
                 empty_blocks += 1
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
