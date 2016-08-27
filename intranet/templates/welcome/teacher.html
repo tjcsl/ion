@@ -1,177 +1,45 @@
-{% extends "page_with_nav.html" %}
+{% extends "welcome/base.html" %}
 {% load static %}
 
-{% block title %}
-    {{ block.super }} - Welcome
-{% endblock %}
-
-{% block css %}
+{% block step1 %}
     {{ block.super }}
-    <style type="text/css">
-    .primary-content {
-        max-width: 800px;
-    }
-
-    .primary-content#step-2 {
-        display: none;
-    }
-
-    .credit-text {
-        display: table;
-        font-size: 10px;
-    }
-
-    .credit-section {
-        display: table-cell;
-        padding: 5px 10px;
-    }
-
-    img.mobile {
-        zoom: 0.6;
-    }
-
-    .mobile-only {
-        display: none;
-    }
-
-    @media (max-width: 750px) {
-        img.mobile {
-            margin-left: -250px;
-        }
-
-        .mobile-only img.mobile {
-            margin-left: 0;
-        }
-    }
-
-    @media (max-width: 600px) {
-        img.desktop {
-            zoom: 0.9;
-        }
-
-        img.mobile {
-            zoom: 0.5;
-        }
-    }
-
-    @media (max-width: 550px) {
-        img.desktop {
-            display: none;
-        }
-
-        img.mobile {
-            zoom: 0.75;
-            margin-left: 0;
-        }
-
-        .mobile-only {
-            display: inline;
-        }
-
-        .desktop-only {
-            display: none;
-        }
-    }
-
-    @media (max-width: 700px) {
-        .credit-section {
-            display: block;
-        }
-    }
-    </style>
+    <center>
+        <button id="continue-step-1" class="continue-step-1">How to Navigate <i class="fa fa-chevron-right"></i></button>
+    </center>
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
-    <script type="text/javascript">
-    $(function() {
-        $(".continue-step-1").click(function() {
-            $(".primary-content#step-1").hide();
-            $(".primary-content#step-2").show();
-            $(document).scrollTo("0px");
-        });
+{% block step2 %}
+    <h2>
+        How to Navigate
+    </h2>
 
-        $(".skip-tutorial").click(function() {
-            $(document).scrollTo("#about-intranet");
-        });
+    <p>Intranet is fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
 
-        $(".continue-step-2").click(function() {
-            location.href = "/welcome/done";
-        })
-    })
-    </script>
+    <p>For detailed instructions on using the Ion teacher interface, press the <b>Help</b> button on the left-side navigation, or ask 8th Period Office Coordinator Joan Burch.</p>
+
+    <center>
+        <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fa fa-chevron-right"></i></button>
+    </center>
 {% endblock %}
 
-{% block main %}
-    <div class="primary-content" id="step-1">
-        <h2>Welcome to the TJ Intranet</h2>
-        <p>The TJ Intranet gives you access to eighth period attendance, announcements, directory information, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
+{% block step3 %}
+    <h2>About Intranet</h2>
 
-        <p>Logged in as: {{ request.user.full_name }}</p>
-        <p>Email addresses on file:</p>
-        <ul>
-            {% for email in request.user.emails %}
-            {% if email != request.user.tj_email %}
-                <li>{{ email }}</li>
-            {% endif %}
-            {% empty %}
-            <li>(No custom addresses)</li>
-            {% endfor %}
-            {% if request.user.emails|length == 1 and request.user.emails.0 == request.user.tj_email %}
-                <li>(No custom addresses)</li>
-            {% endif %}
-        </ul>
-        
-        <br />
+    <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
 
-        {% if request.user.tj_email %}
-            <p>Your FCPS/TJ email is: <b>{{ request.user.tj_email }}</b></p>
-        {% endif %}
+    <div class="ion-welcome-logo"></div>
 
-        <p>Please make sure these are all addresses that are correct. Students who view this information on your profile will often expect to be able to reach you with the information listed. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
+    <br /><br /><br />
+    <br /><br /><br />
+    <br />
 
-        <center>
-            <button id="continue-step-1" class="continue-step-1">What's New in Ion <i class="fa fa-arrow-right"></i></button>
-        </center>
-    </div>
+    {% include "credits.html" %}
 
-    <div class="primary-content" id="step-2">
-        <h2>
-            How to Navigate &nbsp; &nbsp;
-            <button class="skip-tutorial small-button">Skip tutorial</button>
-        </h2>
-
-        
-
-        <div class="mobile-only">
-            <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
-            <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" class="mobile" />
-            <br />
-            <br />
-        </div>
-
-        <div class="desktop-only">
-            <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
-        </div>
-        For detailed instructions on using the Ion teacher interface, press the <b>Help</b> button on the left-side navigation, or <a href="/static/teacher-guide.pdf">click here</a>.
-
-        <br />
-        <br />
-        <br />
-
-        <h2>About Intranet</h2>
-
-        <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, is now ready to be used during the 2015-2016 school year. While the application has now been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
-
-        {% include "credits.html" %}
-
-        <br />
-        <br />
-        <p><b>Teachers,</b> we are looking for your feedback in order to make your experience better. As students, we have attempted to make the teacher-specific features easier to use, but you are the ones who use this functionality on a daily basis. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, or email <a href="mailto:intranet@tjhsst.edu" target="_blank">intranet@tjhsst.edu</a> with your questions, comments, and concerns. Thanks!</p>
-        <p>Thanks for reading and have a great year!</p>
-        <center>
-            <button id="continue-step-2" class="continue-step-2"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</button>
-        </center>
-    </div>
+    <br />
+    <br />
+    <p><b>Teachers,</b> we are looking for your feedback in order to make your experience better. As students, we have attempted to make the teacher-specific features easier to use, but you are the ones who use this functionality on a daily basis. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, or email <a href="mailto:intranet@tjhsst.edu" target="_blank">intranet@tjhsst.edu</a> with your questions, comments, and concerns. Thanks!</p>
+    <p>Thanks for reading and have a great year!</p>
+    <center>
+        <button id="continue-step-2" class="continue-step-2"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</button>
+    </center>
 {% endblock %}

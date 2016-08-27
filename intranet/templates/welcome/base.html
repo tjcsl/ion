@@ -21,6 +21,7 @@
 <div id="welcome-container">
     <div id="welcome">
         <div id="ion-welcome">
+            {% block welcome %}
             <br />
             <br />
             <h2>
@@ -29,10 +30,37 @@
             <div class="ion-welcome-logo"></div>
             <div class="ion-welcome-icons"></div>
             <button id="ion-welcome-continue" class="ion-welcome-continue">
-                Continue <i class="fa fa-chevron-right"></i></button>
+                Continue <i class="fa fa-chevron-right"></i>
+            </button>
+            {% endblock %}
         </div>
         <div id="step-1">
             {% block step1 %}
+                <h2>Welcome to the TJ Intranet</h2>
+                <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
+
+                <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+                <p>Email addresses on file:</p>
+                <ul>
+                    {% for email in request.user.emails %}
+                    <li>{{ email }}</li>
+                    {% empty %}
+                    <li>(No custom addresses)</li>
+                    {% endfor %}
+                </ul>
+
+                <br />
+
+                {% if request.user.emails %}
+                <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
+                {% else %}
+                <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>
+                {% endif %}
+
+
+                <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
+
+                <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
             {% endblock %}
         </div>
 

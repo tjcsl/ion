@@ -2,33 +2,9 @@
 {% load static %}
 
 {% block step1 %}
-    <h2>Welcome to the TJ Intranet</h2>
-    <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
-
-    <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
-    <p>Email addresses on file:</p>
-    <ul>
-        {% for email in request.user.emails %}
-        <li>{{ email }}</li>
-        {% empty %}
-        <li>(No custom addresses)</li>
-        {% endfor %}
-    </ul>
-
-    <br />
-
-    {% if request.user.emails %}
-    <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
-    {% else %}
-    <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>
-    {% endif %}
-
-
-    <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
-
-    <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
+    {{ block.super }}
     <center>
-        <button id="continue-step-1" class="continue-step-1">Eighth Period Policies <i class="fa fa-chevron-right"></i></button>
+        <button id="continue-step-1" class="continue-step-1-policy">Eighth Period Policies <i class="fa fa-chevron-right"></i></button>
     </center>
 {% endblock %}
 
@@ -49,9 +25,7 @@
         </div>
     </div>
     <div class="brs">
-        <br />
-        <br />
-        <br />
+        <br /><br /><br />
     </div>
     <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as your current eighth period signups. To sign up for a block of eighth period, click the "Sign Up" button on the widget. If you have already selected an activity for this block, you may select "Change."</p>
 
@@ -81,8 +55,7 @@
 
     <br />
     <div class="brs">
-        <br />
-        <br />
+        <br /><br />
     </div>
 
     <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
@@ -90,18 +63,12 @@
     <img src="{% static 'img/promo/search-results-small.png' %}" alt="Student directory searching" class="desktop" align="right" />
     <br />
     <div class="brs">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <br /><br /><br />
+        <br /><br />
     </div>
     <p>After selecting a user, you will be able to view their personal information, class, and eighth period schedule, if they have decided to share this information publicly. You also have the capability to restrict other students from viewing your information; visit the Preferences page to change what others can see on your profile.</p>
     <img src="{% static 'img/promo/profile.png' %}" alt="User profile" class="desktop" float="left" />
-
-    <span id="about-intranet" name="about-intranet"></span>
-    <br />
-    <br />
+    <br /><br /><br />
     <center>
         <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fa fa-chevron-right"></i></button>
     </center>
@@ -111,6 +78,12 @@
     <h2>About Intranet</h2>
 
     <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
+
+    <div class="ion-welcome-logo"></div>
+
+    <br /><br /><br />
+    <br /><br /><br />
+    <br />
 
     {% include "credits.html" %}
 
