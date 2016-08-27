@@ -456,7 +456,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def next_blocks(self, quantity=-1):
         """Get the next blocks in order."""
-        blocks = (EighthBlock.objects.order_by(
+        blocks = (EighthBlock.objects.get_blocks_this_year().order_by(
             "date", "block_letter").filter(Q(date__gt=self.date) | (Q(date=self.date) & Q(block_letter__gt=self.block_letter))))
         if quantity == -1:
             return blocks
@@ -464,7 +464,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def previous_blocks(self, quantity=-1):
         """Get the previous blocks in order."""
-        blocks = (EighthBlock.objects.order_by(
+        blocks = (EighthBlock.objects.get_blocks_this_year().order_by(
             "-date", "-block_letter").filter(Q(date__lt=self.date) | (Q(date=self.date) & Q(block_letter__lt=self.block_letter))))
         if quantity == -1:
             return reversed(blocks)

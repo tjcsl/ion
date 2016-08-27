@@ -508,6 +508,7 @@ INSTALLED_APPS = [
     "intranet.apps.lostfound",
     "intranet.apps.emailfwd",
     "intranet.apps.parking",
+    "intranet.apps.dataimport",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
@@ -697,11 +698,16 @@ GIT = {
     "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT)
 }
 
-# Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = datetime.datetime(year=2016, month=6, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
 
 # Senior graduation year
-SENIOR_GRADUATION_YEAR = 2016
+SENIOR_GRADUATION_YEAR = 2017
+
+# Senior graduation date in Javascript-readable format
+SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
+
+# Month (1-indexed) after which a new school year begins
+# 7 = July
+YEAR_TURNOVER_MONTH = 7
 
 # The hour on an eighth period day to lock teachers from
 # taking attendance (10PM)

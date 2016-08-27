@@ -1973,7 +1973,7 @@ class Grade(object):
     @classmethod
     def grade_from_year(cls, graduation_year):
         today = datetime.now()
-        if today.month >= 7:
+        if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
         else:
             current_senior_year = today.year
@@ -1983,7 +1983,7 @@ class Grade(object):
     @classmethod
     def year_from_grade(cls, grade):
         today = datetime.now()
-        if today.month >= 7:
+        if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
         else:
             current_senior_year = today.year
