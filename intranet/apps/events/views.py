@@ -48,9 +48,9 @@ def events_view(request):
             messages.success(request, "Rejected event {}".format(event))
 
     if is_events_admin and "show_all" in request.GET:
-        viewable_events = (Event.objects.prefetch_related("groups"))
+        viewable_events = (Event.objects.all().this_year().prefetch_related("groups"))
     else:
-        viewable_events = (Event.objects.visible_to_user(request.user).prefetch_related("groups"))
+        viewable_events = (Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups"))
 
     # get date objects for week and month
     today = datetime.date.today()

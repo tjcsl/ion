@@ -9,9 +9,19 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 
 from ..users.models import User
+from ...utils.date import get_date_range_this_year
+
+
+class PollQuerySet(models.QuerySet):
+    def this_year(self):
+        """ Get AnnouncementRequests from this school year only. """
+        start_date, end_date = get_date_range_this_year()
+        return self.filter(start_time__gte=start_date, start_time__lte=end_date)
 
 
 class PollManager(Manager):
+    def get_queryset(self):
+        return PollQuerySet(self.model, using=self._db)
 
     def visible_to_user(self, user):
         """Get a list of visible polls for a given user (usually request.user).

@@ -327,8 +327,16 @@ class EighthActivity(AbstractBaseEighthModel):
     def __str__(self):
         return self.name_with_flags
 
+class EighthBlockQuerySet(models.QuerySet):
+    def this_year(self):
+        """ Get EighthBlocks from this school year only. """
+        start_date, end_date = get_date_range_this_year()
+        return self.filter(date__gte=start_date, date__lte=end_date)
 
 class EighthBlockManager(models.Manager):
+
+    def get_queryset(self):
+        return EighthBlockQuerySet(self.model, using=self._db)
 
     def get_upcoming_blocks(self, max_number=-1):
         """Gets the X number of upcoming blocks (that will take place in the future). If there is no

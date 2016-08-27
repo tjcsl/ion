@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import Manager, Q
 
 from ..users.models import User
-from ...utils.date import is_current_year
+from ...utils.date import is_current_year, get_date_range_this_year
 
 
 class AnnouncementManager(Manager):
@@ -38,6 +38,12 @@ class AnnouncementManager(Manager):
         """
         ids = user.announcements_hidden.all().values_list("announcement__id")
         return Announcement.objects.filter(id__in=ids)
+
+
+    def this_year(self):
+        """ Get AnnouncementRequests from this school year only. """
+        start_date, end_date = get_date_range_this_year()
+        return Announcement.objects.filter(added__gte=start_date, added__lte=end_date)
 
 
 class AnnouncementUserMap(models.Model):
@@ -120,7 +126,7 @@ class Announcement(models.Model):
 
     @property
     def is_this_year(self):
-        """Return whether the announcement was created after September 1st of this school year."""
+        """Return whether the announcement was created after July 1st of this school year."""
         return is_current_year(self.added.date())
 
     def is_visible(self, user):
@@ -151,6 +157,14 @@ class Announcement(models.Model):
 
     class Meta:
         ordering = ["-pinned", "-added"]
+
+
+class AnnouncementRequestManager(Manager):
+
+    def this_year(self):
+        """ Get AnnouncementRequests from this school year only. """
+        start_date, end_date = get_date_range_this_year()
+        return AnnouncementRequest.objects.filter(added__gte=start_date, added__lte=end_date)
 
 
 class AnnouncementRequest(models.Model):
@@ -185,6 +199,8 @@ class AnnouncementRequest(models.Model):
             Intranet administrator to post the announcement.
 
     """
+
+    objects = AnnouncementRequestManager()
 
     title = models.CharField(max_length=127)
     content = models.TextField()

@@ -10,7 +10,7 @@ from .notifications import event_approval_request
 from ..announcements.models import Announcement
 from ..eighth.models import EighthScheduledActivity
 from ..users.models import User
-from ...utils.date import is_current_year
+from ...utils.date import is_current_year, get_date_range_this_year
 
 
 class Link(models.Model):
@@ -19,7 +19,16 @@ class Link(models.Model):
     title = models.CharField(max_length=100)
 
 
+class EventQuerySet(models.QuerySet):
+    def this_year(self):
+        """ Get Events from this school year only. """
+        start_date, end_date = get_date_range_this_year()
+        return self.filter(added__gte=start_date, added__lte=end_date)
+
+
 class EventManager(Manager):
+    def get_queryset(self):
+        return EventQuerySet(self.model, using=self._db)
 
     def visible_to_user(self, user):
         """Get a list of visible events for a given user (usually request.user).
