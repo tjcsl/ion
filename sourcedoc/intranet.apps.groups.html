@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.groups package &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>intranet.apps.groups package &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.ionldap package" href="intranet.apps.ionldap.html" />
     <link rel="prev" title="intranet.apps.files package" href="intranet.apps.files.html" />
@@ -168,7 +168,7 @@
 <span id="intranet-apps-groups-forms-module"></span><h2>intranet.apps.groups.forms module<a class="headerlink" href="#module-intranet.apps.groups.forms" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.groups.forms.GroupForm">
-<em class="property">class </em><code class="descclassname">intranet.apps.groups.forms.</code><code class="descname">GroupForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/groups/forms.html#GroupForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.groups.forms.GroupForm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.groups.forms.</code><code class="descname">GroupForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/groups/forms.html#GroupForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.groups.forms.GroupForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.groups.forms.GroupForm.Meta">
@@ -229,19 +229,6 @@ confusion, like:</p>
 <dt id="intranet.apps.groups.models.Group.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descclassname">Group.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.groups.models.Group.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.MultipleObjectsReturned</span></code></p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="intranet.apps.groups.models.Group.groupproperties">
-<code class="descclassname">Group.</code><code class="descname">groupproperties</code><a class="headerlink" href="#intranet.apps.groups.models.Group.groupproperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related object on the reverse side of a one-to-one
-relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">place.restaurant</span></code> is a <code class="docutils literal"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -310,9 +297,30 @@ one-to-one relation.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.groups.models.GroupProperties.group_id">
+<code class="descclassname">GroupProperties.</code><code class="descname">group_id</code><a class="headerlink" href="#intranet.apps.groups.models.GroupProperties.group_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.groups.models.GroupProperties.id">
+<code class="descclassname">GroupProperties.</code><code class="descname">id</code><a class="headerlink" href="#intranet.apps.groups.models.GroupProperties.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.groups.models.GroupProperties.objects">
 <code class="descclassname">GroupProperties.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.groups.models.GroupProperties.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.groups.models.GroupProperties.student_visible">
+<code class="descclassname">GroupProperties.</code><code class="descname">student_visible</code><a class="headerlink" href="#intranet.apps.groups.models.GroupProperties.student_visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 

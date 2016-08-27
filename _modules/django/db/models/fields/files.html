@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.fields.files &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>django.db.models.fields.files &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -149,6 +149,7 @@
   <h1>Source code for django.db.models.fields.files</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">posixpath</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
@@ -159,9 +160,8 @@
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">signals</span>
 <span class="kn">from</span> <span class="nn">django.db.models.fields</span> <span class="k">import</span> <span class="n">Field</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="k">import</span> <span class="n">RemovedInDjango110Warning</span>
+<span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="k">import</span> <span class="n">RemovedInDjango20Warning</span>
 <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">force_str</span><span class="p">,</span> <span class="n">force_text</span>
-<span class="kn">from</span> <span class="nn">django.utils.inspect</span> <span class="k">import</span> <span class="n">func_supports_parameter</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
 
 
@@ -237,22 +237,8 @@
 
     <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">generate_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">func_supports_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save</span><span class="p">,</span> <span class="s1">&#39;max_length&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s1">&#39;Backwards compatibility for storage backends without &#39;</span>
-                <span class="s1">&#39;support for the `max_length` argument in &#39;</span>
-                <span class="s1">&#39;Storage.save() will be removed in Django 1.10.&#39;</span><span class="p">,</span>
-                <span class="n">RemovedInDjango110Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-        <span class="c1"># Update the filesize cache</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Save the object because it has changed, unless save is False</span>
@@ -273,10 +259,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-        <span class="c1"># Delete the filesize cache</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_size&#39;</span><span class="p">):</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_committed</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
@@ -318,11 +300,9 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">field</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-                <span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; attribute can only be accessed from </span><span class="si">%s</span><span class="s2"> instances.&quot;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">owner</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span>
 
         <span class="c1"># This is slightly complicated, so worth an explanation.</span>
         <span class="c1"># instance.file`needs to ultimately return some instance of `File`,</span>
@@ -336,7 +316,11 @@
 
         <span class="c1"># The instance dict contains whatever was originally assigned</span>
         <span class="c1"># in __set__.</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># If this value is a string (instance.file = &quot;path/to/file&quot;) or None</span>
         <span class="c1"># then we simply wrap it with the appropriate attribute class according</span>
@@ -366,6 +350,10 @@
             <span class="n">file</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
             <span class="n">file</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span>
             <span class="n">file</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">storage</span>
+
+        <span class="c1"># Make sure that the instance is correct.</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">FieldFile</span><span class="p">)</span> <span class="ow">and</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
 
         <span class="c1"># That was fun, wasn&#39;t it?</span>
         <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
@@ -406,7 +394,6 @@
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">checks</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
                     <span class="s2">&quot;&#39;unique&#39; is not a valid argument for a </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                    <span class="n">hint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;fields.E200&#39;</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -419,7 +406,6 @@
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">checks</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
                     <span class="s2">&quot;&#39;primary_key&#39; is not a valid argument for a </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                    <span class="n">hint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;fields.E201&#39;</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -438,11 +424,6 @@
 
     <span class="k">def</span> <span class="nf">get_internal_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;FileField&quot;</span>
-
-    <span class="k">def</span> <span class="nf">get_prep_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup_type</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">name</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_prep_lookup</span><span class="p">(</span><span class="n">lookup_type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_prep_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="s2">&quot;Returns field&#39;s value prepared for saving into a database.&quot;</span>
@@ -465,20 +446,34 @@
         <span class="nb">setattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor_class</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">get_directory_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;FileField now delegates file name and folder processing to the &#39;</span>
+            <span class="s1">&#39;storage. get_directory_name() will be removed in Django 2.0.&#39;</span><span class="p">,</span>
+            <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">force_text</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">force_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">))))</span>
 
     <span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;FileField now delegates file name and folder processing to the &#39;</span>
+            <span class="s1">&#39;storage. get_filename() will be removed in Django 2.0.&#39;</span><span class="p">,</span>
+            <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get_valid_name</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">generate_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="c1"># If upload_to is a callable, make sure that the path it returns is</span>
-        <span class="c1"># passed through get_valid_name() of the underlying storage.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply (if callable) or prepend (if a string) upload_to to the filename,</span>
+<span class="sd">        then delegate further processing of the name to the storage backend.</span>
+<span class="sd">        Until the storage layer, all file paths are expected to be Unix style</span>
+<span class="sd">        (with forward slashes).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">):</span>
-            <span class="n">directory_name</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get_valid_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory_name</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_directory_name</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dirname</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">force_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_to</span><span class="p">)))</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">generate_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">save_form_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c1"># Important: None means &quot;no change&quot;, other false value means &quot;clear&quot;</span>
@@ -540,8 +535,7 @@
     <span class="n">descriptor_class</span> <span class="o">=</span> <span class="n">ImageFileDescriptor</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Image&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">height_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_field</span> <span class="o">=</span> <span class="n">width_field</span><span class="p">,</span> <span class="n">height_field</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">verbose_name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -596,9 +590,10 @@
 <span class="sd">        Dimensions can be forced to update with force=True, which is how</span>
 <span class="sd">        ImageFileDescriptor.__set__ calls this method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Nothing to update if the field doesn&#39;t have dimension fields.</span>
+        <span class="c1"># Nothing to update if the field doesn&#39;t have dimension fields or if</span>
+        <span class="c1"># the field is deferred.</span>
         <span class="n">has_dimension_fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_field</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_dimension_fields</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_dimension_fields</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">attname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="c1"># getattr will call the ImageFileDescriptor&#39;s __get__ method, which</span>
@@ -611,8 +606,8 @@
             <span class="k">return</span>
 
         <span class="n">dimension_fields_filled</span> <span class="o">=</span> <span class="ow">not</span><span class="p">(</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_field</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span><span class="p">))</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height_field</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_field</span><span class="p">))</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_field</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_field</span><span class="p">))</span> <span class="ow">or</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height_field</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_field</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="c1"># When both dimension fields have values, we are most likely loading</span>
         <span class="c1"># data from the database or updating an image field that already had</span>

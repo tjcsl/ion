@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.board package &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>intranet.apps.board package &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.dashboard package" href="intranet.apps.dashboard.html" />
     <link rel="prev" title="intranet.apps.auth.management.commands package" href="intranet.apps.auth.management.commands.html" />
@@ -239,8 +239,8 @@
 <dt id="intranet.apps.board.models.Board">
 <em class="property">class </em><code class="descclassname">intranet.apps.board.models.</code><code class="descname">Board</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/board/models.html#Board"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.board.models.Board" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
-<p>A Board is a collection of BoardPosts for a specific eighth period activity, class, class
-section, or group.</p>
+<p>A Board is a collection of BoardPosts for a specific eighth period activity, class,
+class section, or group.</p>
 <dl class="exception">
 <dt id="intranet.apps.board.models.Board.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.board.models.Board.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -267,6 +267,13 @@ one-to-one relation.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.Board.activity_id">
+<code class="descclassname">Board.</code><code class="descname">activity_id</code><a class="headerlink" href="#intranet.apps.board.models.Board.activity_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.Board.add_button_arg">
 <code class="descclassname">Board.</code><code class="descname">add_button_arg</code><a class="headerlink" href="#intranet.apps.board.models.Board.add_button_arg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the argument for the route for the &#8216;Post&#8217; button.</p>
@@ -277,6 +284,13 @@ one-to-one relation.</p>
 <dt id="intranet.apps.board.models.Board.add_button_route">
 <code class="descclassname">Board.</code><code class="descname">add_button_route</code><a class="headerlink" href="#intranet.apps.board.models.Board.add_button_route" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the route name for the &#8216;Post&#8217; button.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.Board.course_id">
+<code class="descclassname">Board.</code><code class="descname">course_id</code><a class="headerlink" href="#intranet.apps.board.models.Board.course_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -304,6 +318,13 @@ one-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.board.models.Board.group_id">
+<code class="descclassname">Board.</code><code class="descname">group_id</code><a class="headerlink" href="#intranet.apps.board.models.Board.group_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.board.models.Board.has_member">
 <code class="descclassname">Board.</code><code class="descname">has_member</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/board/models.html#Board.has_member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.board.models.Board.has_member" title="Permalink to this definition">¶</a></dt>
@@ -311,6 +332,13 @@ one-to-one relation.</p>
 <p>Because you can&#8217;t always see all of the people in a class or
 section due to permissions, you should only check whether the
 current user is a member.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.Board.id">
+<code class="descclassname">Board.</code><code class="descname">id</code><a class="headerlink" href="#intranet.apps.board.models.Board.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -347,6 +375,13 @@ a many-to-many relation.</p>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.Board.section_id">
+<code class="descclassname">Board.</code><code class="descname">section_id</code><a class="headerlink" href="#intranet.apps.board.models.Board.section_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -392,6 +427,13 @@ the board.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.added">
+<code class="descclassname">BoardPost.</code><code class="descname">added</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.added" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPost.board">
 <code class="descclassname">BoardPost.</code><code class="descname">board</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.board" title="Permalink to this definition">¶</a></dt>
 <dd><p>A BoardPost <em>should</em> only be on one Board, so find the first
@@ -430,6 +472,13 @@ instances.</p>
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.content">
+<code class="descclassname">BoardPost.</code><code class="descname">content</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.board.models.BoardPost.get_next_by_added">
 <code class="descclassname">BoardPost.</code><code class="descname">get_next_by_added</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.board.models.BoardPost.get_next_by_added" title="Permalink to this definition">¶</a></dt>
@@ -451,14 +500,42 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.id">
+<code class="descclassname">BoardPost.</code><code class="descname">id</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPost.objects">
 <code class="descclassname">BoardPost.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.board.models.BoardPost.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.safe_html">
+<code class="descclassname">BoardPost.</code><code class="descname">safe_html</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.safe_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPost.show_stallman">
 <code class="descclassname">BoardPost.</code><code class="descname">show_stallman</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.show_stallman" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.title">
+<code class="descclassname">BoardPost.</code><code class="descname">title</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.updated">
+<code class="descclassname">BoardPost.</code><code class="descname">updated</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPost.user">
@@ -471,6 +548,13 @@ one-to-one relation.</p>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPost.user_id">
+<code class="descclassname">BoardPost.</code><code class="descname">user_id</code><a class="headerlink" href="#intranet.apps.board.models.BoardPost.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>
@@ -493,6 +577,13 @@ one-to-one relation.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPostComment.added">
+<code class="descclassname">BoardPostComment.</code><code class="descname">added</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.added" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPostComment.boardpost_set">
 <code class="descclassname">BoardPostComment.</code><code class="descname">boardpost_set</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.boardpost_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the forward and reverse sides of
@@ -508,6 +599,13 @@ instances.</p>
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPostComment.content">
+<code class="descclassname">BoardPostComment.</code><code class="descname">content</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.board.models.BoardPostComment.get_next_by_added">
 <code class="descclassname">BoardPostComment.</code><code class="descname">get_next_by_added</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.get_next_by_added" title="Permalink to this definition">¶</a></dt>
@@ -517,6 +615,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dt id="intranet.apps.board.models.BoardPostComment.get_previous_by_added">
 <code class="descclassname">BoardPostComment.</code><code class="descname">get_previous_by_added</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.get_previous_by_added" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPostComment.id">
+<code class="descclassname">BoardPostComment.</code><code class="descname">id</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPostComment.objects">
@@ -529,6 +634,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPostComment.safe_html">
+<code class="descclassname">BoardPostComment.</code><code class="descname">safe_html</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.safe_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.board.models.BoardPostComment.user">
 <code class="descclassname">BoardPostComment.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -539,6 +651,13 @@ one-to-one relation.</p>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.board.models.BoardPostComment.user_id">
+<code class="descclassname">BoardPostComment.</code><code class="descname">user_id</code><a class="headerlink" href="#intranet.apps.board.models.BoardPostComment.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>

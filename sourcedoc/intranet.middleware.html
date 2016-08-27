@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware package &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>intranet.middleware package &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../index.html" />
     <link rel="up" title="intranet package" href="intranet.html" />
     <link rel="next" title="intranet.settings package" href="intranet.settings.html" />
     <link rel="prev" title="intranet.db package" href="intranet.db.html" />
@@ -121,10 +121,15 @@
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.access_log">intranet.middleware.access_log module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.ajax">intranet.middleware.ajax module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.corsheaders">intranet.middleware.corsheaders module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.debug_toolbar">intranet.middleware.debug_toolbar module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.email_handler">intranet.middleware.email_handler module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.environment">intranet.middleware.environment module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.ldap_db">intranet.middleware.ldap_db module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.maintenancemode">intranet.middleware.maintenancemode module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.oauth2_provider">intranet.middleware.oauth2_provider module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.profiler">intranet.middleware.profiler module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.simple_history">intranet.middleware.simple_history module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.templates">intranet.middleware.templates module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.threadlocals">intranet.middleware.threadlocals module</a></li>
 <li><a class="reference internal" href="#module-intranet.middleware.traceback">intranet.middleware.traceback module</a></li>
@@ -174,13 +179,8 @@
 <span id="intranet-middleware-access-log-module"></span><h2>intranet.middleware.access_log module<a class="headerlink" href="#module-intranet.middleware.access_log" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.access_log.AccessLogMiddleWare">
-<em class="property">class </em><code class="descclassname">intranet.middleware.access_log.</code><code class="descname">AccessLogMiddleWare</code><a class="reference internal" href="../_modules/intranet/middleware/access_log.html#AccessLogMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.access_log.AccessLogMiddleWare" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.access_log.</code><code class="descname">AccessLogMiddleWare</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/access_log.html#AccessLogMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.access_log.AccessLogMiddleWare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
-<dt id="intranet.middleware.access_log.AccessLogMiddleWare.process_response">
-<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/access_log.html#AccessLogMiddleWare.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.access_log.AccessLogMiddleWare.process_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -188,7 +188,7 @@
 <span id="intranet-middleware-ajax-module"></span><h2>intranet.middleware.ajax module<a class="headerlink" href="#module-intranet.middleware.ajax" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare">
-<em class="property">class </em><code class="descclassname">intranet.middleware.ajax.</code><code class="descname">AjaxNotAuthenticatedMiddleWare</code><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.ajax.</code><code class="descname">AjaxNotAuthenticatedMiddleWare</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Django doesn&#8217;t handle login redirects with AJAX very nicely, so we have to work around the
 default behavior a little.</p>
@@ -201,11 +201,24 @@ the client as a <code class="docutils literal"><span class="pre">200</span> <spa
 everything worked. To avoid this, we need to detect these types of
 requests and change their status code to <code class="docutils literal"><span class="pre">401</span></code> to let the client
 know that the request actually failed.</p>
-<dl class="method">
-<dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare.process_response">
-<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare.process_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
 
+</div>
+<div class="section" id="module-intranet.middleware.corsheaders">
+<span id="intranet-middleware-corsheaders-module"></span><h2>intranet.middleware.corsheaders module<a class="headerlink" href="#module-intranet.middleware.corsheaders" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.corsheaders.CorsMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.corsheaders.</code><code class="descname">CorsMiddleware</code><span class="sig-paren">(</span><em>get_response=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/corsheaders.html#CorsMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.corsheaders.CorsMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">corsheaders.middleware.CorsMiddleware</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/http/middleware/#django.utils.deprecation.MiddlewareMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.utils.deprecation.MiddlewareMixin</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.debug_toolbar">
+<span id="intranet-middleware-debug-toolbar-module"></span><h2>intranet.middleware.debug_toolbar module<a class="headerlink" href="#module-intranet.middleware.debug_toolbar" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.debug_toolbar.DebugToolbarMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.debug_toolbar.</code><code class="descname">DebugToolbarMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/debug_toolbar.html#DebugToolbarMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.debug_toolbar.DebugToolbarMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">debug_toolbar.middleware.DebugToolbarMiddleware</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/http/middleware/#django.utils.deprecation.MiddlewareMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.utils.deprecation.MiddlewareMixin</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -227,7 +240,7 @@ know that the request actually failed.</p>
 <span id="intranet-middleware-environment-module"></span><h2>intranet.middleware.environment module<a class="headerlink" href="#module-intranet.middleware.environment" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.environment.KerberosCacheMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.environment.</code><code class="descname">KerberosCacheMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.environment.</code><code class="descname">KerberosCacheMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Reloads the KRB5CCNAME environmental variable from the session for potential use in future
 LDAP requests.</p>
@@ -242,12 +255,6 @@ available for requests to any view and so each view does not have
 to load the environmental variable. The LDAP wrapper
 (intranet.db.ldap_db) cannot set the environmental variable because
 it does not have access to the current session (request.session).</p>
-<dl class="method">
-<dt id="intranet.middleware.environment.KerberosCacheMiddleware.process_request">
-<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propogate KRB5CCNAME session variable to the environmental variable.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -255,13 +262,26 @@ it does not have access to the current session (request.session).</p>
 <span id="intranet-middleware-ldap-db-module"></span><h2>intranet.middleware.ldap_db module<a class="headerlink" href="#module-intranet.middleware.ldap_db" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.ldap_db.CheckLDAPBindMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.ldap_db.</code><code class="descname">CheckLDAPBindMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/ldap_db.html#CheckLDAPBindMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ldap_db.CheckLDAPBindMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.ldap_db.</code><code class="descname">CheckLDAPBindMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ldap_db.html#CheckLDAPBindMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ldap_db.CheckLDAPBindMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
-<dt id="intranet.middleware.ldap_db.CheckLDAPBindMiddleware.process_response">
-<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ldap_db.html#CheckLDAPBindMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ldap_db.CheckLDAPBindMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
 
+</div>
+<div class="section" id="module-intranet.middleware.maintenancemode">
+<span id="intranet-middleware-maintenancemode-module"></span><h2>intranet.middleware.maintenancemode module<a class="headerlink" href="#module-intranet.middleware.maintenancemode" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.maintenancemode.MaintenanceModeMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.maintenancemode.</code><code class="descname">MaintenanceModeMiddleware</code><span class="sig-paren">(</span><em>get_response=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/maintenancemode.html#MaintenanceModeMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.maintenancemode.MaintenanceModeMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">maintenancemode.middleware.MaintenanceModeMiddleware</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/http/middleware/#django.utils.deprecation.MiddlewareMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.utils.deprecation.MiddlewareMixin</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.oauth2_provider">
+<span id="intranet-middleware-oauth2-provider-module"></span><h2>intranet.middleware.oauth2_provider module<a class="headerlink" href="#module-intranet.middleware.oauth2_provider" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.oauth2_provider.OAuth2TokenMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.oauth2_provider.</code><code class="descname">OAuth2TokenMiddleware</code><span class="sig-paren">(</span><em>get_response=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/oauth2_provider.html#OAuth2TokenMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.oauth2_provider.OAuth2TokenMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">oauth2_provider.middleware.OAuth2TokenMiddleware</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/http/middleware/#django.utils.deprecation.MiddlewareMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.utils.deprecation.MiddlewareMixin</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -317,33 +337,31 @@ std = sqrt(sum_i (x_i - mean)^2 over n-1)
 </dd></dl>
 
 </div>
+<div class="section" id="module-intranet.middleware.simple_history">
+<span id="intranet-middleware-simple-history-module"></span><h2>intranet.middleware.simple_history module<a class="headerlink" href="#module-intranet.middleware.simple_history" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.simple_history.HistoryRequestMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.simple_history.</code><code class="descname">HistoryRequestMiddleware</code><span class="sig-paren">(</span><em>get_response=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/simple_history.html#HistoryRequestMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.simple_history.HistoryRequestMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">simple_history.middleware.HistoryRequestMiddleware</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/http/middleware/#django.utils.deprecation.MiddlewareMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.utils.deprecation.MiddlewareMixin</span></code></a></p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-intranet.middleware.templates">
 <span id="intranet-middleware-templates-module"></span><h2>intranet.middleware.templates module<a class="headerlink" href="#module-intranet.middleware.templates" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">AdminSelectizeLoadingIndicatorMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">AdminSelectizeLoadingIndicatorMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Automatically add a loading placeholder for Selectize inputs in admin templates.</p>
 <p>This is probably not a good practice, but it really needs to be done
 server-side for the loading indicators to show up instantly.</p>
-<dl class="method">
-<dt id="intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.process_response">
-<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="intranet.middleware.templates.StripNewlinesMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">StripNewlinesMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">StripNewlinesMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Strip extra newlines from rendered templates to enhance readability.</p>
-<dl class="method">
-<dt id="intranet.middleware.templates.StripNewlinesMiddleware.process_response">
-<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process the response and strip extra newlines from HTML.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -351,13 +369,13 @@ server-side for the loading indicators to show up instantly.</p>
 <span id="intranet-middleware-threadlocals-module"></span><h2>intranet.middleware.threadlocals module<a class="headerlink" href="#module-intranet.middleware.threadlocals" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.threadlocals.</code><code class="descname">ThreadLocalsMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.threadlocals.</code><code class="descname">ThreadLocalsMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Stores the current authorized User object in thread locals for access in models (and
 elsewhere) without passing the user around as an argument.</p>
-<dl class="method">
-<dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request">
-<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dl class="staticmethod">
+<dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_view">
+<em class="property">static </em><code class="descname">process_view</code><span class="sig-paren">(</span><em>request</em>, <em>*_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware.process_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the request to thread locals.</p>
 </dd></dl>
 
@@ -378,7 +396,7 @@ elsewhere) without passing the user around as an argument.</p>
 <span id="intranet-middleware-traceback-module"></span><h2>intranet.middleware.traceback module<a class="headerlink" href="#module-intranet.middleware.traceback" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.traceback.UserTracebackMiddleware">
-<em class="property">class </em><code class="descclassname">intranet.middleware.traceback.</code><code class="descname">UserTracebackMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/traceback.html#UserTracebackMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.traceback.UserTracebackMiddleware" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.traceback.</code><code class="descname">UserTracebackMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/traceback.html#UserTracebackMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.traceback.UserTracebackMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Adds the currently logged-in user to the request context, so that they
 show up in error emails.</p>
@@ -394,17 +412,8 @@ show up in error emails.</p>
 <span id="intranet-middleware-url-slashes-module"></span><h2>intranet.middleware.url_slashes module<a class="headerlink" href="#module-intranet.middleware.url_slashes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.middleware.url_slashes.FixSlashes">
-<em class="property">class </em><code class="descclassname">intranet.middleware.url_slashes.</code><code class="descname">FixSlashes</code><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.middleware.url_slashes.</code><code class="descname">FixSlashes</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
-<dt id="intranet.middleware.url_slashes.FixSlashes.process_request">
-<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes.process_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add or remove trailing slashes where needed.</p>
-<p>Note that there is no HTTP redirection actually happening. This
-just fixes the trailing slashes before the URLs are matched to
-any URL patterns by changing the request&#8217;s internal properties.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>

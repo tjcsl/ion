@@ -11,6 +11,7 @@ Subpackages
     intranet.apps.auth
     intranet.apps.board
     intranet.apps.dashboard
+    intranet.apps.dataimport
     intranet.apps.eighth
     intranet.apps.emailfwd
     intranet.apps.emerg

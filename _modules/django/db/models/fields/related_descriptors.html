@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.fields.related_descriptors &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>django.db.models.fields.related_descriptors &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -211,11 +211,13 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
 
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">attrgetter</span>
 
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">connections</span><span class="p">,</span> <span class="n">router</span><span class="p">,</span> <span class="n">transaction</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span><span class="p">,</span> <span class="n">signals</span>
 <span class="kn">from</span> <span class="nn">django.db.models.query</span> <span class="k">import</span> <span class="n">QuerySet</span>
+<span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="k">import</span> <span class="n">RemovedInDjango20Warning</span>
 <span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
 
 
@@ -251,11 +253,19 @@
         <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_default_manager</span>
-        <span class="c1"># If the related manager indicates that it should be used for</span>
-        <span class="c1"># related fields, respect that.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="s1">&#39;use_for_related_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_base_manager</span>
+        <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="p">,</span> <span class="s1">&#39;use_for_related_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="p">,</span> <span class="s1">&#39;silence_use_for_related_fields_deprecation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;use_for_related_fields is deprecated, instead &quot;</span>
+                    <span class="s2">&quot;set Meta.base_manager_name on &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">label</span><span class="p">),</span>
+                    <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="mi">2</span>
+                <span class="p">)</span>
+            <span class="n">manager</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">manager</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">_base_manager</span>
+
         <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">db_manager</span><span class="p">(</span><span class="n">hints</span><span class="o">=</span><span class="n">hints</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_prefetch_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -289,7 +299,7 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="n">rel_obj_cache_name</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">rel_obj_attr</span><span class="p">,</span> <span class="n">instance_attr</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related instance through the forward relation.</span>
 
@@ -297,7 +307,7 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``parent`` attribute</span>
 <span class="sd">        - ``instance`` is the ``child`` instance</span>
-<span class="sd">        - ``instance_type`` in the ``Child`` class (we don&#39;t need it)</span>
+<span class="sd">        - ``cls`` is the ``Child`` class (we don&#39;t need it)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
@@ -338,16 +348,10 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``parent`` attribute</span>
 <span class="sd">        - ``instance`` is the ``child`` instance</span>
-<span class="sd">        - ``value`` in the ``parent`` instance on the right of the equal sign</span>
+<span class="sd">        - ``value`` is the ``parent`` instance on the right of the equal sign</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># If null=True, we can assign null here, but otherwise the value needs</span>
-        <span class="c1"># to be an instance of the related class.</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">null</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Cannot assign None: &quot;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&quot; does not allow null values.&#39;</span> <span class="o">%</span>
-                <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span><span class="p">):</span>
+        <span class="c1"># An object must be an instance of the related class.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">concrete_model</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Cannot assign &quot;</span><span class="si">%r</span><span class="s1">&quot;: &quot;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&quot; must be a &quot;</span><span class="si">%s</span><span class="s1">&quot; instance.&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">value</span><span class="p">,</span>
@@ -434,11 +438,19 @@
         <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span>
-        <span class="c1"># If the related manager indicates that it should be used for</span>
-        <span class="c1"># related fields, respect that.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="s1">&#39;use_for_related_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">related_model</span><span class="o">.</span><span class="n">_base_manager</span>
+        <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">related_model</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="p">,</span> <span class="s1">&#39;use_for_related_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="p">,</span> <span class="s1">&#39;silence_use_for_related_fields_deprecation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;use_for_related_fields is deprecated, instead &quot;</span>
+                    <span class="s2">&quot;set Meta.base_manager_name on &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">related_model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">label</span><span class="p">),</span>
+                    <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="mi">2</span>
+                <span class="p">)</span>
+            <span class="n">manager</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">manager</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">_base_manager</span>
+
         <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">db_manager</span><span class="p">(</span><span class="n">hints</span><span class="o">=</span><span class="n">hints</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_prefetch_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -447,7 +459,10 @@
         <span class="n">queryset</span><span class="o">.</span><span class="n">_add_hints</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="n">rel_obj_attr</span> <span class="o">=</span> <span class="n">attrgetter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-        <span class="n">instance_attr</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">_get_pk_val</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">instance_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">_get_pk_val</span><span class="p">()</span>
+
         <span class="n">instances_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">instance_attr</span><span class="p">(</span><span class="n">inst</span><span class="p">):</span> <span class="n">inst</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">}</span>
         <span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">__in&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">instances</span><span class="p">}</span>
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">query</span><span class="p">)</span>
@@ -460,7 +475,7 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="n">rel_obj_cache_name</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">rel_obj_attr</span><span class="p">,</span> <span class="n">instance_attr</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related instance through the reverse relation.</span>
 
@@ -468,7 +483,7 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``restaurant`` attribute</span>
 <span class="sd">        - ``instance`` is the ``place`` instance</span>
-<span class="sd">        - ``instance_type`` in the ``Place`` class (we don&#39;t need it)</span>
+<span class="sd">        - ``cls`` is the ``Place`` class (unused)</span>
 
 <span class="sd">        Keep in mind that ``Restaurant`` holds the foreign key to ``Place``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -515,7 +530,7 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``restaurant`` attribute</span>
 <span class="sd">        - ``instance`` is the ``place`` instance</span>
-<span class="sd">        - ``value`` in the ``restaurant`` instance on the right of the equal sign</span>
+<span class="sd">        - ``value`` is the ``restaurant`` instance on the right of the equal sign</span>
 
 <span class="sd">        Keep in mind that ``Restaurant`` holds the foreign key to ``Place``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -523,26 +538,17 @@
         <span class="c1"># ForwardManyToOneDescriptor is annoying, but there&#39;s a bunch</span>
         <span class="c1"># of small differences that would make a common base class convoluted.</span>
 
-        <span class="c1"># If null=True, we can assign null here, but otherwise the value needs</span>
-        <span class="c1"># to be an instance of the related class.</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">null</span><span class="p">:</span>
-                <span class="c1"># Update the cached related instance (if any) &amp; clear the cache.</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">rel_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                    <span class="k">pass</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">delattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="c1"># Update the cached related instance (if any) &amp; clear the cache.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rel_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;Cannot assign None: &quot;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&quot; does not allow null values.&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                        <span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">get_accessor_name</span><span class="p">(),</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">related_model</span><span class="p">):</span>
+            <span class="c1"># An object must be an instance of the related class.</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Cannot assign &quot;</span><span class="si">%r</span><span class="s1">&quot;: &quot;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&quot; must be a &quot;</span><span class="si">%s</span><span class="s1">&quot; instance.&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">value</span><span class="p">,</span>
@@ -596,12 +602,14 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">related_manager_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span>
+
         <span class="k">return</span> <span class="n">create_reverse_many_to_one_manager</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
+            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related objects through the reverse relation.</span>
 
@@ -609,12 +617,18 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``children`` attribute</span>
 <span class="sd">        - ``instance`` is the ``parent`` instance</span>
-<span class="sd">        - ``instance_type`` in the ``Parent`` class (we don&#39;t need it)</span>
+<span class="sd">        - ``cls`` is the ``Parent`` class (unused)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">related_manager_cls</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_set_deprecation_msg_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>  <span class="c1"># RemovedInDjango20Warning</span>
+            <span class="s1">&#39;reverse side of a related set&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">get_accessor_name</span><span class="p">(),</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -624,8 +638,13 @@
 
 <span class="sd">        - ``self`` is the descriptor managing the ``children`` attribute</span>
 <span class="sd">        - ``instance`` is the ``parent`` instance</span>
-<span class="sd">        - ``value`` in the ``children`` sequence on the right of the equal sign</span>
+<span class="sd">        - ``value`` is the ``children`` sequence on the right of the equal sign</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;Direct assignment to the </span><span class="si">%s</span><span class="s1"> is deprecated due to the implicit &#39;</span>
+            <span class="s1">&#39;save() that happens. Use </span><span class="si">%s</span><span class="s1">.set() instead.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_set_deprecation_msg_params</span><span class="p">(),</span>
+            <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get__</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">manager</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -656,23 +675,29 @@
             <span class="k">return</span> <span class="n">manager_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">do_not_call_in_templates</span> <span class="o">=</span> <span class="kc">True</span>
 
+        <span class="k">def</span> <span class="nf">_apply_rel_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Filter the queryset for the instance this manager is bound to.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="ow">or</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="n">empty_strings_as_null</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="n">db</span><span class="p">]</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">interprets_empty_strings_as_nulls</span>
+            <span class="n">queryset</span><span class="o">.</span><span class="n">_add_hints</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
+            <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">core_filters</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">foreign_related_fields</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">empty_strings_as_null</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
+            <span class="n">queryset</span><span class="o">.</span><span class="n">_known_related_objects</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">:</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">pk</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">}}</span>
+            <span class="k">return</span> <span class="n">queryset</span>
+
         <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_prefetched_objects_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">related_query_name</span><span class="p">()]</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-                <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="ow">or</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
-                <span class="n">empty_strings_as_null</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="n">db</span><span class="p">]</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">interprets_empty_strings_as_nulls</span>
-                <span class="n">qs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
-                <span class="n">qs</span><span class="o">.</span><span class="n">_add_hints</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
-                    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
-                <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">core_filters</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">foreign_related_fields</span><span class="p">:</span>
-                    <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">empty_strings_as_null</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
-                <span class="n">qs</span><span class="o">.</span><span class="n">_known_related_objects</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">:</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">pk</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">}}</span>
-                <span class="k">return</span> <span class="n">qs</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_rel_filters</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_prefetch_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -845,11 +870,18 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">related_manager_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">model</span>
+
         <span class="k">return</span> <span class="n">create_forward_many_to_many_manager</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
+            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
             <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_set_deprecation_msg_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>  <span class="c1"># RemovedInDjango20Warning</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> side of a many-to-many set&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;reverse&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="k">else</span> <span class="s1">&#39;forward&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">get_accessor_name</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
         <span class="p">)</span>
 
 
@@ -930,15 +962,21 @@
                 <span class="n">filters</span> <span class="o">|=</span> <span class="n">symmetrical_filters</span>
             <span class="k">return</span> <span class="n">filters</span>
 
+        <span class="k">def</span> <span class="nf">_apply_rel_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Filter the queryset for the instance this manager is bound to.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">queryset</span><span class="o">.</span><span class="n">_add_hints</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">_next_is_sticky</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">core_filters</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_prefetched_objects_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_cache_name</span><span class="p">]</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-                <span class="n">qs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
-                <span class="n">qs</span><span class="o">.</span><span class="n">_add_hints</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
-                    <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">_next_is_sticky</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">core_filters</span><span class="p">)</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_rel_filters</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_prefetch_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1010,16 +1048,19 @@
         <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;pre_clear&quot;</span><span class="p">,</span>
+                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;pre_clear&quot;</span><span class="p">,</span>
                     <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
-
+                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="n">filters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_remove_filters</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
-                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;post_clear&quot;</span><span class="p">,</span>
+                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;post_clear&quot;</span><span class="p">,</span>
                     <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="n">clear</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1047,9 +1088,10 @@
 
                     <span class="n">new_objs</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
-                        <span class="n">fk_val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_field</span><span class="o">.</span><span class="n">get_foreign_related_value</span><span class="p">(</span><span class="n">obj</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">else</span> <span class="n">obj</span><span class="p">)</span>
-
+                        <span class="n">fk_val</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">target_field</span><span class="o">.</span><span class="n">get_foreign_related_value</span><span class="p">(</span><span class="n">obj</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">else</span> <span class="n">obj</span>
+                        <span class="p">)</span>
                         <span class="k">if</span> <span class="n">fk_val</span> <span class="ow">in</span> <span class="n">old_ids</span><span class="p">:</span>
                             <span class="n">old_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fk_val</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
@@ -1140,9 +1182,11 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="ow">or</span> <span class="n">source_field_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_field_name</span><span class="p">:</span>
                         <span class="c1"># Don&#39;t send the signal when we are inserting the</span>
                         <span class="c1"># duplicate data row for symmetrical reverse entries.</span>
-                        <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;pre_add&#39;</span><span class="p">,</span>
+                        <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                            <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;pre_add&#39;</span><span class="p">,</span>
                             <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">new_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+                            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">new_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                        <span class="p">)</span>
 
                     <span class="c1"># Add the ones that aren&#39;t there already</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">([</span>
@@ -1156,9 +1200,11 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="ow">or</span> <span class="n">source_field_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_field_name</span><span class="p">:</span>
                         <span class="c1"># Don&#39;t send the signal when we are inserting the</span>
                         <span class="c1"># duplicate data row for symmetrical reverse entries.</span>
-                        <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;post_add&#39;</span><span class="p">,</span>
+                        <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                            <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;post_add&#39;</span><span class="p">,</span>
                             <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">new_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+                            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">new_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                        <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_remove_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_field_name</span><span class="p">,</span> <span class="n">target_field_name</span><span class="p">,</span> <span class="o">*</span><span class="n">objs</span><span class="p">):</span>
             <span class="c1"># source_field_name: the PK colname in join table for the source object</span>
@@ -1179,9 +1225,11 @@
             <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span> <span class="n">savepoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
                 <span class="c1"># Send a signal to the other end if need be.</span>
-                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;pre_remove&quot;</span><span class="p">,</span>
+                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;pre_remove&quot;</span><span class="p">,</span>
                     <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">old_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">old_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="n">target_model_qs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">target_model_qs</span><span class="o">.</span><span class="n">_has_filters</span><span class="p">():</span>
                     <span class="n">old_vals</span> <span class="o">=</span> <span class="n">target_model_qs</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
@@ -1191,9 +1239,11 @@
                 <span class="n">filters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_remove_filters</span><span class="p">(</span><span class="n">old_vals</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
-                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;post_remove&quot;</span><span class="p">,</span>
+                <span class="n">signals</span><span class="o">.</span><span class="n">m2m_changed</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">through</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;post_remove&quot;</span><span class="p">,</span>
                     <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
-                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">old_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">)</span>
+                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pk_set</span><span class="o">=</span><span class="n">old_ids</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+                <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ManyRelatedManager</span>
 </pre></div>

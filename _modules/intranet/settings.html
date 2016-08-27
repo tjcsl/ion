@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2839) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #2860) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #2839)',
+        VERSION:     'v3 (Build #2860)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2839) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2860) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -417,6 +417,14 @@
 <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;intranet.apps.auth.backends.MasterPasswordAuthenticationBackend&quot;</span><span class="p">,</span>
                            <span class="s2">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
                            <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,)</span>
+<span class="c1"># Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage</span>
+<span class="n">PASSWORD_HASHERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;django.contrib.auth.hashers.Argon2PasswordHasher&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.hashers.PBKDF2PasswordHasher&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.hashers.BCryptSHA256PasswordHasher&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.hashers.BCryptPasswordHasher&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="c1"># Use the custom User model defined in apps/users/models.py</span>
 <span class="n">AUTH_USER_MODEL</span> <span class="o">=</span> <span class="s2">&quot;users.User&quot;</span>
@@ -460,16 +468,17 @@
 <span class="k">if</span> <span class="ow">not</span> <span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;WARN_INVALID_TEMPLATE_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;NO&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span><span class="p">:</span>
     <span class="n">TEMPLATES</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;OPTIONS&quot;</span><span class="p">][</span><span class="s2">&quot;string_if_invalid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">InvalidString</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">[</span>
+<span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>  <span class="c1"># Remove slashes in URLs</span>
     <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django default</span>
     <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django sessions</span>
     <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django CSRF</span>
     <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django X-Frame-Options</span>
     <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django auth</span>
-    <span class="s2">&quot;django.contrib.auth.middleware.SessionAuthenticationMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django session auth</span>
-    <span class="s2">&quot;oauth2_provider.middleware.OAuth2TokenMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Oauth toolkit</span>
-    <span class="s2">&quot;maintenancemode.middleware.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Maintenance mode</span>
+    <span class="c1"># FIXME: use oauth2_provider.middleware.Oauth2TokenMiddleware directly once it properly supports django 1.10+</span>
+    <span class="s2">&quot;intranet.middleware.oauth2_provider.OAuth2TokenMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Oauth toolkit</span>
+    <span class="c1"># FIXME: use maintenancemode.middleware.MaintenanceModeMiddleware directly once it properly supports django 1.10+</span>
+    <span class="s2">&quot;intranet.middleware.maintenancemode.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Maintenance mode</span>
     <span class="s2">&quot;intranet.middleware.environment.KerberosCacheMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Kerberos</span>
     <span class="s2">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Thread locals</span>
     <span class="s2">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Include user in traceback</span>
@@ -478,10 +487,12 @@
     <span class="s2">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Selectize fixes</span>
     <span class="s2">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># Access log</span>
     <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
-    <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
+    <span class="c1"># FIXME: use corsheaders.middleware.CorsMiddleware directly once it properly supports django 1.10+</span>
+    <span class="s2">&quot;intranet.middleware.corsheaders.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
     <span class="s2">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Show ldap simple bind message</span>
-    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span>
+    <span class="c1"># FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+</span>
+    <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span>
 <span class="p">]</span>
 
 <span class="c1"># URLconf at urls.py</span>
@@ -521,8 +532,6 @@
 <span class="c1"># Cacheops configuration</span>
 <span class="c1"># may be removed in the future</span>
 <span class="n">CACHEOPS_REDIS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> <span class="s2">&quot;db&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;socket_timeout&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-
-<span class="n">CACHEOPS_DEGRADE_ON_FAILURE</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="c1"># CACHEOPS_DEFAULTS = {&quot;ops&quot;: &quot;all&quot;, &quot;cache_on_save&quot;: True, &quot;timeout&quot;: int(datetime.timedelta(hours=24).total_seconds())}</span>
 
@@ -657,6 +666,7 @@
     <span class="s2">&quot;intranet.apps.lostfound&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.emailfwd&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.parking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.apps.dataimport&quot;</span><span class="p">,</span>
     <span class="c1"># Intranet middleware</span>
     <span class="s2">&quot;intranet.middleware.environment&quot;</span><span class="p">,</span>
     <span class="c1"># Django plugins</span>
@@ -802,20 +812,22 @@
         <span class="c1"># FIXME: broken (&quot;debug_toolbar_line_profiler.panel.ProfilingPanel&quot;, False),</span>
     <span class="p">]</span>
 
-    <span class="n">DEBUG_TOOLBAR_CONFIG</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;INTERCEPT_REDIRECTS&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;DISABLE_PANELS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">panel</span> <span class="k">for</span> <span class="n">panel</span><span class="p">,</span> <span class="n">enabled</span> <span class="ow">in</span> <span class="n">_panels</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">]}</span>
+    <span class="c1"># Only show debug toolbar when requested if in production.</span>
+    <span class="n">DEBUG_TOOLBAR_CONFIG</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DISABLE_PANELS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">panel</span> <span class="k">for</span> <span class="n">panel</span><span class="p">,</span> <span class="n">enabled</span> <span class="ow">in</span> <span class="n">_panels</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">],</span>
+                            <span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.utils.helpers.debug_toolbar_callback&quot;</span><span class="p">,</span>
+                            <span class="p">}</span>
 
     <span class="n">DEBUG_TOOLBAR_PANELS</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_panels</span><span class="p">]</span>
 
     <span class="c1"># Add middleware</span>
-    <span class="n">MIDDLEWARE_CLASSES</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+    <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
         <span class="s2">&quot;intranet.middleware.templates.StripNewlinesMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Strip newlines</span>
-        <span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Debug toolbar</span>
+        <span class="c1"># FIXME: use debug_toolbar.middleware.DebugToolbarMiddleware directly once it properly supports django 1.10+</span>
+        <span class="s2">&quot;intranet.middleware.debug_toolbar.DebugToolbarMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Debug toolbar</span>
     <span class="p">])</span>
 
     <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;debug_toolbar&quot;</span><span class="p">,</span> <span class="s2">&quot;debug_toolbar_line_profiler&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Only show debug toolbar when requested if in production.</span>
-    <span class="n">DEBUG_TOOLBAR_CONFIG</span><span class="p">[</span><span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;intranet.utils.helpers.debug_toolbar_callback&quot;</span>
 
 <span class="c1"># Maintenance mode</span>
 <span class="c1"># This should be adjusted in secrets.py or by running:</span>
@@ -846,11 +858,16 @@
     <span class="s2">&quot;commit_github_url&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_github_url</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Senior graduation date in Javascript-readable format</span>
-<span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2016</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B </span><span class="si">%d</span><span class="s1"> %Y %H:%M:%S&#39;</span><span class="p">)</span>
 
 <span class="c1"># Senior graduation year</span>
-<span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2016</span>
+<span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2017</span>
+
+<span class="c1"># Senior graduation date in Javascript-readable format</span>
+<span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B </span><span class="si">%d</span><span class="s1"> %Y %H:%M:%S&#39;</span><span class="p">)</span>
+
+<span class="c1"># Month (1-indexed) after which a new school year begins</span>
+<span class="c1"># July = 7</span>
+<span class="n">YEAR_TURNOVER_MONTH</span> <span class="o">=</span> <span class="mi">7</span>
 
 <span class="c1"># The hour on an eighth period day to lock teachers from</span>
 <span class="c1"># taking attendance (10PM)</span>
@@ -860,9 +877,11 @@
 <span class="n">CLEAR_ABSENCE_DAYS</span> <span class="o">=</span> <span class="mi">14</span>
 
 <span class="c1"># The address for FCPS&#39; Emergency Announcement page</span>
-<span class="n">FCPS_EMERGENCY_PAGE</span> <span class="o">=</span> <span class="s2">&quot;http://www.fcps.edu/content/emergencyContent.html&quot;</span>
+<span class="n">FCPS_EMERGENCY_PAGE</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
+<span class="c1"># &quot;http://www.fcps.edu/content/emergencyContent.html&quot;</span>
+
 <span class="c1"># The timeout for the request to FCPS&#39; emergency page (in seconds)</span>
-<span class="n">FCPS_EMERGENCY_TIMEOUT</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">FCPS_EMERGENCY_TIMEOUT</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="c1"># Show an iframe with tjStar activity data</span>
 <span class="k">if</span> <span class="n">TJSTAR_MAP</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
