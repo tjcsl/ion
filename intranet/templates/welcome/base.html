@@ -1,0 +1,54 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Welcome
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'welcome' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/welcome.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    {{ block.super }}
+<div id="welcome-container">
+    <div id="welcome">
+        <div id="ion-welcome">
+            <br />
+            <br />
+            <h2>
+                Welcome to <b>Ion</b>
+            </h2>
+            <div class="ion-welcome-logo"></div>
+            <div class="ion-welcome-icons"></div>
+            <button id="ion-welcome-continue" class="ion-welcome-continue">
+                Continue <i class="fa fa-chevron-right"></i></button>
+        </div>
+        <div id="step-1">
+            {% block step1 %}
+            {% endblock %}
+        </div>
+
+        <div id="eighth-policy">
+            {% include "welcome/eighth_policy.html" %}
+        </div>
+
+        <div id="step-2">
+            {% block step2 %}
+            {% endblock %}
+        </div>
+
+        <div id="step-3">
+            {% block step3 %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

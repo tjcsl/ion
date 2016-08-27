@@ -1,446 +1,124 @@
-{% extends "dashboard/dashboard.html" %}
+{% extends "welcome/base.html" %}
 {% load static %}
 
-{% block title %}
-    {{ block.super }} - Welcome
+{% block step1 %}
+    <h2>Welcome to the TJ Intranet</h2>
+    <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
+
+    <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+    <p>Email addresses on file:</p>
+    <ul>
+        {% for email in request.user.emails %}
+        <li>{{ email }}</li>
+        {% empty %}
+        <li>(No custom addresses)</li>
+        {% endfor %}
+    </ul>
+
+    <br />
+
+    {% if request.user.emails %}
+    <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
+    {% else %}
+    <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>
+    {% endif %}
+
+
+    <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
+
+    <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
+    <center>
+        <button id="continue-step-1" class="continue-step-1">Eighth Period Policies <i class="fa fa-chevron-right"></i></button>
+    </center>
 {% endblock %}
 
-{% block css %}
-    {{ block.super }}
-<style>
-body {
-    overflow: hidden;
-}
+{% block step2 %}
+    <h2>
+        How to Navigate
+        <button id="skip-step-2" class="continue-step-2 small-button" style="float:right">Skip</a>
+    </h2>
 
-.main, .header {
-    -webkit-filter: blur(2px);
-    filter: blur(2px);
-}
-
-#welcome-container {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    z-index: 9999;
-    background-color: rgba(128, 128, 128, 0.5);
-    overflow-y: auto;
-}
-
-#welcome-container button i.fa,
-#welcome-container a.button i.fa {
-    margin-left: 8px;
-}
-
-#welcome {
-    width: 90%;
-    max-width: 800px;
-    margin: 30px auto;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 5px;
-}
-
-#ion-welcome {
-    height: 400px;
-    position: relative;
-}
-
-#ion-welcome h2 {
-    font-size: 40px;
-    font-family: Roboto;
-    text-align: center;
-}
-
-#ion-welcome h2 b {
-    color: #0048ab;
-}
-
-.ion-welcome-logo {
-    height: 120px;
-    width: 128px;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    margin: -64px;
-    background-image: url(/static/img/logos/touch/touch-icon128.png);
-    background-position: 0;
-    border-radius: 10px;           
-}
-
-@-webkit-keyframes animBg {
-   0% {
-     background-position-x: 0px;
-   }
-   100% { 
-     background-position-x: 500px;
-   }
-}
-
-@keyframes animBg {
-   0% {
-     background-position-x: 0px;
-   }
-   100% { 
-     background-position-x: 500px;
-   }
-}
-
-.ion-welcome-icons {
-    height: 50px;
-    width: 100%;
-    background-image: url(https://ion.tjhsst.edu/static/img/icons.png);
-    background-size: auto 150px;
-    background-position: center -51px;
-    background-repeat: repeat-x;
-    position: absolute;
-    top: 74%;
-    margin-top: -25px;
-    animation: animBg 20s linear infinite;
-    -webkit-animation: animBg 20s linear infinite;
-}
-
-.ion-welcome-continue {
-    padding: 10px 20px;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    margin-left: -60px;
-    width: 120px;
-}
-
-#eighth-policy {
-    display: none;
-}
-
-#eighth-policy b {
-    font-weight: bold;
-}
-
-#eighth-policy i:not(.fa) {
-    font-style: italic;
-}
-
-#eighth-policy u {
-    text-decoration: underline;
-}
-
-#eighth-policy p, #eighth-policy ul {
-    margin-bottom: 15px;
-}
-
-#step-1, #step-2, #step-3 {
-    display: none;
-}
-
-#step-1 p, #step-2 p, #step-3 p {
-    margin-bottom: 15px;
-}
-
-.credit-text {
-    display: table;
-    font-size: 10px;
-}
-
-.credit-section {
-    display: table-cell;
-    padding: 5px 10px;
-}
-
-.eighth-mobile {
-    padding: 10px;
-}
-
-@media (max-width: 930px) {
-    .desktop {
-        zoom: 0.85;
-    }
-}
-
-@media (max-width: 848px) {
-    .desktop {
-        zoom: 0.75;
-    }
-
-    .mobile {
-        zoom: 0.85;
-    }
-}
-
-@media (max-width: 760px) {
-    .eighth-mobile {
-        float: none;
-    }
-
-    .eighth-mobile-detail {
-        display: none;
-    }
-}
-
-@media (max-width: 681px) {
-    .dashboard-desktop {
-        zoom: 0.57;
-    }
-}
-
-@media (max-width: 550px) {
-    #welcome {
-        width: 100%;
-        width: calc(100% - 32px);
-        border-radius: 0;;
-    }
-    img.desktop {
-        display: none;
-    }
-
-    .eighth-mobile-detail {
-        display: block;
-    }
-
-    img.mobile {
-        float: none;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .brs {
-        display: none;
-    }
-
-    .dash {
-        position: relative;
-        margin-bottom: 700px;
-    }
-
-    .dash .dashboard-mobile-pics {
-        position: absolute;
-        top: 100%;
-        width: 100%;
-    }
-}
-
-@media (max-width: 700px) {
-    .credit-section {
-        display: block;
-    }
-}
-
-@media (min-width: 550px)
-</style>
-{% endblock %}
-
-{% block js %}
-    {{ block.super }}
-    <script>
-    $(document).ready(function() {
-        function scroll() {
-            $("body, #welcome-container").animate({ scrollTop: 0 }, 500);
-        }
-
-        var tm = 250;
-
-        $("#ion-welcome-continue").click(function(e) {
-            e.preventDefault();
-            $("#ion-welcome").slideUp(tm);
-            $("#step-1").slideDown(tm);
-            scroll();
-        });
-
-        $("#eighth-policy-next").click(function(e) {
-            e.preventDefault();
-            $("#eighth-policy").slideUp(tm);
-            $("#step-2").slideDown(tm);
-            scroll();
-        });
-
-        $(".continue-step-1").click(function() {
-            $("#step-1").slideUp(tm);
-            $("#eighth-policy").slideDown(tm);
-            scroll();
-        });
-
-        $(".continue-step-2").click(function() {
-            $("#step-2").slideUp(tm);
-            $("#step-3").slideDown(tm);
-            scroll();
-        });
-    });
-    </script>
-{% endblock %}
-
-{% block body %}
-    {{ block.super }}
-<div id="welcome-container">
-    <div id="welcome">
-        <div id="ion-welcome">
+    <div class="dash">
+        <div class="dashboard-mobile-pics">
+            <img src="{% static 'img/promo/dashboard-student-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="left" style="padding: 10px" />
+            <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="right" style="padding: 10px" />
             <br />
-            <br />
-            <h2>
-                Welcome to <b>Ion</b>
-            </h2>
-            <div class="ion-welcome-logo"></div>
-            <div class="ion-welcome-icons"></div>
-            <button id="ion-welcome-continue" class="ion-welcome-continue">
-                Continue <i class="fa fa-chevron-right" style="
-                
-            "></i></button>
         </div>
-        <div id="step-1">
-            <h2>Welcome to the TJ Intranet</h2>
-            <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
-
-            <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
-            <p>Email addresses on file:</p>
-            <ul>
-                {% for email in request.user.emails %}
-                <li>{{ email }}</li>
-                {% empty %}
-                <li>(No custom addresses)</li>
-                {% endfor %}
-            </ul>
-
-            <br />
-
-            {% if request.user.emails %}
-            <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
-            {% else %}
-            <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>
-            {% endif %}
-
-
-            <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
-
-            <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
-            <center>
-                <button id="continue-step-1" class="continue-step-1">Eighth Period Policies <i class="fa fa-chevron-right"></i></button>
-            </center>
-        </div>
-
-        <div id="eighth-policy">
-            <h2>8th Period Sign Up Policy</h2>
-            <p><i>I understand that:</i></p>
-            <p><b>All students must sign up for 8th period by the end of lunch.</b></p>
-            <p><b>Any student who has not signed up by lunch will be scheduled into an Administrative Study Hall.</b> Students may check intranet or the roster posted outside the 8th period office for the location (no pass needed). Students may not change from that activity for any reason. Any absence from these study halls will not be cleared.</p>
-            <p><b>Any student whose activity is cancelled</b> must sign up for another activity before the end of lunch or come to the 8th period office for a pass to any other activity that is not full.</p>
-            <p><b>Any student who has signed up and wishes to change their activity</b> after lunch (except those in a sticky) must come get a pass to another <i>academic activity</i> that is not full.</p>
-            <p>There will be some circumstances where a student does not know by 12:30 that they need to meet with a teacher. In those <i>rare</i> cases, <i>your teacher</i> should communicate directly with the 8th period office.</p>
-            <h2>8th Period Attendance</h2>
-            <p><i>I understand that:</i></p>
-            <p>Because 8th period is a required part of the school day, the school must account for the whereabouts of each student during this time. <b>Attendance is recorded for each activity.</b></p>
-            <p>NOTE: <i>Student parking spaces are allocated only after a review of 8th period attendance records. Counselors and teachers may use 8th period attendance as one measure of responsibility and reliability when considering students for leadership positions, mentorships, or in preparing college recommendations.</i></p>
-            <p><b>Students must keep track of their attendance and absences must be cleared within two weeks.</b> The number of unexcused 8th period absences will be displayed in RED at the top of the 8th Period “box”.  If absences are not cleared, they may be referred to an administrator for placement in 8th period Detention.</p>
-            <h2>8th Period Detention Policy</h2>
-            <p><i>I understand that:</i></p>
-            <p>8th Period Detention is a double block activity with an administrator for students with unexcused 8th pd absences. Following the criteria below, students will be assigned to detention during 8th pd. Students receive an email letting them know and giving them a deadline to fix any mistakes. Students may not be excused for any reason and failure to show up for the entire period will result in a referral to the grade level administrator.</p>
-            <div style="padding:10px;margin:15px;border:1px solid black">
-                Assignment to detention is based upon attendance EACH quarter. Absences are recorded for the year and DO NOT disappear after attending 8th pd detention.  Yearly totals are used for referrals (as outlined below), assigning leadership, mentorship, parking and other privileges.
-            </div>
-            <ul>
-                <li><b><u>If a student gets 2 or more absences in any QUARTER,</u></b> they will be assigned to 8th pd detention.</li>
-                <li><b><u>If a student gets any additional absences</u></b> in the SAME quarter after attending detention that quarter, they will be assigned to the next 8th pd detention.</li>
-            </ul>
-            <b>PLEASE NOTE: Students will get referred to an Assistant Principal (for possible additional consequences and/or Saturday detention) if any of the following apply:</b>
-            <ul>
-                <li>failure to show up for the detention period</li>
-                <li>getting assigned to 3 detentions in the year</li>
-                <li>getting 5 or more absences in any quarter</li>
-                <li>getting 10 or more absences in the year</li>
-            </ul>
-            <p>Staff members are available in the 8th period activity office to help you any time during the day.  Please stop by any time if you have any questions or need help.</p>
-            <div style="text-align:center"><a id="eighth-policy-next" href="#" class="button">Accept <i class="fa fa-chevron-right"></i></a></div>
-        </div>
-        <div id="step-2">
-            <h2>
-                How to Navigate
-                <button id="skip-step-2" class="continue-step-2 small-button" style="float:right">Skip</a>
-            </h2>
-
-            <div class="dash">
-                <div class="dashboard-mobile-pics">
-                    <img src="{% static 'img/promo/dashboard-student-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="left" style="padding: 10px" />
-                    <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="right" style="padding: 10px" />
-                    <br />
-                </div>
-                <div class="dashboard-text">
-                    <p>Intranet is fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
-                </div>
-            </div>
-            <div class="brs">
-                <br />
-                <br />
-                <br />
-            </div>
-            <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as your current eighth period signups. To sign up for a block of eighth period, click the "Sign Up" button on the widget. If you have already selected an activity for this block, you may select "Change."</p>
-
-
-            <center>
-                <img src="{% static 'img/promo/dashboard-student.png' %}" alt="Dashboard page" class="desktop dashboard-desktop" />
-            </center>
-
-
-            <br />
-
-            <img src="{% static 'img/promo/eighth-student-list-mobile.png' %}" alt="Eighth Period signup page" class="mobile eighth-mobile" align="left" />
-            <div class="eighth-text">
-                <br />
-                <p>This will take you to the Eighth Period homepage. On the top, you will see a listing showing all of the days containing a block of Eighth Period. Click on a block listed there to change the day you are viewing activities for.</p>
-                <p>On the left side of the screen, you will see a listing of all the eighth period activities scheduled. To search for a specific activity, use the search box above the listing.</p>
-
-                <p>To view more information about an activity, click on its name. More details about it will appear on the right. Buttons will appear that will allow you to "View Roster" or "Sign Up," if you are able. Some activities are restricted to certain groups, some are cancelled, and some fill up rather quickly. If you are unable to choose an activity to sign up for, a message will appear with an explanation.</p>
-            </div>
-            <img src="{% static 'img/promo/eighth-student-signup-mobile.png' %}" alt="Eighth Period signup information" class="mobile eighth-mobile eighth-mobile-detail" align="left" style="clear: left" />
-
-            <center>
-                <img src="{% static 'img/promo/eighth-student-list.png' %}" alt="Eighth Period signup page" class="desktop" />
-            </center>
-
-
-
-            <br />
-            <div class="brs">
-                <br />
-                <br />
-            </div>
-
-            <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
-            <br />
-            <img src="{% static 'img/promo/search-results-small.png' %}" alt="Student directory searching" class="desktop" align="right" />
-            <br />
-            <div class="brs">
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-            </div>
-            <p>After selecting a user, you will be able to view their personal information, class, and eighth period schedule, if they have decided to share this information publicly. You also have the capability to restrict other students from viewing your information; visit the Preferences page to change what others can see on your profile.</p>
-            <img src="{% static 'img/promo/profile.png' %}" alt="User profile" class="desktop" float="left" />
-
-            <span id="about-intranet" name="about-intranet"></span>
-            <br />
-            <br />
-            <center>
-                <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fa fa-chevron-right"></i></button>
-            </center>
-        </div>
-        <div id="step-3">
-            <h2>About Intranet</h2>
-
-            <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
-
-            {% include "credits.html" %}
-
-            <br />
-            <br />
-            <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessible by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
-            <p>Thanks for reading and have a great year!</p>
-            <center>
-                <a id="continue-step-3" href="{% url 'welcome_done' %}" class="button continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
-            </center>
+        <div class="dashboard-text">
+            <p>Intranet is fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
         </div>
     </div>
-</div>
+    <div class="brs">
+        <br />
+        <br />
+        <br />
+    </div>
+    <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as your current eighth period signups. To sign up for a block of eighth period, click the "Sign Up" button on the widget. If you have already selected an activity for this block, you may select "Change."</p>
+
+
+    <center>
+        <img src="{% static 'img/promo/dashboard-student.png' %}" alt="Dashboard page" class="desktop dashboard-desktop" />
+    </center>
+
+
+    <br />
+
+    <img src="{% static 'img/promo/eighth-student-list-mobile.png' %}" alt="Eighth Period signup page" class="mobile eighth-mobile" align="left" />
+    <div class="eighth-text">
+        <br />
+        <p>This will take you to the Eighth Period homepage. On the top, you will see a listing showing all of the days containing a block of Eighth Period. Click on a block listed there to change the day you are viewing activities for.</p>
+        <p>On the left side of the screen, you will see a listing of all the eighth period activities scheduled. To search for a specific activity, use the search box above the listing.</p>
+
+        <p>To view more information about an activity, click on its name. More details about it will appear on the right. Buttons will appear that will allow you to "View Roster" or "Sign Up," if you are able. Some activities are restricted to certain groups, some are cancelled, and some fill up rather quickly. If you are unable to choose an activity to sign up for, a message will appear with an explanation.</p>
+    </div>
+    <img src="{% static 'img/promo/eighth-student-signup-mobile.png' %}" alt="Eighth Period signup information" class="mobile eighth-mobile eighth-mobile-detail" align="left" style="clear: left" />
+
+    <center>
+        <img src="{% static 'img/promo/eighth-student-list.png' %}" alt="Eighth Period signup page" class="desktop" />
+    </center>
+
+
+
+    <br />
+    <div class="brs">
+        <br />
+        <br />
+    </div>
+
+    <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
+    <br />
+    <img src="{% static 'img/promo/search-results-small.png' %}" alt="Student directory searching" class="desktop" align="right" />
+    <br />
+    <div class="brs">
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+    <p>After selecting a user, you will be able to view their personal information, class, and eighth period schedule, if they have decided to share this information publicly. You also have the capability to restrict other students from viewing your information; visit the Preferences page to change what others can see on your profile.</p>
+    <img src="{% static 'img/promo/profile.png' %}" alt="User profile" class="desktop" float="left" />
+
+    <span id="about-intranet" name="about-intranet"></span>
+    <br />
+    <br />
+    <center>
+        <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fa fa-chevron-right"></i></button>
+    </center>
+{% endblock %}
+
+{% block step3 %}
+    <h2>About Intranet</h2>
+
+    <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
+
+    {% include "credits.html" %}
+
+    <br />
+    <br />
+    <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessible by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
+    <p>Thanks for reading and have a great year!</p>
+    <center>
+        <a id="continue-step-3" href="{% url 'welcome_done' %}" class="button continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
+    </center>
 {% endblock %}
