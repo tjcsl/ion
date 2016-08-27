@@ -1180,7 +1180,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         suff = " - {}".format(self.title) if self.title else ""
         return "{}{} on {}{}".format(self.activity, suff, self.block, cancelled_str)
-
+        
 
 class EighthSignupManager(Manager):
     """Model manager for EighthSignup."""

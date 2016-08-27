@@ -528,7 +528,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         context = add_widgets_context(request, context)
 
     if announcements_admin:
-        all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
+        all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year()
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
 
@@ -537,7 +537,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
             "awaiting_approval": awaiting_approval}
         )
 
-    self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user)
+    self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user).this_year()
     context.update({
         "self_awaiting_teacher": self_awaiting_teacher
     })
