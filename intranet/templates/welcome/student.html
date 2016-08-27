@@ -11,20 +11,28 @@
 body {
     overflow: hidden;
 }
+
 .main, .header {
     -webkit-filter: blur(2px);
     filter: blur(2px);
 }
+
 #welcome-container {
     position: absolute;
     left: 0px;
     top: 0px;
     bottom: 0px;
     right: 0px;
-    z-index:9999;
+    z-index: 9999;
     background-color: rgba(128, 128, 128, 0.5);
     overflow-y: auto;
 }
+
+#welcome-container button i.fa,
+#welcome-container a.button i.fa {
+    margin-left: 8px;
+}
+
 #welcome {
     width: 90%;
     max-width: 800px;
@@ -32,27 +40,102 @@ body {
     background-color: white;
     border: 1px solid #ccc;
     padding: 15px;
+    border-radius: 5px;
 }
+
+#ion-welcome {
+    height: 400px;
+    position: relative;
+}
+
+#ion-welcome h2 {
+    font-size: 40px;
+    font-family: Roboto;
+    text-align: center;
+}
+
+#ion-welcome h2 b {
+    color: #0048ab;
+}
+
+.ion-welcome-logo {
+    height: 120px;
+    width: 128px;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin: -64px;
+    background-image: url(/static/img/logos/touch/touch-icon128.png);
+    background-position: 0;
+    border-radius: 10px;           
+}
+
+@-webkit-keyframes animBg {
+   0% {
+     background-position-x: 0px;
+   }
+   100% { 
+     background-position-x: 500px;
+   }
+}
+
+@keyframes animBg {
+   0% {
+     background-position-x: 0px;
+   }
+   100% { 
+     background-position-x: 500px;
+   }
+}
+
+.ion-welcome-icons {
+    height: 50px;
+    width: 100%;
+    background-image: url(https://ion.tjhsst.edu/static/img/icons.png);
+    background-size: auto 150px;
+    background-position: center -51px;
+    background-repeat: repeat-x;
+    position: absolute;
+    top: 74%;
+    margin-top: -25px;
+    animation: animBg 20s linear infinite;
+    -webkit-animation: animBg 20s linear infinite;
+}
+
+.ion-welcome-continue {
+    padding: 10px 20px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -60px;
+    width: 120px;
+}
+
 #eighth-policy {
     display: none;
 }
+
 #eighth-policy b {
     font-weight: bold;
 }
+
 #eighth-policy i:not(.fa) {
     font-style: italic;
 }
+
 #eighth-policy u {
     text-decoration: underline;
 }
+
 #eighth-policy p, #eighth-policy ul {
     margin-bottom: 15px;
 }
-#step-1, #step-2 {
+
+#step-1, #step-2, #step-3 {
     display: none;
 }
 
-#step-1 p, #step-2 p {
+#step-1 p, #step-2 p, #step-3 p {
     margin-bottom: 15px;
 }
 
@@ -146,21 +229,26 @@ body {
     {{ block.super }}
     <script>
     $(document).ready(function() {
-        $("#ion-welcome-next").click(function(e) {
+        $("#ion-welcome-continue").click(function(e) {
             e.preventDefault();
             $("#ion-welcome").slideUp();
-            $("#eighth-policy").slideDown();
+            $("#step-1").slideDown();
         });
 
         $("#eighth-policy-next").click(function(e) {
             e.preventDefault();
             $("#eighth-policy").slideUp();
-            $("#step-1").slideDown();
+            $("#step-2").slideDown();
         });
 
         $(".continue-step-1").click(function() {
             $("#step-1").slideUp();
-            $("#step-2").slideDown();
+            $("#eighth-policy").slideDown();
+        });
+
+        $(".continue-step-2").click(function() {
+            $("#step-2").slideUp();
+            $("#step-3").slideDown();
         });
     });
     </script>
@@ -171,41 +259,17 @@ body {
 <div id="welcome-container">
     <div id="welcome">
         <div id="ion-welcome">
-            <b>INSERT WELCOME SCREEN HERE</b>
-            <div style="text-align:center"><a id="ion-welcome-next" href="#" class="button">Continue <i class="fa fa-arrow-right"></i></a></div>
-        </div>
-        <div id="eighth-policy">
-            <h2>8th Period Sign Up Policy</h2>
-            <p><i>I understand that:</i></p>
-            <p><b>All students must sign up for 8th period by the end of lunch.</b></p>
-            <p><b>Any student who has not signed up by lunch will be scheduled into an Administrative Study Hall.</b> Students may check intranet or the roster posted outside the 8th period office for the location (no pass needed). Students may not change from that activity for any reason. Any absence from these study halls will not be cleared.</p>
-            <p><b>Any student whose activity is cancelled</b> must sign up for another activity before the end of lunch or come to the 8th period office for a pass to any other activity that is not full.</p>
-            <p><b>Any student who has signed up and wishes to change their activity</b> after lunch (except those in a sticky) must come get a pass to another <i>academic activity</i> that is not full.</p>
-            <p>There will be some circumstances where a student does not know by 12:30 that they need to meet with a teacher. In those <i>rare</i> cases, <i>your teacher</i> should communicate directly with the 8th period office.</p>
-            <h2>8th Period Attendance</h2>
-            <p><i>I understand that:</i></p>
-            <p>Because 8th period is a required part of the school day, the school must account for the whereabouts of each student during this time. <b>Attendance is recorded for each activity.</b></p>
-            <p>NOTE: <i>Student parking spaces are allocated only after a review of 8th period attendance records. Counselors and teachers may use 8th period attendance as one measure of responsibility and reliability when considering students for leadership positions, mentorships, or in preparing college recommendations.</i></p>
-            <p><b>Students must keep track of their attendance and absences must be cleared within two weeks.</b> The number of unexcused 8th period absences will be displayed in RED at the top of the 8th Period “box”.  If absences are not cleared, they may be referred to an administrator for placement in 8th period Detention.</p>
-            <h2>8th Period Detention Policy</h2>
-            <p><i>I understand that:</i></p>
-            <p>8th Period Detention is a double block activity with an administrator for students with unexcused 8th pd absences. Following the criteria below, students will be assigned to detention during 8th pd. Students receive an email letting them know and giving them a deadline to fix any mistakes. Students may not be excused for any reason and failure to show up for the entire period will result in a referral to the grade level administrator.</p>
-            <div style="padding:10px;margin:15px;border:1px solid black">
-                Assignment to detention is based upon attendance EACH quarter. Absences are recorded for the year and DO NOT disappear after attending 8th pd detention.  Yearly totals are used for referrals (as outlined below), assigning leadership, mentorship, parking and other privileges.
-            </div>
-            <ul>
-                <li><b><u>If a student gets 2 or more absences in any QUARTER,</u></b> they will be assigned to 8th pd detention.</li>
-                <li><b><u>If a student gets any additional absences</u></b> in the SAME quarter after attending detention that quarter, they will be assigned to the next 8th pd detention.</li>
-            </ul>
-            <b>PLEASE NOTE: Students will get referred to an Assistant Principal (for possible additional consequences and/or Saturday detention) if any of the following apply:</b>
-            <ul class="fa-ul">
-                <li><i class="fa-li fa fa-chevron-right"></i> failure to show up for the detention period</li>
-                <li><i class="fa-li fa fa-chevron-right"></i> getting assigned to 3 detentions in the year</li>
-                <li><i class="fa-li fa fa-chevron-right"></i> getting 5 or more absences in any quarter</li>
-                <li><i class="fa-li fa fa-chevron-right"></i> getting 10 or more absences in the year</li>
-            </ul>
-            <p>Staff members are available in the 8th period activity office to help you any time during the day.  Please stop by any time if you have any questions or need help.</p>
-            <div style="text-align:center"><a id="eighth-policy-next" href="#" class="button">Accept <i class="fa fa-arrow-right"></i></a></div>
+            <br />
+            <br />
+            <h2>
+                Welcome to <b>Ion</b>
+            </h2>
+            <div class="ion-welcome-logo"></div>
+            <div class="ion-welcome-icons"></div>
+            <button id="ion-welcome-continue" class="ion-welcome-continue">
+                Continue <i class="fa fa-chevron-right" style="
+                
+            "></i></button>
         </div>
         <div id="step-1">
             <h2>Welcome to the TJ Intranet</h2>
@@ -234,14 +298,47 @@ body {
 
             <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
             <center>
-                <button id="continue-step-1" class="continue-step-1">What's New in Ion <i class="fa fa-arrow-right"></i></button>
+                <button id="continue-step-1" class="continue-step-1">Eighth Period Policies <i class="fa fa-chevron-right"></i></button>
             </center>
         </div>
 
+        <div id="eighth-policy">
+            <h2>8th Period Sign Up Policy</h2>
+            <p><i>I understand that:</i></p>
+            <p><b>All students must sign up for 8th period by the end of lunch.</b></p>
+            <p><b>Any student who has not signed up by lunch will be scheduled into an Administrative Study Hall.</b> Students may check intranet or the roster posted outside the 8th period office for the location (no pass needed). Students may not change from that activity for any reason. Any absence from these study halls will not be cleared.</p>
+            <p><b>Any student whose activity is cancelled</b> must sign up for another activity before the end of lunch or come to the 8th period office for a pass to any other activity that is not full.</p>
+            <p><b>Any student who has signed up and wishes to change their activity</b> after lunch (except those in a sticky) must come get a pass to another <i>academic activity</i> that is not full.</p>
+            <p>There will be some circumstances where a student does not know by 12:30 that they need to meet with a teacher. In those <i>rare</i> cases, <i>your teacher</i> should communicate directly with the 8th period office.</p>
+            <h2>8th Period Attendance</h2>
+            <p><i>I understand that:</i></p>
+            <p>Because 8th period is a required part of the school day, the school must account for the whereabouts of each student during this time. <b>Attendance is recorded for each activity.</b></p>
+            <p>NOTE: <i>Student parking spaces are allocated only after a review of 8th period attendance records. Counselors and teachers may use 8th period attendance as one measure of responsibility and reliability when considering students for leadership positions, mentorships, or in preparing college recommendations.</i></p>
+            <p><b>Students must keep track of their attendance and absences must be cleared within two weeks.</b> The number of unexcused 8th period absences will be displayed in RED at the top of the 8th Period “box”.  If absences are not cleared, they may be referred to an administrator for placement in 8th period Detention.</p>
+            <h2>8th Period Detention Policy</h2>
+            <p><i>I understand that:</i></p>
+            <p>8th Period Detention is a double block activity with an administrator for students with unexcused 8th pd absences. Following the criteria below, students will be assigned to detention during 8th pd. Students receive an email letting them know and giving them a deadline to fix any mistakes. Students may not be excused for any reason and failure to show up for the entire period will result in a referral to the grade level administrator.</p>
+            <div style="padding:10px;margin:15px;border:1px solid black">
+                Assignment to detention is based upon attendance EACH quarter. Absences are recorded for the year and DO NOT disappear after attending 8th pd detention.  Yearly totals are used for referrals (as outlined below), assigning leadership, mentorship, parking and other privileges.
+            </div>
+            <ul>
+                <li><b><u>If a student gets 2 or more absences in any QUARTER,</u></b> they will be assigned to 8th pd detention.</li>
+                <li><b><u>If a student gets any additional absences</u></b> in the SAME quarter after attending detention that quarter, they will be assigned to the next 8th pd detention.</li>
+            </ul>
+            <b>PLEASE NOTE: Students will get referred to an Assistant Principal (for possible additional consequences and/or Saturday detention) if any of the following apply:</b>
+            <ul>
+                <li>failure to show up for the detention period</li>
+                <li>getting assigned to 3 detentions in the year</li>
+                <li>getting 5 or more absences in any quarter</li>
+                <li>getting 10 or more absences in the year</li>
+            </ul>
+            <p>Staff members are available in the 8th period activity office to help you any time during the day.  Please stop by any time if you have any questions or need help.</p>
+            <div style="text-align:center"><a id="eighth-policy-next" href="#" class="button">Accept <i class="fa fa-chevron-right"></i></a></div>
+        </div>
         <div id="step-2">
             <h2>
                 How to Navigate
-                <a href="#about-intranet" class="skip-tutorial button small-button" style="float:right">Skip Tutorial</a>
+                <button id="skip-step-2" class="continue-step-2 small-button" style="float:right">Skip</a>
             </h2>
 
             <div class="dash">
@@ -303,13 +400,16 @@ body {
                 <br />
             </div>
             <p>After selecting a user, you will be able to view their personal information, class, and eighth period schedule, if they have decided to share this information publicly. You also have the capability to restrict other students from viewing your information; visit the Preferences page to change what others can see on your profile.</p>
-            <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" float="left" />
+            <img src="{% static 'img/promo/profile.png' %}" alt="User profile" class="desktop" float="left" />
 
             <span id="about-intranet" name="about-intranet"></span>
             <br />
             <br />
-            <br />
-
+            <center>
+                <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fa fa-chevron-right"></i></button>
+            </center>
+        </div>
+        <div id="step-3">
             <h2>About Intranet</h2>
 
             <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
@@ -321,7 +421,7 @@ body {
             <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessible by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
             <p>Thanks for reading and have a great year!</p>
             <center>
-                <a id="continue-step-2" href="{% url 'welcome_done' %}" class="button continue-step-2"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
+                <a id="continue-step-3" href="{% url 'welcome_done' %}" class="button continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
             </center>
         </div>
     </div>
