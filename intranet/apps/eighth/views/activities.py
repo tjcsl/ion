@@ -119,7 +119,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
             ('FONT', (0, 0), (-1, 0), 'Helvetica-Bold')
         ]) for x in empty_activities]
         for i in range(0, len(empty_activities), 2):
-            elements.append(Paragraph("Empty Activities (Page {})".format(i//2), styles["Title"]))
+            elements.append(Paragraph("Empty Activities (Page {})".format(i//2 + 1), styles["Title"]))
             elements.append(Paragraph("The following activities have no 8th period blocks assigned to them.", styles["Normal"]))
             elements.append(Spacer(0, 0.20 * inch))
             ea = [empty_activities[i]]
