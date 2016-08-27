@@ -19,7 +19,7 @@ class Link(models.Model):
     title = models.CharField(max_length=100)
 
 
-class EventQuerySet(models.QuerySet):
+class EventQuerySet(models.query.QuerySet):
     def this_year(self):
         """ Get Events from this school year only. """
         start_date, end_date = get_date_range_this_year()

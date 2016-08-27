@@ -159,7 +159,7 @@ class Announcement(models.Model):
         ordering = ["-pinned", "-added"]
 
 
-class AnnouncementRequestQuerySet(models.QuerySet):
+class AnnouncementRequestQuerySet(models.query.QuerySet):
     def this_year(self):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
