@@ -62,7 +62,7 @@ apt-get -y install htop
 apt-get -y install glances
 
 # CSS
-apt-get -y install rubygems
+apt-get -y install rubygems || apt-get -y install rubygems-integration
 gem install sass
 
 # PostsgreSQL
@@ -72,9 +72,9 @@ apt-get -y install libpq-dev
 sqlcmd(){
     sudo -u postgres psql -U postgres -d postgres -c "$@"
 }
-sqlcmd "CREATE DATABASE ion;"
-sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';"
-sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.5/main/pg_hba.conf
+sqlcmd "CREATE DATABASE ion;" || echo Database already exists
+sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';" || echo Database user already exists
+sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.*/main/pg_hba.conf
 service postgresql restart
 
 # Redis
@@ -95,7 +95,7 @@ grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"
 
 sudo -i -u ubuntu bash -c "
     source /etc/ion_env_setup.sh &&
-    mkvirtualenv --python=python3.5 ion && workon ion &&
+    mkvirtualenv --python=python3 ion && workon ion &&
     pip install -U -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate
@@ -104,5 +104,5 @@ mkdir -p uploads
 ./manage.py migrate --noinput
 ./manage.py collectstatic --noinput
 
-mkdir /var/log/ion
+mkdir -p /var/log/ion
 chown -R ubuntu: /var/log/ion
