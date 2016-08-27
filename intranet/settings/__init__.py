@@ -717,7 +717,7 @@ SENIOR_GRADUATION_YEAR = 2017
 SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
 
 # Month (1-indexed) after which a new school year begins
-# 7 = July
+# July = 7
 YEAR_TURNOVER_MONTH = 7
 
 # The hour on an eighth period day to lock teachers from

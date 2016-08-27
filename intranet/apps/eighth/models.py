@@ -327,11 +327,13 @@ class EighthActivity(AbstractBaseEighthModel):
     def __str__(self):
         return self.name_with_flags
 
+
 class EighthBlockQuerySet(models.QuerySet):
     def this_year(self):
         """ Get EighthBlocks from this school year only. """
         start_date, end_date = get_date_range_this_year()
         return self.filter(date__gte=start_date, date__lte=end_date)
+
 
 class EighthBlockManager(models.Manager):
 
@@ -1180,7 +1182,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         suff = " - {}".format(self.title) if self.title else ""
         return "{}{} on {}{}".format(self.activity, suff, self.block, cancelled_str)
-        
+
 
 class EighthSignupManager(Manager):
     """Model manager for EighthSignup."""

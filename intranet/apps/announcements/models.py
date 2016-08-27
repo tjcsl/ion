@@ -40,7 +40,6 @@ class AnnouncementManager(Manager):
         ids = user.announcements_hidden.all().values_list("announcement__id")
         return Announcement.objects.filter(id__in=ids)
 
-
     def this_year(self):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -165,6 +164,7 @@ class AnnouncementRequestQuerySet(models.QuerySet):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
         return self.filter(added__gte=start_date, added__lte=end_date)
+
 
 class AnnouncementRequestManager(Manager):
     def get_queryset(self):

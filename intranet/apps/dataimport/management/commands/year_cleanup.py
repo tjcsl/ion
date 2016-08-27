@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import csv
 import datetime
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from intranet.apps.users.models import User
+from intranet.apps.eighth.models import EighthSignup
 
 
 class Command(BaseCommand):
@@ -26,7 +25,6 @@ class Command(BaseCommand):
             print("ERROR:", q)
             print("Abort.")
             sys.exit()
-
 
     def handle(self, *args, **options):
         do_run = options["run"]
@@ -61,11 +59,10 @@ class Command(BaseCommand):
         """
 
         print("Resolving absences")
-        if do_run: self.clear_absences()
-
+        if do_run:
+            self.clear_absences()
 
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
         print("{} absents".format(absents.count()))
         absents.update(was_absent=True)
-
