@@ -7,10 +7,10 @@ from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
-from django.db.models import Count
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ..utils import get_start_date
+from ....utils.date import get_date_range_this_year
 from ....utils.serialization import safe_json
 
 from io import BytesIO
@@ -152,35 +152,32 @@ def calculate_statistics(activity, start_date=None, all_years=False):
     chart_data = defaultdict(dict)
 
     old_blocks = 0
-    cancelled_blocks = 0
-    empty_blocks = 0
 
-    past_start_date = 0
-
-    filtered_activities = activities.filter(block__date__lt=start_date)
+    filtered_activities = activities.filter(block__date__lte=start_date)
     past_start_date = activities.count() - filtered_activities.count()
-    year_filtered_activities = []
+
     if not all_years:
-        for a in filtered_activities:
-            if a.block.is_this_year:
-                year_filtered_activities.append(a)
-        old_blocks = filtered_activities.count() - len(year_filtered_activities)
-        filtered_activities = year_filtered_activities
+        year_start, year_end = get_date_range_this_year()
+        year_filtered = filtered_activities.filter(block__date__gte=year_start, block__date__lte=year_end)
+        old_blocks = filtered_activities.count() - len(year_filtered)
+        filtered_activities = year_filtered
 
     activities = filtered_activities
 
-    for a in activities:
-        if a.cancelled:
-            cancelled_blocks += 1
+    cancelled_blocks = activities.filter(cancelled=True).count()
+    empty_blocks = 0
+
+    for a in activities.filter(cancelled=False):
+        members = a.members.count()
+        if members == 0:
+            empty_blocks += 1
         else:
-            members = a.members.count()
             for user in a.members.all():
                 signups[user] += 1
             chart_data[str(a.block.date)][str(a.block.block_letter)] = members
-            if members == 0:
-                empty_blocks += 1
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
+
     total_blocks = len(activities)
     scheduled_blocks = total_blocks - cancelled_blocks
     total_signups = sum(n for _, n in signups)
