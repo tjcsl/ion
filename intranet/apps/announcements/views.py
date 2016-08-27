@@ -244,11 +244,11 @@ def admin_approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def admin_request_status_view(request):
-    all_waiting = AnnouncementRequest.objects.this_year().filter(posted=None, rejected=False)
+    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year()
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
     awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    approved = AnnouncementRequest.objects.this_year().exclude(posted=None)
-    rejected = AnnouncementRequest.objects.this_year().filter(rejected=True)
+    approved = AnnouncementRequest.objects.exclude(posted=None).this_year()
+    rejected = AnnouncementRequest.objects.filter(rejected=True).this_year()
 
     context = {"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval, "approved": approved, "rejected": rejected}
 
