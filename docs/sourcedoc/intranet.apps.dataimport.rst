@@ -11,14 +11,6 @@ Subpackages
 Submodules
 ----------
 
-intranet.apps.dataimport.admin module
--------------------------------------
-
-.. automodule:: intranet.apps.dataimport.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.dataimport.apps module
 ------------------------------------
 
