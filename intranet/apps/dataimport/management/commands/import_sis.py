@@ -52,15 +52,6 @@ class Command(BaseCommand):
         print("CSV file", self.csv_file)
         
 
-        if os.path.isfile("users.json"):
-            print("Loading JSON")
-            users = json.loads(open("users.json", "r").read())
-            print("JSON loaded")
-        else:
-            print("Generating JSON file")
-            users = self.generate_sorted_dump()
-            open("users.json", "w").write(json.dumps(users))
-            print("JSON loaded")
 
         if self.fake_teachers:
             if os.path.isfile("users_faked.json"):
@@ -68,6 +59,7 @@ class Command(BaseCommand):
                 users = json.loads(open("users_faked.json", "r").read())
                 print("JSON loaded")
             else:
+                users = load_gen_users()
                 print("Faking teachers...")
                 for i in range(len(users)):
                     for classid in users[i]["classes"]:
@@ -79,9 +71,59 @@ class Command(BaseCommand):
 
                 open("users_faked.json", "w").write(json.dumps(users))
 
-        
+
+        if os.path.isfile("users_uids.json"):
+            print("Loading user existence/UIDnumbers info...")
+            self.uidmap = json.loads(open("users_uids.json", "r").read())
+            for i in range(len(users)):
+                user = users[i]
+                tjuser = user["user"]["TJUsername"].lower()
+                user["uidNumber"] = self.uidmap[tjuser]["uidNumber"]
+                user["ldapExists"] = self.uidmap[tjuser]["ldapExists"]
+            print("Loaded")
+        else:
+            print("Check for user existence/generate iodineUidNumbers")
+            for i in range(len(users)):
+                user = users[i]
+                tjuser = user["user"]["TJUsername"].lower()
+                try:
+                    ionuser = User.objects.get(username__iexact=tjuser)
+                except User.DoesNotExist:
+                    uidNumber = self.last_uid_number + 1
+                    self.last_uid_number += 1
+                    user["uidNumber"] = uidNumber
+                    user["ldapExists"] = False
+                else:
+                    user["uidNumber"] = ionuser.id
+                    user["ldapExists"] = True
+
+                self.uidmap[tjuser] = {"uidNumber": user["uidNumber"], "ldapExists": user["ldapExists"]}
+            print("Done")
+            open("users_uids.json", "w").write(json.dumps(self.uidmap))
+
+        print("Either add or modify accounts in LDAP")
+        for i in range(len(users)):
+            user = users[i]
+            if user["ldapExists"]:
+                print(user["user"]["TJUsername"], "MODIFY", user["uidNumber"])
+                self.update_ldap_user(user)
+            else:
+                print(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
+                self.add_ldap_user(user)
         
         return
+
+    def load_gen_users(self):
+        if os.path.isfile("users.json"):
+            print("Loading JSON")
+            users = json.loads(open("users.json", "r").read())
+            print("JSON loaded")
+        else:
+            print("Generating JSON file")
+            users = self.generate_sorted_dump()
+            open("users.json", "w").write(json.dumps(users))
+            print("JSON loaded")
+        return users
 
 
     def generate_sorted_dump(self):
@@ -187,11 +229,11 @@ class Command(BaseCommand):
 
     def add_ldap_user(self, user_dict):
         data = user_dict["user"]
-        uidNumber = self.last_uid_number + 1
-        self.last_uid_number += 1
-        data["uidNumber"] = uidNumber
-        #print(data)
+        data["uidNumber"] = user_dict["uidNumber"]
+        data["ldapExists"] = user_dict["ldapExists"]
         ldif = self.get_ldif(data)
-        #print(ldif,"\n\n")
-        self.uidmap[uidNumber] = data["TJUsername"]
+        
+
+    def update_ldap_user(self, user_dict):
+        pass
 
