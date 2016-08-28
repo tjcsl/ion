@@ -173,10 +173,10 @@ class Command(BaseCommand):
         
         ldif = """
 dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
+changetype: {changetype}
 objectClass: tjhsstStudent
 iodineUid: {iodineUid}
 iodineUidNumber: {iodineUidNumber}
-structuralObjectClass: tjhsstStudent
 uid: {iodineUidNumber}
 header: TRUE
 locker: 0
@@ -221,6 +221,9 @@ perm-showaddress-self: FALSE
 perm-showschedule-self: FALSE
 perm-showeighth-self: FALSE
         """.format(**data)
+        if not data["middlename"]:
+            ldif = ldif.replace("\nmiddlename: ", "")
+
         return ldif
 
     def format_counselor(self, name):
@@ -258,8 +261,9 @@ perm-showeighth-self: FALSE
 
         return "{} {}".format(data["user"]["FirstName"], data["user"]["LastName"])
 
-    def gen_fields(self, data):
+    def gen_fields(self, data, changetype):
         return {
+            "changetype": changetype,
             "iodineUid": data["user"]["TJUsername"],
             "iodineUidNumber": data["uidNumber"],
             "tjhsstStudentId": data["user"]["StudentID"],
@@ -281,15 +285,63 @@ perm-showeighth-self: FALSE
         }
 
     def add_ldap_user(self, user_dict):
-        fields = self.gen_fields(user_dict)
+        fields = self.gen_fields(user_dict, "add")
         ldif = self.get_ldif(fields)
         self.ldifs.append(ldif)
         print(user_dict)
         print(fields)
         print(ldif)
-        print("\n\n")
+        print("\n")
         
 
     def update_ldap_user(self, user_dict):
+        fields = self.gen_fields(user_dict, "modify")
+        ldif = self.get_ldif(fields)
+        self.ldifs.append(ldif)
+        print(user_dict)
+        print(fields)
+        print(ldif)
+        print("\n")
+
+
+    def gen_class_ldif(self, data):
+        """
+dn: tjhsstSectionId=000900-05,ou=schedule,dc=tjhsst,dc=edu
+objectClass: tjhsstClass
+tjhsstClassId: 000900
+tjhsstSectionId: 000900-05
+courseLength: 4
+quarterNumber: 1
+quarterNumber: 2
+quarterNumber: 3
+quarterNumber: 4
+roomNumber: DSS
+graduationYear: 2016
+cn: See Counselor
+sponsorDn: iodineUid=mscox,ou=people,dc=tjhsst,dc=edu
+classPeriod: 5
+structuralObjectClass: tjhsstClass
+        """
+
+        base = """
+dn: tjhsstSectionId={sectionId},ou=schedule,dc=tjhsst,dc=edu
+objectClass: tjhsstClass
+structuralObjectClass: tjhsstClass
+tjhsstClassId: {classId}
+tjhsstSectionId: {sectionId}
+courseLength: {courseLength}
+roomNumber: {roomNumber}
+graduationYear: 2017
+cn: {cn}
+sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu
+        """
+        if data["courseLength"] == 4:
+            base += "quarterNumber: 1\n"
+            base += "quarterNumber: 2\n"
+            base += "quarterNumber: 3\n"
+            base += "quarterNumber: 4\n"
+
+
+    def gen_class_fields(self, data):
         pass
 
