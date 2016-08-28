@@ -47,15 +47,19 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
+def current_school_year():
+    if datetime.now().month <= settings.YEAR_TURNOVER_MONTH:
+        return datetime.now().year
+    else:
+        return datetime.now().year + 1
+
+
 def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):
     ''' Accepts EighthActivity objects and outputs a PDF file. '''
     if activities is None:
         activities = EighthActivity.objects.all().order_by("name")
     if year is None:
-        if datetime.now().month <= settings.YEAR_TURNOVER_MONTH:
-            year = datetime.now().year
-        else:
-            year = datetime.now().year + 1
+        year = current_school_year()
 
     pdf_buffer = BytesIO()
 
@@ -229,7 +233,35 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
 
 
 @login_required
-def statistics_view(request, activity_id=None):
+def stats_global_view(request):
+    if not request.user.is_eighth_admin:
+        return render(request, "error/403.html", {"reason": "You do not have permission to generate global statistics."}, status=403)
+
+    if request.method == "POST" and request.POST.get("year", False):
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = 'inline; filename="eighth.pdf"'
+        year = int(request.POST.get("year"))
+        buf = generate_statistics_pdf(year=year)
+        response.write(buf.getvalue())
+        buf.close()
+        return response
+
+    current_year = current_school_year()
+
+    if EighthBlock.objects.count() == 0:
+        earliest_year = current_year
+    else:
+        earliest_year = EighthBlock.objects.order_by("date").first().date.year
+
+    context = {
+        "years": list(reversed(range(earliest_year, current_year + 1)))
+    }
+
+    return render(request, "eighth/admin/global.html", context)
+
+
+@login_required
+def stats_view(request, activity_id=None):
     if not (request.user.is_eighth_admin or request.user.is_teacher):
         return render(request, "error/403.html", {"reason": "You do not have permission to view statistics for this activity."}, status=403)
 
@@ -237,7 +269,9 @@ def statistics_view(request, activity_id=None):
 
     if request.GET.get("print", False):
         response = HttpResponse(content_type="application/pdf")
-        response.write(generate_statistics_pdf([activity]).getvalue())
+        buf = generate_statistics_pdf([activity])
+        response.write(buf.getvalue())
+        buf.close()
         return response
 
     context = {"activity": activity}

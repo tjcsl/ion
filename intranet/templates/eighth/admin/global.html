@@ -1,0 +1,46 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+
+{% block title %}{{ block.super }} - Generate Global Statistics{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    <style>
+    .primary-content {
+        overflow: visible;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(document).ready(function() {
+        $("#generate-form").submit(function(e) {
+            var btn = $(this).find("button");
+            $("#year")[0].selectize.disable();
+            btn.prop("disabled", true);
+            btn.html("<i class='fa fa-cog fa-spin'></i> Generating...");
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+<h2>Generate Global Activity Statistics</h2>
+<form id="generate-form" method="POST">
+    {% csrf_token %}
+    <p>Select the school year you want to export from the list below, and press Generate. The PDF file takes some time to create.</p><br />
+    <select id="year" name="year">
+        {% for year in years %}
+        <option value="{{ year }}">{{ year|add:"-1" }} - {{ year }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" name="generate" value="generate">Generate</button>
+</form>
+{% endblock %}
