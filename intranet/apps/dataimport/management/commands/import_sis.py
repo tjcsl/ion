@@ -35,7 +35,12 @@ class Command(BaseCommand):
     do_run = None
     uidmap = {}
     last_uid_number = 33503
-    ldifs = []
+    schedules = {}
+    ldifs = {
+        "newstudents": [],
+        "oldstudents": [],
+        "schedules": []
+    }
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
@@ -60,7 +65,7 @@ class Command(BaseCommand):
                 users = json.loads(open("users_faked.json", "r").read())
                 print("JSON loaded")
             else:
-                users = load_gen_users()
+                users = self.load_gen_users()
                 print("Faking teachers...")
                 for i in range(len(users)):
                     for classid in users[i]["classes"]:
@@ -112,8 +117,29 @@ class Command(BaseCommand):
                 print(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
                 self.add_ldap_user(user)
 
+        if os.path.isfile("schedules.json"):
+            print("Loading schedules...")
+            self.schedules = json.loads(open("schedules.json", "r").read())
+            print("Loaded schedules")
+        else:
+            print("Handle schedules")
+            self.schedules = {}
+            for i in range(len(users)):
+                classes = users[i]["classes"]
+                for sid in classes:
+                    if sid not in schedules:
+                        self.schedules[sid] = classes[sid]
 
-        open("update.ldif", "w").write("\n\n".join(self.ldifs))
+            open("schedules.json", "w").write(json.dumps(self.schedules))
+
+
+        for sid in self.schedules:
+            print("ADD SCHEDULE", sid)
+            self.add_ldap_class(self.schedules[sid])
+
+        open("newstudents.ldif", "w").write("\n\n".join(self.ldifs["newstudents"]))
+        open("oldstudents.ldif", "w").write("\n\n".join(self.ldifs["oldstudents"]))
+        open("schedules.ldif", "w").write("\n\n".join(self.ldifs["schedules"]))
         
         return
 
@@ -156,6 +182,7 @@ class Command(BaseCommand):
                 class_dict = {i: row_dict[i] for i in class_rows}
                 for f in class_rows:
                     del row_dict[f]
+                row_dict["TJUsername"] = row_dict["TJUsername"].lower()
                 if row_dict[users_dict_base] not in users_dict:
                     users_dict[row_dict[users_dict_base]] = {"user": row_dict, "classes": {}}
                 users_dict[row_dict[users_dict_base]]["classes"][class_dict[class_dict_base]] = class_dict
@@ -220,9 +247,11 @@ perm-showlocker-self: FALSE
 perm-showaddress-self: FALSE
 perm-showschedule-self: FALSE
 perm-showeighth-self: FALSE
-        """.format(**data)
+{classes}""".format(**data)
         if not data["middlename"]:
             ldif = ldif.replace("\nmiddlename: ", "")
+
+        ldif = ldif.replace("\nhomePhone: ###-###-####", "")
 
         return ldif
 
@@ -261,6 +290,13 @@ perm-showeighth-self: FALSE
 
         return "{} {}".format(data["user"]["FirstName"], data["user"]["LastName"])
 
+    def format_classes(self, data):
+        cl = ""
+        for cid in data["classes"]:
+            cl += "enrolledclass: tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu\n".format(data["classes"][cid]["SectionID"])
+
+        return cl
+
     def gen_fields(self, data, changetype):
         return {
             "changetype": changetype,
@@ -281,13 +317,14 @@ perm-showeighth-self: FALSE
             "displayName": self.format_displayName(data),
             "gender": data["user"]["Gender"],
             "title": self.format_title(data["user"]["Gender"]),
-            "middlename": data["user"]["MiddleName"]
+            "middlename": data["user"]["MiddleName"],
+            "classes": self.format_classes(data)
         }
 
     def add_ldap_user(self, user_dict):
         fields = self.gen_fields(user_dict, "add")
         ldif = self.get_ldif(fields)
-        self.ldifs.append(ldif)
+        self.ldifs["newstudents"].append(ldif)
         print(user_dict)
         print(fields)
         print(ldif)
@@ -297,7 +334,7 @@ perm-showeighth-self: FALSE
     def update_ldap_user(self, user_dict):
         fields = self.gen_fields(user_dict, "modify")
         ldif = self.get_ldif(fields)
-        self.ldifs.append(ldif)
+        self.ldifs["oldstudents"].append(ldif)
         print(user_dict)
         print(fields)
         print(ldif)
@@ -323,25 +360,74 @@ classPeriod: 5
 structuralObjectClass: tjhsstClass
         """
 
-        base = """
+        return """
 dn: tjhsstSectionId={sectionId},ou=schedule,dc=tjhsst,dc=edu
+changetype: add
 objectClass: tjhsstClass
-structuralObjectClass: tjhsstClass
 tjhsstClassId: {classId}
 tjhsstSectionId: {sectionId}
 courseLength: {courseLength}
+{quarters}
 roomNumber: {roomNumber}
 graduationYear: 2017
 cn: {cn}
-sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu
-        """
-        if data["courseLength"] == 4:
-            base += "quarterNumber: 1\n"
-            base += "quarterNumber: 2\n"
-            base += "quarterNumber: 3\n"
-            base += "quarterNumber: 4\n"
+{periods}
+sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
+
+    def format_courselength(self, data):
+        if data["TermCode"] == "YR":
+            return 4
+
+        if data["TermCode"] == "S1" or data["TermCode"] == "S2":
+            return 2
+
+    def format_quarters(self, data):
+        if data["TermCode"] == "YR":
+            return ("quarterNumber: 1\n"
+                    "quarterNumber: 2\n"
+                    "quarterNumber: 3\n"
+                    "quarterNumber: 4")
+
+        if data["TermCode"] == "S1":
+            return ("quarterNumber: 1\n"
+                    "quarterNumber: 2")
+
+        if data["TermCode"] == "S2":
+            return ("quarterNumber: 3\n"
+                    "quarterNumber: 4")
+
+    def format_periods(self, data):
+        if data["Period"] == data["EndPeriod"]:
+            return "classPeriod: {}".format(data["Period"])
+
+        return ("classPeriod: {}\n"
+                "classPeriod: {}".format(data["Period"], data["EndPeriod"]))
+
+    def format_sponsor(self, data):
+        # TODO: Search existing LDAP/handle new teachers
+        return {
+            "Glazer, Evan": 59
+        }[data["Teacher"]]
 
     def gen_class_fields(self, data):
-        pass
+        return {
+            "sectionId": data["SectionID"],
+            "classId": data["CourseID"],
+            "courseLength": self.format_courselength(data),
+            "quarters": self.format_quarters(data),
+            "periods": self.format_periods(data),
+            "roomNumber": data["Room"],
+            "cn": data["CourseTitle"],
+            "sponsor": self.format_sponsor(data)
+        }
+
+    def add_ldap_class(self, data):
+        fields = self.gen_class_fields(data)
+        ldif = self.gen_class_ldif(fields)
+        self.ldifs["schedules"].append(ldif)
+        print(data)
+        print(fields)
+        print(ldif)
+        print("\n\n")
 
