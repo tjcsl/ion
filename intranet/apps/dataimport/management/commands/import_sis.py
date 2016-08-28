@@ -17,6 +17,7 @@ class Command(BaseCommand):
         parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
         parser.add_argument('--csv', type=str, dest='csv_file', default='import.csv', help='Import CSV file')
         parser.add_argument('--fake-teachers', action='store_true', dest='fake_teachers', default=False, help='Fake teacher names and room numbers')
+        parser.add_argument('--load-users', action='store_true', dest='load_users', default=False, help='Load users into database')
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -45,6 +46,17 @@ class Command(BaseCommand):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
         self.fake_teachers = options["fake_teachers"]
+        self.load_users = options["load_users"]
+
+        if self.load_users:
+            for i in range(self.last_uid_number, self.last_uid_number + 500):
+                try:
+                    u = User.get_user(id=i)
+                except User.DoesNotExist:
+                    print("UID", i, "None")
+                else:
+                    print("UID", i, u)
+            return
 
         if self.do_run:
             self.ask("===== WARNING! =====\n\n"
@@ -365,6 +377,7 @@ replace: enrolledclass
             ldif = ldif.replace("\n-\nreplace: middlename\nmiddlename: ", "")
 
         ldif = ldif.replace("\n-\nreplace: homePhone\nhomePhone: ###-###-####", "")
+        ldif = ldif.replace("\n-\nreplace: homePhone\nhomePhone: \n", "\n")
 
         return ldif
 
