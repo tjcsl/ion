@@ -46,10 +46,10 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
-def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
+def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):
     ''' Accepts EighthActivity objects and outputs a PDF file. '''
     if activities is None:
-        activities = EighthActivity.objects.all()
+        activities = EighthActivity.objects.all().order_by("name")
 
     pdf_buffer = BytesIO()
 
@@ -67,7 +67,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
     for act in activities:
         lelements = []
         relements = []
-        act_stats = calculate_statistics(act, start_date=start_date, all_years=all_years)
+        act_stats = calculate_statistics(act, start_date=start_date, all_years=all_years, year=year)
         if act_stats["total_blocks"] == 0:
             empty_activities.append(act.name)
             continue
@@ -142,7 +142,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False):
     return pdf_buffer
 
 
-def calculate_statistics(activity, start_date=None, all_years=False):
+def calculate_statistics(activity, start_date=None, all_years=False, year=None):
     if not start_date:
         start_date = datetime.now().date()
 
@@ -157,7 +157,11 @@ def calculate_statistics(activity, start_date=None, all_years=False):
     past_start_date = activities.count() - filtered_activities.count()
 
     if not all_years:
-        year_start, year_end = get_date_range_this_year()
+        if year is None:
+            year_start, year_end = get_date_range_this_year()
+        else:
+            year_start = datetime(year - 1, 9, 1)
+            year_end = datetime(year, 7, 1)
         year_filtered = filtered_activities.filter(block__date__gte=year_start, block__date__lte=year_end)
         old_blocks = filtered_activities.count() - len(year_filtered)
         filtered_activities = year_filtered
