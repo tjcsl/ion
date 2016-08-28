@@ -35,6 +35,7 @@ class Command(BaseCommand):
     do_run = None
     uidmap = {}
     last_uid_number = 33503
+    ldifs = []
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
@@ -110,6 +111,9 @@ class Command(BaseCommand):
             else:
                 print(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
                 self.add_ldap_user(user)
+
+
+        open("update.ldif", "w").write("\n\n".join(self.ldifs))
         
         return
 
@@ -234,10 +238,10 @@ perm-showeighth-self: FALSE
     def format_birthday(self, bday):
         # bday = M/D/Y
         month, day, year = bday.split("/")
-        if month < 10:
+        if int(month) < 10:
             month = "0" + month
 
-        if day < 10:
+        if int(day) < 10:
             day = "0" + day
         # YYYYMMDD
         return "{}{}{}".format(year, month, day)
@@ -247,6 +251,12 @@ perm-showeighth-self: FALSE
             "M": "Mr.",
             "F": "Ms."
         }[gender]
+
+    def format_displayName(self, data):
+        if len(data["user"]["MiddleName"] or "") > 0:
+            return "{} {} {}".format(data["user"]["FirstName"], data["user"]["MiddleName"], data["user"]["LastName"])
+
+        return "{} {}".format(data["user"]["FirstName"], data["user"]["LastName"])
 
     def gen_fields(self, data):
         return {
@@ -264,15 +274,20 @@ perm-showeighth-self: FALSE
             "street": data["user"]["Address"],
             "givenName": data["user"]["FirstName"],
             "graduationYear": data["user"]["TJUsername"][0:4],
-            "displayName": "{} {} {}".format(data["user"]["FirstName"], data["user"]["MiddleName"], data["user"]["LastName"]),
+            "displayName": self.format_displayName(data),
             "gender": data["user"]["Gender"],
             "title": self.format_title(data["user"]["Gender"]),
             "middlename": data["user"]["MiddleName"]
         }
 
     def add_ldap_user(self, user_dict):
-        fields = gen_fields(user_dict)
+        fields = self.gen_fields(user_dict)
         ldif = self.get_ldif(fields)
+        self.ldifs.append(ldif)
+        print(user_dict)
+        print(fields)
+        print(ldif)
+        print("\n\n")
         
 
     def update_ldap_user(self, user_dict):
