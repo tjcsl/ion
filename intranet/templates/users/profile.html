@@ -300,7 +300,6 @@
                 </div>
                 {% if ionldap_courses %}
                 <section class="user-info-schedule class-info">
-                    <div class="inline-warning">This is preliminary second semester schedule information, correct as of February 5, 2016.</div>
                     <h3>Schedule</h3>
                     <table class="fancy-table zebra">
                     <thead>
@@ -363,7 +362,7 @@
                 {% else %}
                 <section class="user-info-schedule class-info">
                     {% if profile_user.classes %}
-                        <div class="inline-warning">Class schedule information has NOT yet been updated for second semester. Teachers, rooms, and periods may change as needed. Direct any questions to your counselor.</div>
+                        <div class="inline-warning">This is preliminary class schedule information for the 2016-2017 school year.</div>
                         <h3>Schedule</h3>
                         <table class="fancy-table zebra" data-sortable>
                             <thead>
@@ -385,9 +384,13 @@
                                     </td>
                                     {% if profile_user.is_student %}
                                         <td>
+                                        {% if class.teacher.id %}
                                             <a href="{% url 'user_profile' class.teacher.id %}">
                                                 {{ class.teacher.last_name }}
                                             </a>
+                                        {% else %}
+                                            {{ class.teacher }}
+                                        {% endif %}
                                         </td>
                                     {% endif %}
                                     <td>

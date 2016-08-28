@@ -734,6 +734,9 @@ FCPS_EMERGENCY_PAGE = None  # type: str
 # The timeout for the request to FCPS' emergency page (in seconds)
 FCPS_EMERGENCY_TIMEOUT = 0
 
+# Whether to grab schedule information from local database (ionldap)
+USE_IONLDAP = False
+
 # Show an iframe with tjStar activity data
 if TJSTAR_MAP is None:
     TJSTAR_MAP = False

@@ -82,7 +82,10 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
-    ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
+    ionldap_courses = None
+    if settings.USE_IONLDAP:
+        ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
+
 
     context = {
         "profile_user": profile_user,
@@ -172,7 +175,7 @@ def picture_view(request, user_id, year=None):
 
 @login_required
 def class_section_view(request, section_id):
-    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
         return redirect("ionldap_class_section", section_id=section_id)
 
     c = Class(id=section_id)
@@ -215,7 +218,7 @@ def class_section_view(request, section_id):
 
 @login_required
 def class_room_view(request, room_id):
-    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
         return redirect("ionldap_class_room", room_id=room_id)
 
     c = LDAPConnection()
@@ -244,7 +247,7 @@ def class_room_view(request, room_id):
 
 @login_required
 def all_classes_view(request):
-    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
         return redirect("ionldap_all_classes")
 
     c = LDAPConnection()

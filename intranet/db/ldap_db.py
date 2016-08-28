@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import logging
 import sys
 from threading import local
@@ -87,6 +88,11 @@ class LDAPConnection(object):
         if 'gssapi' in sys.modules:
             ldap_exceptions += (gssapi.exceptions.GSSError,)
 
+        if "KRB5CCNAME" in os.environ:
+            logger.info("KRB5CCNAME: {}".format(os.environ["KRB5CCNAME"]))
+        else:
+            logger.info("KRB5CCNAME not in environ")
+        
         if not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None:
             logger.info("Connecting to LDAP...")
             server = ldap3.Server(settings.LDAP_SERVER)

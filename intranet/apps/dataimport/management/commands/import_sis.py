@@ -534,7 +534,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
     def format_sponsor(self, data):
         # TODO: Search existing LDAP/handle new teachers
         return {
-            "Glazer, Evan": 59
+            "Glazer, Evan": "emglazer"
         }[data["Teacher"]]
 
     def gen_class_fields(self, data):
