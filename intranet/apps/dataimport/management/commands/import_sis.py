@@ -166,72 +166,113 @@ class Command(BaseCommand):
 
     
     def get_ldif(self, data):
-        """
-        dn: iodineUid=2016jwoglom,ou=people,dc=tjhsst,dc=edu
-        objectClass: tjhsstStudent
-        iodineUid: 2016jwoglom
-        iodineUidNumber: 31863
-        uid: 31863
-        header: TRUE
-        startpage: news
-        perm-showmap: FALSE
-        eighthoffice-comments:: IA==
-        chrome: TRUE
-        eighthAgreement: TRUE
-        perm-showaddress: TRUE
-        perm-showtelephone: TRUE
-        perm-showbirthday: TRUE
-        perm-showpictures: TRUE
-        perm-showlocker: TRUE
-        perm-showeighth: TRUE
-        perm-showschedule: TRUE
-        style: i3-light
-        mailentries: -1
-        perm-showtelephone-self: TRUE
-        perm-showbirthday-self: TRUE
-        perm-showmap-self: FALSE
-        perm-showpictures-self: TRUE
-        perm-showlocker-self: TRUE
-        is-admin: TRUE
-        perm-showaddress-self: FALSE
-        perm-showschedule-self: FALSE
-        perm-showeighth-self: FALSE
-        """
-        ldif =("dn: iodineUid={TJUsername},ou=people,dc=tjhsst,dc=edu\n"
-               "objectClass: tjhsstStudent\n"
-               "iodineUid: {TJUsername}\n"
-               "iodineUidNumber: {uidNumber}\n"
-               "uid: {uidNumber}\n"
-               "header: TRUE\n"
-               "startpage: news\n"
-               "perm-showmap: FALSE\n"
-               "eighthoffice-comments:: IA==\n"
-               "chrome: TRUE\n"
-               "eighthAgreement: FALSE\n"
-               "perm-showaddress: FALSE\n"
-               "perm-showtelephone: FALSE\n"
-               "perm-showbirthday: FALSE\n"
-               "perm-showpictures: FALSE\n"
-               "perm-showlocker: FALSE\n"
-               "perm-showschedule: FALSE\n"
-               "perm-showtelephone-self: FALSE\n"
-               "perm-showbirthday-self: FALSE\n"
-               "perm-showmap-self: FALSE\n"
-               "perm-showlocker-self: FALSE\n"
-               "perm-showaddress-self: FALSE\n"
-               "perm-showschedule-self: FALSE\n"
-               "perm-showeighth-self: FALSE\n"
-               "style: i3-light\n"
-               "mailentries: -1\n"
-               "is-admin: FALSE\n").format(**data)
+        
+        ldif = """
+dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
+objectClass: tjhsstStudent
+iodineUid: {iodineUid}
+iodineUidNumber: {iodineUidNumber}
+structuralObjectClass: tjhsstStudent
+uid: {iodineUidNumber}
+header: TRUE
+locker: 0
+startpage: news
+perm-showmap: FALSE
+eighthoffice-comments:: IA==
+chrome: TRUE
+eighthAgreement: FALSE
+tjhsstStudentId: {tjhsstStudentId}
+cn: {cn}
+sn: {sn}
+postalCode: {postalCode}
+counselor: {counselor}
+st: {st}
+l: {l}
+homePhone: {homePhone}
+birthday: {birthday}
+street: {street}
+givenName: {givenName}
+graduationYear: {graduationYear}
+displayName: {displayName}
+gender: {gender}
+title: {title}
+middlename: {middlename}
+preferredPhoto: AUTO
+style: i3-light
+mailentries: -1
+is-admin: FALSE
+perm-showaddress: FALSE
+perm-showtelephone: FALSE
+perm-showbirthday: FALSE
+perm-showpictures: FALSE
+perm-showlocker: FALSE
+perm-showeighth: FALSE
+perm-showschedule: FALSE
+perm-showtelephone-self: FALSE
+perm-showbirthday-self: FALSE
+perm-showmap-self: FALSE
+perm-showpictures-self: FALSE
+perm-showlocker-self: FALSE
+perm-showaddress-self: FALSE
+perm-showschedule-self: FALSE
+perm-showeighth-self: FALSE
+        """.format(**data)
         return ldif
 
+    def format_counselor(self, name):
+        return {
+            'Burke, Sean': 37,
+            'Martinez, Susan L.': 152, # Kosatka
+            'Scott, Alexa': 105,
+            'Ketchem, Christina Z.': 468,
+            'Hamblin, Kerry': 115,
+            'See Counseling Office': 999, # TBA TBA
+            'Smith, Andrea G.': 9,
+            'McAleer, Kacey': 165
+        }[name]
+
+    def format_birthday(self, bday):
+        # bday = M/D/Y
+        month, day, year = bday.split("/")
+        if month < 10:
+            month = "0" + month
+
+        if day < 10:
+            day = "0" + day
+        # YYYYMMDD
+        return "{}{}{}".format(year, month, day)
+
+    def format_title(self, gender):
+        return {
+            "M": "Mr.",
+            "F": "Ms."
+        }[gender]
+
+    def gen_fields(self, data):
+        return {
+            "iodineUid": data["user"]["TJUsername"],
+            "iodineUidNumber": data["uidNumber"],
+            "tjhsstStudentId": data["user"]["StudentID"],
+            "cn": "{} {}".format(data["user"]["FirstName"], data["user"]["LastName"]),
+            "sn": data["user"]["LastName"],
+            "postalCode": data["user"]["Zipcode"],
+            "counselor": self.format_counselor(data["user"]["Counselor"]),
+            "st": data["user"]["State"],
+            "l": data["user"]["City"],
+            "homePhone": data["user"]["Phone"],
+            "birthday": self.format_birthday(data["user"]["Birthdate"]),
+            "street": data["user"]["Address"],
+            "givenName": data["user"]["FirstName"],
+            "graduationYear": data["user"]["TJUsername"][0:4],
+            "displayName": "{} {} {}".format(data["user"]["FirstName"], data["user"]["MiddleName"], data["user"]["LastName"]),
+            "gender": data["user"]["Gender"],
+            "title": self.format_title(data["user"]["Gender"]),
+            "middlename": data["user"]["MiddleName"]
+        }
 
     def add_ldap_user(self, user_dict):
-        data = user_dict["user"]
-        data["uidNumber"] = user_dict["uidNumber"]
-        data["ldapExists"] = user_dict["ldapExists"]
-        ldif = self.get_ldif(data)
+        fields = gen_fields(user_dict)
+        ldif = self.get_ldif(fields)
         
 
     def update_ldap_user(self, user_dict):
