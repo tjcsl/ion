@@ -257,7 +257,7 @@ def stats_global_view(request):
         "years": list(reversed(range(earliest_year, current_year + 1)))
     }
 
-    return render(request, "eighth/admin/global.html", context)
+    return render(request, "eighth/admin/global_statistics.html", context)
 
 
 @login_required
