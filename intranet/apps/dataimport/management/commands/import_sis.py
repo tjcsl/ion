@@ -264,6 +264,7 @@ perm-showeighth-self: FALSE
             ldif = ldif.replace("\nmiddlename: ", "")
 
         ldif = ldif.replace("\nhomePhone: ###-###-####", "")
+        ldif = ldif.replace("\nhomePhone: \n", "\n")
 
         return ldif
 
