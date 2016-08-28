@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import json
 import csv
@@ -30,12 +31,16 @@ class Command(BaseCommand):
             print("Abort.")
             sys.exit()
 
-
+    csv_file = None
+    do_run = None
+    uidmap = {}
+    last_uid_number = 33503
     def handle(self, *args, **options):
-        csv_file = options["csv_file"]
-        do_run = options["run"]
+        self.csv_file = options["csv_file"]
+        self.do_run = options["run"]
+        self.fake_teachers = options["fake_teachers"]
 
-        if do_run:
+        if self.do_run:
             self.ask("===== WARNING! =====\n\n"
                      "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
                      "===== WARNING! =====\n\n"
@@ -44,13 +49,47 @@ class Command(BaseCommand):
             print("In pretend mode.")
 
 
-        print("CSV file", csv_file)
+        print("CSV file", self.csv_file)
+        
 
+        if os.path.isfile("users.json"):
+            print("Loading JSON")
+            users = json.loads(open("users.json", "r").read())
+            print("JSON loaded")
+        else:
+            print("Generating JSON file")
+            users = self.generate_sorted_dump()
+            open("users.json", "w").write(json.dumps(users))
+            print("JSON loaded")
+
+        if self.fake_teachers:
+            if os.path.isfile("users_faked.json"):
+                print("Loading faked teachers JSON")
+                users = json.loads(open("users_faked.json", "r").read())
+                print("JSON loaded")
+            else:
+                print("Faking teachers...")
+                for i in range(len(users)):
+                    for classid in users[i]["classes"]:
+                        classobj = users[i]["classes"][classid]
+                        classobj["Room"] = "Dome"
+                        classobj["TeacherStaffName"] = "Glazer, E."
+                        classobj["Teacher"] = "Glazer, Evan"
+                        users[i]["classes"][classid] = classobj
+
+                open("users_faked.json", "w").write(json.dumps(users))
+
+        
+        
+        return
+
+
+    def generate_sorted_dump(self):
         users_dict = {}
         users_dict_base = "TJUsername"
         class_dict_base = "SectionID"
 
-        with open(csv_file, 'r') as csv_open:
+        with open(self.csv_file, 'r') as csv_open:
             csv_reader = csv.reader(csv_open)
             next(csv_reader)  # skip first line
             class_rows = [
@@ -69,52 +108,21 @@ class Command(BaseCommand):
             for row in csv_reader:
                 row_dict = {rows[i]: row[i] for i in range(len(row))}
                 class_dict = {i: row_dict[i] for i in class_rows}
+                for f in class_rows:
+                    del row_dict[f]
                 if row_dict[users_dict_base] not in users_dict:
                     users_dict[row_dict[users_dict_base]] = {"user": row_dict, "classes": {}}
                 users_dict[row_dict[users_dict_base]]["classes"][class_dict[class_dict_base]] = class_dict
 
-            print("Check for users")
-            open("udict.json", "w").write(json.dumps(users_dict))
-            return
-            for student_id in users_dict:
-                user_dict = users_dict[student_id]
-                sid = student_id.lower()
-                if not sid:
-                    print("Blank studentid")
-                    print(user_dict)
-                    break
+            users_list = []
+            for usr in users_dict:
+                users_list.append(users_dict[usr])
 
-                try:
-                    user = User.objects.get(username=sid)
-                except User.DoesNotExist:
-                    #print("User does not exist with username '{}'".format(sid))
-                    #print(user_dict)
-                    self.add_ldap_user(user_dict)
-                    continue
-                #print(user, user_dict["classes"].keys())
+        users = sorted(users_list, key=lambda x: (x["user"]["LastName"], x["user"]["FirstName"], x["user"]["MiddleName"], x["user"]["StudentID"]))
+        return users            
 
-            print(self.uidmap)
-            return
-            for student_id in users_dict:
-                user_dict = users_dict[student_id]
-                if not do_run:
-                    continue
 
-                for class_id in user_dict["classes"]:
-                    class_obj = user_dict["classes"][class_id]
-                    """try:
-                        ldap_course = LDAPCourse.objects.get(course_id=class_obj["CourseID"], section_id=class_obj["SectionID"])
-
-                    except LDAPCourse.DoesNotExist:
-                        ldap_course = LDAPCourse.objects.create(
-                            course_id=class_obj["CourseID"], section_id=class_obj["SectionID"], course_title=class_obj["CourseTitle"],
-                            course_short_title=class_obj["CourseShortTitle"], teacher_name=class_obj["Teacher"], room_name=class_obj["Room"],
-                            term_code=class_obj["TermCode"], period=class_obj["Period"], end_period=class_obj["EndPeriod"])
-                    ldap_course.users.add(user)
-                    ldap_course.save()"""
-                    print("{} \t\tadded to\t\t {}".format(user, ldap_course))
-
-    last_uid_number = 33503
+    
     def get_ldif(self, data):
         """
         dn: iodineUid=2016jwoglom,ou=people,dc=tjhsst,dc=edu
@@ -176,7 +184,7 @@ class Command(BaseCommand):
                "is-admin: FALSE\n").format(**data)
         return ldif
 
-    uidmap = {}
+
     def add_ldap_user(self, user_dict):
         data = user_dict["user"]
         uidNumber = self.last_uid_number + 1
