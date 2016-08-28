@@ -196,11 +196,11 @@ class Command(BaseCommand):
 
 
     
-    def get_ldif(self, data):
+    def gen_add_ldif(self, data):
         
         ldif = """
 dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
-changetype: {changetype}
+changetype: add
 objectClass: tjhsstStudent
 iodineUid: {iodineUid}
 iodineUidNumber: {iodineUidNumber}
@@ -255,6 +255,119 @@ perm-showeighth-self: FALSE
 
         return ldif
 
+    def gen_update_ldif(self, data):
+        
+        ldif = """
+dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
+changetype: {changetype}
+replace: locker
+locker: 0
+-
+replace: eighthAgreement
+eighthAgreement: FALSE
+-
+replace: tjhsstStudentId
+tjhsstStudentId: {tjhsstStudentId}
+-
+replace: cn
+cn: {cn}
+-
+replace: sn
+sn: {sn}
+-
+replace: postalCode
+postalCode: {postalCode}
+-
+replace: counselor
+counselor: {counselor}
+-
+replace: st
+st: {st}
+-
+replace: l
+l: {l}
+-
+replace: homePhone
+homePhone: {homePhone}
+-
+replace: birthday
+birthday: {birthday}
+-
+replace: street
+street: {street}
+-
+replace: givenName
+givenName: {givenName}
+-
+replace: graduationYear
+graduationYear: {graduationYear}
+-
+replace: displayName
+displayName: {displayName}
+-
+replace: gender
+gender: {gender}
+-
+replace: title
+title: {title}
+-
+replace: middlename
+middlename: {middlename}
+-
+replace: perm-showaddress
+perm-showaddress: FALSE
+-
+replace: perm-showtelephone
+perm-showtelephone: FALSE
+-
+replace: perm-showbirthday
+perm-showbirthday: FALSE
+-
+replace: perm-showpictures
+perm-showpictures: FALSE
+-
+replace: perm-showlocker
+perm-showlocker: FALSE
+-
+replace: perm-showeighth
+perm-showeighth: FALSE
+-
+replace: perm-showschedule
+perm-showschedule: FALSE
+-
+replace: perm-showtelephone-self
+perm-showtelephone-self: FALSE
+-
+replace: perm-showbirthday-self
+perm-showbirthday-self: FALSE
+-
+replace: perm-showmap-self
+perm-showmap-self: FALSE
+-
+replace: perm-showpictures-self
+perm-showpictures-self: FALSE
+-
+replace: perm-showlocker-self
+perm-showlocker-self: FALSE
+-
+replace: perm-showaddress-self
+perm-showaddress-self: FALSE
+-
+replace: perm-showschedule-self
+perm-showschedule-self: FALSE
+-
+replace: perm-showeighth-self
+perm-showeighth-self: FALSE
+-
+replace: enrolledclass
+{classes}""".format(**data)
+        if not data["middlename"]:
+            ldif = ldif.replace("\n-\nreplace: middlename\nmiddlename: ", "")
+
+        ldif = ldif.replace("\n-\nreplace: homePhone\nhomePhone: ###-###-####", "")
+
+        return ldif
+
     def format_counselor(self, name):
         return {
             'Burke, Sean': 37,
@@ -297,7 +410,7 @@ perm-showeighth-self: FALSE
 
         return cl
 
-    def gen_fields(self, data, changetype):
+    def gen_student_fields(self, data, changetype):
         return {
             "changetype": changetype,
             "iodineUid": data["user"]["TJUsername"],
@@ -322,8 +435,8 @@ perm-showeighth-self: FALSE
         }
 
     def add_ldap_user(self, user_dict):
-        fields = self.gen_fields(user_dict, "add")
-        ldif = self.get_ldif(fields)
+        fields = self.gen_student_fields(user_dict, "add")
+        ldif = self.gen_add_ldif(fields)
         self.ldifs["newstudents"].append(ldif)
         print(user_dict)
         print(fields)
@@ -332,8 +445,8 @@ perm-showeighth-self: FALSE
         
 
     def update_ldap_user(self, user_dict):
-        fields = self.gen_fields(user_dict, "modify")
-        ldif = self.get_ldif(fields)
+        fields = self.gen_student_fields(user_dict, "modify")
+        ldif = self.gen_update_ldif(fields)
         self.ldifs["oldstudents"].append(ldif)
         print(user_dict)
         print(fields)
