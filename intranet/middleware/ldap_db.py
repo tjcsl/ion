@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 
 from django.contrib import messages
 from django.contrib.auth import BACKEND_SESSION_KEY
@@ -58,4 +59,22 @@ class CheckLDAPBindMiddleware:
                 url, {"next": request.path}, percent_encode=False)
             return response
             """
+        return response
+
+class CheckEnvironment:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        if "KRB5CCNAME" in request.session:
+            logger.info("CheckEnvironment: KRB5CCNAME in session -- adding")
+            if "KRB5CCNAME" not in os.environ:
+                logger.info("CheckEnvironment: was NOT in environ")
+            os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
+        else:
+            logger.info("CheckEnvironment: KRB5CCNAME not in session")
+
+        response = self.get_response(request)
+
         return response
