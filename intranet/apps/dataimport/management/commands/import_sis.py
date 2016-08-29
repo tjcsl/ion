@@ -30,16 +30,16 @@ class Command(BaseCommand):
             print("Abort.")
             sys.exit()
 
-    csv_file = None
-    do_run = None
-    uidmap = {}
+    csv_file = None  # type: str
+    do_run = None  # type: bool
+    uidmap = {}  # type: Dict[str,str]
     last_uid_number = 33503
-    schedules = {}
+    schedules = {}  # type: Dict[str,str]
     ldifs = {
         "newstudents": [],
         "oldstudents": [],
         "schedules": []
-    }
+    }  # type: Dict[str,List[str]]
 
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
