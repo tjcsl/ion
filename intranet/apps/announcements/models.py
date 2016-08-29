@@ -127,7 +127,7 @@ class Announcement(models.Model):
     @property
     def is_this_year(self):
         """Return whether the announcement was created after July 1st of this school year."""
-        return is_current_year(self.added.date())
+        return is_current_year(self.added)
 
     def is_visible(self, user):
         return self in Announcement.objects.visible_to_user(user)

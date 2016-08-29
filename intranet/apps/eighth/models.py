@@ -566,7 +566,7 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def is_this_year(self):
         """Return whether the block occurs after September 1st of this school year."""
-        return is_current_year(self.date)
+        return is_current_year(datetime.datetime.combine(self.date, datetime.time()))
 
     @property
     def formatted_date(self):
