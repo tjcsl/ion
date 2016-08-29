@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
-from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -84,11 +83,11 @@ class Command(BaseCommand):
     def handle_delete(self):
         for usr in User.objects.all():
             try:
-                name = usr.first_name
+                usr.first_name
             except ObjectDoesNotExist:
                 print("User", usr, "DELETE")
                 usr.handle_delete()
                 print(usr.delete())
             else:
-                #print("User", usr, "KEEP")
+                # print("User", usr, "KEEP")
                 pass

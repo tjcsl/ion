@@ -4,8 +4,6 @@ import os
 import sys
 import json
 import csv
-import datetime
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 
@@ -104,9 +102,9 @@ class Command(BaseCommand):
                 try:
                     ionuser = User.objects.get(username__iexact=tjuser)
                 except User.DoesNotExist:
-                    uidNumber = self.last_uid_number + 1
+                    uid_number = self.last_uid_number + 1
                     self.last_uid_number += 1
-                    user["uidNumber"] = uidNumber
+                    user["uidNumber"] = uid_number
                     user["ldapExists"] = False
                 else:
                     user["uidNumber"] = ionuser.id
@@ -136,10 +134,11 @@ class Command(BaseCommand):
             for i in range(len(users)):
                 classes = users[i]["classes"]
                 for sid in classes:
-                    if sid not in schedules:
+                    if sid not in self.schedules:
                         self.schedules[sid] = classes[sid]
 
-            open("schedules.json", "w").write(json.dumps(self.schedules))
+            with open("schedules.json", "w") as f:
+                f.write(json.dumps(self.schedules))
 
         for sid in self.schedules:
             print("ADD SCHEDULE", sid)
@@ -404,7 +403,7 @@ replace: enrolledclass
             "F": "Ms."
         }[gender]
 
-    def format_displayName(self, data):
+    def format_display_name(self, data):
         if len(data["user"]["MiddleName"] or "") > 0:
             return "{} {} {}".format(data["user"]["FirstName"], data["user"]["MiddleName"], data["user"]["LastName"])
 
@@ -434,7 +433,7 @@ replace: enrolledclass
             "street": data["user"]["Address"],
             "givenName": data["user"]["FirstName"],
             "graduationYear": data["user"]["TJUsername"][0:4],
-            "displayName": self.format_displayName(data),
+            "displayName": self.format_display_name(data),
             "gender": data["user"]["Gender"],
             "title": self.format_title(data["user"]["Gender"]),
             "middlename": data["user"]["MiddleName"],
