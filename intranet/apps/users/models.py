@@ -233,10 +233,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     _student_id = models.PositiveIntegerField(null=True)
 
-    @property
-    def student_id(self):
-        if self._student_id and (self._current_user_override() or self.is_http_request_sender()):
-            return self._student_id
+    #@property
+    #def student_id(self):
+    #    if self._student_id and (self._current_user_override() or self.is_http_request_sender()):
+    #        return self._student_id
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -1231,13 +1231,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             "can_set": False,
             "can_set": False
         },
-        # "student_id": {
-        #    "ldap_name": "tjhsstStudentId",
-        #    "perm": "specialPerm_studentID",
-        #    "is_list": False,
-        #    "cache": True,
-        #    "can_set": True
-        # },
+        "student_id": {
+           "ldap_name": "tjhsstStudentId",
+           "perm": "specialPerm_studentID",
+           "is_list": False,
+           "cache": True,
+           "can_set": True
+        },
         "common_name": {
             "ldap_name": "cn",
             "perm": None,
