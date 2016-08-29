@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #2868) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #2888) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2868)',
+        VERSION:     'v3 (Build #2888)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2868) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2888) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -1738,6 +1738,13 @@
         <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
 
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="User.handle_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle a graduated user being deleted.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
+        <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">archive_user_deleted</span><span class="p">()</span></div>
 
     <span class="c1"># def has_perm(self, perm, obj=None):</span>
     <span class="c1">#    &quot;&quot;&quot;Return whether user has a permission.&quot;&quot;&quot;</span>
