@@ -19,7 +19,7 @@ from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
 
-USE_SID_LDAP = False
+USE_SID_LDAP = True
 
 
 def do_ldap_query(q, admin=False):
