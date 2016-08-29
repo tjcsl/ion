@@ -99,7 +99,7 @@ class Announcement(models.Model):
     title = models.CharField(max_length=127)
     content = models.TextField()
     author = models.CharField(max_length=63, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
@@ -216,16 +216,16 @@ class AnnouncementRequest(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=models.SET_NULL)
 
     teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True, on_delete=models.CASCADE)
-    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=models.CASCADE)
+    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=models.SET_NULL)
 
     rejected = models.BooleanField(default=False)
-    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=models.CASCADE)
+    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=models.SET_NULL)
 
     admin_email_sent = models.BooleanField(default=False)
 

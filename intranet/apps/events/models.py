@@ -127,7 +127,7 @@ class Event(models.Model):
 
     time = models.DateTimeField()
     location = models.CharField(max_length=100)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True, on_delete=models.CASCADE)
     announcement = models.ForeignKey(Announcement, null=True, blank=True, related_name="event", on_delete=models.CASCADE)
@@ -141,8 +141,8 @@ class Event(models.Model):
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
-    approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=models.CASCADE)
-    rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=models.CASCADE)
+    approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=models.SET_NULL)
+    rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=models.SET_NULL)
 
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.

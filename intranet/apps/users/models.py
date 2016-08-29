@@ -1590,6 +1590,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
+    def handle_delete(self):
+        """Handle a graduated user being deleted."""
+        from intranet.apps.eighth.models import EighthSignup
+        signups = EighthSignup.objects.filter(user=self)
+        for s in signups:
+            s.archive_user_deleted()
+
+
     # def has_perm(self, perm, obj=None):
     #    """Return whether user has a permission."""
     #    return perm in self.user_permissions.all().values_list("codename", flat=True)

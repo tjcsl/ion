@@ -4,7 +4,7 @@ from ..users.models import User
 
 
 class CalculatorRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     calc_serial = models.CharField(max_length=10)
     calc_id = models.CharField(max_length=14)
     CALC_CHOICES = (
@@ -32,7 +32,7 @@ class CalculatorRegistration(models.Model):
 
 
 class ComputerRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     MANUF_CHOICES = (
         ("acer", "Acer"),
         ("apple", "Apple"),
@@ -67,7 +67,7 @@ class ComputerRegistration(models.Model):
 
 
 class PhoneRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     MANUF_CHOICES = (
         ("samsung", "Samsung"),
         ("apple", "Apple"),

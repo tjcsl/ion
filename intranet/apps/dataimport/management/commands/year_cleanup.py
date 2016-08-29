@@ -4,9 +4,10 @@ import sys
 import datetime
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
-
+from django.core.exceptions import ObjectDoesNotExist
 class Command(BaseCommand):
     help = "Perform end-of-year cleanup duties."
 
@@ -66,13 +67,27 @@ class Command(BaseCommand):
         if do_run:
             self.update_welcome()
 
+        print("Deleting graduated users")
+        if do_run:
+            self.handle_delete()
+
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
         print("{} absents".format(absents.count()))
         absents.update(was_absent=True)
 
+
     def update_welcome(self):
         User.objects.all().update(seen_welcome=False)
 
-    def delete_users_ldap(self):
-        c = LDAPConnection()
+    def handle_delete(self):
+        for usr in User.objects.all():
+            try:
+                name = usr.first_name
+            except ObjectDoesNotExist:
+                print("User", usr,  "DELETE")
+                usr.handle_delete()
+                usr.delete()
+            else:
+                #print("User", usr, "KEEP")
+                pass

@@ -5,7 +5,7 @@ from ..users.models import User
 
 
 class Feedback(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     comments = models.CharField(max_length=50000)
     date = models.DateTimeField(auto_now=True)
 

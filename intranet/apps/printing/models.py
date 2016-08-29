@@ -6,7 +6,7 @@ from ..users.models import User
 
 
 class PrintJob(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     printer = models.CharField(max_length=100)
     file = models.FileField(upload_to="printing/")
     page_range = models.CharField(blank=True, max_length=100)

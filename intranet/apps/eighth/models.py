@@ -663,6 +663,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
+    archived_member_count = models.SmallIntegerField(null=True, blank=True)
+
     history = HistoricalRecords()
 
     def get_scheduled_rooms(self):
@@ -1307,6 +1309,14 @@ class EighthSignup(AbstractBaseEighthModel):
     def in_clear_absence_period(self):
         """Is the block for this signup in the clear absence period?"""
         return self.scheduled_activity.block.in_clear_absence_period()
+
+    def archive_user_deleted(self):
+        sa = self.scheduled_activity
+        if sa.archived_member_count:
+            sa.archived_member_count += 1
+        else:
+            sa.archived_member_count = 1
+        sa.save()
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)

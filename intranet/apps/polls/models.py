@@ -254,7 +254,7 @@ class Choice(models.Model):  # individual answer choices
 
 class Answer(models.Model):  # individual answer choices selected
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     choice = models.ForeignKey(Choice, null=True, on_delete=models.CASCADE)  # for multiple choice questions
     answer = models.CharField(max_length=10000, null=True)  # for free response
     clear_vote = models.BooleanField(default=False)
