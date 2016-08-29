@@ -329,6 +329,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
 
 class EighthBlockQuerySet(models.query.QuerySet):
+
     def this_year(self):
         """ Get EighthBlocks from this school year only. """
         start_date, end_date = get_date_range_this_year()

@@ -8,6 +8,8 @@ from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from django.core.exceptions import ObjectDoesNotExist
+
+
 class Command(BaseCommand):
     help = "Perform end-of-year cleanup duties."
 
@@ -76,7 +78,6 @@ class Command(BaseCommand):
         print("{} absents".format(absents.count()))
         absents.update(was_absent=True)
 
-
     def update_welcome(self):
         User.objects.all().update(seen_welcome=False)
 
@@ -85,7 +86,7 @@ class Command(BaseCommand):
             try:
                 name = usr.first_name
             except ObjectDoesNotExist:
-                print("User", usr,  "DELETE")
+                print("User", usr, "DELETE")
                 usr.handle_delete()
                 print(usr.delete())
             else:

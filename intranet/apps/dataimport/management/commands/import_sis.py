@@ -42,6 +42,7 @@ class Command(BaseCommand):
         "oldstudents": [],
         "schedules": []
     }
+
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
@@ -66,10 +67,7 @@ class Command(BaseCommand):
         else:
             print("In pretend mode.")
 
-
         print("CSV file", self.csv_file)
-        
-
 
         if self.fake_teachers:
             if os.path.isfile("users_faked.json"):
@@ -88,7 +86,6 @@ class Command(BaseCommand):
                         users[i]["classes"][classid] = classobj
 
                 open("users_faked.json", "w").write(json.dumps(users))
-
 
         if os.path.isfile("users_uids.json"):
             print("Loading user existence/UIDnumbers info...")
@@ -144,7 +141,6 @@ class Command(BaseCommand):
 
             open("schedules.json", "w").write(json.dumps(self.schedules))
 
-
         for sid in self.schedules:
             print("ADD SCHEDULE", sid)
             self.add_ldap_class(self.schedules[sid])
@@ -152,7 +148,7 @@ class Command(BaseCommand):
         open("newstudents.ldif", "w").write("\n\n".join(self.ldifs["newstudents"]))
         open("oldstudents.ldif", "w").write("\n\n".join(self.ldifs["oldstudents"]))
         open("schedules.ldif", "w").write("\n\n".join(self.ldifs["schedules"]))
-        
+
         return
 
     def load_gen_users(self):
@@ -166,7 +162,6 @@ class Command(BaseCommand):
             open("users.json", "w").write(json.dumps(users))
             print("JSON loaded")
         return users
-
 
     def generate_sorted_dump(self):
         users_dict = {}
@@ -204,12 +199,10 @@ class Command(BaseCommand):
                 users_list.append(users_dict[usr])
 
         users = sorted(users_list, key=lambda x: (x["user"]["LastName"], x["user"]["FirstName"], x["user"]["MiddleName"], x["user"]["StudentID"]))
-        return users            
+        return users
 
-
-    
     def gen_add_ldif(self, data):
-        
+
         ldif = """
 dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: add
@@ -269,7 +262,7 @@ perm-showeighth-self: FALSE
         return ldif
 
     def gen_update_ldif(self, data):
-        
+
         ldif = """
 dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: {changetype}
@@ -385,11 +378,11 @@ replace: enrolledclass
     def format_counselor(self, name):
         return {
             'Burke, Sean': 37,
-            'Martinez, Susan L.': 152, # Kosatka
+            'Martinez, Susan L.': 152,  # Kosatka
             'Scott, Alexa': 105,
             'Ketchem, Christina Z.': 468,
             'Hamblin, Kerry': 115,
-            'See Counseling Office': 999, # TBA TBA
+            'See Counseling Office': 999,  # TBA TBA
             'Smith, Andrea G.': 9,
             'McAleer, Kacey': 165
         }[name]
@@ -456,7 +449,6 @@ replace: enrolledclass
         print(fields)
         print(ldif)
         print("\n")
-        
 
     def update_ldap_user(self, user_dict):
         fields = self.gen_student_fields(user_dict, "modify")
@@ -466,7 +458,6 @@ replace: enrolledclass
         print(fields)
         print(ldif)
         print("\n")
-
 
     def gen_class_ldif(self, data):
         """
@@ -500,7 +491,6 @@ graduationYear: 2017
 cn: {cn}
 {periods}
 sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
-
 
     def format_courselength(self, data):
         if data["TermCode"] == "YR":
@@ -557,4 +547,3 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         print(fields)
         print(ldif)
         print("\n\n")
-

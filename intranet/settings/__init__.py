@@ -323,7 +323,7 @@ MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
-    "intranet.middleware.ldap_db.CheckEnvironment", # Check environment variables for LDAP
+    "intranet.middleware.ldap_db.CheckEnvironment",  # Check environment variables for LDAP
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth

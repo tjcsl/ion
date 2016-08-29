@@ -160,6 +160,7 @@ class Announcement(models.Model):
 
 
 class AnnouncementRequestQuerySet(models.query.QuerySet):
+
     def this_year(self):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -167,6 +168,7 @@ class AnnouncementRequestQuerySet(models.query.QuerySet):
 
 
 class AnnouncementRequestManager(Manager):
+
     def get_queryset(self):
         return AnnouncementRequestQuerySet(self.model, using=self._db)
 

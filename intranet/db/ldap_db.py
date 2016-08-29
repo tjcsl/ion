@@ -92,7 +92,7 @@ class LDAPConnection(object):
             logger.info("KRB5CCNAME: {}".format(os.environ["KRB5CCNAME"]))
         else:
             logger.info("KRB5CCNAME not in environ")
-        
+
         if not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None:
             logger.info("Connecting to LDAP...")
             server = ldap3.Server(settings.LDAP_SERVER)

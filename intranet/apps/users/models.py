@@ -1597,7 +1597,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
-
     # def has_perm(self, perm, obj=None):
     #    """Return whether user has a permission."""
     #    return perm in self.user_permissions.all().values_list("codename", flat=True)

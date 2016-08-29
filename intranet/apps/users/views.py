@@ -86,7 +86,6 @@ def profile_view(request, user_id=None):
     if settings.USE_IONLDAP:
         ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
 
-
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,

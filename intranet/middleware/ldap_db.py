@@ -61,7 +61,9 @@ class CheckLDAPBindMiddleware:
             """
         return response
 
+
 class CheckEnvironment:
+
     def __init__(self, get_response):
         self.get_response = get_response
 

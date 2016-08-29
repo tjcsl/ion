@@ -20,6 +20,7 @@ class Link(models.Model):
 
 
 class EventQuerySet(models.query.QuerySet):
+
     def this_year(self):
         """ Get Events from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -27,6 +28,7 @@ class EventQuerySet(models.query.QuerySet):
 
 
 class EventManager(Manager):
+
     def get_queryset(self):
         return EventQuerySet(self.model, using=self._db)
 
