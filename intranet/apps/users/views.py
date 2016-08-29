@@ -183,6 +183,9 @@ def class_section_view(request, section_id):
     except Exception:
         raise Http404
 
+    if c.name is None:
+        raise Http404
+
     students = sorted(c.students, key=lambda x: (x.last_name, x.first_name))
 
     attrs = {
