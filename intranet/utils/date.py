@@ -6,8 +6,6 @@ import datetime
 
 
 def is_current_year(date):
-    if type(date) is datetime.date:
-        date = datetime.datetime.combine(date, datetime.datetime.min.time())
     start_date, end_date = get_date_range_this_year()
     return start_date <= date <= end_date
 
