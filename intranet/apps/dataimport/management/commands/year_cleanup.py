@@ -87,7 +87,7 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 print("User", usr,  "DELETE")
                 usr.handle_delete()
-                usr.delete()
+                print(usr.delete())
             else:
                 #print("User", usr, "KEEP")
                 pass
