@@ -3,6 +3,7 @@
 import logging
 import os
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import BACKEND_SESSION_KEY
 
@@ -74,7 +75,7 @@ class CheckEnvironment:
             if "KRB5CCNAME" not in os.environ:
                 logger.info("CheckEnvironment: was NOT in environ")
             os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
-        else:
+        elif not settings.TESTING:
             logger.info("CheckEnvironment: KRB5CCNAME not in session")
 
         response = self.get_response(request)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.utils import timezone
 import datetime
 
 
@@ -12,9 +13,9 @@ def get_date_range_this_year():
     """Return the starting and ending date of the current school year."""
     now = datetime.datetime.now().date()
     if now.month <= settings.YEAR_TURNOVER_MONTH:
-        date_start = datetime.date(now.year - 1, 9, 1)
-        date_end = datetime.date(now.year, 7, 1)
+        date_start = datetime.datetime(now.year - 1, 9, 1)
+        date_end = datetime.datetime(now.year, 7, 1)
     else:
-        date_start = datetime.date(now.year, 9, 1)
-        date_end = datetime.date(now.year + 1, 7, 1)
-    return date_start, date_end
+        date_start = datetime.datetime(now.year, 9, 1)
+        date_end = datetime.datetime(now.year + 1, 7, 1)
+    return timezone.make_aware(date_start), timezone.make_aware(date_end)
