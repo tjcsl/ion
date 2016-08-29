@@ -75,7 +75,9 @@ class Command(BaseCommand):
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
         print("{} absents".format(absents.count()))
-        absents.update(was_absent=True)
+        for a in absents:
+            a.archive_remove_absence()
+        print("Archived absences")
 
     def update_welcome(self):
         User.objects.all().update(seen_welcome=False)

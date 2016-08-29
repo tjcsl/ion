@@ -1244,6 +1244,8 @@ class EighthSignup(AbstractBaseEighthModel):
     absence_acknowledged = models.BooleanField(default=False, blank=True)
     absence_emailed = models.BooleanField(default=False, blank=True)
 
+    archived_was_absent = models.BooleanField(default=False, blank=True)
+
     def save(self, *args, **kwargs):
         if self.has_conflict():
             raise ValidationError("EighthSignup already exists for this user on this block.")
@@ -1318,6 +1320,12 @@ class EighthSignup(AbstractBaseEighthModel):
         else:
             sa.archived_member_count = 1
         sa.save()
+
+    def archive_remove_absence(self):
+        if self.was_absent:
+            self.was_absent = False
+            self.archived_was_absent = True
+            self.save()
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)
