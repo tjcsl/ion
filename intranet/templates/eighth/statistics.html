@@ -74,6 +74,9 @@
     </a>
 
     <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
+    <a href="{% url 'eighth_statistics' activity.id %}?print=true">
+        Printer friendly version
+    </a>
 
     <h3>Activity Information</h3>
     {% if activity.sponsors.count > 0 %}
@@ -99,6 +102,7 @@
     <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br />
     <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
     <b>Total signups:</b> {{ total_signups }}<br />
+    <b>Unique students:</b> {{ students }}<br />
     <b>Average signups per block:</b> {{ average_signups }}<br />
     <b>Average signups per student:</b> {{ average_user_signups }}<br />
     <b>Capacity:</b> {{ capacity }}<br />

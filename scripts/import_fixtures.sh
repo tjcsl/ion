@@ -6,6 +6,19 @@ if ! [ -d "fixtures" ]; then
     exit
 fi
 
+while getopts ":f" opt > /dev/null 2>&1; do
+    case $opt in
+        f)
+            echo "Destroying database..."
+            sudo -u postgres dropdb ion
+            echo "Recreating database..."
+            sudo -u postgres createdb ion
+            echo "Migrating..."
+            ./manage.py migrate
+            ;;
+    esac
+done
+
 if [ "$(whoami)" != "postgres" ]; then
     echo "Not running as postgres user, switching user..."
     sudo -u postgres $0

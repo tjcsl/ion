@@ -20,6 +20,14 @@ intranet.apps.eighth.management.commands.find_duplicates module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.eighth.management.commands.generate_statistics module
+-------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.generate_statistics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.eighth.management.commands.import_attendance module
 -----------------------------------------------------------------
 

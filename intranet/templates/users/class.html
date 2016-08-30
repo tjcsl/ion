@@ -40,10 +40,12 @@
         <section class="class-info">
             <h2>{{ class.name }}</h2>
             <h3>
-                {% if class.periods|length == 1 %}
-                    Period {{ class.periods.0 }}
-                {% else %}
-                    Periods {{ class.periods|join:", " }}
+                {% if class.periods %}
+                    {% if class.periods|length == 1 %}
+                        Period {{ class.periods.0 }}
+                    {% else %}
+                        Periods {{ class.periods|join:", " }}
+                    {% endif %}
                 {% endif %}
             </h3>
             <h3>Teacher: <a href="{% url 'user_profile' class.teacher.id %}">
