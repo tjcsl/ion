@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.forms.admin.sponsors &#8212; TJ Intranet v3 (Build #2917) documentation</title>
+    <title>intranet.apps.eighth.management.commands.generate_statistics &#8212; TJ Intranet v3 (Build #2917) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -146,42 +146,27 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.eighth.forms.admin.sponsors</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.eighth.management.commands.generate_statistics</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthSponsor</span>
-<span class="kn">from</span> <span class="nn">....users.models</span> <span class="k">import</span> <span class="n">User</span>
-
-
-<div class="viewcode-block" id="AutoCreateUserField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.sponsors.AutoCreateUserField">[docs]</a><span class="k">class</span> <span class="nc">AutoCreateUserField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">):</span>
-    <span class="n">widget</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span>
-
-<div class="viewcode-block" id="AutoCreateUserField.clean"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.sponsors.AutoCreateUserField.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_values</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">id_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_value</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
-
-        <span class="k">return</span> <span class="n">user</span></div></div>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthActivity</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.views.activities</span> <span class="k">import</span> <span class="n">generate_statistics_pdf</span>
 
 
-<div class="viewcode-block" id="SponsorForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.sponsors.SponsorForm">[docs]</a><span class="k">class</span> <span class="nc">SponsorForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">AutoCreateUserField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;User ID&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.generate_statistics.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Generate a PDF file with statistics of all of the Eighth Activities.&quot;</span>
 
-<div class="viewcode-block" id="SponsorForm.Meta"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.sponsors.SponsorForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">EighthSponsor</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;online_attendance&quot;</span><span class="p">,</span> <span class="s2">&quot;show_full_name&quot;</span><span class="p">]</span></div></div>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.generate_statistics.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--all-years&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;years&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Include statistics for all of the years. Overrides the --year flag, if set.&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--year&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The year to generate statistics for.&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--output-file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;eighth.pdf&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The location where the PDF file will be saved.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.generate_statistics.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">generate_statistics_pdf</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span> <span class="n">all_years</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;years&quot;</span><span class="p">],</span> <span class="n">year</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">])</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div></div>
 </pre></div>
 
     </div>
