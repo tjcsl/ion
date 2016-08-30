@@ -148,7 +148,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
             ], hAlign='LEFT'))
             elements.append(PageBreak())
 
-    def first_page(canvas, doc):
+    def first_page(canvas, _):
         if len(activities) == 1:
             canvas.setTitle("{} Statistics".format(activities[0].name))
         else:
