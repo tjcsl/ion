@@ -254,6 +254,7 @@ def eighth_display_view(request, block_id=None):
     return render(request, "eighth/display.html", context)
 
 
+@login_required
 def eighth_multi_signup_view(request):
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
