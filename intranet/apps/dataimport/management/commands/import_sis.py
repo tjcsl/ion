@@ -43,8 +43,8 @@ class Command(BaseCommand):
         "schedules": [],
         "newteachers": []
     }  # type: Dict[str,List[str]]
-    teacher_mappings = {}
-    new_teachers = []
+    teacher_mappings = {}  # type: Dict[str,str]
+    new_teachers = []  # type: List[Dict[str,str]]
 
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
