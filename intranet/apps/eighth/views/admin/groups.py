@@ -248,7 +248,7 @@ def upload_group_members_view(request, group_id):
         logger.debug(request.FILES)
         if "file" in request.FILES:
             fileobj = request.FILES['file']
-            if fileobj.content_type != "text/":
+            if "text/" not in fileobj.content_type:
                 messages.error(request, "The uploaded file is not of the correct type, plain text.")
                 return redirect("eighth_admin_edit_group", group.id)
             filetext = get_file_string(fileobj)
