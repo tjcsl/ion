@@ -5,6 +5,7 @@ import sys
 import json
 import csv
 import re
+import time
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 
@@ -572,7 +573,6 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         # TODO: Search existing LDAP/handle new teachers
         if data["Teacher"] in self.teacher_mappings:
             return self.teacher_mappings[data["Teacher"]]
-        result = False
         try:
             res = re.findall(r"^([\w\- ]+), ([\w\- ]+)(?: ([\w\-])\.)?$", data["Teacher"])[0]
             last_name, first_name, middle_initial = res
@@ -600,7 +600,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         self.teacher_mappings[data["Teacher"]] = username
 
         try:
-            teacher_object = User.objects.get(username__iexact = username)
+            User.objects.get(username__iexact=username)
         except User.DoesNotExist:
             uid_number = self.last_uid_number + 1
             self.last_uid_number += 1
