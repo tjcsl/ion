@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import csv
+import re
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 
@@ -16,6 +17,7 @@ class Command(BaseCommand):
         parser.add_argument('--csv', type=str, dest='csv_file', default='import.csv', help='Import CSV file')
         parser.add_argument('--fake-teachers', action='store_true', dest='fake_teachers', default=False, help='Fake teacher names and room numbers')
         parser.add_argument('--load-users', action='store_true', dest='load_users', default=False, help='Load users into database')
+        parser.add_argument('--teacher-mappings', type=str, dest='teacher_file', default='teacher.csv', help='Import Teacher mappings')
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -33,19 +35,23 @@ class Command(BaseCommand):
     csv_file = None  # type: str
     do_run = None  # type: bool
     uidmap = {}  # type: Dict[str,str]
-    last_uid_number = 33503
+    last_uid_number = 33971
     schedules = {}  # type: Dict[str,str]
     ldifs = {
         "newstudents": [],
         "oldstudents": [],
-        "schedules": []
+        "schedules": [],
+        "newteachers": []
     }  # type: Dict[str,List[str]]
+    teacher_mappings = {}
+    new_teachers = []
 
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
         self.fake_teachers = options["fake_teachers"]
         self.load_users = options["load_users"]
+        self.teacher_file = options["teacher_file"]
 
         if self.load_users:
             for i in range(self.last_uid_number, self.last_uid_number + 500):
@@ -84,6 +90,8 @@ class Command(BaseCommand):
                         users[i]["classes"][classid] = classobj
 
                 open("users_faked.json", "w").write(json.dumps(users))
+        else:
+            users = self.load_gen_users()
 
         if os.path.isfile("users_uids.json"):
             print("Loading user existence/UIDnumbers info...")
@@ -144,9 +152,15 @@ class Command(BaseCommand):
             print("ADD SCHEDULE", sid)
             self.add_ldap_class(self.schedules[sid])
 
+        print("Adding new teachers")
+        for teacher in self.new_teachers:
+            print("Add teacher {}".format(teacher))
+            self.ldifs["newteachers"].append(self.gen_add_teacher_ldif(teacher))
+
         open("newstudents.ldif", "w").write("\n\n".join(self.ldifs["newstudents"]))
         open("oldstudents.ldif", "w").write("\n\n".join(self.ldifs["oldstudents"]))
         open("schedules.ldif", "w").write("\n\n".join(self.ldifs["schedules"]))
+        open("newteachers.ldif", "w").write("\n\n".join(self.ldifs["newteachers"]))
 
         return
 
@@ -199,6 +213,40 @@ class Command(BaseCommand):
 
         users = sorted(users_list, key=lambda x: (x["user"]["LastName"], x["user"]["FirstName"], x["user"]["MiddleName"], x["user"]["StudentID"]))
         return users
+
+    def gen_add_teacher_ldif(self, data):
+        """
+        dn: iodineUid=emglazer,ou=people,dc=tjhsst,dc=edu
+        objectClass: tjhsstTeacher
+        iodineUid: emglazer
+        iodineUidNumber: 59
+        header: TRUE
+        style: default
+        mailentries: -1
+        cn: Evan Glazer
+        sn: Glazer
+        givenName: Evan
+        chrome: TRUE
+        mail: Evan.Glazer@fcps.edu
+        startpage: news
+        """
+
+        ldif = """
+dn: iodineUid={username},ou=people,dc=tjhsst,dc=edu
+changetype: add
+objectClass: tjhsstTeacher
+iodineUid: {username}
+iodineUidNumber: {uid}
+uid: {uid}
+header: TRUE
+style: default
+mailentries: -1
+cn: {fullname}
+sn: {lastname}
+givenName: {firstname}
+startpage: news
+structuralObjectClass: tjhsstTeacher""".format(**data)
+        return ldif
 
     def gen_add_ldif(self, data):
 
@@ -522,9 +570,43 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
     def format_sponsor(self, data):
         # TODO: Search existing LDAP/handle new teachers
-        return {
-            "Glazer, Evan": "emglazer"
-        }[data["Teacher"]]
+        if data["Teacher"] in self.teacher_mappings:
+            return self.teacher_mappings[data["Teacher"]]
+        result = False
+        try:
+            res = re.findall(r"^([\w\- ]+), ([\w\- ]+)(?: ([\w\-])\.)?$", data["Teacher"])[0]
+            last_name, first_name, middle_initial = res
+        except:
+            if data["Teacher"]:
+                print("INVALID TEACHER '{}' returning kosatka".format(data["Teacher"]))
+                time.sleep(5)
+            return 'bpkosatka'
+
+        try:
+
+            with open(self.teacher_file, 'r') as csv_file:
+                reader = csv.reader(csv_file)
+                next(reader)
+                for line in reader:
+                    if line[0] == last_name and line[1] == first_name and (not line[2] or not middle_initial or line[2].startswith(middle_initial)):
+                        username = line[4].split('@')[0].lower()
+            if not username:
+                raise Exception("no match")
+
+        except Exception as e:
+            print(str(e))
+            username = input("Please enter fcps username for {}: ".format(data["Teacher"]))
+
+        self.teacher_mappings[data["Teacher"]] = username
+
+        try:
+            teacher_object = User.objects.get(username__iexact = username)
+        except User.DoesNotExist:
+            uid_number = self.last_uid_number + 1
+            self.last_uid_number += 1
+            self.new_teachers.append({'uid': uid_number, 'username': username, 'firstname': first_name, 'lastname': last_name, 'fullname': '{} {}'.format(first_name, last_name)})
+
+        return username
 
     def gen_class_fields(self, data):
         return {
@@ -533,7 +615,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             "courseLength": self.format_courselength(data),
             "quarters": self.format_quarters(data),
             "periods": self.format_periods(data),
-            "roomNumber": data["Room"],
+            "roomNumber": data["Room"] or 'DSS',
             "cn": data["CourseTitle"],
             "sponsor": self.format_sponsor(data)
         }
