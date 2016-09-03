@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #2936) documentation</title>
+    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #2938) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2936)',
+        VERSION:     'v3 (Build #2938)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2936) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2938) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -601,8 +601,10 @@
                     <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batched_insert</span><span class="p">(</span><span class="n">objs_without_pk</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">connection</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">can_return_ids_from_bulk_insert</span><span class="p">:</span>
                         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs_without_pk</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)):</span>
-                        <span class="n">objs_without_pk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">obj_without_pk</span><span class="p">,</span> <span class="n">pk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">objs_without_pk</span><span class="p">,</span> <span class="n">ids</span><span class="p">):</span>
+                        <span class="n">obj_without_pk</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">pk</span>
+                        <span class="n">obj_without_pk</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">adding</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">obj_without_pk</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
 
         <span class="k">return</span> <span class="n">objs</span>
 

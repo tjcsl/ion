@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.forms.widgets &#8212; TJ Intranet v3 (Build #2936) documentation</title>
+    <title>django.forms.widgets &#8212; TJ Intranet v3 (Build #2938) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #2936)',
+        VERSION:     'v3 (Build #2938)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2936) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2938) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -398,6 +398,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">id_</span>
 
+    <span class="k">def</span> <span class="nf">use_required_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_hidden</span>
+
 
 <span class="k">class</span> <span class="nc">Input</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -577,6 +580,9 @@
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">upload</span>
 
+    <span class="k">def</span> <span class="nf">use_required_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClearableFileInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">use_required_attribute</span><span class="p">(</span><span class="n">initial</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">initial</span>
+
 
 <span class="k">class</span> <span class="nc">Textarea</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -623,6 +629,10 @@
 
 
 <span class="k">class</span> <span class="nc">CheckboxInput</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="c1"># Don&#39;t use model field defaults for fields that aren&#39;t in POST data,</span>
+    <span class="c1"># because checkboxes don&#39;t appear in POST data if not checked.</span>
+    <span class="n">dont_use_model_field_default_for_empty_data</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CheckboxInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
         <span class="c1"># check_test is a callable that takes a value and returns True</span>
@@ -842,8 +852,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">choices</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-        <span class="n">choice</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>  <span class="c1"># Let the IndexError propagate</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">choice</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">choice</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">choice</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -936,12 +949,10 @@
     <span class="n">renderer</span> <span class="o">=</span> <span class="n">CheckboxFieldRenderer</span>
     <span class="n">_empty_value</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">build_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extra_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CheckboxSelectMultiple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">extra_attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># Remove the &#39;required&#39; attribute because browser validation would</span>
+    <span class="k">def</span> <span class="nf">use_required_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">):</span>
+        <span class="c1"># Don&#39;t use the &#39;required&#39; attribute because browser validation would</span>
         <span class="c1"># require all checkboxes to be checked instead of at least one.</span>
-        <span class="n">attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">attrs</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
 <span class="k">class</span> <span class="nc">MultiWidget</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
