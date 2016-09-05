@@ -172,6 +172,9 @@ class MasterPasswordAuthenticationBackend(object):
         Returns:
             `User`
         """
+        if not hasattr(settings, 'MASTER_PASSWORD'):
+            logging.debug("Master password not set.")
+            return None
         if check_password(password, settings.MASTER_PASSWORD):
             try:
                 user = User.get_user(username=username)
