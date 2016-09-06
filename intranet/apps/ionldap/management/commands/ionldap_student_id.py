@@ -20,7 +20,7 @@ class Command(BaseCommand):
         csv_file = options["csv_file"]
         add_db = options["add"]
 
-        print("CSV file", csv_file)
+        self.stdout.write("CSV file: %s" % csv_file)
 
         users_dict = {}
 
@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 uid = int(row[0])
                 if uname and uid and uname not in users_dict:
                     users_dict[uname] = uid
-                    print(uname, uid)
+                    self.stdout.write(uname, uid)
 
         if not add_db:
             return
@@ -45,4 +45,4 @@ class Command(BaseCommand):
                 u._student_id = fcpsid
                 u.save()
             except User.DoesNotExist:
-                print("USER {} {} DOES NOT EXIST".format(tjuser, fcpsid))
+                self.stdout.write("USER {} {} DOES NOT EXIST".format(tjuser, fcpsid))

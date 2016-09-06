@@ -28,6 +28,14 @@ intranet.apps.emailfwd.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.emailfwd.tests module
+-----------------------------------
+
+.. automodule:: intranet.apps.emailfwd.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.emailfwd.urls module
 ----------------------------------
 

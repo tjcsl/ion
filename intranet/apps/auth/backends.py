@@ -127,8 +127,8 @@ class KerberosAuthenticationBackend(object):
             try:
                 user = User.get_user(username=username)
             except User.DoesNotExist:
-                # Shouldn't happen
-                logger.error("User {} successfully authenticated but not found in LDAP.".format(username))
+                # Most likely recently graduated user who has been removed from ldap, but can still login.
+                logger.warning("User {} successfully authenticated but not found in LDAP.".format(username))
 
                 user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
             return user
@@ -172,6 +172,9 @@ class MasterPasswordAuthenticationBackend(object):
         Returns:
             `User`
         """
+        if not hasattr(settings, 'MASTER_PASSWORD'):
+            logging.debug("Master password not set.")
+            return None
         if check_password(password, settings.MASTER_PASSWORD):
             try:
                 user = User.get_user(username=username)

@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         u = User.objects.get(username=args[0])
-        print(u, u.user_locked, str(u.last_login))
+        self.stdout.write("%s - %s - %s" % (u, u.user_locked, str(u.last_login)))
         u.user_locked = True
         u.save()
-        print(u, u.user_locked)
+        self.stdout.write("%s - %s" % (u, u.user_locked))

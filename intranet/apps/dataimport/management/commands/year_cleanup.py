@@ -17,15 +17,15 @@ class Command(BaseCommand):
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
-            print("Abort.")
+            self.stdout.write("Abort.")
             sys.exit()
 
     def chk(self, q, test):
         if test:
-            print("OK:", q)
+            self.stdout.write("OK: %s" % q)
         else:
-            print("ERROR:", q)
-            print("Abort.")
+            self.stdout.write("ERROR: %s" % q)
+            self.stdout.write("Abort.")
             sys.exit()
 
     def handle(self, *args, **options):
@@ -37,12 +37,12 @@ class Command(BaseCommand):
                      "===== WARNING! =====\n\n"
                      "Continue?")
         else:
-            print("In pretend mode.")
+            self.stdout.write("In pretend mode.")
 
         current_year = datetime.datetime.now().year
         new_senior_year = current_year + 1
         turnover_date = datetime.datetime(current_year, 7, 1)
-        print("Turnover date set to: {}".format(turnover_date.strftime("%c")))
+        self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
 
         self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year),
                  settings.SENIOR_GRADUATION_YEAR == new_senior_year)
@@ -60,24 +60,24 @@ class Command(BaseCommand):
             User: graduated students deleted
         """
 
-        print("Resolving absences")
+        self.stdout.write("Resolving absences")
         if do_run:
             self.clear_absences()
 
-        print("Updating welcome state")
+        self.stdout.write("Updating welcome state")
         if do_run:
             self.update_welcome()
 
-        print("Deleting graduated users")
+        self.stdout.write("Deleting graduated users")
         if do_run:
             self.handle_delete()
 
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
-        print("{} absents".format(absents.count()))
+        self.stdout.write("{} absents".format(absents.count()))
         for a in absents:
             a.archive_remove_absence()
-        print("Archived absences")
+        self.stdout.write("Archived absences")
 
     def update_welcome(self):
         User.objects.all().update(seen_welcome=False)
@@ -87,9 +87,9 @@ class Command(BaseCommand):
             try:
                 usr.first_name
             except ObjectDoesNotExist:
-                print("User", usr, "DELETE")
+                self.stdout.write("User", usr, "DELETE")
                 usr.handle_delete()
-                print(usr.delete())
+                self.stdout.write(usr.delete())
             else:
-                # print("User", usr, "KEEP")
+                # self.stdout.write("User", usr, "KEEP")
                 pass

@@ -14,7 +14,10 @@ def parse_db_url(db_url):
     if db_url is None:
         raise Exception("You must set SECRET_DATABASE_URL in secret.py")
     url = parse.urlparse(db_url)
-    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
+    args = {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
+    if url.hostname:
+        args.update({'HOST': url.hostname})
+    return args
 
 
 def debug_toolbar_callback(request):
