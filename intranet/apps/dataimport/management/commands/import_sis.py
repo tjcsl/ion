@@ -22,15 +22,15 @@ class Command(BaseCommand):
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
-            print("Abort.")
+            self.stdout.write("Abort.")
             sys.exit()
 
     def chk(self, q, test):
         if test:
-            print("OK:", q)
+            self.stdout.write("OK: %s" % q)
         else:
-            print("ERROR:", q)
-            print("Abort.")
+            self.stdout.write("ERROR: %s" % q)
+            self.stdout.write("Abort.")
             sys.exit()
 
     csv_file = None  # type: str
@@ -59,9 +59,9 @@ class Command(BaseCommand):
                 try:
                     u = User.get_user(id=i)
                 except User.DoesNotExist:
-                    print("UID", i, "None")
+                    self.stdout.write("UID", i, "None")
                 else:
-                    print("UID", i, u)
+                    self.stdout.write("UID", i, u)
             return
 
         if self.do_run:
@@ -70,18 +70,18 @@ class Command(BaseCommand):
                      "===== WARNING! =====\n\n"
                      "Continue?")
         else:
-            print("In pretend mode.")
+            self.stdout.write("In pretend mode.")
 
-        print("CSV file", self.csv_file)
+        self.stdout.write("CSV file", self.csv_file)
 
         if self.fake_teachers:
             if os.path.isfile("users_faked.json"):
-                print("Loading faked teachers JSON")
+                self.stdout.write("Loading faked teachers JSON")
                 users = json.loads(open("users_faked.json", "r").read())
-                print("JSON loaded")
+                self.stdout.write("JSON loaded")
             else:
                 users = self.load_gen_users()
-                print("Faking teachers...")
+                self.stdout.write("Faking teachers...")
                 for i in range(len(users)):
                     for classid in users[i]["classes"]:
                         classobj = users[i]["classes"][classid]
@@ -95,16 +95,16 @@ class Command(BaseCommand):
             users = self.load_gen_users()
 
         if os.path.isfile("users_uids.json"):
-            print("Loading user existence/UIDnumbers info...")
+            self.stdout.write("Loading user existence/UIDnumbers info...")
             self.uidmap = json.loads(open("users_uids.json", "r").read())
             for i in range(len(users)):
                 user = users[i]
                 tjuser = user["user"]["TJUsername"].lower()
                 user["uidNumber"] = self.uidmap[tjuser]["uidNumber"]
                 user["ldapExists"] = self.uidmap[tjuser]["ldapExists"]
-            print("Loaded")
+            self.stdout.write("Loaded")
         else:
-            print("Check for user existence/generate iodineUidNumbers")
+            self.stdout.write("Check for user existence/generate iodineUidNumbers")
             for i in range(len(users)):
                 user = users[i]
                 tjuser = user["user"]["TJUsername"].lower()
@@ -120,25 +120,25 @@ class Command(BaseCommand):
                     user["ldapExists"] = True
 
                 self.uidmap[tjuser] = {"uidNumber": user["uidNumber"], "ldapExists": user["ldapExists"]}
-            print("Done")
+            self.stdout.write("Done")
             open("users_uids.json", "w").write(json.dumps(self.uidmap))
 
-        print("Either add or modify accounts in LDAP")
+        self.stdout.write("Either add or modify accounts in LDAP")
         for i in range(len(users)):
             user = users[i]
             if user["ldapExists"]:
-                print(user["user"]["TJUsername"], "MODIFY", user["uidNumber"])
+                self.stdout.write(user["user"]["TJUsername"], "MODIFY", user["uidNumber"])
                 self.update_ldap_user(user)
             else:
-                print(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
+                self.stdout.write(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
                 self.add_ldap_user(user)
 
         if os.path.isfile("schedules.json"):
-            print("Loading schedules...")
+            self.stdout.write("Loading schedules...")
             self.schedules = json.loads(open("schedules.json", "r").read())
-            print("Loaded schedules")
+            self.stdout.write("Loaded schedules")
         else:
-            print("Handle schedules")
+            self.stdout.write("Handle schedules")
             self.schedules = {}
             for i in range(len(users)):
                 classes = users[i]["classes"]
@@ -150,12 +150,12 @@ class Command(BaseCommand):
                 f.write(json.dumps(self.schedules))
 
         for sid in self.schedules:
-            print("ADD SCHEDULE", sid)
+            self.stdout.write("ADD SCHEDULE", sid)
             self.add_ldap_class(self.schedules[sid])
 
-        print("Adding new teachers")
+        self.stdout.write("Adding new teachers")
         for teacher in self.new_teachers:
-            print("Add teacher {}".format(teacher))
+            self.stdout.write("Add teacher {}".format(teacher))
             self.ldifs["newteachers"].append(self.gen_add_teacher_ldif(teacher))
 
         open("newstudents.ldif", "w").write("\n\n".join(self.ldifs["newstudents"]))
@@ -167,14 +167,14 @@ class Command(BaseCommand):
 
     def load_gen_users(self):
         if os.path.isfile("users.json"):
-            print("Loading JSON")
+            self.stdout.write("Loading JSON")
             users = json.loads(open("users.json", "r").read())
-            print("JSON loaded")
+            self.stdout.write("JSON loaded")
         else:
-            print("Generating JSON file")
+            self.stdout.write("Generating JSON file")
             users = self.generate_sorted_dump()
             open("users.json", "w").write(json.dumps(users))
-            print("JSON loaded")
+            self.stdout.write("JSON loaded")
         return users
 
     def generate_sorted_dump(self):
@@ -493,19 +493,19 @@ replace: enrolledclass
         fields = self.gen_student_fields(user_dict, "add")
         ldif = self.gen_add_ldif(fields)
         self.ldifs["newstudents"].append(ldif)
-        print(user_dict)
-        print(fields)
-        print(ldif)
-        print("\n")
+        self.stdout.write(user_dict)
+        self.stdout.write(fields)
+        self.stdout.write(ldif)
+        self.stdout.write("\n")
 
     def update_ldap_user(self, user_dict):
         fields = self.gen_student_fields(user_dict, "modify")
         ldif = self.gen_update_ldif(fields)
         self.ldifs["oldstudents"].append(ldif)
-        print(user_dict)
-        print(fields)
-        print(ldif)
-        print("\n")
+        self.stdout.write(user_dict)
+        self.stdout.write(fields)
+        self.stdout.write(ldif)
+        self.stdout.write("\n")
 
     def gen_class_ldif(self, data):
         """
@@ -578,7 +578,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             last_name, first_name, middle_initial = res
         except:
             if data["Teacher"]:
-                print("INVALID TEACHER '{}' returning kosatka".format(data["Teacher"]))
+                self.stdout.write("INVALID TEACHER '{}' returning kosatka".format(data["Teacher"]))
                 time.sleep(5)
             return 'bpkosatka'
 
@@ -594,7 +594,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
                 raise Exception("no match")
 
         except Exception as e:
-            print(str(e))
+            self.stdout.write(str(e))
             username = input("Please enter fcps username for {}: ".format(data["Teacher"]))
 
         self.teacher_mappings[data["Teacher"]] = username
@@ -624,7 +624,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         fields = self.gen_class_fields(data)
         ldif = self.gen_class_ldif(fields)
         self.ldifs["schedules"].append(ldif)
-        print(data)
-        print(fields)
-        print(ldif)
-        print("\n\n")
+        self.stdout.write(data)
+        self.stdout.write(fields)
+        self.stdout.write(ldif)
+        self.stdout.write("\n\n")

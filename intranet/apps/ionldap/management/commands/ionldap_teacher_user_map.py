@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for course in LDAPCourse.objects.all():
             teacher = course.teacher_user_find()
-            print(course, teacher)
+            self.stdout.write("%s - %s" % (course, teacher))
             if teacher:
                 course.teacher_user = teacher
                 course.save()

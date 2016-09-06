@@ -21,7 +21,7 @@ class Command(BaseCommand):
         csv_file = options["csv_file"]
         add_db = options["add"]
 
-        print("CSV file", csv_file)
+        self.stdout.write("CSV file: %s" % csv_file)
 
         users_dict = {}
         users_dict_base = "TJUsername"
@@ -54,17 +54,17 @@ class Command(BaseCommand):
                 user_dict = users_dict[student_id]
                 sid = student_id.lower()
                 if not sid:
-                    print("Blank studentid")
-                    print(user_dict)
+                    self.stdout.write("Blank studentid")
+                    self.stdout.write(user_dict)
                     continue
 
-                print("User: {}".format(sid))
+                self.stdout.write("User: {}".format(sid))
 
                 try:
                     user = User.objects.get(username=sid)
                 except User.DoesNotExist:
-                    print("User does not exist with username '{}'".format(sid))
-                    print(user_dict)
+                    self.stdout.write("User does not exist with username '{}'".format(sid))
+                    self.stdout.write(user_dict)
                     continue
 
                 if not add_db:
@@ -82,4 +82,4 @@ class Command(BaseCommand):
                             term_code=class_obj["TermCode"], period=class_obj["Period"], end_period=class_obj["EndPeriod"])
                     ldap_course.users.add(user)
                     ldap_course.save()
-                    print("{} \t\tadded to\t\t {}".format(user, ldap_course))
+                    self.stdout.write("{} \t\tadded to\t\t {}".format(user, ldap_course))
