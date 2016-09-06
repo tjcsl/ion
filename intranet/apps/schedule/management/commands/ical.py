@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 summary = event.get('summary')
                 categories = event.get('categories')
                 if categories in ['Blue Day', 'Red Day', 'Anchor Day']:
-                    print("{} {} {}".format(date.to_ical(), summary, categories))
+                    self.stdout.write("{} {} {}".format(date.to_ical(), summary, categories))
                     calmap[date.to_ical()] = str(summary)
             return calmap
 
@@ -55,10 +55,10 @@ class Command(BaseCommand):
                 do = Day.objects.filter(date=day)
                 if len(do) < 1:
                     daydate = Day.objects.create(date=day, type=dt)
-                    print(daydate)
+                    self.stdout.write(daydate)
                 else:
-                    print("{} already exists".format(str(daydate)))
+                    self.stdout.write("{} already exists".format(str(daydate)))
 
-        map = parse(get_ical())
-        print(map)
+        ical_map = parse(get_ical())
+        self.stdout.write(str(ical_map))
         # add(map)
