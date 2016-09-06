@@ -275,7 +275,7 @@ class EighthActivity(AbstractBaseEighthModel):
             grade = None
 
         if grade is not None and 9 <= grade.number <= 12:
-            activities |= set(EighthActivity.objects.filter(**{'{}s_allowed'.format(grade.name): True}).values_list("id", flat=True))
+            activities |= set(EighthActivity.objects.filter(**{'{}_allowed'.format(grade.name_plural): True}).values_list("id", flat=True))
 
         for group in user.groups.all():
             activities |= set(group.restricted_activity_set.values_list("id", flat=True))
