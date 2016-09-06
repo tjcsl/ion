@@ -27,14 +27,6 @@ intranet.apps.dataimport.tests module
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.dataimport.views module
--------------------------------------
-
-.. automodule:: intranet.apps.dataimport.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

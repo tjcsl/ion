@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.serializers &#8212; TJ Intranet v3 (Build #2947) documentation</title>
+    <title>intranet.apps.schedule.tests &#8212; TJ Intranet v3 (Build #2947) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -146,23 +146,24 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.announcements.serializers</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.schedule.tests</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">serializers</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Announcement</span>
-<span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
+<span class="kn">from</span> <span class="nn">django.core.management</span> <span class="k">import</span> <span class="n">call_command</span>
+
+<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
-<div class="viewcode-block" id="AnnouncementSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.AnnouncementSerializer">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_announcements_detail&quot;</span><span class="p">)</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">groups</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="viewcode-block" id="ScheduleTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.tests.ScheduleTest">[docs]</a><span class="k">class</span> <span class="nc">ScheduleTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests schedules.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AnnouncementSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.AnnouncementSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Announcement</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;added&#39;</span><span class="p">,</span> <span class="s1">&#39;updated&#39;</span><span class="p">,</span> <span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="s1">&#39;pinned&#39;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="ScheduleTest.test_ical"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.tests.ScheduleTest.test_ical">[docs]</a>    <span class="k">def</span> <span class="nf">test_ical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;ical&#39;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(),</span> <span class="n">output</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

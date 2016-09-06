@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #2938) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #2947) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2938)',
+        VERSION:     'v3 (Build #2947)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2938) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2947) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -171,15 +171,15 @@
 
 <div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Command.chk"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.chk">[docs]</a>    <span class="k">def</span> <span class="nf">chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OK: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ERROR: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
     <span class="n">csv_file</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
@@ -208,9 +208,9 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UID&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UID&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UID&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UID&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_run</span><span class="p">:</span>
@@ -219,18 +219,18 @@
                      <span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                      <span class="s2">&quot;Continue?&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;In pretend mode.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;In pretend mode.&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;CSV file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_file</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_teachers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;users_faked.json&quot;</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading faked teachers JSON&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading faked teachers JSON&quot;</span><span class="p">)</span>
                 <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_faked.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gen_users</span><span class="p">()</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Faking teachers...&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Faking teachers...&quot;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
                     <span class="k">for</span> <span class="n">classid</span> <span class="ow">in</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">]:</span>
                         <span class="n">classobj</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">classid</span><span class="p">]</span>
@@ -244,16 +244,16 @@
             <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gen_users</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading user existence/UIDnumbers info...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading user existence/UIDnumbers info...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">tjuser</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">][</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span>
                 <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">][</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loaded&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Check for user existence/generate iodineUidNumbers&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Check for user existence/generate iodineUidNumbers&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">tjuser</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -269,25 +269,25 @@
                     <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">],</span> <span class="s2">&quot;ldapExists&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]}</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
             <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">))</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Either add or modify accounts in LDAP&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Either add or modify accounts in LDAP&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span> <span class="s2">&quot;MODIFY&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span> <span class="s2">&quot;MODIFY&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_ldap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_ldap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;schedules.json&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading schedules...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading schedules...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;schedules.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded schedules&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loaded schedules&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Handle schedules&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Handle schedules&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
                 <span class="n">classes</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">]</span>
@@ -299,12 +299,12 @@
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ADD SCHEDULE&quot;</span><span class="p">,</span> <span class="n">sid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ADD SCHEDULE&quot;</span><span class="p">,</span> <span class="n">sid</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_ldap_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">[</span><span class="n">sid</span><span class="p">])</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Adding new teachers&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Adding new teachers&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_teachers</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Add teacher </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Add teacher </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;newteachers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_add_teacher_ldif</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
 
         <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;newstudents.ldif&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;newstudents&quot;</span><span class="p">]))</span>
@@ -316,14 +316,14 @@
 
 <div class="viewcode-block" id="Command.load_gen_users"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.load_gen_users">[docs]</a>    <span class="k">def</span> <span class="nf">load_gen_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;users.json&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading JSON&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading JSON&quot;</span><span class="p">)</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating JSON file&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Generating JSON file&quot;</span><span class="p">)</span>
             <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_sorted_dump</span><span class="p">()</span>
             <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;JSON loaded&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="Command.generate_sorted_dump"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.generate_sorted_dump">[docs]</a>    <span class="k">def</span> <span class="nf">generate_sorted_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -642,19 +642,19 @@
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_student_fields</span><span class="p">(</span><span class="n">user_dict</span><span class="p">,</span> <span class="s2">&quot;add&quot;</span><span class="p">)</span>
         <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_add_ldif</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;newstudents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">user_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.update_ldap_user"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.update_ldap_user">[docs]</a>    <span class="k">def</span> <span class="nf">update_ldap_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_dict</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_student_fields</span><span class="p">(</span><span class="n">user_dict</span><span class="p">,</span> <span class="s2">&quot;modify&quot;</span><span class="p">)</span>
         <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_update_ldif</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;oldstudents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">user_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.gen_class_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.gen_class_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">gen_class_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -727,7 +727,7 @@
             <span class="n">last_name</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">middle_initial</span> <span class="o">=</span> <span class="n">res</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INVALID TEACHER &#39;</span><span class="si">{}</span><span class="s2">&#39; returning kosatka&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;INVALID TEACHER &#39;</span><span class="si">{}</span><span class="s2">&#39; returning kosatka&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
             <span class="k">return</span> <span class="s1">&#39;bpkosatka&#39;</span>
 
@@ -743,7 +743,7 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;no match&quot;</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter fcps username for </span><span class="si">{}</span><span class="s2">: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">teacher_mappings</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">username</span>
@@ -773,10 +773,10 @@
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_class_fields</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_class_ldif</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;schedules&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

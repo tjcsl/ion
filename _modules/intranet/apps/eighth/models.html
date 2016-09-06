@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #2938) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #2947) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2938)',
+        VERSION:     'v3 (Build #2947)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2938) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2947) documentation" href="../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -405,8 +405,8 @@
         <span class="n">name</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">include_restricted</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (R)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">include_restricted</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (R)&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
@@ -418,19 +418,13 @@
         <span class="sd">&quot;&quot;&quot;Find the restricted activities available to the given user.&quot;&quot;&quot;</span>
         <span class="n">activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">restricted_activity_set</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
-            <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">grade</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">freshmen_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
-            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sophomores_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
-            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">juniors_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
-            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">seniors_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">grade</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
+            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">s_allowed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span><span class="p">):</span> <span class="kc">True</span><span class="p">})</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">restricted_activity_set</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -441,9 +435,9 @@
 <div class="viewcode-block" id="EighthActivity.available_ids"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.available_ids">[docs]</a>    <span class="k">def</span> <span class="nf">available_ids</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="n">id_min</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">id_max</span> <span class="o">=</span> <span class="mi">3200</span>
-        <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">id_min</span><span class="p">,</span> <span class="n">id_max</span><span class="p">)]</span>
-        <span class="n">used</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)]</span>
-        <span class="n">avail</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">used</span><span class="p">)</span>
+        <span class="n">nums</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">id_min</span><span class="p">,</span> <span class="n">id_max</span><span class="p">))</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)])</span>
+        <span class="n">avail</span> <span class="o">=</span> <span class="n">nums</span> <span class="o">-</span> <span class="n">used</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">avail</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthActivity.change_id_to"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.change_id_to">[docs]</a>    <span class="k">def</span> <span class="nf">change_id_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">):</span>
@@ -505,10 +499,11 @@
             <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">max_number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">max_number</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">blocks</span></div>
+        <span class="k">if</span> <span class="n">max_number</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">blocks</span>
+
+        <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">max_number</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EighthBlockManager.get_first_upcoming_block"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockManager.get_first_upcoming_block">[docs]</a>    <span class="k">def</span> <span class="nf">get_first_upcoming_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the first upcoming block (the first block that will take place in the future). If</span>
@@ -518,14 +513,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-        <span class="c1"># Show same day if it&#39;s before 17:00</span>
-        <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">:</span>
-            <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">block</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthBlockManager.get_next_upcoming_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockManager.get_next_upcoming_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_upcoming_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the next upccoming blocks. (Finds the other blocks that are occurring on the day of</span>
