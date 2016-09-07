@@ -1535,7 +1535,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         c = LDAPConnection()
         logger.debug("SET {}: {} = {}".format(self.dn, field_name, value))
-        c.set_attribute(self.dn, field_name, value)
+        if not value:
+            c.del_attribute(self.dn, field_name)
+        else:
+            c.set_attribute(self.dn, field_name, value)
 
     def clear_cache(self):
         logger.debug("Clearing LDAP user cache for {}".format(self.dn))
