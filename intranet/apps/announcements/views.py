@@ -8,7 +8,7 @@ import bleach
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -383,8 +383,11 @@ def hide_announcement_view(request):
         announcement_id = request.POST.get("announcement_id")
         if announcement_id:
             announcement = Announcement.objects.get(id=announcement_id)
-            announcement.user_map.users_hidden.add(request.user)
-            announcement.user_map.save()
+            try:
+                announcement.user_map.users_hidden.add(request.user)
+                announcement.user_map.save()
+            except IntegrityError:
+                logger.warning("Duplicate value when hiding announcement {} for {}.".format(announcement_id, request.user.username))
             return http.HttpResponse("Hidden")
         raise http.Http404
     else:
