@@ -240,6 +240,9 @@ class LDAPConnection(object):
             value = [value]
         self.conn.modify(dn, {attribute: [(ldap3.MODIFY_REPLACE, value)]})
 
+    def del_attribute(self, dn, attribute):
+        self.conn.modify(dn, {attribute: [(ldap3.MODIFY_DELETE)]})
+
 
 class LDAPResult(object):
     """Represents the result of an LDAP query.

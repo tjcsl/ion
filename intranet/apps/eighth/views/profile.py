@@ -72,10 +72,7 @@ def edit_profile_view(request, user_id=None):
             else:
                 logger.debug("Setting regular {}={}".format(key, new_data[key]))
                 try:
-                    if not new_data[key]:
-                        user.del_ldap_attribute(key, key in override_set)
-                    else:
-                        user.set_ldap_attribute(key, new_data[key], key in override_set)
+                    user.set_ldap_attribute(key, new_data[key], key in override_set)
                 except Exception as e:
                     messages.error(request, "Field {} with value {}: {}".format(key, new_data[key], e))
                     logger.debug("Field {} with value {}: {}".format(key, new_data[key], e))
