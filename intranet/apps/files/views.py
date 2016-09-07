@@ -38,7 +38,9 @@ exceptions = (EOFError, OSError, PermissionError, SSHException, SFTPError)
 
 @sensitive_variables('password')
 def create_session(hostname, username, password):
-    return pysftp.Connection(hostname, username=username, password=password)
+    cnopts = pysftp.CnOpts()
+    cnopts.hostkeys = None
+    return pysftp.Connection(hostname, username=username, password=password, cnopts=cnopts)
 
 
 @login_required
@@ -91,7 +93,8 @@ def files_auth(request):
             response = redirect("files")
         response.set_cookie(key="files_key", value=cookie_key)
         if "username" in request.POST:
-            request.session["filecenter_username"] = request.POST.get("username")
+            request.session[
+                "filecenter_username"] = request.POST.get("username")
         return response
     else:
         return render(request, "files/auth.html", {"is_admin": request.user.member_of("admin_all")})
@@ -116,14 +119,16 @@ def get_authinfo(request):
     obj = AES.new(key, AES.MODE_CFB, iv)
     password = obj.decrypt(text)
 
-    username = request.session["filecenter_username"] if "filecenter_username" in request.session else request.user.username
+    username = request.session[
+        "filecenter_username"] if "filecenter_username" in request.session else request.user.username
 
     return {"username": username, "password": password}
 
 
 def windows_dir_format(host_dir, user):
     """Format a string for the location of the user's folder on the Windows (TJ03) fileserver."""
-    grade_folders = {9: "Freshman M:", 10: "Sophomore M:", 11: "Junior M:", 12: "Senior M:"}
+    grade_folders = {
+        9: "Freshman M:", 10: "Sophomore M:", 11: "Junior M:", 12: "Senior M:"}
     if user and user.grade:
         grade = int(user.grade)
     else:
@@ -148,7 +153,8 @@ def files_type(request, fstype=None):
     if host.available_to_all:
         pass
     elif not host.visible_to(request.user):
-        messages.error(request, "You don't have permission to access this host.")
+        messages.error(
+            request, "You don't have permission to access this host.")
         return redirect("files")
 
     authinfo = get_authinfo(request)
@@ -157,7 +163,8 @@ def files_type(request, fstype=None):
         return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
 
     try:
-        sftp = create_session(host.address, authinfo["username"], authinfo["password"])
+        sftp = create_session(
+            host.address, authinfo["username"], authinfo["password"])
     except exceptions as e:
         messages.error(request, e)
         error_msg = str(e).lower()
@@ -165,7 +172,8 @@ def files_type(request, fstype=None):
             return redirect("files_auth")
         return redirect("files")
     finally:
-        # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+        # Delete the stored credentials, so they aren't mistakenly used or
+        # accessed later.
         del authinfo
 
     if host.directory:
@@ -183,10 +191,12 @@ def files_type(request, fstype=None):
                         sftp.chdir(host_dir)
                     except exceptions as e2:
                         messages.error(request, e)
-                        messages.error(request, "Root directory: {}".format(e2))
+                        messages.error(
+                            request, "Root directory: {}".format(e2))
                         return redirect("files")
                     else:
-                        messages.error(request, "Unable to access home folder -- showing root directory instead.")
+                        messages.error(
+                            request, "Unable to access home folder -- showing root directory instead.")
                 else:
                     messages.error(request, e)
                     return redirect("files")
@@ -212,14 +222,16 @@ def files_type(request, fstype=None):
             try:
                 fstat = sftp.stat(filepath)
             except exceptions as e:
-                messages.error(request, "Unable to access {}: {}".format(filebase, e))
+                messages.error(
+                    request, "Unable to access {}: {}".format(filebase, e))
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
             if fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped))
+            tmpfile = tempfile.TemporaryFile(
+                prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped))
             logger.debug(tmpfile)
 
             try:
@@ -231,9 +243,11 @@ def files_type(request, fstype=None):
             content_len = tmpfile.tell()
             tmpfile.seek(0)
             chunk_size = 8192
-            response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+            response = StreamingHttpResponse(
+                FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
             response['Content-Length'] = content_len
-            response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
+            response[
+                "Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
             return response
 
     fsdir = request.GET.get("dir")
@@ -246,13 +260,15 @@ def files_type(request, fstype=None):
                 messages.error(request, e)
                 return redirect("files")
         else:
-            messages.error(request, "Access to the path you provided is restricted.")
+            messages.error(
+                request, "Access to the path you provided is restricted.")
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
     if "zip" in request.GET:
         dirbase_escaped = os.path.basename(fsdir)
         dirbase_escaped = slugify(dirbase_escaped)
-        tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
+        tmpfile = tempfile.TemporaryFile(
+            prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
 
         with tempfile.TemporaryDirectory(prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)) as tmpdir:
             remote_directories = [fsdir]
@@ -278,11 +294,13 @@ def files_type(request, fstype=None):
 
                     totalsize += fstat.st_size
                     if totalsize > settings.FILES_MAX_DOWNLOAD_SIZE:
-                        messages.error(request, "Too large to download (>200MB)")
+                        messages.error(
+                            request, "Too large to download (>200MB)")
                         return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(fsdir)))
 
                     try:
-                        localpath = os.path.join(tmpdir, os.path.relpath(rd, fsdir))
+                        localpath = os.path.join(
+                            tmpdir, os.path.relpath(rd, fsdir))
                         if not os.path.exists(localpath):
                             os.makedirs(localpath)
                         fh = open(os.path.join(localpath, item), "wb")
@@ -294,16 +312,19 @@ def files_type(request, fstype=None):
             with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:
                 for root, dirs, files in os.walk(tmpdir):
                     for f in files:
-                        zf.write(os.path.join(root, f), os.path.join(os.path.relpath(root, tmpdir), f))
+                        zf.write(
+                            os.path.join(root, f), os.path.join(os.path.relpath(root, tmpdir), f))
 
         content_len = tmpfile.tell()
         tmpfile.seek(0)
         chunk_size = 8192
-        response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+        response = StreamingHttpResponse(
+            FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
         response["Content-Length"] = content_len
         if not dirbase_escaped:
             dirbase_escaped = "files"
-        response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
+        response[
+            "Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
         return response
 
     try:
@@ -369,7 +390,8 @@ def files_delete(request, fstype=None):
     if host.available_to_all:
         pass
     elif not host.visible_to(request.user):
-        messages.error(request, "You don't have permission to access this host.")
+        messages.error(
+            request, "You don't have permission to access this host.")
         return redirect("files")
 
     authinfo = get_authinfo(request)
@@ -378,7 +400,8 @@ def files_delete(request, fstype=None):
         return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
 
     try:
-        sftp = create_session(host.address, authinfo["username"], authinfo["password"])
+        sftp = create_session(
+            host.address, authinfo["username"], authinfo["password"])
     except exceptions as e:
         messages.error(request, e)
         error_msg = str(e).lower()
@@ -386,7 +409,8 @@ def files_delete(request, fstype=None):
             return redirect("files_auth")
         return redirect("files")
     finally:
-        # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+        # Delete the stored credentials, so they aren't mistakenly used or
+        # accessed later.
         del authinfo
 
     if host.directory:
@@ -412,7 +436,8 @@ def files_delete(request, fstype=None):
             fstat = sftp.stat(filepath)
             is_directory = stat.S_ISDIR(fstat.st_mode)
         except exceptions as e:
-            messages.error(request, "Unable to access {}: {}".format(filepath, e))
+            messages.error(
+                request, "Unable to access {}: {}".format(filepath, e))
             return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
     def rmtree(sftp, path):
@@ -430,9 +455,11 @@ def files_delete(request, fstype=None):
                 rmtree(sftp, filepath)
             else:
                 sftp.remove(filepath)
-            messages.success(request, ("Folder" if is_directory else "File") + " deleted!")
+            messages.success(
+                request, ("Folder" if is_directory else "File") + " deleted!")
         except PermissionError:
-            messages.error(request, "You are not allowed to delete this " + ("folder" if is_directory else "file") + "!")
+            messages.error(request, "You are not allowed to delete this " +
+                           ("folder" if is_directory else "file") + "!")
         except exceptions as e:
             messages.error(request, "{}".format(e))
         return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
@@ -459,7 +486,8 @@ def files_upload(request, fstype=None):
     if host.available_to_all:
         pass
     elif not host.visible_to(request.user):
-        messages.error(request, "You don't have permission to access this host.")
+        messages.error(
+            request, "You don't have permission to access this host.")
         return redirect("files")
 
     authinfo = get_authinfo(request)
@@ -471,12 +499,14 @@ def files_upload(request, fstype=None):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                sftp = create_session(host.address, authinfo["username"], authinfo["password"])
+                sftp = create_session(
+                    host.address, authinfo["username"], authinfo["password"])
             except exceptions as e:
                 messages.error(request, e)
                 return redirect("files")
             else:
-                # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+                # Delete the stored credentials, so they aren't mistakenly used
+                # or accessed later.
                 del authinfo
 
             if host.directory:
@@ -498,14 +528,17 @@ def files_upload(request, fstype=None):
 
             fsdir = normpath(fsdir)
             if not can_access_path(fsdir):
-                messages.error(request, "Access to the path you provided is restricted.")
+                messages.error(
+                    request, "Access to the path you provided is restricted.")
                 return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
-            handle_file_upload(request.FILES['file'], fstype, fsdir, sftp, request)
+            handle_file_upload(
+                request.FILES['file'], fstype, fsdir, sftp, request)
             return redirect("/files/{}/?dir={}".format(fstype, fsdir))
     else:
         form = UploadFileForm()
-    context = {"host": host, "remote_dir": fsdir, "form": form, "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)}
+    context = {"host": host, "remote_dir": fsdir, "form": form,
+               "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)}
     return render(request, "files/upload.html", context)
 
 
