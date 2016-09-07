@@ -9,10 +9,10 @@ class ProfileEditForm(forms.Form):
 
     student_id = forms.IntegerField(label="FCPS Student ID")
     first_name = forms.CharField(label="First Name")
-    middle_name = forms.CharField(label="Middle Name")
+    middle_name = forms.CharField(label="Middle Name", required=False)
     last_name = forms.CharField(label="Last Name")
     title = forms.CharField(label="Title")
-    nickname = forms.CharField(label="Nickname")
+    nickname = forms.CharField(label="Nickname", required=False)
     graduation_year = forms.IntegerField(label="Graduation Year")
     sex = forms.CharField(label="Sex (M or F)")
     birthday = forms.DateField(label="Birth Date")
