@@ -156,6 +156,26 @@
             <b>No results.</b>
         {% endif %}
     {% endif %}
+    {% if search_query %}
+        <br /><br />
+        <h3>Classes</h3>
+        {% if classes %}
+        {{ classes|length }} result{{ classes|pluralize }}
+        <table class="list-table events-table">
+            {% for class in classes %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'class_section' class.section_id %}">
+                            {{ class }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
         <br><br>
         <a href="{% url 'search' %}?tips">Advanced Search Tips</a>
 {% endif %}

@@ -14,7 +14,7 @@ from ..announcements.models import Announcement
 from ..eighth.models import EighthActivity
 from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import Grade, User
+from ..users.models import Grade, User, Class
 from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,8 @@ def do_ldap_query(q, admin=False):
     if q.isdigit():
         logger.debug("Digit search: {}".format(q))
         if USE_SID_LDAP:
-            query = ("(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
+            query = (
+                "(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
 
             logger.debug("Running LDAP query: {}".format(query))
 
@@ -131,7 +132,8 @@ def do_ldap_query(q, admin=False):
                                                                                         ")")).format(p)
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
-                    # implied wildcard at beginning and end of the search string
+                    # implied wildcard at beginning and end of the search
+                    # string
                     inner += (("(|(givenName=*{0})"
                                "(givenName={0}*)"
                                "(sn=*{0})"
@@ -182,7 +184,8 @@ def do_ldap_query(q, admin=False):
                 inner += "({}{}{})".format(attr, sep, val)
             inner += ")"
 
-        query = "(&{}(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))".format(inner)
+        query = "(&{}(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))".format(
+            inner)
 
         logger.debug("Running LDAP query: {}".format(query))
 
@@ -269,6 +272,66 @@ def get_search_results(q, admin=False):
     return False, users
 
 
+def do_classes_search(q):
+    c = LDAPConnection()
+    result_dns = []
+    q = escape_filter_chars(q)
+    q = q.replace(escape_filter_chars('*'), '*')
+    parts = q.split(" ")
+    # split on each word
+    i = 0
+    for p in parts:
+        exact = False
+        logger.debug(p)
+        if p.startswith('"') and p.endswith('"'):
+            exact = True
+            p = p[1:-1]
+
+        if exact:
+            logger.debug("Simple exact: {}".format(p))
+            # No implied wildcard
+            query = (("(&(|(tjhsstClassId={0})"
+                      "(cn={0})"
+                      ")(|(objectClass=tjhsstClass)))")).format(p)
+        else:
+            logger.debug("Simple wildcard: {}".format(p))
+            if p.endswith("*"):
+                p = p[:-1]
+            if p.startswith("*"):
+                p = p[1:]
+            # Search for first, last, middle, nickname uid, with implied
+            # wildcard at beginning and end
+            query = (("(&(|(tjhsstClassId=*{0})"
+                      "(tjhsstClassId={0}*)"
+                      "(cn=*{0})"
+                      "(cn={0}*)"
+                      ")(|(objectClass=tjhsstClass)))")).format(p)
+
+        logger.debug("Running LDAP query: {}".format(query))
+
+        res = c.search(settings.CLASS_DN, query, ["dn"])
+        new_dns = []
+        # if multiple words, delete those that weren't in previous searches
+        for row in res:
+            dn = row["dn"]
+            if i == 0:
+                new_dns.append(dn)
+            elif dn in result_dns:
+                new_dns.append(dn)
+
+        result_dns = new_dns
+        i += 1
+
+    # loop through the DNs saved and get actual user objects
+    classes = []
+    for dn in result_dns:
+        result_class = Class(dn=dn)
+        if result_class not in classes:
+            classes.append(result_class)
+    classes = sorted(classes, key=lambda c: str(c))
+    return classes
+
+
 def do_activities_search(q):
     filter_query = get_query(q, ["name", "description"])
     entires = EighthActivity.objects.filter(filter_query).order_by("name")
@@ -313,7 +376,8 @@ def search_view(request):
                 return profile_view(request, user_id=u.id)
 
         try:
-            query_error, users = get_search_results(q, request.user.is_eighthoffice)
+            query_error, users = get_search_results(
+                q, request.user.is_eighthoffice)
         except Exception as e:
             query_error = "{}".format(e)
             users = []
@@ -324,6 +388,7 @@ def search_view(request):
         activities = do_activities_search(q)
         announcements = do_announcements_search(q)
         events = do_events_search(q)
+        classes = do_classes_search(q)
 
         logger.debug(activities)
         logger.debug(announcements)
@@ -341,7 +406,8 @@ def search_view(request):
             "search_results": users,  # User objects
             "announcements": announcements,  # Announcement objects
             "events": events,  # Event objects
-            "activities": activities  # EighthActivity objects
+            "activities": activities,  # EighthActivity objects
+            "classes": classes  # Class from LDAP
         }
     else:
         context = {"search_results": None}
