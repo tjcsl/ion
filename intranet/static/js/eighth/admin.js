@@ -116,7 +116,7 @@ $(function() {
 
             // Ignore special and unschedule checkbox
             $checkboxes.each(function() {
-                if (!$(this).is(".special, .administrative, .restricted, .sticky, .unschedule")) {
+                if (!$(this).is(".special, .administrative, .restricted, .sticky, .unschedule, .both_blocks")) {
                     $(this).prop("checked", true);
                 }
             });
