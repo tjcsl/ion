@@ -62,7 +62,7 @@
 </table>
 
 <br />
-<h2>{{ group.name }}: {{ member_count }} members</h2>
+<h2>{{ group.name }}: {{ members|length }} members</h2>
 {% if linked_activities %}
     This group is on the restriction list for these activities:
     <ul>
@@ -116,14 +116,6 @@
         {% endfor %}
     </tbody>
 </table>
-<br />
-<div class="pagination">
-    <span class="step-links">
-        <a class="button" {% if members_page.has_previous %} href="?p={{ members_page.previous_page_number }}" {% else %} disabled {% endif %}>Previous</a>
-        <span class="current">Page {{ members_page.number }} of {{ members_page.paginator.num_pages }}</span>
-        <a class="button" {% if members_page.has_next %} href="?p={{ members_page.next_page_number }}" {% else %} disabled {% endif %}>Next</a>
-    </span>
-</div>
 <br />
 <a href="{% url 'eighth_admin_download_group_csv' group.id %}" class="button">Download as CSV</a>
 <br />

@@ -11,7 +11,6 @@ from django import http
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
@@ -85,18 +84,9 @@ def edit_group_view(request, group_id):
     else:
         form = GroupForm(instance=group, initial={"student_visible": group.properties.student_visible})
 
-    users = group.user_set.all()  # Order not strictly alphabetical
-    p = Paginator(users, 30)  # Paginating to limit LDAP queries (slow)
-
-    page_num = request.GET.get('p', 1)
-    try:
-        page = p.page(page_num)
-    except PageNotAnInteger:
-        page = p.page(1)
-    except EmptyPage:
-        page = p.page(p.num_pages)
+    users = group.user_set.all()
     members = []
-    for user in page:
+    for user in users:
         grade = user.grade
         emails = user.emails
         members.append({
@@ -116,8 +106,6 @@ def edit_group_view(request, group_id):
     context = {
         "group": group,
         "members": members,
-        "member_count": users.count(),
-        "members_page": page,
         "edit_form": form,
         "added_ids": [parse_int(x) for x in request.GET.getlist("added")],
         "linked_activities": linked_activities,
