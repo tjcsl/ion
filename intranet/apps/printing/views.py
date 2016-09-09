@@ -21,7 +21,8 @@ logger = logging.getLogger(__name__)
 
 def get_printers():
     try:
-        output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True)
+        output = subprocess.check_output(
+            ["lpstat", "-a"], universal_newlines=True)
     # Don't die if cups isn't installed.
     except FileNotFoundError:
         return []
@@ -42,9 +43,11 @@ def get_printers():
 
 def convert_soffice(tmpfile_name):
     try:
-        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT, universal_newlines=True)
+        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf",
+                                          tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run soffice command (returned {}): {}".format(e.returncode, e.output))
+        logger.error("Could not run soffice command (returned {}): {}".format(
+            e.returncode, e.output))
         return False
 
     if " -> " in output and " using " in output:
@@ -58,9 +61,11 @@ def convert_soffice(tmpfile_name):
 def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     new_name = "{}.pdf".format(tmpfile_name)
     try:
-        subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
+        subprocess.check_output(
+            [cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run {} command (returned {}): {}".format(cmdname, e.returncode, e.output))
+        logger.error("Could not run {} command (returned {}): {}".format(
+            cmdname, e.returncode, e.output))
         return False
 
     if os.path.isfile(new_name):
@@ -71,9 +76,11 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
 
 def get_numpages(tmpfile_name):
     try:
-        output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
+        output = subprocess.check_output(
+            ["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
+        logger.error("Could not run pdfinfo command (returned {}): {}".format(
+            e.returncode, e.output))
         return -1
 
     lines = output.splitlines()
@@ -92,7 +99,8 @@ def get_numpages(tmpfile_name):
 def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
-    detected = detected.decode()
+    if not isinstance(detected, str):
+        detected = detected.decode()
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
                        "application/vnd.oasis.opendocument.text"]
@@ -106,7 +114,8 @@ def convert_file(tmpfile_name):
     if detected == "application/postscript":
         return convert_pdf(tmpfile_name, "pdf2ps")
 
-    raise Exception("Not sure how to handle a file of type {}".format(detected))
+    raise Exception(
+        "Not sure how to handle a file of type {}".format(detected))
 
 
 def check_page_range(page_range, max_pages):
@@ -121,7 +130,8 @@ def check_page_range(page_range, max_pages):
                 else:
                     rl = int(rr[0])
                     rh = int(rr[1])
-                    if not 0 < rl < max_pages and not 0 < rh < max_pages:  # check in page range
+                    # check in page range
+                    if not 0 < rl < max_pages and not 0 < rh < max_pages:
                         return False
                     if rl > rh:   # check lower bound <= upper bound
                         return False
@@ -149,7 +159,8 @@ def print_job(obj, do_print=True):
 
     filebase = os.path.basename(fileobj.name)
     filebase_escaped = slugify(filebase)
-    tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
+    tmpfile_name = tempfile.NamedTemporaryFile(
+        prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
     with open(tmpfile_name, 'wb+') as dest:
         for chunk in fileobj.chunks():
             dest.write(chunk)
@@ -190,12 +201,15 @@ def print_job(obj, do_print=True):
         else:
             args.extend(["-o", "sides=one-sided"])
         try:
-            subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
+            subprocess.check_output(
+                args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:
             if "is not accepting jobs" in e.output:
                 raise Exception(e.output.strip())
-            logger.error("Could not run lpr (returned {}): {}".format(e.returncode, e.output.strip()))
-            raise Exception("An error occured while printing your file: %s" % e.output.strip())
+            logger.error("Could not run lpr (returned {}): {}".format(
+                e.returncode, e.output.strip()))
+            raise Exception(
+                "An error occured while printing your file: %s" % e.output.strip())
 
     obj.printed = True
     obj.save()
@@ -204,7 +218,8 @@ def print_job(obj, do_print=True):
 @login_required
 def print_view(request):
     if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
-        messages.error(request, "You don't have printer access outside of the TJ network.")
+        messages.error(
+            request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
 
     printers = get_printers()
