@@ -233,6 +233,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     _student_id = models.PositiveIntegerField(null=True)
 
+    _is_superuser = models.BooleanField(default=False)
+
     # @property
     # def student_id(self):
     #    if self._student_id and (self._current_user_override() or self.is_http_request_sender()):
@@ -1099,6 +1101,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.is_superuser or self.has_admin_permission("staff")
+
+    @property
+    def is_superuser(self):
+        """Override Django is_superuser.
+
+        For any user in the 'admin_all' group,
+        this method will return True, otherwise
+        it will use the field's value.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.member_of("admin_all") or self._is_superuser
 
     @property
     def is_attendance_user(self):
