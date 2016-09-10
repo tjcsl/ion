@@ -28,5 +28,5 @@ class DynamicGroupTest(IonTestCase):
         del user._groups_cache
         self.assertTrue(user.is_superuser)
         user.groups.remove(group)
-        user._is_superuser = True
-        self.assertTrue(user.is_superuser)
+        del user._groups_cache
+        self.assertFalse(user.is_superuser)

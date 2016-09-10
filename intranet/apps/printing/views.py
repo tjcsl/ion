@@ -99,8 +99,6 @@ def get_numpages(tmpfile_name):
 def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
-    if not isinstance(detected, str):
-        detected = detected.decode()
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
                        "application/vnd.oasis.opendocument.text"]
