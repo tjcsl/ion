@@ -929,6 +929,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         exception = eighth_exceptions.SignupException()
 
+        if not user.grade or user.grade.number > 12:
+            exception.SignupForbidden = True
+
         all_sched_act = [self]
         all_blocks = [self.block]
 
