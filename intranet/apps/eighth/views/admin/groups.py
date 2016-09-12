@@ -88,7 +88,16 @@ def edit_group_view(request, group_id):
         form = GroupForm(
             instance=group, initial={"student_visible": group.properties.student_visible})
 
-    users = group.user_set.all()  # Order not strictly alphabetical
+    student_query = None
+    if request.method == "GET":
+        student_query = request.GET.get("q", None)
+
+    if not student_query:
+        users = group.user_set.all()  # Order not strictly alphabetical
+    else:
+        ion_ids = [sid.strip() for sid in student_query.split(",")]
+        users = group.user_set.filter(id__in=ion_ids)
+
     p = Paginator(users, 100)  # Paginating to limit LDAP queries (slow)
 
     page_num = request.GET.get('p', 1)
