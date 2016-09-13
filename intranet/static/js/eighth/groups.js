@@ -3,7 +3,7 @@ $(function() {
     var $memb = $("#member_search");
     var $inp = $memb.find("input[name='search']");
     var $clear = $memb.find("a#clear");
-    var $searchStu = $memb.find("#searchStudents");
+    var $searchStu = $memb.find("#search_students");
     $searchStu.click(function() {
         var noparam = window.location.href.split("?")[0];
         window.location = noparam + "?q=" + encodeURIComponent($inp.val());
