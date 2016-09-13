@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #2974) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_sis &mdash; TJ Intranet v3 (Build #2999) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2974)',
+        VERSION:     'v3 (Build #2999)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2974) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2999) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -155,22 +155,22 @@
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Import data from SIS.&quot;</span>
 
 <div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--run&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Actually run.&#39;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--run&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Actually run.&#39;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--csv&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;csv_file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;import.csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Import CSV file&#39;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fake-teachers&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;fake_teachers&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fake teacher names and room numbers&#39;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--load-users&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;load_users&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Load users into database&#39;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fake-teachers&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;fake_teachers&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fake teacher names and room numbers&#39;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--load-users&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;load_users&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Load users into database&#39;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--teacher-mappings&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;teacher_file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;teacher.csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Import Teacher mappings&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;{} [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
@@ -182,8 +182,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
-    <span class="n">csv_file</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
-    <span class="n">do_run</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: bool</span>
+    <span class="n">csv_file</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: str</span>
+    <span class="n">do_run</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: bool</span>
     <span class="n">uidmap</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str,str]</span>
     <span class="n">last_uid_number</span> <span class="o">=</span> <span class="mi">33971</span>
     <span class="n">schedules</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str,str]</span>
@@ -263,10 +263,10 @@
                     <span class="n">uid_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uid_number</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ionuser</span><span class="o">.</span><span class="n">id</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">],</span> <span class="s2">&quot;ldapExists&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
@@ -304,7 +304,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Adding new teachers&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_teachers</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Add teacher </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Add teacher {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;newteachers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_add_teacher_ldif</span><span class="p">(</span><span class="n">teacher</span><span class="p">))</span>
 
         <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;newstudents.ldif&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;newstudents&quot;</span><span class="p">]))</span>
@@ -382,18 +382,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: iodineUid=</span><span class="si">{username}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
+<span class="s2">dn: iodineUid={username},ou=people,dc=tjhsst,dc=edu</span>
 <span class="s2">changetype: add</span>
 <span class="s2">objectClass: tjhsstTeacher</span>
-<span class="s2">iodineUid: </span><span class="si">{username}</span><span class="s2"></span>
-<span class="s2">iodineUidNumber: </span><span class="si">{uid}</span><span class="s2"></span>
-<span class="s2">uid: </span><span class="si">{uid}</span><span class="s2"></span>
+<span class="s2">iodineUid: {username}</span>
+<span class="s2">iodineUidNumber: {uid}</span>
+<span class="s2">uid: {uid}</span>
 <span class="s2">header: TRUE</span>
 <span class="s2">style: default</span>
 <span class="s2">mailentries: -1</span>
-<span class="s2">cn: </span><span class="si">{fullname}</span><span class="s2"></span>
-<span class="s2">sn: </span><span class="si">{lastname}</span><span class="s2"></span>
-<span class="s2">givenName: </span><span class="si">{firstname}</span><span class="s2"></span>
+<span class="s2">cn: {fullname}</span>
+<span class="s2">sn: {lastname}</span>
+<span class="s2">givenName: {firstname}</span>
 <span class="s2">startpage: news</span>
 <span class="s2">structuralObjectClass: tjhsstTeacher&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ldif</span></div>
@@ -401,12 +401,12 @@
 <div class="viewcode-block" id="Command.gen_add_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.gen_add_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">gen_add_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 
         <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: iodineUid=</span><span class="si">{iodineUid}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
+<span class="s2">dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu</span>
 <span class="s2">changetype: add</span>
 <span class="s2">objectClass: tjhsstStudent</span>
-<span class="s2">iodineUid: </span><span class="si">{iodineUid}</span><span class="s2"></span>
-<span class="s2">iodineUidNumber: </span><span class="si">{iodineUidNumber}</span><span class="s2"></span>
-<span class="s2">uid: </span><span class="si">{iodineUidNumber}</span><span class="s2"></span>
+<span class="s2">iodineUid: {iodineUid}</span>
+<span class="s2">iodineUidNumber: {iodineUidNumber}</span>
+<span class="s2">uid: {iodineUidNumber}</span>
 <span class="s2">header: TRUE</span>
 <span class="s2">locker: 0</span>
 <span class="s2">startpage: news</span>
@@ -414,22 +414,22 @@
 <span class="s2">eighthoffice-comments:: IA==</span>
 <span class="s2">chrome: TRUE</span>
 <span class="s2">eighthAgreement: FALSE</span>
-<span class="s2">tjhsstStudentId: </span><span class="si">{tjhsstStudentId}</span><span class="s2"></span>
-<span class="s2">cn: </span><span class="si">{cn}</span><span class="s2"></span>
-<span class="s2">sn: </span><span class="si">{sn}</span><span class="s2"></span>
-<span class="s2">postalCode: </span><span class="si">{postalCode}</span><span class="s2"></span>
-<span class="s2">counselor: </span><span class="si">{counselor}</span><span class="s2"></span>
-<span class="s2">st: </span><span class="si">{st}</span><span class="s2"></span>
-<span class="s2">l: </span><span class="si">{l}</span><span class="s2"></span>
-<span class="s2">homePhone: </span><span class="si">{homePhone}</span><span class="s2"></span>
-<span class="s2">birthday: </span><span class="si">{birthday}</span><span class="s2"></span>
-<span class="s2">street: </span><span class="si">{street}</span><span class="s2"></span>
-<span class="s2">givenName: </span><span class="si">{givenName}</span><span class="s2"></span>
-<span class="s2">graduationYear: </span><span class="si">{graduationYear}</span><span class="s2"></span>
-<span class="s2">displayName: </span><span class="si">{displayName}</span><span class="s2"></span>
-<span class="s2">gender: </span><span class="si">{gender}</span><span class="s2"></span>
-<span class="s2">title: </span><span class="si">{title}</span><span class="s2"></span>
-<span class="s2">middlename: </span><span class="si">{middlename}</span><span class="s2"></span>
+<span class="s2">tjhsstStudentId: {tjhsstStudentId}</span>
+<span class="s2">cn: {cn}</span>
+<span class="s2">sn: {sn}</span>
+<span class="s2">postalCode: {postalCode}</span>
+<span class="s2">counselor: {counselor}</span>
+<span class="s2">st: {st}</span>
+<span class="s2">l: {l}</span>
+<span class="s2">homePhone: {homePhone}</span>
+<span class="s2">birthday: {birthday}</span>
+<span class="s2">street: {street}</span>
+<span class="s2">givenName: {givenName}</span>
+<span class="s2">graduationYear: {graduationYear}</span>
+<span class="s2">displayName: {displayName}</span>
+<span class="s2">gender: {gender}</span>
+<span class="s2">title: {title}</span>
+<span class="s2">middlename: {middlename}</span>
 <span class="s2">preferredPhoto: AUTO</span>
 <span class="s2">style: i3-light</span>
 <span class="s2">mailentries: -1</span>
@@ -449,7 +449,7 @@
 <span class="s2">perm-showaddress-self: FALSE</span>
 <span class="s2">perm-showschedule-self: FALSE</span>
 <span class="s2">perm-showeighth-self: FALSE</span>
-<span class="si">{classes}</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+<span class="s2">{classes}&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;middlename&quot;</span><span class="p">]:</span>
             <span class="n">ldif</span> <span class="o">=</span> <span class="n">ldif</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">middlename: &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
@@ -461,8 +461,8 @@
 <div class="viewcode-block" id="Command.gen_update_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.gen_update_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">gen_update_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 
         <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: iodineUid=</span><span class="si">{iodineUid}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
-<span class="s2">changetype: </span><span class="si">{changetype}</span><span class="s2"></span>
+<span class="s2">dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu</span>
+<span class="s2">changetype: {changetype}</span>
 <span class="s2">replace: locker</span>
 <span class="s2">locker: 0</span>
 <span class="s2">-</span>
@@ -470,52 +470,52 @@
 <span class="s2">eighthAgreement: FALSE</span>
 <span class="s2">-</span>
 <span class="s2">replace: tjhsstStudentId</span>
-<span class="s2">tjhsstStudentId: </span><span class="si">{tjhsstStudentId}</span><span class="s2"></span>
+<span class="s2">tjhsstStudentId: {tjhsstStudentId}</span>
 <span class="s2">-</span>
 <span class="s2">replace: cn</span>
-<span class="s2">cn: </span><span class="si">{cn}</span><span class="s2"></span>
+<span class="s2">cn: {cn}</span>
 <span class="s2">-</span>
 <span class="s2">replace: sn</span>
-<span class="s2">sn: </span><span class="si">{sn}</span><span class="s2"></span>
+<span class="s2">sn: {sn}</span>
 <span class="s2">-</span>
 <span class="s2">replace: postalCode</span>
-<span class="s2">postalCode: </span><span class="si">{postalCode}</span><span class="s2"></span>
+<span class="s2">postalCode: {postalCode}</span>
 <span class="s2">-</span>
 <span class="s2">replace: counselor</span>
-<span class="s2">counselor: </span><span class="si">{counselor}</span><span class="s2"></span>
+<span class="s2">counselor: {counselor}</span>
 <span class="s2">-</span>
 <span class="s2">replace: st</span>
-<span class="s2">st: </span><span class="si">{st}</span><span class="s2"></span>
+<span class="s2">st: {st}</span>
 <span class="s2">-</span>
 <span class="s2">replace: l</span>
-<span class="s2">l: </span><span class="si">{l}</span><span class="s2"></span>
+<span class="s2">l: {l}</span>
 <span class="s2">-</span>
 <span class="s2">replace: homePhone</span>
-<span class="s2">homePhone: </span><span class="si">{homePhone}</span><span class="s2"></span>
+<span class="s2">homePhone: {homePhone}</span>
 <span class="s2">-</span>
 <span class="s2">replace: birthday</span>
-<span class="s2">birthday: </span><span class="si">{birthday}</span><span class="s2"></span>
+<span class="s2">birthday: {birthday}</span>
 <span class="s2">-</span>
 <span class="s2">replace: street</span>
-<span class="s2">street: </span><span class="si">{street}</span><span class="s2"></span>
+<span class="s2">street: {street}</span>
 <span class="s2">-</span>
 <span class="s2">replace: givenName</span>
-<span class="s2">givenName: </span><span class="si">{givenName}</span><span class="s2"></span>
+<span class="s2">givenName: {givenName}</span>
 <span class="s2">-</span>
 <span class="s2">replace: graduationYear</span>
-<span class="s2">graduationYear: </span><span class="si">{graduationYear}</span><span class="s2"></span>
+<span class="s2">graduationYear: {graduationYear}</span>
 <span class="s2">-</span>
 <span class="s2">replace: displayName</span>
-<span class="s2">displayName: </span><span class="si">{displayName}</span><span class="s2"></span>
+<span class="s2">displayName: {displayName}</span>
 <span class="s2">-</span>
 <span class="s2">replace: gender</span>
-<span class="s2">gender: </span><span class="si">{gender}</span><span class="s2"></span>
+<span class="s2">gender: {gender}</span>
 <span class="s2">-</span>
 <span class="s2">replace: title</span>
-<span class="s2">title: </span><span class="si">{title}</span><span class="s2"></span>
+<span class="s2">title: {title}</span>
 <span class="s2">-</span>
 <span class="s2">replace: middlename</span>
-<span class="s2">middlename: </span><span class="si">{middlename}</span><span class="s2"></span>
+<span class="s2">middlename: {middlename}</span>
 <span class="s2">-</span>
 <span class="s2">replace: perm-showaddress</span>
 <span class="s2">perm-showaddress: FALSE</span>
@@ -563,7 +563,7 @@
 <span class="s2">perm-showeighth-self: FALSE</span>
 <span class="s2">-</span>
 <span class="s2">replace: enrolledclass</span>
-<span class="si">{classes}</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+<span class="s2">{classes}&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;middlename&quot;</span><span class="p">]:</span>
             <span class="n">ldif</span> <span class="o">=</span> <span class="n">ldif</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">replace: middlename</span><span class="se">\n</span><span class="s2">middlename: &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
@@ -593,7 +593,7 @@
         <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">day</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="o">+</span> <span class="n">day</span>
         <span class="c1"># YYYYMMDD</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;{}{}{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.format_title"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_title">[docs]</a>    <span class="k">def</span> <span class="nf">format_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gender</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -603,14 +603,14 @@
 
 <div class="viewcode-block" id="Command.format_display_name"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_display_name">[docs]</a>    <span class="k">def</span> <span class="nf">format_display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s2">&quot;{} {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="s2">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Command.format_classes"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_classes">[docs]</a>    <span class="k">def</span> <span class="nf">format_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">]:</span>
-            <span class="n">cl</span> <span class="o">+=</span> <span class="s2">&quot;enrolledclass: tjhsstSectionId=</span><span class="si">{}</span><span class="s2">,ou=schedule,dc=tjhsst,dc=edu</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">cid</span><span class="p">][</span><span class="s2">&quot;SectionID&quot;</span><span class="p">])</span>
+            <span class="n">cl</span> <span class="o">+=</span> <span class="s2">&quot;enrolledclass: tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">cid</span><span class="p">][</span><span class="s2">&quot;SectionID&quot;</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cl</span></div>
 
@@ -620,7 +620,7 @@
             <span class="s2">&quot;iodineUid&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span>
             <span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">],</span>
             <span class="s2">&quot;tjhsstStudentId&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;StudentID&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;cn&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;cn&quot;</span><span class="p">:</span> <span class="s2">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">]),</span>
             <span class="s2">&quot;sn&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">],</span>
             <span class="s2">&quot;postalCode&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;Zipcode&quot;</span><span class="p">],</span>
             <span class="s2">&quot;counselor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_counselor</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;Counselor&quot;</span><span class="p">]),</span>
@@ -676,18 +676,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: tjhsstSectionId=</span><span class="si">{sectionId}</span><span class="s2">,ou=schedule,dc=tjhsst,dc=edu</span>
+<span class="s2">dn: tjhsstSectionId={sectionId},ou=schedule,dc=tjhsst,dc=edu</span>
 <span class="s2">changetype: add</span>
 <span class="s2">objectClass: tjhsstClass</span>
-<span class="s2">tjhsstClassId: </span><span class="si">{classId}</span><span class="s2"></span>
-<span class="s2">tjhsstSectionId: </span><span class="si">{sectionId}</span><span class="s2"></span>
-<span class="s2">courseLength: </span><span class="si">{courseLength}</span><span class="s2"></span>
-<span class="si">{quarters}</span><span class="s2"></span>
-<span class="s2">roomNumber: </span><span class="si">{roomNumber}</span><span class="s2"></span>
+<span class="s2">tjhsstClassId: {classId}</span>
+<span class="s2">tjhsstSectionId: {sectionId}</span>
+<span class="s2">courseLength: {courseLength}</span>
+<span class="s2">{quarters}</span>
+<span class="s2">roomNumber: {roomNumber}</span>
 <span class="s2">graduationYear: 2017</span>
-<span class="s2">cn: </span><span class="si">{cn}</span><span class="s2"></span>
-<span class="si">{periods}</span><span class="s2"></span>
-<span class="s2">sponsorDn: iodineUid=</span><span class="si">{sponsor}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+<span class="s2">cn: {cn}</span>
+<span class="s2">{periods}</span>
+<span class="s2">sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.format_courselength"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_courselength">[docs]</a>    <span class="k">def</span> <span class="nf">format_courselength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;TermCode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;YR&quot;</span><span class="p">:</span>
@@ -713,10 +713,10 @@
 
 <div class="viewcode-block" id="Command.format_periods"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_periods">[docs]</a>    <span class="k">def</span> <span class="nf">format_periods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EndPeriod&quot;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="s2">&quot;classPeriod: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s2">&quot;classPeriod: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;classPeriod: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;classPeriod: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EndPeriod&quot;</span><span class="p">]))</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;classPeriod: {}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;classPeriod: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EndPeriod&quot;</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="Command.format_sponsor"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">format_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c1"># TODO: Search existing LDAP/handle new teachers</span>
@@ -727,7 +727,7 @@
             <span class="n">last_name</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">middle_initial</span> <span class="o">=</span> <span class="n">res</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;INVALID TEACHER &#39;</span><span class="si">{}</span><span class="s2">&#39; returning kosatka&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;INVALID TEACHER &#39;{}&#39; returning kosatka&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
             <span class="k">return</span> <span class="s1">&#39;bpkosatka&#39;</span>
 
@@ -744,7 +744,7 @@
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-            <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter fcps username for </span><span class="si">{}</span><span class="s2">: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
+            <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter fcps username for {}: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">teacher_mappings</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">username</span>
 
@@ -753,7 +753,7 @@
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">uid_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">new_teachers</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="n">uid_number</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;firstname&#39;</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;lastname&#39;</span><span class="p">:</span> <span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;fullname&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_teachers</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="n">uid_number</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;firstname&#39;</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;lastname&#39;</span><span class="p">:</span> <span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;fullname&#39;</span><span class="p">:</span> <span class="s1">&#39;{} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)})</span>
 
         <span class="k">return</span> <span class="n">username</span></div>
 
