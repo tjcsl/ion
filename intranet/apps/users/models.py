@@ -1098,21 +1098,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.has_admin_permission("staff")
-
-    @property
-    def is_superuser(self):
-        """Override Django is_superuser.
-
-        For any user in the 'admin_all' group,
-        this method will return True.
-
-        Returns:
-            Boolean
-
-        """
-
-        return self.member_of("admin_all")
+        return self.is_superuser or self.has_admin_permission("staff")
 
     @property
     def is_attendance_user(self):
