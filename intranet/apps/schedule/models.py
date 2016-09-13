@@ -3,6 +3,7 @@
 import datetime
 
 from django.db import models
+from django.utils import timezone
 
 
 class Time(models.Model):
@@ -83,7 +84,7 @@ class DayManager(models.Manager):
 
     def get_future_days(self):
         """Return only future Day objects."""
-        today = datetime.datetime.now().date()
+        today = timezone.now().date()
 
         return Day.objects.filter(date__gte=today)
 
