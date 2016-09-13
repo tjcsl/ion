@@ -507,6 +507,38 @@
             </form>
             </section>
             {% endif %}
+
+            {% if request.user.is_eighth_admin %}
+                <br />
+                <br />
+                <h3>Groups</h3>
+                <table class="fancy-table">
+                <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for g in profile_user.groups.all %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'eighth_admin_edit_group' g.id %}">{{ g.name }}</a>
+                        </td>
+                        <td>
+                            <form action="{% url 'eighth_admin_remove_member_from_group' g.id profile_user.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_id" value="{{ profile_user.id }}">
+                                <input type="submit" value="Remove" class="button small-button">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+                <br />
+                <br />
+            {% endif %}
         </div>
     </div>
 {% endblock %}

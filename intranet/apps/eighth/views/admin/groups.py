@@ -713,8 +713,12 @@ def remove_member_from_group_view(request, group_id, user_id):
     except Group.DoesNotExist:
         raise http.Http404
 
-    next_url = reverse(
-        "eighth_admin_edit_group", kwargs={"group_id": group_id})
+    uid = request.POST.get("profile_id", 0)
+    if uid:
+        next_url = reverse("user_profile", args=(uid,))
+    else:
+        next_url = reverse(
+            "eighth_admin_edit_group", kwargs={"group_id": group_id})
 
     try:
         user = User.get_user(id=user_id)
