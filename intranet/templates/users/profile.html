@@ -51,6 +51,17 @@
             });
         </script>
     {% endif %}
+    {% if request.user.is_eighth_admin %}
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#user-groups form").submit(function(e) {
+                if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest("tr").first("td").text()) + "?")) {
+                    e.preventDefault();
+                }
+            });
+        });
+        </script>
+    {% endif %}
     <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
 {% endblock %}
 
@@ -509,10 +520,9 @@
             {% endif %}
 
             {% if request.user.is_eighth_admin %}
-                <br />
-                <br />
+            <section class="user-info-eighth groups">
                 <h3>Groups</h3>
-                <table class="fancy-table">
+                <table id="user-groups" class="fancy-table">
                 <thead>
                 <tr>
                     <th>Group Name</th>
@@ -536,8 +546,7 @@
                 {% endfor %}
                 </tbody>
                 </table>
-                <br />
-                <br />
+            </section>
             {% endif %}
         </div>
     </div>
