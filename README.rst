@@ -43,4 +43,4 @@ Ensure that your code follows those guidelines by running this in the root of th
 * Security-related or TJ CSL-specific issues should be submitted on `Bugzilla <http://bugs.tjhsst.edu/>`_ or emailed to `intranet@tjhsst.edu <mailto:intranet@tjhsst.edu>`_.
 
 
-Current Intranet maintainer: `James Woglom <https://github.com/jwoglom>`_ (TJ 2016)
+Current Intranet maintainers: `James Houghton <https://github.com/jamesthoughton>`_ (TJ 2017) and `Eric Wang <https://github.com/ezwang>`_ (TJ 2017)
