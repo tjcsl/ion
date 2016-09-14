@@ -269,11 +269,31 @@ def stats_view(request, activity_id=None):
 
     if request.GET.get("print", False):
         response = HttpResponse(content_type="application/pdf")
-        buf = generate_statistics_pdf([activity])
+        buf = generate_statistics_pdf([activity], year=int(request.GET.get("year", 0)) or None)
         response.write(buf.getvalue())
         buf.close()
         return response
 
-    context = {"activity": activity}
-    context.update(calculate_statistics(activity, get_start_date(request)))
+    current_year = current_school_year()
+
+    if EighthBlock.objects.count() == 0:
+        earliest_year = current_year
+    else:
+        earliest_year = EighthBlock.objects.order_by("date").first().date.year
+
+    if request.GET.get("year", False):
+        year = int(request.GET.get("year"))
+    else:
+        year = None
+
+    context = {
+        "activity": activity,
+        "years": list(reversed(range(earliest_year, current_year + 1))),
+        "year": year
+    }
+
+    if year:
+        context.update(calculate_statistics(activity, year=year))
+    else:
+        context.update(calculate_statistics(activity, get_start_date(request)))
     return render(request, "eighth/statistics.html", context)

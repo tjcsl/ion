@@ -7,10 +7,10 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
     <style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
     #members-table td:nth-child(3)
     {
         text-align:right;
@@ -46,6 +46,12 @@
     <script type="text/javascript">
         var rawData = $.parseJSON("{{ chart_data }}");
         var capacity = {{ capacity }};
+
+        $(document).ready(function() {
+            $("#year").change(function() {
+                window.location.href = location.protocol + "//" + location.host + location.pathname + "?year=" + encodeURIComponent($("#year").val());
+            });
+        });
     </script>
 {% endblock %}
 
@@ -74,7 +80,14 @@
     </a>
 
     <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
-    <a href="{% url 'eighth_statistics' activity.id %}?print=true">
+
+    <select id="year">
+        {% for y in years %}
+        <option value="{{ y }}"{% if y == year %}selected{% endif %}>{{ y|add:"-1" }} - {{ y }}</option>
+        {% endfor %}
+    </select>
+
+    <a href="{% url 'eighth_statistics' activity.id %}?print=true{% if year %}&year={{ year }}{% endif %}">
         Printer friendly version
     </a>
 
@@ -129,8 +142,12 @@
     </table>
 
     <br />
-    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {% if past_start_date != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
-    <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} from previous years {% if old_blocks != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
+    {% if year %}
+        <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} not in the {{ year|add:"-1" }}-{{ year }} school year and {% if old_blocks != 1 %}are{% else %}is{% endif %} not included on this page.
+    {% else %}
+        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {% if past_start_date != 1 %}are{% else %}is{% endif %} not included on this page.<br />
+        <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} from previous years {% if old_blocks != 1 %}are{% else %}is{% endif %} not included on this page.<br />
+    {% endif %}
     <br />
 </div>
 {% endblock %}
