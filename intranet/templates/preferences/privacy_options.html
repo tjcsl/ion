@@ -23,7 +23,29 @@
     <script type="text/javascript">
     $(function() {
         $("#user_select").selectize();
-    })
+        $("#select_all_checkbox").click(function(){
+            if ($(this).prop("checked", true)) {
+                $(".privacy-options input[type=checkbox]").each(function() {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $(".privacy-options input[type=checkbox]").each(function() {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+        $(".privacy-options input[type=checkbox]").each(function() {
+            $(this).click(function() {
+                if($(".privacy-options input[type=checkbox]").length == $(".privacy-options input[type=checkbox]:checked").length) {
+                    $("#select_all_checkbox").prop("checked", true);
+                }
+                else {
+                    $("#select_all_checkbox").prop("checked", false);
+                }
+            });
+        });
+    });
     </script>
 {% endblock %}
 
@@ -71,6 +93,12 @@
                     <th>Student<br/>Choice</th>
                     <th></th>
                 </thead>
+                <tr>
+                    <td>
+                        <label for="select_all_checkbox">Select All</label>
+                        <input type="checkbox" id="select_all_checkbox" />
+                    </td>
+                </tr>
                 {% for field in privacy_options_form %}
                     <!--tr>
                         <td><input type="checkbox" disabled="disabled" checked="checked"></td>
