@@ -880,16 +880,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             for photo in photos:
                 attrs = photo['attributes']
-                grade = attrs["cn"][0][:-len("Photo")]
-                try:
-                    public = (attrs["perm-showpictures-self"][0] == "TRUE")
-                    perms["self"][grade] = public
-                except KeyError:
+                if "cn" in attrs:
+                    grade = attrs["cn"][0][:-len("Photo")]
                     try:
-                        public = (attrs["perm-showpictures"][0] == "TRUE")
+                        public = (attrs["perm-showpictures-self"][0] == "TRUE")
                         perms["self"][grade] = public
                     except KeyError:
-                        perms["self"][grade] = False
+                        try:
+                            public = (attrs["perm-showpictures"][0] == "TRUE")
+                            perms["self"][grade] = public
+                        except KeyError:
+                            perms["self"][grade] = False
 
             cache.set(key, perms, timeout=settings.CACHE_AGE["ldap_permissions"])
             return perms

@@ -24,20 +24,20 @@
     $(function() {
         $("#user_select").selectize();
         $("#select_all_checkbox").click(function(){
-            if ($(this).prop("checked", true)) {
-                $(".privacy-options input[type=checkbox]").each(function() {
+            if ($(this).is(":checked")) {
+                $(".privacy-options .parent input[type=checkbox]").each(function() {
                     $(this).prop("checked", true);
                 });
             }
             else {
-                $(".privacy-options input[type=checkbox]").each(function() {
+                $(".privacy-options .parent input[type=checkbox]").each(function() {
                     $(this).prop("checked", false);
                 });
             }
         });
-        $(".privacy-options input[type=checkbox]").each(function() {
+        $(".privacy-options .parent input[type=checkbox]").each(function() {
             $(this).click(function() {
-                if($(".privacy-options input[type=checkbox]").length == $(".privacy-options input[type=checkbox]:checked").length) {
+                if($(".privacy-options .parent input[type=checkbox]").length == $(".privacy-options .parent input[type=checkbox]:checked").length) {
                     $("#select_all_checkbox").prop("checked", true);
                 }
                 else {
@@ -78,7 +78,7 @@
             </tr>
         </table>
         </form>
-        
+
         <br />
 
         <h3>Student: {{ profile_user.full_name }} ({{ profile_user.student_id|default:profile_user.id }})</h3>
@@ -93,21 +93,10 @@
                     <th>Student<br/>Choice</th>
                     <th></th>
                 </thead>
-                <tr>
-                    <td>
-                        <label for="select_all_checkbox">Select All</label>
-                        <input type="checkbox" id="select_all_checkbox" />
-                    </td>
-                </tr>
                 {% for field in privacy_options_form %}
-                    <!--tr>
-                        <td><input type="checkbox" disabled="disabled" checked="checked"></td>
-                        <td><input type="checkbox"></td>
-                        <td>Show ---</td>
-                    </tr-->
                     {% if not field.name|endswith:"-self" %}
                         <tr>
-                            <td>
+                            <td class="parent">
                                 {{ field.errors }}
                                 {{ field }}
                             </td>
@@ -123,6 +112,14 @@
                     {% endif %}
                 {% endfor %}
             </table>
+
+            {% if request.user.is_eighth_admin %}
+                <br />
+                <label>
+                    <input type="checkbox" id="select_all_checkbox" /> Select All Parent Permissions
+                </label>
+                <br />
+            {% endif %}
 
             <br />
 
