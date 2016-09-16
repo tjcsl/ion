@@ -14,7 +14,6 @@ class FixSlashes(object):
         any URL patterns by changing the request's internal properties.
 
         """
-        response = self.get_response(request)
 
         # We can't remove slashes from these urls - they're included from
         # first/third party apps
@@ -35,5 +34,4 @@ class FixSlashes(object):
                 new_url = request.path.rstrip("/")
                 request.path_info = new_url
                 request.path = new_url
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)
