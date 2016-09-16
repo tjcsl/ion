@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(DjangoUserManager):
+
     """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -168,6 +169,7 @@ class UserManager(DjangoUserManager):
             users = User.objects.exclude(username__startswith="2")
             # Add possible exceptions handling here
             users = users | User.objects.filter(id=31863)
+
             logger.debug("Set cache for User.get_teachers")
             cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
             return users
@@ -185,7 +187,7 @@ class UserManager(DjangoUserManager):
                 teachers.remove(t)
         teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
-            if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011]:
+            if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011, 9996]:
                 teachers.remove(t)
         # Hack to return QuerySet in given order
         id_list = [t[2] for t in teachers]
@@ -196,6 +198,7 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
     """Django User model subclass with properties that fetch data from LDAP.
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
@@ -1613,6 +1616,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Class(object):
+
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
     Note that this is not a Django model, but rather an interface
@@ -1855,6 +1859,7 @@ class Class(object):
 
 
 class ClassSections(object):
+
     """Represents a list of tjhsstClass LDAP objects.
 
     Note that this is not a Django model, but rather an interface
@@ -1906,6 +1911,7 @@ class ClassSections(object):
 
 
 class Address(object):
+
     """Represents a user's address.
 
     Attributes:
@@ -1933,6 +1939,7 @@ class Address(object):
 
 
 class Grade(object):
+
     """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior"]
 
