@@ -18,7 +18,8 @@ class FixSlashes(object):
 
         # We can't remove slashes from these urls - they're included from
         # first/third party apps
-        exception_prefixes = ["/admin", "/api-auth", "/djangoadmin", "/__debug__", "/oauth"]
+        exception_prefixes = [
+            "/admin", "/api-auth", "/djangoadmin", "/__debug__", "/oauth"]
         needs_trailing_slash = False
 
         for prefix in exception_prefixes:
@@ -34,4 +35,5 @@ class FixSlashes(object):
                 new_url = request.path.rstrip("/")
                 request.path_info = new_url
                 request.path = new_url
+        response = self.get_response(request)
         return response
