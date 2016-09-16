@@ -547,7 +547,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         information regardless of their privacy settings."""
         try:
             # threadlocals is a module, not an actual thread locals object
-            requesting_user = threadlocals.request().user
+            request = threadlocals.request()
+            if request is None:
+                return False
+            requesting_user = request.user
             if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated:
                 return False
             can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
