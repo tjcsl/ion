@@ -167,6 +167,8 @@ class UserManager(DjangoUserManager):
             return cached
         else:
             users = User.objects.exclude(username__startswith="2")
+            extra = [9996, 8888, 7011]
+            users = users.exclude(id__in=extra)
             # Add possible exceptions handling here
             users = users | User.objects.filter(id=31863)
 
@@ -187,7 +189,7 @@ class UserManager(DjangoUserManager):
                 teachers.remove(t)
         teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
-            if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011, 9996]:
+            if t[0] is None or len(t[0]) <= 1:
                 teachers.remove(t)
         # Hack to return QuerySet in given order
         id_list = [t[2] for t in teachers]
