@@ -76,7 +76,7 @@ try {
                         udlr.input = "";
                         e.preventDefault();
                         return false;
-                    } else if (udlr.input === udlr.pattern.substr(0, udlr.input.length)) e.preventDefault();
+                    }
                     else udlr.input = "";
                 }, this);
                 this.iphone.load(link);
