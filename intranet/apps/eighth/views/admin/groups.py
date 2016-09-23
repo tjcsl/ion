@@ -117,7 +117,7 @@ def edit_group_view(request, group_id):
             "last_name": user.last_name,
             "student_id": user.student_id,
             "email": user.tj_email if user.tj_email else emails[0] if emails else "",
-            "grade": grade.number if user.grade else "Staff"
+            "grade": grade.number if user.grade and not user.grade.number == 13 else "Staff"
         })
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
     linked_activities = EighthActivity.objects.filter(groups_allowed=group)
