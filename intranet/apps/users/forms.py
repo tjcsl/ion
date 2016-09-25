@@ -4,8 +4,9 @@ from ..preferences.fields import PhoneField
 
 
 class ProfileEditForm(forms.Form):
+
     """A form containing editable fields in the User model."""
-    admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea)
+    admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
 
     student_id = forms.IntegerField(label="FCPS Student ID")
     first_name = forms.CharField(label="First Name")
@@ -31,6 +32,7 @@ class ProfileEditForm(forms.Form):
 
 
 class UserChoiceField(forms.ModelChoiceField):
+
     """A ModelChoiceField that returns a user's full name instead of their TJ username (which is the
     default string representation)."""
 
@@ -39,6 +41,7 @@ class UserChoiceField(forms.ModelChoiceField):
 
 
 class SortedUserChoiceField(forms.ModelChoiceField):
+
     """A ModelChoiceField that returns a user's Last, First name instead of their TJ username (which
     is the default string representation)."""
 
@@ -47,6 +50,7 @@ class SortedUserChoiceField(forms.ModelChoiceField):
 
 
 class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
+
     """A ModelMultipleChoiceField that returns a user's full name instead of their TJ username
     (which is the default string representation)."""
 
@@ -55,6 +59,7 @@ class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
 
 
 class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
+
     """A ModelMultipleChoiceField that returns a user's Last, First name instead of their TJ
     username (which is the default string representation)."""
 
@@ -63,6 +68,7 @@ class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
 
 
 class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
+
     """A ModelMultipleChoiceField that returns a user's Last, First initial instead of their TJ
     username (which is the default string representation)."""
 
