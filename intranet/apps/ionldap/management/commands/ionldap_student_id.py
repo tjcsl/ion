@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 uid = int(row[0])
                 if uname and uid and uname not in users_dict:
                     users_dict[uname] = uid
-                    self.stdout.write(uname, uid)
+                    self.stdout.write("%s %d" % (uname, uid))
 
         if not add_db:
             return

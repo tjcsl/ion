@@ -24,7 +24,7 @@ class Command(BaseCommand):
         for uid, bid in duplicates:
             su = EighthSignup.objects.filter(user_id=uid, scheduled_activity__block_id=bid)
             self.stdout.write("Duplicate: {} {}".format(uid, bid))
-            self.stdout.write("Scheduled activities:", su)
+            self.stdout.write("Scheduled activities: %s" % su)
             if options['fix']:
                 if su[0].scheduled_activity.activity.both_blocks:
                     sibling = su[0].scheduled_activity.get_both_blocks_sibling()

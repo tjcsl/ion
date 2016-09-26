@@ -87,9 +87,9 @@ class Command(BaseCommand):
             try:
                 usr.first_name
             except ObjectDoesNotExist:
-                self.stdout.write("User", usr, "DELETE")
+                self.stdout.write("User %s DELETE" % usr)
                 usr.handle_delete()
                 self.stdout.write(usr.delete())
             else:
-                # self.stdout.write("User", usr, "KEEP")
+                # self.stdout.write("User %s KEEP" % usr)
                 pass

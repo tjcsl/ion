@@ -59,9 +59,9 @@ class Command(BaseCommand):
                 try:
                     u = User.get_user(id=i)
                 except User.DoesNotExist:
-                    self.stdout.write("UID", i, "None")
+                    self.stdout.write("UID %d None" % i)
                 else:
-                    self.stdout.write("UID", i, u)
+                    self.stdout.write("UID %d %s" % (i, u))
             return
 
         if self.do_run:
@@ -72,7 +72,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write("In pretend mode.")
 
-        self.stdout.write("CSV file", self.csv_file)
+        self.stdout.write("CSV file: %s" % self.csv_file)
 
         if self.fake_teachers:
             if os.path.isfile("users_faked.json"):
@@ -127,10 +127,10 @@ class Command(BaseCommand):
         for i in range(len(users)):
             user = users[i]
             if user["ldapExists"]:
-                self.stdout.write(user["user"]["TJUsername"], "MODIFY", user["uidNumber"])
+                self.stdout.write("%s MODIFY %s" % (user["user"]["TJUsername"], user["uidNumber"]))
                 self.update_ldap_user(user)
             else:
-                self.stdout.write(user["user"]["TJUsername"], "CREATE", user["uidNumber"])
+                self.stdout.write("%s CREATE %s" % (user["user"]["TJUsername"], user["uidNumber"]))
                 self.add_ldap_user(user)
 
         if os.path.isfile("schedules.json"):
@@ -150,7 +150,7 @@ class Command(BaseCommand):
                 f.write(json.dumps(self.schedules))
 
         for sid in self.schedules:
-            self.stdout.write("ADD SCHEDULE", sid)
+            self.stdout.write("ADD SCHEDULE %s" % sid)
             self.add_ldap_class(self.schedules[sid])
 
         self.stdout.write("Adding new teachers")
