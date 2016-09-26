@@ -16,7 +16,7 @@ from Crypto.Cipher import AES
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.utils.text import slugify

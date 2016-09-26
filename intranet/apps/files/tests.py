@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .models import Host
 from ...test.ion_test import IonTestCase
