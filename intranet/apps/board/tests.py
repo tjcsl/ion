@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from ..users.models import Group, User
 
 from ...test.ion_test import IonTestCase
 
 
 class BoardTest(IonTestCase):
+
     """Tests for the board module."""
 
     @classmethod

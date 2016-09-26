@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import resolve, reverse
+from django.urls import resolve, reverse
 """
 Views that render different pages depending on the user that
 requests them.

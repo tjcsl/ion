@@ -10,7 +10,7 @@ from cacheops import invalidate_model, invalidate_obj
 from django import http
 from django.contrib import messages
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 

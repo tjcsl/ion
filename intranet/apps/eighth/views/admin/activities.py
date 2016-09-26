@@ -7,7 +7,7 @@ from cacheops import invalidate_obj
 
 from django import forms, http
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import redirect, render
 
 from ...forms.admin.activities import ActivityForm, QuickActivityForm

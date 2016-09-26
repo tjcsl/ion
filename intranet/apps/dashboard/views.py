@@ -7,7 +7,7 @@ from itertools import chain
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import render
 from django.utils import timezone
 
