@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractBaseEighthModel(models.Model):
+
     """Abstract base model that includes created and last modified times."""
 
     created_time = models.DateTimeField(auto_now_add=True, null=True)
@@ -29,6 +30,7 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
+
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
@@ -77,6 +79,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 
 class EighthRoom(AbstractBaseEighthModel):
+
     """Represents a room in which an eighth period activity can be held.
 
     Attributes:
@@ -133,6 +136,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 
 class EighthActivity(AbstractBaseEighthModel):
+
     """Represents an eighth period activity.
 
     Attributes:
@@ -184,6 +188,8 @@ class EighthActivity(AbstractBaseEighthModel):
         freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed
             Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
             takes effect if the activity is restricted.
+        admin_comments
+            Notes for the Eighth Office
         favorites
             A ManyToManyField of User objects who have favorited the activity.
         deleted
@@ -217,6 +223,8 @@ class EighthActivity(AbstractBaseEighthModel):
     sophomores_allowed = models.BooleanField(default=False)
     juniors_allowed = models.BooleanField(default=False)
     seniors_allowed = models.BooleanField(default=False)
+
+    admin_comments = models.CharField(max_length=1000, blank=True)
 
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
 
@@ -402,6 +410,7 @@ class EighthBlockManager(models.Manager):
 
 
 class EighthBlock(AbstractBaseEighthModel):
+
     """Represents an eighth period block.
 
     Attributes:
@@ -569,6 +578,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
 
 class EighthScheduledActivityManager(Manager):
+
     """Model Manager for EighthScheduledActivity."""
 
     def for_sponsor(self, sponsor, include_cancelled=False):
@@ -592,6 +602,7 @@ class EighthScheduledActivityManager(Manager):
 
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
+
     """Represents the relationship between an activity and a block in which it has been scheduled.
 
     Attributes:
@@ -1179,6 +1190,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
 
 class EighthSignupManager(Manager):
+
     """Model manager for EighthSignup."""
 
     def create_signup(self, user, scheduled_activity, **kwargs):
@@ -1191,6 +1203,7 @@ class EighthSignupManager(Manager):
 
 
 class EighthSignup(AbstractBaseEighthModel):
+
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:
