@@ -52,6 +52,10 @@
         });
         var sact = $(".schedule-activity-buttons");
         $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: sact.offset().top + sact.height() });
+        $("#admin_comments_modal").fadeOut();
+        $("#admin_comments_badge").click(function(){
+            $("#admin_comments_modal").slideToggle();
+        });
     });
     </script>
 
@@ -123,6 +127,11 @@
                 {% endif %}
                 {% if activity.default_capacity %}
                     &nbsp; <b>Activity default capacity: {{ activity.default_capacity }}</b>
+                {% endif %}
+                {% if activity.admin_comments %}
+                    <span class="badge orange" id="admin_comments_badge">Admin Comments</span>
+                    <div id="admin_comments_modal" class="modal">{{ activity.admin_comments }}</div>
+
                 {% endif %}
             </div>
 
