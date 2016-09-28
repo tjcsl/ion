@@ -519,6 +519,7 @@ INSTALLED_APPS = [
     "intranet.apps.emailfwd",
     "intranet.apps.parking",
     "intranet.apps.dataimport",
+    "intranet.apps.nomination",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
