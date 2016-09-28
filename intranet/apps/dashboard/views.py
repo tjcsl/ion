@@ -494,7 +494,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     else:
         dashboard_title = dashboard_header = "Announcements"
 
-    num_senior_destinations = Senior.objects.filled().count()
+    num_senior_destinations = len(Senior.objects.filled())
 
     try:
         dash_warning = settings.DASH_WARNING
