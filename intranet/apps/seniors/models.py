@@ -20,10 +20,7 @@ class SeniorManager(models.Manager):
 
     def filled(self):
         seniors = Senior.objects.exclude(college=None, major=None)
-        for s in seniors:
-            if not s.user.is_senior:
-                seniors = seniors.exclude(user=s.user)
-        return seniors
+        return [senior for senior in seniors if senior.user.is_senior]
 
 
 class Senior(models.Model):
