@@ -743,6 +743,7 @@ USE_IONLDAP = False
 if TJSTAR_MAP is None:
     TJSTAR_MAP = False
 
+NOMINATIONS_ACTIVE = True
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

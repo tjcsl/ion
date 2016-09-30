@@ -42,7 +42,8 @@ urlpatterns = [
     # FIXME: update when admin supports django 1.10+ properly
     url(r"^djangoadmin/", include(admin.site.urls[:2], namespace=admin.site.urls[2])),  # type: ignore
     url(r"^oauth/", include(("oauth2_provider.urls", "oauth2_provider"))),
-    url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
+    url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
+    url(r"^nominations", include("intranet.apps.nomination.urls")),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:

@@ -92,7 +92,9 @@ def profile_view(request, user_id=None):
         "can_view_eighth": can_view_eighth,
         "eighth_restricted_msg": eighth_restricted_msg,
         "eighth_sponsor_schedule": eighth_sponsor_schedule,
-        "ionldap_courses": ionldap_courses
+        "ionldap_courses": ionldap_courses,
+        "nominations_active": settings.NOMINATIONS_ACTIVE,
+        "nomination_position": settings.NOMINATION_POSITION
     }
     return render(request, "users/profile.html", context)
 

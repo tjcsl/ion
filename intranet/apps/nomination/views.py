@@ -1,4 +1,40 @@
 # -*- coding: utf-8 -*-
-# from django.shortcuts import render
+import logging
 
-# Create your views here.
+from django import http
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.utils import timezone
+from django.urls import reverse
+
+from .models import NominationPosition, Nomination
+from .forms import CreateNominationPositionForm
+from ..users.models import User
+from ..auth.decorators import eighth_admin_required
+
+logger = logging.getLogger(__name__)
+
+
+@login_required
+def vote_for_user(request, username, position):
+    try:
+        nominated_user = User.objects.get(username=username)
+        if nominated_user.grade.number == request.user.grade.number:
+            nominated_position = NominationPosition.objects.get(position_name=position)
+            votes_for_position = request.user.nomination_votes.filter(position=nominated_position)
+            if len(votes_for_position.filter(nominee=nominated_user)) > 0:
+                messages.error(request, "You have already voted for this user.")
+            else:
+                if len(votes_for_position) > 0:
+                    for vote in votes_for_position:
+                        if (vote.nominee.is_male and nominated_user.is_male) or (vote.nominee.is_female and nominated_user.is_female):
+                            vote.delete()
+                nom = Nomination(nominator=request.user, nominee=nominated_user, position=nominated_position)
+                nom.save()
+                messages.success(request, "Your Nomination Was Created")
+        else:
+            messages.error(request, "You Can Only Vote For Users in Your Grade")
+        return redirect("/")
+    except (User.DoesNotExist, NominationPosition.DoesNotExist):
+        return redirect("/")
