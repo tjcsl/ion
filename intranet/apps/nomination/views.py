@@ -4,7 +4,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-# from django.urls import reverse
+from django.urls import reverse
 
 from .models import NominationPosition, Nomination
 # from .forms import CreateNominationPositionForm
@@ -30,9 +30,11 @@ def vote_for_user(request, username, position):
                             vote.delete()
                 nom = Nomination(nominator=request.user, nominee=nominated_user, position=nominated_position)
                 nom.save()
-                messages.success(request, "Your Nomination Was Created")
+                messages.success(request, "Your nomination was created.")
         else:
-            messages.error(request, "You Can Only Vote For Users in Your Grade")
+            messages.error(request, "You can only vote for users in your grade")
+    except User.DoesNotExist:
         return redirect("/")
-    except (User.DoesNotExist, NominationPosition.DoesNotExist):
-        return redirect("/")
+    except NominationPosition.DoesNotExist:
+        messages.error(request, "Nomination not found. (Did someone misspell something?)")
+    return redirect(reverse("user_profile", args=(nominated_user.id,)))
