@@ -113,19 +113,6 @@
                     <br />
                 </center>
             {% endif %}
-            {% if nominations_active %}
-                {% if profile_user.grade.number == request.user.grade.number and request.user.grade.number < 13 %}
-                <center>
-                    <br />
-                    {% if has_been_nominated %}
-                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
-                    {% else %}
-                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
-                    {% endif %}
-                    <br />
-                </center>
-                {% endif %}
-            {% endif %}
 
         </div>
 
@@ -447,6 +434,19 @@
 
             </div>
 
+            {% if nominations_active %}
+                {% if profile_user.grade.number == request.user.grade.number and request.user.grade.number < 13 %}
+                <section class="nomination">
+                    <br />
+                    {% if has_been_nominated %}
+                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
+                    {% else %}
+                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
+                    {% endif %}
+                    <br />
+                </section>
+                {% endif %}
+            {% endif %}
             {% if profile_user.is_student and eighth_schedule %}
             <section class="user-info-eighth signups">
                 <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Signups{% endif %}</h3>
