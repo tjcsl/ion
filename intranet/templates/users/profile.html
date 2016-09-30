@@ -113,6 +113,16 @@
                     <br />
                 </center>
             {% endif %}
+            {% if nominations_active %}
+                {% if profile_user.grade.number == request.user.grade.number %}
+                <center>
+                    <br />
+                    <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate User for {{ nomination_position }}</a>
+                    <br />
+                </center>
+                {% endif %}
+            {% endif %}
+
         </div>
 
 
