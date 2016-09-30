@@ -12,6 +12,14 @@ intranet.apps.nomination.apps module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.nomination.forms module
+-------------------------------------
+
+.. automodule:: intranet.apps.nomination.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.nomination.models module
 --------------------------------------
 
@@ -24,6 +32,14 @@ intranet.apps.nomination.tests module
 -------------------------------------
 
 .. automodule:: intranet.apps.nomination.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.nomination.urls module
+------------------------------------
+
+.. automodule:: intranet.apps.nomination.urls
     :members:
     :undoc-members:
     :show-inheritance:

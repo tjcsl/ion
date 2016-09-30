@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.utils import timezone
-from django.urls import reverse
+from django.shortcuts import redirect
+# from django.urls import reverse
 
 from .models import NominationPosition, Nomination
-from .forms import CreateNominationPositionForm
+# from .forms import CreateNominationPositionForm
 from ..users.models import User
-from ..auth.decorators import eighth_admin_required
+# from ..auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
 
