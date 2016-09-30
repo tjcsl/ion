@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #3038) documentation</title>
+    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #3065) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3038)',
+        VERSION:     'v3 (Build #3065)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #3038) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3065) documentation" href="../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -168,6 +168,7 @@
 
 
 <div class="viewcode-block" id="AbstractBaseEighthModel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.AbstractBaseEighthModel">[docs]</a><span class="k">class</span> <span class="nc">AbstractBaseEighthModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Abstract base model that includes created and last modified times.&quot;&quot;&quot;</span>
 
     <span class="n">created_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -178,6 +179,7 @@
 
 
 <div class="viewcode-block" id="EighthSponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSponsor">[docs]</a><span class="k">class</span> <span class="nc">EighthSponsor</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents a sponsor for an eighth period activity.</span>
 
 <span class="sd">    A sponsor could be linked to an actual user or just a name.</span>
@@ -226,6 +228,7 @@
 
 
 <div class="viewcode-block" id="EighthRoom"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthRoom">[docs]</a><span class="k">class</span> <span class="nc">EighthRoom</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents a room in which an eighth period activity can be held.</span>
 
 <span class="sd">    Attributes:</span>
@@ -282,6 +285,7 @@
 
 
 <div class="viewcode-block" id="EighthActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity">[docs]</a><span class="k">class</span> <span class="nc">EighthActivity</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents an eighth period activity.</span>
 
 <span class="sd">    Attributes:</span>
@@ -333,6 +337,8 @@
 <span class="sd">        freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed</span>
 <span class="sd">            Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only</span>
 <span class="sd">            takes effect if the activity is restricted.</span>
+<span class="sd">        admin_comments</span>
+<span class="sd">            Notes for the Eighth Office</span>
 <span class="sd">        favorites</span>
 <span class="sd">            A ManyToManyField of User objects who have favorited the activity.</span>
 <span class="sd">        deleted</span>
@@ -366,6 +372,8 @@
     <span class="n">sophomores_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">juniors_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">seniors_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="n">admin_comments</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">favorites</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;favorited_activity_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -551,6 +559,7 @@
 
 
 <div class="viewcode-block" id="EighthBlock"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock">[docs]</a><span class="k">class</span> <span class="nc">EighthBlock</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents an eighth period block.</span>
 
 <span class="sd">    Attributes:</span>
@@ -718,6 +727,7 @@
 
 
 <div class="viewcode-block" id="EighthScheduledActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Model Manager for EighthScheduledActivity.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthScheduledActivityManager.for_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager.for_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">for_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -741,6 +751,7 @@
 
 
 <div class="viewcode-block" id="EighthScheduledActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivity</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents the relationship between an activity and a block in which it has been scheduled.</span>
 
 <span class="sd">    Attributes:</span>
@@ -1328,6 +1339,7 @@
 
 
 <div class="viewcode-block" id="EighthSignupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager">[docs]</a><span class="k">class</span> <span class="nc">EighthSignupManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Model manager for EighthSignup.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthSignupManager.create_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager.create_signup">[docs]</a>    <span class="k">def</span> <span class="nf">create_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1340,6 +1352,7 @@
 
 
 <div class="viewcode-block" id="EighthSignup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup">[docs]</a><span class="k">class</span> <span class="nc">EighthSignup</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Represents a signup/membership in an eighth period activity.</span>
 
 <span class="sd">    Attributes:</span>
