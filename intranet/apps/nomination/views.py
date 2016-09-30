@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def vote_for_user(request, username, position):
     try:
         nominated_user = User.objects.get(username=username)
-        if nominated_user.grade.number == request.user.grade.number:
+        if nominated_user.grade.number == request.user.grade.number and request.user.grade.number < 13:
             nominated_position = NominationPosition.objects.get(position_name=position)
             votes_for_position = request.user.nomination_votes.filter(position=nominated_position)
             if len(votes_for_position.filter(nominee=nominated_user)) > 0:
