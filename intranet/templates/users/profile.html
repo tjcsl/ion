@@ -117,7 +117,11 @@
                 {% if profile_user.grade.number == request.user.grade.number %}
                 <center>
                     <br />
-                    <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate User for {{ nomination_position }}</a>
+                    {% if has_been_nominated %}
+                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
+                    {% else %}
+                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
+                    {% endif %}
                     <br />
                 </center>
                 {% endif %}
