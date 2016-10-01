@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from io import StringIO
 
 from django.conf import settings
 from django.shortcuts import render
+from django.core.management import call_command
 
 from intranet.db.ldap_db import LDAPConnection
 
@@ -26,8 +28,15 @@ def index_view(request):
 @eighth_admin_required
 def start_of_year_view(request):
     context = {
-        "admin_page_title": "Start of Year Operations"
+        "admin_page_title": "Start of Year Operations",
+        "completed": False
     }
+    if request.method == "POST" and request.POST.get("confirm"):
+        content = StringIO()
+        call_command("year_cleanup", stdout=content)
+        content.seek(0)
+        context["output"] = content.read()
+        context["completed"] = True
     return render(request, "eighth/admin/start_of_year.html", context)
 
 

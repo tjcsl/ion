@@ -12,11 +12,18 @@
 
 {% block admin_main %}
 
+{% if completed %}
+<h3>Success!</h3>
+<p>The start of year scripts have been executed. The box below contains the command output.</p>
+<pre>{{ output }}</pre>
+<a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a>
+{% else %}
 <form id="clear-comments" action="{% url 'eighth_admin_maintenance_start_of_year' %}" method="POST">
     {% csrf_token %}
     <input type="hidden" name="confirm" value="true" />
     <p><b>Are you sure?</b> Pressing the button below will run the start of year scripts.</p>
-    <a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a> <button disabled type="submit">Run Start of Year Scripts</button>
+    <a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a> <button type="submit">Run Start of Year Scripts</button>
 </form>
+{% endif %}
 
 {% endblock %}
