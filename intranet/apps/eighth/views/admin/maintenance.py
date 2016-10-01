@@ -26,6 +26,14 @@ def index_view(request):
 
 
 @eighth_admin_required
+def teacher_management(request):
+    context = {
+        "admin_page_title": "Teacher Management"
+    }
+    return render(request, "eighth/admin/teacher_management.html", context)
+
+
+@eighth_admin_required
 def sis_import(request):
     context = {
         "admin_page_title": "SIS Import"
