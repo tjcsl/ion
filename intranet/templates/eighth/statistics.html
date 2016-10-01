@@ -143,10 +143,10 @@
 
     <br />
     {% if year %}
-        <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} not in the {{ year|add:"-1" }}-{{ year }} school year and {% if old_blocks != 1 %}are{% else %}is{% endif %} not included on this page.
+        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} not in the {{ year|add:"-1" }}-{{ year }} school year and {{ old_blocks|pluralize:"is,are" }} not included on this page.
     {% else %}
-        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {% if past_start_date != 1 %}are{% else %}is{% endif %} not included on this page.<br />
-        <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} from previous years {% if old_blocks != 1 %}are{% else %}is{% endif %} not included on this page.<br />
+        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {{ past_start_date|pluralize:"is,are" }} not included on this page.<br />
+        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} from previous years {{ old_blocks|pluralize:"is,are" }} not included on this page.<br />
     {% endif %}
     <br />
 </div>
