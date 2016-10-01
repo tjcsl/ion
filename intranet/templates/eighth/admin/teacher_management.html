@@ -3,6 +3,79 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript">
+        var list_endpoint = "{% url 'eighth_admin_maintenance_teacher_list' %}";
+        function refreshList() {
+            $("#teacher-list .teacher").remove();
+            $.get(list_endpoint, function(data) {
+                var tdata = data.teachers;
+                tdata.sort(function(a, b) {
+                    return a["name"] >= b["name"];
+                });
+                $.each(tdata, function(k, v) {
+                    $("#teacher-list").append('<div class="teacher" data-id="' + v["id"] + '">' + v["name"]  + '</div>');
+                });
+            });
+        }
+        function loadTeacher(id) {
+            $("#delete-teacher").toggle(!!id);
+            $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
+            $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
+            $(".ldap-field").val("");
+            if (id) {
+                $.get(list_endpoint + "?id=" + encodeURIComponent(id), function(data) {
+                    $.each(data.teacher, function(k, v) {
+                        var ele = $("#ldap-" + k + ".ldap-field");
+                        if (ele) {
+                            ele.val(v);
+                        }
+                    });
+                });
+            }
+        }
+        $(document).ready(function() {
+            refreshList();
+            $("#teacher-list-search").on("change keyup paste", function(e) {
+                var term = $(this).val().toLowerCase();
+                $("#teacher-list .teacher").each(function(k, v) {
+                    var contains = $(this).text().toLowerCase().indexOf(term) !== -1;
+                    if (contains) {
+                        $(this).show();
+                    }
+                    else {
+                        $(this).hide();
+                    }
+                });
+            });
+            $("#teacher-list").keydown(function(e) {
+                var ele = null;
+                if (e.which == 38) {
+                    ele = $(".teacher.selected").prev();
+                }
+                else if (e.which == 40) {
+                    ele = $(".teacher.selected").next();
+                }
+                if (ele && !ele.hasClass("selected")) {
+                    ele.click();
+                    var $tl = $("#teacher-list");
+                    $tl.scrollTop($tl.scrollTop() + ele.position().top - $tl.height()/2 + ele.height()/2);
+                    e.preventDefault();
+                }
+            });
+            $("#teacher-list").on("click", ".teacher", function(e) {
+                if ($(this).hasClass("selected")) {
+                    $(this).removeClass("selected");
+                    loadTeacher(false);
+                }
+                else {
+                    $(".teacher").removeClass("selected");
+                    $(this).addClass("selected");
+                    loadTeacher($(this).data("id"));
+                    $("#teacher-list").focus();
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
@@ -11,5 +84,22 @@
 {% endblock %}
 
 {% block admin_main %}
+
+<div id="teacher-list-container">
+    <input type="text" id="teacher-list-search" placeholder="&#xf002; Search" />
+    <div id="teacher-list" tabindex="0"></div>
+</div>
+<div id="edit-area">
+    <h3 id="edit-title">Create Teacher Account</h3>
+    <div class="normal-fields">
+        {% for field in fields %}
+        <div class="form-group">
+            <label for="ldap-{{ field }}">{{ field }}</label>
+            <input class="ldap-field" id="ldap-{{ field }}" type="text" />
+        </div>
+        {% endfor %}
+    </div>
+    <button style="display:none" id="delete-teacher">Delete Teacher</button> <button id="edit-teacher">Create Teacher</button>
+</div>
 
 {% endblock %}
