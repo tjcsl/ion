@@ -26,6 +26,7 @@ ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
 NO_CACHE = False
 PARKING_ENABLED = False
+NOMINATION_POSITION = False
 try:
     from .secret import *  # noqa
 except ImportError:
