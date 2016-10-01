@@ -23,6 +23,7 @@
             $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
             $(".ldap-field").val("");
             if (id) {
+                $("#ldap-loading").show();
                 $.get(list_endpoint + "?id=" + encodeURIComponent(id), function(data) {
                     $.each(data.teacher, function(k, v) {
                         var ele = $("#ldap-" + k + ".ldap-field");
@@ -30,6 +31,8 @@
                             ele.val(v);
                         }
                     });
+                }).always(function() {
+                    $("#ldap-loading").hide();
                 });
             }
         }
@@ -99,7 +102,7 @@
         </div>
         {% endfor %}
     </div>
-    <button style="display:none" id="delete-teacher">Delete Teacher</button> <button id="edit-teacher">Create Teacher</button>
+    <button style="display:none" id="delete-teacher">Delete Teacher</button> <button id="edit-teacher">Create Teacher</button> <span id="ldap-loading"><i class="fa fa-cog fa-spin fa-2x"></i></span>
 </div>
 
 {% endblock %}
