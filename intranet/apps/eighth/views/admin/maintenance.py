@@ -4,6 +4,7 @@ import logging
 from io import StringIO
 
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.management import call_command
 
@@ -28,9 +29,28 @@ def index_view(request):
 @eighth_admin_required
 def teacher_management(request):
     context = {
-        "admin_page_title": "Teacher Management"
+        "admin_page_title": "Teacher Management",
+        "fields": ["iodineUid", "iodineUidNumber", "cn", "sn", "givenName", "mail"],
+        "advanced_fields": ["dn", "objectClass", "header", "style", "mailentries", "chrome", "startpage"]
     }
     return render(request, "eighth/admin/teacher_management.html", context)
+
+
+@eighth_admin_required
+def teacher_list(request):
+    c = LDAPConnection()
+    usrid = request.GET.get("id", None)
+    if usrid:
+        data = c.search(settings.USER_DN, "iodineUid={}".format(usrid), ["*"])
+        if len(data) == 0:
+            return JsonResponse({"teacher": None})
+        teacher = {x: y[0] for x, y in data[0]["attributes"].items()}
+        teacher["dn"] = data[0]["dn"]
+        return JsonResponse({"teacher": teacher})
+    else:
+        data = c.search(settings.USER_DN, "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
+        teachers = [{"id": x["attributes"]["iodineUid"][0], "name": x["attributes"]["cn"][0]} for x in data]
+        return JsonResponse({"teachers": teachers})
 
 
 @eighth_admin_required
