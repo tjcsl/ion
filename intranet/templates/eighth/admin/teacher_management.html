@@ -5,6 +5,8 @@
     {{ block.super }}
     <script type="text/javascript">
         var list_endpoint = "{% url 'eighth_admin_maintenance_teacher_list' %}";
+        var modify_endpoint = "{% url 'eighth_admin_maintenance_teacher_modify' %}";
+        var delete_endpoint = "{% url 'eighth_admin_maintenance_teacher_delete' %}";
         function refreshList() {
             $("#teacher-list .teacher").remove();
             $.get(list_endpoint, function(data) {
@@ -22,6 +24,7 @@
             $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
             $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
             $(".ldap-field").val("");
+            $(".ldap-field").attr("data-default", "");
             if (id) {
                 $("#ldap-loading").show();
                 $.get(list_endpoint + "?id=" + encodeURIComponent(id), function(data) {
@@ -29,6 +32,7 @@
                         var ele = $("#ldap-" + k + ".ldap-field");
                         if (ele) {
                             ele.val(v);
+                            ele.attr("data-default", v);
                         }
                     });
                 }).always(function() {
@@ -77,6 +81,38 @@
                     $("#teacher-list").focus();
                 }
             });
+            $("#edit-teacher").click(function(e) {
+                e.preventDefault();
+                var fields = {};
+                $(".ldap-field").each(function(k, v) {
+                    fields[$(this).attr("id").substring(5)] = $(this).val();
+                });
+                $.post(modify_endpoint, fields, function(data) {
+                    if (data.success) {
+                        Messenger().success("Teacher account '" + data.id + "' created/modified!");
+                        loadTeacher(data.id);
+                        refreshList();
+                    }
+                    else {
+                        Messenger().error("Failed to modify or create teacher account.");
+                    }
+                });
+            });
+            $("#delete-teacher").click(function(e) {
+                e.preventDefault();
+                if (confirm("Are you sure you want to delete '" + $("#ldap-cn").data("default") + "'?")) {
+                    $.post(delete_endpoint, { "account": $("#ldap-dn").val() }, function(data) {
+                        if (data.success) {
+                            Messenger().success("Teacher account '" + $("#ldap-cn").data("default") + "' deleted!");
+                            loadTeacher(false);
+                            refreshList();
+                        }
+                        else {
+                            Messenger().error("Failed to delete teacher account.");
+                        }
+                    });
+                }
+            });
         });
     </script>
 {% endblock %}
@@ -95,6 +131,7 @@
 <div id="edit-area">
     <h3 id="edit-title">Create Teacher Account</h3>
     <div class="normal-fields">
+        <input type="hidden" class="ldap-field" id="ldap-dn" />
         {% for field in fields %}
         <div class="form-group">
             <label for="ldap-{{ field }}">{{ field }}</label>

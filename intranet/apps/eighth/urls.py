@@ -60,6 +60,8 @@ eighth_admin_patterns = [
     url(r"^maintenance/sis_import$", admin_maintenance.sis_import, name="eighth_admin_maintenance_sis_import"),
     url(r"^maintenance/teacher$", admin_maintenance.teacher_management, name="eighth_admin_maintenance_teacher"),
     url(r"^maintenance/teacher/list$", admin_maintenance.teacher_list, name="eighth_admin_maintenance_teacher_list"),
+    url(r"^maintenance/teacher/delete$", admin_maintenance.teacher_delete, name="eighth_admin_maintenance_teacher_delete"),
+    url(r"^maintenance/teacher/modify$", admin_maintenance.teacher_modify, name="eighth_admin_maintenance_teacher_modify"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),

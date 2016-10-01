@@ -37,6 +37,18 @@ def teacher_management(request):
 
 
 @eighth_admin_required
+def teacher_modify(request):
+    # TODO: implement teacher create/modify
+    return JsonResponse({"success": False})
+
+
+@eighth_admin_required
+def teacher_delete(request):
+    # TODO: implement teacher delete
+    return JsonResponse({"success": False})
+
+
+@eighth_admin_required
 def teacher_list(request):
     c = LDAPConnection()
     usrid = request.GET.get("id", None)
