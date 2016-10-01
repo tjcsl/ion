@@ -7,18 +7,7 @@
 
 {% block css %}
     {{ block.super }}
-    <style>
-    pre {
-        font-family: monospace;
-        max-height: 400px;
-        width: 600px;
-        overflow: auto;
-        padding: 5px;
-        margin-bottom: 10px;
-        background-color: white;
-        border: 1px solid #ccc;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.maintenance.css' %}" />
 {% endblock %}
 
 {% block admin_main %}
@@ -26,9 +15,8 @@
 <form id="clear-comments" action="{% url 'eighth_admin_maintenance_start_of_year' %}" method="POST">
     {% csrf_token %}
     <input type="hidden" name="confirm" value="true" />
-    <p style="margin-bottom:10px"><b>Are you sure?</b> Pressing the button below will run the start of year scripts you have selected.</p>
+    <p><b>Are you sure?</b> Pressing the button below will run the start of year scripts.</p>
     <a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a> <button disabled type="submit">Run Start of Year Scripts</button>
 </form>
-{% endif %}
 
 {% endblock %}
