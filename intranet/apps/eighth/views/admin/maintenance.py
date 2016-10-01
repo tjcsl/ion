@@ -24,6 +24,14 @@ def index_view(request):
 
 
 @eighth_admin_required
+def start_of_year_view(request):
+    context = {
+        "admin_page_title": "Start of Year Operations"
+    }
+    return render(request, "eighth/admin/start_of_year.html", context)
+
+
+@eighth_admin_required
 def clear_comments_view(request):
     context = {
         "admin_page_title": "Clear Admin Comments",

@@ -56,6 +56,7 @@ eighth_admin_patterns = [
     # Maintenance tools
     url(r"^maintenance$", admin_maintenance.index_view, name="eighth_admin_maintenance"),
     url(r"^maintenance/clear_comments$", admin_maintenance.clear_comments_view, name="eighth_admin_maintenance_clear_comments"),
+    url(r"^maintenance/start_of_year$", admin_maintenance.start_of_year_view, name="eighth_admin_maintenance_start_of_year"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
