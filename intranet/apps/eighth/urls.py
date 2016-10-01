@@ -5,6 +5,7 @@ from django.conf.urls import include, url
 from .views import activities, attendance, profile, routers, signup
 from .views.admin import activities as admin_activities
 from .views.admin import attendance as admin_attendance
+from .views.admin import maintenance as admin_maintenance
 from .views.admin import blocks, general, groups, rooms, scheduling, sponsors
 
 urlpatterns = [
@@ -51,6 +52,10 @@ eighth_admin_patterns = [
     url(r"^activities/edit/(?P<activity_id>\d+)$", admin_activities.edit_activity_view, name="eighth_admin_edit_activity"),
     url(r"^activities/delete/(?P<activity_id>\d+)$", admin_activities.delete_activity_view, name="eighth_admin_delete_activity"),
     url(r"^history$", general.history_view, name="eighth_admin_history"),
+
+    # Maintenance tools
+    url(r"^maintenance$", admin_maintenance.index_view, name="eighth_admin_maintenance"),
+    url(r"^maintenance/clear_comments$", admin_maintenance.clear_comments_view, name="eighth_admin_maintenance_clear_comments"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
