@@ -33,7 +33,7 @@ def start_of_year_view(request):
     }
     if request.method == "POST" and request.POST.get("confirm"):
         content = StringIO()
-        call_command("year_cleanup", stdout=content)
+        call_command("year_cleanup", run=True, confirm=True, stdout=content)
         content.seek(0)
         context["output"] = content.read()
         context["completed"] = True
