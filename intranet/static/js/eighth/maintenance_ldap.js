@@ -32,7 +32,7 @@ function loadAccount(id) {
                     ele.val(v);
                     ele.attr("data-original", v);
                 }
-                else {
+                else if (k !== "objectClass") {
                     $("#additional-fields").append("<div class='form-group'><label><b>Additional Field</b> (" + k + ")</label><input disabled type='text' value='" + v.replace("'", "\\'") + "' /></div>");
                 }
             });
