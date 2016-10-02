@@ -51,13 +51,13 @@ def index_view(request):
 
 
 @eighth_admin_required
-def teacher_management(request):
+def ldap_management(request):
     context = {
-        "admin_page_title": "Teacher Management",
+        "admin_page_title": "LDAP Management",
         "fields": LDAP_TEACHER_FIELDS,
         "advanced_fields": LDAP_TEACHER_ADVANCED_FIELDS
     }
-    return render(request, "eighth/admin/teacher_management.html", context)
+    return render(request, "eighth/admin/ldap_management.html", context)
 
 
 def clear_user_cache(dn):
@@ -67,7 +67,7 @@ def clear_user_cache(dn):
 
 
 @eighth_admin_required
-def teacher_modify(request):
+def ldap_modify(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST":
         c = LDAPConnection()
@@ -108,7 +108,7 @@ def teacher_modify(request):
 
 
 @eighth_admin_required
-def teacher_delete(request):
+def ldap_delete(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST" and dn:
         if not dn.endswith(settings.USER_DN):
@@ -128,25 +128,29 @@ def teacher_delete(request):
 
 
 @eighth_admin_required
-def teacher_next_id(request):
+def ldap_next_id(request):
+    is_student = request.GET.get("type", "teacher") == "student"
     usrid = 0
     c = LDAPConnection()
-    res = c.search(settings.USER_DN, "objectClass=tjhsstTeacher", ["iodineUidNumber"])
+    res = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstTeacher", ["iodineUidNumber"])
     if len(res) > 0:
         res = [int(x["attributes"]["iodineUidNumber"][0]) for x in res]
-        res = set([x for x in res if x < 1200])
-        usrid = max(res) + 1
-        if usrid == 1200:
-            for x in range(1200):
-                if x not in res:
-                    usrid = x
-                    break
+        if is_student:
+            usrid = max(res) + 1
+        else:
+            res = set([x for x in res if x < 1200])
+            usrid = max(res) + 1
+            if usrid == 1200:
+                for x in range(1200):
+                    if x not in res:
+                        usrid = x
+                        break
 
     return JsonResponse({"id": usrid})
 
 
 @eighth_admin_required
-def teacher_list(request):
+def ldap_list(request):
     c = LDAPConnection()
     usrid = request.GET.get("id", None)
     if usrid:

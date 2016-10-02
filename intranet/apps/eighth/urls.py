@@ -58,11 +58,11 @@ eighth_admin_patterns = [
     url(r"^maintenance/clear_comments$", admin_maintenance.clear_comments_view, name="eighth_admin_maintenance_clear_comments"),
     url(r"^maintenance/start_of_year$", admin_maintenance.start_of_year_view, name="eighth_admin_maintenance_start_of_year"),
     url(r"^maintenance/sis_import$", admin_maintenance.sis_import, name="eighth_admin_maintenance_sis_import"),
-    url(r"^maintenance/teacher$", admin_maintenance.teacher_management, name="eighth_admin_maintenance_teacher"),
-    url(r"^maintenance/teacher/list$", admin_maintenance.teacher_list, name="eighth_admin_maintenance_teacher_list"),
-    url(r"^maintenance/teacher/delete$", admin_maintenance.teacher_delete, name="eighth_admin_maintenance_teacher_delete"),
-    url(r"^maintenance/teacher/modify$", admin_maintenance.teacher_modify, name="eighth_admin_maintenance_teacher_modify"),
-    url(r"^maintenance/teacher/next_id$", admin_maintenance.teacher_next_id, name="eighth_admin_maintenance_teacher_next_id"),
+    url(r"^maintenance/ldap$", admin_maintenance.ldap_management, name="eighth_admin_maintenance_ldap"),
+    url(r"^maintenance/ldap/list$", admin_maintenance.ldap_list, name="eighth_admin_maintenance_ldap_list"),
+    url(r"^maintenance/ldap/delete$", admin_maintenance.ldap_delete, name="eighth_admin_maintenance_ldap_delete"),
+    url(r"^maintenance/ldap/modify$", admin_maintenance.ldap_modify, name="eighth_admin_maintenance_ldap_modify"),
+    url(r"^maintenance/ldap/next_id$", admin_maintenance.ldap_next_id, name="eighth_admin_maintenance_ldap_next_id"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),

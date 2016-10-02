@@ -93,7 +93,7 @@ $(document).ready(function() {
     });
     $("#generate-id").click(function(e) {
         e.preventDefault();
-        $.get(next_id_endpoint, function(data) {
+        $.get(next_id_endpoint + "?type=teacher", function(data) {
             $("#ldap-iodineUidNumber").val(data.id);
         });
     });
