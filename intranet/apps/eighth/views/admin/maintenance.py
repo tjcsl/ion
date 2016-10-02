@@ -175,6 +175,8 @@ class ImportThread(threading.Thread):
 
     def run(self):
         # TODO: run import process
+        # TODO: import LDIF files
+        # TODO: send email to user
         shutil.rmtree(self.folder)
 
 
