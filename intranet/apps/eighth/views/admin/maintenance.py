@@ -18,8 +18,21 @@ from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
-LDAP_TEACHER_FIELDS = ["iodineUid", "iodineUidNumber", "cn", "sn", "givenName", "mail"]
-LDAP_TEACHER_ADVANCED_FIELDS = ["dn", "objectClass", "header", "style", "mailentries", "chrome", "startpage"]
+LDAP_TEACHER_FIELDS = [
+    ("iodineUid", "Username"),
+    ("iodineUidNumber", "User ID"),
+    ("cn", "Full Name"),
+    ("givenName", "First Name"),
+    ("sn", "Last Name"),
+    ("mail", "Email")
+]
+LDAP_TEACHER_ADVANCED_FIELDS = {
+    "header": True,
+    "style": "default",
+    "mailentries": -1,
+    "chrome": True,
+    "startpage": "news"
+}
 
 
 @eighth_admin_required
@@ -53,7 +66,7 @@ def teacher_modify(request):
         c = LDAPConnection()
         if dn:
             attrs = {}
-            for field in LDAP_TEACHER_FIELDS:
+            for field, name in LDAP_TEACHER_FIELDS:
                 value = request.POST.get(field, None)
                 if value:
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
@@ -66,17 +79,11 @@ def teacher_modify(request):
                 "details": c.conn.last_error
             })
         else:
-            attrs = {
-                "header": True,
-                "style": "default",
-                "mailentries": -1,
-                "chrome": True,
-                "startpage": "news"
-            }
-            for field in LDAP_TEACHER_FIELDS:
+            attrs = dict(LDAP_TEACHER_ADVANCED_FIELDS)
+            for field, name in LDAP_TEACHER_FIELDS:
                 value = request.POST.get(field, None)
                 if not value:
-                    return JsonResponse({"success": False, "error": "{} must be filled out!".format(field)})
+                    return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
                 attrs[field] = value
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class="tjhsstTeacher", attributes=attrs)
             return JsonResponse({

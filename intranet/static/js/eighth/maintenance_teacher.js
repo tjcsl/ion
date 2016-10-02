@@ -15,7 +15,7 @@ function loadTeacher(id) {
     $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
     $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
     $(".ldap-field").val("");
-    $(".ldap-field").attr("data-default", "");
+    $(".ldap-field").attr("data-original", "");
     if (id) {
         $("#ldap-loading").show();
         $.get(list_endpoint + "?id=" + encodeURIComponent(id), function(data) {
@@ -23,7 +23,7 @@ function loadTeacher(id) {
                 var ele = $("#ldap-" + k + ".ldap-field");
                 if (ele) {
                     ele.val(v);
-                    ele.attr("data-default", v);
+                    ele.attr("data-original", v);
                 }
             });
         }).fail(function() {
@@ -98,10 +98,10 @@ $(document).ready(function() {
     });
     $("#delete-teacher").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to delete '" + $("#ldap-cn").data("default") + "'?\nThis action is irreversible!")) {
+        if (confirm("Are you sure you want to delete '" + $("#ldap-cn").data("original") + "'?\nThis action is irreversible!")) {
             $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
                 if (data.success) {
-                    Messenger().success("Teacher account '" + $("#ldap-cn").data("default") + "' deleted!");
+                    Messenger().success("Teacher account '" + $("#ldap-cn").data("original") + "' deleted!");
                     loadTeacher(false);
                     refreshList();
                 }
