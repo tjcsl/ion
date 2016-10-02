@@ -44,7 +44,11 @@ def teacher_modify(request):
 
 @eighth_admin_required
 def teacher_delete(request):
-    # TODO: implement teacher delete
+    dn = request.POST.get("dn", None)
+    if request.method == "POST" and dn and settings.USER_DN in dn:
+        c = LDAPConnection()
+        c.conn.delete(dn)
+        return JsonResponse({"success": True})
     return JsonResponse({"success": False})
 
 

@@ -93,8 +93,8 @@ $(document).ready(function() {
     });
     $("#delete-teacher").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to delete '" + $("#ldap-cn").data("default") + "'?")) {
-            $.post(delete_endpoint, { "account": $("#ldap-dn").val() }, function(data) {
+        if (confirm("Are you sure you want to delete '" + $("#ldap-cn").data("default") + "'?\nThis action is irreversible!")) {
+            $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
                 if (data.success) {
                     Messenger().success("Teacher account '" + $("#ldap-cn").data("default") + "' deleted!");
                     loadTeacher(false);
