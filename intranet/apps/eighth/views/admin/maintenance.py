@@ -17,6 +17,9 @@ from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
+LDAP_TEACHER_FIELDS = ["iodineUid", "iodineUidNumber", "cn", "sn", "givenName", "mail"]
+LDAP_TEACHER_ADVANCED_FIELDS = ["dn", "objectClass", "header", "style", "mailentries", "chrome", "startpage"]
+
 
 @eighth_admin_required
 def index_view(request):
@@ -30,15 +33,38 @@ def index_view(request):
 def teacher_management(request):
     context = {
         "admin_page_title": "Teacher Management",
-        "fields": ["iodineUid", "iodineUidNumber", "cn", "sn", "givenName", "mail"],
-        "advanced_fields": ["dn", "objectClass", "header", "style", "mailentries", "chrome", "startpage"]
+        "fields": LDAP_TEACHER_FIELDS,
+        "advanced_fields": LDAP_TEACHER_ADVANCED_FIELDS
     }
     return render(request, "eighth/admin/teacher_management.html", context)
 
 
 @eighth_admin_required
 def teacher_modify(request):
-    # TODO: implement teacher create/modify
+    dn = request.POST.get("dn", None)
+    if request.method == "POST":
+        c = LDAPConnection()
+        if dn:
+            # TODO: modify teacher
+            pass
+        else:
+            attrs = {
+                "header": True,
+                "style": "default",
+                "mailentries": -1,
+                "chrome": True,
+                "startpage": "news"
+            }
+            for field in LDAP_TEACHER_FIELDS:
+                value = request.POST.get(field, None)
+                if not value:
+                    return JsonResponse({"success": False, "error": "{} must be filled out!".format(field)})
+                attrs[field] = value
+            success = c.conn.add(dn, object_class="tjhsstTeacher", attributes=attrs)
+            return JsonResponse({
+                "success": success,
+                "error": "LDAP query failed!" if not success else None
+            })
     return JsonResponse({"success": False})
 
 
@@ -47,8 +73,11 @@ def teacher_delete(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST" and dn and settings.USER_DN in dn:
         c = LDAPConnection()
-        c.conn.delete(dn)
-        return JsonResponse({"success": True})
+        success = c.conn.delete(dn)
+        return JsonResponse({
+            "success": success,
+            "error": "LDAP query failed!" if not success else None
+        })
     return JsonResponse({"success": False})
 
 

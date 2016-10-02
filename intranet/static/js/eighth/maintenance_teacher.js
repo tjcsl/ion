@@ -87,7 +87,7 @@ $(document).ready(function() {
                 refreshList();
             }
             else {
-                Messenger().error("Failed to modify or create teacher account.");
+                Messenger().error("Failed to modify/create account." + (data.error ? "<br /><b>Error:</b> " + data.error : ""));
             }
         });
     });
@@ -101,7 +101,7 @@ $(document).ready(function() {
                     refreshList();
                 }
                 else {
-                    Messenger().error("Failed to delete teacher account.");
+                    Messenger().error("Failed to delete teacher account." + (data.error ? "<br /><b>Error:</b> " + data.error : ""));
                 }
             });
         }
