@@ -25,7 +25,7 @@ from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
-LDAP_TEACHER_FIELDS = [
+LDAP_BASIC_FIELDS = [
     ("iodineUid", "Username"),
     ("iodineUidNumber", "User ID"),
     ("cn", "Full Name"),
@@ -54,7 +54,7 @@ def index_view(request):
 def ldap_management(request):
     context = {
         "admin_page_title": "LDAP Management",
-        "fields": LDAP_TEACHER_FIELDS,
+        "fields": LDAP_BASIC_FIELDS,
         "advanced_fields": LDAP_TEACHER_ADVANCED_FIELDS
     }
     return render(request, "eighth/admin/ldap_management.html", context)
@@ -71,9 +71,9 @@ def ldap_modify(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST":
         c = LDAPConnection()
-        if dn:
+        if dn:  # modify account
             attrs = {}
-            for field, name in LDAP_TEACHER_FIELDS:
+            for field, name in LDAP_BASIC_FIELDS:
                 value = request.POST.get(field, None)
                 if value:
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
@@ -85,9 +85,16 @@ def ldap_modify(request):
                 "error": "LDAP query failed!" if not success else None,
                 "details": c.conn.last_error
             })
-        else:
+        else:  # create new account
+            objectClass = request.POST.get("objectClass", None)
+            if not objectClass == "tjhsstStudent" and not objectClass == "tjhsstTeacher":
+                return JsonResponse({
+                    "success": False,
+                    "error": "Invalid objectClass!",
+                    "details": "Valid objectClasses are tjhsstStudent and tjhsstTeacher."
+                })
             attrs = dict(LDAP_TEACHER_ADVANCED_FIELDS)
-            for field, name in LDAP_TEACHER_FIELDS:
+            for field, name in LDAP_BASIC_FIELDS:
                 value = request.POST.get(field, None)
                 if not value:
                     return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
@@ -96,9 +103,13 @@ def ldap_modify(request):
                 iodineUidNum = int(attrs["iodineUidNumber"])
             except ValueError:
                 return JsonResponse({"success": False, "error": "iodineUidNumber must be an integer!"})
-            if not (0 <= iodineUidNum <= 10000):
-                return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10000!"})
-            success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class="tjhsstTeacher", attributes=attrs)
+            if objectClass == "tjhsstTeacher":
+                if not (0 <= iodineUidNum <= 10000):
+                    return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10,000!"})
+            else:
+                if not iodineUidNum > 30000:
+                    return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
+            success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=objectClass, attributes=attrs)
             return JsonResponse({
                 "success": success,
                 "error": "LDAP query failed!" if not success else None,
@@ -156,15 +167,16 @@ def ldap_list(request):
     if usrid:
         data = c.search(settings.USER_DN, "iodineUid={}".format(usrid), ["*"])
         if len(data) == 0:
-            return JsonResponse({"teacher": None})
-        teacher = {x: y[0] for x, y in data[0]["attributes"].items()}
-        teacher["dn"] = data[0]["dn"]
-        return JsonResponse({"teacher": teacher})
+            return JsonResponse({"account": None})
+        account = {x: y[0] for x, y in data[0]["attributes"].items()}
+        account["dn"] = data[0]["dn"]
+        return JsonResponse({"account": account})
     else:
-        data = c.search(settings.USER_DN, "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
-        teachers = [{"id": x["attributes"]["iodineUid"][0], "name": x["attributes"]["cn"][0]} for x in data]
-        teachers = sorted(teachers, key=lambda teacher: teacher["name"])
-        return JsonResponse({"teachers": teachers})
+        is_student = request.GET.get("type", "teacher") == "student"
+        data = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
+        accounts = [{"id": x["attributes"]["iodineUid"][0], "name": x["attributes"]["cn"][0]} for x in data]
+        accounts = sorted(accounts, key=lambda acc: acc["name"])
+        return JsonResponse({"accounts": accounts})
 
 
 def get_import_directory():
