@@ -43,7 +43,8 @@ $(document).ready(function() {
         var term = $(this).val().toLowerCase();
         $("#teacher-list .teacher").each(function() {
             var contains = $(this).text().toLowerCase().indexOf(term) !== -1;
-            $(this).toggle(contains);
+            var idcontains = $(this).data("id").toLowerCase().indexOf(term) !== -1;
+            $(this).toggle(contains || idcontains);
         });
     });
     $("#teacher-list").keydown(function(e) {
