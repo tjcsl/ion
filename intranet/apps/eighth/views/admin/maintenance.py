@@ -2,6 +2,7 @@
 
 import logging
 from io import StringIO
+from ldap3 import MODIFY_REPLACE
 
 from django.conf import settings
 from django.http import JsonResponse
@@ -45,8 +46,17 @@ def teacher_modify(request):
     if request.method == "POST":
         c = LDAPConnection()
         if dn:
-            # TODO: modify teacher
-            pass
+            attrs = {}
+            for field in LDAP_TEACHER_FIELDS:
+                value = request.POST.get(field, None)
+                if value:
+                    attrs[field] = [(MODIFY_REPLACE, [value])]
+            success = c.conn.modify(dn, attrs)
+            return JsonResponse({
+                "success": success,
+                "id": request.POST.get("iodineUid", None) if success else None,
+                "error": "LDAP query failed!" if not success else None
+            })
         else:
             attrs = {
                 "header": True,
