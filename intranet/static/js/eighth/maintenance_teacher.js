@@ -13,6 +13,7 @@ function refreshList() {
 function loadTeacher(id) {
     $("#delete-teacher").toggle(!!id);
     $("#generate-id").toggle(!id);
+    $("#ldap-iodineUidNumber, #ldap-iodineUid").prop("readonly", !!id);
     $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
     $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
     $(".ldap-field").val("");
