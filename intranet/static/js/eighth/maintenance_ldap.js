@@ -2,6 +2,7 @@ var type_student = false;
 
 function refreshList() {
     $("#account-list .account").remove();
+    $("#account-list").append("<div class='loading'><i class=' fa fa-cog fa-spin fa-3x'></i></div>");
     $.get(list_endpoint + "?type=" + (type_student ? "student" : "teacher"), function(data) {
         var adata = data.accounts;
         var output = "";
@@ -11,6 +12,8 @@ function refreshList() {
         $("#account-list").append(output);
     }).fail(function() {
         Messenger().error("Failed to load account list.");
+    }).always(function() {
+        $("#account-list .loading").remove();
     });
 }
 function loadAccount(id) {
