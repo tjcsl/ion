@@ -8,6 +8,7 @@
         var list_endpoint = "{% url 'eighth_admin_maintenance_teacher_list' %}";
         var modify_endpoint = "{% url 'eighth_admin_maintenance_teacher_modify' %}";
         var delete_endpoint = "{% url 'eighth_admin_maintenance_teacher_delete' %}";
+        var next_id_endpoint = "{% url 'eighth_admin_maintenance_teacher_next_id' %}";
     </script>
 {% endblock %}
 
@@ -29,6 +30,9 @@
         {% for field in fields %}
         <div class="form-group">
             <label for="ldap-{{ field }}">{{ field }}</label>
+            {% if field == "iodineUidNumber" %}
+            <a href="#" class="pull-right" id="generate-id">Generate ID</a>
+            {% endif %}
             <input class="ldap-field" id="ldap-{{ field }}" type="text" />
         </div>
         {% endfor %}
