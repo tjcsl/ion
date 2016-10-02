@@ -86,8 +86,8 @@ def ldap_modify(request):
                 "details": c.conn.last_error
             })
         else:  # create new account
-            objectClass = request.POST.get("objectClass", None)
-            if not objectClass == "tjhsstStudent" and not objectClass == "tjhsstTeacher":
+            object_class = request.POST.get("objectClass", None)
+            if not object_class == "tjhsstStudent" and not object_class == "tjhsstTeacher":
                 return JsonResponse({
                     "success": False,
                     "error": "Invalid objectClass!",
@@ -100,16 +100,16 @@ def ldap_modify(request):
                     return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
                 attrs[field] = value
             try:
-                iodineUidNum = int(attrs["iodineUidNumber"])
+                iodine_uid_num = int(attrs["iodineUidNumber"])
             except ValueError:
                 return JsonResponse({"success": False, "error": "iodineUidNumber must be an integer!"})
-            if objectClass == "tjhsstTeacher":
-                if not (0 <= iodineUidNum <= 10000):
+            if object_class == "tjhsstTeacher":
+                if iodine_uid_num < 0 or iodine_uid_num > 10000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10,000!"})
             else:
-                if not iodineUidNum > 30000:
+                if iodine_uid_num < 30000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
-            success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=objectClass, attributes=attrs)
+            success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
             return JsonResponse({
                 "success": success,
                 "error": "LDAP query failed!" if not success else None,
