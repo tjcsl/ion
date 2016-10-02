@@ -33,7 +33,7 @@ LDAP_BASIC_FIELDS = [
     ("sn", "Last Name"),
     ("mail", "Email")
 ]
-LDAP_TEACHER_ADVANCED_FIELDS = {
+LDAP_DEFAULT_FIELDS = {
     "header": True,
     "style": "default",
     "mailentries": -1,
@@ -55,7 +55,7 @@ def ldap_management(request):
     context = {
         "admin_page_title": "LDAP Management",
         "fields": LDAP_BASIC_FIELDS,
-        "advanced_fields": LDAP_TEACHER_ADVANCED_FIELDS
+        "default_fields": LDAP_DEFAULT_FIELDS
     }
     return render(request, "eighth/admin/ldap_management.html", context)
 
@@ -93,7 +93,7 @@ def ldap_modify(request):
                     "error": "Invalid objectClass!",
                     "details": "Valid objectClasses are tjhsstStudent and tjhsstTeacher."
                 })
-            attrs = dict(LDAP_TEACHER_ADVANCED_FIELDS)
+            attrs = dict(LDAP_DEFAULT_FIELDS)
             for field, name in LDAP_BASIC_FIELDS:
                 value = request.POST.get(field, None)
                 if not value:

@@ -14,9 +14,8 @@ function refreshList() {
     });
 }
 function loadAccount(id) {
-    $("#delete-teacher").toggle(!!id);
-    $("#generate-id").toggle(!id);
-    $("#create-notif").toggle(!!id);
+    $("#delete-teacher, #create-notif").toggle(!!id);
+    $("#generate-id, #default-fields").toggle(!id);
     $("#ldap-iodineUidNumber, #ldap-iodineUid").prop("readonly", !!id);
     var type_word = (type_student ? "Student" : "Teacher");
     $("#edit-teacher").text((id ? "Edit " : "Create ") + type_word);
