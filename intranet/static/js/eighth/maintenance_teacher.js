@@ -3,10 +3,10 @@ function refreshList() {
     $.get(list_endpoint, function(data) {
         var tdata = data.teachers;
         tdata.sort(function(a, b) {
-            return a["name"] >= b["name"];
+            return a.name >= b.name;
         });
         $.each(tdata, function(k, v) {
-            $("#teacher-list").append('<div class="teacher" data-id="' + v["id"] + '">' + v["name"]  + '</div>');
+            $("#teacher-list").append("<div class=\"teacher\" data-id=\"" + v.id + "\">" + v.name  + "</div>");
         });
     });
 }
@@ -38,27 +38,22 @@ function loadTeacher(id) {
 $(document).ready(function() {
     refreshList();
     $(window).resize(function() {
-        $("#teacher-list").css("height", $(window).height() - $("#teacher-list").offset().top - 10 + "px");
+        $("#teacher-list").css("height", ($(window).height() - $("#teacher-list").offset().top - 10) + "px");
     });
     $(window).resize();
-    $("#teacher-list-search").on("change keyup paste", function(e) {
+    $("#teacher-list-search").on("change keyup paste", function() {
         var term = $(this).val().toLowerCase();
-        $("#teacher-list .teacher").each(function(k, v) {
+        $("#teacher-list .teacher").each(function() {
             var contains = $(this).text().toLowerCase().indexOf(term) !== -1;
-            if (contains) {
-                $(this).show();
-            }
-            else {
-                $(this).hide();
-            }
+            $(this).toggle(contains);
         });
     });
     $("#teacher-list").keydown(function(e) {
         var ele = null;
-        if (e.which == 38) {
+        if (e.which === 38) {
             ele = $(".teacher.selected").prev();
         }
-        else if (e.which == 40) {
+        else if (e.which === 40) {
             ele = $(".teacher.selected").next();
         }
         if (ele && !ele.hasClass("selected")) {
@@ -68,7 +63,7 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-    $("#teacher-list").on("click", ".teacher", function(e) {
+    $("#teacher-list").on("click", ".teacher", function() {
         if ($(this).hasClass("selected")) {
             $(this).removeClass("selected");
             loadTeacher(false);
@@ -83,7 +78,7 @@ $(document).ready(function() {
     $("#edit-teacher").click(function(e) {
         e.preventDefault();
         var fields = {};
-        $(".ldap-field").each(function(k, v) {
+        $(".ldap-field").each(function() {
             fields[$(this).attr("id").substring(5)] = $(this).val();
         });
         $.post(modify_endpoint, fields, function(data) {
