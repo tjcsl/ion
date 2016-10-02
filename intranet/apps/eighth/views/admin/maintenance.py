@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import ldap3
 from io import StringIO
-from ldap3 import MODIFY_REPLACE
 
 from django.conf import settings
 from django.http import JsonResponse
@@ -50,7 +50,7 @@ def teacher_modify(request):
             for field in LDAP_TEACHER_FIELDS:
                 value = request.POST.get(field, None)
                 if value:
-                    attrs[field] = [(MODIFY_REPLACE, [value])]
+                    attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
             success = c.conn.modify(dn, attrs)
             return JsonResponse({
                 "success": success,
