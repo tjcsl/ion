@@ -10,6 +10,7 @@ function refreshList() {
             output += "<div class=\"account\" data-id=\"" + v.id + "\">" + v.name  + "</div>";
         });
         $("#account-list").append(output);
+        $("#account-list-search").trigger("change");
     }).fail(function() {
         Messenger().error("Failed to load account list.");
     }).always(function() {
