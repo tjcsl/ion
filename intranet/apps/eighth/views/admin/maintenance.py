@@ -95,9 +95,17 @@ def teacher_delete(request):
 def teacher_next_id(request):
     usrid = 0
     c = LDAPConnection()
-    res = c.search(settings.USER_DN, "iodineUidNumber=*", ["iodineUidNumber"])
+    res = c.search(settings.USER_DN, "objectClass=tjhsstTeacher", ["iodineUidNumber"])
     if len(res) > 0:
-        usrid = max([int(x["attributes"]["iodineUidNumber"][0]) for x in res])
+        res = [int(x["attributes"]["iodineUidNumber"][0]) for x in res]
+        res = set([x for x in res if x < 1200])
+        usrid = max(res) + 1
+        if usrid == 1200:
+            for x in range(1200):
+                if x not in res:
+                    usrid = x
+                    break
+
     return JsonResponse({"id": usrid})
 
 
@@ -115,6 +123,7 @@ def teacher_list(request):
     else:
         data = c.search(settings.USER_DN, "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
         teachers = [{"id": x["attributes"]["iodineUid"][0], "name": x["attributes"]["cn"][0]} for x in data]
+        teachers = sorted(teachers, key=lambda teacher: teacher["name"])
         return JsonResponse({"teachers": teachers})
 
 

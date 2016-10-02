@@ -2,9 +2,6 @@ function refreshList() {
     $("#teacher-list .teacher").remove();
     $.get(list_endpoint, function(data) {
         var tdata = data.teachers;
-        tdata.sort(function(a, b) {
-            return a.name >= b.name;
-        });
         $.each(tdata, function(k, v) {
             $("#teacher-list").append("<div class=\"teacher\" data-id=\"" + v.id + "\">" + v.name  + "</div>");
         });
@@ -13,6 +10,7 @@ function refreshList() {
 function loadTeacher(id) {
     $("#delete-teacher").toggle(!!id);
     $("#generate-id").toggle(!id);
+    $("#create-notif").toggle(!!id);
     $("#ldap-iodineUidNumber, #ldap-iodineUid").prop("readonly", !!id);
     $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
     $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
