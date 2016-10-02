@@ -62,6 +62,7 @@ eighth_admin_patterns = [
     url(r"^maintenance/teacher/list$", admin_maintenance.teacher_list, name="eighth_admin_maintenance_teacher_list"),
     url(r"^maintenance/teacher/delete$", admin_maintenance.teacher_delete, name="eighth_admin_maintenance_teacher_delete"),
     url(r"^maintenance/teacher/modify$", admin_maintenance.teacher_modify, name="eighth_admin_maintenance_teacher_modify"),
+    url(r"^maintenance/teacher/next_id$", admin_maintenance.teacher_next_id, name="eighth_admin_maintenance_teacher_next_id"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),

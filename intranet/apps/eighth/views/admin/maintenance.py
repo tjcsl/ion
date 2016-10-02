@@ -82,6 +82,16 @@ def teacher_delete(request):
 
 
 @eighth_admin_required
+def teacher_next_id(request):
+    usrid = 0
+    c = LDAPConnection()
+    res = c.search(settings.USER_DN, "iodineUidNumber=*", ["iodineUidNumber"])
+    if len(res) > 0:
+        usrid = max([int(x["attributes"]["iodineUidNumber"][0]) for x in res])
+    return JsonResponse({"id": usrid})
+
+
+@eighth_admin_required
 def teacher_list(request):
     c = LDAPConnection()
     usrid = request.GET.get("id", None)

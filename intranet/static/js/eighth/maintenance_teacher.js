@@ -12,6 +12,7 @@ function refreshList() {
 }
 function loadTeacher(id) {
     $("#delete-teacher").toggle(!!id);
+    $("#generate-id").toggle(!id);
     $("#edit-teacher").text(id ? "Edit Teacher" : "Create Teacher");
     $("#edit-title").text(id ? "Edit Teacher Account - " + id : "Create Teacher Account");
     $(".ldap-field").val("");
@@ -89,6 +90,12 @@ $(document).ready(function() {
             else {
                 Messenger().error("Failed to modify/create account." + (data.error ? "<br /><b>Error:</b> " + data.error : ""));
             }
+        });
+    });
+    $("#generate-id").click(function(e) {
+        e.preventDefault();
+        $.get(next_id_endpoint, function(data) {
+            $("#ldap-iodineUidNumber").val(data.id);
         });
     });
     $("#delete-teacher").click(function(e) {
