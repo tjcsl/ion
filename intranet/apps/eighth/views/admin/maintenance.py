@@ -85,6 +85,12 @@ def teacher_modify(request):
                 if not value:
                     return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
                 attrs[field] = value
+            try:
+                iodineUidNum = int(attrs["iodineUidNumber"])
+            except ValueError:
+                return JsonResponse({"success": False, "error": "iodineUidNumber must be an integer!"})
+            if not (0 <= iodineUidNum <= 10000):
+                return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10000!"})
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class="tjhsstTeacher", attributes=attrs)
             return JsonResponse({
                 "success": success,
