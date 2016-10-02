@@ -37,6 +37,10 @@ function loadTeacher(id) {
 }
 $(document).ready(function() {
     refreshList();
+    $(window).resize(function() {
+        $("#teacher-list").css("height", $(window).height() - $("#teacher-list").offset().top - 10 + "px");
+    });
+    $(window).resize();
     $("#teacher-list-search").on("change keyup paste", function(e) {
         var term = $(this).val().toLowerCase();
         $("#teacher-list .teacher").each(function(k, v) {
