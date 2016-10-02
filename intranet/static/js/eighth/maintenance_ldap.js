@@ -23,14 +23,18 @@ function loadAccount(id) {
     $("#edit-title").text(id ? ("Edit " + type_word +  " Account - " + id) : ("Create " + type_word + " Account"));
     $(".ldap-field").val("");
     $(".ldap-field").attr("data-original", "");
+    $("#additional-fields").empty();
     if (id) {
         $("#ldap-loading").show();
         $.get(list_endpoint + "?id=" + encodeURIComponent(id), function(data) {
             $.each(data.account, function(k, v) {
                 var ele = $("#ldap-" + k + ".ldap-field");
-                if (ele) {
+                if (ele.length) {
                     ele.val(v);
                     ele.attr("data-original", v);
+                }
+                else {
+                    $("#additional-fields").append("<div class='form-group'><label><b>Additional Field</b> (" + k + ")</label><input disabled type='text' value='" + v.replace("'", "\\'") + "' /></div>");
                 }
             });
         }).fail(function() {
@@ -44,6 +48,7 @@ $(document).ready(function() {
     refreshList();
     $(window).resize(function() {
         $("#account-list").css("height", ($(window).height() - $("#account-list").offset().top - 10) + "px");
+        $("#edit-area").css("height", ($(window).height() - $("#edit-area").offset().top - 10) + "px");
     });
     $(window).resize();
     $("#account-list-search").on("change keyup paste", function() {
@@ -62,7 +67,7 @@ $(document).ready(function() {
         else if (e.which === 40) {
             ele = $(".account.selected").next();
         }
-        if (ele && !ele.hasClass("selected")) {
+        if (ele && ele.length && !ele.hasClass("selected")) {
             ele.click();
             var $tl = $("#account-list");
             $tl.scrollTop($tl.scrollTop() + ele.position().top - $tl.height()/2 + ele.height()/2);
