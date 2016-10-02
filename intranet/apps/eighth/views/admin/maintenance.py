@@ -2,12 +2,19 @@
 
 import logging
 import ldap3
+import os
+import threading
+import shutil
+
+from tempfile import gettempdir
 from io import StringIO
 
 from django.conf import settings
+from django.urls import reverse
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.management import call_command
+from django.contrib import messages
 
 from intranet.db.ldap_db import LDAPConnection
 
@@ -156,12 +163,46 @@ def teacher_list(request):
         return JsonResponse({"teachers": teachers})
 
 
+def get_import_directory():
+    return os.path.join(gettempdir(), "ion_sis_import")
+
+
+class ImportThread(threading.Thread):
+    def __init__(self, email, folder):
+        threading.Thread.__init__(self)
+        self.email = email
+        self.folder = folder
+
+    def run(self):
+        # TODO: run import process
+        shutil.rmtree(self.folder)
+
+
 @eighth_admin_required
 def sis_import(request):
+    import_dir = get_import_directory()
     context = {
-        "admin_page_title": "SIS Import"
+        "admin_page_title": "SIS Import",
+        "email": request.user.tj_email,
+        "help_email": settings.FEEDBACK_EMAIL,
+        "already_importing": os.path.isdir(import_dir),
+        "completed": False
     }
-    # TODO: implement sis import
+    if request.method == "POST":
+        if context["already_importing"]:
+            messages.error(request, "An upload is currently in progress!")
+            return redirect(reverse("eighth_admin_amintenance_sis_import"))
+        if len(request.FILES) == 0:
+            messages.error(request, "You need to upload a file!")
+            return redirect(reverse("eighth_admin_maintenance_sis_import"))
+        data = request.FILES["data"]
+        os.makedirs(import_dir)
+        with open(os.path.join(import_dir, "data.csv"), "wb+") as f:
+            for chunk in data.chunks():
+                f.write(chunk)
+        thread = ImportThread(request.user.tj_email, import_dir)
+        thread.start()
+        context["completed"] = True
     return render(request, "eighth/admin/sis_import.html", context)
 
 
