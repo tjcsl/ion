@@ -40,6 +40,12 @@ def teacher_management(request):
     return render(request, "eighth/admin/teacher_management.html", context)
 
 
+def clear_user_cache(dn):
+    user = User.get_user(dn=dn)
+    invalidate_obj(user)
+    user.clear_cache()
+
+
 @eighth_admin_required
 def teacher_modify(request):
     dn = request.POST.get("dn", None)
@@ -52,10 +58,12 @@ def teacher_modify(request):
                 if value:
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
             success = c.conn.modify(dn, attrs)
+            clear_user_cache(dn)
             return JsonResponse({
                 "success": success,
                 "id": request.POST.get("iodineUid", None) if success else None,
-                "error": "LDAP query failed!" if not success else None
+                "error": "LDAP query failed!" if not success else None,
+                "details": c.conn.last_error
             })
         else:
             attrs = {
@@ -70,10 +78,11 @@ def teacher_modify(request):
                 if not value:
                     return JsonResponse({"success": False, "error": "{} must be filled out!".format(field)})
                 attrs[field] = value
-            success = c.conn.add(dn, object_class="tjhsstTeacher", attributes=attrs)
+            success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class="tjhsstTeacher", attributes=attrs)
             return JsonResponse({
                 "success": success,
-                "error": "LDAP query failed!" if not success else None
+                "error": "LDAP query failed!" if not success else None,
+                "details": c.conn.last_error
             })
     return JsonResponse({"success": False})
 
@@ -81,12 +90,19 @@ def teacher_modify(request):
 @eighth_admin_required
 def teacher_delete(request):
     dn = request.POST.get("dn", None)
-    if request.method == "POST" and dn and settings.USER_DN in dn:
+    if request.method == "POST" and dn:
+        if not dn.endswith(settings.USER_DN):
+            return JsonResponse({
+                "success": False,
+                "error": "Invalid DN!"
+            })
         c = LDAPConnection()
         success = c.conn.delete(dn)
+        clear_user_cache(dn)
         return JsonResponse({
             "success": success,
-            "error": "LDAP query failed!" if not success else None
+            "error": "LDAP query failed!" if not success else None,
+            "details": c.conn.last_error
         })
     return JsonResponse({"success": False})
 
