@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3105) documentation</title>
+    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3114) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3105)',
+        VERSION:     'v3 (Build #3114)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3105) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3114) documentation" href="../../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -153,12 +153,19 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">ldap3</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">gettempdir</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">JsonResponse</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
 <span class="kn">from</span> <span class="nn">django.core.management</span> <span class="k">import</span> <span class="n">call_command</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 
 <span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="k">import</span> <span class="n">LDAPConnection</span>
 
@@ -169,7 +176,7 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="n">LDAP_TEACHER_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="n">LDAP_BASIC_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">,</span> <span class="s2">&quot;Username&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">,</span> <span class="s2">&quot;User ID&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">&quot;cn&quot;</span><span class="p">,</span> <span class="s2">&quot;Full Name&quot;</span><span class="p">),</span>
@@ -177,7 +184,7 @@
     <span class="p">(</span><span class="s2">&quot;sn&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">)</span>
 <span class="p">]</span>
-<span class="n">LDAP_TEACHER_ADVANCED_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">LDAP_DEFAULT_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;header&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="s2">&quot;mailentries&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -195,13 +202,13 @@
 
 
 <span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="teacher_management"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.teacher_management">[docs]</a><span class="k">def</span> <span class="nf">teacher_management</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ldap_management"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ldap_management">[docs]</a><span class="k">def</span> <span class="nf">ldap_management</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Teacher Management&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="n">LDAP_TEACHER_FIELDS</span><span class="p">,</span>
-        <span class="s2">&quot;advanced_fields&quot;</span><span class="p">:</span> <span class="n">LDAP_TEACHER_ADVANCED_FIELDS</span>
+        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;LDAP Management&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="n">LDAP_BASIC_FIELDS</span><span class="p">,</span>
+        <span class="s2">&quot;default_fields&quot;</span><span class="p">:</span> <span class="n">LDAP_DEFAULT_FIELDS</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/teacher_management.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/ldap_management.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="clear_user_cache"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.clear_user_cache">[docs]</a><span class="k">def</span> <span class="nf">clear_user_cache</span><span class="p">(</span><span class="n">dn</span><span class="p">):</span>
@@ -211,13 +218,13 @@
 
 
 <span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="teacher_modify"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.teacher_modify">[docs]</a><span class="k">def</span> <span class="nf">teacher_modify</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ldap_modify"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ldap_modify">[docs]</a><span class="k">def</span> <span class="nf">ldap_modify</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">dn</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">dn</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dn</span><span class="p">:</span>  <span class="c1"># modify account</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LDAP_TEACHER_FIELDS</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LDAP_BASIC_FIELDS</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
                     <span class="n">attrs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">ldap3</span><span class="o">.</span><span class="n">MODIFY_REPLACE</span><span class="p">,</span> <span class="p">[</span><span class="n">value</span><span class="p">])]</span>
@@ -229,20 +236,31 @@
                 <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;LDAP query failed!&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span>
             <span class="p">})</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">LDAP_TEACHER_ADVANCED_FIELDS</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LDAP_TEACHER_FIELDS</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># create new account</span>
+            <span class="n">object_class</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;objectClass&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">object_class</span> <span class="o">==</span> <span class="s2">&quot;tjhsstStudent&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">object_class</span> <span class="o">==</span> <span class="s2">&quot;tjhsstTeacher&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
+                    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid objectClass!&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="s2">&quot;Valid objectClasses are tjhsstStudent and tjhsstTeacher.&quot;</span>
+                <span class="p">})</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">LDAP_DEFAULT_FIELDS</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LDAP_BASIC_FIELDS</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is a required field!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">)})</span>
                 <span class="n">attrs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">iodineUidNum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">])</span>
+                <span class="n">iodine_uid_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;iodineUidNumber must be an integer!&quot;</span><span class="p">})</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">iodineUidNum</span> <span class="o">&lt;=</span> <span class="mi">10000</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;iodineUidNumber must be between 0 and 10000!&quot;</span><span class="p">})</span>
-            <span class="n">success</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;iodineUid=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">],</span> <span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">),</span> <span class="n">object_class</span><span class="o">=</span><span class="s2">&quot;tjhsstTeacher&quot;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">object_class</span> <span class="o">==</span> <span class="s2">&quot;tjhsstTeacher&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">iodine_uid_num</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">iodine_uid_num</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;iodineUidNumber must be between 0 and 10,000!&quot;</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">iodine_uid_num</span> <span class="o">&lt;</span> <span class="mi">30000</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;iodineUidNumber must be above 30,000!&quot;</span><span class="p">})</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;iodineUid=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">],</span> <span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">),</span> <span class="n">object_class</span><span class="o">=</span><span class="n">object_class</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
                 <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span>
                 <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;LDAP query failed!&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -252,7 +270,7 @@
 
 
 <span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="teacher_delete"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.teacher_delete">[docs]</a><span class="k">def</span> <span class="nf">teacher_delete</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ldap_delete"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ldap_delete">[docs]</a><span class="k">def</span> <span class="nf">ldap_delete</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">dn</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">dn</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">):</span>
@@ -272,47 +290,88 @@
 
 
 <span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="teacher_next_id"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.teacher_next_id">[docs]</a><span class="k">def</span> <span class="nf">teacher_next_id</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ldap_next_id"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ldap_next_id">[docs]</a><span class="k">def</span> <span class="nf">ldap_next_id</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">is_student</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;teacher&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;student&quot;</span>
     <span class="n">usrid</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="s2">&quot;objectClass=tjhsstTeacher&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="s2">&quot;objectClass=tjhsstStudent&quot;</span> <span class="k">if</span> <span class="n">is_student</span> <span class="k">else</span> <span class="s2">&quot;objectClass=tjhsstTeacher&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1200</span><span class="p">])</span>
-        <span class="n">usrid</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">usrid</span> <span class="o">==</span> <span class="mi">1200</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1200</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-                    <span class="n">usrid</span> <span class="o">=</span> <span class="n">x</span>
-                    <span class="k">break</span>
+        <span class="k">if</span> <span class="n">is_student</span><span class="p">:</span>
+            <span class="n">usrid</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1200</span><span class="p">])</span>
+            <span class="n">usrid</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">usrid</span> <span class="o">==</span> <span class="mi">1200</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1200</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                        <span class="n">usrid</span> <span class="o">=</span> <span class="n">x</span>
+                        <span class="k">break</span>
 
     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">usrid</span><span class="p">})</span></div>
 
 
 <span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="teacher_list"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.teacher_list">[docs]</a><span class="k">def</span> <span class="nf">teacher_list</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ldap_list"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ldap_list">[docs]</a><span class="k">def</span> <span class="nf">ldap_list</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
     <span class="n">usrid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">usrid</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="s2">&quot;iodineUid=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">usrid</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;teacher&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
-        <span class="n">teacher</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="n">teacher</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;teacher&quot;</span><span class="p">:</span> <span class="n">teacher</span><span class="p">})</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">account</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="n">account</span><span class="p">})</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="s2">&quot;objectClass=tjhsstTeacher&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">,</span> <span class="s2">&quot;cn&quot;</span><span class="p">])</span>
-        <span class="n">teachers</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;cn&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-        <span class="n">teachers</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">teachers</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">teacher</span><span class="p">:</span> <span class="n">teacher</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;teachers&quot;</span><span class="p">:</span> <span class="n">teachers</span><span class="p">})</span></div>
+        <span class="n">is_student</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;teacher&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;student&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="s2">&quot;objectClass=tjhsstStudent&quot;</span> <span class="k">if</span> <span class="n">is_student</span> <span class="k">else</span> <span class="s2">&quot;objectClass=tjhsstTeacher&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">,</span> <span class="s2">&quot;cn&quot;</span><span class="p">])</span>
+        <span class="n">accounts</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;cn&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">accounts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">accounts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">acc</span><span class="p">:</span> <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;accounts&quot;</span><span class="p">:</span> <span class="n">accounts</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="get_import_directory"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.get_import_directory">[docs]</a><span class="k">def</span> <span class="nf">get_import_directory</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s2">&quot;ion_sis_import&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ImportThread"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ImportThread">[docs]</a><span class="k">class</span> <span class="nc">ImportThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">folder</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="n">folder</span>
+
+<div class="viewcode-block" id="ImportThread.run"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.ImportThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: run import process</span>
+        <span class="c1"># TODO: import LDIF files</span>
+        <span class="c1"># TODO: send email to user</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span></div></div>
 
 
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="sis_import"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.maintenance.sis_import">[docs]</a><span class="k">def</span> <span class="nf">sis_import</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">import_dir</span> <span class="o">=</span> <span class="n">get_import_directory</span><span class="p">()</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;SIS Import&quot;</span>
+        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;SIS Import&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span>
+        <span class="s2">&quot;help_email&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">,</span>
+        <span class="s2">&quot;already_importing&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">import_dir</span><span class="p">),</span>
+        <span class="s2">&quot;completed&quot;</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">}</span>
-    <span class="c1"># TODO: implement sis import</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;already_importing&quot;</span><span class="p">]:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;An upload is currently in progress!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_amintenance_sis_import&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You need to upload a file!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_maintenance_sis_import&quot;</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">import_dir</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">import_dir</span><span class="p">,</span> <span class="s2">&quot;data.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;wb+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">chunks</span><span class="p">():</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">ImportThread</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span> <span class="n">import_dir</span><span class="p">)</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;completed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/sis_import.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
