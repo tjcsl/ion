@@ -82,7 +82,7 @@ def ldap_modify(request):
             return JsonResponse({
                 "success": success,
                 "id": request.POST.get("iodineUid", None) if success else None,
-                "error": "LDAP query failed!" if not success else None,
+                "error": "LDAP query failed! (DN: {})".format(dn) if not success else None,
                 "details": c.conn.last_error
             })
         else:  # create new account
@@ -109,6 +109,7 @@ def ldap_modify(request):
             else:
                 if iodine_uid_num < 30000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
+            attrs["iodineUidNumber"] = iodine_uid_num
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
             return JsonResponse({
                 "success": success,
