@@ -125,10 +125,10 @@ $(document).ready(function() {
     });
     $("#delete-teacher").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to delete the " + (type_student ? "student" : "teacher") + " '" + $("#ldap-cn").data("original") + "'?\nThis action is irreversible!")) {
+        if (confirm("Are you sure you want to delete the " + (type_student ? "student" : "teacher") + " '" + $("#ldap-cn").attr("data-original") + "'?\nThis action is irreversible!")) {
             $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
                 if (data.success) {
-                    Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").data("original") + "' deleted!");
+                    Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
                     loadAccount(false);
                     refreshList();
                 }
