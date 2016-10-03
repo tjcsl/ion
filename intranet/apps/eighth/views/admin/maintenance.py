@@ -129,7 +129,6 @@ def ldap_delete(request):
             })
         c = LDAPConnection()
         success = c.conn.delete(dn)
-        clear_user_cache(dn)
         return JsonResponse({
             "success": success,
             "error": "LDAP query failed!" if not success else None,
