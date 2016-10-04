@@ -28,6 +28,14 @@ intranet.utils.date module
     :undoc-members:
     :show-inheritance:
 
+intranet.utils.deletion module
+------------------------------
+
+.. automodule:: intranet.utils.deletion
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.helpers module
 -----------------------------
 
