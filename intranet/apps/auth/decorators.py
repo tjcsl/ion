@@ -2,6 +2,8 @@
 """Decorators that restrict views to certain types of users."""
 
 from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect
+from django.urls import reverse
 
 
 def admin_required(group):
@@ -31,3 +33,13 @@ board_admin_required = admin_required("board")
 
 #: Restrict the wrapped view to users who can take attendance
 attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous and u.is_attendance_taker)
+
+
+def reauthentication_required(wrapped):
+    def inner(*args, **kwargs):
+        request = args[0]  # request is the first argument in a view
+        if request.session.get("reauthenticated", False):
+            return wrapped(*args, **kwargs)
+        else:
+            return redirect("{}?next={}".format(reverse('reauth'), request.path))
+    return inner

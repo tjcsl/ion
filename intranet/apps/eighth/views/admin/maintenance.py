@@ -20,7 +20,7 @@ from intranet.db.ldap_db import LDAPConnection
 
 from cacheops import invalidate_obj
 
-from ....auth.decorators import eighth_admin_required
+from ....auth.decorators import eighth_admin_required, reauthentication_required
 from ....users.models import User
 
 logger = logging.getLogger(__name__)
@@ -43,6 +43,7 @@ LDAP_DEFAULT_FIELDS = {
 
 
 @eighth_admin_required
+@reauthentication_required
 def index_view(request):
     context = {
         "admin_page_title": "Maintenance Tools"
@@ -51,6 +52,7 @@ def index_view(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def ldap_management(request):
     context = {
         "admin_page_title": "LDAP Management",
@@ -67,6 +69,7 @@ def clear_user_cache(dn):
 
 
 @eighth_admin_required
+@reauthentication_required
 def ldap_modify(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST":
@@ -82,7 +85,7 @@ def ldap_modify(request):
             return JsonResponse({
                 "success": success,
                 "id": request.POST.get("iodineUid", None) if success else None,
-                "error": "LDAP query failed! (DN: {})".format(dn) if not success else None,
+                "error": "LDAP query failed!" if not success else None,
                 "details": c.conn.last_error
             })
         else:  # create new account
@@ -109,7 +112,6 @@ def ldap_modify(request):
             else:
                 if iodine_uid_num < 30000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
-            attrs["iodineUidNumber"] = iodine_uid_num
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
             return JsonResponse({
                 "success": success,
@@ -120,6 +122,7 @@ def ldap_modify(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def ldap_delete(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST" and dn:
@@ -130,6 +133,7 @@ def ldap_delete(request):
             })
         c = LDAPConnection()
         success = c.conn.delete(dn)
+        clear_user_cache(dn)
         return JsonResponse({
             "success": success,
             "error": "LDAP query failed!" if not success else None,
@@ -139,6 +143,7 @@ def ldap_delete(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def ldap_next_id(request):
     is_student = request.GET.get("type", "teacher") == "student"
     usrid = 0
@@ -161,6 +166,7 @@ def ldap_next_id(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def ldap_list(request):
     c = LDAPConnection()
     usrid = request.GET.get("id", None)
@@ -184,6 +190,7 @@ def get_import_directory():
 
 
 class ImportThread(threading.Thread):
+
     def __init__(self, email, folder):
         threading.Thread.__init__(self)
         self.email = email
@@ -197,6 +204,7 @@ class ImportThread(threading.Thread):
 
 
 @eighth_admin_required
+@reauthentication_required
 def sis_import(request):
     import_dir = get_import_directory()
     context = {
@@ -225,6 +233,7 @@ def sis_import(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def start_of_year_view(request):
     context = {
         "admin_page_title": "Start of Year Operations",
@@ -240,6 +249,7 @@ def start_of_year_view(request):
 
 
 @eighth_admin_required
+@reauthentication_required
 def clear_comments_view(request):
     context = {
         "admin_page_title": "Clear Admin Comments",

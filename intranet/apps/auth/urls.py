@@ -9,4 +9,5 @@ urlpatterns = [
     url(r"^login$", views.LoginView.as_view(), name="login"),
     url(r"^logout$", views.logout_view, name="logout"),
     url(r"^about$", views.about_view, name="about"),
+    url(r"^reauthenticate", views.reauthentication_view, name="reauth"),
 ]

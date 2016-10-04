@@ -1,0 +1,61 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    TJ {{ block.super }} - Login
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'login' %}
+    {% if login_warning %}
+        {% stylesheet 'emerg' %}
+    {% endif %}
+    {% if bg_pattern %}
+        <style type="text/css">
+        body {
+            background-image: url('{{ bg_pattern }}');
+        }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/swregistration.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
+{% endblock %}
+
+{% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
+
+{% block body %}
+    <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
+        <div class="center">
+            <div class="login">
+                    <div class="title">
+                        <div class="logo">
+                        </div>
+                        <h1>TJ Intranet</h1>
+                    </div>
+                    <div class="message message-next">
+                        Please reenter your password to access this page. You will be able to access this page without reauthenticating until you log out of Intranet.
+                    </div>
+                <form {% if login_failed %}autocomplete="off"{% endif %} method="post">
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}" />
+                {% elif request.POST.next %}
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}" />
+                {% endif %}
+                    {% csrf_token %}
+                    <input type="password" name="password" class="{% if login_failed %}error{% endif %}" placeholder="{% if not login_failed %}Password{% else %}Invalid Password{% endif %}" aria-label="Enter Password">
+                    <input type="submit" value="Login" />
+                    <div class='spinner-container'></div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

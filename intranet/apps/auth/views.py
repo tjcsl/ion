@@ -7,7 +7,7 @@ import subprocess
 from datetime import date, datetime
 
 from django.conf import settings
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.templatetags.static import static
@@ -139,6 +139,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
 
 
 class LoginView(View):
+
     """Log in and redirect a user."""
 
     @method_decorator(sensitive_post_parameters("password"))
@@ -231,3 +232,14 @@ def logout_view(request):
         return redirect(app_redirects[app])
 
     return redirect("/")
+
+
+def reauthentication_view(request):
+    context = {"login_failed": False}
+    if request.method == "POST":
+        if authenticate(username=request.user.username, password=request.POST.get("password", "")):
+            request.session["reauthenticated"] = True
+            return redirect(request.POST.get("next", request.GET.get("next", "/")))
+        else:
+            context["login_failed"] = True
+    return render(request, "auth/reauth.html", context)
