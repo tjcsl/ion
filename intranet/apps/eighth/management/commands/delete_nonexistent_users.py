@@ -6,8 +6,6 @@ from django.db.models.deletion import Collector
 
 from intranet.apps.users.models import User
 
-teststaff = User.get_user(id=7011)
-
 
 class Command(BaseCommand):
     help = "Delete all users not in LDAP and change their historical data to User with ID 7011"
@@ -22,6 +20,7 @@ class Command(BaseCommand):
             sys.exit()
 
     def handle(self, *args, **options):
+        teststaff = User.get_user(id=7011)
         if options['run']:
             if not options["confirm"]:
                 self.ask("===== WARNING! =====\n\n"
