@@ -58,7 +58,7 @@ $(document).ready(function() {
         var term = $(this).val().toLowerCase();
         $("#account-list .account").each(function() {
             var contains = $(this).text().toLowerCase().indexOf(term) !== -1;
-            var idcontains = $(this).data("id").toLowerCase().indexOf(term) !== -1;
+            var idcontains = $(this).attr("data-id").toLowerCase().indexOf(term) !== -1;
             $(this).toggle(contains || idcontains);
         });
     });
@@ -85,7 +85,7 @@ $(document).ready(function() {
         else {
             $(".account").removeClass("selected");
             $(this).addClass("selected");
-            loadAccount($(this).data("id"));
+            loadAccount($(this).attr("data-id"));
             $("#account-list").focus();
         }
     });
@@ -125,10 +125,10 @@ $(document).ready(function() {
     });
     $("#delete-teacher").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to delete the " + (type_student ? "student" : "teacher") + " '" + $("#ldap-cn").data("original") + "'?\nThis action is irreversible!")) {
+        if (confirm("Are you sure you want to delete the " + (type_student ? "student" : "teacher") + " '" + $("#ldap-cn").attr("data-original") + "'?\nThis action is irreversible!")) {
             $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
                 if (data.success) {
-                    Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").data("original") + "' deleted!");
+                    Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
                     loadAccount(false);
                     refreshList();
                 }
