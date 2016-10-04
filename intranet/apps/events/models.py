@@ -11,9 +11,11 @@ from ..announcements.models import Announcement
 from ..eighth.models import EighthScheduledActivity
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
+from ...utils.deletion import SET_HISTORICAL_USER
 
 
 class Link(models.Model):
+
     """A link about an item (Facebook event link, etc)."""
     url = models.URLField(max_length=2000)
     title = models.CharField(max_length=100)
@@ -55,6 +57,7 @@ class EventManager(Manager):
 
 
 class EventUserMap(models.Model):
+
     """Represents mapping fields between events and users.
 
     These attributes would be a part of the Event model, but if they are,
@@ -80,6 +83,7 @@ class EventUserMap(models.Model):
 
 
 class Event(models.Model):
+
     """An event available to the TJ community.
 
     title:
@@ -129,7 +133,7 @@ class Event(models.Model):
 
     time = models.DateTimeField()
     location = models.CharField(max_length=100)
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=SET_HISTORICAL_USER)
 
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True, on_delete=models.CASCADE)
     announcement = models.ForeignKey(Announcement, null=True, blank=True, related_name="event", on_delete=models.CASCADE)
@@ -143,8 +147,8 @@ class Event(models.Model):
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
-    approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=models.SET_NULL)
-    rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=models.SET_NULL)
+    approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=SET_HISTORICAL_USER)
+    rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=SET_HISTORICAL_USER)
 
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.

@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
 
+from ...utils.deletion import SET_HISTORICAL_USER
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 
@@ -47,6 +48,7 @@ class AnnouncementManager(Manager):
 
 
 class AnnouncementUserMap(models.Model):
+
     """Represents mapping fields between announcements and users.
 
     These attributes would be a part of the Announcement model, but if they are,
@@ -75,6 +77,7 @@ class AnnouncementUserMap(models.Model):
 
 
 class Announcement(models.Model):
+
     """Represents an announcement.
 
     Attributes:
@@ -99,7 +102,7 @@ class Announcement(models.Model):
     title = models.CharField(max_length=127)
     content = models.TextField()
     author = models.CharField(max_length=63, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=SET_HISTORICAL_USER)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
@@ -174,6 +177,7 @@ class AnnouncementRequestManager(Manager):
 
 
 class AnnouncementRequest(models.Model):
+
     """Represents a request for an announcement.
 
     Attributes:
@@ -218,16 +222,16 @@ class AnnouncementRequest(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=SET_HISTORICAL_USER)
 
     teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True, on_delete=models.CASCADE)
-    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=models.SET_NULL)
+    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=SET_HISTORICAL_USER)
 
     rejected = models.BooleanField(default=False)
-    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=models.SET_NULL)
+    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=SET_HISTORICAL_USER)
 
     admin_email_sent = models.BooleanField(default=False)
 

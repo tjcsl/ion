@@ -34,8 +34,10 @@ class Command(BaseCommand):
                 c = Collector(using="default")
                 c.collect([user])
                 objects = c.instances_with_model()
-                for obj in list(objects)[1:]:
-                    if not obj[1].__str__() == "User_groups object" and obj[0] is not User:
+                for obj in objects:
+                    if obj[0] is User:
+                        continue
+                    if not obj[1].__str__() == "User_groups object":
                         if options['run']:
                             try:
                                 self.stdout.write("Setting %s user to %s" % (obj[1], teststaff))
@@ -44,6 +46,7 @@ class Command(BaseCommand):
                                 self.stdout.write("Set %s's user to %s" % (obj[1], teststaff))
                             except:
                                 self.stdout.write("DELETE %s" % obj[1])
+                                obj[1].delete()
                         else:
                             self.stdout.write("Would set %s's user to %s" % (obj[1], teststaff))
                     else:

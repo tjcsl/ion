@@ -5,9 +5,11 @@ from django.db import models
 from ..eighth.models import EighthActivity
 from ..ionldap.models import LDAPCourse
 from ..users.models import User
+from ...utils.deletion import SET_HISTORICAL_USER
 
 
 class Board(models.Model):
+
     """A Board is a collection of BoardPosts for a specific eighth period activity, class,
     class section, or group."""
 
@@ -159,6 +161,7 @@ class Board(models.Model):
 
 
 class BoardPost(models.Model):
+
     """A BoardPost is a post by a user in a specific Board.
 
     They must be in the activity/class/class section/group to post to
@@ -170,7 +173,7 @@ class BoardPost(models.Model):
     content = models.TextField(max_length=10000)
     safe_html = models.BooleanField(default=False)
 
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=SET_HISTORICAL_USER)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -197,10 +200,11 @@ class BoardPost(models.Model):
 
 
 class BoardPostComment(models.Model):
+
     """A BoardPostComment is a comment on a BoardPost by a user in a specific Board."""
 
     content = models.TextField(max_length=1000)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=SET_HISTORICAL_USER)
     added = models.DateTimeField(auto_now_add=True)
     safe_html = models.BooleanField(default=False)
 
