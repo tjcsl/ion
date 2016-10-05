@@ -14,7 +14,7 @@ from django.utils import formats
 from . import exceptions as eighth_exceptions
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
-from ...utils.deletion import SET_HISTORICAL_USER
+from ...utils.deletion import set_historical_user
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=set_historical_user)
     online_attendance = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
 
@@ -1236,7 +1236,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     time = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=False, on_delete=SET_HISTORICAL_USER)
+    user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True, on_delete=models.CASCADE)
 
     # An after-deadline signup is assumed to be a pass

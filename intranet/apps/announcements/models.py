@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
 
-from ...utils.deletion import SET_HISTORICAL_USER
+from ...utils.deletion import set_historical_user
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 
@@ -102,7 +102,7 @@ class Announcement(models.Model):
     title = models.CharField(max_length=127)
     content = models.TextField()
     author = models.CharField(max_length=63, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=SET_HISTORICAL_USER)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=set_historical_user)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
@@ -222,16 +222,16 @@ class AnnouncementRequest(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=SET_HISTORICAL_USER)
+    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=set_historical_user)
 
     teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True, on_delete=models.CASCADE)
-    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=SET_HISTORICAL_USER)
+    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=set_historical_user)
 
     rejected = models.BooleanField(default=False)
-    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=SET_HISTORICAL_USER)
+    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=set_historical_user)
 
     admin_email_sent = models.BooleanField(default=False)
 
