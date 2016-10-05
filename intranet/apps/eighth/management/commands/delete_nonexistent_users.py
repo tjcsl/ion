@@ -31,30 +31,8 @@ class Command(BaseCommand):
             try:
                 user.first_name
             except User.DoesNotExist:
-                c = Collector(using="default")
-                c.collect([user])
-                objects = c.instances_with_model()
-                for obj in objects:
-                    if obj[0] is User:
-                        continue
-                    if not obj[1].__str__() == "User_groups object":
-                        if options['run']:
-                            try:
-                                self.stdout.write("Setting %s user to %s" % (obj[1], teststaff))
-                                obj[1].user = teststaff
-                                obj[1].save()
-                                self.stdout.write("Set %s's user to %s" % (obj[1], teststaff))
-                            except:
-                                self.stdout.write("DELETE %s" % obj[1])
-                                obj[1].delete()
-                        else:
-                            self.stdout.write("Would set %s's user to %s" % (obj[1], teststaff))
-                    else:
-                        self.stdout.write("Deleting group relation %s" % obj[1].group)
-                        if options['run']:
-                            obj[1].delete()
                 if options['run']:
-                    self.stdout.write("===== DELETING USER %s =========" % user)
+                    self.stdout.write("==== DELETING USER %s ====" % user)
                     user.delete()
                 else:
                     self.stdout.write("DELETE %s" % user)
