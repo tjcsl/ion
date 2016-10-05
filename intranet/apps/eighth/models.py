@@ -189,6 +189,8 @@ class EighthActivity(AbstractBaseEighthModel):
         freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed
             Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
             takes effect if the activity is restricted.
+        wed_a, wed_b, fri_a, fri_b
+            What blocks the activity usually meets. Does not affect schedule, is just information for the Eighth Office.
         admin_comments
             Notes for the Eighth Office
         favorites
@@ -225,6 +227,11 @@ class EighthActivity(AbstractBaseEighthModel):
     juniors_allowed = models.BooleanField(default=False)
     seniors_allowed = models.BooleanField(default=False)
 
+    wed_a = models.BooleanField("Meets Wednesday A", default=False)
+    wed_b = models.BooleanField("Meets Wednesday B", default=False)
+    fri_a = models.BooleanField("Meets Friday A", default=False)
+    fri_b = models.BooleanField("Meets Friday B", default=False)
+    
     admin_comments = models.CharField(max_length=1000, blank=True)
 
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
