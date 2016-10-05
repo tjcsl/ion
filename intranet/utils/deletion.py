@@ -41,7 +41,7 @@ def handle_eighth_sponsor_deletion(in_obj, EighthSponsor):
     c.collect([in_obj])
     objects = c.instances_with_model()
     for obj in objects:
-        if not type(obj[1]) == EighthSponsor:
+        if not isinstance(obj[1], EighthSponsor):
             obj[1].user = teststaff
             obj[1].save()
         else:
