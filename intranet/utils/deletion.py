@@ -14,7 +14,7 @@ def set_historical_user(collector, field, sub_objs, using):
     from intranet.apps.eighth.models import EighthSignup, EighthSponsor
     teststaff = User.get_user(id=7011)
     for obj in sub_objs:
-        if type(obj) == EighthSignup:
+        if isinstance(obj, EighthSignup):
             scheduled_activity = obj.scheduled_activity
             if scheduled_activity.block.date < date.today():
                 if scheduled_activity.archived_member_count:
@@ -22,7 +22,7 @@ def set_historical_user(collector, field, sub_objs, using):
                 else:
                     scheduled_activity.archived_member_count = 1
                 scheduled_activity.save()
-        elif type(obj) == EighthSponsor:
+        elif isinstance(obj, EighthSponsor):
             handle_eighth_sponsor_deletion(obj, EighthSponsor)
             sub_objs = sub_objs.exclude(pk=obj.pk)
         else:

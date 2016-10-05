@@ -231,7 +231,7 @@ class EighthActivity(AbstractBaseEighthModel):
     wed_b = models.BooleanField("Meets Wednesday B", default=False)
     fri_a = models.BooleanField("Meets Friday A", default=False)
     fri_b = models.BooleanField("Meets Friday B", default=False)
-    
+
     admin_comments = models.CharField(max_length=1000, blank=True)
 
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
