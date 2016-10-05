@@ -3,6 +3,7 @@ import sys
 
 from django.core.management.base import BaseCommand
 from django.db.models.deletion import Collector
+from django.core.exceptions import ObjectDoesNotExist
 
 from intranet.apps.users.models import User
 
@@ -30,9 +31,11 @@ class Command(BaseCommand):
         for user in User.objects.all():
             try:
                 user.first_name
-            except User.DoesNotExist:
+            except ObjectDoesNotExist:
                 if options['run']:
                     self.stdout.write("==== DELETING USER %s ====" % user)
                     user.delete()
                 else:
                     self.stdout.write("DELETE %s" % user)
+            else:
+                pass
