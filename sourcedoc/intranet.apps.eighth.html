@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #3114) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #3143) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3114)',
+        VERSION:     'v3 (Build #3143)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3114) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3143) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.eighth.forms package" href="intranet.apps.eighth.forms.html" />
     <link rel="prev" title="intranet.apps.dataimport.management.commands package" href="intranet.apps.dataimport.management.commands.html" />
@@ -197,6 +197,7 @@
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.management.commands.html">intranet.apps.eighth.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.absence_email">intranet.apps.eighth.management.commands.absence_email module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.delete_nonexistent_users">intranet.apps.eighth.management.commands.delete_nonexistent_users module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.find_duplicates">intranet.apps.eighth.management.commands.find_duplicates module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.generate_statistics">intranet.apps.eighth.management.commands.generate_statistics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.import_attendance">intranet.apps.eighth.management.commands.import_attendance module</a></li>
@@ -514,6 +515,8 @@ is not restricted.</dd>
 <dt>freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed</dt>
 <dd>Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
 takes effect if the activity is restricted.</dd>
+<dt>wed_a, wed_b, fri_a, fri_b</dt>
+<dd>What blocks the activity usually meets. Does not affect schedule, is just information for the Eighth Office.</dd>
 <dt>admin_comments</dt>
 <dd>Notes for the Eighth Office</dd>
 <dt>favorites</dt>
@@ -663,6 +666,20 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthActivity.freshmen_allowed">
 <code class="descclassname">EighthActivity.</code><code class="descname">freshmen_allowed</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.freshmen_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.fri_a">
+<code class="descclassname">EighthActivity.</code><code class="descname">fri_a</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.fri_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.fri_b">
+<code class="descclassname">EighthActivity.</code><code class="descname">fri_b</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.fri_b" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -870,6 +887,20 @@ a many-to-many relation.</p>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.wed_a">
+<code class="descclassname">EighthActivity.</code><code class="descname">wed_a</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.wed_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.wed_b">
+<code class="descclassname">EighthActivity.</code><code class="descname">wed_b</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.wed_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>
@@ -3269,7 +3300,7 @@ object the first time, the query is executed.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.eighth" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity">
-<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthActivity</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>name</em>, <em>description</em>, <em>default_capacity</em>, <em>presign</em>, <em>one_a_day</em>, <em>both_blocks</em>, <em>sticky</em>, <em>special</em>, <em>administrative</em>, <em>restricted</em>, <em>freshmen_allowed</em>, <em>sophomores_allowed</em>, <em>juniors_allowed</em>, <em>seniors_allowed</em>, <em>admin_comments</em>, <em>deleted</em>, <em>history_id</em>, <em>history_date</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthActivity</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>name</em>, <em>description</em>, <em>default_capacity</em>, <em>presign</em>, <em>one_a_day</em>, <em>both_blocks</em>, <em>sticky</em>, <em>special</em>, <em>administrative</em>, <em>restricted</em>, <em>freshmen_allowed</em>, <em>sophomores_allowed</em>, <em>juniors_allowed</em>, <em>seniors_allowed</em>, <em>wed_a</em>, <em>wed_b</em>, <em>fri_a</em>, <em>fri_b</em>, <em>admin_comments</em>, <em>deleted</em>, <em>history_id</em>, <em>history_date</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.DoesNotExist">
@@ -3335,6 +3366,20 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.freshmen_allowed">
 <code class="descclassname">HistoricalEighthActivity.</code><code class="descname">freshmen_allowed</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.freshmen_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthActivity.fri_a">
+<code class="descclassname">HistoricalEighthActivity.</code><code class="descname">fri_a</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.fri_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthActivity.fri_b">
+<code class="descclassname">HistoricalEighthActivity.</code><code class="descname">fri_b</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.fri_b" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -3490,6 +3535,20 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.sticky">
 <code class="descclassname">HistoricalEighthActivity.</code><code class="descname">sticky</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.sticky" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthActivity.wed_a">
+<code class="descclassname">HistoricalEighthActivity.</code><code class="descname">wed_a</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.wed_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthActivity.wed_b">
+<code class="descclassname">HistoricalEighthActivity.</code><code class="descname">wed_b</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.wed_b" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
