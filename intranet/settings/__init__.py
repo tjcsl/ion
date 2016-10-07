@@ -263,7 +263,7 @@ LIST_OF_INDEPENDENT_CSS = ['about', 'api', 'login', 'emerg', 'files', 'schedule'
                            'dashboard', 'events', 'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board',
                            'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'signage.touch.landscape',
                            'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance',
-                           'lostfound', 'welcome']
+                           'lostfound', 'welcome', 'ribbon']
 
 for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.single_css_map(name))
