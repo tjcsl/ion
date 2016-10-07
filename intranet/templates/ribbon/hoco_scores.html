@@ -1,0 +1,118 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    $.get("https://homecoming.tjhsst.edu/api/", function(data) {
+        $("#score-senior").text(data.senior_total);
+        $("#score-sophomore").text(data.sophomore_total);
+        $("#score-junior").text(data.junior_total);
+        $("#score-freshman").text(data.freshman_total);
+        giveRibbons();
+    });
+});
+function giveRibbons() {
+    var arr = [];
+    $("#hoco-scores .box").each(function() {
+        var score = parseFloat($(this).find(".score").text());
+        arr.push([$(this), score]);
+    });
+    arr.sort(function(a, b) {
+        return b[1] - a[1];
+    });
+    var place = 0;
+    $.each(arr, function(k, v) {
+        if (k > 0 && arr[k - 1][1] != v[1]) {
+            place += 1;
+        }
+        if (place == 0) {
+            v[0].find(".corner-ribbon").addClass("gold").text("1st");
+        }
+        else if (place == 1) {
+            v[0].find(".corner-ribbon").addClass("silver").text("2nd");
+        }
+        else if (place == 2) {
+            v[0].find(".corner-ribbon").addClass("bronze").text("3rd");
+        }
+    });
+}
+</script>
+<style>
+#hoco-scores {
+    margin: 15px auto;
+    width: 580px;
+    text-align: center;
+}
+@media screen and (max-width: 640px) {
+    .center-wrapper {
+        margin-top: 200px;
+    }
+    #hoco-scores {
+        width: 284px;
+        zoom: 0.7;
+    }
+}
+#hoco-scores .box {
+    display: inline-block;
+    position: relative;
+    background-color: #545454;
+    color: white;
+    padding: 15px;
+    padding-bottom: 20px;
+    margin: 5px;
+    width: 100px;
+    height: 80px;
+    overflow: hidden;
+}
+#hoco-scores .box .class {
+    font-size: 1.5em;
+}
+#hoco-scores .box .score {
+    font-size: 2em;
+}
+.corner-ribbon {
+    width: 95px;
+    background: #e43;
+    position: absolute;
+    top: 5px;
+    left: -30px;
+    text-align: center;
+    line-height: 25px;
+    letter-spacing: 1px;
+    color: #f0f0f0;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+.gold {
+    background-color: #C98910;
+}
+.silver {
+    background-color: #A8A8A8;
+}
+.bronze {
+    background-color: #965A38;
+}
+</style>
+<div id="hoco-scores">
+    <div class="box">
+        <div class="class">2017</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-senior"></div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">2018</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-junior"></div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">2019</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-sophomore"></div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">2020</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-freshman"></div>
+        points
+    </div>
+</div>
