@@ -1,12 +1,12 @@
 <script type="text/javascript">
 $(document).ready(function() {
-    giveRibbons();
     $.get("https://homecoming.tjhsst.edu/api/", function(data) {
         $("#score-senior").text(data.senior_total);
         $("#score-sophomore").text(data.sophomore_total);
         $("#score-junior").text(data.junior_total);
         $("#score-freshman").text(data.freshman_total);
         giveRibbons();
+        $("#hoco-scores").fadeIn();
     });
 });
 function giveRibbons() {
@@ -37,6 +37,7 @@ function giveRibbons() {
 </script>
 <style>
 #hoco-scores {
+    display: none;
     margin: 15px auto;
     width: 580px;
     text-align: center;
