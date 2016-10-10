@@ -34,10 +34,10 @@ LDAP_BASIC_FIELDS = [
     ("mail", "Email")
 ]
 LDAP_DEFAULT_FIELDS = {
-    "header": True,
+    "header": "TRUE",
     "style": "default",
     "mailentries": -1,
-    "chrome": True,
+    "chrome": "TRUE",
     "startpage": "news"
 }
 
