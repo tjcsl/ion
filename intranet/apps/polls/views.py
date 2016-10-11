@@ -259,15 +259,15 @@ def handle_choice(q, do_gender=True):
                 "total": {
                     "all": votes.count(),
                     "all_percent": perc(votes.count(), question_votes.count()),
-                    "male": sum([v.user.is_male for v in votes]) if do_gender else 0,
-                    "female": sum([v.user.is_female for v in votes]) if do_gender else 0
+                    "male": sum([v.user.is_male for v in votes if v.user]) if do_gender else 0,
+                    "female": sum([v.user.is_female for v in votes if v.user]) if do_gender else 0
                 }
             },
             "users": [v.user for v in votes]
         }
 
         for yr in range(9, 14):
-            yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
+            yr_votes = [v.user if v.user and v.user.grade and v.user.grade.number == yr else None for v in votes]
             yr_votes = list(filter(None, yr_votes))
             choice["votes"][yr] = {"all": len(yr_votes),
                                    "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
@@ -282,15 +282,15 @@ def handle_choice(q, do_gender=True):
             "total": {
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), question_votes.count()),
-                "male": sum([v.user.is_male for v in votes]) if do_gender else 0,
-                "female": sum([v.user.is_female for v in votes]) if do_gender else 0
+                "male": sum([v.user.is_male for v in votes if v.user]) if do_gender else 0,
+                "female": sum([v.user.is_female for v in votes if v.user]) if do_gender else 0
             }
         },
         "users": [v.user for v in votes]
     }
 
     for yr in range(9, 14):
-        yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
+        yr_votes = [v.user if v.user and v.user.grade and v.user.grade.number == yr else None for v in votes]
         yr_votes = list(filter(None, yr_votes))
         choice["votes"][yr] = {"all": len(yr_votes),
                                "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
