@@ -115,6 +115,7 @@ def ldap_modify(request):
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
             return JsonResponse({
                 "success": success,
+                "id": request.POST.get("iodineUid", None) if success else None,
                 "error": "LDAP query failed!" if not success else None,
                 "details": c.conn.last_error
             })
