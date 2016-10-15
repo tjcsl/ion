@@ -2,7 +2,9 @@ var type_student = false;
 
 function refreshList() {
     $("#account-list .account").remove();
-    $("#account-list").append("<div class='loading'><i class=' fa fa-cog fa-spin fa-3x'></i></div>");
+    if (!$("#account-list .loading").length) {
+        $("#account-list").append("<div class='loading'><i class=' fa fa-cog fa-spin fa-3x'></i></div>");
+    }
     $.get(list_endpoint + "?type=" + (type_student ? "student" : "teacher"), function(data) {
         var adata = data.accounts;
         var output = "";
