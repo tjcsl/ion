@@ -5,6 +5,9 @@ import ldap3
 import os
 import threading
 import shutil
+import traceback
+import subprocess
+import datetime
 
 from tempfile import gettempdir
 from io import StringIO
@@ -22,6 +25,8 @@ from cacheops import invalidate_obj
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 from ....users.models import User
+
+from ....notifications.emails import email_send
 
 logger = logging.getLogger(__name__)
 
@@ -198,9 +203,39 @@ class ImportThread(threading.Thread):
         self.folder = folder
 
     def run(self):
-        # TODO: run import process
-        # TODO: import LDIF files
-        # TODO: send email to user
+        start_time = datetime.datetime.now()
+        content = StringIO()
+
+        try:
+            content.write("=== Starting CSV to LDIF script.\n\n")
+            os.chdir(self.folder)
+            call_command("import_sis", csv_file=os.path.join(self.folder, "data.csv"), run=True, confirm=True, stdout=content, stderr=content)
+            content.write("\n=== Finished CSV to LDIF script.\n")
+
+            content.write("=== Starting LDIF import.\n")
+            for f in os.listdir(self.folder):
+                if f.endswith(".ldif"):
+                    content.write("Importing {}\n".format(f))
+                    # ldap3 does not support importing LDIF files
+                    subprocess.call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f, env={
+                        "KRB5CCNAME": os.environ["KRB5CCNAME"]
+                    }, stdout=content, stderr=content)
+            content.write("=== Finished LDIF import.\n")
+
+            content.write("Processing complete.\n")
+        except Exception:
+            content.write("\n=== An error occured during the import process!\n\n")
+            content.write(traceback.format_exc())
+            content.write("\n=== The import process has been aborted.")
+
+        content.seek(0)
+
+        data = {
+            "log": content.read(),
+            "help_email": settings.FEEDBACK_EMAIL,
+            "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")
+        }
+        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data, "SIS Import Results", [self.email])
         shutil.rmtree(self.folder)
 
 
@@ -218,7 +253,7 @@ def sis_import(request):
     if request.method == "POST":
         if context["already_importing"]:
             messages.error(request, "An upload is currently in progress!")
-            return redirect(reverse("eighth_admin_amintenance_sis_import"))
+            return redirect(reverse("eighth_admin_maintenance_sis_import"))
         if len(request.FILES) == 0:
             messages.error(request, "You need to upload a file!")
             return redirect(reverse("eighth_admin_maintenance_sis_import"))

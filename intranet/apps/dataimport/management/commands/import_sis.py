@@ -15,6 +15,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
+        parser.add_argument('--confirm', action='store_true', dest='confirm', default=False, help='Skip confirmation message.')
         parser.add_argument('--csv', type=str, dest='csv_file', default='import.csv', help='Import CSV file')
         parser.add_argument('--fake-teachers', action='store_true', dest='fake_teachers', default=False, help='Fake teacher names and room numbers')
         parser.add_argument('--load-users', action='store_true', dest='load_users', default=False, help='Load users into database')
@@ -50,6 +51,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
+        self.skip_confirm = options["confirm"]
         self.fake_teachers = options["fake_teachers"]
         self.load_users = options["load_users"]
         self.teacher_file = options["teacher_file"]
@@ -65,10 +67,13 @@ class Command(BaseCommand):
             return
 
         if self.do_run:
-            self.ask("===== WARNING! =====\n\n"
-                     "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
-                     "===== WARNING! =====\n\n"
-                     "Continue?")
+            if self.skip_confirm:
+                self.stdout.write("Skipping confirmation.")
+            else:
+                self.ask("===== WARNING! =====\n\n"
+                         "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
+                         "===== WARNING! =====\n\n"
+                         "Continue?")
         else:
             self.stdout.write("In pretend mode.")
 
