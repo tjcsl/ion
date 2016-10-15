@@ -41,7 +41,6 @@ LDAP_BASIC_FIELDS = [
 LDAP_DEFAULT_FIELDS = {
     "header": "TRUE",
     "style": "default",
-    "mailentries": -1,
     "chrome": "TRUE",
     "startpage": "news"
 }
