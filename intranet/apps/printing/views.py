@@ -96,9 +96,13 @@ def get_numpages(tmpfile_name):
     return num_pages
 
 
-def convert_file(tmpfile_name):
+def get_mimetype(tmpfile_name):
     mime = magic.Magic(mime=True)
-    detected = mime.from_file(tmpfile_name)
+    return mime.from_file(tmpfile_name)
+
+
+def convert_file(tmpfile_name):
+    detected = get_mimetype(tmpfile_name)
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
                        "application/vnd.oasis.opendocument.text"]
@@ -171,9 +175,17 @@ def print_job(obj, do_print=True):
     if not tmpfile_name:
         raise Exception("Could not convert file.")
 
-    num_pages = get_numpages(tmpfile_name)
-    if num_pages < 0:
-        raise Exception("Could not get number of pages in %s" % filebase)
+    if get_mimetype(tmpfile_name) == "text/plain":
+        num_chars = 0
+        with open(tmpfile_name, "r") as f:
+            for line in f:
+                num_chars += len(line)
+        num_pages = num_chars // (settings.PRINTING_PAGES_LIMIT * 50 * 72)
+    else:
+        num_pages = get_numpages(tmpfile_name)
+        if num_pages < 0:
+            raise Exception("Could not get number of pages in %s" % filebase)
+
     obj.num_pages = num_pages
     obj.page_range = "".join(obj.page_range.split())  # remove all spaces
     obj.save()
