@@ -1583,6 +1583,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return sp
 
+    def has_unvoted_polls(self):
+        # FIXME: remove recursive dep
+        from ..polls.models import Poll
+
+        for poll in Poll.objects.visible_to_user(self):
+            if not poll.has_user_voted(self):
+                return True
+        return False
+
     def absence_count(self):
         """Return the user's absence count.
 
