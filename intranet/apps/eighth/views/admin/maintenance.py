@@ -86,9 +86,12 @@ def ldap_modify(request):
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
             success = c.conn.modify(dn, attrs)
             clear_user_cache(dn)
+            new_uid = request.POST.get("iodineUid", None)
+            if new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
+                success = success and c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
             return JsonResponse({
                 "success": success,
-                "id": request.POST.get("iodineUid", None) if success else None,
+                "id": new_uid if success else None,
                 "error": "LDAP query failed!" if not success else None,
                 "details": c.conn.last_error
             })
