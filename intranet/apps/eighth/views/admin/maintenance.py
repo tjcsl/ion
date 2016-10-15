@@ -207,6 +207,7 @@ class ImportThread(threading.Thread):
     def run(self):
         start_time = datetime.datetime.now()
         content = StringIO()
+        failure = False
 
         try:
             content.write("=== Starting CSV to LDIF script.\n\n")
@@ -215,6 +216,7 @@ class ImportThread(threading.Thread):
             content.write("\n=== Finished CSV to LDIF script.\n")
 
             content.write("=== Starting LDIF import.\n")
+            ldifs_imported = 0
             for f in os.listdir(self.folder):
                 if f.endswith(".ldif"):
                     content.write("=== Importing {}\n".format(f))
@@ -225,10 +227,17 @@ class ImportThread(threading.Thread):
                     content.write("=== Process finished with exit code {}.\n".format(ret))
                     if ret != 0:
                         raise Exception("Nonzero exit code when running ldapmodify!")
+                    ldifs_imported += 1
+            if ldifs_imported == 0:
+                content.write("=== WARNING: No LDIF files were imported!\n")
+                failure = True
+            else:
+                content.write("=== {} LDIF files were imported.\n".format(ldifs_imported))
             content.write("=== Finished LDIF import.\n")
 
             content.write("Processing complete.\n")
         except Exception:
+            failure = True
             content.write("\n=== An error occured during the import process!\n\n")
             content.write(traceback.format_exc())
             content.write("\n=== The import process has been aborted.")
@@ -237,10 +246,11 @@ class ImportThread(threading.Thread):
 
         data = {
             "log": content.read(),
+            "failure": failure,
             "help_email": settings.FEEDBACK_EMAIL,
             "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")
         }
-        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data, "SIS Import Results", [self.email])
+        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data, "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
         shutil.rmtree(self.folder)
 
 
