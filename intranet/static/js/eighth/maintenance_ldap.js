@@ -7,7 +7,7 @@ function refreshList() {
         var adata = data.accounts;
         var output = "";
         $.each(adata, function(k, v) {
-            output += "<div class=\"account\" data-id=\"" + v.id + "\">" + v.name  + "</div>";
+            output += "<div class=\"account\" data-id=\"" + v.id + "\"><b>" + v.name  + "</b> (" + v.id + ")</div>";
         });
         $("#account-list").append(output);
         $("#account-list-search").trigger("change");
@@ -58,8 +58,7 @@ $(document).ready(function() {
         var term = $(this).val().toLowerCase();
         $("#account-list .account").each(function() {
             var contains = $(this).text().toLowerCase().indexOf(term) !== -1;
-            var idcontains = $(this).attr("data-id").toLowerCase().indexOf(term) !== -1;
-            $(this).toggle(contains || idcontains);
+            $(this).toggle(contains);
         });
     });
     $("#account-list").keydown(function(e) {
