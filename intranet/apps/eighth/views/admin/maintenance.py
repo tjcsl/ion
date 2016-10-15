@@ -221,12 +221,10 @@ class ImportThread(threading.Thread):
                 if f.endswith(".ldif"):
                     content.write("=== Importing {}\n".format(f))
                     # ldap3 does not support importing LDIF files
-                    ret = subprocess.call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f, env={
+                    subprocess.check_call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f, env={
                         "KRB5CCNAME": os.environ["KRB5CCNAME"]
                     }, stdout=content, stderr=content)
-                    content.write("=== Process finished with exit code {}.\n".format(ret))
-                    if ret != 0:
-                        raise Exception("Nonzero exit code when running ldapmodify!")
+                    content.write("=== Imported {}\n".format(f))
                     ldifs_imported += 1
             if ldifs_imported == 0:
                 content.write("=== WARNING: No LDIF files were imported!\n")
