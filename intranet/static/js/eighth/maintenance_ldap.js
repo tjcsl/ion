@@ -20,7 +20,7 @@ function refreshList() {
 function loadAccount(id) {
     $("#delete-teacher, #create-notif").toggle(!!id);
     $("#generate-id, #default-fields").toggle(!id);
-    $("#ldap-iodineUidNumber, #ldap-iodineUid").prop("readonly", !!id);
+    $("#ldap-iodineUidNumber").prop("readonly", !!id);
     var type_word = (type_student ? "Student" : "Teacher");
     $("#edit-teacher").text((id ? "Edit " : "Create ") + type_word);
     $("#edit-title").text(id ? ("Edit " + type_word +  " Account - " + id) : ("Create " + type_word + " Account"));
