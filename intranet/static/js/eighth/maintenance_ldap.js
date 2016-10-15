@@ -124,17 +124,27 @@ $(document).ready(function() {
     });
     $("#delete-teacher").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to delete the " + (type_student ? "student" : "teacher") + " '" + $("#ldap-cn").attr("data-original") + "'?\nThis action is irreversible!")) {
-            $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
-                if (data.success) {
-                    Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
-                    loadAccount(false);
-                    refreshList();
-                }
-                else {
-                    Messenger().error("Failed to delete " + (type_student ? "student" : "teacher") + " account." + (data.error ? "<br /><b>Error:</b> " + data.error : "") + (data.details ? "<br /><b>Details</b>: " + data.details : ""));
-                }
-            });
-        }
+        $("#delete-fullname").text($("#ldap-cn").attr("data-original"));
+        $("#delete-username").text($("#ldap-iodineUid").attr("data-original"));
+        $("#delete-modal-background").fadeIn("fast");
+        $("#delete-modal-cancel").focus();
+    });
+    $("#delete-modal-cancel").click(function(e) {
+        e.preventDefault();
+        $("#delete-modal-background").fadeOut("fast");
+    });
+    $("#delete-modal-confirm").click(function(e) {
+        e.preventDefault();
+        $("#delete-modal-background").fadeOut("fast");
+        $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
+            if (data.success) {
+                Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
+                loadAccount(false);
+                refreshList();
+            }
+            else {
+                Messenger().error("Failed to delete " + (type_student ? "student" : "teacher") + " account." + (data.error ? "<br /><b>Error:</b> " + data.error : "") + (data.details ? "<br /><b>Details</b>: " + data.details : ""));
+            }
+        });
     });
 });
