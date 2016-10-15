@@ -69,7 +69,12 @@
 
         <li {% if nav_category == "polls" %}class="selected"{% endif %}>
             <a href="{% url 'polls' %}">
+            <div class="nav-alert-container">
                 <i class="nav-icon polls-icon"></i>
+                {% if request.user.has_unvoted_polls %}
+                <i class="fa fa-exclamation-circle nav-alert"></i>
+                {% endif %}
+            </div>
                 Polls
             </a>
         </li>
