@@ -32,19 +32,17 @@ def set_historical_user(collector, field, sub_objs, using):
             sub_objs = sub_objs.exclude(pk=obj.pk)
 
     models.CASCADE(collector, field, sub_objs, using)
-    return
 
 
-def handle_eighth_sponsor_deletion(in_obj, EighthSponsor):
+def handle_eighth_sponsor_deletion(in_obj, eighth_sponsor):
     teststaff = User.get_user(id=7011)
     c = Collector(using="default")
     c.collect([in_obj])
     objects = c.instances_with_model()
     for obj in objects:
-        if not isinstance(obj[1], EighthSponsor):
+        if not isinstance(obj[1], eighth_sponsor):
             obj[1].user = teststaff
             obj[1].save()
         else:
             original = obj[1]
     original.delete()
-    return
