@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3190) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3192) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3190)',
+        VERSION:     'v3 (Build #3192)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3190) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3192) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -1736,11 +1736,12 @@
 
 <div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Poll</span>
+        <span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Answer</span>
 
         <span class="k">for</span> <span class="n">poll</span> <span class="ow">in</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">poll</span><span class="o">.</span><span class="n">has_user_voted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__in</span><span class="o">=</span><span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
+
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
