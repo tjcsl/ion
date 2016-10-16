@@ -94,6 +94,8 @@ def ldap_modify(request):
         if dn:  # modify account
             attrs = {}
             for field, name in LDAP_BASIC_FIELDS:
+                if field == "iodineUid":
+                    continue  # this is handled by modify_dn
                 value = request.POST.get(field, None)
                 if value:
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
@@ -106,9 +108,11 @@ def ldap_modify(request):
 
             success = c.conn.modify(dn, attrs)
             clear_user_cache(dn)
+
             new_uid = request.POST.get("iodineUid", None)
             if new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
                 success = success and c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
+
             return JsonResponse({
                 "success": success,
                 "id": new_uid if success else None,
