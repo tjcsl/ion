@@ -1585,11 +1585,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_unvoted_polls(self):
         # FIXME: remove recursive dep
-        from ..polls.models import Poll
+        from ..polls.models import Poll, Answer
 
         for poll in Poll.objects.visible_to_user(self):
-            if not poll.has_user_voted(self):
+            if Answer.objects.filter(question__in=poll.question_set.all(), user=self).count() == 0:
                 return True
+
         return False
 
     def absence_count(self):
