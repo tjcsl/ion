@@ -26,6 +26,7 @@ function loadAccount(id) {
     var type_word = (type_student ? "Student" : "Teacher");
     $("#edit-teacher").text((id ? "Edit " : "Create ") + type_word);
     $("#edit-title").text(id ? ("Edit " + type_word +  " Account - " + id) : ("Create " + type_word + " Account"));
+    $("#student-fields").toggle(type_student);
     $(".ldap-field").val("");
     $(".ldap-field").attr("data-original", "");
     $("#additional-fields").empty();

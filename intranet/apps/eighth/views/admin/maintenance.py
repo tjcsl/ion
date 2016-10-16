@@ -30,6 +30,9 @@ from ....notifications.emails import email_send
 
 logger = logging.getLogger(__name__)
 
+LDAP_STUDENT_FIELDS = [
+    ("graduationYear", "Graduation Year")
+]
 LDAP_BASIC_FIELDS = [
     ("iodineUid", "Username"),
     ("iodineUidNumber", "User ID"),
@@ -61,7 +64,8 @@ def ldap_management(request):
     context = {
         "admin_page_title": "LDAP Management",
         "fields": LDAP_BASIC_FIELDS,
-        "default_fields": LDAP_DEFAULT_FIELDS
+        "default_fields": LDAP_DEFAULT_FIELDS,
+        "student_fields": LDAP_STUDENT_FIELDS
     }
     return render(request, "eighth/admin/ldap_management.html", context)
 
@@ -78,12 +82,28 @@ def ldap_modify(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST":
         c = LDAPConnection()
+
+        object_class = request.POST.get("objectClass", None)
+        if not object_class == "tjhsstStudent" and not object_class == "tjhsstTeacher":
+            return JsonResponse({
+                "success": False,
+                "error": "Invalid objectClass!",
+                "details": "Valid objectClasses are tjhsstStudent and tjhsstTeacher."
+            })
+
         if dn:  # modify account
             attrs = {}
             for field, name in LDAP_BASIC_FIELDS:
                 value = request.POST.get(field, None)
                 if value:
                     attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
+
+            if object_class == "tjhsstStudent":
+                for field, name in LDAP_STUDENT_FIELDS:
+                    value = request.POST.get(field, None)
+                    if value:
+                        attrs[field] = [(ldap3.MODIFY_REPLACE, [value])]
+
             success = c.conn.modify(dn, attrs)
             clear_user_cache(dn)
             new_uid = request.POST.get("iodineUid", None)
@@ -96,29 +116,32 @@ def ldap_modify(request):
                 "details": c.conn.last_error
             })
         else:  # create new account
-            object_class = request.POST.get("objectClass", None)
-            if not object_class == "tjhsstStudent" and not object_class == "tjhsstTeacher":
-                return JsonResponse({
-                    "success": False,
-                    "error": "Invalid objectClass!",
-                    "details": "Valid objectClasses are tjhsstStudent and tjhsstTeacher."
-                })
             attrs = dict(LDAP_DEFAULT_FIELDS)
             for field, name in LDAP_BASIC_FIELDS:
                 value = request.POST.get(field, None)
                 if not value:
                     return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
                 attrs[field] = value
+
+            if object_class == "tjhsstStudent":
+                for field, name in LDAP_STUDENT_FIELDS:
+                    value = request.POST.get(field, None)
+                    if not value:
+                        return JsonResponse({"success": False, "error": "{} is a required field for students!".format(field)})
+                    attrs[field] = value
+
             try:
                 iodine_uid_num = int(attrs["iodineUidNumber"])
             except ValueError:
                 return JsonResponse({"success": False, "error": "iodineUidNumber must be an integer!"})
+
             if object_class == "tjhsstTeacher":
                 if iodine_uid_num < 0 or iodine_uid_num > 10000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10,000!"})
             else:
                 if iodine_uid_num < 30000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
+
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
             return JsonResponse({
                 "success": success,
