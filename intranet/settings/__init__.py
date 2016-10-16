@@ -677,8 +677,7 @@ if SHOW_DEBUG_TOOLBAR:
     # Add middleware
     MIDDLEWARE.extend([
         "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
-        # FIXME: use debug_toolbar.middleware.DebugToolbarMiddleware directly once it properly supports django 1.10+
-        "intranet.middleware.debug_toolbar.DebugToolbarMiddleware",  # Debug toolbar
+        "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
     ])
 
     INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]

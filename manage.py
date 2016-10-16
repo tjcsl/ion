@@ -14,9 +14,8 @@ warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='dj
 # FIXME: remove when upstream supports django 1.10+ properly
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='oauth2_provider')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='simple_history')
-warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='rest_framework')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='cacheops')
-warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='pipeline')
+warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='debug_toolbar')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
