@@ -342,8 +342,7 @@ MIDDLEWARE = [
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
-    # FIXME: use corsheaders.middleware.CorsMiddleware directly once it properly supports django 1.10+
-    "intranet.middleware.corsheaders.CorsMiddleware",  # CORS headers, for ext. API use
+    "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
     # FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+
