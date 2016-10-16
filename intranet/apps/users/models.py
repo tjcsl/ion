@@ -1587,7 +1587,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         # FIXME: remove recursive dep
         from ..polls.models import Poll, Answer
 
-        for poll in Poll.objects.visible_to_user(self):
+        now = timezone.now()
+        for poll in Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now):
             if Answer.objects.filter(question__in=poll.question_set.all(), user=self).count() == 0:
                 return True
 
