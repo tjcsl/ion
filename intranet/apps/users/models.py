@@ -1594,6 +1594,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return False
 
+    def signed_up_today(self):
+        # FIXME: remove recursive dep
+        from ..eighth.models import EighthBlock, EighthSignup
+
+        if not self.is_student:
+            return True
+
+        for b in EighthBlock.objects.get_upcoming_blocks(2):
+            if b.is_today() and not EighthSignup.objects.filter(user=self, scheduled_activity__block=b).count():
+                return False
+
+        return True
+
     def absence_count(self):
         """Return the user's absence count.
 

@@ -10,7 +10,12 @@
         {% if request.user.is_eighth_admin and request.user.is_student %}
             <li {% if nav_category == "eighth" %}class="selected"{% endif %}>
                 <a href="{% url 'eighth_signup' %}">
-                    <i class="nav-icon eighth-icon"></i>
+                    <div class="nav-alert-container">
+                        <i class="nav-icon eighth-icon"></i>
+                        {% if not request.user.signed_up_today %}
+                        <i class="fa fa-exclamation-circle nav-alert" style="right: 18px"></i>
+                        {% endif %}
+                    </div>
                     Signup
                 </a>
             </li>
@@ -23,7 +28,12 @@
         {% else %}
             <li {% if nav_category == "eighth" or nav_category == "eighth_admin" %}class="selected"{% endif %}>
                 <a href="{% if request.user.is_eighth_admin %}{% url 'eighth_admin_dashboard' %}{% else %}{% url 'eighth_redirect' %}{% endif %}">
-                    <i class="nav-icon eighth-icon"></i>
+                    <div class="nav-alert-container">
+                        <i class="nav-icon eighth-icon"></i>
+                        {% if not request.user.signed_up_today %}
+                        <i class="fa fa-exclamation-circle nav-alert" style="right: 18px"></i>
+                        {% endif %}
+                    </div>
                     Eighth
                 </a>
             </li>
@@ -69,12 +79,12 @@
 
         <li {% if nav_category == "polls" %}class="selected"{% endif %}>
             <a href="{% url 'polls' %}">
-            <div class="nav-alert-container">
-                <i class="nav-icon polls-icon"></i>
-                {% if request.user.has_unvoted_polls %}
-                <i class="fa fa-exclamation-circle nav-alert"></i>
-                {% endif %}
-            </div>
+                <div class="nav-alert-container">
+                    <i class="nav-icon polls-icon"></i>
+                    {% if request.user.has_unvoted_polls %}
+                    <i class="fa fa-exclamation-circle nav-alert"></i>
+                    {% endif %}
+                </div>
                 Polls
             </a>
         </li>
