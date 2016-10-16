@@ -113,7 +113,7 @@ def ldap_modify(request):
                 "success": success,
                 "id": new_uid if success else None,
                 "error": "LDAP query failed!" if not success else None,
-                "details": c.conn.last_error
+                "details": c.conn.last_error or str(c.conn.result)
             })
         else:  # create new account
             attrs = dict(LDAP_DEFAULT_FIELDS)
