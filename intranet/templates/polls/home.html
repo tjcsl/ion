@@ -29,9 +29,15 @@
         <h2>Polls</h2>
         <div class="button-container">
             {% if is_polls_admin %}
-                <a href="?show_all=1" class="button">
-                    Show All
-                </a>
+                {% if request.GET.show_all %}
+                    <a href="?" class="button">
+                        <i class="fa fa-times"></i> Don't Show All
+                    </a>
+                {% else %}
+                    <a href="?show_all=1" class="button">
+                        Show All
+                    </a>
+                {% endif %}
             {% endif %}
 
             {% if is_polls_admin %}
