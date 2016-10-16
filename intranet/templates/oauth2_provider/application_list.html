@@ -6,15 +6,16 @@
     <div class="block-center">
         <h3 class="block-center-heading">{% trans "Your applications" %}</h3>
         {% if applications %}
-            <ul>
+            <hr />
+            <ul id="oauth-app-list">
                 {% for application in applications %}
                     <li><a href="{{ application.get_absolute_url }}">{{ application.name }}</a></li>
                 {% endfor %}
             </ul>
-
-            <a class="button" href="{% url "oauth2_provider:register" %}">New Application</a>
+            <hr />
+            <a class="button" href="{% url "oauth2_provider:register" %}"><i class="fa fa-plus"></i> New Application</a>
         {% else %}
-            <p>{% trans "No applications defined" %}. <a href="{% url 'oauth2_provider:register' %}">{% trans "Click here" %}</a> {% trans "if you want to register a new one" %}</p>
+            <p>{% trans "No applications defined" %}. <a href="{% url 'oauth2_provider:register' %}">{% trans "Click here" %}</a> {% trans "if you want to register a new one" %}.</p>
         {% endif %}
     </div>
 {% endblock content %}
