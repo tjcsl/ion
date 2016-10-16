@@ -109,9 +109,19 @@ def ldap_modify(request):
             success = c.conn.modify(dn, attrs)
             clear_user_cache(dn)
 
+            try:
+                u = User.get_user(dn=dn)
+            except User.DoesNotExist:
+                logger.warning("User with dn {} not found in database!".format(dn))
+                u = None
+
             new_uid = request.POST.get("iodineUid", None)
-            if new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
-                success = success and c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
+
+            if success and new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
+                success = c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
+                if success and u:
+                    u.username = new_uid
+                    u.save()
 
             return JsonResponse({
                 "success": success,
