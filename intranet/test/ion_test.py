@@ -34,5 +34,6 @@ class IonTestCase(TestCase):
     def login(self):
         # We need to add the user to the db before trying to login as them.
         User.get_user(username='awilliam').save()
+        User.get_user(username="awilliam").set_cache()
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             self.client.login(username='awilliam', password='dankmemes')
