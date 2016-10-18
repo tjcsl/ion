@@ -1124,8 +1124,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
-        else:
-            logger.debug("Using cached objectClass")
         return self.cache.objectClass == "tjhsstTeacher"
 
     @property
@@ -1140,8 +1138,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
-        else:
-            logger.debug("Using cached objectClass")
         return self.cache.objectClass == "tjhsstStudent"
 
     @property
@@ -1207,8 +1203,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
-        else:
-            logger.debug("Using cached objectClass")
         return self.cache.objectClass == "tjhsstUser"
 
     @property
@@ -1224,8 +1218,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
-        else:
-            logger.debug("Using cached objectClass")
         return self.cache.objectClass == "simpleUser"
 
     @property
