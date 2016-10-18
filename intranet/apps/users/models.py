@@ -434,11 +434,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         This is required for subclasses of User.
 
         """
-        if self.cache.first_name is None:
+
+        if self.get_from_cache('first_name') is None:
             logger.debug("First Name is not cached, setting using LDAP")
             self.cache.first_name = self.first_name
             self.cache.save()
-        if self.cache.last_name is None:
+        if self.get_from_cache('last_name') is None:
             logger.debug("Last Name is not cached, setting using LDAP")
             self.cache.last_name = self.last_name
             self.cache.save()
@@ -456,11 +457,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
         """
-        if self.cache.first_name is None:
+        if self.get_from_cache('first_name') is None:
             logger.debug("First Name is not cached, setting using LDAP")
             self.cache.first_name = self.first_name
             self.cache.save()
-        if self.cache.last_name is None:
+        if self.get_from_cache('last_name') is None:
             logger.debug("Last Name is not cached, setting using LDAP")
             self.cache.last_name = self.last_name
             self.cache.save()
@@ -471,11 +472,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
-        if self.cache.first_name is None:
+        if self.get_from_cache('first_name') is None:
             logger.debug("First Name is not cached, setting using LDAP")
             self.cache.first_name = self.first_name
             self.cache.save()
-        if self.cache.last_name is None:
+        if self.get_from_cache('last_name')is None:
             logger.debug("Last Name is not cached, setting using LDAP")
             self.cache.last_name = self.last_name
             self.cache.save()
@@ -488,11 +489,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, F [(Nickname)]
         """
-        if self.cache.first_name is None:
+        if self.get_from_cache('first_name') is None:
             logger.debug("First Name is not cached, setting using LDAP")
             self.cache.first_name = self.first_name
             self.cache.save()
-        if self.cache.last_name is None:
+        if self.get_from_cache('last_name') is None:
             logger.debug("Last Name is not cached, setting using LDAP")
             self.cache.last_name = self.last_name
             self.cache.save()
@@ -506,7 +507,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         This is required for subclasses of User.
 
         """
-        if self.cache.first_name is None:
+        if self.get_from_cache('first_name') is None:
             logger.debug("First Name is not cached, setting using LDAP")
             self.cache.first_name = self.first_name
             self.cache.save()
@@ -780,7 +781,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_male(self):
-        if self.cache.gender is None:
+        if self.get_from_cache('gender') is None:
             if self.sex:
                 logger.debug("Cached gender not available, setting using LDAP")
                 if self.sex.lower()[:1] == "m":
@@ -799,7 +800,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_female(self):
-        if self.cache.gender is None:
+        if self.get_from_cache('gender') is None:
             if self.sex:
                 logger.debug("Cached gender not available, setting using LDAP")
                 if self.sex.lower()[:1] == "m":
@@ -1116,7 +1117,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        if not self.cache.objectClass:
+        if not self.get_from_cache('objectClass'):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
@@ -1132,7 +1133,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        if not self.cache.objectClass:
+        if not self.get_from_cache('objectClass'):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
@@ -1195,7 +1196,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        if not self.cache.objectClass:
+        if not self.get_from_cache('objectClass'):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
@@ -1212,7 +1213,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        if not self.cache.objectClass:
+        if not self.get_from_cache('objectClass'):
             logger.debug("objectClass is not cached, setting using LDAP")
             self.cache.objectClass = self.user_type
             self.cache.save()
@@ -1643,19 +1644,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         for attr in User.ldap_user_attributes:
             cache.delete(":".join((self.dn, attr)))
             cache.delete(User.create_secure_cache_key(":".join((self.dn, attr))))
-        logger.debug("Clearing cached DB values for objectClass and gender")
+        logger.debug("Clearing cached DB values")
         if self.cache:
-            self.cache.delete()
+            UserCache.objects.get(pk=self.cache.pk).delete()
         self.set_cache()
 
     def set_cache(self):
         logger.debug("Setting DB cache using LDAP values")
+        if not self.cache:
+            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name)
         bool_gender = None
         if self.sex:
             bool_gender = True if self.sex.lower()[:1] == "m" else False
-        if not self.cache:
-            self.cache = UserCache.objects.create(gender=bool_gender, objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name)
+        self.cache.gender = bool_gender
+        self.cache.save()
+        self.save()
+
+    def get_from_cache(self, attribute):
+        try:
+            return getattr(self.cache, attribute)
+        except AttributeError:
+            if not self.cache:
+                self.cache = UserCache.objects.create()
+                self.save()
+            return None
+        except UserCache.DoesNotExist:
+            self.cache = UserCache.objects.create()
             self.save()
+            return None
 
     @property
     def is_eighth_sponsor(self):

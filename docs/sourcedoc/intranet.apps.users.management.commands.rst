@@ -36,6 +36,14 @@ intranet.apps.users.management.commands.lock module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.users.management.commands.set_db_cache module
+-----------------------------------------------------------
+
+.. automodule:: intranet.apps.users.management.commands.set_db_cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
