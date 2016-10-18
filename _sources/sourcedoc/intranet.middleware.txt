@@ -20,22 +20,6 @@ intranet.middleware.ajax module
     :undoc-members:
     :show-inheritance:
 
-intranet.middleware.corsheaders module
---------------------------------------
-
-.. automodule:: intranet.middleware.corsheaders
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet.middleware.debug_toolbar module
-----------------------------------------
-
-.. automodule:: intranet.middleware.debug_toolbar
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.middleware.email_handler module
 ----------------------------------------
 
