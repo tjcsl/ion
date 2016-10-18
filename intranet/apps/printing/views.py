@@ -26,6 +26,9 @@ def get_printers():
     # Don't die if cups isn't installed.
     except FileNotFoundError:
         return []
+    # Don't die if lpstat -a fails
+    except subprocess.CalledProcessError as e:
+        return []
     lines = output.splitlines()
     names = []
     for l in lines:
