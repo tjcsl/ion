@@ -1063,7 +1063,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.grade.number == 11 or self.is_parking_admin)
+        if self.get_from_cache('grade_number') is None:
+            self.cache.grade_number = self.grade.number
+            self.cache.save()
+        return (self.cache.grade_number == 11 or self.is_parking_admin)
 
     @property
     def is_ldap_admin(self):
@@ -1149,7 +1152,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.is_student and self.grade and self.grade.number and self.grade.number == 12)
+        if self.get_from_cache('grade_number') is None:
+            logger.debug("Grade number is not cached, setting using LDAP")
+            self.cache.grade_number = self.grade.number
+            self.cache.save()
+        return (self.is_student and self.cache.grade_number == 12)
 
     @property
     def is_eighthoffice(self):
@@ -1652,7 +1659,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_cache(self):
         logger.debug("Setting DB cache using LDAP values")
         if not self.cache:
-            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name)
+            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name,
+                                                  grade_number=self.grade.number, graduation_year=int(self.graduation_year))
         bool_gender = None
         if self.sex:
             bool_gender = True if self.sex.lower()[:1] == "m" else False
@@ -2168,6 +2176,8 @@ class UserCache(models.Model):
     objectClass = models.CharField(max_length=15, null=True)
     first_name = models.CharField(max_length=64, null=True)
     last_name = models.CharField(max_length=128, null=True)
+    graduation_year = models.PositiveIntegerField(null=True)
+    grade_number = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return self.user.username
