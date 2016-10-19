@@ -1651,8 +1651,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_cache(self):
         logger.debug("Setting DB cache using LDAP values")
         if not self.cache:
-            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name,
-                                                  grade_number=self.grade.number, graduation_year=int(self.graduation_year))
+            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name)
+        self.cache.grade_number = self.grade.number if self.grade else None
+        self.cache.graduation_year = int(self.graduation_year) if self.graduation_year else None
         bool_gender = None
         if self.sex:
             bool_gender = True if self.sex.lower()[:1] == "m" else False
@@ -1661,16 +1662,45 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.save()
 
     def get_from_cache(self, attribute):
+        mappings = {
+            "objectClass": "user_type",
+            "gender": "sex",
+            "first_name": "first_name",
+            "last_name": "last_name",
+            "graduation_year": "graduation_year"
+        }
         try:
-            return getattr(self.cache, attribute)
+            val = getattr(self.cache, attribute)
+            if not val:
+                raise AttributeError
+            return val
         except AttributeError:
             if not self.cache:
                 self.cache = UserCache.objects.create()
+                self.cache.save()
                 self.save()
+            if attribute in mappings:
+                if attribute == "gender":
+                    if self.sex:
+                        self.cache.gender = True if self.sex.lower()[:1] == "m" else False
+                    else:
+                        return None
+                elif attribute == "graduation_year":
+                    setattr(self.cache, attribute, int(getattr(self, mappings[attribute])))
+                else:
+                    setattr(self.cache, attribute, getattr(self, mappings[attribute]))
+                self.cache.save()
+                return self.get_from_cache(attribute)
+            elif attribute == "grade_number":
+                self.cache.grade_number = self.grade.number if self.grade else None
+                self.cache.save()
+                return self.get_from_cache(attribute)
             return None
         except UserCache.DoesNotExist:
             self.cache = UserCache.objects.create()
             self.save()
+            return self.get_from_cache(attribute)
+        else:
             return None
 
     @property
