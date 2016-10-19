@@ -4,6 +4,14 @@ intranet.apps.templatetags package
 Submodules
 ----------
 
+intranet.apps.templatetags.cache module
+---------------------------------------
+
+.. automodule:: intranet.apps.templatetags.cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.templatetags.dates module
 ---------------------------------------
 
