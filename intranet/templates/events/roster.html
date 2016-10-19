@@ -2,6 +2,7 @@
 {% load static %}
 {% load dates %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Event Roster
@@ -41,7 +42,7 @@
                 {% for p in viewable_roster %}
                     <li>
                         <a href="{% url 'user_profile' p.id %}">
-                            {{ p.full_name }} ({{ p.grade.number }})
+                            {{ p.full_name }} ({{ p|from_cache:'grade_number' }})
                         </a>
                     </li>
                 {% empty %}
@@ -62,7 +63,7 @@
                     {% for p in full_roster %}
                         <li>
                             <a href="{% url 'user_profile' p.id %}">
-                                {{ p.full_name }} ({{ p.grade.number }})
+                                {{ p.full_name }} ({{ p|from_cache:'grade_number' }})
                             </a>
                         </li>
                     {% empty %}

@@ -1,3 +1,4 @@
+{% load cache %}
 <a href="{% url 'eighth_profile' profile_user.id %}">
     <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">    
         <img src="/profile/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View Eighth Profile" width="86" height="107.5" />
@@ -18,9 +19,9 @@
                 </h2>
                 <h3>
                 {% if profile_user.is_student %}
-                    {% if profile_user.graduation_year %}
+                    {% if profile_user|from_cache:'graduation_year' %}
                         {{ profile_user.grade|capfirst }}
-                        (Grade {{ profile_user.grade.number }}: {{ profile_user.graduation_year }})
+                        (Grade {{ profile_user|from_cache:'grade_number' }}: {{ profile_user:from_cache('graduation_year') }})
                     {% else %}
                         Student
                     {% endif %}
@@ -45,7 +46,7 @@
                     <th>Username</th>
                     <td>{{ profile_user.ion_username }}</td>
                 </tr>
-                {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
+                {% if profile_user|from_cache:'objectClass' == "tjhsstStudent" and profile_user.counselor %}
                     <tr>
                         <th>Counselor</th>
                         <td> {{ profile_user.counselor.last_name }} </td>

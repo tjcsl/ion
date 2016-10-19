@@ -3,6 +3,7 @@
 {% load grades %}
 {% load users %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Search{% if search_query %} - {{ search_query }}{% endif %}
@@ -46,7 +47,7 @@
                     <td class="list-item">
                         <a href="{% url 'user_profile' user.id %}">
                             {% if is_admin or request.GET.last_first %}
-                                {{ user.last_name }}, {{ user.first_name }}
+                                {{ user|from_cache:'last_name' }}, {{ user|from_cache:'first_name' }}
                             {% else %}
                                 {% if user.full_name %}
                                     {{ user.full_name }}
@@ -65,10 +66,10 @@
                     {% endif %}
                     <td>
                         {% if user.grade and not user.is_teacher %}
-                            {% if user.grade.number == 13 %}
+                            {% if user|from_cache:'grade_number' == 13 %}
                                 Graduate
                             {% else %}
-                                Grade {{ user.grade.number }}
+                                Grade {{ user|from_cache:'grade_number' }}
                             {% endif %}
                         {% else %}
                             Staff

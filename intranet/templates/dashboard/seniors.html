@@ -1,10 +1,11 @@
+{% load cache %}
 <div class="widget extra-widget seniors-widget" data-graduation-date="{{ senior_graduation }}" data-graduation-year="{{ senior_graduation_year }}">
     <div class="widget-title">
         <h2>
             {% if is_senior %}
                 Seniors: Class of {{ senior_graduation_year }}
             {% else %}
-                {{ user.grade.name_plural|capfirst }}: Class of {{ user.graduation_year }}
+                {{ user.grade.name_plural|capfirst }}: Class of {{ user|from_cache:'graduation_year' }}
             {% endif %}
         </h2>
         <div class="info">
