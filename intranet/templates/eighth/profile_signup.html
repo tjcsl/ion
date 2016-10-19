@@ -3,6 +3,7 @@
 {% load math %}
 {% load strings %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Eighth Period
@@ -295,7 +296,7 @@
 
             <input type="hidden" name="user" value="{{ profile_user.id }}" />
             <h3>
-                Eighth Period{% if profile_user != real_user %} - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                Eighth Period{% if profile_user != real_user %} - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user|from_cache:'graduation_year' }})</a>{% endif %}
             </h3>
             {% if skipped_ahead %}
                 There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
@@ -487,9 +488,9 @@
                         </h2>
                         <h3>
                         {% if profile_user.is_student %}
-                            {% if profile_user.graduation_year %}
+                            {% if profile_user|from_cache:'graduation_year' %}
                                 {{ profile_user.grade|capfirst }}
-                                ({{ profile_user.graduation_year }})
+                                ({{ profile_user|from_cache:'graduation_year' }})
                             {% else %}
                                 Student
                             {% endif %}
@@ -521,7 +522,7 @@
                                 </tr>
                             {% endif %}
 
-                            {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
+                            {% if profile_user|from_cache:'objectClass' == "tjhsstStudent" and profile_user.counselor %}
                                 <tr>
                                     <th>Counselor</th>
                                     <td> {{ profile_user.counselor.last_name }} </td>

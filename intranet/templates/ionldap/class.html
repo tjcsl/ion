@@ -2,6 +2,7 @@
 {% load phone_numbers %}
 {% load static %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Class: {{ class.name }}
@@ -95,7 +96,7 @@
                                 {{ student.last_first }}
                             </a>
                         </td>
-                        <td>{{ student.grade.number }}</td>
+                        <td>{{ student|from_cache:'grade_number' }}</td>
                         {% if show_emails %}<td class="email-col">{{ student.tj_email }}</td>{% endif %}
                     </tr>
                     {% endfor %}
@@ -108,7 +109,7 @@
                                     {{ student.last_first }}
                                 </a>
                             </td>
-                            <td>{{ student.grade.number }}</td>
+                            <td>{{ student|from_cache:'grade_number' }}</td>
                             {% if show_emails %}<td class="email-col">{{ student.tj_email }}</td>{% endif %}
                             {% endwith %}
                         </tr>

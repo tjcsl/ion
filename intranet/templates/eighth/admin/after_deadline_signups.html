@@ -1,5 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
+{% load cache %}
 
 {% block js %}
     <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
@@ -46,7 +47,7 @@
                     <tr>
                         <td data-value={{ signup.time|date:"U" }}>{{ signup.time }}</td>
                         <td>{{ signup.scheduled_activity.block }}</td>
-                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }} ({{ signup.user.student_id }}, {{ signup.user.grade.number }})</td>
+                        <td>{{ signup.user|from_cache:'last_name' }}, {{ signup.user|from_cache:'first_name' }} ({{ signup.user.student_id }}, {{ signup.user|from_cache:'grade_number' }})</td>
                         <td>{{ signup.previous_activity_name }}</td>
                         <td>{{ signup.previous_activity_sponsors }}</td>
                         <td>{{ signup.scheduled_activity.activity.name_with_flags }} ({{ signup.scheduled_activity.activity.id }})</td>

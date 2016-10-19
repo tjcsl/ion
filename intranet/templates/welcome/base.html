@@ -1,6 +1,7 @@
 {% extends "dashboard/dashboard.html" %}
 {% load static %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     Intranet - Welcome
@@ -40,7 +41,7 @@
                 <h2>Welcome to the TJ Intranet</h2>
                 <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
 
-                <p>Logged in as: {{ request.user.full_name }}{% if request.user.graduation_year %}, Class of {{ request.user.graduation_year }}{% endif %}</p>
+                <p>Logged in as: {{ request.user.full_name }}{% if request.user|from_cache:'graduation_year' %}, Class of {{ request.user|from_cache:'graduation_year' }}{% endif %}</p>
                 <p>Email addresses on file:</p>
                 <ul>
                     {% for email in request.user.emails %}
