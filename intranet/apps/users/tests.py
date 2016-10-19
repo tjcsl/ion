@@ -3,11 +3,16 @@
 from io import StringIO
 
 from django.core.management import call_command
+from django.urls import reverse
+
+from .models import User, UserCache
+from ..groups.models import Group
 
 from ...test.ion_test import IonTestCase
 
 
 class DynamicGroupTest(IonTestCase):
+
     """Tests creating dynamic groups."""
 
     def test_dynamic_groups(self):
@@ -19,3 +24,48 @@ class DynamicGroupTest(IonTestCase):
             "2019: Processed", "Done."
         ]
         self.assertEqual(out.getvalue().splitlines(), output)
+
+
+class CacheTest(IonTestCase):
+
+    def make_admin(self):
+        self.login()
+        # Make user an eighth admin
+        user = User.get_user(username='awilliam')
+        group = Group.objects.get_or_create(name="admin_all")[0]
+        user.groups.add(group)
+        return user
+
+    def test_clear_cache(self):
+        user = self.make_admin()
+        # clear as if using shell
+        user.clear_cache()
+        # clear cache as if using web interface
+        response = self.client.get(reverse('user_profile'), {"clear_cache": 1})
+        self.assertEqual(response.status_code, 302)
+
+    def test_property_without_cache(self):
+        user = self.make_admin()
+        # delete cache object related to user
+        UserCache.objects.filter(user=user).delete()
+        # make sure correct exception is raised when accessing a nonexistent object
+        with self.assertRaises(UserCache.DoesNotExist):
+            user.cache.gender
+        # make sure user.cache does not exist
+        with self.assertRaises(UserCache.DoesNotExist):
+            user.cache
+        # gender is not accessible, so returns None and sets cache
+        self.assertEqual(user.get_from_cache('gender'), None)
+        # make sure cache was set by get_from_cache
+        self.assertNotEqual(user.cache, None)
+        # delete cache object related to user
+        UserCache.objects.filter(user=user).delete()
+        # make sure user.is_male is false and does not fail, i.e checks LDAP and sets cache
+        self.assertEqual(user.is_male, False)
+        # make sure cache was set
+        self.assertNotEqual(user.cache, None)
+        # delete cache object related to user
+        UserCache.objects.filter(user=user).delete()
+        # make sure getting the profile with no cache works
+        response = self.client.get(reverse('user_profile'))
+        self.assertEqual(response.status_code, 200)

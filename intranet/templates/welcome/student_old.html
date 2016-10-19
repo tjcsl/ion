@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Welcome
@@ -142,7 +143,7 @@
         <h2>Welcome to the TJ Intranet</h2>
         <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
 
-        <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+        <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user|from_cache:'graduation_year' }}</p>
         <p>Email addresses on file:</p>
         <ul>
             {% for email in request.user.emails %}

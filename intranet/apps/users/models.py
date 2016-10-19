@@ -465,7 +465,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("Last Name is not cached, setting using LDAP")
             self.cache.last_name = self.last_name
             self.cache.save()
-        return ("{}, {} ".format(self.cache.last_name, self.cache.first_name) + ("({})".format(self.nickname) if self.nickname else ""))
+        return "{}, {} ".format(self.cache.last_name, self.cache.first_name) + ("({})".format(self.nickname) if self.nickname else "")
 
     @property
     def last_first_id(self):
@@ -1066,7 +1066,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.get_from_cache('grade_number') is None:
             self.cache.grade_number = self.grade.number
             self.cache.save()
-        return (self.cache.grade_number == 11 or self.is_parking_admin)
+        return self.cache.grade_number == 11 or self.is_parking_admin
 
     @property
     def is_ldap_admin(self):
@@ -1152,7 +1152,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("Grade number is not cached, setting using LDAP")
             self.cache.grade_number = self.grade.number
             self.cache.save()
-        return (self.is_student and self.cache.grade_number == 12)
+        return self.is_student and self.cache.grade_number == 12
 
     @property
     def is_eighthoffice(self):
@@ -1246,7 +1246,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.is_eighth_admin or self.is_teacher or self.is_attendance_user)
+        return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
 
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
@@ -1293,7 +1293,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 # threadlocals is a module, not an actual thread locals object
                 requesting_user = threadlocals.request().user
-                return (requesting_user.is_teacher or requesting_user.is_simple_user)
+                return requesting_user.is_teacher or requesting_user.is_simple_user
             except (AttributeError, KeyError):
                 return False
             return False

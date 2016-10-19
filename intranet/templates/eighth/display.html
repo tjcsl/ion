@@ -3,6 +3,7 @@
 {% load math %}
 {% load strings %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
@@ -583,7 +584,7 @@
                                 {% if active_block.locked %}
                                     <i class="fa fa-lock"></i>
                                 {% endif %}
-                                {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user and not no_user_display %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                                {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user and not no_user_display %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user|from_cache:'graduation_year' }})</a>{% endif %}
                             </h2>
                             <h4>
                                 {% if block_info.block_letter %}

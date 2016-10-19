@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
 {% load pipeline %}
+{% load cache %}
 
 {% block title %}
     {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - Eighth Period Absences
@@ -30,7 +31,7 @@
             {% endif %}
         </div>
 
-        Absence information for <a href="{% url 'user_profile' user.id %}">{{ user.display_name }} (Grade {{ user.grade.number }})</a>{% if user.student_id %} - {{ user.student_id }}{% endif %}: <b>{{ absences|length }} Absence{{ absences|pluralize }}</b>
+        Absence information for <a href="{% url 'user_profile' user.id %}">{{ user.display_name }} (Grade {{ user|from_cache:'grade_number' }})</a>{% if user.student_id %} - {{ user.student_id }}{% endif %}: <b>{{ absences|length }} Absence{{ absences|pluralize }}</b>
         <br><br>
         {% if request.user.is_student %}
             <p style="max-width: 600px">

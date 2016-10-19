@@ -1,5 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
+{% load cache %}
 
 {% block js %}
     <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
@@ -70,7 +71,7 @@
                     <tr>
                         <td>
                             <a href="{% url 'user_profile' delinquent.user.id %}">
-                                {{ delinquent.user.last_name }}, {{ delinquent.user.first_name }}
+                                {{ delinquent.user|from_cache:'last_name' }}, {{ delinquent.user|from_cache:'first_name' }}
                             </a>
                         </td>
                         <td>
@@ -80,7 +81,7 @@
                             <a href="{% url 'eighth_absences' delinquent.user.id %}">{{ delinquent.absences }}</a>
                         </td>
                         <td>
-                            {{ delinquent.user.grade.number }}
+                            {{ delinquent.user|from_cache:'grade_number' }}
                         </td>
                         <td>
                             {{ delinquent.user.counselor.last_name }}

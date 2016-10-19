@@ -1,5 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
+{% load cache %}
 
 {% block js %}
     <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
@@ -53,8 +54,8 @@
                             {{ pass.scheduled_activity.full_title }}
                         </a>
                     </td>
-                    <td><a href="{% url 'user_profile' pass.user.id %}">{{ pass.user.last_name }}, {{ pass.user.first_name }}</a> ({{ pass.user.student_id }})</td>
-                    <td>{{ pass.user.grade.number }}</td>
+                    <td><a href="{% url 'user_profile' pass.user.id %}">{{ pass.user|from_cache:'last_name' }}, {{ pass.user|from_cache:'first_name' }}</a> ({{ pass.user.student_id }})</td>
+                    <td>{{ pass.user|from_cache:'grade_number' }}</td>
                     <td>{{ pass.user.absence_count }}</td>
                     <td>{{ pass.last_modified_time|date:'Y-m-d h:i A' }}</td>
                     <td class="center">
