@@ -118,6 +118,13 @@ def ldap_modify(request):
             new_uid = request.POST.get("iodineUid", None)
 
             if success and new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
+                if User.objects.filter(username=new_uid).count():
+                    return JsonResponse({
+                        "success": False,
+                        "id": None,
+                        "error": "The username '" + new_uid + "' already exists!"
+                    })
+
                 success = c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
                 if success and u:
                     u.username = new_uid
