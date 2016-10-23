@@ -1157,12 +1157,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def male(self):
         """Return if the user is male."""
-        return self.is_female
+        return self.is_male
 
     @property
     def female(self):
         """Return if the user is female."""
-        return self.is_male
+        return self.is_female
 
     @property
     def has_senior(self):
@@ -1585,7 +1585,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_cache(self):
         logger.debug("Setting DB cache using LDAP values")
         if not self.cache:
-            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name)
+            self.cache = UserCache.objects.create(objectClass=self.user_type,
+                                                  first_name=self.first_name,
+                                                  last_name=self.last_name)
         self.cache.grade_number = self.grade.number if self.grade else None
         self.cache.graduation_year = int(self.graduation_year) if self.graduation_year else None
         bool_gender = None
@@ -1635,7 +1637,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return self.get_or_set_cache(attribute)
             return None
         except UserCache.DoesNotExist:
-            logger.debug("Creating new UserCache for {}".format(self))
+            logger.debug("Initializeing UserCache for {}".format(self))
             self.cache = UserCache.objects.create()
             self.save()
             return self.get_or_set_cache(attribute)

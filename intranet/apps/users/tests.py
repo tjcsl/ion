@@ -53,17 +53,17 @@ class CacheTest(IonTestCase):
             user.cache.gender
         # make sure user.cache does not exist
         with self.assertRaises(UserCache.DoesNotExist):
-            user.cache
+            self.assertIsNotNone(user.cache)
         # gender is not accessible, so returns None and sets cache
-        self.assertEqual(user.get_or_set_cache('gender'), None)
+        self.assertIsNone(user.get_or_set_cache('gender'))
         # make sure cache was set by get_or_set_cache
-        self.assertNotEqual(user.cache, None)
+        self.assertIsNotNone(user.cache)
         # delete cache object related to user
         UserCache.objects.filter(user=user).delete()
         # make sure user.is_male is false and does not fail, i.e checks LDAP and sets cache
-        self.assertEqual(user.is_male, False)
+        self.assertFalse(user.is_male)
         # make sure cache was set
-        self.assertNotEqual(user.cache, None)
+        self.assertIsNotNone(user.cache)
         # delete cache object related to user
         UserCache.objects.filter(user=user).delete()
         # make sure getting the profile with no cache works
