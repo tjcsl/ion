@@ -1631,7 +1631,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 self.cache.save()
                 return self.get_or_set_cache(attribute)
             elif attribute == "grade_number":
-                logger.debug("Setting grade_number from LDAp")
+                logger.debug("Setting grade_number from LDAP")
                 self.cache.grade_number = self.grade.number if self.grade else None
                 self.cache.save()
                 return self.get_or_set_cache(attribute)
