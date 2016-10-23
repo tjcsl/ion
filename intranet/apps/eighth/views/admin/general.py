@@ -17,7 +17,7 @@ from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, Ei
 from ...utils import get_start_date, set_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
-from ....users.models import User
+from ....users.models import User, UserCache
 
 
 @eighth_admin_required
@@ -104,6 +104,7 @@ def cache_view(request):
     if request.method == "POST":
         if "invalidate_all" in request.POST:
             invalidate_all()
+            UserCache.objects.all().delete()
             messages.success(request, "Invalidated all of the cache")
 
     try:
