@@ -593,10 +593,8 @@ def eighth_absences_view(request, user_id=None):
         else:
             return redirect("eighth_admin_dashboard")
 
-    absences = (EighthSignup.objects.filter(
-        user=user, was_absent=True,
-        scheduled_activity__attendance_taken=True).select_related("scheduled_activity__block", "scheduled_activity__activity")
-        .order_by("scheduled_activity__block"))
+    absences = (EighthSignup.objects.filter(user=user, was_absent=True, scheduled_activity__attendance_taken=True)
+                .select_related("scheduled_activity__block", "scheduled_activity__activity").order_by("scheduled_activity__block"))
     context = {"absences": absences, "user": user}
     return render(request, "eighth/absences.html", context)
 
