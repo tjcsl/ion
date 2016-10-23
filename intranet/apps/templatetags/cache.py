@@ -18,4 +18,4 @@ def from_cache(value, attribute):
     if not isinstance(attribute, str):
         raise TypeError("Attribute must be a string.")
     logger.debug("Retrieved attribute `{}` from cache for User `{}`".format(attribute, value))
-    return value.get_from_cache(attribute)
+    return value.get_or_set_cache(attribute)
