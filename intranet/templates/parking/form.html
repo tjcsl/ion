@@ -39,14 +39,14 @@ b, .parking table th {
             <th>Name:</th>
             <td>
                 <a href="{% url 'user_profile' user.id %}">
-                    {{ user|from_cache:'first_name' }} {{ user|from_cache:'last_name' }}
+                    {{ user.first_name }} {{ user.last_name }}
                 </a>
             </td>
         </tr>
         <tr>
             <th>Grade:</th>
             <td>
-                {{ user|from_cache:'grade_number' }}
+                {{ user.grade_number }}
             </td>
         </tr>
         <tr>
@@ -61,13 +61,13 @@ b, .parking table th {
 
     {% if in_joint %}
         <h3>Another user has submitted a joint parking application with you.</h3>
-        <p>If you do not want to have a joint parking application with <a href="{% url 'user_profile' in_joint.user.id %}">{{ in_joint.user|from_cache:'first_name' }} {{ in_joint.user|from_cache:'last_name' }} ({{ in_joint.user|from_cache:'grade_number' }})</a>, <a href="{% url 'parking_joint' %}?disagree=1">CLICK HERE</a></p>
+        <p>If you do not want to have a joint parking application with <a href="{% url 'user_profile' in_joint.user.id %}">{{ in_joint.user.first_name }} {{ in_joint.user.last_name }} ({{ in_joint.user.grade_number }})</a>, <a href="{% url 'parking_joint %}?disagree=1">CLICK HERE</a></p>
     {% endif %}
 
     {% if app.joint_user %}
         <b>You currently have a joint parking application with
             <a href="{% url 'user_profile' app.joint_user.id %}">
-                {{ app.joint_user|from_cache:'first_name' }} {{ app.joint_user|from_cache:'last_name' }} ({{ app.joint_user|from_cache:'grade_number' }})
+                {{ app.joint_user.first_name }} {{ app.joint_user.last_name }} ({{ app.joint_user.grade_number }})
             </a></b><br />
             <a href="{% url 'parking_joint' %}">Modify</a>
             {% else %}
