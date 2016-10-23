@@ -9,14 +9,11 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('polls', '0006_auto_20160112_0101'),
-    ]
+    dependencies = [('polls', '0006_auto_20160112_0101'),]
 
     operations = [
         migrations.AlterField(
             model_name='answer',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),),
     ]

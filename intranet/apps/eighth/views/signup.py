@@ -126,10 +126,8 @@ def eighth_signup_view(request, block_id=None):
                 "title": b,
                 "block_letter": b.block_letter,
                 "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
-                "current_signup": getattr(
-                    block_signup_map.get(b.id, {}), "activity", None),
-                "current_signup_cancelled": getattr(
-                    block_signup_map.get(b.id, {}), "cancelled", False),
+                "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
+                "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
                 "locked": b.locked
             }
 
@@ -212,10 +210,8 @@ def eighth_display_view(request, block_id=None):
             "title": b,
             "block_letter": b.block_letter,
             "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
-            "current_signup": getattr(
-                block_signup_map.get(b.id, {}), "activity", None),
-            "current_signup_cancelled": getattr(
-                block_signup_map.get(b.id, {}), "cancelled", False),
+            "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
+            "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
             "locked": b.locked
         }
 
@@ -378,11 +374,13 @@ def eighth_multi_signup_view(request):
             blocks_info.append(block_info)
             acts = block_info["activities"]
             for a in acts:
-                info = {"id": block.id,
-                        "date": block.date,
-                        "date_text": block.date.strftime('%a, %b %-d, %Y'),
-                        "block_letter": block.block_letter,
-                        "short_text": block.short_text}
+                info = {
+                    "id": block.id,
+                    "date": block.date,
+                    "date_text": block.date.strftime('%a, %b %-d, %Y'),
+                    "block_letter": block.block_letter,
+                    "short_text": block.short_text
+                }
                 if a in activities:
                     activities[a]["blocks"].append(info)
                 else:

@@ -118,12 +118,15 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
         logger.debug("Cached schedule context for {}".format(date_fmt))
         return data
 
+
 # does NOT require login
 
 
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
+
+
 # does NOT require login
 
 
@@ -188,6 +191,7 @@ def schedule_embed(request):
     data = schedule_context(request)
     return render(request, "schedule/embed.html", data)
 
+
 # DOES require login
 
 
@@ -229,7 +233,8 @@ def do_default_fill(request):
         blue_day = DayType.objects.get(name="Blue Day")
         red_day = DayType.objects.get(name="Red Day")
     except DayType.DoesNotExist:
-        return render(request, "schedule/fill.html", {"msgs": ["Failed to insert any schedules.", "Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days."]})
+        return render(request, "schedule/fill.html",
+                      {"msgs": ["Failed to insert any schedules.", "Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days."]})
 
     daymap = {monday: anchor_day, tuesday: blue_day, wednesday: red_day, thursday: blue_day, friday: red_day}
 
@@ -304,14 +309,16 @@ def admin_home_view(request):
 
     daytypes = DayType.objects.all()
 
-    data = {"month_name": month_name,
-            "year_name": year_name,
-            "sch": sch,
-            "add_form": add_form,
-            "this_month": this_month,
-            "next_month": next_month,
-            "last_month": last_month,
-            "daytypes": daytypes}
+    data = {
+        "month_name": month_name,
+        "year_name": year_name,
+        "sch": sch,
+        "add_form": add_form,
+        "this_month": this_month,
+        "next_month": next_month,
+        "last_month": last_month,
+        "daytypes": daytypes
+    }
 
     return render(request, "schedule/admin_home.html", data)
 
@@ -405,8 +412,9 @@ def admin_daytype_view(request, id=None):
             model = form.save()
             """Add blocks"""
             blocks = zip(
-                request.POST.getlist('block_order'), request.POST.getlist('block_name'), [[int(j) if j else 0 for j in i.split(":")] if ":" in i else
-                                                                                          [9, 0] for i in request.POST.getlist('block_start')],
+                request.POST.getlist('block_order'),
+                request.POST.getlist('block_name'), [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0]
+                                                     for i in request.POST.getlist('block_start')],
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist('block_end')])
             logger.debug(blocks)
             model.blocks.all().delete()

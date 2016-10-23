@@ -6,10 +6,7 @@ from django.utils.encoding import force_text
 
 class PhoneField(forms.Field):
     widget = forms.TextInput
-    default_error_messages = {
-        'incomplete': 'Enter a phone number.',
-        'invalid': 'Please enter a valid phone number.'
-    }
+    default_error_messages = {'incomplete': 'Enter a phone number.', 'invalid': 'Please enter a valid phone number.'}
 
     def __init__(self, *args, **kwargs):
         super(PhoneField, self).__init__(*args, **kwargs)

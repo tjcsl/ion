@@ -134,8 +134,8 @@ def save_personal_info(request, user):
                     if field_vals is None or len(field_vals) == 0 or (len(field_vals) == 1 and (field_vals[0] is None or len(field_vals[0]) < 1)):
                         pass
                     else:
-                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else
-                                                                              ", ".join(field_vals)))
+                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals
+                                                                              if not isinstance(field_vals, list) else ", ".join(field_vals)))
     return personal_info_form
 
 
@@ -215,8 +215,8 @@ def save_privacy_options(request, user):
                         messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
-                                                                              ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field]
+                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -244,13 +244,13 @@ def save_notification_options(request, user):
                 if field in notification_options and notification_options[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], notification_options[field] if field in notification_options else
-                                                               None))
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], notification_options[field]
+                                                               if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
                     try:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
-                                                                              ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field]
+                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
                     except TypeError:
                         pass
     return notification_options_form

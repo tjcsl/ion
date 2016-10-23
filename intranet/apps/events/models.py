@@ -15,7 +15,6 @@ from ...utils.deletion import set_historical_user
 
 
 class Link(models.Model):
-
     """A link about an item (Facebook event link, etc)."""
     url = models.URLField(max_length=2000)
     title = models.CharField(max_length=100)
@@ -57,7 +56,6 @@ class EventManager(Manager):
 
 
 class EventUserMap(models.Model):
-
     """Represents mapping fields between events and users.
 
     These attributes would be a part of the Event model, but if they are,
@@ -83,7 +81,6 @@ class EventUserMap(models.Model):
 
 
 class Event(models.Model):
-
     """An event available to the TJ community.
 
     title:

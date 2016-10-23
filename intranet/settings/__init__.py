@@ -233,7 +233,7 @@ STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 
 PIPELINE = {
     'CSS_COMPRESSOR': None,
-    'COMPILERS': ['pipeline.compilers.sass.SASSCompiler'],
+    'COMPILERS': ['pipeline.compilers.sass.SASSCompiler',],
     'STYLESHEETS': {
         'base': {
             'source_filenames': ['css/base.scss', 'css/themes.scss', 'css/responsive.scss'],

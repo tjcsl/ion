@@ -128,8 +128,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     if surrounding_blocks is None:
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
-    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(
-        block__in=surrounding_blocks))
+    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(block__in=surrounding_blocks))
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
@@ -532,15 +531,10 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
 
-        context.update({
-            "awaiting_teacher": awaiting_teacher,
-            "awaiting_approval": awaiting_approval}
-        )
+        context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval})
 
     self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user).this_year()
-    context.update({
-        "self_awaiting_teacher": self_awaiting_teacher
-    })
+    context.update({"self_awaiting_teacher": self_awaiting_teacher})
 
     if show_welcome:
         return render(request, "welcome/student.html", context)

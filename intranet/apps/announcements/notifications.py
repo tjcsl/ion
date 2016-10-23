@@ -42,11 +42,13 @@ def request_announcement_email(request, form, obj):
     logger.debug(emails)
     logger.info("%s: Announcement request to %s, %s", request.user, teachers, emails)
     base_url = request.build_absolute_uri(reverse('index'))
-    data = {"teachers": teachers,
-            "user": request.user,
-            "formdata": form.data,
-            "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
-            "base_url": base_url}
+    data = {
+        "teachers": teachers,
+        "user": request.user,
+        "formdata": form.data,
+        "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
+        "base_url": base_url
+    }
     logger.info("%s: Announcement request %s", request.user, data)
     email_send("announcements/emails/teacher_approve.txt", "announcements/emails/teacher_approve.html", data, subject, emails)
 
@@ -62,10 +64,12 @@ def admin_request_announcement_email(request, form, obj):
     subject = "News Post Approval Needed ({})".format(obj.title)
     emails = [settings.APPROVAL_EMAIL]
     base_url = request.build_absolute_uri(reverse('index'))
-    data = {"req": obj,
-            "formdata": form.data,
-            "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
-            "base_url": base_url}
+    data = {
+        "req": obj,
+        "formdata": form.data,
+        "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
+        "base_url": base_url
+    }
     email_send("announcements/emails/admin_approve.txt", "announcements/emails/admin_approve.html", data, subject, emails)
 
 

@@ -8,14 +8,17 @@ class Migration(migrations.Migration):
     dependencies = [('polls', '0002_auto_20151117_1855')]
 
     operations = [
-        migrations.AlterModelOptions(name='question',
-                                     options={'ordering': ['num']},),
-        migrations.AddField(model_name='answer',
-                            name='clear_vote',
-                            field=models.BooleanField(default=False),),
-        migrations.AlterField(model_name='answer',
-                              name='choice',
-                              field=models.ForeignKey(to='polls.Choice', null=True, on_delete=models.CASCADE),),
+        migrations.AlterModelOptions(
+            name='question',
+            options={'ordering': ['num']},),
+        migrations.AddField(
+            model_name='answer',
+            name='clear_vote',
+            field=models.BooleanField(default=False),),
+        migrations.AlterField(
+            model_name='answer',
+            name='choice',
+            field=models.ForeignKey(to='polls.Choice', null=True, on_delete=models.CASCADE),),
         migrations.AlterField(
             model_name='question',
             name='type',

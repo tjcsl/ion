@@ -9,15 +9,14 @@ class Migration(migrations.Migration):
     dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
-        migrations.CreateModel(name='College',
-                               fields=[
-                                   ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                                   ('name', models.CharField(max_length=1000)),
-                                   ('ceeb', models.IntegerField(unique=True)),
-                               ],
-                               options={
-                                   'ordering': ['name'],
-                               },),
+        migrations.CreateModel(
+            name='College',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=1000)),
+                ('ceeb', models.IntegerField(unique=True)),
+            ],
+            options={'ordering': ['name'],},),
         migrations.CreateModel(
             name='Major',
             fields=[
@@ -47,8 +46,8 @@ class Migration(migrations.Migration):
                                 'Environmental Science', 'Environmental Science'), ('Evolutionary Biology', 'Evolutionary Biology'), (
                                     'Advertising', 'Advertising'), ('Apparel Design', 'Apparel Design'), ('East Asian Studies', 'East Asian Studies'),
                     ('Biomedical Engineering', 'Biomedical Engineering'), ('Policy Analysis and Management', 'Policy Analysis and Management'), (
-                        'Videogame Design and Development', 'Videogame Design and Development'
-                    ), ('Electrical Engineering', 'Electrical Engineering'), ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
+                        'Videogame Design and Development', 'Videogame Design and Development'), ('Electrical Engineering', 'Electrical Engineering'),
+                    ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
                         'Theatre/Directing', 'Theatre/Directing'), ('Leadership', 'Leadership'), ('Design', 'Design'), (
                             'Environmental Thought and Practice', 'Environmental Thought and Practice'), ('Athletic Training', 'Athletic Training'),
                     ('Physical Therapy', 'Physical Therapy'), ('Chemical Engineering', 'Chemical Engineering'), (
@@ -61,16 +60,15 @@ class Migration(migrations.Migration):
                                         'Mathematics & Computer Science', 'Mathematics & Computer Science')
                 ])),
             ],
-            options={
-                'ordering': ['name'],
-            },),
-        migrations.CreateModel(name='Senior',
-                               fields=[
-                                   ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                                   ('college_sure', models.BooleanField(default=False)),
-                                   ('major_sure', models.BooleanField(default=False)),
-                                   ('college', models.ForeignKey(to='seniors.College', on_delete=models.CASCADE)),
-                                   ('major', models.ForeignKey(to='seniors.Major', on_delete=models.CASCADE)),
-                                   ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
-                               ],),
+            options={'ordering': ['name'],},),
+        migrations.CreateModel(
+            name='Senior',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('college_sure', models.BooleanField(default=False)),
+                ('major_sure', models.BooleanField(default=False)),
+                ('college', models.ForeignKey(to='seniors.College', on_delete=models.CASCADE)),
+                ('major', models.ForeignKey(to='seniors.Major', on_delete=models.CASCADE)),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+            ],),
     ]

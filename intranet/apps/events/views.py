@@ -58,18 +58,16 @@ def events_view(request):
     this_week = (delta, delta + datetime.timedelta(days=7))
     this_month = (this_week[1], this_week[1] + datetime.timedelta(days=31))
 
-    events_categories = [
-        {
-            "title": "This week",
-            "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])
-        }, {
-            "title": "This month",
-            "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1])
-        }, {
-            "title": "Future",
-            "events": viewable_events.filter(time__gte=this_month[1])
-        }
-    ]
+    events_categories = [{
+        "title": "This week",
+        "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])
+    }, {
+        "title": "This month",
+        "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1])
+    }, {
+        "title": "Future",
+        "events": viewable_events.filter(time__gte=this_month[1])
+    }]
 
     if is_events_admin:
         unapproved_events = (Event.objects.filter(approved=False, rejected=False).prefetch_related("groups"))
@@ -207,7 +205,8 @@ def request_event_view(request):
             # SAFE HTML
             obj.description = bleach.linkify(obj.description)
 
-            messages.success(request, "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.")
+            messages.success(request,
+                             "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.")
             obj.created_hook(request)
 
             obj.save()

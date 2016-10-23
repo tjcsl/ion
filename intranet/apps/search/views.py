@@ -34,8 +34,7 @@ def do_ldap_query(q, admin=False):
     if q.isdigit():
         logger.debug("Digit search: {}".format(q))
         if USE_SID_LDAP:
-            query = (
-                "(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
+            query = ("(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
 
             logger.debug("Running LDAP query: {}".format(query))
 
@@ -56,24 +55,28 @@ def do_ldap_query(q, admin=False):
         logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
         map_attrs = {
-            "firstname": ("givenname",
-                          "nickname",),
-            "first": ("givenname",
-                      "nickname",),
+            "firstname": (
+                "givenname",
+                "nickname",),
+            "first": (
+                "givenname",
+                "nickname",),
             "lastname": ("sn",),
             "last": ("sn",),
             "nick": ("nickname",),
             "nickname": ("nickname",),
-            "name": ("sn",
-                     "mname",
-                     "givenname",
-                     "nickname",),
+            "name": (
+                "sn",
+                "mname",
+                "givenname",
+                "nickname",),
             "city": ("l",),
             "town": ("l",),
             "middlename": ("mname",),
             "middle": ("mname",),
-            "phone": ("homephone",
-                      "mobile",),
+            "phone": (
+                "homephone",
+                "mobile",),
             "homephone": ("homephone",),
             "cell": ("mobile",),
             "address": ("street",),
@@ -184,8 +187,7 @@ def do_ldap_query(q, admin=False):
                 inner += "({}{}{})".format(attr, sep, val)
             inner += ")"
 
-        query = "(&{}(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))".format(
-            inner)
+        query = "(&{}(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))".format(inner)
 
         logger.debug("Running LDAP query: {}".format(query))
 
@@ -229,10 +231,10 @@ def do_ldap_query(q, admin=False):
                           "(sn={0}*)"
                           "(iodineUid=*{0})"
                           "(iodineUid={0}*)") + ("(mname=*{0})"
-                                                 "(mname={0}*)" if admin else "") +
-                         ("(nickname=*{0})"
-                          "(nickname={0}*)"
-                          ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
+                                                 "(mname={0}*)"
+                                                 if admin else "") + ("(nickname=*{0})"
+                                                                      "(nickname={0}*)"
+                                                                      ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
 
             logger.debug("Running LDAP query: {}".format(query))
 
@@ -290,9 +292,7 @@ def do_classes_search(q):
         if exact:
             logger.debug("Simple exact: {}".format(p))
             # No implied wildcard
-            query = (("(&(|(tjhsstClassId={0})"
-                      "(cn={0})"
-                      ")(|(objectClass=tjhsstClass)))")).format(p)
+            query = (("(&(|(tjhsstClassId={0})" "(cn={0})" ")(|(objectClass=tjhsstClass)))")).format(p)
         else:
             logger.debug("Simple wildcard: {}".format(p))
             if p.endswith("*"):
@@ -301,11 +301,7 @@ def do_classes_search(q):
                 p = p[1:]
             # Search for first, last, middle, nickname uid, with implied
             # wildcard at beginning and end
-            query = (("(&(|(tjhsstClassId=*{0})"
-                      "(tjhsstClassId={0}*)"
-                      "(cn=*{0})"
-                      "(cn={0}*)"
-                      ")(|(objectClass=tjhsstClass)))")).format(p)
+            query = (("(&(|(tjhsstClassId=*{0})" "(tjhsstClassId={0}*)" "(cn=*{0})" "(cn={0}*)" ")(|(objectClass=tjhsstClass)))")).format(p)
 
         logger.debug("Running LDAP query: {}".format(query))
 
@@ -376,8 +372,7 @@ def search_view(request):
                 return profile_view(request, user_id=u.id)
 
         try:
-            query_error, users = get_search_results(
-                q, request.user.is_eighthoffice)
+            query_error, users = get_search_results(q, request.user.is_eighthoffice)
         except Exception as e:
             query_error = "{}".format(e)
             users = []

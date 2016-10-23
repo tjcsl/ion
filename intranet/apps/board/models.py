@@ -9,7 +9,6 @@ from ...utils.deletion import set_historical_user
 
 
 class Board(models.Model):
-
     """A Board is a collection of BoardPosts for a specific eighth period activity, class,
     class section, or group."""
 
@@ -161,7 +160,6 @@ class Board(models.Model):
 
 
 class BoardPost(models.Model):
-
     """A BoardPost is a post by a user in a specific Board.
 
     They must be in the activity/class/class section/group to post to
@@ -200,7 +198,6 @@ class BoardPost(models.Model):
 
 
 class BoardPostComment(models.Model):
-
     """A BoardPostComment is a comment on a BoardPost by a user in a specific Board."""
 
     content = models.TextField(max_length=1000)

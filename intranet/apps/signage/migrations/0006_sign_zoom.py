@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('signage', '0005_auto_20160303_1409'),
-    ]
+    dependencies = [('signage', '0005_auto_20160303_1409'),]
 
-    operations = [
-        migrations.AddField(
-            model_name='sign',
-            name='zoom',
-            field=models.IntegerField(default=3),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='sign',
+        name='zoom',
+        field=models.IntegerField(default=3),),]

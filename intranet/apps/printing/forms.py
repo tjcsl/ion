@@ -31,9 +31,7 @@ class PrintJobForm(forms.ModelForm):
 
     file = forms.FileField(validators=[validate_size])
     printer = forms.ChoiceField()
-    page_range = forms.RegexField(max_length=100,
-                                  required=False,
-                                  regex=r'^[0-9,\- ]*$',
+    page_range = forms.RegexField(max_length=100, required=False, regex=r'^[0-9,\- ]*$',
                                   error_message="This field must contain only numbers or ranges of numbers.",
                                   widget=forms.TextInput(attrs={'placeholder': 'All Pages'}))
 

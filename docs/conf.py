@@ -32,8 +32,10 @@ import sphinx_bootstrap_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
-              "djangodocs"]
+extensions = [
+    'sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
+    "djangodocs"
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -294,8 +296,10 @@ texinfo_documents = [('index', 'TJIntranet', 'TJ Intranet Documentation', 'TJ In
 # texinfo_no_detailmenu = False
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
-                       'django': ('https://docs.djangoproject.com/en/dev', 'https://docs.djangoproject.com/en/dev/_objects')}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'django': ('https://docs.djangoproject.com/en/dev', 'https://docs.djangoproject.com/en/dev/_objects')
+}
 
 # -- Django Setup -------------------------------------------------------------
 

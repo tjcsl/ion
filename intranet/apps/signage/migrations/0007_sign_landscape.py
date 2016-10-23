@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('signage', '0006_sign_zoom'),
-    ]
+    dependencies = [('signage', '0006_sign_zoom'),]
 
-    operations = [
-        migrations.AddField(
-            model_name='sign',
-            name='landscape',
-            field=models.BooleanField(default=False),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='sign',
+        name='landscape',
+        field=models.BooleanField(default=False),),]

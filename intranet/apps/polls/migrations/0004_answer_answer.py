@@ -8,4 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [('polls', '0003_auto_20151117_2139')]
 
-    operations = [migrations.AddField(model_name='answer', name='answer', field=models.CharField(max_length=10000, null=True),)]
+    operations = [migrations.AddField(
+        model_name='answer',
+        name='answer',
+        field=models.CharField(max_length=10000, null=True),)]

@@ -43,13 +43,15 @@ class EighthTest(IonTestCase):
 
     def schedule_activity(self, block_id, activity_id):
         # FIXME: figure out a way to do this that involves less hard-coding.
-        args = {'form-TOTAL_FORMS': '1',
-                'form-INITIAL_FORMS': '0',
-                'form-MAX_NUM_FORMS': '',
-                'form-0-block': block_id,
-                'form-0-activity': activity_id,
-                'form-0-scheduled': True,
-                'form-0-capacity': 1}
+        args = {
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MAX_NUM_FORMS': '',
+            'form-0-block': block_id,
+            'form-0-activity': activity_id,
+            'form-0-scheduled': True,
+            'form-0-capacity': 1
+        }
         response = self.client.post(reverse('eighth_admin_schedule_activity'), args)
         self.assertEqual(response.status_code, 302)
         return EighthScheduledActivity.objects.get(block__id=block_id, activity__id=activity_id)
@@ -242,8 +244,10 @@ class EighthTest(IonTestCase):
         schact1.attendance_taken = False
         schact1.save()
 
-        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" +
-                                    urlencode({"block": block1.id}), {"take_attendance_zero": "1"})
+        response = self.client.post(
+            reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({
+                "block": block1.id
+            }), {"take_attendance_zero": "1"})
         self.assertEqual(response.status_code, 302)
 
         # Make sure activity is marked as attendance taken.
@@ -267,8 +271,10 @@ class EighthTest(IonTestCase):
         schact1.cancelled = True
         schact1.save()
 
-        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" +
-                                    urlencode({"block": block1.id}), {"take_attendance_cancelled": "1"})
+        response = self.client.post(
+            reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({
+                "block": block1.id
+            }), {"take_attendance_cancelled": "1"})
         self.assertEqual(response.status_code, 302)
 
         # Make sure attendance has been marked as taken.

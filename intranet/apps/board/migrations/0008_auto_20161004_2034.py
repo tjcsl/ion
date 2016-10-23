@@ -9,19 +9,15 @@ import intranet.utils.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('board', '0007_auto_20160828_2058'),
-    ]
+    dependencies = [('board', '0007_auto_20160828_2058'),]
 
     operations = [
         migrations.AlterField(
             model_name='boardpost',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),),
         migrations.AlterField(
             model_name='boardpostcomment',
             name='user',
-            field=models.ForeignKey(on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),),
     ]

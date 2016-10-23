@@ -75,8 +75,10 @@ def schedule_activity_view(request):
                         cancelled = True
 
                 if instance:
-                    fields = ["rooms", "capacity", "sponsors", "title", "special", "administrative",
-                              "restricted", "sticky", "both_blocks", "comments", "admin_comments"]
+                    fields = [
+                        "rooms", "capacity", "sponsors", "title", "special", "administrative", "restricted", "sticky", "both_blocks", "comments",
+                        "admin_comments"
+                    ]
                     if "rooms" in form.cleaned_data:
                         for o in form.cleaned_data["rooms"]:
                             invalidate_obj(o)

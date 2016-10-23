@@ -72,10 +72,12 @@ def delete_room_view(request, room_id):
         messages.success(request, "Successfully deleted room.")
         return redirect("eighth_admin_dashboard")
     else:
-        context = {"admin_page_title": "Delete Room",
-                   "item_name": str(room),
-                   "help_text": "Deleting this room will remove all records "
-                                "of it related to eighth period."}
+        context = {
+            "admin_page_title": "Delete Room",
+            "item_name": str(room),
+            "help_text": "Deleting this room will remove all records "
+            "of it related to eighth period."
+        }
 
         return render(request, "eighth/admin/delete_form.html", context)
 

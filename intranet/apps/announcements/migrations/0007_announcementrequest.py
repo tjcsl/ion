@@ -23,7 +23,5 @@ class Migration(migrations.Migration):
                 ('teachers_requested', models.ManyToManyField(related_name='teachers_requested', to=settings.AUTH_USER_MODEL, blank=True)),
                 ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
-            options={
-                'ordering': ['-added'],
-            },),
+            options={'ordering': ['-added'],},),
     ]

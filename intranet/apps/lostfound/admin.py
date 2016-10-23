@@ -17,5 +17,6 @@ class FoundItemAdmin(admin.ModelAdmin):
     ordering = ('-added',)
     raw_id_fields = ('user',)
 
+
 admin.site.register(LostItem, LostItemAdmin)
 admin.site.register(FoundItem, FoundItemAdmin)

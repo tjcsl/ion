@@ -46,9 +46,7 @@ class Command(BaseCommand):
         turnover_date = datetime.datetime(current_year, 7, 1)
         self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
 
-        self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year),
-                 settings.SENIOR_GRADUATION_YEAR == new_senior_year)
-
+        self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year), settings.SENIOR_GRADUATION_YEAR == new_senior_year)
         """
         EIGHTH:
             EighthBlock: filtered

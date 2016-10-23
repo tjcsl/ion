@@ -9,26 +9,21 @@ import intranet.utils.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('events', '0020_auto_20160828_2058'),
-    ]
+    dependencies = [('events', '0020_auto_20160828_2058'),]
 
     operations = [
         migrations.AlterField(
             model_name='event',
             name='approved_by',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user,
-                                    related_name='approved_event', to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='approved_event',
+                                    to=settings.AUTH_USER_MODEL),),
         migrations.AlterField(
             model_name='event',
             name='rejected_by',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user,
-                                    related_name='rejected_event', to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='rejected_event',
+                                    to=settings.AUTH_USER_MODEL),),
         migrations.AlterField(
             model_name='event',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),),
     ]

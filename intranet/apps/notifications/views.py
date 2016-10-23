@@ -66,9 +66,11 @@ def chrome_getdata_view(request):
             notif = notifs.first()
             ndata = notif.data
             if "title" in ndata and "text" in ndata:
-                data = {"title": ndata['title'] if 'title' in ndata else '',
-                        "text": ndata['text'] if 'text' in ndata else '',
-                        "url": ndata['url'] if 'url' in ndata else ''}
+                data = {
+                    "title": ndata['title'] if 'title' in ndata else '',
+                    "text": ndata['text'] if 'text' in ndata else '',
+                    "url": ndata['url'] if 'url' in ndata else ''
+                }
             else:
                 schedule_chk = chrome_getdata_check(request)
                 if schedule_chk:

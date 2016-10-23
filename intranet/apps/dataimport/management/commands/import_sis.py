@@ -39,12 +39,7 @@ class Command(BaseCommand):
     uidmap = {}  # type: Dict[str,str]
     last_uid_number = 33971
     schedules = {}  # type: Dict[str,str]
-    ldifs = {
-        "newstudents": [],
-        "oldstudents": [],
-        "schedules": [],
-        "newteachers": []
-    }  # type: Dict[str,List[str]]
+    ldifs = {"newstudents": [], "oldstudents": [], "schedules": [], "newteachers": []}  # type: Dict[str,List[str]]
     teacher_mappings = {}  # type: Dict[str,str]
     new_teachers = []  # type: List[Dict[str,str]]
 
@@ -195,14 +190,16 @@ class Command(BaseCommand):
                 "CourseIDTitle", "CourseTitleId", "TermName", "TermCode", "TeacherAide", "TermOverride", "SectionEnterDate", "SectionLeaveDate",
                 "MeetDays"
             ]
-            rows = ["StudentID", "Gender", "Grade", "FirstName", "LastName", "MiddleName", "StudentName", "TJUsername", "Nickname", "Birthdate",
-                    "Gridcode", "Address", "City", "State", "Zipcode", "CityStateZip", "EthnicCode", "Language", "EnterDate", "LeaveDate", "Track",
-                    "Phone", "ScheduleHouse", "HomeroomTeacher", "HomeroomStaffName", "HomeroomName", "CounselorLast", "Counselor", "Locker",
-                    "LockerComb", "ADA", "Organization", "Period", "EndPeriod", "Teacher", "TeacherStaffName", "Room", "SectionID", "CourseID",
-                    "CourseTitle", "CourseShortTitle", "CourseIDTitle", "CourseTitleId", "TermName", "TermCode", "TeacherAide", "TermOverride",
-                    "SectionEnterDate", "SectionLeaveDate", "House", "AuditClass", "MeetDays", "FeeAmount", "FeeCategory", "FeeCode",
-                    "FeeDescription", "ParentName1", "Phone1", "Type1", "Extension1", "ParentName2", "Phone2", "Type2", "Extension2", "ParentName3",
-                    "Phone3", "Type3", "Extension3", "ParentName4", "Phone4", "Type4", "Extension4"]
+            rows = [
+                "StudentID", "Gender", "Grade", "FirstName", "LastName", "MiddleName", "StudentName", "TJUsername", "Nickname", "Birthdate",
+                "Gridcode", "Address", "City", "State", "Zipcode", "CityStateZip", "EthnicCode", "Language", "EnterDate", "LeaveDate", "Track",
+                "Phone", "ScheduleHouse", "HomeroomTeacher", "HomeroomStaffName", "HomeroomName", "CounselorLast", "Counselor", "Locker",
+                "LockerComb", "ADA", "Organization", "Period", "EndPeriod", "Teacher", "TeacherStaffName", "Room", "SectionID", "CourseID",
+                "CourseTitle", "CourseShortTitle", "CourseIDTitle", "CourseTitleId", "TermName", "TermCode", "TeacherAide", "TermOverride",
+                "SectionEnterDate", "SectionLeaveDate", "House", "AuditClass", "MeetDays", "FeeAmount", "FeeCategory", "FeeCode", "FeeDescription",
+                "ParentName1", "Phone1", "Type1", "Extension1", "ParentName2", "Phone2", "Type2", "Extension2", "ParentName3", "Phone3", "Type3",
+                "Extension3", "ParentName4", "Phone4", "Type4", "Extension4"
+            ]
             for row in csv_reader:
                 row_dict = {rows[i]: row[i] for i in range(len(row))}
                 class_dict = {i: row_dict[i] for i in class_rows}
@@ -452,10 +449,7 @@ replace: enrolledclass
         return "{}{}{}".format(year, month, day)
 
     def format_title(self, gender):
-        return {
-            "M": "Mr.",
-            "F": "Ms."
-        }[gender]
+        return {"M": "Mr.", "F": "Ms."}[gender]
 
     def format_display_name(self, data):
         if len(data["user"]["MiddleName"] or "") > 0:
@@ -554,25 +548,19 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
     def format_quarters(self, data):
         if data["TermCode"] == "YR":
-            return ("quarterNumber: 1\n"
-                    "quarterNumber: 2\n"
-                    "quarterNumber: 3\n"
-                    "quarterNumber: 4")
+            return ("quarterNumber: 1\n" "quarterNumber: 2\n" "quarterNumber: 3\n" "quarterNumber: 4")
 
         if data["TermCode"] == "S1":
-            return ("quarterNumber: 1\n"
-                    "quarterNumber: 2")
+            return ("quarterNumber: 1\n" "quarterNumber: 2")
 
         if data["TermCode"] == "S2":
-            return ("quarterNumber: 3\n"
-                    "quarterNumber: 4")
+            return ("quarterNumber: 3\n" "quarterNumber: 4")
 
     def format_periods(self, data):
         if data["Period"] == data["EndPeriod"]:
             return "classPeriod: {}".format(data["Period"])
 
-        return ("classPeriod: {}\n"
-                "classPeriod: {}".format(data["Period"], data["EndPeriod"]))
+        return ("classPeriod: {}\n" "classPeriod: {}".format(data["Period"], data["EndPeriod"]))
 
     def format_sponsor(self, data):
         # TODO: Search existing LDAP/handle new teachers
@@ -609,8 +597,13 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         except User.DoesNotExist:
             uid_number = self.last_uid_number + 1
             self.last_uid_number += 1
-            self.new_teachers.append({'uid': uid_number, 'username': username, 'firstname': first_name,
-                                      'lastname': last_name, 'fullname': '{} {}'.format(first_name, last_name)})
+            self.new_teachers.append({
+                'uid': uid_number,
+                'username': username,
+                'firstname': first_name,
+                'lastname': last_name,
+                'fullname': '{} {}'.format(first_name, last_name)
+            })
 
         return username
 
