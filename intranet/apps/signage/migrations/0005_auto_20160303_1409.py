@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('signage', '0004_auto_20160212_1121'),]
+    dependencies = [('signage', '0004_auto_20160212_1121')]
 
     operations = [
         migrations.AddField(

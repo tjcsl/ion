@@ -7,9 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('users', '0008_user__student_id'),]
+    dependencies = [('users', '0008_user__student_id')]
 
     operations = [migrations.AddField(
         model_name='user',
         name='user_locked',
-        field=models.BooleanField(default=False),),]
+        field=models.BooleanField(default=False),)]

@@ -7,9 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('printing', '0006_printjob_page_range'),]
+    dependencies = [('printing', '0006_printjob_page_range')]
 
     operations = [migrations.AddField(
         model_name='printjob',
         name='duplex',
-        field=models.BooleanField(default=True),),]
+        field=models.BooleanField(default=True),)]

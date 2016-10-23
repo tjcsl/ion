@@ -7,9 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('events', '0017_auto_20160323_2305'),]
+    dependencies = [('events', '0017_auto_20160323_2305')]
 
     operations = [migrations.AddField(
         model_name='event',
         name='show_on_dashboard',
-        field=models.BooleanField(default=True),),]
+        field=models.BooleanField(default=True),)]

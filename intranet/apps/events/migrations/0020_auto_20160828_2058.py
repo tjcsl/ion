@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [('events', '0019_tjstaruuidmap'),]
+    dependencies = [('events', '0019_tjstaruuidmap')]
 
     operations = [
         migrations.AlterField(

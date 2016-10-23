@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelManagers(
             name='user',
-            managers=[('objects', intranet.apps.users.models.UserManager()),],),
+            managers=[('objects', intranet.apps.users.models.UserManager())],),
         migrations.AlterField(
             model_name='user',
             name='groups',

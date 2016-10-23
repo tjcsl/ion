@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('eighth', '0039_auto_20160322_1013'),]
+    dependencies = [('eighth', '0039_auto_20160322_1013')]
 
     operations = [
         migrations.AddField(

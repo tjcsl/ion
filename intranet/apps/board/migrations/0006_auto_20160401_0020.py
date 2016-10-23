@@ -7,7 +7,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [('board', '0005_auto_20160330_2140'),]
+    dependencies = [('board', '0005_auto_20160330_2140')]
 
     operations = [
         migrations.AlterModelOptions(

@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('itemreg', '0003_auto_20160409_2240'),]
+    dependencies = [('itemreg', '0003_auto_20160409_2240')]
 
     operations = [
         migrations.AddField(
