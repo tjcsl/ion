@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=1000)),
                 ('ceeb', models.IntegerField(unique=True)),
             ],
-            options={'ordering': ['name'],},),
+            options={'ordering': ['name']},),
         migrations.CreateModel(
             name='Major',
             fields=[
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                                         'Mathematics & Computer Science', 'Mathematics & Computer Science')
                 ])),
             ],
-            options={'ordering': ['name'],},),
+            options={'ordering': ['name']},),
         migrations.CreateModel(
             name='Senior',
             fields=[
