@@ -20,7 +20,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nominator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='nomination_votes', to=settings.AUTH_USER_MODEL)),
-                ('nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='nomination_votes_received', to=settings.AUTH_USER_MODEL)),
+                ('nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                              related_name='nomination_votes_received', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(

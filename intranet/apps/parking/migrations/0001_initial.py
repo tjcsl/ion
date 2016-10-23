@@ -33,8 +33,10 @@ class Migration(migrations.Migration):
                 ('email', models.CharField(max_length=50)),
                 ('mentorship', models.BooleanField(default=False)),
                 ('cars', models.ManyToManyField(to='parking.CarApplication')),
-                ('joint_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='parkingapplication_joint', to=settings.AUTH_USER_MODEL)),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='parkingapplication', to=settings.AUTH_USER_MODEL)),
+                ('joint_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                                 related_name='parkingapplication_joint', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                           related_name='parkingapplication', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
