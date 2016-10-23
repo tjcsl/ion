@@ -7,7 +7,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [('itemreg', '0006_auto_20160410_2215'),]
+    dependencies = [('itemreg', '0006_auto_20160410_2215')]
 
     operations = [
         migrations.RemoveField(

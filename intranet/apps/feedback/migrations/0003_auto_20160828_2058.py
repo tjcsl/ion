@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [('feedback', '0002_auto_20151207_1933'),]
+    dependencies = [('feedback', '0002_auto_20151207_1933')]
 
     operations = [
         migrations.AlterField(

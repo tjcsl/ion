@@ -9,7 +9,7 @@ import intranet.utils.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [('eighth', '0044_auto_20161004_2034'),]
+    dependencies = [('eighth', '0044_auto_20161004_2034')]
 
     operations = [
         migrations.AlterField(

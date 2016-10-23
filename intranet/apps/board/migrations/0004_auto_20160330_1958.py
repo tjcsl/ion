@@ -7,9 +7,9 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [('board', '0003_auto_20150831_1118'),]
+    dependencies = [('board', '0003_auto_20150831_1118')]
 
     operations = [migrations.RenameField(
         model_name='board',
         old_name='class_id',
-        new_name='course_id',),]
+        new_name='course_id',)]

@@ -8,7 +8,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('eighth', '0036_merge'),]
+    dependencies = [('eighth', '0036_merge')]
 
     operations = [
         migrations.RemoveField(
