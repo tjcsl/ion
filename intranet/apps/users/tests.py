@@ -55,8 +55,8 @@ class CacheTest(IonTestCase):
         with self.assertRaises(UserCache.DoesNotExist):
             user.cache
         # gender is not accessible, so returns None and sets cache
-        self.assertEqual(user.get_from_cache('gender'), None)
-        # make sure cache was set by get_from_cache
+        self.assertEqual(user.get_or_set_cache('gender'), None)
+        # make sure cache was set by get_or_set_cache
         self.assertNotEqual(user.cache, None)
         # delete cache object related to user
         UserCache.objects.filter(user=user).delete()

@@ -128,9 +128,9 @@
                         </h2>
                         <h3>
                         {% if profile_user.is_student %}
-                            {% if profile_user|from_cache:'graduation_year' %}
+                            {% if profile_user.graduation_year %}
                                 {{ profile_user.grade|capfirst }}
-                                ({{ profile_user|from_cache:'graduation_year' }})
+                                ({{ profile_user.graduation_year }})
                             {% else %}
                                 Student
                             {% endif %}
@@ -149,7 +149,7 @@
                                 <td>{{ profile_user.display_name }}{% if profile_user.nickname %} ({{ profile_user.nickname }}){% endif %}</td>
                             </tr>
                         {% endif %}
-                        {% if profile_user|from_cache:'gender' is not None %}
+                        {% if profile_user.gender is not None %}
                             <tr>
                                 <th>Gender</th>
                                 <td>{% if profile_user.is_male is True %}Male{% elif profile_user.is_female%}Female{% endif %}</td>
@@ -179,7 +179,7 @@
                             <td>{{ profile_user.birthday|date:"F j, Y" }}</td>
                         </tr>
                         {% endif %}
-                        {% if profile_user|from_cache:'objectClass' == "tjhsstStudent" and profile_user.counselor %}
+                        {% if profile_user.object_class == "tjhsstStudent" and profile_user.counselor %}
                             <tr>
                                 <th>Counselor</th>
                                 <td> {{ profile_user.counselor.last_name }} </td>
@@ -436,13 +436,13 @@
             </div>
 
             {% if nominations_active %}
-                {% if request.user.is_student and profile_user|from_cache:"grade_number" ==  request.user|from_cache:"grade_number" %}
+                {% if request.user.is_student and profile_user.grade_number ==  request.user.grade_number %}
                 <section class="nomination">
                     <br />
                     {% if has_been_nominated %}
-                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user|from_cache:'first_name' }} for {{ nomination_position }}.</a>
+                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
                     {% else %}
-                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user|from_cache:'first_name' }} for {{ nomination_position }}</a>
+                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
                     {% endif %}
                     <br />
                 </section>
