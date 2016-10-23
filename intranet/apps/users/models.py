@@ -1611,36 +1611,36 @@ class User(AbstractBaseUser, PermissionsMixin):
                 self.cache = UserCache.objects.create()
                 self.cache.save()
                 self.save()
-            val = getattr(self.cache, attribute)
-            if val:
-                return val
-            logger.debug("Value not found in cache, attempting to set from LDAP")
-            if attribute in mappings:
-                if attribute == "gender":
-                    logger.debug("Setting gender from LDAP")
-                    if self.sex:
-                        self.cache.gender = True if self.sex.lower()[:1] == "m" else False
-                    else:
-                        return None
-                else:
-                    logger.debug("Setting {} from LDAP".format(attribute))
-                    if str(self.__getattr__(mappings[attribute])).isdigit():
-                        setattr(self.cache, attribute, int(self.__getattr__(mappings[attribute])))
-                    else:
-                        setattr(self.cache, attribute, self.__getattr__(mappings[attribute]))
-                self.cache.save()
-                return self.get_or_set_cache(attribute)
-            elif attribute == "grade_number":
-                logger.debug("Setting grade_number from LDAP")
-                self.cache.grade_number = self.grade.number if self.grade else None
-                self.cache.save()
-                return self.get_or_set_cache(attribute)
-            return None
         except UserCache.DoesNotExist:
             logger.debug("Initializing UserCache for {}".format(self))
             self.cache = UserCache.objects.create()
             self.save()
             return self.get_or_set_cache(attribute)
+        val = getattr(self.cache, attribute)
+        if val:
+            return val
+        logger.debug("Value not found in cache, attempting to set from LDAP")
+        if attribute in mappings:
+            if attribute == "gender":
+                logger.debug("Setting gender from LDAP")
+                if self.sex:
+                    self.cache.gender = True if self.sex.lower()[:1] == "m" else False
+                else:
+                    return None
+            else:
+                logger.debug("Setting {} from LDAP".format(attribute))
+                if str(self.__getattr__(mappings[attribute])).isdigit():
+                    setattr(self.cache, attribute, int(self.__getattr__(mappings[attribute])))
+                else:
+                    setattr(self.cache, attribute, self.__getattr__(mappings[attribute]))
+            self.cache.save()
+            return self.get_or_set_cache(attribute)
+        elif attribute == "grade_number":
+            logger.debug("Setting grade_number from LDAP")
+            self.cache.grade_number = self.grade.number if self.grade else None
+            self.cache.save()
+            return self.get_or_set_cache(attribute)
+        return None
 
     @property
     def is_eighth_sponsor(self):
