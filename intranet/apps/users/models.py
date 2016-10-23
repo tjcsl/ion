@@ -1637,7 +1637,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return self.get_or_set_cache(attribute)
             return None
         except UserCache.DoesNotExist:
-            logger.debug("Initializeing UserCache for {}".format(self))
+            logger.debug("Initializing UserCache for {}".format(self))
             self.cache = UserCache.objects.create()
             self.save()
             return self.get_or_set_cache(attribute)
