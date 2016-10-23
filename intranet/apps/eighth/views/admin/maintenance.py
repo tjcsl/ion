@@ -292,7 +292,8 @@ class ImportThread(threading.Thread):
             "help_email": settings.FEEDBACK_EMAIL,
             "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")
         }
-        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data, "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
+        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data,
+                   "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
         shutil.rmtree(self.folder)
 
 

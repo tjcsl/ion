@@ -1244,7 +1244,8 @@ class EighthSignup(AbstractBaseEighthModel):
     time = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True, on_delete=models.CASCADE)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set",
+                                           null=False, db_index=True, on_delete=models.CASCADE)
 
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
@@ -1275,7 +1276,8 @@ class EighthSignup(AbstractBaseEighthModel):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
     def has_conflict(self):
-        signup_count = EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).count()
+        signup_count = EighthSignup.objects.exclude(pk=self.pk).filter(
+            user=self.user, scheduled_activity__block=self.scheduled_activity.block).count()
         return signup_count > 0
 
     def remove_signup(self, user=None, force=False):

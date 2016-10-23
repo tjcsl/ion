@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eighthsponsor',
             name='user',
-            field=models.OneToOneField(blank=True, null=True, on_delete=intranet.utils.deletion.handle_eighth_sponsor_deletion, to=settings.AUTH_USER_MODEL),
+            field=models.OneToOneField(blank=True, null=True,
+                                       on_delete=intranet.utils.deletion.handle_eighth_sponsor_deletion, to=settings.AUTH_USER_MODEL),
         ),
     ]

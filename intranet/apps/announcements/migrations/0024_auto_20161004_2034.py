@@ -22,16 +22,19 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcementrequest',
             name='posted_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='posted_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user,
+                                    related_name='posted_by', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='announcementrequest',
             name='rejected_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='rejected_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user,
+                                    related_name='rejected_by', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='announcementrequest',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='user', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user,
+                                    related_name='user', to=settings.AUTH_USER_MODEL),
         ),
     ]

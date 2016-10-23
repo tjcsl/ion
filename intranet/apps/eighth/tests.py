@@ -242,7 +242,8 @@ class EighthTest(IonTestCase):
         schact1.attendance_taken = False
         schact1.save()
 
-        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({"block": block1.id}), {"take_attendance_zero": "1"})
+        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" +
+                                    urlencode({"block": block1.id}), {"take_attendance_zero": "1"})
         self.assertEqual(response.status_code, 302)
 
         # Make sure activity is marked as attendance taken.
@@ -266,7 +267,8 @@ class EighthTest(IonTestCase):
         schact1.cancelled = True
         schact1.save()
 
-        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({"block": block1.id}), {"take_attendance_cancelled": "1"})
+        response = self.client.post(reverse('eighth_admin_view_activities_without_attendance') + "?" +
+                                    urlencode({"block": block1.id}), {"take_attendance_cancelled": "1"})
         self.assertEqual(response.status_code, 302)
 
         # Make sure attendance has been marked as taken.

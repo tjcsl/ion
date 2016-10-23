@@ -17,12 +17,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='approved_by',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='approved_event', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user,
+                                    related_name='approved_event', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='event',
             name='rejected_by',
-            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user, related_name='rejected_event', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(null=True, on_delete=intranet.utils.deletion.set_historical_user,
+                                    related_name='rejected_event', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='event',
