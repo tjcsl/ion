@@ -50,7 +50,7 @@ class CacheTest(IonTestCase):
         UserCache.objects.filter(user=user).delete()
         # make sure correct exception is raised when accessing a nonexistent object
         with self.assertRaises(UserCache.DoesNotExist):
-            user.cache.gender
+            self.assertIsNotNone(user.cache.gender)
         # make sure user.cache does not exist
         with self.assertRaises(UserCache.DoesNotExist):
             self.assertIsNotNone(user.cache)
