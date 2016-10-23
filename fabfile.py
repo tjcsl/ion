@@ -53,8 +53,8 @@ def runserver(port=8080, debug_toolbar="yes", werkzeug="no", dummy_cache="no", s
 
     with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(), DUMMY_CACHE=dummy_cache.upper(), SHORT_CACHE=short_cache.upper(),
                    WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(), LOG_LEVEL=log_level):
-        local("./manage.py runserver{} 0.0.0.0:{}{}".format("_plus" if werkzeug.lower() == "yes" else "", port, " --insecure" if insecure.lower() ==
-                                                            "yes" else ""))
+        local("./manage.py runserver{} 0.0.0.0:{}{}".format("_plus" if werkzeug.lower() == "yes" else "", port, " --insecure"
+                                                            if insecure.lower() == "yes" else ""))
 
 
 def killserver():
@@ -143,7 +143,8 @@ def linecount():
     """Get a total line count of files with these types:"""
     with hide("running"):
         local(
-            "cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
+            "cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations ."
+        )
 
 
 def load_fixtures():
@@ -155,9 +156,11 @@ def load_fixtures():
     if not confirm("Are you sure you want to load all fixtures? This could have unintended consequences if the database is not empty."):
         abort("Aborted.")
 
-    files = ["fixtures/users/users.json", "fixtures/eighth/sponsors.json", "fixtures/eighth/rooms.json", "fixtures/eighth/blocks.json",
-             "fixtures/eighth/activities.json", "fixtures/eighth/scheduled_activities.json", "fixtures/eighth/signups.json",
-             "fixtures/announcements/announcements.json"]
+    files = [
+        "fixtures/users/users.json", "fixtures/eighth/sponsors.json", "fixtures/eighth/rooms.json", "fixtures/eighth/blocks.json",
+        "fixtures/eighth/activities.json", "fixtures/eighth/scheduled_activities.json", "fixtures/eighth/signups.json",
+        "fixtures/announcements/announcements.json"
+    ]
 
     for f in files:
         local("./manage.py loaddata " + f)

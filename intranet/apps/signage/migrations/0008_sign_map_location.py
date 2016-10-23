@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('signage', '0007_sign_landscape'),
-    ]
+    dependencies = [('signage', '0007_sign_landscape'),]
 
-    operations = [
-        migrations.AddField(
-            model_name='sign',
-            name='map_location',
-            field=models.CharField(blank=True, max_length=20, null=True),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='sign',
+        name='map_location',
+        field=models.CharField(blank=True, max_length=20, null=True),),]

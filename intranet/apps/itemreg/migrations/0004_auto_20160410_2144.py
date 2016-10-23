@@ -7,19 +7,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('itemreg', '0003_auto_20160409_2240'),
-    ]
+    dependencies = [('itemreg', '0003_auto_20160409_2240'),]
 
     operations = [
         migrations.AddField(
             model_name='founditem',
             name='retrieved',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='lostitem',
             name='found',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
     ]

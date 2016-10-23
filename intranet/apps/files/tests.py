@@ -19,10 +19,7 @@ class FilesTest(IonTestCase):
         self.login()
 
         # Create hosts entry.
-        Host.objects.create(name="Computer Systems Lab",
-                            code="csl",
-                            address="remote.tjhsst.edu",
-                            linux=True)
+        Host.objects.create(name="Computer Systems Lab", code="csl", address="remote.tjhsst.edu", linux=True)
 
         # Login to remote file system
         response = self.client.post(reverse('files_auth'), {'password': 'hunter2'})

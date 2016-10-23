@@ -7,23 +7,15 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('itemreg', '0006_auto_20160410_2215'),
-    ]
+    dependencies = [('itemreg', '0006_auto_20160410_2215'),]
 
     operations = [
         migrations.RemoveField(
             model_name='founditem',
-            name='user',
-        ),
+            name='user',),
         migrations.RemoveField(
             model_name='lostitem',
-            name='user',
-        ),
-        migrations.DeleteModel(
-            name='FoundItem',
-        ),
-        migrations.DeleteModel(
-            name='LostItem',
-        ),
+            name='user',),
+        migrations.DeleteModel(name='FoundItem',),
+        migrations.DeleteModel(name='LostItem',),
     ]

@@ -8,9 +8,10 @@ class Migration(migrations.Migration):
     dependencies = [('seniors', '0003_auto_20151130_1504')]
 
     operations = [
-        migrations.AlterField(model_name='senior',
-                              name='college',
-                              field=models.ForeignKey(to='seniors.College', null=True, on_delete=models.CASCADE),),
+        migrations.AlterField(
+            model_name='senior',
+            name='college',
+            field=models.ForeignKey(to='seniors.College', null=True, on_delete=models.CASCADE),),
         migrations.AlterField(
             model_name='senior',
             name='major',
@@ -39,8 +40,8 @@ class Migration(migrations.Migration):
                                 'Environmental Science', 'Environmental Science'), ('Evolutionary Biology', 'Evolutionary Biology'), (
                                     'Advertising', 'Advertising'), ('Apparel Design', 'Apparel Design'), ('East Asian Studies', 'East Asian Studies'),
                 ('Biomedical Engineering', 'Biomedical Engineering'), ('Policy Analysis and Management', 'Policy Analysis and Management'), (
-                    'Videogame Design and Development', 'Videogame Design and Development'
-                ), ('Electrical Engineering', 'Electrical Engineering'), ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
+                    'Videogame Design and Development', 'Videogame Design and Development'), ('Electrical Engineering', 'Electrical Engineering'),
+                ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
                     'Theatre/Directing', 'Theatre/Directing'), ('Leadership', 'Leadership'), ('Design', 'Design'), (
                         'Environmental Thought and Practice', 'Environmental Thought and Practice'), ('Athletic Training', 'Athletic Training'), (
                             'Physical Therapy', 'Physical Therapy'), ('Chemical Engineering', 'Chemical Engineering'),

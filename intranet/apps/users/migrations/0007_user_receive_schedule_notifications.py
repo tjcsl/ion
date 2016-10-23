@@ -9,4 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [('users', '0006_user_seen_welcome')]
 
-    operations = [migrations.AddField(model_name='user', name='receive_schedule_notifications', field=models.BooleanField(default=False),)]
+    operations = [migrations.AddField(
+        model_name='user',
+        name='receive_schedule_notifications',
+        field=models.BooleanField(default=False),)]

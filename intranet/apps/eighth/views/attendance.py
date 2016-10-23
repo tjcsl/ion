@@ -188,11 +188,13 @@ def roster_view(request, scheduled_activity_id):
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
     is_sponsor = scheduled_activity.user_is_sponsor(request.user)
     logger.debug(viewable_members)
-    context = {"scheduled_activity": scheduled_activity,
-               "viewable_members": viewable_members,
-               "num_hidden_members": num_hidden_members,
-               "signups": signups,
-               "is_sponsor": is_sponsor}
+    context = {
+        "scheduled_activity": scheduled_activity,
+        "viewable_members": viewable_members,
+        "num_hidden_members": num_hidden_members,
+        "signups": signups,
+        "is_sponsor": is_sponsor
+    }
 
     return render(request, "eighth/roster.html", context)
 
@@ -209,10 +211,12 @@ def raw_roster_view(request, scheduled_activity_id):
     viewable_members = scheduled_activity.get_viewable_members(request.user)
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
 
-    context = {"scheduled_activity": scheduled_activity,
-               "viewable_members": viewable_members,
-               "num_hidden_members": num_hidden_members,
-               "signups": signups}
+    context = {
+        "scheduled_activity": scheduled_activity,
+        "viewable_members": viewable_members,
+        "num_hidden_members": num_hidden_members,
+        "signups": signups
+    }
 
     return render(request, "eighth/roster-list.html", context)
 
@@ -313,8 +317,7 @@ def take_attendance_view(request, scheduled_activity_id):
 
         return redirect(redirect_url)
     else:
-        passes = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True,
-                                                                     pass_accepted=False))
+        passes = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True, pass_accepted=False))
 
         users = scheduled_activity.members.exclude(eighthsignup__in=passes)
         members = []
@@ -353,17 +356,19 @@ def take_attendance_view(request, scheduled_activity_id):
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = (EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id))
             logger.debug(context["scheduled_activities"])
-            context["blocks"] = (EighthBlock.objects
-                                 # .filter(date__gte=get_start_date(request))
-                                            .order_by("date"))
+            context["blocks"] = (
+                EighthBlock.objects
+                # .filter(date__gte=get_start_date(request))
+                .order_by("date"))
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
             response = http.HttpResponse(content_type="text/csv")
             response["Content-Disposition"] = "attachment; filename=\"attendance.csv\""
 
             writer = csv.writer(response)
-            writer.writerow(["Block", "Activity", "Name", "Student ID", "Grade", "Email", "Locked", "Rooms", "Sponsors", "Attendance Taken",
-                             "Present", "Had Pass"])
+            writer.writerow([
+                "Block", "Activity", "Name", "Student ID", "Grade", "Email", "Locked", "Rooms", "Sponsors", "Attendance Taken", "Present", "Had Pass"
+            ])
             for member in members:
                 row = []
                 logger.debug(member)
@@ -517,9 +522,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
             Paragraph("{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")),
                       styles["ActivityAttribute"]), Paragraph(block_letter, styles[block_letter_style])
         ]]
-        header_style = TableStyle([("VALIGN", (0, 0), (0, 0), "TOP"),
-                                   ("VALIGN", (1, 0), (2, 0), "MIDDLE"),
-                                   ("TOPPADDING", (0, 0), (0, 0), 15),
+        header_style = TableStyle([("VALIGN", (0, 0), (0, 0), "TOP"), ("VALIGN", (1, 0), (2, 0), "MIDDLE"), ("TOPPADDING", (0, 0), (0, 0), 15),
                                    ("RIGHTPADDING", (1, 0), (1, 0), 0)])
 
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, block_letter_width]))
@@ -531,13 +534,15 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Paragraph(num_members_label, styles["Center"]))
         elements.append(Spacer(0, 5))
 
-        attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]),
-                            Paragraph("Grade", styles["Heading5"])]]
+        attendance_data = [[
+            Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])
+        ]]
 
         members = []
         for member in sact.members.all():
-            members.append((member.last_name + ", " + member.first_name, (member.student_id if member.student_id else "User {}".format(member.id)),
-                            int(member.grade) if member.grade else "?"))
+            members.append((member.last_name + ", " + member.first_name, (member.student_id
+                                                                          if member.student_id else "User {}".format(member.id)), int(member.grade)
+                            if member.grade else "?"))
         members = sorted(members)
 
         for member_name, member_id, member_grade in members:
@@ -591,7 +596,7 @@ def eighth_absences_view(request, user_id=None):
     absences = (EighthSignup.objects.filter(
         user=user, was_absent=True,
         scheduled_activity__attendance_taken=True).select_related("scheduled_activity__block", "scheduled_activity__activity")
-        .order_by("scheduled_activity__block"))
+                .order_by("scheduled_activity__block"))
     context = {"absences": absences, "user": user}
     return render(request, "eighth/absences.html", context)
 

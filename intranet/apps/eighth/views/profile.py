@@ -217,11 +217,7 @@ def profile_history_view(request, user_id=None):
 
     logger.debug(eighth_schedule)
 
-    context = {
-        "profile_user": profile_user,
-        "eighth_schedule": eighth_schedule,
-        "show_profile_header": request.user.is_eighth_admin
-    }
+    context = {"profile_user": profile_user, "eighth_schedule": eighth_schedule, "show_profile_header": request.user.is_eighth_admin}
 
     return render(request, "eighth/profile_history.html", context)
 
@@ -256,11 +252,7 @@ def profile_often_view(request, user_id=None):
 
     logger.debug(oftens)
 
-    context = {
-        "profile_user": profile_user,
-        "oftens": oftens,
-        "show_profile_header": request.user.is_eighth_admin
-    }
+    context = {"profile_user": profile_user, "oftens": oftens, "show_profile_header": request.user.is_eighth_admin}
 
     return render(request, "eighth/profile_often.html", context)
 

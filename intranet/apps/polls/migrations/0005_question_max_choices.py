@@ -8,4 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [('polls', '0004_answer_answer')]
 
-    operations = [migrations.AddField(model_name='question', name='max_choices', field=models.IntegerField(default=1),)]
+    operations = [migrations.AddField(
+        model_name='question',
+        name='max_choices',
+        field=models.IntegerField(default=1),)]

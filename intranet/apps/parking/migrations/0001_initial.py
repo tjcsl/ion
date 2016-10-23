@@ -11,9 +11,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL),]
 
     operations = [
         migrations.CreateModel(
@@ -24,8 +22,7 @@ class Migration(migrations.Migration):
                 ('make', models.CharField(max_length=100)),
                 ('model', models.CharField(max_length=100)),
                 ('year', models.PositiveIntegerField()),
-            ],
-        ),
+            ],),
         migrations.CreateModel(
             name='ParkingApplication',
             fields=[
@@ -35,8 +32,7 @@ class Migration(migrations.Migration):
                 ('cars', models.ManyToManyField(to='parking.CarApplication')),
                 ('joint_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
                                                  related_name='parkingapplication_joint', to=settings.AUTH_USER_MODEL)),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
-                                           related_name='parkingapplication', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
+                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='parkingapplication',
+                                           to=settings.AUTH_USER_MODEL)),
+            ],),
     ]

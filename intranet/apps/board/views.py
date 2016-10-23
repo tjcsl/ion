@@ -50,12 +50,7 @@ def home(request):
             teacher_courses[cl.course_id] = cl.course_title
         teacher_courses = [{"course_id": i, "course_title": teacher_courses[i], "count": course_count[i]} for i in teacher_courses]
 
-    context = {
-        "classes": classes,
-        "posts": posts,
-        "teacher_classes": teacher_classes,
-        "teacher_courses": teacher_courses
-    }
+    context = {"classes": classes, "posts": posts, "teacher_classes": teacher_classes, "teacher_courses": teacher_courses}
 
     return render(request, "board/home.html", context)
 
@@ -77,51 +72,182 @@ def get_all_memes():
     {"id": 6, "url": "https://i.imgur.com/2k7EPdX.jpg"},
     {"id": 7, "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?stallman"}"""
     memes = [
-        {"id": "aa1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa1.jpg"},
-        {"id": "aa2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa2.png"},
-        {"id": "aa3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa3.jpg"},
-        {"id": "aa4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa4.jpg"},
-        {"id": "aa5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa5.jpg"},
-        {"id": "android1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/android1.jpg"},
-        {"id": "band1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band1.png"},
-        {"id": "band2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band2.jpg"},
-        {"id": "band3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band3.jpg"},
-        {"id": "cat1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat1.png"},
-        {"id": "cat2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat2.jpg"},
-        {"id": "cat3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat3.jpg"},
-        {"id": "cat4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat4.png"},
-        {"id": "linux1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux1.jpg?stallman"},
-        {"id": "linux2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux2.jpg?stallman"},
-        {"id": "linux3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux3.jpg?stallman"},
-        {"id": "linux4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux4.gif?stallman"},
-        {"id": "linux5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux5.png?stallman"},
-        {"id": "linux6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux6.jpg?stallman"},
-        {"id": "linux7", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux7.jpg?stallman"},
-        {"id": "sch1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch1.jpg"},
-        {"id": "sch10", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch10.jpg"},
-        {"id": "sch2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch2.jpg"},
-        {"id": "sch3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch3.jpg"},
-        {"id": "sch4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch4.jpg"},
-        {"id": "sch5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch5.jpg"},
-        {"id": "sch6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch6.png"},
-        {"id": "sch7", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch7.png"},
-        {"id": "sch8", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch8.jpg"},
-        {"id": "sch9", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch9.jpeg"},
-        {"id": "tj1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj1.png"},
-        {"id": "tj2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj2.png"},
-        {"id": "tj3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png"},
-        {"id": "futurama1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama1.jpg"},
-        {"id": "futurama2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama2.jpg"},
-        {"id": "futurama3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama3.jpg"},
-        {"id": "futurama4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama4.jpg"},
-        {"id": "futurama5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama5.png"},
-        {"id": "futurama6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama6.jpg"},
-        {"id": "futurama7", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama7.jpg"},
-        {"id": "simpsons1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons1.jpg"},
-        {"id": "simpsons2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons2.jpg"},
-        {"id": "simpsons3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons3.jpg"},
-        {"id": "simpsons4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons4.jpg"},
-
+        {
+            "id": "aa1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa1.jpg"
+        },
+        {
+            "id": "aa2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa2.png"
+        },
+        {
+            "id": "aa3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa3.jpg"
+        },
+        {
+            "id": "aa4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa4.jpg"
+        },
+        {
+            "id": "aa5",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa5.jpg"
+        },
+        {
+            "id": "android1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/android1.jpg"
+        },
+        {
+            "id": "band1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band1.png"
+        },
+        {
+            "id": "band2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band2.jpg"
+        },
+        {
+            "id": "band3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band3.jpg"
+        },
+        {
+            "id": "cat1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat1.png"
+        },
+        {
+            "id": "cat2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat2.jpg"
+        },
+        {
+            "id": "cat3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat3.jpg"
+        },
+        {
+            "id": "cat4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat4.png"
+        },
+        {
+            "id": "linux1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux1.jpg?stallman"
+        },
+        {
+            "id": "linux2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux2.jpg?stallman"
+        },
+        {
+            "id": "linux3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux3.jpg?stallman"
+        },
+        {
+            "id": "linux4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux4.gif?stallman"
+        },
+        {
+            "id": "linux5",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux5.png?stallman"
+        },
+        {
+            "id": "linux6",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux6.jpg?stallman"
+        },
+        {
+            "id": "linux7",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux7.jpg?stallman"
+        },
+        {
+            "id": "sch1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch1.jpg"
+        },
+        {
+            "id": "sch10",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch10.jpg"
+        },
+        {
+            "id": "sch2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch2.jpg"
+        },
+        {
+            "id": "sch3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch3.jpg"
+        },
+        {
+            "id": "sch4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch4.jpg"
+        },
+        {
+            "id": "sch5",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch5.jpg"
+        },
+        {
+            "id": "sch6",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch6.png"
+        },
+        {
+            "id": "sch7",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch7.png"
+        },
+        {
+            "id": "sch8",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch8.jpg"
+        },
+        {
+            "id": "sch9",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch9.jpeg"
+        },
+        {
+            "id": "tj1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj1.png"
+        },
+        {
+            "id": "tj2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj2.png"
+        },
+        {
+            "id": "tj3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png"
+        },
+        {
+            "id": "futurama1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama1.jpg"
+        },
+        {
+            "id": "futurama2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama2.jpg"
+        },
+        {
+            "id": "futurama3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama3.jpg"
+        },
+        {
+            "id": "futurama4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama4.jpg"
+        },
+        {
+            "id": "futurama5",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama5.png"
+        },
+        {
+            "id": "futurama6",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama6.jpg"
+        },
+        {
+            "id": "futurama7",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama7.jpg"
+        },
+        {
+            "id": "simpsons1",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons1.jpg"
+        },
+        {
+            "id": "simpsons2",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons2.jpg"
+        },
+        {
+            "id": "simpsons3",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons3.jpg"
+        },
+        {
+            "id": "simpsons4",
+            "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons4.jpg"
+        },
     ]
     return memes
 
@@ -164,7 +290,6 @@ def all_feed(request):
 def course_feed(request, course_id):
     if not can_view_board(request, course_id=course_id):
         return redirect("/")
-
     """The feed of a course (which contains multiple classes)."""
     ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
 
@@ -277,13 +402,7 @@ def course_feed_post(request, course_id):
     else:
         form = BoardPostForm()
 
-    context = {
-        "form": form,
-        "action": "add",
-        "ldap_courses": ldap_courses,
-        "course_title": course_title,
-        "board": board
-    }
+    context = {"form": form, "action": "add", "ldap_courses": ldap_courses, "course_title": course_title, "board": board}
     return render(request, "board/add_modify.html", context)
 
 
@@ -325,12 +444,7 @@ def section_feed_post(request, section_id):
     else:
         form = BoardPostForm()
 
-    context = {
-        "form": form,
-        "action": "add",
-        "section": section,
-        "board": board
-    }
+    context = {"form": form, "action": "add", "section": section, "board": board}
     return render(request, "board/add_modify.html", context)
 
 
@@ -419,12 +533,7 @@ def comment_view(request, post_id):
     else:
         form = BoardPostCommentForm()
 
-    context = {
-        "form": form,
-        "action": "add",
-        "post": post,
-        "board": board
-    }
+    context = {"form": form, "action": "add", "post": post, "board": board}
     return render(request, "board/comment.html", context)
 
 
@@ -459,11 +568,7 @@ def view_post(request, post_id):
     if not board.has_member(request.user):
         return render(request, "error/403.html", {"reason": "You are not allowed to view the board in which this post resides."}, status=403)
 
-    context = {
-        "post": post,
-        "board": board,
-        "show_all_comments": True
-    }
+    context = {"post": post, "board": board, "show_all_comments": True}
 
     if board.type == "section":
         context["section"] = board.section_obj
@@ -533,10 +638,7 @@ def course_feed_post_meme(request, course_id):
             meme = memes[0]
 
         content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme["url"])
-        post = BoardPost.objects.create(title="",
-                                        content=content,
-                                        safe_html=True,
-                                        user=request.user)
+        post = BoardPost.objects.create(title="", content=content, safe_html=True, user=request.user)
         board.posts.add(post)
         board.save()
         messages.success(request, "Successfully added post.")
@@ -570,10 +672,7 @@ def section_feed_post_meme(request, section_id):
             meme = get_all_memes()[0]
 
         content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme["url"])
-        post = BoardPost.objects.create(title="",
-                                        content=content,
-                                        safe_html=True,
-                                        user=request.user)
+        post = BoardPost.objects.create(title="", content=content, safe_html=True, user=request.user)
         board.posts.add(post)
         board.save()
 

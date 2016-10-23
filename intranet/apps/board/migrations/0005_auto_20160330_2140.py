@@ -7,19 +7,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('board', '0004_auto_20160330_1958'),
-    ]
+    dependencies = [('board', '0004_auto_20160330_1958'),]
 
     operations = [
         migrations.AddField(
             model_name='boardpost',
             name='safe_html',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='boardpostcomment',
             name='safe_html',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
     ]

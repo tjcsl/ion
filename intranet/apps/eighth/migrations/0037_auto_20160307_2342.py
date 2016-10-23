@@ -8,33 +8,26 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0036_merge'),
-    ]
+    dependencies = [('eighth', '0036_merge'),]
 
     operations = [
         migrations.RemoveField(
             model_name='historicaleighthactivity',
-            name='aid',
-        ),
+            name='aid',),
         migrations.AddField(
             model_name='historicaleighthactivity',
             name='default_capacity',
-            field=models.SmallIntegerField(blank=True, null=True),
-        ),
+            field=models.SmallIntegerField(blank=True, null=True),),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='special',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='historicaleighthsignup',
             name='absence_emailed',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AlterField(
             model_name='historicaleighthblock',
             name='signup_time',
-            field=models.TimeField(default=datetime.time(12, 40)),
-        ),
+            field=models.TimeField(default=datetime.time(12, 40)),),
     ]

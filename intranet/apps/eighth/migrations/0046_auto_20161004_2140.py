@@ -9,14 +9,11 @@ import intranet.utils.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0045_auto_20161004_2135'),
-    ]
+    dependencies = [('eighth', '0045_auto_20161004_2135'),]
 
     operations = [
         migrations.AlterField(
             model_name='eighthsponsor',
             name='user',
-            field=models.OneToOneField(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.OneToOneField(blank=True, null=True, on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL),),
     ]

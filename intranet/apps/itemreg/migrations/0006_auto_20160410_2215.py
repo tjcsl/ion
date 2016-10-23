@@ -9,32 +9,25 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('itemreg', '0005_auto_20160410_2146'),
-    ]
+    dependencies = [('itemreg', '0005_auto_20160410_2146'),]
 
     operations = [
         migrations.AlterModelOptions(
             name='founditem',
-            options={'ordering': ['-added']},
-        ),
+            options={'ordering': ['-added']},),
         migrations.AlterModelOptions(
             name='lostitem',
-            options={'ordering': ['-added']},
-        ),
+            options={'ordering': ['-added']},),
         migrations.AlterField(
             model_name='calculatorregistration',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),),
         migrations.AlterField(
             model_name='computerregistration',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),),
         migrations.AlterField(
             model_name='phoneregistration',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),),
     ]

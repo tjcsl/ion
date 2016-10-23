@@ -7,19 +7,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0040_auto_20160515_1851'),
-    ]
+    dependencies = [('eighth', '0040_auto_20160515_1851'),]
 
     operations = [
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='archived_member_count',
-            field=models.SmallIntegerField(blank=True, null=True),
-        ),
+            field=models.SmallIntegerField(blank=True, null=True),),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='archived_member_count',
-            field=models.SmallIntegerField(blank=True, null=True),
-        ),
+            field=models.SmallIntegerField(blank=True, null=True),),
     ]

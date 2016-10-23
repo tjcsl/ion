@@ -19,6 +19,7 @@ def admin_required(group):
 
     return user_passes_test(in_admin_group)
 
+
 #: Restrict the wrapped view to eighth admins
 eighth_admin_required = admin_required("eighth")
 
@@ -36,10 +37,12 @@ attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous and u.
 
 
 def reauthentication_required(wrapped):
+
     def inner(*args, **kwargs):
         request = args[0]  # request is the first argument in a view
         if request.session.get("reauthenticated", False):
             return wrapped(*args, **kwargs)
         else:
             return redirect("{}?next={}".format(reverse('reauth'), request.path))
+
     return inner

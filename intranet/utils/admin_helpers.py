@@ -3,8 +3,7 @@ import csv
 from django.http import HttpResponse
 
 
-def export_csv_action(description="Export selected objects as CSV file",
-                      fields=None, exclude=None, header=True):
+def export_csv_action(description="Export selected objects as CSV file", fields=None, exclude=None, header=True):
     """This function returns an export csv action.
 
     'fields' and 'exclude' work like in django
@@ -14,6 +13,7 @@ def export_csv_action(description="Export selected objects as CSV file",
     https://djangosnippets.org/snippets/2369/
 
     """
+
     def export_as_csv(modeladmin, request, queryset):
         """Generic csv export admin action.
 
@@ -38,5 +38,6 @@ def export_csv_action(description="Export selected objects as CSV file",
         for obj in queryset:
             writer.writerow([str(getattr(obj, field)) for field in field_names])
         return response
+
     export_as_csv.short_description = description
     return export_as_csv

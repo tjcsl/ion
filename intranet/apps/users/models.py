@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(DjangoUserManager):
-
     """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -200,7 +199,6 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
     """Django User model subclass with properties that fetch data from LDAP.
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
@@ -924,10 +922,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             return cached
         else:
             c = LDAPConnection()
-            results = c.user_attributes(self.dn,
-                                        ["perm-showaddress", "perm-showtelephone", "perm-showbirthday", "perm-showschedule", "perm-showeighth",
-                                         "perm-showpictures", "perm-showaddress-self", "perm-showtelephone-self", "perm-showbirthday-self",
-                                         "perm-showschedule-self", "perm-showeighth-self", "perm-showpictures-self"])
+            results = c.user_attributes(self.dn, [
+                "perm-showaddress", "perm-showtelephone", "perm-showbirthday", "perm-showschedule", "perm-showeighth", "perm-showpictures",
+                "perm-showaddress-self", "perm-showtelephone-self", "perm-showbirthday-self", "perm-showschedule-self", "perm-showeighth-self",
+                "perm-showpictures-self"
+            ])
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
             for perm, value in result.items():
@@ -1645,7 +1644,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Class(object):
-
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
     Note that this is not a Django model, but rather an interface
@@ -1888,7 +1886,6 @@ class Class(object):
 
 
 class ClassSections(object):
-
     """Represents a list of tjhsstClass LDAP objects.
 
     Note that this is not a Django model, but rather an interface
@@ -1940,7 +1937,6 @@ class ClassSections(object):
 
 
 class Address(object):
-
     """Represents a user's address.
 
     Attributes:
@@ -1968,7 +1964,6 @@ class Address(object):
 
 
 class Grade(object):
-
     """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior"]
 

@@ -26,18 +26,9 @@ def nav_categorizer(request):
     falls under
     """
 
-    categories = [
-        (r"^/$", "dashboard"),
-        (r"^/announcements", "dashboard"),
-        (r"^/eighth/admin", "eighth_admin"),
-        (r"^/eighth", "eighth"),
-        (r"^/events", "events"),
-        (r"^/files", "files"),
-        (r"^/printing", "printing"),
-        (r"^/groups", "groups"),
-        (r"^/polls", "polls"),
-        (r"^/board", "board")
-    ]
+    categories = [(r"^/$", "dashboard"), (r"^/announcements", "dashboard"), (r"^/eighth/admin", "eighth_admin"), (r"^/eighth", "eighth"),
+                  (r"^/events", "events"), (r"^/files", "files"), (r"^/printing", "printing"), (r"^/groups", "groups"), (r"^/polls", "polls"),
+                  (r"^/board", "board")]
 
     for pattern, category in categories:
         p = re.compile(pattern)
@@ -114,6 +105,4 @@ def _get_current_ip(request):
 def is_tj_ip(request):
     ip = _get_current_ip(request)
 
-    return {
-        "is_tj_ip": (ip in settings.TJ_IPS)
-    }
+    return {"is_tj_ip": (ip in settings.TJ_IPS)}

@@ -35,8 +35,8 @@ def log_auth(request, success):
 
     username = request.POST.get("username", "unknown")
 
-    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, datetime.now(), request.get_full_path(),
-                                                               request.META.get("HTTP_USER_AGENT", ""))
+    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success,
+                                                               datetime.now(), request.get_full_path(), request.META.get("HTTP_USER_AGENT", ""))
 
     auth_logger.info(log_line)
 
@@ -123,14 +123,16 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if ap_week and not login_warning:
             login_warning = ap_week
 
-        data = {"auth_form": auth_form,
-                "request": request,
-                "git_info": settings.GIT,
-                "bg_pattern": get_bg_pattern(),
-                "theme": get_login_theme(),
-                "login_warning": login_warning,
-                "senior_graduation": settings.SENIOR_GRADUATION,
-                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR}
+        data = {
+            "auth_form": auth_form,
+            "request": request,
+            "git_info": settings.GIT,
+            "bg_pattern": get_bg_pattern(),
+            "theme": get_login_theme(),
+            "login_warning": login_warning,
+            "senior_graduation": settings.SENIOR_GRADUATION,
+            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
+        }
         schedule = schedule_context(request)
         data.update(schedule)
         if added_context is not None:
@@ -139,7 +141,6 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
 
 
 class LoginView(View):
-
     """Log in and redirect a user."""
 
     @method_decorator(sensitive_post_parameters("password"))

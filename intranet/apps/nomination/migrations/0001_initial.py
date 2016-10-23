@@ -11,21 +11,18 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL),]
 
     operations = [
         migrations.CreateModel(
             name='HomecomingCourtNomination',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('female_nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
-                                                     related_name='homecoming_court_female_nominations', to=settings.AUTH_USER_MODEL)),
-                ('male_nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
-                                                   related_name='homecoming_court_male_nominations', to=settings.AUTH_USER_MODEL)),
-                ('voter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
-                                            related_name='homecoming_court_nominations', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
+                ('female_nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='homecoming_court_female_nominations',
+                                                     to=settings.AUTH_USER_MODEL)),
+                ('male_nominee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='homecoming_court_male_nominations',
+                                                   to=settings.AUTH_USER_MODEL)),
+                ('voter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='homecoming_court_nominations',
+                                            to=settings.AUTH_USER_MODEL)),
+            ],),
     ]

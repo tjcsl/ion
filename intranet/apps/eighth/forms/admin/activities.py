@@ -52,8 +52,7 @@ class ActivitySelectionForm(forms.Form):
         else:
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
-                activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id",
-                                                                                                                          flat=True))
+                activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id", flat=True))
             else:
                 activity_ids = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list("activity__id",
                                                                                                                                 flat=True))
@@ -87,11 +86,10 @@ class ScheduledActivityMultiSelectForm(forms.Form):
         super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
         logger.debug(block)
         if block is not None:
-            activity_ids = (EighthScheduledActivity.objects
-                                                   .exclude(activity__deleted=True)
-                            # .exclude(cancelled=True)
-                                                   .filter(block=block)
-                                                   .values_list("activity__id", flat=True))
+            activity_ids = (
+                EighthScheduledActivity.objects.exclude(activity__deleted=True)
+                # .exclude(cancelled=True)
+                .filter(block=block).values_list("activity__id", flat=True))
             queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
         else:
             queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
@@ -128,11 +126,13 @@ class ActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = [
             "name", "description", "sponsors", "rooms", "default_capacity", "id", "presign", "one_a_day", "both_blocks", "sticky", "special",
-            "administrative", "restricted", "users_allowed", "groups_allowed", "users_blacklisted", "freshmen_allowed", "sophomores_allowed", "juniors_allowed",
-            "seniors_allowed", "wed_a", "wed_b", "fri_a", "fri_b", "admin_comments"
+            "administrative", "restricted", "users_allowed", "groups_allowed", "users_blacklisted", "freshmen_allowed", "sophomores_allowed",
+            "juniors_allowed", "seniors_allowed", "wed_a", "wed_b", "fri_a", "fri_b", "admin_comments"
         ]
         widgets = {
-            "description": forms.Textarea(attrs={"rows": 5, "cols": 46}),
+            "description": forms.Textarea(attrs={"rows": 5,
+                                                 "cols": 46}),
             "name": forms.TextInput(attrs={"style": "width: 292px"}),
-            "admin_comments": forms.Textarea(attrs={"rows": 5, "cols": 46})
+            "admin_comments": forms.Textarea(attrs={"rows": 5,
+                                                    "cols": 46})
         }

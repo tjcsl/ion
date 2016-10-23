@@ -82,11 +82,13 @@ def add_block_view(request):
                 visible_blocks.append(blk.block_letter)
                 letters.append({"name": blk.block_letter, "exists": True})
 
-    context = {"admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
-               "date": date,
-               "letters": letters,
-               "show_letters": show_letters,
-               "add_block_form": QuickBlockForm}
+    context = {
+        "admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
+        "date": date,
+        "letters": letters,
+        "show_letters": show_letters,
+        "add_block_form": QuickBlockForm
+    }
 
     return render(request, "eighth/admin/add_block.html", context)
 
@@ -127,10 +129,12 @@ def delete_block_view(request, block_id):
         messages.success(request, "Successfully deleted block.")
         return redirect("eighth_admin_dashboard")
     else:
-        context = {"admin_page_title": "Delete Block",
-                   "item_name": str(block),
-                   "help_text": "Deleting this block will remove all records "
-                                "of it related to eighth period."}
+        context = {
+            "admin_page_title": "Delete Block",
+            "item_name": str(block),
+            "help_text": "Deleting this block will remove all records "
+            "of it related to eighth period."
+        }
 
         return render(request, "eighth/admin/delete_form.html", context)
 

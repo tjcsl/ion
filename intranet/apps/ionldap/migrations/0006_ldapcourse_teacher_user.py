@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ldapcourse',
             name='teacher_user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
-                                    related_name='ionldap_course_teacher', to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='ionldap_course_teacher',
+                                    to=settings.AUTH_USER_MODEL),),
     ]

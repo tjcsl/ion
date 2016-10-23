@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0007_user_receive_schedule_notifications'),
-    ]
+    dependencies = [('users', '0007_user_receive_schedule_notifications'),]
 
-    operations = [
-        migrations.AddField(
-            model_name='user',
-            name='_student_id',
-            field=models.PositiveIntegerField(null=True),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='user',
+        name='_student_id',
+        field=models.PositiveIntegerField(null=True),),]

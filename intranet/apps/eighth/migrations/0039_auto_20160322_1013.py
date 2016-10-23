@@ -7,34 +7,27 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0038_merge'),
-    ]
+    dependencies = [('eighth', '0038_merge'),]
 
     operations = [
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='restricted',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='sticky',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='administrative',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='restricted',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='sticky',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
     ]
