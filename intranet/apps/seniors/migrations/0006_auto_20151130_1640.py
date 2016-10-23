@@ -36,8 +36,8 @@ class Migration(migrations.Migration):
                                 'Environmental Science', 'Environmental Science'), ('Evolutionary Biology', 'Evolutionary Biology'), (
                                     'Advertising', 'Advertising'), ('Apparel Design', 'Apparel Design'), ('East Asian Studies', 'East Asian Studies'),
                 ('Biomedical Engineering', 'Biomedical Engineering'), ('Policy Analysis and Management', 'Policy Analysis and Management'), (
-                    'Videogame Design and Development', 'Videogame Design and Development'
-                ), ('Electrical Engineering', 'Electrical Engineering'), ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
+                    'Videogame Design and Development', 'Videogame Design and Development'), ('Electrical Engineering', 'Electrical Engineering'),
+                ('Information Systems', 'Information Systems'), ('Theatre', 'Theatre'), (
                     'Theatre/Directing', 'Theatre/Directing'), ('Leadership', 'Leadership'), ('Design', 'Design'), (
                         'Environmental Thought and Practice', 'Environmental Thought and Practice'), ('Athletic Training', 'Athletic Training'), (
                             'Physical Therapy', 'Physical Therapy'), ('Chemical Engineering', 'Chemical Engineering'),

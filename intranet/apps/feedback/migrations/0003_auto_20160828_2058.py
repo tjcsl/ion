@@ -9,14 +9,11 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('feedback', '0002_auto_20151207_1933'),
-    ]
+    dependencies = [('feedback', '0002_auto_20151207_1933'),]
 
     operations = [
         migrations.AlterField(
             model_name='feedback',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),),
     ]

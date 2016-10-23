@@ -15,8 +15,10 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ["added", "updated", "user", "scheduled_activity", "announcement", "attending", "links", "approved", "rejected",
-                   "approved_by", "rejected_by"]
+        exclude = [
+            "added", "updated", "user", "scheduled_activity", "announcement", "attending", "links", "approved", "rejected", "approved_by",
+            "rejected_by"
+        ]
 
 
 class AdminEventForm(forms.ModelForm):

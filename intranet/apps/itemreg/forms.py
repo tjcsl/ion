@@ -15,33 +15,18 @@ class CalculatorRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = CalculatorRegistration
-        fields = [
-            "calc_type",
-            "calc_serial",
-            "calc_id"
-        ]
+        fields = ["calc_type", "calc_serial", "calc_id"]
 
 
 class ComputerRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = ComputerRegistration
-        fields = [
-            "manufacturer",
-            "model",
-            "screen_size",
-            "serial",
-            "description"
-        ]
+        fields = ["manufacturer", "model", "screen_size", "serial", "description"]
 
 
 class PhoneRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = PhoneRegistration
-        fields = [
-            "manufacturer",
-            "model",
-            "serial",
-            "description"
-        ]
+        fields = ["manufacturer", "model", "serial", "description"]

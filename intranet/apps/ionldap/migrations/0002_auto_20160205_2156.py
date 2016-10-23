@@ -10,10 +10,12 @@ class Migration(migrations.Migration):
     dependencies = [('ionldap', '0001_initial')]
 
     operations = [
-        migrations.AlterField(model_name='ldapcourse',
-                              name='end_period',
-                              field=models.IntegerField(),),
-        migrations.AlterField(model_name='ldapcourse',
-                              name='period',
-                              field=models.IntegerField(),),
+        migrations.AlterField(
+            model_name='ldapcourse',
+            name='end_period',
+            field=models.IntegerField(),),
+        migrations.AlterField(
+            model_name='ldapcourse',
+            name='period',
+            field=models.IntegerField(),),
     ]

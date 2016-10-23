@@ -138,8 +138,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def get_activity(self, user, favorited_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
-        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities,
-                                               available_restricted_acts)
+        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, available_restricted_acts)
 
     def get_scheduled_activity(self, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -171,15 +170,17 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         # in this block
         activities_with_signups = (EighthSignup.objects.filter(scheduled_activity__block=block).exclude(
             scheduled_activity__activity__deleted=True).values_list("scheduled_activity__activity_id")
-            .annotate(user_count=Count("scheduled_activity")))
+                                   .annotate(user_count=Count("scheduled_activity")))
 
         for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = (EighthSponsor.objects.values_list("id", "user_id", "first_name", "last_name", "show_full_name"))
 
-        all_sponsors = dict((sponsor[0], {"user_id": sponsor[1],
-                                          "name": sponsor[2] + " " + sponsor[3] if sponsor[4] else sponsor[3]}) for sponsor in sponsors_dict)
+        all_sponsors = dict((sponsor[0], {
+            "user_id": sponsor[1],
+            "name": sponsor[2] + " " + sponsor[3] if sponsor[4] else sponsor[3]
+        }) for sponsor in sponsors_dict)
 
         activity_ids = scheduled_activities.values_list("activity__id")
         sponsorships = (EighthActivity.sponsors.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("sponsors").values(

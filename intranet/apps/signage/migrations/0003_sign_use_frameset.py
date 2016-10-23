@@ -9,4 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [('signage', '0002_auto_20151230_2151')]
 
-    operations = [migrations.AddField(model_name='sign', name='use_frameset', field=models.BooleanField(default=False),)]
+    operations = [migrations.AddField(
+        model_name='sign',
+        name='use_frameset',
+        field=models.BooleanField(default=False),)]

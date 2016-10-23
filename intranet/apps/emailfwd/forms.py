@@ -7,6 +7,4 @@ class SeniorEmailForwardForm(forms.ModelForm):
 
     class Meta:
         model = SeniorEmailForward
-        fields = [
-            "email",
-        ]
+        fields = ["email",]

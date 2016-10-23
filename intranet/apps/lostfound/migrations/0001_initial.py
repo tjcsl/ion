@@ -11,9 +11,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL),]
 
     operations = [
         migrations.CreateModel(
@@ -27,10 +25,7 @@ class Migration(migrations.Migration):
                 ('retrieved', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-                'ordering': ['-added'],
-            },
-        ),
+            options={'ordering': ['-added'],},),
         migrations.CreateModel(
             name='LostItem',
             fields=[
@@ -42,8 +37,5 @@ class Migration(migrations.Migration):
                 ('found', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-                'ordering': ['-added'],
-            },
-        ),
+            options={'ordering': ['-added'],},),
     ]

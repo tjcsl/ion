@@ -6,19 +6,15 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0028_historicaleighthactivity'),
-    ]
+    dependencies = [('eighth', '0028_historicaleighthactivity'),]
 
     operations = [
         migrations.AddField(
             model_name='eighthsignup',
             name='own_signup',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
         migrations.AddField(
             model_name='historicaleighthsignup',
             name='own_signup',
-            field=models.BooleanField(default=False),
-        ),
+            field=models.BooleanField(default=False),),
     ]

@@ -7,4 +7,6 @@ class Migration(migrations.Migration):
 
     dependencies = [('schedule', '0008_block_order')]
 
-    operations = [migrations.AlterModelOptions(name='block', options={'ordering': ('order', 'name', 'start', 'end')},)]
+    operations = [migrations.AlterModelOptions(
+        name='block',
+        options={'ordering': ('order', 'name', 'start', 'end')},)]

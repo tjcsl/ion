@@ -7,29 +7,23 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('itemreg', '0002_auto_20160409_2157'),
-    ]
+    dependencies = [('itemreg', '0002_auto_20160409_2157'),]
 
     operations = [
         migrations.AlterField(
             model_name='computerregistration',
             name='description',
-            field=models.TextField(max_length=1000),
-        ),
+            field=models.TextField(max_length=1000),),
         migrations.AlterField(
             model_name='founditem',
             name='description',
-            field=models.TextField(max_length=1000),
-        ),
+            field=models.TextField(max_length=1000),),
         migrations.AlterField(
             model_name='lostitem',
             name='description',
-            field=models.TextField(max_length=1000),
-        ),
+            field=models.TextField(max_length=1000),),
         migrations.AlterField(
             model_name='phoneregistration',
             name='description',
-            field=models.TextField(max_length=1000),
-        ),
+            field=models.TextField(max_length=1000),),
     ]

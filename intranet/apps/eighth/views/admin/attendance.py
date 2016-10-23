@@ -85,7 +85,7 @@ def delinquent_students_view(request):
             users_with_absence = (EighthSignup.objects.filter(
                 was_absent=True, scheduled_activity__attendance_taken=True, scheduled_activity__block__date__gte=start_date_filter,
                 scheduled_activity__block__date__lte=end_date_filter).values("user").annotate(absences=Count("user")).filter(absences__gte=1)
-                .values("user", "absences").order_by("user"))
+                                  .values("user", "absences").order_by("user"))
 
             uids_with_absence = [row["user"] for row in users_with_absence]
             all_students = User.objects.get_students().values_list("id")
@@ -101,9 +101,8 @@ def delinquent_students_view(request):
         if int(upper_absence_limit_filter) > 0:
             delinquents = (EighthSignup.objects.filter(
                 was_absent=True, scheduled_activity__attendance_taken=True, scheduled_activity__block__date__gte=start_date_filter,
-                scheduled_activity__block__date__lte=end_date_filter).values("user").annotate(absences=Count("user"))
-                .filter(absences__gte=lower_absence_limit_filter,
-                        absences__lte=upper_absence_limit_filter).values("user", "absences").order_by("user"))
+                scheduled_activity__block__date__lte=end_date_filter).values("user").annotate(absences=Count("user")).filter(
+                    absences__gte=lower_absence_limit_filter, absences__lte=upper_absence_limit_filter).values("user", "absences").order_by("user"))
 
             user_ids = [d["user"] for d in delinquents]
             delinquent_users = User.objects.filter(id__in=user_ids).order_by("id")
@@ -146,8 +145,8 @@ def delinquent_students_view(request):
         response["Content-Disposition"] = "attachment; filename=\"delinquent_students.csv\""
 
         writer = csv.writer(response)
-        writer.writerow(["Start Date", "End Date", "Absences", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email",
-                         "Other Email"])
+        writer.writerow(
+            ["Start Date", "End Date", "Absences", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email", "Other Email"])
 
         for delinquent in delinquents:
             row = []
@@ -230,8 +229,10 @@ def after_deadline_signup_view(request):
         response["Content-Disposition"] = "attachment; filename=\"after_deadline_signups.csv\""
 
         writer = csv.writer(response)
-        writer.writerow(["Start Date", "End Date", "Time", "Block", "Last Name", "First Name", "Student ID", "Grade", "From Activity", "From Sponsor",
-                         "To Activity ID", "To Activity", "To Sponsor"])
+        writer.writerow([
+            "Start Date", "End Date", "Time", "Block", "Last Name", "First Name", "Student ID", "Grade", "From Activity", "From Sponsor",
+            "To Activity ID", "To Activity", "To Sponsor"
+        ])
 
         for signup in signups:
             row = []
@@ -294,8 +295,8 @@ def activities_without_attendance_view(request):
             logger.debug(signups)
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
-            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(
-                cancelled.count(), signups.count()))
+            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(),
+                                                                                                                       signups.count()))
             return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
 
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
@@ -357,9 +358,9 @@ def out_of_building_schedules_view(request, block_id=None):
         rooms = EighthRoom.objects.filter(name__icontains="out of building")
 
         if len(rooms) > 0:
-            signups = (EighthSignup.objects.filter(scheduled_activity__block=block).filter(Q(scheduled_activity__rooms__in=rooms) | (Q(
-                scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms))).distinct()
-                .order_by("scheduled_activity__activity"))
+            signups = (EighthSignup.objects.filter(scheduled_activity__block=block).filter(
+                Q(scheduled_activity__rooms__in=rooms) | (Q(scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms)))
+                       .distinct().order_by("scheduled_activity__activity"))
             context["signups"] = signups
 
     if request.resolver_match.url_name == "eighth_admin_export_out_of_building_schedules":

@@ -100,18 +100,17 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         lelements.append(
             Paragraph("<b>Unique students:</b> {}, <b>Capacity:</b> {}".format(act_stats["students"], act_stats["capacity"]), styles["Normal"]))
 
-        elements.append(Table([[lelements, relements]], style=[
-            ('LEFTPADDING', (0, 0), (-1, -1), 0),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP')
-        ]))
+        elements.append(
+            Table([[lelements, relements]], style=[('LEFTPADDING', (0, 0), (-1, -1), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 0), ('VALIGN', (0, 0), (
+                -1, -1), 'TOP')]))
 
         parsed_members = [[x.username, y] for x, y in act_stats["members"]]
         parsed_members = list(chunks(parsed_members, 30))[:3]
         if parsed_members:
             parsed_members = [[["Username", "Signups"]] + x for x in parsed_members]
-            parsed_members = [Table(x, style=[('FONT', (0, 0), (1, 0), 'Helvetica-Bold'), ('ALIGN', (1, 0), (1, -1), 'RIGHT')])
-                              for x in parsed_members]
+            parsed_members = [
+                Table(x, style=[('FONT', (0, 0), (1, 0), 'Helvetica-Bold'), ('ALIGN', (1, 0), (1, -1), 'RIGHT')]) for x in parsed_members
+            ]
             elements.append(Table([parsed_members], style=[('VALIGN', (-1, -1), (-1, -1), 'TOP')]))
             if act_stats["students"] - 90 > 0:
                 elements.append(Paragraph("<b>{}</b> students were not shown on this page. ".format(act_stats["students"] - 90), styles["Normal"]))
@@ -120,9 +119,11 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
 
         if start_date is not None:
             elements.append(
-                Paragraph("<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]), styles["Normal"]))
-        elements.append(Paragraph(
-            "<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(act_stats["old_blocks"], year - 1, year), styles["Normal"]))
+                Paragraph("<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]),
+                          styles["Normal"]))
+        elements.append(
+            Paragraph("<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(act_stats["old_blocks"], year - 1,
+                                                                                                              year), styles["Normal"]))
 
         elements.append(PageBreak())
 
@@ -131,26 +132,27 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         empty_activities = [[x] for x in empty_activities]
         empty_activities = list(chunks(empty_activities, 35))
         empty_activities = [[["Activity"]] + x for x in empty_activities]
-        empty_activities = [Table(x, style=[
-            ('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 0)
-        ]) for x in empty_activities]
+        empty_activities = [
+            Table(x, style=[('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'), ('LEFTPADDING', (0, 0), (-1, -1), 0)]) for x in empty_activities
+        ]
         for i in range(0, len(empty_activities), 2):
             elements.append(Paragraph("Empty Activities (Page {})".format(i // 2 + 1), styles["Title"]))
             if all_years:
                 elements.append(Paragraph("The following activities have no 8th period blocks assigned to them.", styles["Normal"]))
             else:
                 elements.append(
-                    Paragraph("The following activities have no 8th period blocks assigned to them for the {}-{} school year.".format(year - 1, year), styles["Normal"]))
+                    Paragraph("The following activities have no 8th period blocks assigned to them for the {}-{} school year.".format(year - 1, year),
+                              styles["Normal"]))
             elements.append(Spacer(0, 0.10 * inch))
             ea = [empty_activities[i]]
             if i + 1 < len(empty_activities):
                 ea.append(empty_activities[i + 1])
-            elements.append(Table([ea], style=[
-                ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ], hAlign='LEFT'))
+            elements.append(
+                Table([ea], style=[
+                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ], hAlign='LEFT'))
             elements.append(PageBreak())
 
     def first_page(canvas, _):
@@ -258,9 +260,7 @@ def stats_global_view(request):
     else:
         earliest_year = EighthBlock.objects.order_by("date").first().date.year
 
-    context = {
-        "years": list(reversed(range(earliest_year, current_year + 1)))
-    }
+    context = {"years": list(reversed(range(earliest_year, current_year + 1)))}
 
     return render(request, "eighth/admin/global_statistics.html", context)
 
@@ -291,11 +291,7 @@ def stats_view(request, activity_id=None):
     else:
         year = None
 
-    context = {
-        "activity": activity,
-        "years": list(reversed(range(earliest_year, current_year + 1))),
-        "year": year
-    }
+    context = {"activity": activity, "years": list(reversed(range(earliest_year, current_year + 1))), "year": year}
 
     if year:
         context.update(calculate_statistics(activity, year=year))

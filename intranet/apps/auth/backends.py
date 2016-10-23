@@ -23,6 +23,7 @@ class KerberosAuthenticationBackend(object):
     This is the default authentication backend.
 
     """
+
     @staticmethod
     def kinit_timeout_handle(username, realm):
         """Check if the user exists before we throw an error.

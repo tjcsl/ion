@@ -22,8 +22,7 @@ class Migration(migrations.Migration):
                 ('section_id', models.CharField(max_length=100, blank=True)),
                 ('activity', models.OneToOneField(null=True, to='eighth.EighthActivity', on_delete=models.CASCADE)),
                 ('group', models.OneToOneField(null=True, to='auth.Group', on_delete=models.CASCADE)),
-            ],
-        ),
+            ],),
         migrations.CreateModel(
             name='BoardPost',
             fields=[
@@ -32,8 +31,7 @@ class Migration(migrations.Migration):
                 ('content', models.TextField(max_length=10000)),
                 ('added', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-            ],
-        ),
+            ],),
         migrations.CreateModel(
             name='BoardPostComment',
             fields=[
@@ -41,21 +39,17 @@ class Migration(migrations.Migration):
                 ('content', models.TextField(max_length=1000)),
                 ('added', models.DateTimeField(auto_now_add=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
-            ],
-        ),
+            ],),
         migrations.AddField(
             model_name='boardpost',
             name='comments',
-            field=models.ManyToManyField(to='board.BoardPostComment', null=True),
-        ),
+            field=models.ManyToManyField(to='board.BoardPostComment', null=True),),
         migrations.AddField(
             model_name='boardpost',
             name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
-        ),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),),
         migrations.AddField(
             model_name='board',
             name='posts',
-            field=models.ManyToManyField(to='board.BoardPost', null=True),
-        ),
+            field=models.ManyToManyField(to='board.BoardPost', null=True),),
     ]

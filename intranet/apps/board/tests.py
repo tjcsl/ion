@@ -7,7 +7,6 @@ from ...test.ion_test import IonTestCase
 
 
 class BoardTest(IonTestCase):
-
     """Tests for the board module."""
 
     @classmethod

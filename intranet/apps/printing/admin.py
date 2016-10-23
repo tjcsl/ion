@@ -12,6 +12,7 @@ class PrintJobAdmin(admin.ModelAdmin):
         if not obj.page_range:
             return "All"
         return obj.page_range
+
     formatted_page_range.admin_order_field = "page_range"  # type: ignore
     formatted_page_range.short_description = "Page Range"  # type: ignore
 

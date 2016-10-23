@@ -86,8 +86,9 @@ def profile_view(request, user_id=None):
     if settings.USE_IONLDAP:
         ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
 
-    has_been_nominated = profile_user.username in [u.nominee.username for u in request.user.nomination_votes.filter(
-        position__position_name=settings.NOMINATION_POSITION)]
+    has_been_nominated = profile_user.username in [
+        u.nominee.username for u in request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION)
+    ]
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,

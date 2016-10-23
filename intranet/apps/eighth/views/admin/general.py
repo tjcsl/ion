@@ -140,8 +140,5 @@ def history_view(request):
         "EighthActivity": EighthActivity.history.filter(history_date__gt=history_timeframe),
         "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe)
     }
-    context = {
-        "history": history,
-        "admin_page_title": "Event History"
-    }
+    context = {"history": history, "admin_page_title": "Event History"}
     return render(request, "eighth/admin/history.html", context)

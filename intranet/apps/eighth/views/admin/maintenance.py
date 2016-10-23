@@ -30,31 +30,16 @@ from ....notifications.emails import email_send
 
 logger = logging.getLogger(__name__)
 
-LDAP_STUDENT_FIELDS = [
-    ("graduationYear", "Graduation Year")
-]
-LDAP_BASIC_FIELDS = [
-    ("iodineUid", "Username"),
-    ("iodineUidNumber", "User ID"),
-    ("cn", "Full Name"),
-    ("givenName", "First Name"),
-    ("sn", "Last Name"),
-    ("mail", "Email")
-]
-LDAP_DEFAULT_FIELDS = {
-    "header": "TRUE",
-    "style": "default",
-    "chrome": "TRUE",
-    "startpage": "news"
-}
+LDAP_STUDENT_FIELDS = [("graduationYear", "Graduation Year")]
+LDAP_BASIC_FIELDS = [("iodineUid", "Username"), ("iodineUidNumber", "User ID"), ("cn", "Full Name"), ("givenName", "First Name"), ("sn", "Last Name"),
+                     ("mail", "Email")]
+LDAP_DEFAULT_FIELDS = {"header": "TRUE", "style": "default", "chrome": "TRUE", "startpage": "news"}
 
 
 @eighth_admin_required
 @reauthentication_required
 def index_view(request):
-    context = {
-        "admin_page_title": "Maintenance Tools"
-    }
+    context = {"admin_page_title": "Maintenance Tools"}
     return render(request, "eighth/admin/maintenance.html", context)
 
 
@@ -119,11 +104,7 @@ def ldap_modify(request):
 
             if success and new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
                 if User.objects.filter(username=new_uid).count():
-                    return JsonResponse({
-                        "success": False,
-                        "id": None,
-                        "error": "The username '" + new_uid + "' already exists!"
-                    })
+                    return JsonResponse({"success": False, "id": None, "error": "The username '" + new_uid + "' already exists!"})
 
                 success = c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
                 if success and u:
@@ -179,18 +160,11 @@ def ldap_delete(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST" and dn:
         if not dn.endswith(settings.USER_DN):
-            return JsonResponse({
-                "success": False,
-                "error": "Invalid DN!"
-            })
+            return JsonResponse({"success": False, "error": "Invalid DN!"})
         c = LDAPConnection()
         success = c.conn.delete(dn)
         clear_user_cache(dn)
-        return JsonResponse({
-            "success": success,
-            "error": "LDAP query failed!" if not success else None,
-            "details": c.conn.last_error
-        })
+        return JsonResponse({"success": success, "error": "LDAP query failed!" if not success else None, "details": c.conn.last_error})
     return JsonResponse({"success": False})
 
 
@@ -265,9 +239,8 @@ class ImportThread(threading.Thread):
                 if f.endswith(".ldif"):
                     content.write("=== Importing {}\n".format(f))
                     # ldap3 does not support importing LDIF files
-                    subprocess.check_call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f, env={
-                        "KRB5CCNAME": os.environ["KRB5CCNAME"]
-                    }, stdout=content, stderr=content)
+                    subprocess.check_call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f,
+                                          env={"KRB5CCNAME": os.environ["KRB5CCNAME"]}, stdout=content, stderr=content)
                     content.write("=== Imported {}\n".format(f))
                     ldifs_imported += 1
             if ldifs_imported == 0:
@@ -286,12 +259,7 @@ class ImportThread(threading.Thread):
 
         content.seek(0)
 
-        data = {
-            "log": content.read(),
-            "failure": failure,
-            "help_email": settings.FEEDBACK_EMAIL,
-            "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")
-        }
+        data = {"log": content.read(), "failure": failure, "help_email": settings.FEEDBACK_EMAIL, "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")}
         email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data,
                    "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
         shutil.rmtree(self.folder)
@@ -329,10 +297,7 @@ def sis_import(request):
 @eighth_admin_required
 @reauthentication_required
 def start_of_year_view(request):
-    context = {
-        "admin_page_title": "Start of Year Operations",
-        "completed": False
-    }
+    context = {"admin_page_title": "Start of Year Operations", "completed": False}
     if request.method == "POST" and request.POST.get("confirm"):
         content = StringIO()
         call_command("year_cleanup", run=True, confirm=True, stdout=content)
@@ -345,10 +310,7 @@ def start_of_year_view(request):
 @eighth_admin_required
 @reauthentication_required
 def clear_comments_view(request):
-    context = {
-        "admin_page_title": "Clear Admin Comments",
-        "completed": False
-    }
+    context = {"admin_page_title": "Clear Admin Comments", "completed": False}
     if request.method == "POST" and request.POST.get("confirm"):
         deleted_comments = ""
         count = 0

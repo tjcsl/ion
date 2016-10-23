@@ -7,4 +7,6 @@ class Migration(migrations.Migration):
 
     dependencies = [('announcements', '0019_auto_20150806_0849')]
 
-    operations = [migrations.AlterModelOptions(name='announcement', options={'ordering': ['-pinned', '-added']},)]
+    operations = [migrations.AlterModelOptions(
+        name='announcement',
+        options={'ordering': ['-pinned', '-added']},)]

@@ -9,14 +9,11 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('board', '0006_auto_20160401_0020'),
-    ]
+    dependencies = [('board', '0006_auto_20160401_0020'),]
 
     operations = [
         migrations.AlterField(
             model_name='boardpost',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
-        ),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),),
     ]

@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('eighth', '0035_eighthactivity_blacklist'),
-    ]
+    dependencies = [('eighth', '0035_eighthactivity_blacklist'),]
 
-    operations = [
-        migrations.AddField(
-            model_name='eighthscheduledactivity',
-            name='administrative',
-            field=models.BooleanField(default=False),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='eighthscheduledactivity',
+        name='administrative',
+        field=models.BooleanField(default=False),),]
