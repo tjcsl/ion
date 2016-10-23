@@ -67,10 +67,10 @@ $(document).ready(function() {
     $("#account-list").keydown(function(e) {
         var ele = null;
         if (e.which === 38) {
-            ele = $(".account.selected").prev();
+            ele = $(".account.selected").prevAll(":visible").first();
         }
         else if (e.which === 40) {
-            ele = $(".account.selected").next();
+            ele = $(".account.selected").nextAll(":visible").first();
         }
         if (ele && ele.length && !ele.hasClass("selected")) {
             ele.click();
