@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Group',
             fields=[],
-            options={'proxy': True,},
+            options={'proxy': True},
             bases=('auth.group',),
             managers=[('objects', intranet.apps.groups.models.GroupManager())],),
         migrations.AddField(

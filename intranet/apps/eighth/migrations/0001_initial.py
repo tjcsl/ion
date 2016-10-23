@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.BooleanField(default=False)),
                 ('groups_allowed', models.ManyToManyField(related_name='restricted_activity_set', to='auth.Group', blank=True)),
             ],
-            options={'verbose_name_plural': 'eighth activities',},
+            options={'verbose_name_plural': 'eighth activities'},
             bases=(models.Model,),),
         migrations.CreateModel(
             name='EighthBlock',
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('block_letter', models.CharField(max_length=1)),
                 ('locked', models.BooleanField(default=False)),
             ],
-            options={'ordering': ('date', 'block_letter'),},
+            options={'ordering': ('date', 'block_letter')},
             bases=(models.Model,),),
         migrations.CreateModel(
             name='EighthRoom',
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('activity', models.ForeignKey(to='eighth.EighthActivity', on_delete=models.CASCADE)),
                 ('block', models.ForeignKey(to='eighth.EighthBlock', on_delete=models.CASCADE)),
             ],
-            options={'verbose_name_plural': 'eighth scheduled activities',},
+            options={'verbose_name_plural': 'eighth scheduled activities'},
             bases=(models.Model,),),
         migrations.CreateModel(
             name='EighthSignup',
