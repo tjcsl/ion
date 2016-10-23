@@ -7,9 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('printing', '0004_auto_20151218_1346'),]
+    dependencies = [('printing', '0004_auto_20151218_1346')]
 
     operations = [migrations.AlterField(
         model_name='printjob',
         name='file',
-        field=models.FileField(upload_to='printing/'),),]
+        field=models.FileField(upload_to='printing/'),)]

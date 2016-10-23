@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [('polls', '0006_auto_20160112_0101'),]
+    dependencies = [('polls', '0006_auto_20160112_0101')]
 
     operations = [
         migrations.AlterField(

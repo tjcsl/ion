@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [('printing', '0007_printjob_duplex'),]
+    dependencies = [('printing', '0007_printjob_duplex')]
 
     operations = [
         migrations.AlterField(

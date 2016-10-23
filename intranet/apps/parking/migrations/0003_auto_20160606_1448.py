@@ -9,7 +9,7 @@ from django.utils.timezone import utc
 
 class Migration(migrations.Migration):
 
-    dependencies = [('parking', '0002_carapplication_user'),]
+    dependencies = [('parking', '0002_carapplication_user')]
 
     operations = [
         migrations.AddField(

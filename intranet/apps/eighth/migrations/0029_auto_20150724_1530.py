@@ -6,7 +6,7 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [('eighth', '0028_historicaleighthactivity'),]
+    dependencies = [('eighth', '0028_historicaleighthactivity')]
 
     operations = [
         migrations.AddField(

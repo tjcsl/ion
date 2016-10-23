@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.CreateModel(
             name='AnnouncementUserMap',
-            fields=[('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),],),
+            fields=[('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True))],),
         migrations.RemoveField(
             model_name='announcement',
             name='users_hidden',),
