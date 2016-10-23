@@ -609,7 +609,8 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         except User.DoesNotExist:
             uid_number = self.last_uid_number + 1
             self.last_uid_number += 1
-            self.new_teachers.append({'uid': uid_number, 'username': username, 'firstname': first_name, 'lastname': last_name, 'fullname': '{} {}'.format(first_name, last_name)})
+            self.new_teachers.append({'uid': uid_number, 'username': username, 'firstname': first_name,
+                                      'lastname': last_name, 'fullname': '{} {}'.format(first_name, last_name)})
 
         return username
 

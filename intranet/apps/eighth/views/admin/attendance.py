@@ -294,7 +294,8 @@ def activities_without_attendance_view(request):
             logger.debug(signups)
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
-            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(), signups.count()))
+            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(
+                cancelled.count(), signups.count()))
             return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
 
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
