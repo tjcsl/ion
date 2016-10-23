@@ -1122,7 +1122,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
         for signup in final_remove_signups:
-            success_message += "\nYour signup for {0} on {1} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
+            success_message += "\nYour signup for {0} on {1} was removed. ".format(
+                signup.scheduled_activity.activity, signup.scheduled_activity.block)
             signup.delete()
         """
 

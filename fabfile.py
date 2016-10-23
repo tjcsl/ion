@@ -142,9 +142,8 @@ def contributors():
 def linecount():
     """Get a total line count of files with these types:"""
     with hide("running"):
-        local(
-            "cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations ."
-        )
+        excludes = "intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations"
+        local("cloc --exclude-ext=json --exclude-dir=%s ." % excludes)
 
 
 def load_fixtures():
