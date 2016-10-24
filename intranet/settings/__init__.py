@@ -532,6 +532,9 @@ INSTALLED_APPS = [
     "simple_history"
 ]
 
+if PRODUCTION:
+    INSTALLED_APPS += ["raven.contrib.django.raven_compat"]
+
 # Eighth period default block date format
 # Post Django 1.8.7, this can no longer be used in templates.
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
