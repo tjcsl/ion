@@ -28,6 +28,15 @@ NO_CACHE = False
 PARKING_ENABLED = False
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
+#
+# In production, Nginx filters requests that are not in this list. If this is
+# not done, an email failure notification gets sent whenever someone messes with
+# the HTTP Host header.
+ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
+
 try:
     from .secret import *  # noqa
 except ImportError:
@@ -154,14 +163,6 @@ SILENCED_SYSTEM_CHECKS = [
     "security.W019"
 ]
 
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
-#
-# In production, Nginx filters requests that are not in this list. If this is
-# not done, an email failure notification gets sent whenever someone messes with
-# the HTTP Host header.
-ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -217,60 +218,52 @@ STATICFILES_DIRS = [
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don"t forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, "static")]
+    os.path.join(PROJECT_ROOT, "static")
+]
 
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_FINDERS = ["django.contrib.staticfiles.finders.FileSystemFinder",
-                       "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-                       'pipeline.finders.PipelineFinder',
-                       ]
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    'pipeline.finders.PipelineFinder',
+]
 
 STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 
 PIPELINE = {
     'CSS_COMPRESSOR': None,
-    'COMPILERS': [
-        'pipeline.compilers.sass.SASSCompiler',
-    ],
+    'COMPILERS': ['pipeline.compilers.sass.SASSCompiler'],
     'STYLESHEETS': {
         'base': {
-            'source_filenames': [
-                'css/base.scss',
-                'css/themes.scss',
-                'css/responsive.scss'
-            ],
+            'source_filenames': ['css/base.scss', 'css/themes.scss', 'css/responsive.scss'],
             'output_filename': 'css/base.css'
         },
         'eighth.admin': {
-            'source_filenames': [
-                'css/eighth.common.scss',
-                'css/eighth.admin.scss'
-            ],
+            'source_filenames': ['css/eighth.common.scss', 'css/eighth.admin.scss'],
             'output_filename': 'css/eighth.admin.css'
         },
         'eighth.signup': {
-            'source_filenames': [
-                'css/eighth.common.scss',
-                'css/eighth.signup.scss'
-            ],
+            'source_filenames': ['css/eighth.common.scss', 'css/eighth.signup.scss'],
             'output_filename': 'css/eighth.signup.css'
         },
     }
 }  # type: Dict[str,Any]
 
-LIST_OF_INDEPENDENT_CSS = ['about', 'api', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search',
-                           'dashboard', 'events', 'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board',
-                           'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'signage.touch.landscape',
-                           'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance',
-                           'lostfound', 'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth']
+LIST_OF_INDEPENDENT_CSS = [
+    'about', 'api', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search', 'dashboard', 'events',
+    'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board', 'announcements.form', 'preferences', 'signage.base',
+    'signage.touch', 'signage.touch.landscape', 'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance', 'lostfound',
+    'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth'
+]
 
 for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.single_css_map(name))
 
-AUTHENTICATION_BACKENDS = ("intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
-                           "intranet.apps.auth.backends.KerberosAuthenticationBackend",
-                           "oauth2_provider.backends.OAuth2Backend",)
+AUTHENTICATION_BACKENDS = (
+    "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
+    "oauth2_provider.backends.OAuth2Backend",)
 # Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -288,25 +281,22 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
-            "context_processors":
-            ("django.contrib.auth.context_processors.auth",  # Authentication; must be defined first
-             "django.template.context_processors.debug",  # Django default
-             "django.template.context_processors.request",  # Django default
-             "django.contrib.messages.context_processors.messages",  # For page messages
-             "intranet.apps.context_processors.ion_base_url",  # For determining the base url
-             "intranet.apps.context_processors.nav_categorizer",  # For determining the category in the navbar
-             "intranet.apps.context_processors.global_warning",  # For showing a global warning throughout the application (in page_base.html)
-             "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
-             "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
-             "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
-             "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
-             "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
-             ),
-            "debug": True,  # Only enabled if DEBUG is true as well
-            'loaders': (
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader'
+            "context_processors": (
+                "django.contrib.auth.context_processors.auth",  # Authentication; must be defined first
+                "django.template.context_processors.debug",  # Django default
+                "django.template.context_processors.request",  # Django default
+                "django.contrib.messages.context_processors.messages",  # For page messages
+                "intranet.apps.context_processors.ion_base_url",  # For determining the base url
+                "intranet.apps.context_processors.nav_categorizer",  # For determining the category in the navbar
+                "intranet.apps.context_processors.global_warning",  # For showing a global warning throughout the application (in page_base.html)
+                "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
+                "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
+                "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
+                "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
+                "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
             ),
+            "debug": True,  # Only enabled if DEBUG is true as well
+            'loaders': ('django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'),
             'libraries': {
                 'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
             },
@@ -315,9 +305,8 @@ TEMPLATES = [
 ]  # type: List[Dict[str,Any]]
 
 if PRODUCTION:
-    TEMPLATES[0]["OPTIONS"]["loaders"] = [('django.template.loaders.cached.Loader', [
-                                           'django.template.loaders.filesystem.Loader',
-                                           'django.template.loaders.app_directories.Loader'])]
+    TEMPLATES[0]["OPTIONS"]["loaders"] = [('django.template.loaders.cached.Loader',
+                                           ['django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'])]
 
 if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
@@ -361,6 +350,7 @@ VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"]) if "VIRTUAL_ENV" in os
 
 def get_month_seconds():
     return datetime.timedelta(hours=24).total_seconds() * 30
+
 
 # Age of cache information
 CACHE_AGE = {
@@ -464,17 +454,19 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
-    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.ApiBasicAuthentication",
-                                       "rest_framework.authentication.SessionAuthentication",
-                                       "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
+    "DEFAULT_AUTHENTICATION_CLASSES":
+    ("intranet.apps.api.authentication.ApiBasicAuthentication", "rest_framework.authentication.SessionAuthentication",
+     "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
 }
 
 # Django Oauth Toolkit configuration
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
-    'SCOPES': {'read': 'Read scope',
-               'write': 'Write scope'}
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope'
+    }
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 
@@ -577,6 +569,12 @@ LOGGING = {
             "class": "intranet.middleware.email_handler.AdminEmailHandler",
             "include_html": True
         },
+        # send to sentry
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            "filters": ["require_debug_false"],
+        },
         # Log in console
         "console": {
             "level": "DEBUG",
@@ -642,7 +640,17 @@ LOGGING = {
             "handlers": ["console_access"] + get_log("auth_log"),
             "level": "DEBUG",
             "propagate": False
-        }
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     }
 }
 
@@ -671,9 +679,10 @@ if SHOW_DEBUG_TOOLBAR:
     ]
 
     # Only show debug toolbar when requested if in production.
-    DEBUG_TOOLBAR_CONFIG = {"DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled],
-                            "SHOW_TOOLBAR_CALLBACK": "intranet.utils.helpers.debug_toolbar_callback",
-                            }
+    DEBUG_TOOLBAR_CONFIG = {
+        "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled],
+        "SHOW_TOOLBAR_CALLBACK": "intranet.utils.helpers.debug_toolbar_callback",
+    }
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
@@ -684,7 +693,6 @@ if SHOW_DEBUG_TOOLBAR:
     ])
 
     INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]
-
 
 # Maintenance mode
 # This should be adjusted in secrets.py or by running:
@@ -714,7 +722,6 @@ GIT = {
     "commit_date": helpers.get_current_commit_date(),
     "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT)
 }
-
 
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2017
