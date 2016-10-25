@@ -619,13 +619,13 @@ LOGGING = {
     "loggers": {
         # Django errors get sent to the error log
         "django": {
-            "handlers": ["console", "mail_admins"] + get_log("error_log"),
+            "handlers": ["console", "mail_admins", "sentry"] + get_log("error_log"),
             "level": "ERROR",
             "propagate": True,
         },
         # Intranet errors email admins and errorlog
         "intranet": {
-            "handlers": ["console", "mail_admins"] + get_log("error_log"),
+            "handlers": ["console", "mail_admins", "sentry"] + get_log("error_log"),
             "level": LOG_LEVEL,
             "propagate": True,
         },
