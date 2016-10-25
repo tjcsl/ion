@@ -16,6 +16,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='cache',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user', to='users.UserCache'),
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='user',
+                to='users.UserCache'),
         ),
     ]
