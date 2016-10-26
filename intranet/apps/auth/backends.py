@@ -31,12 +31,19 @@ class KerberosAuthenticationBackend(object):
 
         """
         try:
-            User.get_user(username=username)
+            u = User.get_user(username=username)
         except User.DoesNotExist:
             logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
             return
 
-        logger.critical("kinit timed out for {}@{}".format(username, realm))
+        logger.critical("kinit timed out for {}".format(realm), extra={
+            'fingerprint': ['kinit', 'timeout'],
+            'stack': True,
+            'username': username,
+            'data': {
+                'user': u
+            }
+        })
 
     @staticmethod
     # @sensitive_variables('password')
