@@ -1589,7 +1589,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.cache:
             self.cache = UserCache.objects.create(objectClass=self.user_type,
                                                   first_name=self.first_name,
-                                                  last_name=self.last_name)
+                                                  last_name=self.last_name, user=self)
         self.cache.grade_number = self.grade.number if self.grade else None
         self.cache.graduation_year = int(self.graduation_year) if self.graduation_year else None
         bool_gender = None
@@ -1610,12 +1610,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             if not self.cache:
                 logger.debug("Initializing UserCache for {}".format(self))
-                self.cache = UserCache.objects.create()
+                self.cache = UserCache.objects.create(user=self)
                 self.cache.save()
                 self.save()
         except UserCache.DoesNotExist:
             logger.debug("Initializing UserCache for {}".format(self))
-            self.cache = UserCache.objects.create()
+            self.cache = UserCache.objects.create(user=self)
             self.save()
             return self.get_or_set_cache(attribute)
         val = getattr(self.cache, attribute)
