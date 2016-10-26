@@ -14,12 +14,8 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def seniors_home_view(request):
-    seniors = Senior.objects.exclude(college=None, major=None)
-
-    # This will potentially make lots of LDAP queries,
-    # so this may need a rewrite for better performance.
-    seniors = list(filter(lambda s: s.user.grade.number == 12, seniors))
-    seniors = sorted(seniors, key=lambda x: x.user.last_first)
+    seniors = Senior.objects.exclude(college=None, major=None).filter(
+        user__cache__grade_number=12).order_by('user__cache__last_name', 'user__cache__first_name')
     try:
         own_senior = Senior.objects.get(user=request.user)
     except Senior.DoesNotExist:

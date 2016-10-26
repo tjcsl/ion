@@ -19,8 +19,7 @@ class College(models.Model):
 class SeniorManager(models.Manager):
 
     def filled(self):
-        seniors = Senior.objects.exclude(college=None, major=None)
-        return [senior for senior in seniors if senior.user.is_senior]
+        return Senior.objects.exclude(college=None, major=None).filter(user__cache__grade_number=12)
 
 
 class Senior(models.Model):
