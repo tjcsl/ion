@@ -563,12 +563,12 @@ LOGGING = {
     },
     "handlers": {
         # Email ADMINS
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["require_debug_false"],
-            "class": "intranet.middleware.email_handler.AdminEmailHandler",
-            "include_html": True
-        },
+        # "mail_admins": {
+        #     "level": "ERROR",
+        #     "filters": ["require_debug_false"],
+        #     "class": "intranet.middleware.email_handler.AdminEmailHandler",
+        #     "include_html": True
+        # },
         # send to sentry
         'sentry': {
             'level': 'ERROR',
