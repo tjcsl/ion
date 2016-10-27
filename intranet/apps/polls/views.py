@@ -165,7 +165,7 @@ def fmt(num):
 def perc(num, den):
     if den == 0:
         return 0
-    return int(10000 * num / den) / 100
+    return round(num / den * 100, 2)
 
 
 def handle_sap(q):
@@ -259,20 +259,19 @@ def handle_choice(q, do_gender=True):
                 "total": {
                     "all": votes.count(),
                     "all_percent": perc(votes.count(), question_votes.count()),
-                    "male": sum([v.user.is_male for v in votes if v.user]) if do_gender else 0,
-                    "female": sum([v.user.is_female for v in votes if v.user]) if do_gender else 0
+                    "male": votes.filter(user__cache__gender=True).count() if do_gender else 0,
+                    "female": votes.filter(user__cache__gender=False).count() if do_gender else 0
                 }
             },
             "users": [v.user for v in votes]
         }
 
         for yr in range(9, 14):
-            yr_votes = [v.user if v.user and v.user.grade and v.user.grade.number == yr else None for v in votes]
-            yr_votes = list(filter(None, yr_votes))
+            yr_votes = votes.filter(user__cache__grade_number=yr)
             choice["votes"][yr] = {
-                "all": len(yr_votes),
-                "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
-                "female": sum([u.is_female for u in yr_votes]) if do_gender else 0
+                "all": yr_votes.count(),
+                "male": yr_votes.filter(user__cache__gender=True).count() if do_gender else 0,
+                "female": yr_votes.filter(user__cache__gender=False).count() if do_gender else 0
             }
         choices.append(choice)
     """ Clear vote """
@@ -283,20 +282,19 @@ def handle_choice(q, do_gender=True):
             "total": {
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), question_votes.count()),
-                "male": sum([v.user.is_male for v in votes if v.user]) if do_gender else 0,
-                "female": sum([v.user.is_female for v in votes if v.user]) if do_gender else 0
+                "male": votes.filter(user__cache__gender=True).count() if do_gender else 0,
+                "female": votes.filter(user__cache__gender=False).count() if do_gender else 0
             }
         },
         "users": [v.user for v in votes]
     }
 
     for yr in range(9, 14):
-        yr_votes = [v.user if v.user and v.user.grade and v.user.grade.number == yr else None for v in votes]
-        yr_votes = list(filter(None, yr_votes))
+        yr_votes = votes.filter(user__cache__grade_number=yr)
         choice["votes"][yr] = {
-            "all": len(yr_votes),
-            "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
-            "female": sum([u.is_female for u in yr_votes]) if do_gender else 0
+            "all": yr_votes.count(),
+            "male": yr_votes.filter(user__cache__gender=True).count() if do_gender else 0,
+            "female": yr_votes.filter(user__cache__gender=False).count() if do_gender else 0
         }
 
     choices.append(choice)
@@ -307,18 +305,17 @@ def handle_choice(q, do_gender=True):
                 "all": question_votes.count(),
                 "users_all": users.count(),
                 "all_percent": perc(question_votes.count(), users.count()),
-                "male": sum([u.is_male for u in users]) if do_gender else 0,
-                "female": sum([u.is_female for u in users]) if do_gender else 0,
+                "male": users.filter(cache__gender=True).count() if do_gender else 0,
+                "female": users.filter(cache__gender=False).count() if do_gender else 0,
             }
         }
     }
     for yr in range(9, 14):
-        yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
-        yr_votes = list(filter(None, yr_votes))
+        yr_votes = votes.filter(user__cache__grade_number=yr)
         choice["votes"][yr] = {
-            "all": len(yr_votes),
-            "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
-            "female": sum([u.is_female for u in yr_votes]) if do_gender else 0
+            "all": yr_votes.count(),
+            "male": yr_votes.filter(user__cache__gender=True).count() if do_gender else 0,
+            "female": yr_votes.filter(user__cache__gender=False).count() if do_gender else 0
         }
 
     choices.append(choice)
