@@ -255,7 +255,7 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), total_count),
                 "male": votes.filter(user__cache__gender=True).count() if do_gender else 0,
-                "female": votes.filter(user__cache__gender=False).count() if do_gender else 0
+                "female": votes.filter(user__cache__gender__isnull=False, user__cache__gender=False).count() if do_gender else 0
             }
         },
         "users": [v.user for v in votes] if show_answers else None
@@ -266,7 +266,7 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
         choice["votes"][yr] = {
             "all": yr_votes.count(),
             "male": yr_votes.filter(user__cache__gender=True).count() if do_gender else 0,
-            "female": yr_votes.filter(user__cache__gender=False).count() if do_gender else 0
+            "female": yr_votes.filter(user__cache__gender__isnull=False, user__cache__gender=False).count() if do_gender else 0
         }
     return choice
 
@@ -303,6 +303,11 @@ def poll_results_view(request, poll_id):
         poll = Poll.objects.get(id=poll_id)
     except Poll.DoesNotExist:
         raise http.Http404
+
+    # Set the database cache of all users that participated in the poll.
+    participants = Answer.objects.filter(question__in=poll.question_set.all()).values_list("user", flat=True)
+    for user in User.objects.filter(cache__isnull=True, id__in=participants):
+        user.set_cache()
 
     questions = []
     for q in poll.question_set.all():
