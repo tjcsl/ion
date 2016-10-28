@@ -197,6 +197,8 @@ def handle_sap(q):
                 "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
                 "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
             }
+
+        choices.append(choice)
     """ Clear vote """
     votes = question_votes.filter(clear_vote=True)
     clr_users = set([v.user for v in votes])
@@ -220,6 +222,8 @@ def handle_sap(q):
             "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
             "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
         }
+
+    choices.append(choice)
 
     choice = {
         "choice": "Total",
@@ -305,8 +309,8 @@ def poll_results_view(request, poll_id):
         raise http.Http404
 
     # Set the database cache of all users that participated in the poll.
-    participants = Answer.objects.filter(question__in=poll.question_set.all()).values_list("user", flat=True)
-    for user in User.objects.filter(cache__isnull=True, id__in=participants):
+    participants = Answer.objects.filter(user__cache__isnull=True, question__in=poll.question_set.all()).values_list("user", flat=True)
+    for user in User.objects.filter(id__in=participants):
         user.set_cache()
 
     questions = []
