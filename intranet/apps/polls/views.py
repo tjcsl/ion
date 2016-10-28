@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from django.db.models import Q
+
 from .models import Answer, Choice, Poll, Question
 from ..users.models import User
 
@@ -309,7 +311,9 @@ def poll_results_view(request, poll_id):
         raise http.Http404
 
     # Set the database cache of all users that participated in the poll.
-    participants = Answer.objects.filter(user__cache__isnull=True, question__in=poll.question_set.all()).values_list("user", flat=True)
+    participants = Answer.objects.filter(question__in=poll.question_set.all())
+    participants = participants.filter(Q(user__cache__isnull=True) | Q(user__cache__gender__isnull=True) | Q(user__cache__grade_number=True))
+    participants = participants.values_list("user", flat=True)
     for user in User.objects.filter(id__in=participants):
         user.set_cache()
 
