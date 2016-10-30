@@ -167,7 +167,7 @@ def fmt(num):
 def perc(num, den):
     if den == 0:
         return 0
-    return round(num / den * 100, 2)
+    return round(num / den * 100.0, 2)
 
 
 def handle_sap(q):
@@ -282,15 +282,17 @@ def handle_choice(q, do_gender=True, show_answers=False):
     total_count = question_votes.count()
     users = q.get_users_voted()
     choices = []
+
+    # Choices
     for c in q.choice_set.all().order_by("num"):
         votes = question_votes.filter(choice=c)
         choices.append(generate_choice(c, votes, total_count, do_gender, show_answers))
 
-    """ Clear vote """
+    # Clear vote
     votes = question_votes.filter(clear_vote=True)
     choices.append(generate_choice("Clear vote", votes, total_count, do_gender, show_answers))
 
-    """ Total """
+    # Total
     total_choice = generate_choice("Total", question_votes, total_count, do_gender, show_answers)
     total_choice["votes"]["total"]["users_all"] = users.count()
     choices.append(total_choice)
