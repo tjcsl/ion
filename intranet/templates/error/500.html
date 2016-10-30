@@ -4,7 +4,23 @@
     Internal Server Error - HTTP 500
 {% endblock %}
 
+
+{% block scripts %}
+<script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
+{% endblock %}
+
+
 {% block description %}
     There was an error processing your request.<br />
-    If this message continues to appear, please contact the <a href="mailto:intranet@tjhsst.edu">Intranet Development Team.</a>
+    Click <a href="#" id="feedbackLink">here</a> to send feedback to the <a href="mailto:intranet@tjhsst.edu">Intranet Development Team.</a>
+{% if request.sentry.id %}
+  <script>
+  document.getElementById("feedbackLink").onclick = function() {
+    Raven.showReportDialog({
+    eventId: '{{ request.sentry.id }}',
+    dsn: '{{ public_dsn }}'
+  });
+  };
+  </script>
+{% endif %}
 {% endblock %}

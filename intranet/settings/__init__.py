@@ -338,6 +338,9 @@ MIDDLEWARE = [
     "intranet.middleware.simple_history.HistoryRequestMiddleware"
 ]
 
+if PRODUCTION:
+    MIDDLEWARE += ["raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware", ]
+
 # URLconf at urls.py
 ROOT_URLCONF = "intranet.urls"
 
