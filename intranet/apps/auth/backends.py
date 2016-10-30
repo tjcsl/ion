@@ -38,7 +38,6 @@ class KerberosAuthenticationBackend(object):
             return
 
         logger.critical("kinit timed out for {}".format(realm), extra={
-            "fingerprint": ["kinit", "timeout"],
             "stack": True,
             "data": {
                 "username": username
