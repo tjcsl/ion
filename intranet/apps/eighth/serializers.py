@@ -195,21 +195,18 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             sponsor_id = sponsorship["eighthsponsor"]
             sponsor = all_sponsors[sponsor_id]
 
-            if sponsor["user_id"]:
-                # We're not using User.get_user() here since we only want
-                # a value from LDAP that is probably already cached.
-                # This eliminates several hundred SQL queries on some
-                # pages.
-                dn = User.dn_from_id(sponsor["user_id"])
-                if dn is not None:
-                    name = User(dn=dn).last_name
-                else:
+            if sponsor["name"]:
+                name = sponsor["name"]
+            elif sponsor["user_id"]:
+                try:
+                    name = User.objects.get(id=sponsor["user_id"]).last_name
+                except User.DoesNotExist:
                     name = None
             else:
                 name = None
 
             if activity_id in activity_list:
-                activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
+                activity_list[activity_id]["sponsors"].append(name)
 
         activities_sponsors_overidden = []
         for sponsorship in overidden_sponsorships:
@@ -222,16 +219,18 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 activities_sponsors_overidden.append(activity_id)
                 del activity_list[activity_id]["sponsors"][:]
 
-            if sponsor["user_id"]:
-                # See a few lines up for why we're not using User.get_user()
-                dn = User.dn_from_id(sponsor["user_id"])
-                if dn is not None:
-                    name = User(dn=dn).last_name
-                else:
+            if sponsor["name"]:
+                name = sponsor["name"]
+            elif sponsor["user_id"]:
+                try:
+                    name = User.objects.get(id=sponsor["user_id"]).last_name
+                except User.DoesNotExist:
                     name = None
             else:
                 name = None
-            activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
+
+            if activity_id in activity_list:
+                activity_list[activity_id]["sponsors"].append(name)
 
         roomings = (EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity"))
         overidden_roomings = (EighthScheduledActivity.rooms.through.objects.filter(
