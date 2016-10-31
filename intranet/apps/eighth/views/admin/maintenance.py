@@ -104,7 +104,11 @@ def ldap_modify(request):
 
             if success and new_uid and not "iodineUid={},{}".format(new_uid, settings.USER_DN) == dn:
                 if User.objects.filter(username=new_uid).count():
-                    return JsonResponse({"success": False, "id": None, "error": "The username '" + new_uid + "' already exists!"})
+                    return JsonResponse({
+                        "success": False,
+                        "id": None,
+                        "error": "The username '{}' already exists!".format(new_uid)
+                    })
 
                 success = c.conn.modify_dn(dn, "iodineUid={}".format(new_uid))
                 if success and u:
@@ -151,7 +155,6 @@ def ldap_modify(request):
                 "error": "LDAP query failed!" if not success else None,
                 "details": c.conn.last_error
             })
-    return JsonResponse({"success": False})
 
 
 @eighth_admin_required
@@ -160,11 +163,18 @@ def ldap_delete(request):
     dn = request.POST.get("dn", None)
     if request.method == "POST" and dn:
         if not dn.endswith(settings.USER_DN):
-            return JsonResponse({"success": False, "error": "Invalid DN!"})
+            return JsonResponse({
+                "success": False,
+                "error": "Invalid DN!",
+                "details": dn
+            })
         c = LDAPConnection()
         success = c.conn.delete(dn)
-        clear_user_cache(dn)
-        return JsonResponse({"success": success, "error": "LDAP query failed!" if not success else None, "details": c.conn.last_error})
+        return JsonResponse({
+            "success": success,
+            "error": "LDAP query failed!" if not success else None,
+            "details": c.conn.last_error
+        })
     return JsonResponse({"success": False})
 
 
