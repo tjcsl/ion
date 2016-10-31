@@ -18,6 +18,7 @@ except ImportError:
 import ldap3
 import ldap3.protocol.sasl
 import ldap3.utils.conv
+from ldap3.core.exceptions import LDAPSocketOpenError, LDAPExceptionError
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -69,7 +70,7 @@ class LDAPConnection(object):
         _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
         try:
             _thread_locals.ldap_conn.bind()
-        except ldap3.LDAPSocketOpenError as e:
+        except LDAPSocketOpenError as e:
             logging.critical("Failed to connect to ldap server: %s", e)
             _thread_locals.ldap_conn = None
         _thread_locals.simple_bind = True
@@ -84,7 +85,7 @@ class LDAPConnection(object):
         middleware.
 
         """
-        ldap_exceptions = (ldap3.LDAPExceptionError, ldap3.LDAPSocketOpenError)
+        ldap_exceptions = (LDAPExceptionError, LDAPSocketOpenError)
         if 'gssapi' in sys.modules:
             ldap_exceptions += (gssapi.exceptions.GSSError,)
 

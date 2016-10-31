@@ -20,6 +20,7 @@ from intranet.middleware import threadlocals
 
 import ldap3
 import ldap3.utils.dn
+from ldap3.core.exceptions import LDAPInvalidDNSyntaxResult, LDAPNoSuchObjectResult
 
 from ..groups.models import Group
 
@@ -308,7 +309,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         user.save()
                     else:
                         raise User.DoesNotExist("`User` with DN '{}' does not have a username.".format(dn))
-            except (ldap3.LDAPInvalidDNSyntaxResult, ldap3.LDAPNoSuchObjectResult):
+            except (LDAPInvalidDNSyntaxResult, LDAPNoSuchObjectResult):
                 raise User.DoesNotExist("`User` with DN '{}' does not exist.".format(dn))
         else:
             raise TypeError("get_user() requires at least one argument.")
@@ -833,7 +834,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     logger.debug("{} photo of user {} loaded from LDAP.".format(photo_year.title(), self.id))
                 else:
                     data = None
-            except (ldap3.LDAPNoSuchObjectResult, KeyError):
+            except (LDAPNoSuchObjectResult, KeyError):
                 data = None
 
             cache.set(key, data, timeout=settings.CACHE_AGE['ldap_permissions'])
