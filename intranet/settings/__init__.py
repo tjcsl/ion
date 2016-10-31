@@ -18,11 +18,14 @@ defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
 SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
+# Dummy values for development and testing.
+# Overridden by the import from secret.py below.
 SECRET_DATABASE_URL = None  # type: str
 MAINTENANCE_MODE = None  # type: bool
 TJSTAR_MAP = None  # type: bool
 TWITTER_KEYS = None  # type: Dict[str,str]
 ADMINS = None  # type: List[Tuple[str,str]]
+SENTRY_PUBLIC_DSN = None
 USE_SASL = True
 NO_CACHE = False
 PARKING_ENABLED = False

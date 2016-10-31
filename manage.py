@@ -8,6 +8,7 @@ from django.utils.deprecation import RemovedInDjango20Warning
 warnings.simplefilter('default')
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='cacheops')
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='funcy')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='pipeline')
 warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='distutils')
 warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='django')
 
