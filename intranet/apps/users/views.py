@@ -10,6 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+from django.core.exceptions import MultipleObjectsReturned
+
+from raven.contrib.django.raven_compat.models import client
 
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
@@ -63,6 +66,9 @@ def profile_view(request, user_id=None):
         try:
             sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
         except EighthSignup.DoesNotExist:
+            sch["signup"] = None
+        except MultipleObjectsReturned:
+            client.captureException()
             sch["signup"] = None
         eighth_schedule.append(sch)
 

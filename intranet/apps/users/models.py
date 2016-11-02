@@ -724,10 +724,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 results = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode'])
                 result = results.first_result()
-                street = result['street'][0]
-                city = result['l'][0]
-                state = result['st'][0]
-                postal_code = result['postalCode'][0]
+                street = result['street']
+                city = result['l']
+                state = result['st']
+                postal_code = result['postalCode']
             except KeyError:
                 return None
             else:
@@ -759,7 +759,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             c = LDAPConnection()
             try:
                 result = c.user_attributes(self.dn, ["birthday"])
-                birthday = result.first_result()["birthday"][0]
+                birthday = result.first_result()["birthday"]
             except KeyError:
                 return None
             else:
@@ -830,7 +830,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
                 if len(results) == 1:
-                    data = results[0]['attributes']['jpegPhoto'][0]
+                    data = results[0]['attributes']['jpegPhoto']
                     logger.debug("{} photo of user {} loaded from LDAP.".format(photo_year.title(), self.id))
                 else:
                     data = None
@@ -906,10 +906,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             default_result = c.user_attributes(self.dn, ["perm-showpictures-self", "perm-showpictures"])
             default = default_result.first_result()
             if "perm-showpictures" in default:
-                perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
+                perms["parent"] = (default["perm-showpictures"] == "TRUE")
 
             if "perm-showpictures-self" in default:
-                perms["self"]["default"] = (default["perm-showpictures-self"][0] == "TRUE")
+                perms["self"]["default"] = (default["perm-showpictures-self"] == "TRUE")
 
             photos_result = c.search(self.dn, "(objectclass=iodinePhoto)", ["cn", "perm-showpictures", "perm-showpictures-self"])
 
@@ -918,13 +918,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             for photo in photos:
                 attrs = photo['attributes']
                 if "cn" in attrs:
-                    grade = attrs["cn"][0][:-len("Photo")]
+                    grade = attrs["cn"][:-len("Photo")]
                     try:
-                        public = (attrs["perm-showpictures-self"][0] == "TRUE")
+                        public = (attrs["perm-showpictures-self"] == "TRUE")
                         perms["self"][grade] = public
                     except KeyError:
                         try:
-                            public = (attrs["perm-showpictures"][0] == "TRUE")
+                            public = (attrs["perm-showpictures"] == "TRUE")
                             perms["self"][grade] = public
                         except KeyError:
                             perms["self"][grade] = False
@@ -961,7 +961,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
             for perm, value in result.items():
-                bool_value = True if (value[0] == 'TRUE') else False
+                bool_value = True if value == 'TRUE' else False
                 if perm.endswith("-self"):
                     perm_name = perm[5:-5]
                     perms["self"][perm_name] = bool_value
