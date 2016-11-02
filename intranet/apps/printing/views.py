@@ -206,6 +206,8 @@ def print_job(obj, do_print=True):
             args.extend(["-o", "sides=two-sided-long-edge"])
         else:
             args.extend(["-o", "sides=one-sided"])
+        if obj.fit:
+            args.extend(["-o", "fit-to-page"])
         try:
             subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:
