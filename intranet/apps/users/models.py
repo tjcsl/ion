@@ -722,10 +722,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 results = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode'])
                 result = results.first_result()
-                street = result['street']
-                city = result['l']
-                state = result['st']
-                postal_code = result['postalCode']
+                street = result['street'][0]
+                city = result['l'][0]
+                state = result['st'][0]
+                postal_code = result['postalCode'][0]
             except KeyError:
                 return None
             else:
