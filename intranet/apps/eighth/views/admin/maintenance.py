@@ -217,7 +217,7 @@ def ldap_list(request):
         data = c.search(settings.USER_DN, "iodineUid={}".format(usrid), ["*"])
         if len(data) == 0:
             return JsonResponse({"account": None})
-        account = {k: (v[0] if type(v) is list else v) for k, v in data[0]["attributes"].items()}
+        account = {k: (v[0] if isinstance(v, list) else v) for k, v in data[0]["attributes"].items()}
         account["dn"] = data[0]["dn"]
         return JsonResponse({"account": account})
     else:
