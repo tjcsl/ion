@@ -373,51 +373,6 @@ title: {title}
 replace: middlename
 middlename: {middlename}
 -
-replace: perm-showaddress
-perm-showaddress: FALSE
--
-replace: perm-showtelephone
-perm-showtelephone: FALSE
--
-replace: perm-showbirthday
-perm-showbirthday: FALSE
--
-replace: perm-showpictures
-perm-showpictures: FALSE
--
-replace: perm-showlocker
-perm-showlocker: FALSE
--
-replace: perm-showeighth
-perm-showeighth: FALSE
--
-replace: perm-showschedule
-perm-showschedule: FALSE
--
-replace: perm-showtelephone-self
-perm-showtelephone-self: FALSE
--
-replace: perm-showbirthday-self
-perm-showbirthday-self: FALSE
--
-replace: perm-showmap-self
-perm-showmap-self: FALSE
--
-replace: perm-showpictures-self
-perm-showpictures-self: FALSE
--
-replace: perm-showlocker-self
-perm-showlocker-self: FALSE
--
-replace: perm-showaddress-self
-perm-showaddress-self: FALSE
--
-replace: perm-showschedule-self
-perm-showschedule-self: FALSE
--
-replace: perm-showeighth-self
-perm-showeighth-self: FALSE
--
 replace: enrolledclass
 {classes}""".format(**data)
         if not data["middlename"]:
@@ -431,13 +386,14 @@ replace: enrolledclass
     def format_counselor(self, name):
         return {
             'Burke, Sean': 37,
-            'Martinez, Susan L.': 152,  # Kosatka
+            'Martinez, Susan L.': 1035,
             'Scott, Alexa': 105,
             'Ketchem, Christina Z.': 468,
             'Hamblin, Kerry': 115,
             'See Counseling Office': 999,  # TBA TBA
             'Smith, Andrea G.': 9,
-            'McAleer, Kacey': 165
+            'McAleer, Kacey': 165,
+            'Freedman, Naomi L.': 110
         }[name]
 
     def format_birthday(self, bday):
@@ -498,8 +454,8 @@ replace: enrolledclass
         fields = self.gen_student_fields(user_dict, "add")
         ldif = self.gen_add_ldif(fields)
         self.ldifs["newstudents"].append(ldif)
-        self.stdout.write(user_dict)
-        self.stdout.write(fields)
+        self.stdout.write(str(user_dict))
+        self.stdout.write(str(fields))
         self.stdout.write(ldif)
         self.stdout.write("\n")
 
@@ -507,8 +463,8 @@ replace: enrolledclass
         fields = self.gen_student_fields(user_dict, "modify")
         ldif = self.gen_update_ldif(fields)
         self.ldifs["oldstudents"].append(ldif)
-        self.stdout.write(user_dict)
-        self.stdout.write(fields)
+        self.stdout.write(str(user_dict))
+        self.stdout.write(str(fields))
         self.stdout.write(ldif)
         self.stdout.write("\n")
 
@@ -629,7 +585,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         fields = self.gen_class_fields(data)
         ldif = self.gen_class_ldif(fields)
         self.ldifs["schedules"].append(ldif)
-        self.stdout.write(data)
-        self.stdout.write(fields)
+        self.stdout.write(str(data))
+        self.stdout.write(str(fields))
         self.stdout.write(ldif)
         self.stdout.write("\n\n")
