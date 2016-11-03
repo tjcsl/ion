@@ -1462,7 +1462,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 except TypeError:
                     result = None
 
-                if attr["is_list"]:
+                if attr["is_list"] or not isinstance(result, (list, tuple)):
                     value = result
                 elif result:
                     value = result[0]
