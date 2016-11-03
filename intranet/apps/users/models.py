@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(DjangoUserManager):
-
     """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -201,7 +200,6 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
     """Django User model subclass with properties that fetch data from LDAP.
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
@@ -1588,9 +1586,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_cache(self):
         logger.debug("Setting DB cache using LDAP values")
         if not self.cache:
-            self.cache = UserCache.objects.create(objectClass=self.user_type,
-                                                  first_name=self.first_name,
-                                                  last_name=self.last_name, user=self)
+            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name, user=self)
         self.cache.grade_number = self.grade.number if self.grade else None
         self.cache.graduation_year = int(self.graduation_year) if self.graduation_year else None
         bool_gender = None
@@ -1738,7 +1734,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Class(object):
-
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
     Note that this is not a Django model, but rather an interface
@@ -1981,7 +1976,6 @@ class Class(object):
 
 
 class ClassSections(object):
-
     """Represents a list of tjhsstClass LDAP objects.
 
     Note that this is not a Django model, but rather an interface
@@ -2033,7 +2027,6 @@ class ClassSections(object):
 
 
 class Address(object):
-
     """Represents a user's address.
 
     Attributes:
@@ -2061,7 +2054,6 @@ class Address(object):
 
 
 class Grade(object):
-
     """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior"]
 
@@ -2141,7 +2133,6 @@ class Grade(object):
 
 
 class UserCache(models.Model):
-
     """ Stores all the data from LDAP to speed up page loading and make filtering objects easier """
     gender = models.NullBooleanField(null=True)
     objectClass = models.CharField(max_length=15, null=True)

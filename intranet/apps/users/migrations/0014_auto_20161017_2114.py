@@ -7,19 +7,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0013_auto_20161016_1525'),
-    ]
+    dependencies = [('users', '0013_auto_20161016_1525')]
 
     operations = [
         migrations.AddField(
             model_name='usercache',
             name='grade_number',
-            field=models.PositiveIntegerField(null=True),
-        ),
+            field=models.PositiveIntegerField(null=True)),
         migrations.AddField(
             model_name='usercache',
             name='graduation_year',
-            field=models.PositiveIntegerField(null=True),
-        ),
+            field=models.PositiveIntegerField(null=True)),
     ]

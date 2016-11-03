@@ -7,19 +7,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0009_user_user_locked'),
-    ]
+    dependencies = [('users', '0009_user_user_locked')]
 
     operations = [
         migrations.AddField(
             model_name='user',
             name='gender_cached',
-            field=models.NullBooleanField(),
-        ),
+            field=models.NullBooleanField()),
         migrations.AddField(
             model_name='user',
             name='object_class_cached',
-            field=models.CharField(max_length=15, null=True),
-        ),
+            field=models.CharField(max_length=15, null=True)),
     ]

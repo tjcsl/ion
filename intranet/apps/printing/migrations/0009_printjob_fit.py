@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('printing', '0008_auto_20160828_2058'),
-    ]
+    dependencies = [('printing', '0008_auto_20160828_2058')]
 
-    operations = [
-        migrations.AddField(
-            model_name='printjob',
-            name='fit',
-            field=models.BooleanField(default=False, verbose_name='Fit-to-page'),
-        ),
-    ]
+    operations = [migrations.AddField(
+        model_name='printjob',
+        name='fit',
+        field=models.BooleanField(default=False, verbose_name='Fit-to-page'))]
