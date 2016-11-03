@@ -31,9 +31,9 @@ class Command(BaseCommand):
                 user.first_name
             except ObjectDoesNotExist:
                 if options['run']:
-                    self.stdout.write("==== DELETING USER %s ====" % user)
+                    self.stdout.write("==== DELETING USER {} ====\n".format(user))
                     user.delete()
                 else:
-                    self.stdout.write("DELETE %s" % user)
+                    self.stdout.write("DELETE {}\n".format(user))
             else:
                 pass
