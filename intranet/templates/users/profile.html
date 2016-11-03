@@ -56,7 +56,7 @@
         <script type="text/javascript">
         $(document).ready(function() {
             $("#user-groups form").submit(function(e) {
-                if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest("tr").first("td").text()) + "?")) {
+                if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest(".group").find("a").text()) + "?")) {
                     e.preventDefault();
                 }
             });
@@ -539,30 +539,18 @@
             {% if request.user.is_eighth_admin %}
             <section class="user-info-eighth groups">
                 <h3>Groups</h3>
-                <table id="user-groups" class="fancy-table">
-                <thead>
-                <tr>
-                    <th>Group Name</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
+                <div id="user-groups">
                 {% for g in profile_user.groups.all|dictsort:"name" %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'eighth_admin_edit_group' g.id %}">{{ g.name }}</a>
-                        </td>
-                        <td>
-                            <form action="{% url 'eighth_admin_remove_member_from_group' g.id profile_user.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="profile_id" value="{{ profile_user.id }}">
-                                <input type="submit" value="Remove" class="button small-button">
-                            </form>
-                        </td>
-                    </tr>
+                    <div class="group">
+                        <form action="{% url 'eighth_admin_remove_member_from_group' g.id profile_user.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_id" value="{{ profile_user.id }}">
+                            <input type="submit" value="Remove" class="button small-button">
+                        </form>
+                        <a href="{% url 'eighth_admin_edit_group' g.id %}">{{ g.name }}</a>
+                    </div>
                 {% endfor %}
-                </tbody>
-                </table>
+                </div>
             </section>
             {% endif %}
         </div>
