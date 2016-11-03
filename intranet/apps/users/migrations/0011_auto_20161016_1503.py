@@ -20,14 +20,8 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=64, null=True)),
                 ('last_name', models.CharField(max_length=128, null=True)),
             ],),
-        migrations.RemoveField(
-            model_name='user',
-            name='gender_cached'),
-        migrations.RemoveField(
-            model_name='user',
-            name='object_class_cached'),
-        migrations.AddField(
-            model_name='user',
-            name='cache',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='users.UserCache')),
+        migrations.RemoveField(model_name='user', name='gender_cached'),
+        migrations.RemoveField(model_name='user', name='object_class_cached'),
+        migrations.AddField(model_name='user', name='cache',
+                            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='users.UserCache')),
     ]

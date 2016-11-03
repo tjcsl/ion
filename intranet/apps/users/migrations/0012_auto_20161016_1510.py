@@ -11,9 +11,6 @@ class Migration(migrations.Migration):
     dependencies = [('users', '0011_auto_20161016_1503')]
 
     operations = [
-        migrations.AlterField(
-            model_name='user',
-            name='cache',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user',
-                                       to='users.UserCache')),
+        migrations.AlterField(model_name='user', name='cache', field=models.OneToOneField(
+            blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user', to='users.UserCache')),
     ]
