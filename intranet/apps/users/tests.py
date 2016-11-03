@@ -44,6 +44,11 @@ class CacheTest(IonTestCase):
         response = self.client.get(reverse('user_profile'), {"clear_cache": 1})
         self.assertEqual(response.status_code, 302)
 
+    def test_view_profile(self):
+        self.login()
+        response = self.client.get(reverse('user_profile'))
+        self.assertEqual(response.status_code, 200)
+
     def test_property_without_cache(self):
         user = self.make_admin()
         # delete cache object related to user
