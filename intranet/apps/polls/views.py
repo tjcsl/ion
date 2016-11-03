@@ -330,13 +330,7 @@ def poll_results_view(request, poll_id):
             question = {"question": q, "answers": answers}
             questions.append(question)
 
-    context = {
-        "poll": poll,
-        "grades": range(9, 13),
-        "questions": questions,
-        "show_answers": show_answers,
-        "do_gender": do_gender
-    }
+    context = {"poll": poll, "grades": range(9, 13), "questions": questions, "show_answers": show_answers, "do_gender": do_gender}
     return render(request, "polls/results.html", context)
 
 

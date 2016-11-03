@@ -7,14 +7,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0012_auto_20161016_1510'),
-    ]
+    dependencies = [('users', '0012_auto_20161016_1510')]
 
-    operations = [
-        migrations.AlterField(
-            model_name='usercache',
-            name='gender',
-            field=models.NullBooleanField(),
-        ),
-    ]
+    operations = [migrations.AlterField(
+        model_name='usercache',
+        name='gender',
+        field=models.NullBooleanField())]

@@ -6,7 +6,6 @@ from ...test.ion_test import IonTestCase
 
 
 class ApiTest(IonTestCase):
-
     """Tests for the api module."""
 
     def test_get_profile(self):
