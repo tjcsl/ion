@@ -21,6 +21,8 @@ from django.contrib import messages
 
 from intranet.db.ldap_db import LDAPConnection
 
+from raven.contrib.django.raven_compat.models import client
+
 from cacheops import invalidate_obj
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
@@ -97,6 +99,7 @@ def ldap_modify(request):
             try:
                 u = User.get_user(dn=dn)
             except User.DoesNotExist:
+                client.captureException()
                 logger.warning("User with dn {} not found in database!".format(dn))
                 u = None
 
@@ -184,7 +187,10 @@ def ldap_next_id(request):
     is_student = request.GET.get("type", "teacher") == "student"
     usrid = 0
     c = LDAPConnection()
-    res = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstTeacher", ["iodineUidNumber"])
+    if is_student:
+        res = c.search(settings.USER_DN, "(objectClass=tjhsstStudent)", ["iodineUidNumber"])
+    else:
+        res = c.search(settings.USER_DN, "(objectClass=tjhsstTeacher)", ["iodineUidNumber"])
     if len(res) > 0:
         res = [int(x["attributes"]["iodineUidNumber"][0]) for x in res]
         if is_student:
@@ -197,7 +203,8 @@ def ldap_next_id(request):
                     if x not in res:
                         usrid = x
                         break
-
+            else:
+                logger.error("Out of teacher LDAP IDs!")
     return JsonResponse({"id": usrid})
 
 
@@ -210,13 +217,13 @@ def ldap_list(request):
         data = c.search(settings.USER_DN, "iodineUid={}".format(usrid), ["*"])
         if len(data) == 0:
             return JsonResponse({"account": None})
-        account = {x: y[0] for x, y in data[0]["attributes"].items()}
+        account = {k: (v[0] if type(v) is list else v) for k, v in data[0]["attributes"].items()}
         account["dn"] = data[0]["dn"]
         return JsonResponse({"account": account})
     else:
         is_student = request.GET.get("type", "teacher") == "student"
         data = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
-        accounts = [{"id": x["attributes"]["iodineUid"][0], "name": x["attributes"]["cn"][0]} for x in data]
+        accounts = [{"id": x["attributes"]["iodineUid"], "name": x["attributes"]["cn"]} for x in data]
         accounts = sorted(accounts, key=lambda acc: acc["name"])
         return JsonResponse({"accounts": accounts})
 

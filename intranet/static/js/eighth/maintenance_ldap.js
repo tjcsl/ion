@@ -40,7 +40,7 @@ function loadAccount(id) {
                     ele.attr("data-original", v);
                 }
                 else if (k !== "objectClass") {
-                    $("#additional-fields").append("<div class='form-group'><label><b>Additional Field</b> (" + k + ")</label><input readonly class='ldap-field' id='ldap-" + k + "' type='text' value='" + v.replace("'", "\\'") + "' /></div>");
+                    $("#additional-fields").append("<div class='form-group'><label><b>Additional Field</b> (" + k + ")</label><input readonly class='ldap-field' id='ldap-" + k + "' type='text' value='" + v.toString().replace("'", "\\'") + "' /></div>");
                 }
             });
         }).fail(function() {
