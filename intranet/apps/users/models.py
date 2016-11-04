@@ -125,11 +125,11 @@ class UserManager(DjangoUserManager):
             day = "0" + str(day)
 
         search_query = "birthday=*{}{}".format(month, day)
-        results = c.search(settings.USER_DN, search_query, ["dn"])
+        results = c.search(settings.USER_DN, search_query, ["iodineUid"])
 
         users = []
         for res in results:
-            u = User.get_user(dn=res["dn"])
+            u = User.objects.get(username=res["iodineUid"])
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
 
