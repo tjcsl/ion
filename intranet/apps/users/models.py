@@ -125,11 +125,11 @@ class UserManager(DjangoUserManager):
             day = "0" + str(day)
 
         search_query = "birthday=*{}{}".format(month, day)
-        results = c.search(settings.USER_DN, search_query, ["iodineUid"])
+        results = c.search(settings.USER_DN, search_query, None)
 
         users = []
         for res in results:
-            u = User.objects.get(username=res["iodineUid"])
+            u = User.get_user(dn=res["dn"])
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
 
@@ -335,7 +335,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return cached
         else:
             c = LDAPConnection()
-            result = c.search(settings.USER_DN, "iodineUidNumber={}".format(id), ['dn'])
+            result = c.search(settings.USER_DN, "iodineUidNumber={}".format(id), None)
             if len(result) == 1:
                 dn = result[0]['dn']
             else:
