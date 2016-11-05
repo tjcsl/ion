@@ -26,7 +26,7 @@ def get_printers():
     except FileNotFoundError:
         return []
     # Don't die if lpstat -a fails
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return []
     lines = output.splitlines()
     names = []
