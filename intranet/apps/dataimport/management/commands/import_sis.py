@@ -504,19 +504,19 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
     def format_quarters(self, data):
         if data["TermCode"] == "YR":
-            return ("quarterNumber: 1\n" "quarterNumber: 2\n" "quarterNumber: 3\n" "quarterNumber: 4")
+            return "\n".join("quarterNumber: 1", "quarterNumber: 2", "quarterNumber: 3", "quarterNumber: 4")
 
         if data["TermCode"] == "S1":
-            return ("quarterNumber: 1\n" "quarterNumber: 2")
+            return "\n".join("quarterNumber: 1", "quarterNumber: 2")
 
         if data["TermCode"] == "S2":
-            return ("quarterNumber: 3\n" "quarterNumber: 4")
+            return "\n".join("quarterNumber: 3", "quarterNumber: 4")
 
     def format_periods(self, data):
         if data["Period"] == data["EndPeriod"]:
             return "classPeriod: {}".format(data["Period"])
 
-        return ("classPeriod: {}\n" "classPeriod: {}".format(data["Period"], data["EndPeriod"]))
+        return "classPeriod: {}\n" "classPeriod: {}".format(data["Period"], data["EndPeriod"])
 
     def format_sponsor(self, data):
         # TODO: Search existing LDAP/handle new teachers
@@ -525,7 +525,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         try:
             res = re.findall(r"^([\w\- ]+), ([\w\- ]+)(?: ([\w\-])\.)?$", data["Teacher"])[0]
             last_name, first_name, middle_initial = res
-        except:
+        except IndexError:
             if data["Teacher"]:
                 self.stdout.write("INVALID TEACHER '{}' returning kosatka".format(data["Teacher"]))
                 time.sleep(5)
