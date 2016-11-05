@@ -42,7 +42,7 @@ class UserManager(DjangoUserManager):
             return None"""
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN, "tjhsstStudentId={}".format(student_id), ["dn"])
+        results = c.search(settings.USER_DN, "tjhsstStudentId={}".format(student_id), None)
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
@@ -58,7 +58,7 @@ class UserManager(DjangoUserManager):
             return None
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN, "iodineUidNumber={}".format(student_id), ["dn"])
+        results = c.search(settings.USER_DN, "iodineUidNumber={}".format(student_id), None)
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
@@ -68,7 +68,7 @@ class UserManager(DjangoUserManager):
         """Get a list of users in a specific graduation year."""
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN, "graduationYear={}".format(year), ["dn"])
+        results = c.search(settings.USER_DN, "graduationYear={}".format(year), None)
 
         users = []
         for user in results:
@@ -95,17 +95,17 @@ class UserManager(DjangoUserManager):
         results = []
 
         if sn and not given_name:
-            results = c.search(settings.USER_DN, "sn={}".format(sn), ["dn"])
+            results = c.search(settings.USER_DN, "sn={}".format(sn), None)
         elif given_name:
             query = ["givenName={}".format(given_name)]
             if sn:
                 query.append("sn={}".format(sn))
-            results = c.search(settings.USER_DN, self._ldap_and_string(query), ["dn"])
+            results = c.search(settings.USER_DN, self._ldap_and_string(query), None)
 
             if len(results) == 0:
                 # Try their first name as a nickname
                 query[0] = "nickname={}".format(given_name)
-                results = c.search(settings.USER_DN, self._ldap_and_string(query), ["dn"])
+                results = c.search(settings.USER_DN, self._ldap_and_string(query), None)
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
@@ -626,7 +626,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     classes = results.first_result()["enrolledclass"]
                 else:
                     query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
-                    results = c.search(settings.CLASS_DN, query, ["dn"])
+                    results = c.search(settings.CLASS_DN, query, None)
                     classes = [r["dn"] for r in results]
 
                 logger.debug("Classes: {}".format(classes))
@@ -726,7 +726,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 city = result['l'][0]
                 state = result['st'][0]
                 postal_code = result['postalCode'][0]
-            except KeyError:
+            except (KeyError, IndexError):
                 return None
             else:
                 address_object = Address(street, city, state, postal_code)
@@ -1777,7 +1777,7 @@ class Class(object):
 
         """
         c = LDAPConnection()
-        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), ["dn"])
+        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), None)
 
         users = []
         for row in students:
