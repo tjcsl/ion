@@ -68,6 +68,7 @@ eighth_admin_patterns = [
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
     url(r"^blocks/print_rosters/(?P<block_id>\d+)$", blocks.print_block_rosters_view, name="eighth_admin_print_block_rosters"),
     url(r"^blocks/edit/(?P<block_id>\d+)$", blocks.edit_block_view, name="eighth_admin_edit_block"),
+    url(r"^blocks/copy/(?P<block_id>\d+)$", blocks.copy_block_view, name="eighth_admin_copy_block"),
     url(r"^blocks/delete/(?P<block_id>\d+)$", blocks.delete_block_view, name="eighth_admin_delete_block"),
 
     # Scheduling

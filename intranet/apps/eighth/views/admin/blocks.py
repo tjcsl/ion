@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 
 from ..attendance import generate_roster_pdf
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
-from ...models import EighthBlock, EighthScheduledActivity
+from ...models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ....auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
@@ -112,8 +112,73 @@ def edit_block_view(request, block_id):
     else:
         form = BlockForm(instance=block)
 
-    context = {"form": form, "delete_url": reverse("eighth_admin_delete_block", args=[block_id]), "admin_page_title": "Edit Block"}
+    context = {
+        "form": form,
+        "delete_url": reverse("eighth_admin_delete_block", args=[block_id]),
+        "admin_page_title": "Edit Block",
+        "block_id": block_id
+    }
     return render(request, "eighth/admin/edit_form.html", context)
+
+
+@eighth_admin_required
+def copy_block_view(request, block_id):
+    try:
+        block = EighthBlock.objects.get(id=block_id)
+    except EighthBlock.DoesNotExist:
+        raise http.Http404
+
+    if request.method == "POST":
+        copy_signups = request.POST.get("signups", False)
+        new_block_id = request.POST.get("block", None)
+        if new_block_id and not new_block_id == block_id:
+            new_block = None
+            try:
+                new_block = EighthBlock.objects.get(id=new_block_id)
+            except EighthBlock.DoesNotExist:
+                messages.error(request, "That block does not exist!")
+            if new_block:
+                # Delete previous EighthScheduledActivities and EighthSignups
+                EighthScheduledActivity.objects.filter(block=block).delete()
+                EighthSignup.objects.filter(scheduled_activity__block=block).delete()
+
+                for schact in EighthScheduledActivity.objects.filter(block=new_block, cancelled=False).prefetch_related("rooms", "sponsors"):
+                    new_schact = EighthScheduledActivity.objects.create(
+                        block=block,
+                        activity=schact.activity,
+                        both_blocks=schact.both_blocks,
+                        special=schact.special
+                    )
+                    new_schact.sponsors.set(schact.sponsors.all())
+                    new_schact.rooms.set(schact.rooms.all())
+                    new_schact.save()
+                    if copy_signups:
+                        EighthSignup.objects.bulk_create(
+                            [EighthSignup(user=s.user, scheduled_activity=new_schact) for s in EighthSignup.objects.filter(scheduled_activity=schact)]
+                        )
+
+                context = {
+                    "new_activities": EighthScheduledActivity.objects.filter(block=block).count(),
+                    "new_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
+                    "success": True,
+                    "admin_page_title": "Finished Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
+                    "block_id": block_id
+                }
+                return render(request, "eighth/admin/copy_form.html", context)
+
+        else:
+            messages.error(request, "Please enter a valid block to copy activities from.")
+
+    context = {
+        "existing_activities": EighthScheduledActivity.objects.filter(block=block).count(),
+        "existing_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
+        "blocks": EighthBlock.objects.all().order_by("date"),
+        "admin_page_title": "Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
+        "block_id": block_id,
+        "locked": block.locked,
+        "success": False
+    }
+    return render(request, "eighth/admin/copy_form.html", context)
 
 
 @eighth_admin_required

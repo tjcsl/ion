@@ -1,0 +1,46 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+    p {
+        margin-bottom: 15px;
+    }
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+
+{% if success %}
+    <p><b>Success!</b></p>
+    <p><b>{{ new_activities }}</b> activit{{ new_activities|pluralize:"y,ies" }} and <b>{{ new_signups }}</b> signup{{ new_signups|pluralize }} have been imported.</p>
+    <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
+{% else %}
+    {% if locked %}
+        <p><i class="fa fa-exclamation-triangle"></i> This block is locked.</p>
+    {% endif %}
+    {% if existing_activities > 0 or existing_signups > 0 %}
+        <p>
+            <i class="fa fa-exclamation-triangle"></i> <b>{{ existing_activities }}</b> activit{{ existing_activities|pluralize:"y,ies" }} and <b>{{ existing_signups }}</b> signup{{ existing_signups|pluralize }} already exist for this block.
+            Copying from another block will <b style="color:red">delete</b> these activities and signups.
+        </p>
+    {% endif %}
+
+    <p>Select a block below to import activities from. Checking copy signups will copy over student signups without attendance information.</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <select id="block-select" name="block" placeholder="Select or search for a block">
+            <option value="">Select or search for a block</option>
+            {% for block in blocks %}
+                <option value="{{ block.id }}">{{ block.id }}: {{ block.formatted_date }} ({{ block.block_letter }})</option>
+            {% endfor %}
+        </select>
+        <div style="margin-bottom: 10px">
+            <label><input type="checkbox" name="signups" /> Copy Signups</label>
+        </div>
+        <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
+        <button type="submit">Copy Block</button>
+    </form>
+{% endif %}
+
+{% endblock %}

@@ -218,7 +218,7 @@ def raw_roster_view(request, scheduled_activity_id):
         "signups": signups
     }
 
-    return render(request, "eighth/roster-list.html", context)
+    return render(request, "eighth/roster_list.html", context)
 
 
 @attendance_taker_required
