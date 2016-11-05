@@ -9,6 +9,17 @@
     </style>
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(document).ready(function() {
+        $("form").submit(function() {
+            $(this).find("button").prop("disabled", true).html("<i class='fa fa-cog fa-spin'></i> Copying...");
+        });
+    });
+    </script>
+{% endblock %}
+
 {% block admin_main %}
 
 {% if success %}
