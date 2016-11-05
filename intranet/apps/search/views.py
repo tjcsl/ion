@@ -38,7 +38,7 @@ def do_ldap_query(q, admin=False):
 
             logger.debug("Running LDAP query: {}".format(query))
 
-            res = c.search(settings.USER_DN, query, ["dn"])
+            res = c.search(settings.USER_DN, query, None)
             for row in res:
                 dn = row["dn"]
                 result_dns.append(dn)
@@ -191,7 +191,7 @@ def do_ldap_query(q, admin=False):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, ["dn"])
+        res = c.search(settings.USER_DN, query, None)
         for row in res:
             dn = row["dn"]
             result_dns.append(dn)
@@ -238,7 +238,7 @@ def do_ldap_query(q, admin=False):
 
             logger.debug("Running LDAP query: {}".format(query))
 
-            res = c.search(settings.USER_DN, query, ["dn"])
+            res = c.search(settings.USER_DN, query, None)
             new_dns = []
             # if multiple words, delete those that weren't in previous searches
             for row in res:
@@ -305,7 +305,7 @@ def do_classes_search(q):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.CLASS_DN, query, ["dn"])
+        res = c.search(settings.CLASS_DN, query, None)
         new_dns = []
         # if multiple words, delete those that weren't in previous searches
         for row in res:

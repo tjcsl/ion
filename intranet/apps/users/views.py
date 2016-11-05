@@ -238,7 +238,7 @@ def class_room_view(request, room_id):
     c = LDAPConnection()
     room_id = LDAPFilter.escape(room_id)
 
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id), ["tjhsstSectionId", "dn"])
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id), ["tjhsstSectionId"])
 
     if len(classes) > 0:
         schedule = []
@@ -266,7 +266,7 @@ def all_classes_view(request):
 
     c = LDAPConnection()
 
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "objectClass=tjhsstClass", ["tjhsstSectionId", "dn"])
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "objectClass=tjhsstClass", ["tjhsstSectionId"])
 
     logger.debug("{} classes found.".format(len(classes)))
 
