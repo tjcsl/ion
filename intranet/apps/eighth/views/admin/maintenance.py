@@ -321,7 +321,7 @@ def clear_comments_view(request):
         count = 0
 
         c = LDAPConnection()
-        comments = c.search(settings.USER_DN, "objectClass=tjhsstStudent", ["eighthoffice-comments", "dn"])
+        comments = c.search(settings.USER_DN, "objectClass=tjhsstStudent", ["eighthoffice-comments"])
         for row in comments:
             if "eighthoffice-comments" in row:
                 c.del_attribute(row["dn"], "eighthoffice-comments")
