@@ -332,6 +332,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",  # Messages
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
+    "intranet.middleware.templates.NoReferrerMiddleware",  # Prevent malicious JS from changing the referring page
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
