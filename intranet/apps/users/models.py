@@ -838,7 +838,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 data = None
 
             if isinstance(data, (list, tuple)):
-                data = data[0]
+                if data:
+                    data = data[0]
+                else:
+                    data = None
 
             cache.set(key, data, timeout=settings.CACHE_AGE['ldap_permissions'])
             return data
