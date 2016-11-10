@@ -922,7 +922,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             for photo in photos:
                 attrs = photo['attributes']
                 if "cn" in attrs:
-                    grade = attrs["cn"][:-len("Photo")][0]
+                    grade = attrs["cn"][0][:-len("Photo")]
                     try:
                         public = (attrs["perm-showpictures-self"] == "TRUE")
                         perms["self"][grade] = public
