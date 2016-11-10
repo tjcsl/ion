@@ -64,5 +64,5 @@ class NoReferrerMiddleware(object):
         response = self.get_response(request)
         is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
         if is_html:
-            response.content = re.sub(r'<a(.*)>', r'<a rel="noopener noreferrer"\1>', response.content.decode())
+            response.content = re.sub(r'<a(.*href ?= ?[\'"]http.*)>', r'<a rel="noopener noreferrer"\1>', response.content.decode())
         return response
