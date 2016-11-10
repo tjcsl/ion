@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -194,13 +194,15 @@
 
 <div class="viewcode-block" id="EighthTest.schedule_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.schedule_activity">[docs]</a>    <span class="k">def</span> <span class="nf">schedule_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">):</span>
         <span class="c1"># FIXME: figure out a way to do this that involves less hard-coding.</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;form-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;form-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;form-0-block&#39;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
-                <span class="s1">&#39;form-0-activity&#39;</span><span class="p">:</span> <span class="n">activity_id</span><span class="p">,</span>
-                <span class="s1">&#39;form-0-scheduled&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s1">&#39;form-0-capacity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;form-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;form-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;form-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;form-0-block&#39;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
+            <span class="s1">&#39;form-0-activity&#39;</span><span class="p">:</span> <span class="n">activity_id</span><span class="p">,</span>
+            <span class="s1">&#39;form-0-scheduled&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;form-0-capacity&#39;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_schedule_activity&#39;</span><span class="p">),</span> <span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block__id</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span> <span class="n">activity__id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span></div>
@@ -393,7 +395,10 @@
         <span class="n">schact1</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">schact1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_zero&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span>
+                <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_zero&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
 
         <span class="c1"># Make sure activity is marked as attendance taken.</span>
@@ -417,7 +422,10 @@
         <span class="n">schact1</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">schact1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_cancelled&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_view_activities_without_attendance&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span>
+                <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">}),</span> <span class="p">{</span><span class="s2">&quot;take_attendance_cancelled&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
 
         <span class="c1"># Make sure attendance has been marked as taken.</span>

@@ -12,6 +12,14 @@ intranet.apps.eighth.management.commands.absence_email module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.eighth.management.commands.delete_duplicate_signups module
+------------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.delete_duplicate_signups
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.eighth.management.commands.delete_nonexistent_users module
 ------------------------------------------------------------------------
 

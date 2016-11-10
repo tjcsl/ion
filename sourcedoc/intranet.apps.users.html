@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.users.management package" href="intranet.apps.users.management.html" />
     <link rel="prev" title="intranet.apps.templatetags package" href="intranet.apps.templatetags.html" />
@@ -177,6 +177,7 @@
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.users.management.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.users.management.commands.html">intranet.apps.users.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.management.commands.html#module-intranet.apps.users.management.commands.db_cache">intranet.apps.users.management.commands.db_cache module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.management.commands.html#module-intranet.apps.users.management.commands.dynamic_groups">intranet.apps.users.management.commands.dynamic_groups module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.management.commands.html#module-intranet.apps.users.management.commands.fix_bad_users">intranet.apps.users.management.commands.fix_bad_users module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.management.commands.html#module-intranet.apps.users.management.commands.import_groups">intranet.apps.users.management.commands.import_groups module</a></li>
@@ -838,6 +839,26 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.users.models.User.cache">
+<code class="descclassname">User.</code><code class="descname">cache</code><a class="headerlink" href="#intranet.apps.users.models.User.cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.cache_id">
+<code class="descclassname">User.</code><code class="descname">cache_id</code><a class="headerlink" href="#intranet.apps.users.models.User.cache_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.users.models.User.calculatorregistration_set">
 <code class="descclassname">User.</code><code class="descname">calculatorregistration_set</code><a class="headerlink" href="#intranet.apps.users.models.User.calculatorregistration_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -1135,6 +1156,12 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.users.models.User.first_name">
+<code class="descclassname">User.</code><code class="descname">first_name</code><a class="headerlink" href="#intranet.apps.users.models.User.first_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return first name, e.g. Angela</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.users.models.User.founditem_set">
 <code class="descclassname">User.</code><code class="descname">founditem_set</code><a class="headerlink" href="#intranet.apps.users.models.User.founditem_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -1177,6 +1204,11 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dd><p>Return the <a class="reference internal" href="intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSponsor" title="intranet.apps.eighth.models.EighthSponsor"><code class="xref py py-class docutils literal"><span class="pre">intranet.apps.eighth.models.EighthSponsor</span></code></a> that a given user is
 associated with.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.models.User.get_or_set_cache">
+<code class="descclassname">User.</code><code class="descname">get_or_set_cache</code><span class="sig-paren">(</span><em>attribute</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_or_set_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_or_set_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_short_name">
@@ -1222,6 +1254,18 @@ otherwise User.DoesNotExist is raised.</dd>
 <dt>Returns:</dt>
 <dd>Grade object</dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.grade_number">
+<code class="descclassname">User.</code><code class="descname">grade_number</code><a class="headerlink" href="#intranet.apps.users.models.User.grade_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user&#8217;s grade number from the database cache</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.graduation_year">
+<code class="descclassname">User.</code><code class="descname">graduation_year</code><a class="headerlink" href="#intranet.apps.users.models.User.graduation_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user&#8217;s graduation year from the database cache</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1523,8 +1567,14 @@ Lastname, F [(Nickname)]</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.users.models.User.last_name">
+<code class="descclassname">User.</code><code class="descname">last_name</code><a class="headerlink" href="#intranet.apps.users.models.User.last_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return last name, e.g. William</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.users.models.User.ldap_user_attributes">
-<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'common_name': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'cn', 'can_set': True}, 'display_name': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'displayName', 'can_set': True}, 'preferred_photo': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'preferredPhoto', 'can_set': True}, 'graduation_year': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'graduationYear', 'can_set': False}, 'mobile_phone': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'mobile', 'can_set': True}, 'webpages': {'perm': None, 'cache': True, 'is_list': True, 'ldap_name': 'webpage', 'can_set': True}, 'startpage': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'startpage', 'can_set': True}, 'ion_username': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'iodineUid', 'can_set': False}, 'last_name': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'sn', 'can_set': True}, 'emails': {'perm': None, 'cache': True, 'is_list': True, 'ldap_name': 'mail', 'can_set': True}, 'admin_comments': {'perm': None, 'cache': False, 'is_list': False, 'ldap_name': 'eighthoffice-comments', 'can_set': True}, 'middle_name': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'middlename', 'can_set': True}, 'sex': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'gender', 'can_set': True}, 'home_phone': {'perm': 'showtelephone', 'cache': True, 'is_list': False, 'ldap_name': 'homePhone', 'can_set': True}, 'first_name': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'givenName', 'can_set': True}, 'ion_id': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'iodineUidNumber', 'can_set': False}, 'title': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'title', 'can_set': True}, 'user_type': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'objectClass', 'can_set': False}, 'nickname': {'perm': None, 'cache': True, 'is_list': False, 'ldap_name': 'nickname', 'can_set': True}, 'other_phones': {'perm': None, 'cache': True, 'is_list': True, 'ldap_name': 'telephoneNumber', 'can_set': True}, 'student_id': {'perm': 'specialPerm_studentID', 'cache': True, 'is_list': False, 'ldap_name': 'tjhsstStudentId', 'can_set': True}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'student_id': {'perm': 'specialPerm_studentID', 'can_set': True, 'ldap_name': 'tjhsstStudentId', 'cache': True, 'is_list': False}, 'ion_id': {'perm': None, 'can_set': False, 'ldap_name': 'iodineUidNumber', 'cache': True, 'is_list': False}, 'emails': {'perm': None, 'can_set': True, 'ldap_name': 'mail', 'cache': True, 'is_list': True}, 'last_name': {'perm': None, 'can_set': True, 'ldap_name': 'sn', 'cache': True, 'is_list': False}, 'mobile_phone': {'perm': None, 'can_set': True, 'ldap_name': 'mobile', 'cache': True, 'is_list': False}, 'common_name': {'perm': None, 'can_set': True, 'ldap_name': 'cn', 'cache': True, 'is_list': False}, 'user_type': {'perm': None, 'can_set': False, 'ldap_name': 'objectClass', 'cache': True, 'is_list': False}, 'title': {'perm': None, 'can_set': True, 'ldap_name': 'title', 'cache': True, 'is_list': False}, 'admin_comments': {'perm': None, 'can_set': True, 'ldap_name': 'eighthoffice-comments', 'cache': False, 'is_list': False}, 'sex': {'perm': None, 'can_set': True, 'ldap_name': 'gender', 'cache': True, 'is_list': False}, 'preferred_photo': {'perm': None, 'can_set': True, 'ldap_name': 'preferredPhoto', 'cache': True, 'is_list': False}, 'home_phone': {'perm': 'showtelephone', 'can_set': True, 'ldap_name': 'homePhone', 'cache': True, 'is_list': False}, 'startpage': {'perm': None, 'can_set': True, 'ldap_name': 'startpage', 'cache': True, 'is_list': False}, 'middle_name': {'perm': None, 'can_set': True, 'ldap_name': 'middlename', 'cache': True, 'is_list': False}, 'ion_username': {'perm': None, 'can_set': False, 'ldap_name': 'iodineUid', 'cache': True, 'is_list': False}, 'other_phones': {'perm': None, 'can_set': True, 'ldap_name': 'telephoneNumber', 'cache': True, 'is_list': True}, 'display_name': {'perm': None, 'can_set': True, 'ldap_name': 'displayName', 'cache': True, 'is_list': False}, 'nickname': {'perm': None, 'can_set': True, 'ldap_name': 'nickname', 'cache': True, 'is_list': False}, 'first_name': {'perm': None, 'can_set': True, 'ldap_name': 'givenName', 'cache': True, 'is_list': False}, 'webpages': {'perm': None, 'can_set': True, 'ldap_name': 'webpage', 'cache': True, 'is_list': True}, 'graduation_year': {'perm': None, 'can_set': False, 'ldap_name': 'graduationYear', 'cache': True, 'is_list': False}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1651,6 +1701,12 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.object_class">
+<code class="descclassname">User.</code><code class="descname">object_class</code><a class="headerlink" href="#intranet.apps.users.models.User.object_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user&#8217;s objectClass for the database cache</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1892,6 +1948,11 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.users.models.User.set_cache">
+<code class="descclassname">User.</code><code class="descname">set_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.set_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.set_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.users.models.User.set_ldap_attribute">
 <code class="descclassname">User.</code><code class="descname">set_ldap_attribute</code><span class="sig-paren">(</span><em>name</em>, <em>value</em>, <em>override_set=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.set_ldap_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.set_ldap_attribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a user attribute in LDAP.</p>
@@ -2031,6 +2092,92 @@ object the first time, the query is executed.</p>
 <dt id="intranet.apps.users.models.User.username_from_dn">
 <em class="property">static </em><code class="descclassname">User.</code><code class="descname">username_from_dn</code><span class="sig-paren">(</span><em>dn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.username_from_dn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.username_from_dn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.users.models.UserCache">
+<em class="property">class </em><code class="descclassname">intranet.apps.users.models.</code><code class="descname">UserCache</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserCache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Stores all the data from LDAP to speed up page loading and make filtering objects easier</p>
+<dl class="exception">
+<dt id="intranet.apps.users.models.UserCache.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.users.models.UserCache.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">UserCache.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.first_name">
+<code class="descclassname">UserCache.</code><code class="descname">first_name</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.first_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.gender">
+<code class="descclassname">UserCache.</code><code class="descname">gender</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.grade_number">
+<code class="descclassname">UserCache.</code><code class="descname">grade_number</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.grade_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.graduation_year">
+<code class="descclassname">UserCache.</code><code class="descname">graduation_year</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.graduation_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.id">
+<code class="descclassname">UserCache.</code><code class="descname">id</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.last_name">
+<code class="descclassname">UserCache.</code><code class="descname">last_name</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.last_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.objectClass">
+<code class="descclassname">UserCache.</code><code class="descname">objectClass</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.objectClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.objects">
+<code class="descclassname">UserCache.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.users.models.UserCache.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserCache.user">
+<code class="descclassname">UserCache.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">place.restaurant</span></code> is a <code class="docutils literal"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2244,6 +2391,32 @@ default User model manager.</p>
 </div>
 <div class="section" id="module-intranet.apps.users.tests">
 <span id="intranet-apps-users-tests-module"></span><h2>intranet.apps.users.tests module<a class="headerlink" href="#module-intranet.apps.users.tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.users.tests.CacheTest">
+<em class="property">class </em><code class="descclassname">intranet.apps.users.tests.</code><code class="descname">CacheTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#CacheTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.CacheTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="intranet.test.html#intranet.test.ion_test.IonTestCase" title="intranet.test.ion_test.IonTestCase"><code class="xref py py-class docutils literal"><span class="pre">intranet.test.ion_test.IonTestCase</span></code></a></p>
+<dl class="method">
+<dt id="intranet.apps.users.tests.CacheTest.make_admin">
+<code class="descname">make_admin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#CacheTest.make_admin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.CacheTest.make_admin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.CacheTest.test_clear_cache">
+<code class="descname">test_clear_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#CacheTest.test_clear_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.CacheTest.test_clear_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.CacheTest.test_property_without_cache">
+<code class="descname">test_property_without_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#CacheTest.test_property_without_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.CacheTest.test_property_without_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.CacheTest.test_view_profile">
+<code class="descname">test_view_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#CacheTest.test_view_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.CacheTest.test_view_profile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="intranet.apps.users.tests.DynamicGroupTest">
 <em class="property">class </em><code class="descclassname">intranet.apps.users.tests.</code><code class="descname">DynamicGroupTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#DynamicGroupTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.DynamicGroupTest" title="Permalink to this definition">¶</a></dt>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.schedule package" href="intranet.apps.schedule.html" />
     <link rel="prev" title="intranet.apps.preferences package" href="intranet.apps.preferences.html" />
@@ -213,7 +213,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intranet.apps.printing.forms.PrintJobForm.Meta.fields">
-<code class="descname">fields</code><em class="property"> = ['file', 'printer', 'page_range', 'duplex']</em><a class="headerlink" href="#intranet.apps.printing.forms.PrintJobForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ['file', 'printer', 'page_range', 'duplex', 'fit']</em><a class="headerlink" href="#intranet.apps.printing.forms.PrintJobForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -241,7 +241,7 @@
 <span id="intranet-apps-printing-models-module"></span><h2>intranet.apps.printing.models module<a class="headerlink" href="#module-intranet.apps.printing.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.printing.models.PrintJob">
-<em class="property">class </em><code class="descclassname">intranet.apps.printing.models.</code><code class="descname">PrintJob</code><span class="sig-paren">(</span><em>id</em>, <em>user</em>, <em>printer</em>, <em>file</em>, <em>page_range</em>, <em>time</em>, <em>printed</em>, <em>num_pages</em>, <em>duplex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/models.html#PrintJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.models.PrintJob" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.printing.models.</code><code class="descname">PrintJob</code><span class="sig-paren">(</span><em>id</em>, <em>user</em>, <em>printer</em>, <em>file</em>, <em>page_range</em>, <em>time</em>, <em>printed</em>, <em>num_pages</em>, <em>duplex</em>, <em>fit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/models.html#PrintJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.models.PrintJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.printing.models.PrintJob.DoesNotExist">
@@ -277,6 +277,13 @@ FieldFile when accessed so you can do stuff like:</p>
 <span class="gp">... </span>    <span class="n">instance</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.fit">
+<code class="descclassname">PrintJob.</code><code class="descname">fit</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">

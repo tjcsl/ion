@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -169,11 +169,14 @@
 <span class="sd">SECRET_DATABASE_URL should be of the following form:</span>
 <span class="sd">    postgres://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;/&lt;database&gt;</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Dummy values for development and testing.</span>
+<span class="c1"># Overridden by the import from secret.py below.</span>
 <span class="n">SECRET_DATABASE_URL</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: bool</span>
 <span class="n">TJSTAR_MAP</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: bool</span>
 <span class="n">TWITTER_KEYS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Dict[str,str]</span>
 <span class="n">ADMINS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: List[Tuple[str,str]]</span>
+<span class="n">SENTRY_PUBLIC_DSN</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
 <span class="n">USE_SASL</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">NO_CACHE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">PARKING_ENABLED</span> <span class="o">=</span> <span class="kc">False</span>
@@ -480,6 +483,7 @@
     <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Messages</span>
     <span class="s2">&quot;intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># See note in ajax.py</span>
     <span class="s2">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Selectize fixes</span>
+    <span class="s2">&quot;intranet.middleware.templates.NoReferrerMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Prevent malicious JS from changing the referring page</span>
     <span class="s2">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># Access log</span>
     <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
@@ -488,6 +492,9 @@
     <span class="c1"># FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+</span>
     <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span>
 <span class="p">]</span>
+
+<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
+    <span class="n">MIDDLEWARE</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware&quot;</span><span class="p">]</span>
 
 <span class="c1"># URLconf at urls.py</span>
 <span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;intranet.urls&quot;</span>

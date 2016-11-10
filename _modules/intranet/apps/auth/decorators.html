@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.decorators &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.apps.auth.decorators &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -170,6 +170,7 @@
 
     <span class="k">return</span> <span class="n">user_passes_test</span><span class="p">(</span><span class="n">in_admin_group</span><span class="p">)</span></div>
 
+
 <span class="c1">#: Restrict the wrapped view to eighth admins</span>
 <span class="n">eighth_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">&quot;eighth&quot;</span><span class="p">)</span>
 
@@ -187,12 +188,14 @@
 
 
 <div class="viewcode-block" id="reauthentication_required"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.decorators.reauthentication_required">[docs]</a><span class="k">def</span> <span class="nf">reauthentication_required</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
+
     <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># request is the first argument in a view</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reauthenticated&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?next=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;reauth&#39;</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+
     <span class="k">return</span> <span class="n">inner</span></div>
 </pre></div>
 

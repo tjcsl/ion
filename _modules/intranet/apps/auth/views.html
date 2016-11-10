@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3314) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3347) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3314)',
+        VERSION:     'v3 (Build #3347)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3314) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3347) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -186,8 +186,8 @@
 
     <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
 
-    <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2"> - auth </span><span class="si">{}</span><span class="s2"> - [</span><span class="si">{}</span><span class="s2">] </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">(),</span>
-                                                               <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_USER_AGENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2"> - auth </span><span class="si">{}</span><span class="s2"> - [</span><span class="si">{}</span><span class="s2">] </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span>
+                                                               <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">(),</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_USER_AGENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
     <span class="n">auth_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_line</span><span class="p">)</span></div>
 
@@ -274,14 +274,16 @@
         <span class="k">if</span> <span class="n">ap_week</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">login_warning</span><span class="p">:</span>
             <span class="n">login_warning</span> <span class="o">=</span> <span class="n">ap_week</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;auth_form&quot;</span><span class="p">:</span> <span class="n">auth_form</span><span class="p">,</span>
-                <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span>
-                <span class="s2">&quot;git_info&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GIT</span><span class="p">,</span>
-                <span class="s2">&quot;bg_pattern&quot;</span><span class="p">:</span> <span class="n">get_bg_pattern</span><span class="p">(),</span>
-                <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">get_login_theme</span><span class="p">(),</span>
-                <span class="s2">&quot;login_warning&quot;</span><span class="p">:</span> <span class="n">login_warning</span><span class="p">,</span>
-                <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION</span><span class="p">,</span>
-                <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;auth_form&quot;</span><span class="p">:</span> <span class="n">auth_form</span><span class="p">,</span>
+            <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span>
+            <span class="s2">&quot;git_info&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GIT</span><span class="p">,</span>
+            <span class="s2">&quot;bg_pattern&quot;</span><span class="p">:</span> <span class="n">get_bg_pattern</span><span class="p">(),</span>
+            <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">get_login_theme</span><span class="p">(),</span>
+            <span class="s2">&quot;login_warning&quot;</span><span class="p">:</span> <span class="n">login_warning</span><span class="p">,</span>
+            <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION</span><span class="p">,</span>
+            <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span>
+        <span class="p">}</span>
         <span class="n">schedule</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">added_context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -290,7 +292,6 @@
 
 
 <div class="viewcode-block" id="LoginView"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView">[docs]</a><span class="k">class</span> <span class="nc">LoginView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;Log in and redirect a user.&quot;&quot;&quot;</span>
 
     <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
