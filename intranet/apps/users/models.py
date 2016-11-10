@@ -837,6 +837,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             except (LDAPNoSuchObjectResult, KeyError):
                 data = None
 
+            if not data:
+                cache.set(key, data, timeout=settings.CACHE_AGE['ldap_permissions'])
+                return data
+
             cache.set(key, data[0], timeout=settings.CACHE_AGE['ldap_permissions'])
             return data[0]
         else:
