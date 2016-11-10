@@ -922,7 +922,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             for photo in photos:
                 attrs = photo['attributes']
                 if "cn" in attrs:
-                    grade = attrs["cn"][:-len("Photo")]
+                    grade = attrs["cn"][:-len("Photo")][0]
                     try:
                         public = (attrs["perm-showpictures-self"] == "TRUE")
                         perms["self"][grade] = public
@@ -1967,7 +1967,7 @@ class Class(object):
                     if name == "periods":
                         value = sorted(list(map(int, value)))
                 else:
-                    value = result[0]
+                    value = result[0] if isinstance(result, (list, tuple)) else result
 
                 cache.set(key, value, timeout=settings.CACHE_AGE['class_attribute'])
                 return value
