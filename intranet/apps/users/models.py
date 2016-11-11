@@ -693,7 +693,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 result = c.user_attributes(self.dn, ["counselor"])
                 counselor = result.first_result()["counselor"][0]
-            except KeyError:
+            except (KeyError, IndexError):
                 return None
             else:
                 cache.set(key, counselor, timeout=settings.CACHE_AGE['user_attribute'])
