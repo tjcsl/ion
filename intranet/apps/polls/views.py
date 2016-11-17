@@ -32,7 +32,7 @@ def polls_view(request):
     if not is_polls_admin:
         polls = polls.filter(visible=True)
 
-    context = {"polls": polls, "is_polls_admin": is_polls_admin}
+    context = {"polls": polls.order_by("end_time"), "is_polls_admin": is_polls_admin}
     return render(request, "polls/home.html", context)
 
 
