@@ -234,8 +234,8 @@ def handle_sap(q):
                 "all": users.count(),
                 "votes_all": question_votes.count(),
                 "all_percent": perc(users.count(), users.count()),
-                "male": sum([u.is_male for u in users]),
-                "female": sum([u.is_female for u in users]),
+                "male": users.filter(cache__gender=True).count(),
+                "female": users.filter(cache__gender__isnull=False, cache__gender=False).count()
             }
         }
     }
