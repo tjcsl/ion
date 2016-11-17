@@ -30,6 +30,8 @@ If you would like to populate the database with test data, run ``fab load_fixtur
 Troubleshooting
 ===============
 
-If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant up``, you need to start the openvpn client.
+If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant up``, you need to start the OpenVPN client.
+
+If you see a ``Adding routes to host computer...`` message, you probably forgot to start the OpenVPN client.
 
 :doc:`Continue with these post-install steps.<postinstall>`
