@@ -150,7 +150,7 @@ def load_fixtures():
     """Populate a database with data from fixtures."""
 
     if local("pwd", capture=True) == PRODUCTION_DOCUMENT_ROOT:
-        abort("Refusing to automatically load " "fixtures into production database")
+        abort("Refusing to automatically load fixtures into production database!")
 
     if not confirm("Are you sure you want to load all fixtures? This could have unintended consequences if the database is not empty."):
         abort("Aborted.")
