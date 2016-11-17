@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Setting up Vagrant &#8212; TJ Intranet v3 (Build #3362) documentation</title>
+    <title>Setting up Vagrant &#8212; TJ Intranet v3 (Build #3370) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3362)',
+        VERSION:     'v3 (Build #3370)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3362) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3370) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Architecture" href="../architecture/index.html" />
     <link rel="prev" title="Setting up the Server" href="server.html" />
@@ -74,10 +74,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Setup</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Creating Ion fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html#importing-ion-fixtures">Importing Ion fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html">Setting up the Server</a></li>
@@ -159,7 +156,7 @@
   <div class="section" id="setting-up-vagrant">
 <h1>Setting up Vagrant<a class="headerlink" href="#setting-up-vagrant" title="Permalink to this headline">¶</a></h1>
 <p>Vagrant is used to manage Ion&#8217;s development environment so that it closely resembles the production environment. To get started, download and install Virtualbox from <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">here</a> and Vagrant from <a class="reference external" href="http://docs.vagrantup.com/v2/installation/index.html">here</a>.</p>
-<p>Ensure you have an SSH key set up with GitHub by running <code class="docutils literal"><span class="pre">ssh</span> <span class="pre">-T</span> <span class="pre">git&#64;github.com</span></code>. You should be greeted by your username. If not, set up an SSH key with GitHub by following <a class="reference external" href="https://help.github.com/articles/generating-ssh-keys/">these instructions</a>.</p>
+<p>Ensure you have an SSH key set up with GitHub by running <code class="docutils literal"><span class="pre">ssh</span> <span class="pre">-T</span> <span class="pre">git&#64;github.com</span></code>. You should be greeted by your username. If not, set up an SSH key with GitHub by following <a class="reference external" href="https://help.github.com/articles/generating-an-ssh-key/">these instructions</a>.</p>
 <p>With Vagrant and Virtualbox installed, clone the Ion repository onto the host computer and <code class="docutils literal"><span class="pre">cd</span></code> into the new directory.</p>
 <p>Note: if your host machine is running Windows, please run <code class="docutils literal"><span class="pre">git</span> <span class="pre">config</span> <span class="pre">core.autocrlf</span> <span class="pre">input</span></code> before cloning to prevent line ending issues.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>$ git clone git@github.com:tjcsl/ion.git intranet
@@ -171,10 +168,11 @@ $ <span class="nb">cd</span> intranet
 <p>Run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span> <span class="pre">&amp;&amp;</span> <span class="pre">vagrant</span> <span class="pre">reload</span></code> and wait while the development environment is set up. When asked to select a network interface for bridging, enter the number corresponding to one that is active. To automatically select this interface in the future, set the &#8220;network_interface&#8221; key in <code class="docutils literal"><span class="pre">devconfig.json</span></code> to the name of the interface you selected (e.g. <code class="docutils literal"><span class="pre">&quot;en0:</span> <span class="pre">Wi-Fi</span> <span class="pre">(AirPort)&quot;</span></code>). There may be repeated warnings similar to &#8220;<code class="docutils literal"><span class="pre">Remote</span> <span class="pre">connection</span> <span class="pre">disconnect</span></code> on the second <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span></code>. After several minutes they will stop. Once the provisioning process is complete, run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">ssh</span></code> to log in to the development box.</p>
 <p>Move into the <code class="docutils literal"><span class="pre">intranet</span></code> directory and run <code class="docutils literal"><span class="pre">workon</span> <span class="pre">ion</span></code> to load the Python dependencies. <code class="docutils literal"><span class="pre">workon</span> <span class="pre">ion</span></code> should always be the first thing you run after you SSH into the development box.</p>
 <p>The Git repository on the host computer is synced with <code class="docutils literal"><span class="pre">~/intranet</span></code> on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.</p>
-<p>If you would like to populate the database with test data, run <code class="docutils literal"><span class="pre">fab</span> <span class="pre">load_fixtures</span></code> in the <code class="docutils literal"><span class="pre">~/intranet</span></code> directory. This process may take a lot of RAM and can unexpectedly quit. If this happens, run <code class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">flush</span></code> to flush the database, exit the SSH session, run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">halt</span></code>, increase the VM&#8217;s allotted memory in VirtualBox, and run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span></code> again.</p>
 <div class="section" id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
-<p>If you get a <code class="docutils literal"><span class="pre">SIOCADDRT:</span> <span class="pre">Network</span> <span class="pre">is</span> <span class="pre">unreachable</span></code> error when running <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span></code>, you need to start the openvpn client.</p>
+<p>If you get a <code class="docutils literal"><span class="pre">SIOCADDRT:</span> <span class="pre">Network</span> <span class="pre">is</span> <span class="pre">unreachable</span></code> error when running <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">up</span></code>, you need to start the OpenVPN client.</p>
+<p>If you see a <code class="docutils literal"><span class="pre">Adding</span> <span class="pre">routes</span> <span class="pre">to</span> <span class="pre">host</span> <span class="pre">computer...</span></code> message, you probably forgot to start the OpenVPN client.</p>
+<p>If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for <code class="docutils literal"><span class="pre">ldap_simple_bind_password</span></code>.</p>
 <p><a class="reference internal" href="postinstall.html"><span class="doc">Continue with these post-install steps.</span></a></p>
 </div>
 </div>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3362) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3370) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3362)',
+        VERSION:     'v3 (Build #3370)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3362) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3370) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -72,10 +72,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html">Creating Ion fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#importing-ion-fixtures">Importing Ion fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
@@ -183,7 +180,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_polls_admin</span><span class="p">:</span>
         <span class="n">polls</span> <span class="o">=</span> <span class="n">polls</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="n">polls</span><span class="p">,</span> <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="n">is_polls_admin</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="n">polls</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;end_time&quot;</span><span class="p">),</span> <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="n">is_polls_admin</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
@@ -385,8 +382,8 @@
                 <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                 <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">question_votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                 <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()),</span>
-                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">([</span><span class="n">u</span><span class="o">.</span><span class="n">is_male</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">]),</span>
-                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">([</span><span class="n">u</span><span class="o">.</span><span class="n">is_female</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">]),</span>
+                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cache__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cache__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cache__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
