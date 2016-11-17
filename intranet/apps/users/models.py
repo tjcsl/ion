@@ -692,7 +692,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             c = LDAPConnection()
             try:
                 result = c.user_attributes(self.dn, ["counselor"])
-                counselor = result.first_result()["counselor"][0]
+                counselor = result.first_result()["counselor"]
             except (KeyError, IndexError):
                 return None
             else:
