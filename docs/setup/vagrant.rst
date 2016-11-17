@@ -4,7 +4,7 @@ Setting up Vagrant
 
 Vagrant is used to manage Ion's development environment so that it closely resembles the production environment. To get started, download and install Virtualbox from `here <https://www.virtualbox.org/wiki/Downloads>`__ and Vagrant from `here <http://docs.vagrantup.com/v2/installation/index.html>`__.
 
-Ensure you have an SSH key set up with GitHub by running ``ssh -T git@github.com``. You should be greeted by your username. If not, set up an SSH key with GitHub by following `these instructions <https://help.github.com/articles/generating-ssh-keys/>`_.
+Ensure you have an SSH key set up with GitHub by running ``ssh -T git@github.com``. You should be greeted by your username. If not, set up an SSH key with GitHub by following `these instructions <https://help.github.com/articles/generating-an-ssh-key/>`_.
 
 With Vagrant and Virtualbox installed, clone the Ion repository onto the host computer and ``cd`` into the new directory.
 
@@ -31,5 +31,7 @@ Troubleshooting
 If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant up``, you need to start the OpenVPN client.
 
 If you see a ``Adding routes to host computer...`` message, you probably forgot to start the OpenVPN client.
+
+If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for ``ldap_simple_bind_password``.
 
 :doc:`Continue with these post-install steps.<postinstall>`
