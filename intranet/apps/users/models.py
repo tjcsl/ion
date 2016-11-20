@@ -624,8 +624,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             c = LDAPConnection()
             try:
                 if is_student:
-                    results = c.user_attributes(self.dn, ['enrolledclass'])
-                    classes = results.first_result()["enrolledclass"]
+                    result = c.user_attributes(self.dn, ['enrolledclass']).first_result()
+                    classes = result.get("enrolledclass", None)
                 else:
                     query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
                     results = c.search(settings.CLASS_DN, query, None)
@@ -690,15 +690,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             return user_object
         else:
             c = LDAPConnection()
-            try:
-                result = c.user_attributes(self.dn, ["counselor"])
-                counselor = result.first_result()["counselor"]
-            except (KeyError, IndexError):
+            result = c.user_attributes(self.dn, ["counselor"]).first_result()
+            counselor = result.get("counselor", None)
+            if not counselor:
                 return None
-            else:
-                cache.set(key, counselor, timeout=settings.CACHE_AGE['user_attribute'])
-                user_object = User.get_user(id=counselor)
-                return user_object
+            cache.set(key, counselor, timeout=settings.CACHE_AGE['user_attribute'])
+            user_object = User.get_user(id=counselor)
+            return user_object
 
     @property
     def address(self):
@@ -721,19 +719,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return cached
         elif not cached and visible:
             c = LDAPConnection()
-            try:
-                results = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode'])
-                result = results.first_result()
-                street = result['street'][0]
-                city = result['l'][0]
-                state = result['st'][0]
-                postal_code = result['postalCode'][0]
-            except (KeyError, IndexError):
+            result = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode']).first_result()
+            if not result:
                 return None
-            else:
-                address_object = Address(street, city, state, postal_code)
-                cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
-                return address_object
+            street = result['street']
+            city = result['l']
+            state = result['st']
+            postal_code = result['postalCode']
+            address_object = Address(street, city, state, postal_code)
+            cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
+            return address_object
 
         else:
             return None
@@ -757,15 +752,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             return cached
         elif not cached and visible:
             c = LDAPConnection()
-            try:
-                result = c.user_attributes(self.dn, ["birthday"])
-                birthday = result.first_result()["birthday"]
-            except KeyError:
+            result = c.user_attributes(self.dn, ["birthday"]).first_result()
+            birthday = result.get("birthday", None)
+            if not birthday:
                 return None
-            else:
-                date_object = datetime.strptime(birthday, '%Y%m%d')
-                cache.set(key, date_object, timeout=settings.CACHE_AGE['user_attribute'])
-                return date_object
+            date_object = datetime.strptime(birthday, '%Y%m%d')
+            cache.set(key, date_object, timeout=settings.CACHE_AGE['user_attribute'])
+            return date_object
 
         else:
             return None
