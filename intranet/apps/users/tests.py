@@ -5,8 +5,7 @@ from io import StringIO
 from django.core.management import call_command
 from django.urls import reverse
 
-from .models import User, UserCache
-from ..groups.models import Group
+from .models import UserCache
 
 from ...test.ion_test import IonTestCase
 
@@ -25,16 +24,19 @@ class DynamicGroupTest(IonTestCase):
         self.assertEqual(out.getvalue().splitlines(), output)
 
 
+class ProfileTest(IonTestCase):
+    def test_get_profile(self):
+        self.make_admin()
+        # Check for non-existant user.
+        response = self.client.get(reverse('api_user_profile_detail', args=[42]))
+        self.assertEqual(response.status_code, 404)
+        # Get data for ourself.
+        response = self.client.get(reverse('api_user_myprofile_detail'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['address']['postal_code'], '22182')
+
+
 class CacheTest(IonTestCase):
-
-    def make_admin(self):
-        self.login()
-        # Make user an eighth admin
-        user = User.get_user(username='awilliam')
-        group = Group.objects.get_or_create(name="admin_all")[0]
-        user.groups.add(group)
-        return user
-
     def test_clear_cache(self):
         user = self.make_admin()
         # clear as if using shell
