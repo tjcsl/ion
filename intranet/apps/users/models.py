@@ -622,17 +622,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return schedule
         elif not cached and visible:
             c = LDAPConnection()
-            try:
-                if is_student:
-                    result = c.user_attributes(self.dn, ['enrolledclass']).first_result()
-                    classes = result.get("enrolledclass", None)
-                else:
-                    query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
-                    results = c.search(settings.CLASS_DN, query, None)
-                    classes = [r["dn"] for r in results]
+            if is_student:
+                result = c.user_attributes(self.dn, ['enrolledclass']).first_result()
+                classes = result.get("enrolledclass", None)
+            else:
+                query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
+                results = c.search(settings.CLASS_DN, query, None)
+                classes = [r["dn"] for r in results]
 
-                logger.debug("Classes: {}".format(classes))
-            except KeyError:
+            logger.debug("Classes: {}".format(classes))
+            if not classes:
                 return None
             else:
                 schedule = []
@@ -715,21 +714,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         visible = self._current_user_override() or visible
 
         if cached and visible:
-            logger.debug("Attribute 'address' of user {} loaded " "from cache.".format(self.id))
+            logger.debug("Attribute 'address' of user {} loaded from cache.".format(self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
             result = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode']).first_result()
             if not result:
                 return None
-            street = result['street']
-            city = result['l']
-            state = result['st']
-            postal_code = result['postalCode']
+            street = result['street'][0]
+            city = result['l'][0]
+            state = result['st'][0]
+            postal_code = result['postalCode'][0]
             address_object = Address(street, city, state, postal_code)
             cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
             return address_object
-
         else:
             return None
 

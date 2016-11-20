@@ -5,6 +5,7 @@ from django.test import TestCase
 import ldap3
 
 from ..apps.users.models import User
+from ..apps.groups.models import Group
 from ..db import ldap_db
 
 
@@ -37,3 +38,11 @@ class IonTestCase(TestCase):
         User.get_user(username="awilliam").set_cache()
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             self.client.login(username='awilliam', password='dankmemes')
+
+    def make_admin(self):
+        self.login()
+        # Make user an eighth admin
+        user = User.get_user(username='awilliam')
+        group = Group.objects.get_or_create(name="admin_all")[0]
+        user.groups.add(group)
+        return user
