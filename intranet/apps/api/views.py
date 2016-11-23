@@ -45,7 +45,9 @@ def api_root(request, format=None):
         "/profile/<username>": ["Get specific user profile by username",
                                 perma_reverse(request, "api_user_profile_detail_by_username", kwargs={"username": "2017ewang"})],
         "/profile/<pk>/picture":
-        ["Get a specific user's profile picture", perma_reverse(request, "api_user_profile_picture_default", kwargs={"pk": 489})]
+        ["Get a specific user's profile picture", perma_reverse(request, "api_user_profile_picture_default", kwargs={"pk": 489})],
+        "/profile/<username>/picture": ["Get a specific user's profile picture by username",
+                                        perma_reverse(request, "api_user_profile_picture_default_by_username", kwargs={"username": "2017ewang"})]
     }), ("Classes", {
         "/classes/<pk>": ["Get class details", perma_reverse(request, "api_user_class_detail", kwargs={"pk": "924016-01"})]
     }), ("Search", {

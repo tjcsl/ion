@@ -54,6 +54,8 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         if 'pk' in kwargs:
             user = User.objects.get(pk=kwargs['pk'])
+        elif 'username' in kwargs:
+            user = User.objects.get(username=kwargs['username'])
         else:
             user = request.user
 
