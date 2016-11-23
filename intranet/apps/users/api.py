@@ -21,6 +21,7 @@ class ProfileDetail(generics.RetrieveAPIView):
 
     /api/profile: retrieve your profile
     /api/profile/<pk>: retrieve the profile of the user with id <pk>
+    /api/profile/<username>: retrieve the profile of the user with username <username>
 
     """
     serializer_class = UserSerializer
@@ -29,6 +30,8 @@ class ProfileDetail(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         if 'pk' in kwargs:
             user = User.objects.get(pk=kwargs['pk'])
+        elif 'username' in kwargs:
+            user = User.objects.get(username=kwargs['username'])
         else:
             user = request.user
 
