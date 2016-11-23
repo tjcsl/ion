@@ -21,6 +21,7 @@ urlpatterns = [
     url(r"^/activities/(?P<pk>[0-9]+)$", eighth_api.EighthActivityDetail.as_view(), name="api_eighth_activity_detail"),
     url(r"^/profile$", users_api.ProfileDetail.as_view(), name="api_user_myprofile_detail"),
     url(r"^/profile/(?P<pk>[0-9]+)$", users_api.ProfileDetail.as_view(), name="api_user_profile_detail"),
+    url(r"^/profile/(?P<username>[A-Za-z0-9]+)$", users_api.ProfileDetail.as_view(), name="api_user_profile_detail_by_username"),
     url(r"^/profile/(?P<pk>[0-9]+)/picture$", users_api.ProfilePictureDetail.as_view(), name="api_user_profile_picture_default"),
     url(r"^/profile/(?P<pk>[0-9]+)/picture/(?P<photo_year>[a-zA-Z]+)$", users_api.ProfilePictureDetail.as_view(), name="api_user_profile_picture"),
     url(r"^/signups/user$", eighth_api.EighthUserSignupListAdd.as_view(), name="api_eighth_user_signup_list_myid"),

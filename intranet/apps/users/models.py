@@ -721,10 +721,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             result = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode']).first_result()
             if not result:
                 return None
-            street = result['street'][0]
-            city = result['l'][0]
-            state = result['st'][0]
-            postal_code = result['postalCode'][0]
+            try:
+                street = result['street'][0]
+                city = result['l'][0]
+                state = result['st'][0]
+                postal_code = result['postalCode'][0]
+            except IndexError:
+                return None
             address_object = Address(street, city, state, postal_code)
             cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
             return address_object
