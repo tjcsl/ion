@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3372) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3381) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3372)',
+        VERSION:     'v3 (Build #3381)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="top" title="TJ Intranet v3 (Build #3372) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #3381) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -770,17 +770,16 @@
             <span class="k">return</span> <span class="n">schedule</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">visible</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">is_student</span><span class="p">:</span>
-                    <span class="n">results</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;enrolledclass&#39;</span><span class="p">])</span>
-                    <span class="n">classes</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">first_result</span><span class="p">()[</span><span class="s2">&quot;enrolledclass&quot;</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">query</span> <span class="o">=</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">and_filter</span><span class="p">(</span><span class="s2">&quot;objectClass=tjhsstClass&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsorDn=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">)</span>
-                    <span class="n">results</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">CLASS_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                    <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">is_student</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;enrolledclass&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
+                <span class="n">classes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;enrolledclass&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">and_filter</span><span class="p">(</span><span class="s2">&quot;objectClass=tjhsstClass&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsorDn=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">CLASS_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
 
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Classes: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">classes</span><span class="p">))</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Classes: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">classes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">classes</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">schedule</span> <span class="o">=</span> <span class="p">[]</span>
@@ -838,15 +837,13 @@
             <span class="k">return</span> <span class="n">user_object</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;counselor&quot;</span><span class="p">])</span>
-                <span class="n">counselor</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">first_result</span><span class="p">()[</span><span class="s2">&quot;counselor&quot;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;counselor&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
+            <span class="n">counselor</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;counselor&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">counselor</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">counselor</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
-                <span class="n">user_object</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">counselor</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">user_object</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">counselor</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
+            <span class="n">user_object</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">counselor</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user_object</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -865,24 +862,23 @@
         <span class="n">visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_user_override</span><span class="p">()</span> <span class="ow">or</span> <span class="n">visible</span>
 
         <span class="k">if</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">visible</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Attribute &#39;address&#39; of user </span><span class="si">{}</span><span class="s2"> loaded &quot;</span> <span class="s2">&quot;from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Attribute &#39;address&#39; of user </span><span class="si">{}</span><span class="s2"> loaded from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">cached</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">visible</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;street&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;st&#39;</span><span class="p">,</span> <span class="s1">&#39;postalCode&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;street&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;st&#39;</span><span class="p">,</span> <span class="s1">&#39;postalCode&#39;</span><span class="p">])</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
                 <span class="n">street</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;street&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">city</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">state</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;st&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">postal_code</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;postalCode&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">address_object</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">street</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">postal_code</span><span class="p">)</span>
-                <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">address_object</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
-                <span class="k">return</span> <span class="n">address_object</span>
-
+            <span class="n">address_object</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">street</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">postal_code</span><span class="p">)</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">address_object</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">address_object</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -905,15 +901,13 @@
             <span class="k">return</span> <span class="n">cached</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">visible</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">])</span>
-                <span class="n">birthday</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">first_result</span><span class="p">()[</span><span class="s2">&quot;birthday&quot;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
+            <span class="n">birthday</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;birthday&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">birthday</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">date_object</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">birthday</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">date_object</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
-                <span class="k">return</span> <span class="n">date_object</span>
+            <span class="n">date_object</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">birthday</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">date_object</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">date_object</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
