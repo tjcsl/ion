@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class StripNewlinesMiddleware(object):
-
     """Strip extra newlines from rendered templates to enhance readability."""
 
     def __init__(self, get_response):
@@ -26,7 +25,6 @@ class StripNewlinesMiddleware(object):
 
 
 class AdminSelectizeLoadingIndicatorMiddleware(object):
-
     """Automatically add a loading placeholder for Selectize inputs in admin templates.
 
     This is probably not a good practice, but it really needs to be done
@@ -54,7 +52,6 @@ class AdminSelectizeLoadingIndicatorMiddleware(object):
 
 
 class NoReferrerMiddleware(object):
-
     """Set all links to have rel='noreferrer noopener' to prevent malicious JS from editing what the user sees"""
 
     def __init__(self, get_response):

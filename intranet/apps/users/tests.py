@@ -25,6 +25,7 @@ class DynamicGroupTest(IonTestCase):
 
 
 class ProfileTest(IonTestCase):
+
     def test_get_profile(self):
         self.make_admin()
         # Check for non-existant user.
@@ -37,6 +38,7 @@ class ProfileTest(IonTestCase):
 
 
 class CacheTest(IonTestCase):
+
     def test_clear_cache(self):
         user = self.make_admin()
         # clear as if using shell

@@ -143,19 +143,15 @@ def copy_block_view(request, block_id):
                 EighthSignup.objects.filter(scheduled_activity__block=block).delete()
 
                 for schact in EighthScheduledActivity.objects.filter(block=new_block, cancelled=False).prefetch_related("rooms", "sponsors"):
-                    new_schact = EighthScheduledActivity.objects.create(
-                        block=block,
-                        activity=schact.activity,
-                        both_blocks=schact.both_blocks,
-                        special=schact.special
-                    )
+                    new_schact = EighthScheduledActivity.objects.create(block=block, activity=schact.activity, both_blocks=schact.both_blocks,
+                                                                        special=schact.special)
                     new_schact.sponsors.set(schact.sponsors.all())
                     new_schact.rooms.set(schact.rooms.all())
                     new_schact.save()
                     if copy_signups:
-                        EighthSignup.objects.bulk_create(
-                            [EighthSignup(user=s.user, scheduled_activity=new_schact) for s in EighthSignup.objects.filter(scheduled_activity=schact)]
-                        )
+                        EighthSignup.objects.bulk_create([
+                            EighthSignup(user=s.user, scheduled_activity=new_schact) for s in EighthSignup.objects.filter(scheduled_activity=schact)
+                        ])
 
                 context = {
                     "new_activities": EighthScheduledActivity.objects.filter(block=block).count(),
