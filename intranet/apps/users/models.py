@@ -278,6 +278,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if id is not None:
             try:
+                if isinstance(id, (tuple, list)):
+                    id = id[0]
                 user = User.objects.get(id=id)
             except User.DoesNotExist:
                 user_dn = User.dn_from_id(id)
