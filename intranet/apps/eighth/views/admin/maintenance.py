@@ -184,10 +184,10 @@ def ldap_next_id(request):
         if is_student:
             usrid = max(res) + 1
         else:
-            res = set([x for x in res if x < 1200])
+            res = set([x for x in res if x < 1400])
             usrid = max(res) + 1
-            if usrid == 1200:
-                for x in range(1200):
+            if usrid == 1400:
+                for x in range(1400):
                     if x not in res:
                         usrid = x
                         break
