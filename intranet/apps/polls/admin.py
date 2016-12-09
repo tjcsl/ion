@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Answer, AnswerVotes, Choice, Poll, Question
+from .models import Answer, AnswerVote, Choice, Poll, Question
 
 
 class PollAdmin(admin.ModelAdmin):
@@ -58,7 +58,7 @@ class AnswerAdmin(admin.ModelAdmin):
         'user',)
 
 
-class AnswerVotesAdmin(admin.ModelAdmin):
+class AnswerVoteAdmin(admin.ModelAdmin):
     list_display = (
         'question',
         'choice',)
@@ -73,4 +73,4 @@ admin.site.register(Poll, PollAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Answer, AnswerAdmin)
-admin.site.register(AnswerVotes, AnswerVotesAdmin)
+admin.site.register(AnswerVote, AnswerVoteAdmin)
