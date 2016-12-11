@@ -170,6 +170,7 @@ def copy_block_view(request, block_id):
         "existing_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
         "blocks": EighthBlock.objects.all().order_by("date"),
         "admin_page_title": "Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
+        "to_block": "{}: {} ({})".format(block.id, block.formatted_date, block.block_letter),
         "block_id": block_id,
         "locked": block.locked,
         "success": False

@@ -16,6 +16,16 @@
         $("form").submit(function() {
             $(this).find("button").prop("disabled", true).html("<i class='fa fa-cog fa-spin'></i> Copying...");
         });
+        var block_selectize = $("#block-select")[0].selectize;
+        block_selectize.on("change", function() {
+            var from = block_selectize.getItem(block_selectize.getValue())[0].innerHTML;
+            if (from) {
+                $("#summary").html("You will be copying all of the activites from <b>" + from + "</b> to " + "<b>{{ to_block }}</b>" + ".");
+            }
+            else {
+                $("#summary").html("");
+            }
+        });
     });
     </script>
 {% endblock %}
@@ -49,6 +59,7 @@
         <div style="margin-bottom: 10px">
             <label><input type="checkbox" name="signups" /> Copy Signups</label>
         </div>
+        <p id="summary"></p>
         <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
         <button type="submit">Copy Block</button>
     </form>
