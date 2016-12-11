@@ -225,6 +225,7 @@ def ldap_list(request):
             return JsonResponse({"account": None})
         account = {k: (v[0] if isinstance(v, list) else v) for k, v in data[0]["attributes"].items()}
         account["dn"] = data[0]["dn"]
+        account["userPassword"] = "NA"
         return JsonResponse({"account": account})
     else:
         is_student = request.GET.get("type", "teacher") == "student"
