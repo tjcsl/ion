@@ -60,7 +60,7 @@ def announcement_posted_hook(request, obj):
                 announcement_posted_email(request, obj)
         except Exception as e:
             logger.error("Exception when emailing announcement: {}".format(e))
-            messages.error("Exception when emailing announcement: {}".format(e))
+            messages.error(request, "Exception when emailing announcement: {}".format(e))
             raise e
     else:
         logger.debug("Announcement notify off")
