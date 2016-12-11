@@ -229,8 +229,8 @@ def ldap_list(request):
     else:
         is_student = request.GET.get("type", "teacher") == "student"
         is_attendance = request.GET.get("type", "teacher") == "attendance"
-        data = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstUser" if is_attendance else "objectClass=tjhsstTeacher", [
-                        "iodineUid", "cn"])
+        object_class = "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstUser" if is_attendance else "objectClass=tjhsstTeacher"
+        data = c.search(settings.USER_DN, object_class, ["iodineUid", "cn"])
         accounts = [{"id": x["attributes"]["iodineUid"], "name": x["attributes"]["cn"]} for x in data]
         accounts = sorted(accounts, key=lambda acc: acc["name"])
         return JsonResponse({"accounts": accounts})
