@@ -71,11 +71,11 @@ def ldap_modify(request):
         c = LDAPConnection()
 
         object_class = request.POST.get("objectClass", None)
-        if not object_class == "tjhsstStudent" and not object_class == "tjhsstTeacher":
+        if object_class != "tjhsstStudent" and object_class != "tjhsstTeacher" and object_class != "tjhsstUser":
             return JsonResponse({
                 "success": False,
                 "error": "Invalid objectClass!",
-                "details": "Valid objectClasses are tjhsstStudent and tjhsstTeacher."
+                "details": "Valid objectClasses are tjhsstStudent, tjhsstTeacher, and tjhsstUser."
             })
 
         if dn:  # modify account
@@ -127,7 +127,8 @@ def ldap_modify(request):
                 if not value:
                     return JsonResponse({"success": False, "error": "{} is a required field!".format(field)})
                 attrs[field] = value
-
+            if object_class == "tjhsstUser":
+                attrs["userPassword"] = "{SHA}fe1eec38f1c0b82a9d019045f98f8d44c2789e18"
             if object_class == "tjhsstStudent":
                 for field, name in LDAP_STUDENT_FIELDS:
                     value = request.POST.get(field, None)
@@ -143,16 +144,20 @@ def ldap_modify(request):
             if object_class == "tjhsstTeacher":
                 if iodine_uid_num < 0 or iodine_uid_num > 10000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be between 0 and 10,000!"})
+            elif object_class == "tjhsstUser":
+                if iodine_uid_num < 6000 or iodine_uid_num > 7000:
+                    return JsonResponse({"success": False, "error": "iodineUidNumber must be between 6,000 and 7,000!"})
             else:
                 if iodine_uid_num < 30000:
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
 
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
+            print(c.conn.result)
             return JsonResponse({
                 "success": success,
                 "id": request.POST.get("iodineUid", None) if success else None,
                 "error": "LDAP query failed!" if not success else None,
-                "details": c.conn.last_error
+                "details": c.conn.result["message"]
             })
 
 
@@ -173,16 +178,29 @@ def ldap_delete(request):
 @reauthentication_required
 def ldap_next_id(request):
     is_student = request.GET.get("type", "teacher") == "student"
+    is_attendance = request.GET.get("type", "teacher") == "attendance"
     usrid = 0
     c = LDAPConnection()
     if is_student:
         res = c.search(settings.USER_DN, "(objectClass=tjhsstStudent)", ["iodineUidNumber"])
+    elif is_attendance:
+        res = c.search(settings.USER_DN, "(objectClass=tjhsstUser)", ["iodineUidNumber"])
     else:
         res = c.search(settings.USER_DN, "(objectClass=tjhsstTeacher)", ["iodineUidNumber"])
     if len(res) > 0:
         res = [int(x["attributes"]["iodineUidNumber"][0]) for x in res]
         if is_student:
             usrid = max(res) + 1
+        elif is_attendance:
+            res = set([x for x in res if x < 7000])
+            usrid = max(res) + 1
+            if usrid == 7000:
+                for x in range(6000, 7000):
+                    if x not in res:
+                        usrid = x
+                        break
+            else:
+                logger.error("Out of attendance user LDAP IDs!")
         else:
             res = set([x for x in res if x < 1400])
             usrid = max(res) + 1
@@ -210,7 +228,9 @@ def ldap_list(request):
         return JsonResponse({"account": account})
     else:
         is_student = request.GET.get("type", "teacher") == "student"
-        data = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstTeacher", ["iodineUid", "cn"])
+        is_attendance = request.GET.get("type", "teacher") == "attendance"
+        data = c.search(settings.USER_DN, "objectClass=tjhsstStudent" if is_student else "objectClass=tjhsstUser" if is_attendance else "objectClass=tjhsstTeacher", [
+                        "iodineUid", "cn"])
         accounts = [{"id": x["attributes"]["iodineUid"], "name": x["attributes"]["cn"]} for x in data]
         accounts = sorted(accounts, key=lambda acc: acc["name"])
         return JsonResponse({"accounts": accounts})

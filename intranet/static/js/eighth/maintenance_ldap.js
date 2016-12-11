@@ -1,11 +1,12 @@
 var type_student = false;
+var type_attendance = false;
 
 function refreshList() {
     $("#account-list .account").remove();
     if (!$("#account-list .loading").length) {
         $("#account-list").append("<div class='loading'><i class=' fa fa-cog fa-spin fa-3x'></i></div>");
     }
-    $.get(list_endpoint + "?type=" + (type_student ? "student" : "teacher"), function(data) {
+    $.get(list_endpoint + "?type=" + (type_attendance ? "attendance" : (type_student ? "student" : "teacher")), function(data) {
         var adata = data.accounts;
         var output = "";
         $.each(adata, function(k, v) {
@@ -23,7 +24,7 @@ function loadAccount(id) {
     $("#delete-teacher, #create-notif").toggle(!!id);
     $("#generate-id, #default-fields").toggle(!id);
     $("#ldap-iodineUidNumber").prop("readonly", !!id);
-    var type_word = (type_student ? "Student" : "Teacher");
+    var type_word = (type_attendance ? "Attendance User" : (type_student ? "Student" : "Teacher"));
     $("#edit-teacher").text((id ? "Edit " : "Create ") + type_word);
     $("#edit-title").text(id ? ("Edit " + type_word +  " Account - " + id) : ("Create " + type_word + " Account"));
     $("#student-fields").toggle(type_student);
@@ -97,10 +98,10 @@ $(document).ready(function() {
         $(".ldap-field").each(function() {
             fields[$(this).attr("id").substring(5)] = $(this).val();
         });
-        fields["objectClass"] = type_student ? "tjhsstStudent" : "tjhsstTeacher";
+        fields["objectClass"] = (type_attendance ? "tjhsstUser" : (type_student ? "tjhsstStudent" : "tjhsstTeacher"));
         $.post(modify_endpoint, fields, function(data) {
             if (data.success) {
-                Messenger().success((type_student ? "Student" : "Teacher") + " account '" + data.id + "' " + (fields["dn"] ? "modified" : "created") + "!");
+                Messenger().success((type_attendance ? "Attendance" : (type_student ? "Student" : "Teacher"))+ " account '" + data.id + "' " + (fields["dn"] ? "modified" : "created") + "!");
                 loadAccount(data.id);
                 refreshList();
             }
@@ -111,15 +112,17 @@ $(document).ready(function() {
     });
     $("#type-switch").click(function(e) {
         e.preventDefault();
-        type_student = !type_student;
-        $(".account-type").text(type_student ? "Student" : "Teacher");
-        $(".reverse-account-type").text(type_student ? "Teacher" : "Student");
+        var nextType = $(".reverse-account-type").text();
+        type_student = nextType == "Student" ? !type_student: (nextType == "Teacher" || nextType == "Attendance" ? false: type_student);
+        type_attendance =  nextType == "Attendance" ? !type_attendance: (nextType == "Teacher" || nextType == "Student" ? false: type_attendance);
+        $(".account-type").text((type_attendance ? "Attendance": (type_student ? "Student": "Teacher")));
+        $(".reverse-account-type").text((type_attendance ? "Teacher": (type_student ? "Attendance": "Student")));
         loadAccount(false);
         refreshList();
     });
     $("#generate-id").click(function(e) {
         e.preventDefault();
-        $.get(next_id_endpoint + "?type=" + (type_student ? "student" : "teacher"), function(data) {
+        $.get(next_id_endpoint + "?type=" + (type_attendance ? "attendance" : (type_student ? "student" : "teacher")), function(data) {
             $("#ldap-iodineUidNumber").val(data.id);
         }).fail(function() {
             Messenger().error("Failed to generate ID.");
@@ -141,12 +144,12 @@ $(document).ready(function() {
         $("#delete-modal-background").fadeOut("fast");
         $.post(delete_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
             if (data.success) {
-                Messenger().success((type_student ? "Student" : "Teacher") + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
+                Messenger().success((type_attendance ? "Attendance" : (type_student ? "Student" : "Teacher")) + " account '" + $("#ldap-cn").attr("data-original") + "' deleted!");
                 loadAccount(false);
                 refreshList();
             }
             else {
-                Messenger().error("Failed to delete " + (type_student ? "student" : "teacher") + " account." + (data.error ? "<br /><b>Error:</b> " + data.error : "") + (data.details ? "<br /><b>Details</b>: " + data.details : ""));
+                Messenger().error("Failed to delete " + (type_attendance ? "attendance" : (type_student ? "student" : "teacher")) + " account." + (data.error ? "<br /><b>Error:</b> " + data.error : "") + (data.details ? "<br /><b>Details</b>: " + data.details : ""));
             }
         });
     });
