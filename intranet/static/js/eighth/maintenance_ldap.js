@@ -24,7 +24,7 @@ function loadAccount(id) {
     $("#delete-teacher, #create-notif").toggle(!!id);
     $("#generate-id, #default-fields").toggle(!id);
     $("#ldap-iodineUidNumber").prop("readonly", !!id);
-    var type_word = (type_attendance ? "Attendance User" : (type_student ? "Student" : "Teacher"));
+    var type_word = (type_attendance ? "Attendance" : (type_student ? "Student" : "Teacher"));
     $("#edit-teacher").text((id ? "Edit " : "Create ") + type_word);
     $("#edit-title").text(id ? ("Edit " + type_word +  " Account - " + id) : ("Create " + type_word + " Account"));
     $("#student-fields").toggle(type_student);
@@ -110,13 +110,14 @@ $(document).ready(function() {
             }
         });
     });
-    $("#type-switch").click(function(e) {
+    $("#type-switch span").click(function(e) {
         e.preventDefault();
-        var nextType = $(".reverse-account-type").text();
+        var nextType = $(this).text();
+        $("#type-switch span").removeClass("active");
+        $(this).addClass("active");
         type_student = nextType == "Student" ? !type_student: (nextType == "Teacher" || nextType == "Attendance" ? false: type_student);
         type_attendance =  nextType == "Attendance" ? !type_attendance: (nextType == "Teacher" || nextType == "Student" ? false: type_attendance);
         $(".account-type").text((type_attendance ? "Attendance": (type_student ? "Student": "Teacher")));
-        $(".reverse-account-type").text((type_attendance ? "Teacher": (type_student ? "Attendance": "Student")));
         loadAccount(false);
         refreshList();
     });
