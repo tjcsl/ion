@@ -274,7 +274,7 @@ class Answer(models.Model):  # individual answer choices selected
             return "{} None".format(self.user)
 
 
-class AnswerVotes(models.Model):  # record of total selection of a given answer choice
+class AnswerVote(models.Model):  # record of total selection of a given answer choice
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     users = models.ManyToManyField(User)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
