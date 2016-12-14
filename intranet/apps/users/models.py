@@ -170,7 +170,7 @@ class UserManager(DjangoUserManager):
             extra = [9996, 8888, 7011]
             users = users.exclude(id__in=extra)
             # Add possible exceptions handling here
-            users = users | User.objects.filter(id__in=[31863,32327,32103,33228])
+            users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
 
             logger.debug("Set cache for User.get_teachers")
             cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
