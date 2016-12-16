@@ -25,7 +25,7 @@
             {{ host.name }} Files
         </h2>
 
-        <a class="button" href="{% url 'files_type' host.code %}?dir={{ remote_dir|escape }}">
+        <a class="button" href="{% url 'files_type' host.code %}?dir={{ remote_dir|urlencode }}">
             <i class="fa fa-arrow-left"></i> {{ remote_dir }}
         </a>
 
@@ -35,8 +35,8 @@
 
         <form action="" method="POST">
             {% csrf_token %}
-            <input name="path" type="hidden" value="{{ request.GET.dir|escape }}" />
-            <a class="button" href="{% url 'files_type' host.code %}?dir={{ remote_dir|escape }}">Cancel</a> &nbsp; 
+            <input name="path" type="hidden" value="{{ request.GET.dir|urlencode }}" />
+            <a class="button" href="{% url 'files_type' host.code %}?dir={{ remote_dir|urlencode }}">Cancel</a> &nbsp; 
             <input name="confirm" type="submit" value="Delete" />
         </form>
 

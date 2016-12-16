@@ -36,7 +36,7 @@
             <i class="fa fa-arrow-left"></i> Filesystems
         </a>
 
-        <a class="button" href="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
+        <a class="button" href="{% url 'files_upload' host.code %}?dir={{ current_dir|urlencode }}">
             <i class="fa fa-upload"></i> Upload
         </a>
 
@@ -44,7 +44,7 @@
         <div id="upload-overlay"><div><i class="fa fa-upload fa-5x"></i><h3>Drop to Upload</h3></div></div>
 
         <h3>Current directory: {{ current_dir }}</h3>
-        <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
+        <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|urlencode }}">
         {% if parent_dir %}
             <tr>
                 <td class="item folder">
