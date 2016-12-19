@@ -444,8 +444,10 @@
                 </form>
 
                 <br />
+                {% if request.user.object_class != "tjhsstUser" %}
                 <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 &nbsp; &nbsp;
+                {% endif %}
                 <button class="print-hide" onclick="window.print()">Print</button>
                 {% if user.is_eighth_admin %}
                     <br />
