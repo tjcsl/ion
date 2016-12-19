@@ -89,6 +89,7 @@
                 <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
+            {% if request.user.object_class != "tjhsstUser" %}
             {% if announcements_admin %}
                 {% if "show_all" not in request.GET %}
                     <a class="button" href="{% url view_announcements_url %}?show_all=1">
@@ -108,6 +109,7 @@
                     <i class="fa fa-file-text-o"></i>
                     Request Post
                 </a>
+            {% endif %}
             {% endif %}
             </span>
     </div>
@@ -173,7 +175,7 @@
                 There are no announcements to display at this time.
             </div>
         {% endfor %}
-
+        {% if request.user.object_class != "tjhsstUser" %}
         {% if start_num == 0 and view_announcements_url != 'announcements_archive' %}
             <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
@@ -183,6 +185,7 @@
         {% endif %}
         {% if more_items %}
             <a href="{% url view_announcements_url %}?start={{ end_num }}{{ paginate_link_suffix }}" class="button" style="float:right">Older Posts &rarr;</a>
+        {% endif %}
         {% endif %}
     </div>
 </div>
