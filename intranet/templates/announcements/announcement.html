@@ -15,12 +15,11 @@
         {% if announcement.pinned %}
             <i class="fa fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
         {% endif %}
-        {% if request.user.object_class != "tjhsstUser" %}
-        {% if link_to_announcement %}
+        
+        {% if link_to_announcement and request.user.object_class != "tjhsstUser" %}
         <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
             {{ announcement.title }}
         </a>
-        {% endif %}
         {% else %}
             {{ announcement.title }}
         {% endif %}
