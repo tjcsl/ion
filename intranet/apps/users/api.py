@@ -31,7 +31,7 @@ class ProfileDetail(generics.RetrieveAPIView):
         if 'pk' in kwargs:
             user = User.objects.get(pk=kwargs['pk'])
         elif 'username' in kwargs:
-            user = User.objects.get(username=kwargs['username'])
+            user = User.objects.get(username__iexact=kwargs['username'])
         else:
             user = request.user
 
