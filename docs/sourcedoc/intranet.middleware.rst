@@ -68,6 +68,14 @@ intranet.middleware.profiler module
     :undoc-members:
     :show-inheritance:
 
+intranet.middleware.restrict_users module
+-----------------------------------------
+
+.. automodule:: intranet.middleware.restrict_users
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.simple_history module
 -----------------------------------------
 

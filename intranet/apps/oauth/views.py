@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from oauth2_provider.views.application import ApplicationUpdate
 
 

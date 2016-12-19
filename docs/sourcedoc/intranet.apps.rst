@@ -25,6 +25,7 @@ Subpackages
     intranet.apps.lostfound
     intranet.apps.nomination
     intranet.apps.notifications
+    intranet.apps.oauth
     intranet.apps.parking
     intranet.apps.polls
     intranet.apps.preferences
