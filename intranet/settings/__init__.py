@@ -39,7 +39,10 @@ NOMINATION_POSITION = ""
 # not done, an email failure notification gets sent whenever someone messes with
 # the HTTP Host header.
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
-
+# We want to restrict the access for `tjhsstUser` to the following paths:
+# /, /eighth, /eighth/attendance, and /eighth/attendance/<activity_id>
+# TODO: replace this regex with a better method of checking if the path is allowed
+ATTENDANCE_ALLOWED_PATHS_REGEX = r"^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/logout$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))"
 try:
     from .secret import *  # noqa
 except ImportError:
@@ -339,7 +342,8 @@ MIDDLEWARE = [
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
     # FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+
-    "intranet.middleware.simple_history.HistoryRequestMiddleware"
+    "intranet.middleware.simple_history.HistoryRequestMiddleware",
+    "intranet.middleware.restrict_users.RestrictUserMiddleware",  # Restrict tjhsstUser from most things
 ]
 
 if PRODUCTION:
