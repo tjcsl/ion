@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -6,6 +6,11 @@ from django.conf import settings
 from requests import get
 
 from .models import Room
+
+
+@login_required
+def map_view(request):
+    return render(request, "map/home.html", {})
 
 
 @login_required

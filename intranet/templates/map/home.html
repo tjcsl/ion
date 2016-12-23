@@ -1,0 +1,30 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Map
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+        body, .main, .primary-content {
+            height: 80vh;
+        }
+        object {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <object data="{% url 'map_iframe' %}">Unsupported content.</object>
+    </div>
+{% endblock %}
