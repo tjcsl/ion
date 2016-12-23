@@ -46,6 +46,7 @@ urlpatterns = [
     url(r"^oauth/", include(("oauth2_provider.urls", "oauth2_provider"))),
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
     url(r"^nominations", include("intranet.apps.nomination.urls")),
+    url(r"^map", include("intranet.apps.map.urls")),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
