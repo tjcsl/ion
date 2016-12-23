@@ -10,7 +10,7 @@ from .models import Room
 
 @login_required
 def get_iframe_content_view(request):
-    return HttpResponse(get(settings.MAP_URL).content)
+    return HttpResponse(get(settings.MAP_URL + "?username=" + request.user.username).content)
 
 
 @login_required
