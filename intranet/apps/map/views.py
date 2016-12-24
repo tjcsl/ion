@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -14,8 +14,15 @@ def map_view(request):
 
 
 @login_required
-def get_iframe_content_view(request):
-    return HttpResponse(get(settings.MAP_URL + "?username=" + request.user.username).content)
+def get_svg_view(request, floor):
+    if floor == "first":
+        map_url = settings.MAP_FIRST_URL
+    elif floor == "second":
+        map_url = settings.MAP_SECOND_URL
+    else:
+        raise Http404
+
+    return HttpResponse(get(map_url).content, content_type="image/svg+xml")
 
 
 @login_required
