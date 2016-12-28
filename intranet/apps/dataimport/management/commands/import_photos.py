@@ -16,6 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder for LDIF')
         parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/', help='path to DataImages folder on this host')
         parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
+        parser.add_argument('--skip-staff', action='store_true', dest='skip_staff', default=False, help='Skip staff')
 
 
     def ask(self, q):
@@ -36,6 +37,7 @@ class Command(BaseCommand):
         self.root_dir = options["root_dir"]
         self.local_root_dir = options["local_root_dir"]
         self.grade_offset = options["grade_offset"]
+        self.skip_staff = options["skip_staff"]
 
         print("GRADE OFFSET: ", self.grade_offset)
         print("\n".join(["{} => {}".format(i, self.calc_grade_offset(i)) for i in range(9, 13)]))
@@ -92,14 +94,26 @@ class Command(BaseCommand):
 
         for uname in users:
             udata = users[uname]
-            print(uname, users[uname])
+            if self.skip_staff and udata["grade"] == "STA":
+                continue
+
             photo_yr = self.photo_title_year(udata["grade"])
+
+            print(uname, users[uname], udata["grade"], photo_yr)
             ldif = self.add_photo_ldif({
                 "photo": photo_yr,
                 "iodineUid": uname,
                 "path": self.get_photo_path(udata["photo_name"])
             })
+
             ldifs.append(ldif)
+
+            if udata["grade"] == "STA":
+                ldif = self.teacher_default_photo_ldif({
+                    "iodineUid": uname
+                })
+                ldifs.append(ldif)
+
 
         open("import_photos.ldif", "w").write("\n\n".join(ldifs))
 
@@ -156,9 +170,10 @@ class Command(BaseCommand):
     def calc_grade_offset(self, grade):
         if grade == "STA":
             return grade
-        return int(grade) - self.grade_offset
+        return int(grade) - (self.grade_offset or 0)
 
     def fix_grade(self, grade):
+        grade = str(grade)
         if grade == 'NGA':
             return 'STA'
         if grade[-2:] == 'TH':
@@ -179,7 +194,7 @@ class Command(BaseCommand):
             "12": "seniorPhoto",
             "STA": "freshmanPhoto"
         }
-        if grade in gmap:
+        if str(grade) in gmap:
             if grade != "STA" and int(grade) >= 9 and int(grade) <= 12:
                 return gmap[str(grade)]
             elif grade == "STA":
@@ -207,5 +222,17 @@ changetype: add
 objectClass: iodinePhoto
 cn: {photo}
 jpegPhoto:< file://{path}""".format(**data)
+
+        return ldif
+
+    def teacher_default_photo_ldif(self, data):
+        ldif = """
+dn: iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
+changetype: modify
+replace: preferredPhoto
+preferredPhoto: freshmanPhoto
+-
+replace: perm-showpictures-self
+perm-showpictures-self: TRUE""".format(**data)
 
         return ldif
