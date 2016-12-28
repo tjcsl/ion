@@ -13,7 +13,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
-        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder')
+        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder for LDIF')
+        parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/', help='path to DataImages folder on this host')
         parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
 
 
@@ -33,8 +34,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.do_run = options["run"]
         self.root_dir = options["root_dir"]
+        self.local_root_dir = options["local_root_dir"]
         self.grade_offset = options["grade_offset"]
 
+        print("GRADE OFFSET: ", self.grade_offset)
+        print("\n".join(["{} => {}".format(i, self.calc_grade_offset(i)) for i in range(9, 13)]))
         teacher_photo_index = 0
 
         if os.path.isfile("user_sid_map.json"):
@@ -42,7 +46,7 @@ class Command(BaseCommand):
         else:
             users = {}
 
-            csv_path = "{}data.txt".format(self.root_dir)
+            csv_path = "{}data.txt".format(self.local_root_dir)
             with open(csv_path, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
                 next(csv_reader) # skip header
@@ -50,13 +54,12 @@ class Command(BaseCommand):
                 for row in csv_reader:
                     print(row)
                     sid, fname, lname, grade = row
-                    if grade == 'NGA':
-                        grade = 'STA'
+                    grade = self.fix_grade(grade)
                     if grade == 'IGNORE':
                         # ignore staff with pictures who aren't in LDAP
                         teacher_photo_index += 1
                         continue
-                    # the CSV includes only "missing-Student-ID", but we need the 
+                    # the CSV includes only "missing-Student ID", but we need the 
                     # filename for each specific missing student id file.
                     if sid.startswith("missing-"):
                         sid = self.teacher_photo_name(teacher_photo_index)
@@ -151,7 +154,22 @@ class Command(BaseCommand):
         # change "STA" to "IGNORE" in the csv
 
     def calc_grade_offset(self, grade):
-        return grade - self.grade_offset
+        if grade == "STA":
+            return grade
+        return int(grade) - self.grade_offset
+
+    def fix_grade(self, grade):
+        if grade == 'NGA':
+            return 'STA'
+        if grade[-2:] == 'TH':
+            return grade[:-2]
+        if grade[-1:] == 'T':
+            return grade[:-1]
+        if grade[-1:] == 'H':
+            return grade[:-1]
+
+        return grade
+
 
     def photo_title_year(self, grade):
         gmap = {
@@ -169,8 +187,8 @@ class Command(BaseCommand):
 
     def teacher_photo_name(self, index):
         if index == 0:
-            return "missing-Student-ID"
-        return "missing-Student-ID-{}".format(index)
+            return "missing-Student ID"
+        return "missing-Student ID-{}".format(index)
 
     def get_photo_path(self, sid):
         return "{}images/{}.jpg".format(self.root_dir, sid)
