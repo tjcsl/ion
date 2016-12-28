@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3407) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3424) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3407)',
+        VERSION:     'v3 (Build #3424)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -186,7 +186,10 @@
 <span class="c1"># not done, an email failure notification gets sent whenever someone messes with</span>
 <span class="c1"># the HTTP Host header.</span>
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
-
+<span class="c1"># We want to restrict the access for `tjhsstUser` to the following paths:</span>
+<span class="c1"># /, /eighth, /eighth/attendance, and /eighth/attendance/&lt;activity_id&gt;</span>
+<span class="c1"># TODO: replace this regex with a better method of checking if the path is allowed</span>
+<span class="n">ATTENDANCE_ALLOWED_PATHS_REGEX</span> <span class="o">=</span> <span class="s2">r&quot;^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/logout$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))&quot;</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.secret</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -486,7 +489,8 @@
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
     <span class="s2">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Show ldap simple bind message</span>
     <span class="c1"># FIXME: use simple_history.middleware.HistoryRequestMiddleware directly once it properly supports django 1.10+</span>
-    <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span>
+    <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.middleware.restrict_users.RestrictUserMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Restrict tjhsstUser from most things</span>
 <span class="p">]</span>
 
 <span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>

@@ -4,6 +4,14 @@ intranet.apps.dataimport.management.commands package
 Submodules
 ----------
 
+intranet.apps.dataimport.management.commands.import_photos module
+-----------------------------------------------------------------
+
+.. automodule:: intranet.apps.dataimport.management.commands.import_photos
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.dataimport.management.commands.import_sis module
 --------------------------------------------------------------
 
