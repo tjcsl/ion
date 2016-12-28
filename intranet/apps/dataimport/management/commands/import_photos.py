@@ -13,11 +13,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--pretend', action='store_true', dest='pretend', default=False, help="Don't save files to filesystem")
-        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder for LDIF')
-        parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/', help='path to DataImages folder on this host')
+        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/',
+                            help='**absolute** path to outer DataImages folder for LDIF')
+        parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/',
+                            help='path to DataImages folder on this host')
         parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
         parser.add_argument('--skip-staff', action='store_true', dest='skip_staff', default=False, help='Skip staff')
-
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -51,7 +52,7 @@ class Command(BaseCommand):
             csv_path = "{}data.txt".format(self.local_root_dir)
             with open(csv_path, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
-                next(csv_reader) # skip header
+                next(csv_reader)  # skip header
                 # StudentID, FirstName, LastName, Grade
                 for row in csv_reader:
                     print(row)
@@ -65,28 +66,22 @@ class Command(BaseCommand):
                     current_grade = self.calc_grade_offset(grade)
                     if grade != 'STA' and (int(current_grade) > 12 or int(current_grade) < 9):
                         continue
-                    # the CSV includes only "missing-Student ID", but we need the 
+                    # the CSV includes only "missing-Student ID", but we need the
                     # filename for each specific missing student id file.
                     if sid.startswith("missing-"):
                         sid = self.teacher_photo_name(teacher_photo_index)
                         teacher_photo_index += 1
 
-                    entry = {
-                        "sid": sid,
-                        "fname": fname,
-                        "lname": lname,
-                        "grade": grade,
-                        "photo_name": sid
-                    }
+                    entry = {"sid": sid, "fname": fname, "lname": lname, "grade": grade, "photo_name": sid}
                     if grade != "STA":
                         user_obj = self.get_from_sid(sid)
-                        #entry["user_obj"] = user_obj
+                        # entry["user_obj"] = user_obj
                     else:
                         user_obj = self.get_staff_name(fname, lname)
 
                     if not user_obj:
                         print("INVALID USER OBJECT", entry)
-                        #if self.grade_offset != 0:
+                        # if self.grade_offset != 0:
                         #    continue
 
                     entry["username"] = user_obj.username
@@ -109,25 +104,18 @@ class Command(BaseCommand):
 
             if photo_yr:
                 print("OK", uname, udata["grade"], photo_yr, users[uname])
-                ldif = self.add_photo_ldif({
-                    "photo": photo_yr,
-                    "iodineUid": uname,
-                    "path": self.get_photo_path(udata["photo_name"])
-                })
+                ldif = self.add_photo_ldif({"photo": photo_yr, "iodineUid": uname, "path": self.get_photo_path(udata["photo_name"])})
 
                 ldifs.append(ldif)
 
                 if udata["grade"] == "STA":
-                    ldif = self.teacher_default_photo_ldif({
-                        "iodineUid": uname
-                    })
+                    ldif = self.teacher_default_photo_ldif({"iodineUid": uname})
                     ldifs.append(ldif)
             else:
                 print("SKIP", uname, udata["grade"], photo_yr)
 
         if not self.pretend:
             open("import_photos.ldif", "w").write("\n\n".join(ldifs))
-
 
     def get_from_sid(self, sid):
         # fix duplicate student ID map in LDAP
@@ -198,15 +186,8 @@ class Command(BaseCommand):
 
         return grade
 
-
     def photo_title_year(self, grade):
-        gmap = {
-            "9": "freshmanPhoto",
-            "10": "sophomorePhoto",
-            "11": "juniorPhoto",
-            "12": "seniorPhoto",
-            "STA": "freshmanPhoto"
-        }
+        gmap = {"9": "freshmanPhoto", "10": "sophomorePhoto", "11": "juniorPhoto", "12": "seniorPhoto", "STA": "freshmanPhoto"}
         if str(grade) in gmap:
             if grade != "STA" and int(grade) >= 9 and int(grade) <= 12:
                 return gmap[str(grade)]
@@ -227,7 +208,7 @@ dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: delete""".format(**data)
 
         return ldif
-        
+
     def add_photo_ldif(self, data):
         ldif = """
 dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu

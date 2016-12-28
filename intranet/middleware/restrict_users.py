@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.conf import settings
@@ -11,8 +12,7 @@ class RestrictUserMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        if (request.user.is_authenticated and
-                request.user.object_class == "tjhsstUser" and
+        if (request.user.is_authenticated and request.user.object_class == "tjhsstUser" and
                 not re.match(settings.ATTENDANCE_ALLOWED_PATHS_REGEX, request.path)):
             messages.error(request, "You are not allowed to access this page.")
             return redirect("/")

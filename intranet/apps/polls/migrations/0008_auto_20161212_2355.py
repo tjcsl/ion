@@ -9,6 +9,4 @@ class Migration(migrations.Migration):
 
     dependencies = [('polls', '0007_auto_20160828_2058')]
 
-    operations = [migrations.RenameModel(
-        old_name='AnswerVotes',
-        new_name='AnswerVote')]
+    operations = [migrations.RenameModel(old_name='AnswerVotes', new_name='AnswerVote')]
