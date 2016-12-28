@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
-        parser.add_argument('--root', type=str, dest='root_dir', default='/mnt/c/Users/James/DataImages/', help='**absolute** path to outer DataImages folder')
+        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder')
         parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
 
 
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                         "sid": sid,
                         "fname": fname,
                         "lname": lname,
-                        "grade": grade,
+                        "grade": self.calc_grade_offset(grade),
                         "photo_name": sid
                     }
                     if grade != "STA":
@@ -83,9 +83,22 @@ class Command(BaseCommand):
 
             open("user_sid_map.json", "w").write(json.dumps(users))
 
-
-
         print("Map loaded.")
+
+        ldifs = []
+
+        for uname in users:
+            udata = users[uname]
+            print(uname, users[uname])
+            photo_yr = self.photo_title_year(udata["grade"])
+            ldif = self.add_photo_ldif({
+                "photo": photo_yr,
+                "iodineUid": uname,
+                "path": self.get_photo_path(udata["photo_name"])
+            })
+            ldifs.append(ldif)
+
+        open("import_photos.ldif", "w").write("\n\n".join(ldifs))
 
 
     def get_from_sid(self, sid):
@@ -164,17 +177,17 @@ class Command(BaseCommand):
 
     def delete_photo_ldif(self, data):
         ldif = """
-dn: cn={{photo}},iodineUid={{iodineUid}},ou=people,dc=tjhsst,dc=edu
+dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: delete""".format(**data)
 
         return ldif
         
     def add_photo_ldif(self, data):
         ldif = """
-dn: cn={{photo}},iodineUid={{iodineUid}},ou=people,dc=tjhsst,dc=edu
+dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: add
 objectClass: iodinePhoto
-cn: {{photo}}
-jpegPhoto:< file://{{photo}}""".format(**data)
+cn: {photo}
+jpegPhoto:< file://{path}""".format(**data)
 
         return ldif
