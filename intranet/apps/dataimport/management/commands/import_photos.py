@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = "Import Lifetouch photos into LDAP. Uses the 'TJHSST-Intranet' photo data export format via the Lifetouch Portal."
 
     def add_arguments(self, parser):
-        parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
+        parser.add_argument('--pretend', action='store_true', dest='pretend', default=False, help="Don't save files to filesystem")
         parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/', help='**absolute** path to outer DataImages folder for LDIF')
         parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/', help='path to DataImages folder on this host')
         parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
@@ -33,7 +33,7 @@ class Command(BaseCommand):
             sys.exit()
 
     def handle(self, *args, **options):
-        self.do_run = options["run"]
+        self.pretend = options["pretend"]
         self.root_dir = options["root_dir"]
         self.local_root_dir = options["local_root_dir"]
         self.grade_offset = options["grade_offset"]
@@ -61,6 +61,10 @@ class Command(BaseCommand):
                         # ignore staff with pictures who aren't in LDAP
                         teacher_photo_index += 1
                         continue
+
+                    current_grade = self.calc_grade_offset(grade)
+                    if grade != 'STA' and (int(current_grade) > 12 or int(current_grade) < 9):
+                        continue
                     # the CSV includes only "missing-Student ID", but we need the 
                     # filename for each specific missing student id file.
                     if sid.startswith("missing-"):
@@ -71,7 +75,7 @@ class Command(BaseCommand):
                         "sid": sid,
                         "fname": fname,
                         "lname": lname,
-                        "grade": self.calc_grade_offset(grade),
+                        "grade": grade,
                         "photo_name": sid
                     }
                     if grade != "STA":
@@ -82,11 +86,15 @@ class Command(BaseCommand):
 
                     if not user_obj:
                         print("INVALID USER OBJECT", entry)
+                        #if self.grade_offset != 0:
+                        #    continue
+
                     entry["username"] = user_obj.username
 
                     users[entry["username"]] = entry
 
-            open("user_sid_map.json", "w").write(json.dumps(users))
+            if not self.pretend:
+                open("user_sid_map.json", "w").write(json.dumps(users))
 
         print("Map loaded.")
 
@@ -99,23 +107,26 @@ class Command(BaseCommand):
 
             photo_yr = self.photo_title_year(udata["grade"])
 
-            print(uname, users[uname], udata["grade"], photo_yr)
-            ldif = self.add_photo_ldif({
-                "photo": photo_yr,
-                "iodineUid": uname,
-                "path": self.get_photo_path(udata["photo_name"])
-            })
-
-            ldifs.append(ldif)
-
-            if udata["grade"] == "STA":
-                ldif = self.teacher_default_photo_ldif({
-                    "iodineUid": uname
+            if photo_yr:
+                print("OK", uname, udata["grade"], photo_yr, users[uname])
+                ldif = self.add_photo_ldif({
+                    "photo": photo_yr,
+                    "iodineUid": uname,
+                    "path": self.get_photo_path(udata["photo_name"])
                 })
+
                 ldifs.append(ldif)
 
+                if udata["grade"] == "STA":
+                    ldif = self.teacher_default_photo_ldif({
+                        "iodineUid": uname
+                    })
+                    ldifs.append(ldif)
+            else:
+                print("SKIP", uname, udata["grade"], photo_yr)
 
-        open("import_photos.ldif", "w").write("\n\n".join(ldifs))
+        if not self.pretend:
+            open("import_photos.ldif", "w").write("\n\n".join(ldifs))
 
 
     def get_from_sid(self, sid):
@@ -123,6 +134,8 @@ class Command(BaseCommand):
         sid = int(sid)
         if sid == 1582058:
             return User.objects.get(id=33494)
+        if sid == 1163521:
+            return User.objects.get(id=32391)
         return User.objects.user_with_student_id(sid)
 
     def get_staff_name(self, fname, lname):
