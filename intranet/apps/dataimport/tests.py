@@ -14,10 +14,12 @@ class YearCleanupTest(IonTestCase):
     def test_year_cleanup(self):
         out = StringIO()
         year = datetime.now().year
+        turnover_date = datetime(year, 7, 1)
         with self.settings(SENIOR_GRADUATION_YEAR=year + 1):
             call_command('year_cleanup', stdout=out)
         output = [
-            "In pretend mode.", "Turnover date set to: Fri Jul  1 00:00:00 2016", "OK: SENIOR_GRADUATION_YEAR = 2017 in settings/__init__.py",
-            "Resolving absences", "Updating welcome state", "Deleting graduated users"
+            "In pretend mode.", "Turnover date set to: {}".format(turnover_date.strftime("%c")),
+            "OK: SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(year + 1), "Resolving absences", "Updating welcome state",
+            "Deleting graduated users"
         ]
         self.assertEqual(out.getvalue().splitlines(), output)
