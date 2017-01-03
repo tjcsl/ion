@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Room
+
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('name', 'svg_id')
+    ordering = ('name',)
+
+
+admin.site.register(Room, RoomAdmin)
