@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #3426) documentation</title>
+    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #3436) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3426)',
+        VERSION:     'v3 (Build #3436)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -161,11 +161,13 @@
 <div class="viewcode-block" id="YearCleanupTest.test_year_cleanup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.YearCleanupTest.test_year_cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">test_year_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">turnover_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="o">=</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;year_cleanup&#39;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;In pretend mode.&quot;</span><span class="p">,</span> <span class="s2">&quot;Turnover date set to: Fri Jul  1 00:00:00 2016&quot;</span><span class="p">,</span> <span class="s2">&quot;OK: SENIOR_GRADUATION_YEAR = 2017 in settings/__init__.py&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Resolving absences&quot;</span><span class="p">,</span> <span class="s2">&quot;Updating welcome state&quot;</span><span class="p">,</span> <span class="s2">&quot;Deleting graduated users&quot;</span>
+            <span class="s2">&quot;In pretend mode.&quot;</span><span class="p">,</span> <span class="s2">&quot;Turnover date set to: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">turnover_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span><span class="p">)),</span>
+            <span class="s2">&quot;OK: SENIOR_GRADUATION_YEAR = </span><span class="si">{}</span><span class="s2"> in settings/__init__.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Resolving absences&quot;</span><span class="p">,</span> <span class="s2">&quot;Updating welcome state&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Deleting graduated users&quot;</span>
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(),</span> <span class="n">output</span><span class="p">)</span></div></div>
 </pre></div>
@@ -184,7 +186,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2016, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2017, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>
