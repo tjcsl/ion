@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.core.cache import cache
 
 from requests import get
 
@@ -22,7 +23,14 @@ def get_svg_view(request, floor):
     else:
         raise Http404
 
-    return HttpResponse(get(map_url).content, content_type="image/svg+xml")
+    key = "map:{}".format(floor)
+    map_svg = cache.get(key)
+
+    if not map_svg:
+        map_svg = get(map_url).content
+        cache.set(key, map_svg)
+
+    return HttpResponse(map_svg, content_type="image/svg+xml")
 
 
 @login_required
