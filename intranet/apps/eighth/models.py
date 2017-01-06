@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractBaseEighthModel(models.Model):
+
     """Abstract base model that includes created and last modified times."""
 
     created_time = models.DateTimeField(auto_now_add=True, null=True)
@@ -30,6 +31,7 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
+
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
@@ -80,6 +82,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 
 class EighthRoom(AbstractBaseEighthModel):
+
     """Represents a room in which an eighth period activity can be held.
 
     Attributes:
@@ -136,6 +139,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 
 class EighthActivity(AbstractBaseEighthModel):
+
     """Represents an eighth period activity.
 
     Attributes:
@@ -416,6 +420,7 @@ class EighthBlockManager(models.Manager):
 
 
 class EighthBlock(AbstractBaseEighthModel):
+
     """Represents an eighth period block.
 
     Attributes:
@@ -583,6 +588,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
 
 class EighthScheduledActivityManager(Manager):
+
     """Model Manager for EighthScheduledActivity."""
 
     def for_sponsor(self, sponsor, include_cancelled=False):
@@ -606,6 +612,7 @@ class EighthScheduledActivityManager(Manager):
 
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
+
     """Represents the relationship between an activity and a block in which it has been scheduled.
 
     Attributes:
@@ -648,6 +655,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     block = models.ForeignKey(EighthBlock, on_delete=models.CASCADE)
     activity = models.ForeignKey(EighthActivity, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
+    waitlist = models.ManyToManyField(User, through="EighthWaitlist", related_name="%(class)s_scheduledactivity_set")
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -990,8 +998,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
+                waitlist = None
                 if sched_act.is_full():
-                    exception.ActivityFull = True
+                    if EighthWaitlist.objects.filter(scheduled_activity=sched_act, user_id=user.id).exists():
+                        exception.AlreadyOnWaitlist = True
+                    else:
+                        waitlist = EighthWaitlist.objects.create(user=user, scheduled_activity=sched_act)
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
@@ -1015,7 +1027,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
 
-        success_message = "Successfully signed up for activity."
+        success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
         """
         final_remove_signups = []
 
@@ -1064,60 +1076,67 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # don't make an after deadline signup, which creates a pass.
         if no_after_deadline:
             after_deadline = False
+        if not waitlist:
+            if not self.is_both_blocks():
+                try:
+                    existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
 
-        if not self.is_both_blocks():
-            try:
-                existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
+                    previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
+                    prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
+                    previous_activity_sponsors = ", ".join(map(str, prev_sponsors))
+                    previous_activity = existing_signup.scheduled_activity
 
-                previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
-                prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
-                previous_activity_sponsors = ", ".join(map(str, prev_sponsors))
+                    if not existing_signup.scheduled_activity.is_both_blocks():
+                        existing_signup.scheduled_activity = self
+                        existing_signup.after_deadline = after_deadline
+                        existing_signup.was_absent = False
+                        existing_signup.absence_acknowledged = False
+                        existing_signup.pass_accepted = False
+                        existing_signup.previous_activity_name = previous_activity_name
+                        existing_signup.previous_activity_sponsors = previous_activity_sponsors
 
-                if not existing_signup.scheduled_activity.is_both_blocks():
-                    existing_signup.scheduled_activity = self
-                    existing_signup.after_deadline = after_deadline
-                    existing_signup.was_absent = False
-                    existing_signup.absence_acknowledged = False
-                    existing_signup.pass_accepted = False
-                    existing_signup.previous_activity_name = previous_activity_name
-                    existing_signup.previous_activity_sponsors = previous_activity_sponsors
-                    existing_signup.save()
-                else:
-                    # Clear out the other signups for this block if the user is
-                    # switching out of a both-blocks activity
-                    EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
-                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
+                        existing_signup.save()
+                    else:
+                        # Clear out the other signups for this block if the user is
+                        # switching out of a both-blocks activity
+                        EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
+                        EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
+                                                           previous_activity_name=previous_activity_name,
+                                                           previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
+                    if previous_activity.waitlist.all().exists():
+                        next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
+                        previous_activity.add_user(next_wait.user)
+                        next_wait.delete()
+
+                except EighthSignup.DoesNotExist:
+                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
+            else:
+                existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
+
+                prev_data = {}
+                for signup in existing_signups:
+                    prev_sponsors = signup.scheduled_activity.get_true_sponsors()
+                    prev_data[signup.scheduled_activity.block.block_letter] = {
+                        "name": signup.scheduled_activity.activity.name_with_flags,
+                        "sponsors": ", ".join(map(str, prev_sponsors))
+                    }
+                existing_signups.delete()
+
+                for sched_act in all_sched_act:
+                    letter = sched_act.block.block_letter
+                    if letter in prev_data:
+                        previous_activity_name = prev_data[letter]["name"]
+                        previous_activity_sponsors = prev_data[letter]["sponsors"]
+                    else:
+                        previous_activity_name = None
+                        previous_activity_sponsors = None
+
+                    EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
                                                        previous_activity_name=previous_activity_name,
                                                        previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-            except EighthSignup.DoesNotExist:
-                EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
-        else:
-            existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
 
-            prev_data = {}
-            for signup in existing_signups:
-                prev_sponsors = signup.scheduled_activity.get_true_sponsors()
-                prev_data[signup.scheduled_activity.block.block_letter] = {
-                    "name": signup.scheduled_activity.activity.name_with_flags,
-                    "sponsors": ", ".join(map(str, prev_sponsors))
-                }
-            existing_signups.delete()
-
-            for sched_act in all_sched_act:
-                letter = sched_act.block.block_letter
-                if letter in prev_data:
-                    previous_activity_name = prev_data[letter]["name"]
-                    previous_activity_sponsors = prev_data[letter]["sponsors"]
-                else:
-                    previous_activity_name = None
-                    previous_activity_sponsors = None
-
-                EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
-                                                   previous_activity_name=previous_activity_name,
-                                                   previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-
-                # signup.previous_activity_name = signup.activity.name_with_flags
-                # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
+                    # signup.previous_activity_name = signup.activity.name_with_flags
+                    # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
         """
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
@@ -1198,6 +1217,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
 
 class EighthSignupManager(Manager):
+
     """Model manager for EighthSignup."""
 
     def create_signup(self, user, scheduled_activity, **kwargs):
@@ -1210,6 +1230,7 @@ class EighthSignupManager(Manager):
 
 
 class EighthSignup(AbstractBaseEighthModel):
+
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:
@@ -1308,6 +1329,10 @@ class EighthSignup(AbstractBaseEighthModel):
         else:
             block = self.scheduled_activity.block
             self.delete()
+            if self.scheduled_activity.waitlist.all().exists():
+                next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
+                self.scheduled_activity.add_user(next_wait.user)
+                next_wait.delete()
             return "Successfully removed signup for {}.".format(block)
 
     def accept_pass(self):
@@ -1344,3 +1369,22 @@ class EighthSignup(AbstractBaseEighthModel):
 
     class Meta:
         unique_together = (("user", "scheduled_activity"),)
+
+
+class EighthWaitlistManager(Manager):
+
+    """Model manager for EighthWaitlist."""
+
+    def get_next_waitlist(self, activity):
+        return EighthWaitlist.objects.filter(scheduled_activity_id=activity.id).order_by('time').first()
+
+
+class EighthWaitlist(AbstractBaseEighthModel):
+    objects = EighthWaitlistManager()
+    time = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
+    scheduled_activity = models.ForeignKey(
+        EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.scheduled_activity)
