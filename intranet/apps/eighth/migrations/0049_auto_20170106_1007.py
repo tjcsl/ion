@@ -23,7 +23,8 @@ class Migration(migrations.Migration):
                 ('created_time', models.DateTimeField(auto_now_add=True, null=True)),
                 ('last_modified_time', models.DateTimeField(auto_now=True, null=True)),
                 ('time', models.DateTimeField(auto_now=True)),
-                ('scheduled_activity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='eighthwaitlist_set', to='eighth.EighthScheduledActivity')),
+                ('scheduled_activity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                                         related_name='eighthwaitlist_set', to='eighth.EighthScheduledActivity')),
                 ('user', models.ForeignKey(on_delete=intranet.utils.deletion.set_historical_user, to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -33,6 +34,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='waitlist',
-            field=models.ManyToManyField(related_name='eighthscheduledactivity_scheduledactivity_set', through='eighth.EighthWaitlist', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(related_name='eighthscheduledactivity_scheduledactivity_set',
+                                         through='eighth.EighthWaitlist', to=settings.AUTH_USER_MODEL),
         ),
     ]

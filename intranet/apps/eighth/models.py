@@ -966,6 +966,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 all_sched_act.append(sibling)
                 all_blocks.append(sibling.block)
 
+        waitlist = None
         if not force:
             # Check if the user who sent the request has the permissions
             # to change the target user's signups
@@ -998,7 +999,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                waitlist = None
                 if sched_act.is_full():
                     if EighthWaitlist.objects.filter(scheduled_activity=sched_act, user_id=user.id).exists():
                         exception.AlreadyOnWaitlist = True
