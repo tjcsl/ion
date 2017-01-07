@@ -168,45 +168,45 @@ $(function() {
             success: function(response) {
                 var activity = activityModels.get(aid);
 
-                if (!activity.attributes.both_blocks) {
-                    $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
-                    $(".current-day .both-blocks").removeClass("both-blocks");
-                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
-                } else {
-                    $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
-                    $(".current-day .block").addClass("both-blocks");
-                }
+                if (response.indexOf("added to waitlist") === -1) {
+                    if (!activity.attributes.both_blocks) {
+                        $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
+                        $(".current-day .both-blocks").removeClass("both-blocks");
+                        $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                    } else {
+                        $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                        $(".current-day .block").addClass("both-blocks");
+                    }
 
-                var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
+                    var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
 
-                if (changed_activities !== null) {
-                    for (var i = 0; i < changed_activities.length; i++) {
-                        try {
-                            var evnt = changed_activities[i];
-                            console.debug(evnt);
-                            var act = evnt.split('Your signup for ')[1].split(' on ');
-                            var blk = act[1].split(' was removed')[0];
-                            act = act[0];
-                            console.info(act, blk);
+                    if (changed_activities !== null) {
+                        for (var i = 0; i < changed_activities.length; i++) {
+                            try {
+                                var evnt = changed_activities[i];
+                                console.debug(evnt);
+                                var act = evnt.split('Your signup for ')[1].split(' on ');
+                                var blk = act[1].split(' was removed')[0];
+                                act = act[0];
+                                console.info(act, blk);
 
-                            $(".days-container .day .block").each(function() {
-                                var sa_blk = $(this).attr("title");
-                                var sa_act = $(".selected-activity", $(this)).attr("title");
-                                console.debug(sa_blk, sa_act);
-                                if (sa_blk === blk && sa_act === act) {
-                                    console.log("Found changed activity:", blk, act);
-                                    $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
-                                }
-                            });
-                        } catch (e) {
-                            console.error("An error occurred updating your current signups.", e);
+                                $(".days-container .day .block").each(function() {
+                                    var sa_blk = $(this).attr("title");
+                                    var sa_act = $(".selected-activity", $(this)).attr("title");
+                                    console.debug(sa_blk, sa_act);
+                                    if (sa_blk === blk && sa_act === act) {
+                                        console.log("Found changed activity:", blk, act);
+                                        $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
+                                    }
+                                });
+                            } catch (e) {
+                                console.error("An error occurred updating your current signups.", e);
+                            }
                         }
                     }
-                }
 
-                $(".active-block.cancelled").removeClass("cancelled");
+                    $(".active-block.cancelled").removeClass("cancelled");
 
-                if (response.indexOf("added to waitlist") === -1) {
                     var selectedActivity = activityModels.filter(function(a) {
                         return a.attributes.selected === true
                     });
@@ -216,10 +216,10 @@ $(function() {
                         a.attributes.roster.count -= 1;
                     });
 
-                    activity.attributes.selected = true;
                     activity.attributes.roster.count += 1;
                 }
 
+                activity.attributes.selected = true;
                 activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
 
                 activityDetailView.render();
