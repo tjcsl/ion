@@ -206,17 +206,20 @@ $(function() {
 
                 $(".active-block.cancelled").removeClass("cancelled");
 
-                var selectedActivity = activityModels.filter(function(a) {
-                    return a.attributes.selected === true
-                });
+                if (response.indexOf("added to waitlist") === -1) {
+                    var selectedActivity = activityModels.filter(function(a) {
+                        return a.attributes.selected === true
+                    });
 
-                _.each(selectedActivity, function(a) {
-                    a.attributes.selected = false;
-                    a.attributes.roster.count -= 1;
-                });
+                    _.each(selectedActivity, function(a) {
+                        a.attributes.selected = false;
+                        a.attributes.roster.count -= 1;
+                    });
 
-                activity.attributes.selected = true;
-                activity.attributes.roster.count += 1;
+                    activity.attributes.selected = true;
+                    activity.attributes.roster.count += 1;
+                }
+
                 activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
 
                 activityDetailView.render();
