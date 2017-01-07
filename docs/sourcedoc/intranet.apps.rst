@@ -23,7 +23,6 @@ Subpackages
     intranet.apps.ionldap
     intranet.apps.itemreg
     intranet.apps.lostfound
-    intranet.apps.map
     intranet.apps.nomination
     intranet.apps.notifications
     intranet.apps.oauth
