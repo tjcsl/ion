@@ -1001,11 +1001,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if sched_act.is_full():
-                    if EighthWaitlist.objects.filter(user_id=user.id).exists():
-                        exception.AlreadyOnWaitlist = True
-                    else:
-                        waitlist = EighthWaitlist.objects.create(user=user, scheduled_activity=sched_act)
+                if sched_act.is_full() and not self.is_both_blocks():
+                    if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
+                        EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
+                    waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
+                elif sched_act.is_full():
+                    exception.ActivityFull = True
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
@@ -1385,6 +1386,7 @@ class EighthWaitlist(AbstractBaseEighthModel):
     objects = EighthWaitlistManager()
     time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
+    block = models.ForeignKey(EighthBlock, null=False, on_delete=models.CASCADE)
     scheduled_activity = models.ForeignKey(
         EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True, on_delete=models.CASCADE)
 

@@ -86,6 +86,8 @@
                     <span class="activity-icon cancelled"></span>
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
+                <% } else if (waitlisted) { %>
+                    <span class="fa fa-clock-o"></span>
                 <% } else { %>
                     <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
@@ -258,7 +260,11 @@
                     <% if (!selected) {%>
                         <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
                             <button id="signup-button">
-                                Sign Up
+                                <% if (roster.count < roster.capacity || both_blocks) { %>
+                                    Sign Up
+                                <% } else { %>
+                                    Join Waitlist
+                                <% } %>
                             </button>
                             <div id="signup-spinner-container">
                                 <div id="signup-spinner"></div>

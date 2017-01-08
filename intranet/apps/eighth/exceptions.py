@@ -32,7 +32,6 @@ class SignupException(Exception):
         "OverrideBlockPermissions": m(
             "Your signup ({0}) on an override block ({1}) cannot be changed out of. You will be unable to sign up for any activities on this block.",
             "Your signup ({0}) on an override block ({1}) cannot be changed out of."),
-        "AlreadyOnWaitlist": m("You are already on the waitlist for an activity.", "This student is already on the waitlist for an activity.")
     }
 
     def __init__(self):
