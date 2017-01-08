@@ -9,7 +9,7 @@ from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from .models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
+from .models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist)
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -131,7 +131,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "sticky": scheduled_activity.get_sticky(),
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
-            "display_text": ""
+            "display_text": "",
+            "waitlisted": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
         }
         return activity_info
 

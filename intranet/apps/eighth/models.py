@@ -989,6 +989,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if in_stickie:
                 exception.Sticky = True
 
+            waitlist = None
+
             for sched_act in all_sched_act:
                 # Check if the block has been locked
                 if sched_act.block.locked:
@@ -1000,7 +1002,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                 # Check if the activity is full
                 if sched_act.is_full():
-                    if EighthWaitlist.objects.filter(scheduled_activity=sched_act, user_id=user.id).exists():
+                    if EighthWaitlist.objects.filter(user_id=user.id).exists():
                         exception.AlreadyOnWaitlist = True
                     else:
                         waitlist = EighthWaitlist.objects.create(user=user, scheduled_activity=sched_act)
