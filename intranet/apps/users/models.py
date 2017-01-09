@@ -187,10 +187,10 @@ class UserManager(DjangoUserManager):
         for t in teachers:
             if t is None or t[0] is None or t[1] is None or t[2] is None:
                 teachers.remove(t)
-        teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
             if t[0] is None or len(t[0]) <= 1:
                 teachers.remove(t)
+        teachers.sort(key=lambda u: (u[0], u[1]))
         # Hack to return QuerySet in given order
         id_list = [t[2] for t in teachers]
         clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(id_list)])
