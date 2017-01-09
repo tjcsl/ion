@@ -415,6 +415,9 @@ def files_delete(request, fstype=None):
         except exceptions as e:
             messages.error(request, "Unable to access {}: {}".format(filepath, e))
             return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+    else:
+        messages.error(request, "Unable to access {}".format(filepath))
+        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
     def rmtree(sftp, path):
         for f in sftp.listdir_attr(path):
