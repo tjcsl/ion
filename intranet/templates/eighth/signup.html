@@ -267,19 +267,24 @@
             <div id="signup-section">
                 <% var showingRosterButton = false %>
                 <% if (!cancelled) {%>
-                    <% if (!selected) {%>
+                    <% if (!selected && !waitlisted) {%>
                         <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
                             <% showingRosterButton = true %>
                             <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                                 View Roster
                             </a>
                             <button id="signup-button">
-                                <% if (roster.count < roster.capacity || both_blocks) { %>
+                                <% if (roster.count < roster.capacity || both_blocks || isEighthAdmin) { %>
                                     Sign Up
                                 <% } else { %>
                                     Join Waitlist
                                 <% } %>
                             </button>
+                            <% if (isEighthAdmin && roster.count >= roster.capacity) { %>
+                            <button id="waitlist-button">
+                                Add to Waitlist
+                            </button>
+                            <% } %>
                             <div id="signup-spinner-container">
                                 <div id="signup-spinner"></div>
                             </div>
@@ -290,7 +295,14 @@
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
-                            <strong>You are currently signed up for this activity.</strong>
+                            <% if (waitlisted) { %>
+                                <strong>You are currently on the waitlist for this activity. Please keep in mind that you will be automatically signed out of your current activity and signed up for this one if a spot opens up and you are next in the queue.</strong>
+                                <button id="leave-waitlist">
+                                    Leave Waitlist
+                                </button>
+                            <% } else { %>
+                                <strong>You are currently signed up for this activity.</strong>
+                            <% } %>
                         <% } %>
                     <%}%>
                 <%}%>
@@ -455,7 +467,7 @@
                     </li>
                 </ul>
             </div>
-            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
+            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}" data-leave-waitlist-endpoint="{% url 'leave_waitlist' %}">
                 {% include "eighth/empty_state.html" %}
             </div>
         </div>
