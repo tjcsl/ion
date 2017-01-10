@@ -13,7 +13,7 @@ urlpatterns = [
 
     # Students
     url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
-    url(r"^/leave$", signup.leave_waitlist_view, name="leave_waitlist")
+    url(r"^/leave$", signup.leave_waitlist_view, name="leave_waitlist"),
     url(r"^/signup/multi$", signup.eighth_multi_signup_view, name="eighth_multi_signup"),
     url(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
     url(r"^/absences$", attendance.eighth_absences_view, name="eighth_absences"),
