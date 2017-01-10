@@ -6,9 +6,10 @@ from django import http
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from ..exceptions import SignupException
-from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist)
 from ..serializers import EighthBlockDetailSerializer
 from ...users.models import User
 from ....utils.serialization import safe_json
@@ -418,3 +419,22 @@ def toggle_favorite_view(request):
         else:
             activity.favorites.add(request.user)
             return http.HttpResponse("Favorited activity.")
+
+
+@require_POST
+@login_required
+def leave_waitlist_view(request):
+    for field in ("uid", "bid", "aid"):
+        if not (field in request.POST and request.POST[field].isdigit()):
+            return http.HttpResponseBadRequest(field + " must be an " "integer")
+
+    uid = request.POST["uid"]
+    bid = request.POST["bid"]
+    aid = request.POST["aid"]
+
+    try:
+        user = User.get_user(id=uid)
+    except User.DoesNotExist:
+        return http.HttpResponseNotFound("Given user does not exist.")
+    EighthWaitlist.objects.filter(user_id=user.id, block_id=bid, scheduled_activity_id=aid).delete()
+    return http.HttpResponse("Successfully left waitlist for this activity.")

@@ -33,6 +33,8 @@ $(function() {
 
         events: {
             "click button#signup-button": "signupClickHandler",
+            "click button#waitlist-button": "waitlistClickHandler",
+            "click button#leave-waitlist": "leaveWaitlistClickHandler",
             "click a#roster-button": "rosterClickHandler",
             "click button#close-activity-detail": "closeActivityDetail"
         },
@@ -58,6 +60,28 @@ $(function() {
                 spinner.spin(false);
             });
         },
+
+        waitlistClickHandler: function(e) {
+            var target = e.target;
+            $(target).attr("disabled", true);
+            var aid = aid = $(this.el).data("aid"),
+                bid = $(this.el).data("bid"),
+                uid = $(this.el).data("uid");
+            eighth.waitlistAdd(uid, bid, aid, function() {
+                $(target).removeAttr("disabled");
+            });
+        }
+
+        leaveWaitlistClickHandler: function(e) {
+            var target = e.target;
+            $(target).attr("disabled", true);
+            var aid = aid = $(this.el).data("aid"),
+                bid = $(this.el).data("bid"),
+                uid = $(this.el).data("uid");
+            eighth.leaveWaitlist(uid, bid, aid, function() {
+                $(target).removeAttr("disabled");
+            });
+        }
 
         rosterClickHandler: function(e) {
             e.preventDefault();
@@ -245,6 +269,147 @@ $(function() {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }
+
+                } else if (xhr.status === 401) {
+                    location.reload();
+                } else {
+                    console.error(xhr.responseText);
+
+                    if (xhr.status === 401) {
+                        $(".error-feedback").html("You must log in to sign up for this activity.");
+                        window.location.replace("/login?next=" + window.location.pathname);
+                    } else {
+                        $(".error-feedback").html("There was an error signing you up for this activity.");
+                    }
+                }
+            },
+            complete: callback
+        });
+    };
+
+    eighth.waitlistAdd = function(uid, bid, aid, callback) {
+        $.ajax({
+            url: $("#activity-detail").data("signup-endpoint") + "?add_to_waitlist=1",
+            type: "POST",
+            data: {
+                "uid": uid,
+                "bid": bid,
+                "aid": aid
+            },
+            success: function(response) {
+                var activity = activityModels.get(aid);
+
+                if (response.indexOf("added to waitlist") === -1) {
+                    if (!activity.attributes.both_blocks) {
+                        $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
+                        $(".current-day .both-blocks").removeClass("both-blocks");
+                        $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                    } else {
+                        $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                        $(".current-day .block").addClass("both-blocks");
+                    }
+
+                    var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
+
+                    if (changed_activities !== null) {
+                        for (var i = 0; i < changed_activities.length; i++) {
+                            try {
+                                var evnt = changed_activities[i];
+                                console.debug(evnt);
+                                var act = evnt.split('Your signup for ')[1].split(' on ');
+                                var blk = act[1].split(' was removed')[0];
+                                act = act[0];
+                                console.info(act, blk);
+
+                                $(".days-container .day .block").each(function() {
+                                    var sa_blk = $(this).attr("title");
+                                    var sa_act = $(".selected-activity", $(this)).attr("title");
+                                    console.debug(sa_blk, sa_act);
+                                    if (sa_blk === blk && sa_act === act) {
+                                        console.log("Found changed activity:", blk, act);
+                                        $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
+                                    }
+                                });
+                            } catch (e) {
+                                console.error("An error occurred updating your current signups.", e);
+                            }
+                        }
+                    }
+
+                    $(".active-block.cancelled").removeClass("cancelled");
+
+                    var selectedActivity = activityModels.filter(function(a) {
+                        return a.attributes.selected === true
+                    });
+
+                    _.each(selectedActivity, function(a) {
+                        a.attributes.selected = false;
+                        a.attributes.roster.count -= 1;
+                    });
+
+                    activity.attributes.roster.count += 1;
+                }
+
+                activity.attributes.selected = true;
+                activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
+
+                activityDetailView.render();
+                activityListView.render();
+
+                var $container = $(".primary-content.eighth-signup");
+                var next_url = $container.attr("data-next-url");
+
+                if (next_url) location.href = next_url;
+            },
+            error: function(xhr, status, error) {
+                var content_type = xhr.getResponseHeader("content-type");
+
+                if (xhr.status === 403 &&
+                    (content_type === "text/plain" ||
+                        content_type.indexOf("text/plain;") === 0 ||
+                        content_type === "text/html" ||
+                        content_type.indexOf("text/html;") === 0)) {
+
+                    $(".error-feedback").html(xhr.responseText);
+
+                } else if (xhr.status === 401) {
+                    location.reload();
+                } else {
+                    console.error(xhr.responseText);
+
+                    if (xhr.status === 401) {
+                        $(".error-feedback").html("You must log in to sign up for this activity.");
+                        window.location.replace("/login?next=" + window.location.pathname);
+                    } else {
+                        $(".error-feedback").html("There was an error signing you up for this activity.");
+                    }
+                }
+            },
+            complete: callback
+        });
+    };
+    eighth.leaveWaitlist = function(uid, bid, aid, callback) {
+        $.ajax({
+            url: $("#activity-detail").data("leave-waitlist-endpoint"),
+            type: "POST",
+            data: {
+                "uid": uid,
+                "bid": bid,
+                "aid": aid
+            },
+            success: function(response) {
+                $("#leave-waitlist").hide();
+            },
+            error: function(xhr, status, error) {
+                var content_type = xhr.getResponseHeader("content-type");
+
+                if (xhr.status === 403 &&
+                    (content_type === "text/plain" ||
+                        content_type.indexOf("text/plain;") === 0 ||
+                        content_type === "text/html" ||
+                        content_type.indexOf("text/html;") === 0)) {
+
+                    $(".error-feedback").html(xhr.responseText);
 
                 } else if (xhr.status === 401) {
                     location.reload();

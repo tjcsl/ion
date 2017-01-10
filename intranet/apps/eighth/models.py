@@ -939,7 +939,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     @transaction.atomic
-    def add_user(self, user, request=None, force=False, no_after_deadline=False):
+    def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
         """Sign up a user to this scheduled activity if possible. This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
@@ -948,6 +948,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         if request is not None:
             force = (force or ("force" in request.GET)) and request.user.is_eighth_admin
+            add_to_waitlist = (add_to_waitlist or ("add_to_waitlist" in request.GET)) and request.user.is_eighth_admin
 
         exception = eighth_exceptions.SignupException()
 
@@ -989,8 +990,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if in_stickie:
                 exception.Sticky = True
 
-            waitlist = None
-
             for sched_act in all_sched_act:
                 # Check if the block has been locked
                 if sched_act.block.locked:
@@ -1001,7 +1000,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if sched_act.is_full() and not self.is_both_blocks():
+                if add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
+                                       and (request is not None and (request.user.is_student or not request.user.is_eighth_admin))):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
