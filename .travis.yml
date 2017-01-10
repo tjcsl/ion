@@ -1,52 +1,43 @@
 language: python
-
 python:
-    - '3.4'
-    - '3.5'
-
+- '3.4'
+- '3.5'
 sudo: false
-
 cache:
-    directories:
-        - $HOME/.cache/pip
-
+  directories:
+  - "$HOME/.cache/pip"
 services:
-  - postgresql
-  - redis-server
-
+- postgresql
+- redis-server
 env:
   matrix:
-    - PRODUCTION=TRUE
+  - PRODUCTION=TRUE
   global:
-    # GH_TOKEN env var. See http://docs.travis-ci.com/user/encryption-keys/
-    - secure: fQVrTJV4FyBcRihbrd+MSvWtYHVFLXeX1uTOINZx121k88k1yyH6Qnh2cYpouMfXdTFMc4negTr3ceNqtljVD1za8Q6jWKk0Ht6MWTuDMb/4mynTKn7qufGe0+scJDueofeBymXthEXbRzh1O+1qEmVkxZUwoKCYXIb6Uk2KSeU= 
-    - secure: BT+ndG5VAs3UxdrF7dTx7MK6SACHG8lf9ABfcAD1FgMi+gccT+R3b6FiQ6AcBn4P+1FqHnoxrOEL4PsxPBAUVLf+wjynOXBMI6Ee+bmUfqLvcP1WwCRK3WhSZpH5lSUr7TCxkGFX7ROOJLnqPScTgQhiWHbCzwV9RcAwHaKj1PM=
-    - secure: KmWCQvt6IJh5VAAVuIongjTyLSnsc2QlEOQgmSCAigFjo+qwkeatisho05vCD9nhnqRtEOKFnnPwr/es4uKNUMAVKEqs2N0a2ytBL0jVr4obTTUdUQiaGUxOST5HdaiZY9urDECtwBgXogGImTTG6XdFzi9ah3mmmw5lfMIu+3Y=
-
+  - secure: fQVrTJV4FyBcRihbrd+MSvWtYHVFLXeX1uTOINZx121k88k1yyH6Qnh2cYpouMfXdTFMc4negTr3ceNqtljVD1za8Q6jWKk0Ht6MWTuDMb/4mynTKn7qufGe0+scJDueofeBymXthEXbRzh1O+1qEmVkxZUwoKCYXIb6Uk2KSeU=
+  - secure: BT+ndG5VAs3UxdrF7dTx7MK6SACHG8lf9ABfcAD1FgMi+gccT+R3b6FiQ6AcBn4P+1FqHnoxrOEL4PsxPBAUVLf+wjynOXBMI6Ee+bmUfqLvcP1WwCRK3WhSZpH5lSUr7TCxkGFX7ROOJLnqPScTgQhiWHbCzwV9RcAwHaKj1PM=
+  - secure: KmWCQvt6IJh5VAAVuIongjTyLSnsc2QlEOQgmSCAigFjo+qwkeatisho05vCD9nhnqRtEOKFnnPwr/es4uKNUMAVKEqs2N0a2ytBL0jVr4obTTUdUQiaGUxOST5HdaiZY9urDECtwBgXogGImTTG6XdFzi9ah3mmmw5lfMIu+3Y=
 install:
-    - gem install sass
-    - pip install -U pip setuptools
-    - pip install -U coveralls flake8 codacy-coverage -r requirements.txt
-
+- gem install sass
+- pip install -U pip setuptools
+- pip install -U coveralls flake8 codacy-coverage -r requirements.txt
 before_script:
-  - cp intranet/settings/travis_secret.py intranet/settings/secret.py
-  - psql -U postgres -c 'create database ion'
-
+- cp intranet/settings/travis_secret.py intranet/settings/secret.py
+- psql -U postgres -c 'create database ion'
 script:
-  - flake8 --max-line-length 150 .
-  - coverage run ./setup.py test
-  - coverage run -a ./manage.py migrate
-  - ./manage.py collectstatic --noinput -v 0
-  - ./scripts/build_docs.sh
-  - ./scripts/mypy.sh
-
+- flake8 --max-line-length 150 .
+- coverage run ./setup.py test
+- coverage run -a ./manage.py migrate
+- "./manage.py collectstatic --noinput -v 0"
+- "./scripts/build_docs.sh"
+- "./scripts/mypy.sh"
 after_success:
-  - ./scripts/push_docs.sh
-  - coverage xml
-  - python-codacy-coverage -r coverage.xml
-  - coveralls
-
+- "./scripts/push_docs.sh"
+- coverage xml
+- python-codacy-coverage -r coverage.xml
+- coveralls
 notifications:
-    irc:
-        channels: "chat.freenode.net#tjcsl-ion"
-        skip_join: true
+  irc:
+    channels: chat.freenode.net#tjcsl-ion
+    skip_join: true
+  slack:
+    secure: Hvf44pv4xSFknbLt3G1wPec+FTG2K1fP3DBJeb5Edrc7UBTV1J+49JfoQnYyO3F/VnE3jny1xuo/JMKckPhqntYourdNaqm2F+F+FAVVp+OjwxSDv71CbeMp1BRHt7e9w1l2kVEYE79gPyAOeKeiouHyjbaXTTgXDtnvOhCHS7Q=
