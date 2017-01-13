@@ -352,7 +352,7 @@ def eighth_multi_signup_view(request):
             else:
                 return redirect("eighth_admin_dashboard")
 
-        block_ids = request.GET.getlist("block")
+        block_ids = list(filter(None, request.GET.getlist("block")))
         try:
             blocks = EighthBlock.objects.select_related().filter(id__in=block_ids)
         except EighthBlock.DoesNotExist:
