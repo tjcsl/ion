@@ -2,13 +2,15 @@
 
 import pickle
 
+from collections import defaultdict
+
 from django import http
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import redirect, render
 
 from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
+from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor, EighthBlock
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 
@@ -110,3 +112,39 @@ def sponsor_schedule_view(request, sponsor_id):
     }
 
     return render(request, "eighth/admin/sponsor_schedule.html", context)
+
+
+@eighth_admin_required
+def sponsor_sanity_check_view(request):
+    blocks = EighthBlock.objects.all()
+    block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+    else:
+        blocks = blocks.filter(date__gte=get_start_date(request))
+
+    context = {"blocks": blocks, "chosen_block": block}
+
+    if block is not None:
+        sponsor_conflicts = []
+        sponsors = defaultdict(list)
+
+        sched_acts = block.eighthscheduledactivity_set.exclude(cancelled=True)
+        for sched_act in sched_acts:
+            for sponsor in sched_act.get_true_sponsors():
+                activity = sched_act.activity
+                if not activity.deleted:
+                    sponsors[sponsor.name].append(activity)
+
+        for sponsor_name, activities in sponsors.items():
+            if len(activities) > 1:
+                sponsor_conflicts.append({"sponsor_name": sponsor_name, "activities": activities})
+        context["sponsor_conflicts"] = sponsor_conflicts
+
+    context["admin_page_title"] = "Sponsor Assignment Sanity Check"
+    return render(request, "eighth/admin/sponsor_sanity_check.html", context)

@@ -145,10 +145,16 @@ class Announcement(models.Model):
             return ar
 
     def is_visible_requester(self, user):
-        return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())
+        try:
+            return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())
+        except User.DoesNotExist:
+            return False
 
     def is_visible_submitter(self, user):
-        return (self.announcementrequest and user == self.announcementrequest.user) or self.user == user
+        try:
+            return (self.announcementrequest and user == self.announcementrequest.user) or self.user == user
+        except User.DoesNotExist:
+            return False
 
     @property
     def dashboard_type(self):
