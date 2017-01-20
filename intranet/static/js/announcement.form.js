@@ -16,13 +16,14 @@ $(function() {
         plugins: ["remove_button"],
         maxItems: 2
     });
-    
+
     $("form#announcement_form").bind("submit", function () {
         var button = $("button#submit_announcement");
         button.prop("disabled", true);
-        button.append("<i class=\"fa fa-spinner fa-spin\" aria-hidden=\"true\"></i>")
+        button.append("<i class=\"fa fa-spinner fa-spin\" aria-hidden=\"true\"></i>");
 
-        if ($("input#id_title").val() === "")
+        if ($("input#id_title").val() === "") {
             button.prop("disabled", false);
+        }
     });
 });
