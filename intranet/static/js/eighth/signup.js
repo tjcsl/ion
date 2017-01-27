@@ -70,7 +70,7 @@ $(function() {
             eighth.waitlistAdd(uid, bid, aid, function() {
                 $(target).removeAttr("disabled");
             });
-        }
+        },
 
         leaveWaitlistClickHandler: function(e) {
             var target = e.target;
@@ -81,7 +81,7 @@ $(function() {
             eighth.leaveWaitlist(uid, bid, aid, function() {
                 $(target).removeAttr("disabled");
             });
-        }
+        },
 
         rosterClickHandler: function(e) {
             e.preventDefault();
@@ -241,11 +241,21 @@ $(function() {
                     });
 
                     activity.attributes.roster.count += 1;
+                    activity.attributes.waitlisted = false;
+                    activity.attributes.selected = true;
+                    activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
+                }
+                else {
+                    var waitlistedActivity = activityModels.filter(function(a) {
+                        return a.attributes.waitlisted === true
+                    });
+                    _.each(waitlistedActivity, function(a) {
+                        a.attributes.waitlisted = false;
+                    });
+                    activity.attributes.waitlisted = true;
                 }
 
-                activity.attributes.selected = true;
-                activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
-
+                
                 activityDetailView.render();
                 activityListView.render();
 
@@ -299,59 +309,13 @@ $(function() {
             success: function(response) {
                 var activity = activityModels.get(aid);
 
-                if (response.indexOf("added to waitlist") === -1) {
-                    if (!activity.attributes.both_blocks) {
-                        $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
-                        $(".current-day .both-blocks").removeClass("both-blocks");
-                        $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
-                    } else {
-                        $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
-                        $(".current-day .block").addClass("both-blocks");
-                    }
-
-                    var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
-
-                    if (changed_activities !== null) {
-                        for (var i = 0; i < changed_activities.length; i++) {
-                            try {
-                                var evnt = changed_activities[i];
-                                console.debug(evnt);
-                                var act = evnt.split('Your signup for ')[1].split(' on ');
-                                var blk = act[1].split(' was removed')[0];
-                                act = act[0];
-                                console.info(act, blk);
-
-                                $(".days-container .day .block").each(function() {
-                                    var sa_blk = $(this).attr("title");
-                                    var sa_act = $(".selected-activity", $(this)).attr("title");
-                                    console.debug(sa_blk, sa_act);
-                                    if (sa_blk === blk && sa_act === act) {
-                                        console.log("Found changed activity:", blk, act);
-                                        $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
-                                    }
-                                });
-                            } catch (e) {
-                                console.error("An error occurred updating your current signups.", e);
-                            }
-                        }
-                    }
-
-                    $(".active-block.cancelled").removeClass("cancelled");
-
-                    var selectedActivity = activityModels.filter(function(a) {
-                        return a.attributes.selected === true
-                    });
-
-                    _.each(selectedActivity, function(a) {
-                        a.attributes.selected = false;
-                        a.attributes.roster.count -= 1;
-                    });
-
-                    activity.attributes.roster.count += 1;
-                }
-
-                activity.attributes.selected = true;
-                activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
+                var waitlistedActivity = activityModels.filter(function(a) {
+                    return a.attributes.waitlisted === true
+                });
+                _.each(waitlistedActivity, function(a) {
+                    a.attributes.waitlisted = false;
+                });
+                activity.attributes.waitlisted = true;
 
                 activityDetailView.render();
                 activityListView.render();
@@ -381,7 +345,7 @@ $(function() {
                         $(".error-feedback").html("You must log in to sign up for this activity.");
                         window.location.replace("/login?next=" + window.location.pathname);
                     } else {
-                        $(".error-feedback").html("There was an error signing you up for this activity.");
+                        $(".error-feedback").html("There was an error joining the waitlist for this activity.");
                     }
                 }
             },
@@ -398,6 +362,13 @@ $(function() {
                 "aid": aid
             },
             success: function(response) {
+                var activity = activityModels.get(aid);
+
+                activity.attributes.waitlisted = false;
+
+                activityDetailView.render();
+                activityListView.render();
+
                 $("#leave-waitlist").hide();
             },
             error: function(xhr, status, error) {
