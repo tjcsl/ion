@@ -1001,7 +1001,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                 # Check if the activity is full
                 if add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
-                                       and (request is not None and (request.user.is_student or not request.user.is_eighth_admin))):
+                                       and (request is not None
+                                            and not request.user.is_eighth_admin
+                                            and request.user.is_student)):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
@@ -1029,7 +1031,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Check if user is blacklisted from activity
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
-
+        if force:
+            EighthWaitlist.objects.filter(scheduled_activity_id=self.id, user_id=user.id, block_id=self.block.id).delete()
         success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
         """
         final_remove_signups = []
