@@ -194,7 +194,7 @@ $(function() {
                 $(".new-feature").hide("slow");
             },
             error: function() {
-                alert("There was an error closing this dialog. Please try again.")
+                alert("There was an error closing this dialog. Please try again.");
             }
         });
     });
