@@ -306,7 +306,7 @@ $(function() {
                 "bid": bid,
                 "aid": aid
             },
-            success: function(response) {
+            success: function() {
                 var activity = activityModels.get(aid);
 
                 var waitlistedActivity = activityModels.filter(function(a) {
@@ -361,7 +361,7 @@ $(function() {
                 "bid": bid,
                 "aid": aid
             },
-            success: function(response) {
+            success: function() {
                 var activity = activityModels.get(aid);
 
                 activity.attributes.waitlisted = false;
