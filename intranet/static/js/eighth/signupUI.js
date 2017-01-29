@@ -188,6 +188,9 @@ $(function() {
         initY = null,
         listening = false;
 
+    $(".new-feature-close").click(function() {
+        $(".new-feature").hide("slow");
+    });
     $(".day-picker").on({
         "touchstart": function(e) {
             e.stopPropagation();
