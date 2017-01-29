@@ -59,7 +59,7 @@ def eighth_signup_view(request, block_id=None):
 
         for field in ("uid", "bid", "aid"):
             if not (field in request.POST and request.POST[field].isdigit()):
-                return http.HttpResponseBadRequest(field + " must be an " "integer")
+                return http.HttpResponseBadRequest(field + " must be an integer")
 
         uid = request.POST["uid"]
         bid = request.POST["bid"]
@@ -75,7 +75,7 @@ def eighth_signup_view(request, block_id=None):
                                                                                                                               activity=aid))
 
         except EighthScheduledActivity.DoesNotExist:
-            return http.HttpResponseNotFound("Given activity not scheduled " "for given block.")
+            return http.HttpResponseNotFound("Given activity not scheduled for given block.")
 
         try:
             success_message = scheduled_activity.add_user(user, request)
@@ -303,7 +303,7 @@ def eighth_multi_signup_view(request):
 
         for field in ("uid", "aid"):
             if not (field in request.POST and request.POST[field].isdigit()):
-                return http.HttpResponseBadRequest(field + " must be an " "integer")
+                return http.HttpResponseBadRequest(field + " must be an integer")
 
         uid = request.POST["uid"]
         bids_comma = request.POST["bid"]
@@ -328,7 +328,7 @@ def eighth_multi_signup_view(request):
                                                                                                                                   activity=aid))
 
             except EighthScheduledActivity.DoesNotExist:
-                display_messages.append("{}: Activity was not scheduled " "for block".format(btxt))
+                display_messages.append("{}: Activity was not scheduled for block".format(btxt))
             else:
                 try:
                     success_message = scheduled_activity.add_user(user, request)
@@ -426,7 +426,7 @@ def toggle_favorite_view(request):
 def leave_waitlist_view(request):
     for field in ("uid", "bid", "aid"):
         if not (field in request.POST and request.POST[field].isdigit()):
-            return http.HttpResponseBadRequest(field + " must be an " "integer")
+            return http.HttpResponseBadRequest(field + " must be an integer")
 
     uid = request.POST["uid"]
     bid = request.POST["bid"]
