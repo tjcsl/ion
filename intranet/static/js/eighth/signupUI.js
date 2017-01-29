@@ -189,7 +189,14 @@ $(function() {
         listening = false;
 
     $(".new-feature-close").click(function() {
-        $(".new-feature").hide("slow");
+        $.ajax("/eighth/seen_feature", {
+            success: function() {
+                $(".new-feature").hide("slow");
+            },
+            error: function() {
+                alert("There was an error closing this dialog. Please try again.")
+            }
+        });
     });
     $(".day-picker").on({
         "touchstart": function(e) {

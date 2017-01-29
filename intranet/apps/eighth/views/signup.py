@@ -438,3 +438,9 @@ def leave_waitlist_view(request):
         return http.HttpResponseNotFound("Given user does not exist.")
     EighthWaitlist.objects.filter(user_id=user.id, block_id=bid, scheduled_activity_id=aid).delete()
     return http.HttpResponse("Successfully left waitlist for this activity.")
+
+
+@login_required
+def seen_new_feature_view(request):
+    request.session["seen_feature"] = True
+    return http.HttpResponse("Saved to session.")

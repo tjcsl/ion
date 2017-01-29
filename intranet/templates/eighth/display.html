@@ -597,12 +597,14 @@
             {% if not no_title %}
                 <div class="middle-wrapper">
                     <div class="middle">
+                        {% if not request.session.seen_feature %}
                         <div class="new-feature">
                             <div class="new-feature-close">
                                 <i class="fa fa-close"></i>
                             </div>
                             <span class="new-feature-text"><i class="fa fa-rocket"></i> New: There is a waitlist for activities that are full. If you join a waitlist, you will be automatically assigned into the activity when a spot opens up.</span>
                         </div>
+                        {% endif %}
                         <div class="block-title">
                             <h2>
                                 {% if active_block.locked %}
