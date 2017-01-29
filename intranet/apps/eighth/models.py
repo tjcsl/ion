@@ -1384,7 +1384,7 @@ class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
     def get_next_waitlist(self, activity):
-        return EighthWaitlist.objects.filter(scheduled_activity_id=activity.id).order_by('time').first()
+        return self.filter(scheduled_activity_id=activity.id).order_by('time').first()
 
 
 class EighthWaitlist(AbstractBaseEighthModel):
