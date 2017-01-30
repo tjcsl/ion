@@ -424,19 +424,18 @@ def toggle_favorite_view(request):
 @require_POST
 @login_required
 def leave_waitlist_view(request):
-    for field in ("uid", "bid", "aid"):
+    for field in ("uid", "bid"):
         if not (field in request.POST and request.POST[field].isdigit()):
             return http.HttpResponseBadRequest(field + " must be an integer")
 
     uid = request.POST["uid"]
     bid = request.POST["bid"]
-    aid = request.POST["aid"]
 
     try:
         user = User.get_user(id=uid)
     except User.DoesNotExist:
         return http.HttpResponseNotFound("Given user does not exist.")
-    EighthWaitlist.objects.filter(user_id=user.id, block_id=bid, scheduled_activity_id=aid).delete()
+    EighthWaitlist.objects.filter(user_id=user.id, block_id=bid).delete()
     return http.HttpResponse("Successfully left waitlist for this activity.")
 
 
