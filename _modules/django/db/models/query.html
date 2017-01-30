@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -322,10 +322,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_iterable_class</span> <span class="o">=</span> <span class="n">ModelIterable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">as_manager</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">as_manager</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="c1"># Address the circular dependency between `Queryset` and `Manager`.</span>
         <span class="kn">from</span> <span class="nn">django.db.models.manager</span> <span class="k">import</span> <span class="n">Manager</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">from_queryset</span><span class="p">(</span><span class="n">cls</span><span class="p">)()</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">from_queryset</span><span class="p">(</span><span class="bp">cls</span><span class="p">)()</span>
         <span class="n">manager</span><span class="o">.</span><span class="n">_built_with_as_manager</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">manager</span>
     <span class="n">as_manager</span><span class="o">.</span><span class="n">queryset_only</span> <span class="o">=</span> <span class="kc">True</span>
@@ -339,12 +339,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deep copy of a QuerySet doesn&#39;t populate the cache</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;_result_cache&#39;</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span>
+                <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -353,7 +353,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Force the cache to be fully populated.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all</span><span class="p">()</span>
-        <span class="n">obj_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">obj_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">obj_dict</span><span class="p">[</span><span class="n">DJANGO_VERSION_PICKLE_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_version</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">obj_dict</span>
 
@@ -373,7 +373,7 @@
         <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">[:</span><span class="n">REPR_OUTPUT_SIZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
@@ -408,7 +408,7 @@
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_cache</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Python 2 compatibility</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1219,14 +1219,14 @@
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sticky_filter</span><span class="p">:</span>
             <span class="n">query</span><span class="o">.</span><span class="n">filter_is_sticky</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
+        <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_for_write</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_for_write</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_related_lookups</span><span class="p">[:]</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_known_related_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_known_related_objects</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_iterable_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterable_class</span>
         <span class="n">clone</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
 
-        <span class="n">clone</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">clone</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clone</span>
 
     <span class="k">def</span> <span class="nf">_fetch_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1259,7 +1259,7 @@
                 <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">annotation_select</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">annotation_select</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Merging &#39;</span><span class="si">%s</span><span class="s2">&#39; classes must involve the same values in each case.&quot;</span>
-                <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+                <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_merge_known_related_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -1514,7 +1514,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_to</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_to</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">normalize_prefetch_lookups</span><span class="p">(</span><span class="n">lookups</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1606,7 +1606,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">attr_found</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Cannot find &#39;</span><span class="si">%s</span><span class="s2">&#39; on </span><span class="si">%s</span><span class="s2"> object, &#39;</span><span class="si">%s</span><span class="s2">&#39; is an invalid &quot;</span>
                                      <span class="s2">&quot;parameter to prefetch_related()&quot;</span> <span class="o">%</span>
-                                     <span class="p">(</span><span class="n">through_attr</span><span class="p">,</span> <span class="n">first_obj</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">lookup</span><span class="o">.</span><span class="n">prefetch_through</span><span class="p">))</span>
+                                     <span class="p">(</span><span class="n">through_attr</span><span class="p">,</span> <span class="n">first_obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">lookup</span><span class="o">.</span><span class="n">prefetch_through</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">through_attrs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">prefetcher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Last one, this *must* resolve to something that supports</span>
@@ -1670,7 +1670,7 @@
     <span class="c1"># For singly related objects, we have to avoid getting the attribute</span>
     <span class="c1"># from the object, as this will trigger the query. So we first try</span>
     <span class="c1"># on the class, in order to get the descriptor object.</span>
-    <span class="n">rel_obj_descriptor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">through_attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">rel_obj_descriptor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">through_attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rel_obj_descriptor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">attr_found</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">through_attr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1692,8 +1692,8 @@
                 <span class="k">if</span> <span class="n">through_attr</span> <span class="o">!=</span> <span class="n">to_attr</span><span class="p">:</span>
                     <span class="c1"># Special case cached_property instances because hasattr</span>
                     <span class="c1"># triggers attribute computation and assignment.</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">to_attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">cached_property</span><span class="p">):</span>
-                        <span class="n">is_fetched</span> <span class="o">=</span> <span class="n">to_attr</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">__dict__</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">to_attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">cached_property</span><span class="p">):</span>
+                        <span class="n">is_fetched</span> <span class="o">=</span> <span class="n">to_attr</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">is_fetched</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">to_attr</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1754,14 +1754,14 @@
     <span class="k">if</span> <span class="n">as_attr</span> <span class="ow">and</span> <span class="n">instances</span><span class="p">:</span>
         <span class="c1"># We assume that objects retrieved are homogeneous (which is the premise</span>
         <span class="c1"># of prefetch_related), so what applies to first object applies to all.</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">to_attr</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FieldDoesNotExist</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;to_attr=</span><span class="si">{}</span><span class="s1"> conflicts with a field on the </span><span class="si">{}</span><span class="s1"> model.&#39;</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_attr</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_attr</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
 
     <span class="c1"># Whether or not we&#39;re prefetching the last part of the lookup.</span>
     <span class="n">leaf</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lookup</span><span class="o">.</span><span class="n">prefetch_through</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">LOOKUP_SEP</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">level</span>
@@ -1787,7 +1787,7 @@
                             <span class="s2">&quot;The `</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` class must implement a `_apply_rel_filters()` &quot;</span>
                             <span class="s2">&quot;method that accepts a `QuerySet` as its single &quot;</span>
                             <span class="s2">&quot;argument and returns an appropriately filtered version &quot;</span>
-                            <span class="s2">&quot;of it.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__module__</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span>
+                            <span class="s2">&quot;of it.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
                             <span class="n">RemovedInDjango20Warning</span><span class="p">,</span>
                         <span class="p">)</span>
                         <span class="n">qs</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>

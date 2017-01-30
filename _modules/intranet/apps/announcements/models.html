@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -292,10 +292,16 @@
             <span class="k">return</span> <span class="n">ar</span>
 
 <div class="viewcode-block" id="Announcement.is_visible_requester"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.Announcement.is_visible_requester">[docs]</a>    <span class="k">def</span> <span class="nf">is_visible_requester</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Announcement.is_visible_submitter"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.Announcement.is_visible_submitter">[docs]</a>    <span class="k">def</span> <span class="nf">is_visible_submitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">user</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">user</span>
+        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dashboard_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

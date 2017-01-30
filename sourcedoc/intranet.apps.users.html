@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -590,7 +590,7 @@ In Python code you can also use int() on a Grade object.</p>
 <dl class="class">
 <dt id="intranet.apps.users.models.User">
 <em class="property">class </em><code class="descclassname">intranet.apps.users.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.base_user.AbstractBaseUser</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/auth/customizing/#django.contrib.auth.models.PermissionsMixin" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.PermissionsMixin</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.base_user.AbstractBaseUser</span></code>, <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/topics/auth/customizing/#django.contrib.auth.models.PermissionsMixin" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.PermissionsMixin</span></code></a></p>
 <p>Django User model subclass with properties that fetch data from LDAP.</p>
 <p>Represents a user object in LDAP.Extends AbstractBaseUser so the
 model will work with Django&#8217;s built-in authorization functionality.</p>
@@ -605,13 +605,13 @@ necessarily in the SQL database.</p>
 <dl class="exception">
 <dt id="intranet.apps.users.models.User.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.users.models.User.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.users.models.User.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descclassname">User.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.users.models.User.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1034,6 +1034,22 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.users.models.User.eighthscheduledactivity_scheduledactivity_set">
+<code class="descclassname">User.</code><code class="descname">eighthscheduledactivity_scheduledactivity_set</code><a class="headerlink" href="#intranet.apps.users.models.User.eighthscheduledactivity_scheduledactivity_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.users.models.User.eighthscheduledactivity_set">
 <code class="descclassname">User.</code><code class="descname">eighthscheduledactivity_set</code><a class="headerlink" href="#intranet.apps.users.models.User.eighthscheduledactivity_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the forward and reverse sides of
@@ -1075,6 +1091,21 @@ relation.</p>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">place.restaurant</span></code> is a <code class="docutils literal"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.eighthwaitlist_set">
+<code class="descclassname">User.</code><code class="descname">eighthwaitlist_set</code><a class="headerlink" href="#intranet.apps.users.models.User.eighthwaitlist_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1571,7 +1602,7 @@ Lastname, F [(Nickname)]</p>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.ldap_user_attributes">
-<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'sex': {'ldap_name': 'gender', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'nickname': {'ldap_name': 'nickname', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'first_name': {'ldap_name': 'givenName', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'admin_comments': {'ldap_name': 'eighthoffice-comments', 'can_set': True, 'perm': None, 'cache': False, 'is_list': False}, 'ion_username': {'ldap_name': 'iodineUid', 'can_set': False, 'perm': None, 'cache': True, 'is_list': False}, 'ion_id': {'ldap_name': 'iodineUidNumber', 'can_set': False, 'perm': None, 'cache': True, 'is_list': False}, 'mobile_phone': {'ldap_name': 'mobile', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'user_type': {'ldap_name': 'objectClass', 'can_set': False, 'perm': None, 'cache': True, 'is_list': False}, 'common_name': {'ldap_name': 'cn', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'startpage': {'ldap_name': 'startpage', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'preferred_photo': {'ldap_name': 'preferredPhoto', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'title': {'ldap_name': 'title', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'middle_name': {'ldap_name': 'middlename', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'emails': {'ldap_name': 'mail', 'can_set': True, 'perm': None, 'cache': True, 'is_list': True}, 'home_phone': {'ldap_name': 'homePhone', 'can_set': True, 'perm': 'showtelephone', 'cache': True, 'is_list': False}, 'graduation_year': {'ldap_name': 'graduationYear', 'can_set': False, 'perm': None, 'cache': True, 'is_list': False}, 'last_name': {'ldap_name': 'sn', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'display_name': {'ldap_name': 'displayName', 'can_set': True, 'perm': None, 'cache': True, 'is_list': False}, 'student_id': {'ldap_name': 'tjhsstStudentId', 'can_set': True, 'perm': 'specialPerm_studentID', 'cache': True, 'is_list': False}, 'other_phones': {'ldap_name': 'telephoneNumber', 'can_set': True, 'perm': None, 'cache': True, 'is_list': True}, 'webpages': {'ldap_name': 'webpage', 'can_set': True, 'perm': None, 'cache': True, 'is_list': True}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'webpages': {'perm': None, 'cache': True, 'can_set': True, 'is_list': True, 'ldap_name': 'webpage'}, 'sex': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'gender'}, 'common_name': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'cn'}, 'last_name': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'sn'}, 'ion_id': {'perm': None, 'cache': True, 'can_set': False, 'is_list': False, 'ldap_name': 'iodineUidNumber'}, 'first_name': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'givenName'}, 'mobile_phone': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'mobile'}, 'other_phones': {'perm': None, 'cache': True, 'can_set': True, 'is_list': True, 'ldap_name': 'telephoneNumber'}, 'nickname': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'nickname'}, 'graduation_year': {'perm': None, 'cache': True, 'can_set': False, 'is_list': False, 'ldap_name': 'graduationYear'}, 'ion_username': {'perm': None, 'cache': True, 'can_set': False, 'is_list': False, 'ldap_name': 'iodineUid'}, 'student_id': {'perm': 'specialPerm_studentID', 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'tjhsstStudentId'}, 'user_type': {'perm': None, 'cache': True, 'can_set': False, 'is_list': False, 'ldap_name': 'objectClass'}, 'emails': {'perm': None, 'cache': True, 'can_set': True, 'is_list': True, 'ldap_name': 'mail'}, 'home_phone': {'perm': 'showtelephone', 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'homePhone'}, 'admin_comments': {'perm': None, 'cache': False, 'can_set': True, 'is_list': False, 'ldap_name': 'eighthoffice-comments'}, 'title': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'title'}, 'middle_name': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'middlename'}, 'startpage': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'startpage'}, 'display_name': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'displayName'}, 'preferred_photo': {'perm': None, 'cache': True, 'can_set': True, 'is_list': False, 'ldap_name': 'preferredPhoto'}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2100,13 +2131,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.users.models.UserCache.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.users.models.UserCache.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descclassname">UserCache.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.users.models.UserCache.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2181,7 +2212,7 @@ relation.</p>
 <dl class="class">
 <dt id="intranet.apps.users.models.UserManager">
 <em class="property">class </em><code class="descclassname">intranet.apps.users.models.</code><code class="descname">UserManager</code><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/contrib/auth/#django.contrib.auth.models.UserManager" title="(in Django v1.11)"><code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.UserManager</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/contrib/auth/#django.contrib.auth.models.UserManager" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.UserManager</span></code></a></p>
 <p>User model Manager for table-level User queries.</p>
 <p>Provides table-level LDAP abstraction for the User model. If a call
 to a method fails for this Manager, the call is deferred to the

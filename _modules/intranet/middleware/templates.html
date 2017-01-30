@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.templates &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>intranet.middleware.templates &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -152,7 +152,7 @@
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="StripNewlinesMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.templates.StripNewlinesMiddleware">[docs]</a><span class="k">class</span> <span class="nc">StripNewlinesMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -166,8 +166,8 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">is_html</span> <span class="o">=</span> <span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;text/html;&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">is_html</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;\n(\s*)\n&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;^(\s*)\n&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\n(\s*)\n&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(\s*)\n&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 
@@ -194,7 +194,7 @@
 <span class="s2">                &lt;/div&gt;</span>
 <span class="s2">                &quot;&quot;&quot;</span>
 
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;&lt;/select&gt;&#39;</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;/select&gt;&#39;</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 
@@ -208,7 +208,7 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">is_html</span> <span class="o">=</span> <span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;text/html;&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">is_html</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;&lt;a(.*href ?= ?[</span><span class="se">\&#39;</span><span class="s1">&quot;]http.*)&gt;&#39;</span><span class="p">,</span> <span class="s1">r&#39;&lt;a rel=&quot;noopener noreferrer&quot;\1&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;a(.*href ?= ?[</span><span class="se">\&#39;</span><span class="s1">&quot;]http.*)&gt;&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&lt;a rel=&quot;noopener noreferrer&quot;\1&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 </pre></div>
 

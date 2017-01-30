@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>simple_history.models &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>simple_history.models &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -195,14 +195,14 @@
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The `bases` option must be a list or a tuple.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">contribute_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">contribute_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="o">=</span> <span class="n">cls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="o">=</span> <span class="bp">cls</span>
         <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">class_prepared</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_methods</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_methods</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">add_extra_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_extra_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">save_without_historical_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Save model without saving a historical record</span>
@@ -215,7 +215,7 @@
             <span class="k">finally</span><span class="p">:</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_history_when_saving</span>
             <span class="k">return</span> <span class="n">ret</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">&#39;save_without_historical_record&#39;</span><span class="p">,</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">&#39;save_without_historical_record&#39;</span><span class="p">,</span>
                 <span class="n">save_without_historical_record</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -234,7 +234,7 @@
             <span class="p">))</span>
         <span class="n">history_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_history_model</span><span class="p">(</span><span class="n">sender</span><span class="p">)</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">)</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">history_model</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">history_model</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">history_model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">history_model</span><span class="p">)</span>
 
         <span class="c1"># The HistoricalRecords object will be discarded,</span>
         <span class="c1"># so the signal handlers can&#39;t use weak references.</span>
@@ -254,7 +254,7 @@
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">}</span>
 
         <span class="n">app_module</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.models&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span>
-        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">__module__</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
             <span class="c1"># registered under different app</span>
             <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span>
         <span class="k">elif</span> <span class="n">app_module</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
@@ -262,7 +262,7 @@
                 <span class="c1"># Abuse an internal API because the app registry is loading.</span>
                 <span class="n">app</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">app_configs</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>  <span class="c1"># Django &lt; 1.7</span>
-                <span class="n">models_module</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
+                <span class="n">models_module</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">models_module</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">name</span>
             <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">models_module</span>
@@ -293,7 +293,7 @@
                 <span class="n">field</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">rel</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">OrderWrt</span><span class="p">):</span>
                 <span class="c1"># OrderWrt is a proxy field, switch to a plain IntegerField</span>
-                <span class="n">field</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
+                <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">):</span>
                 <span class="n">old_field</span> <span class="o">=</span> <span class="n">field</span>
                 <span class="n">field_arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;db_constraint&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
@@ -416,11 +416,11 @@
     <span class="sd">&quot;&quot;&quot;Customize field appropriately for use in historical model&quot;&quot;&quot;</span>
     <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">):</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">convert_auto_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">convert_auto_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">):</span>
         <span class="c1"># Don&#39;t copy file, just path.</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span>
+        <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span>
 
     <span class="c1"># Historical instance shouldn&#39;t change create/update timestamps</span>
     <span class="n">field</span><span class="o">.</span><span class="n">auto_now</span> <span class="o">=</span> <span class="kc">False</span>

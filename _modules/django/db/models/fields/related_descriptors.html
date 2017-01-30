@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.fields.related_descriptors &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>django.db.models.fields.related_descriptors &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -297,7 +297,7 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="n">rel_obj_cache_name</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">rel_obj_attr</span><span class="p">,</span> <span class="n">instance_attr</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related instance through the forward relation.</span>
 
@@ -333,7 +333,7 @@
 
         <span class="k">if</span> <span class="n">rel_obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">null</span><span class="p">:</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">RelatedObjectDoesNotExist</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rel_obj</span>
@@ -360,9 +360,9 @@
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">router</span><span class="o">.</span><span class="n">allow_relation</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot assign &quot;</span><span class="si">%r</span><span class="s1">&quot;: the current database router prevents this relation.&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
@@ -473,7 +473,7 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">,</span> <span class="n">rel_obj_cache_name</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">rel_obj_attr</span><span class="p">,</span> <span class="n">instance_attr</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_name</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related instance through the reverse relation.</span>
 
@@ -513,7 +513,7 @@
         <span class="k">if</span> <span class="n">rel_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">RelatedObjectDoesNotExist</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                    <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">get_accessor_name</span><span class="p">()</span>
                 <span class="p">)</span>
             <span class="p">)</span>
@@ -557,9 +557,9 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">router</span><span class="o">.</span><span class="n">allow_relation</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot assign &quot;</span><span class="si">%r</span><span class="s1">&quot;: the current database router prevents this relation.&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
@@ -603,11 +603,11 @@
         <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span>
 
         <span class="k">return</span> <span class="n">create_reverse_many_to_one_manager</span><span class="p">(</span>
-            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
+            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the related objects through the reverse relation.</span>
 
@@ -643,7 +643,7 @@
             <span class="s1">&#39;save() that happens. Use </span><span class="si">%s</span><span class="s1">.set() instead.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_set_deprecation_msg_params</span><span class="p">(),</span>
             <span class="n">RemovedInDjango20Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get__</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">manager</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 
@@ -657,7 +657,7 @@
 
     <span class="k">class</span> <span class="nc">RelatedManager</span><span class="p">(</span><span class="n">superclass</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">RelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">RelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">rel</span><span class="o">.</span><span class="n">related_model</span>
@@ -669,7 +669,7 @@
             <span class="c1"># We use **kwargs rather than a kwarg argument to enforce the</span>
             <span class="c1"># `manager=&#39;manager_name&#39;` syntax.</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">))</span>
-            <span class="n">manager_class</span> <span class="o">=</span> <span class="n">create_reverse_many_to_one_manager</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">rel</span><span class="p">)</span>
+            <span class="n">manager_class</span> <span class="o">=</span> <span class="n">create_reverse_many_to_one_manager</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">rel</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">manager_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">do_not_call_in_templates</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -855,7 +855,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ManyToManyDescriptor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ManyToManyDescriptor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span>
 
@@ -871,7 +871,7 @@
         <span class="n">related_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">related_model</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="o">.</span><span class="n">model</span>
 
         <span class="k">return</span> <span class="n">create_forward_many_to_many_manager</span><span class="p">(</span>
-            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span>
+            <span class="n">related_model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
             <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span>
         <span class="p">)</span>
@@ -893,7 +893,7 @@
 
     <span class="k">class</span> <span class="nc">ManyRelatedManager</span><span class="p">(</span><span class="n">superclass</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span>
 
@@ -934,13 +934,13 @@
             <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">pk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%r</span><span class="s2"> instance needs to have a primary key value before &quot;</span>
                                  <span class="s2">&quot;a many-to-many relationship can be used.&quot;</span> <span class="o">%</span>
-                                 <span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+                                 <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="c1"># We use **kwargs rather than a kwarg argument to enforce the</span>
             <span class="c1"># `manager=&#39;manager_name&#39;` syntax.</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">))</span>
-            <span class="n">manager_class</span> <span class="o">=</span> <span class="n">create_forward_many_to_many_manager</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">rel</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span>
+            <span class="n">manager_class</span> <span class="o">=</span> <span class="n">create_forward_many_to_many_manager</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">rel</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">manager_class</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">do_not_call_in_templates</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1109,14 +1109,14 @@
                     <span class="s2">&quot;an intermediary model. Use </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&#39;s Manager instead.&quot;</span> <span class="o">%</span>
                     <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
                 <span class="p">)</span>
-            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
             <span class="n">new_obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="p">(</span><span class="n">db</span><span class="p">))</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_obj</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">new_obj</span>
         <span class="n">create</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
             <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="p">(</span><span class="n">db</span><span class="p">))</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="c1"># We only need to add() if created because if we got an object back</span>
             <span class="c1"># from get() then the relationship already exists.</span>
@@ -1126,7 +1126,7 @@
         <span class="n">get_or_create</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">def</span> <span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
             <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ManyRelatedManager</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="p">(</span><span class="n">db</span><span class="p">))</span><span class="o">.</span><span class="n">update_or_create</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="c1"># We only need to add() if created because if we got an object back</span>
             <span class="c1"># from get() then the relationship already exists.</span>

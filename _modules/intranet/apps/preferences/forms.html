@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -154,13 +154,13 @@
 
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Grade</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PersonalInformationForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PersonalInformationForm">[docs]</a><span class="k">class</span> <span class="nc">PersonalInformationForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_fields</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PersonalInformationForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PersonalInformationForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_phones</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_fields</span><span class="p">[</span><span class="s2">&quot;phones&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_emails</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_fields</span><span class="p">[</span><span class="s2">&quot;emails&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
@@ -182,7 +182,7 @@
 <div class="viewcode-block" id="PreferredPictureForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PreferredPictureForm">[docs]</a><span class="k">class</span> <span class="nc">PreferredPictureForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;AUTO&quot;</span><span class="p">,</span> <span class="s2">&quot;Auto-select the most recent photo&quot;</span><span class="p">)]</span>
 
         <span class="n">photos</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photo_permissions</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]</span>
@@ -198,7 +198,7 @@
 <div class="viewcode-block" id="PrivacyOptionsForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PrivacyOptionsForm">[docs]</a><span class="k">class</span> <span class="nc">PrivacyOptionsForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">flag</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -244,7 +244,7 @@
 <div class="viewcode-block" id="NotificationOptionsForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.NotificationOptionsForm">[docs]</a><span class="k">class</span> <span class="nc">NotificationOptionsForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">flag</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

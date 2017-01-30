@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.blocks &#8212; TJ Intranet v3 (Build #3461) documentation</title>
+    <title>intranet.apps.eighth.views.admin.blocks &#8212; TJ Intranet v3 (Build #3499) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3461)',
+        VERSION:     'v3 (Build #3499)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -164,7 +164,7 @@
 <span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="nd">@eighth_admin_required</span>
@@ -188,8 +188,8 @@
         <span class="n">date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
     <span class="n">title_suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
-        <span class="n">date_format</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span>
-        <span class="n">fmtdate</span> <span class="o">=</span> <span class="n">date_format</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;\3-\1-\2&#39;</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="n">date_format</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="n">fmtdate</span> <span class="o">=</span> <span class="n">date_format</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\3-\1-\2&#39;</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">fmtdate</span><span class="p">)</span>
         <span class="n">title_suffix</span> <span class="o">=</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmtdate</span><span class="p">)</span>
         <span class="n">show_letters</span> <span class="o">=</span> <span class="kc">True</span>
