@@ -1031,8 +1031,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Check if user is blacklisted from activity
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
+
         if force:
             EighthWaitlist.objects.filter(scheduled_activity_id=self.id, user_id=user.id, block_id=self.block.id).delete()
+
+        if self.get_sticky():
+            EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
+
         success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
         """
         final_remove_signups = []
