@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.db.ldap_db &#8212; TJ Intranet v3 (Build #3500) documentation</title>
+    <title>intranet.db.ldap_db &#8212; TJ Intranet v3 (Build #3506) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #3500)',
+        VERSION:     'v3 (Build #3506)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -165,7 +165,7 @@
 <span class="kn">import</span> <span class="nn">ldap3</span>
 <span class="kn">import</span> <span class="nn">ldap3.protocol.sasl</span>
 <span class="kn">import</span> <span class="nn">ldap3.utils.conv</span>
-<span class="kn">from</span> <span class="nn">ldap3.core.exceptions</span> <span class="k">import</span> <span class="n">LDAPSocketOpenError</span><span class="p">,</span> <span class="n">LDAPExceptionError</span>
+<span class="kn">from</span> <span class="nn">ldap3.core.exceptions</span> <span class="k">import</span> <span class="n">LDAPSocketOpenError</span><span class="p">,</span> <span class="n">LDAPExceptionError</span><span class="p">,</span> <span class="n">LDAPNoSuchObjectResult</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_thread_locals</span> <span class="o">=</span> <span class="n">local</span><span class="p">()</span>
@@ -322,7 +322,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No such user &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="k">return</span> <span class="n">LDAPResult</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
@@ -349,7 +349,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No such photo &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="k">return</span> <span class="n">LDAPResult</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
@@ -376,7 +376,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">LDAPNoSuchObjectResult</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No such class &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="k">return</span> <span class="n">LDAPResult</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
