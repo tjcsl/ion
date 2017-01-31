@@ -25,7 +25,7 @@ from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate, Spacer,
 
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist)
 from ..utils import get_start_date
 from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
@@ -219,6 +219,18 @@ def raw_roster_view(request, scheduled_activity_id):
     }
 
     return render(request, "eighth/roster_list.html", context)
+
+@eighth_admin_required
+def raw_waitlist_view(request, scheduled_activity_id):
+    try:
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
+    except EighthScheduledActivity.DoesNotExist:
+        raise http.Http404
+
+    context = {
+        "ordered_waitlist": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).order_by('time')
+    }
+    return render(request, "eighth/waitlist_list.html", context)
 
 
 @attendance_taker_required

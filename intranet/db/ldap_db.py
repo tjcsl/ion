@@ -18,7 +18,7 @@ except ImportError:
 import ldap3
 import ldap3.protocol.sasl
 import ldap3.utils.conv
-from ldap3.core.exceptions import LDAPSocketOpenError, LDAPExceptionError
+from ldap3.core.exceptions import LDAPSocketOpenError, LDAPExceptionError, LDAPNoSuchObjectResult
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -175,7 +175,7 @@ class LDAPConnection(object):
 
         try:
             r = self.search(dn, filter, attributes=attributes)
-        except ldap3.LDAPNoSuchObjectResult:
+        except LDAPNoSuchObjectResult:
             logger.warning("No such user " + dn)
             raise
         return LDAPResult(r)
@@ -202,7 +202,7 @@ class LDAPConnection(object):
 
         try:
             r = self.search(dn, filter, attributes)
-        except ldap3.LDAPNoSuchObjectResult:
+        except LDAPNoSuchObjectResult:
             logger.warning("No such photo " + dn)
             raise
         return LDAPResult(r)
@@ -229,7 +229,7 @@ class LDAPConnection(object):
 
         try:
             r = self.search(dn, filter, attributes=attributes)
-        except ldap3.LDAPNoSuchObjectResult:
+        except LDAPNoSuchObjectResult:
             logger.warning("No such class " + dn)
             raise
         return LDAPResult(r)

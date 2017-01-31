@@ -1,0 +1,24 @@
+<table class="members-table fancy-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for waitlist in ordered_waitlist %}
+    <tr class="item-row">
+      <td>
+        <a href="{% url 'user_profile' waitlist.user.id %}">
+          {{ waitlist.user.last_name }}, {{ waitlist.user.first_name }}
+        </a>
+      </td>
+      <td>{{ waitlist.user.grade_number }}</td>
+    </tr>
+  {% empty %}
+    <tr class="item-row">
+      <td colspan="2">There are no users on the waitlist.</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>

@@ -36,6 +36,7 @@ $(function() {
             "click button#waitlist-button": "waitlistClickHandler",
             "click button#leave-waitlist": "leaveWaitlistClickHandler",
             "click a#roster-button": "rosterClickHandler",
+            "click a#roster-waitlist-button": "rosterWaitlistClickHandler",
             "click button#close-activity-detail": "closeActivityDetail"
         },
 
@@ -103,6 +104,29 @@ $(function() {
             } else {
                 container.empty();
                 $(target).text("View Roster");
+            }
+        },
+
+        rosterWaitlistClickHandler: function(e) {
+            e.preventDefault();
+            var target = e.target;
+            console.log(target);
+            var container = $("#waitlist-section");
+
+            if ($.trim(container.html()) === '') {
+                var spinnerEl = document.getElementById("signup-spinner");
+                var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
+                var schact_id = this.model.attributes.scheduled_activity.id;
+                console.debug("Load waitlist for scheduled activity", schact_id);
+                var endpoint = $(target).data("endpoint");
+
+                container.load(endpoint + "/" + schact_id, {}, function(resp) {
+                    spinner.spin(false);
+                    $(target).text("Close Waitlist");
+                });
+            } else {
+                container.empty();
+                $(target).text("View Waitlist");
             }
         },
 
@@ -251,7 +275,9 @@ $(function() {
                     });
                     _.each(waitlistedActivity, function(a) {
                         a.attributes.waitlisted = false;
+                        a.attributes.waitlist_count -= 1;
                     });
+                    activity.attributes.waitlist_count += 1;
                     activity.attributes.waitlisted = true;
                 }
 
@@ -314,7 +340,9 @@ $(function() {
                 });
                 _.each(waitlistedActivity, function(a) {
                     a.attributes.waitlisted = false;
+                    a.attributes.waitlist_count -= 1;
                 });
+                activity.attributes.waitlist_count += 1;
                 activity.attributes.waitlisted = true;
 
                 activityDetailView.render();
@@ -365,6 +393,7 @@ $(function() {
                 var activity = activityModels.get(aid);
 
                 activity.attributes.waitlisted = false;
+                activity.attributes.waitlist_count -= 1;
 
                 activityDetailView.render();
                 activityListView.render();

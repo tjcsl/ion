@@ -501,6 +501,10 @@
                 <p><%= description %></p>
             <%}%>
 
+            <% if (waitlist_count > 0) { %>
+                <p class="waitlist-count">There <% if (waitlist_count > 1) { %>are<% } else { %>is<% } %> <%= waitlist_count %> user<% if (waitlist_count > 1) { %>s<% } %> on the waitlist for this activity.</p>
+            <% } %>
+
 
             <div id="signup-section">
                 <% var showingRosterButton = false %>
@@ -553,6 +557,11 @@
                 <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                     View Roster
                 </a>
+                <% if (waitlist_count > 0 && isEighthAdmin) { %>
+                        <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
+                            View Waitlist
+                        </a>
+                <% } %>
                 <div id="signup-spinner-container">
                     <div id="signup-spinner"></div>
                 </div>

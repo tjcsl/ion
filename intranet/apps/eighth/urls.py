@@ -37,6 +37,7 @@ urlpatterns = [
     # Roster (for students/teachers)
     url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
     url(r"^/roster/raw/(?P<scheduled_activity_id>\d+)$", attendance.raw_roster_view, name="eighth_raw_roster"),
+    url(r"^/roster/raw/waitlist/(?P<scheduled_activity_id>\d+)$", attendance.raw_waitlist_view, name="eighth_raw_waitlist"),
 
     # Activity Info (for students/teachers)
     url(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
