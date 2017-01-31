@@ -1109,7 +1109,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if previous_activity.waitlist.all().exists():
+                    if previous_activity.waitlist.all().exists() and not self.block.locked:
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             previous_activity.add_user(next_wait.user)
@@ -1336,7 +1336,7 @@ class EighthSignup(AbstractBaseEighthModel):
         else:
             block = self.scheduled_activity.block
             self.delete()
-            if self.scheduled_activity.waitlist.all().exists():
+            if self.scheduled_activity.waitlist.all().exists() and not block.locked:
                 if not self.scheduled_activity.is_full():
                     next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.add_user(next_wait.user)
