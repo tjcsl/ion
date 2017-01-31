@@ -220,6 +220,7 @@ def raw_roster_view(request, scheduled_activity_id):
 
     return render(request, "eighth/roster_list.html", context)
 
+
 @eighth_admin_required
 def raw_waitlist_view(request, scheduled_activity_id):
     try:
