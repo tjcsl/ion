@@ -24,10 +24,6 @@
         overflow: hidden;
     }
 
-    #toggle-waitlist {
-        cursor: pointer;
-    }
-
     #activity-list:not(.show-administrative) li[data-administrative=true] {
         display: none;
     }
@@ -225,32 +221,6 @@
     <script type="text/javascript">
         $(function() {
             $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
-        });
-    </script>
-    {% else %}
-    <script type="text/javascript">
-        $(function() {
-            $("#toggle-waitlist").click(function(e) {
-                e.preventDefault();
-                var target = $( e.target );
-                target.attr("disabled", true);
-                $.ajax("{% url 'toggle_waitlist' %}", {
-                    success: function() {
-                        if(target.attr("title").indexOf("Disable") === -1) {
-                            target.attr("title", "Disable Waitlist");
-                            target.text("Disable Waitlist");
-                        }
-                        else {
-                            target.attr("title", "Enable Waitlist");
-                            target.text("Enable Waitlist");
-                        }
-                        target.attr("disabled", false);
-                    },
-                    error: function() {
-                        alert("There was an error toggling the waitlist for the current session.");
-                    }
-                });
-            });
         });
     </script>
     {% endif %}
@@ -670,9 +640,6 @@
                                 </span>
                                 {% endif %}
                             </h4>
-                            {% if real_user.is_eighth_admin %}
-                            <a id="toggle-waitlist" title="{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist">{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist</a>
-                            {% endif %}
                         </div>
                         {% if next_block %}
                         <div class="block-switch">
