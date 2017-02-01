@@ -3,6 +3,7 @@
 import logging
 
 from django import http
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
@@ -425,6 +426,9 @@ def toggle_favorite_view(request):
 @require_POST
 @login_required
 def leave_waitlist_view(request):
+    if not settings.ENABLE_WAITLIST:
+        return http.HttpResponseForbidden("Waitlist functionality is currently disabled.")
+
     for field in ("uid", "bid"):
         if not (field in request.POST and request.POST[field].isdigit()):
             return http.HttpResponseBadRequest(field + " must be an integer")
@@ -448,5 +452,8 @@ def seen_new_feature_view(request):
 
 @eighth_admin_required
 def toggle_waitlist_view(request):
+    if not settings.ENABLE_WAITLIST:
+        return http.HttpResponseForbidden("Waitlist functionality is currently disabled.")
+
     request.session["disable_waitlist_transactions"] = not request.session.get("disable_waitlist_transactions", False)
     return http.HttpResponse("Successfully toggled waitlist transactions")

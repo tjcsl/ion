@@ -297,6 +297,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.global_warning",  # For showing a global warning throughout the application (in page_base.html)
                 "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
                 "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
+                "intranet.apps.eighth.context_processors.enable_waitlist", # For checking if the waitlist is enabled
                 "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
                 "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
                 "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)

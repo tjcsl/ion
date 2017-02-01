@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from .utils import get_start_date
 
 
@@ -10,6 +11,10 @@ def start_date(request):
         return {"admin_start_date": get_start_date(request)}
 
     return {}
+
+
+def enable_waitlist(request):
+    return {"waitlist_enabled": settings.ENABLE_WAITLIST}
 
 
 def absence_count(request):

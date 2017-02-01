@@ -1000,10 +1000,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
+                if settings.ENABLE_WAITLIST and (add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
                                        and (request is not None
                                             and not request.user.is_eighth_admin
-                                            and request.user.is_student)):
+                                            and request.user.is_student))):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
@@ -1114,7 +1114,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if (previous_activity.waitlist.all().exists() and not
+                    if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not
                             self.block.locked and
                             request is not None and not
                             request.session.get("disable_waitlist_transactions", False)):
