@@ -1001,9 +1001,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                 # Check if the activity is full
                 if settings.ENABLE_WAITLIST and (add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
-                                       and (request is not None
-                                            and not request.user.is_eighth_admin
-                                            and request.user.is_student))):
+                                                 and (request is not None
+                                                 and not request.user.is_eighth_admin
+                                                 and request.user.is_student))):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
@@ -1115,9 +1115,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
                     if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not
-                            self.block.locked and
-                            request is not None and not
-                            request.session.get("disable_waitlist_transactions", False)):
+                                                     self.block.locked and
+                                                     request is not None and not
+                                                     request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             previous_activity.add_user(next_wait.user)
