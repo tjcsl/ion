@@ -47,6 +47,7 @@ urlpatterns = [
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
     url(r"^/display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
+    url(r"^/toggle_waitlist$", signup.toggle_waitlist_view, name="toggle_waitlist"),
 ]
 
 eighth_admin_patterns = [

@@ -1114,7 +1114,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if previous_activity.waitlist.all().exists() and not self.block.locked:
+                    if (previous_activity.waitlist.all().exists() and not
+                            self.block.locked and
+                            request is not None and not
+                            request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             previous_activity.add_user(next_wait.user)
@@ -1311,7 +1314,7 @@ class EighthSignup(AbstractBaseEighthModel):
                                                                        scheduled_activity__block=self.scheduled_activity.block).count()
         return signup_count > 0
 
-    def remove_signup(self, user=None, force=False):
+    def remove_signup(self, user=None, force=False, dont_run_waitlist=False):
         """Attempt to remove the EighthSignup if the user has permission to do so."""
 
         exception = eighth_exceptions.SignupException()
@@ -1341,7 +1344,7 @@ class EighthSignup(AbstractBaseEighthModel):
         else:
             block = self.scheduled_activity.block
             self.delete()
-            if self.scheduled_activity.waitlist.all().exists() and not block.locked:
+            if self.scheduled_activity.waitlist.all().exists() and not block.locked and not dont_run_waitlist:
                 if not self.scheduled_activity.is_full():
                     next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.add_user(next_wait.user)

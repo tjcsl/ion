@@ -21,6 +21,12 @@
         display: none;
     }
     </style>
+    {% else %}
+        <style type="text/css">
+            #toggle-waitlist {
+                cursor: pointer;
+            }
+        </style>
     {% endif %}
 
     {% stylesheet 'eighth.admin' %}
@@ -73,7 +79,30 @@
                 $(".eighth-signup .switch").click();
             }, 450);
         }
-    })
+    });
+    $(function() {
+        $("#toggle-waitlist").click(function(e) {
+            e.preventDefault();
+            var target = $( e.target );
+            target.attr("disabled", true);
+            $.ajax("{% url 'toggle_waitlist' %}", {
+                success: function() {
+                    if(target.attr("title").indexOf("Disable") === -1) {
+                        target.attr("title", "Disable Waitlist");
+                        target.text("Disable Waitlist");
+                    }
+                    else {
+                        target.attr("title", "Enable Waitlist");
+                        target.text("Enable Waitlist");
+                    }
+                    target.attr("disabled", false);
+                },
+                error: function() {
+                    alert("There was an error toggling the waitlist for the current session.");
+                }
+            });
+        });
+    });
     </script>
 {% endblock %}
 
@@ -331,6 +360,9 @@
             <h3>
                 Eighth Period{% if profile_user != real_user %} - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
             </h3>
+            {% if real_user.is_eighth_admin %}
+            <a id="toggle-waitlist" title="{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist">{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist</a>
+            {% endif %}
             {% if skipped_ahead %}
                 There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
             {% endif %}

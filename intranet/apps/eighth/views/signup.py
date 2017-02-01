@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from ..exceptions import SignupException
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist)
 from ..serializers import EighthBlockDetailSerializer
+from ...auth.decorators import eighth_admin_required
 from ...users.models import User
 from ....utils.serialization import safe_json
 
@@ -282,7 +283,7 @@ def eighth_multi_signup_view(request):
 
                 try:
                     eighth_signup = (EighthSignup.objects.get(scheduled_activity__block__id=bid, user__id=uid))
-                    success_message = eighth_signup.remove_signup(request.user, force)
+                    success_message = eighth_signup.remove_signup(request.user, force, request.session.get("disable_waitlist_transactions", False))
                 except EighthSignup.DoesNotExist:
                     status = 403
                     display_messages.append("{}: Signup did not exist.".format(btxt))
@@ -443,3 +444,9 @@ def leave_waitlist_view(request):
 def seen_new_feature_view(request):
     request.session["seen_feature"] = True
     return http.HttpResponse("Saved to session.")
+
+
+@eighth_admin_required
+def toggle_waitlist_view(request):
+    request.session["disable_waitlist_transactions"] = not request.session.get("disable_waitlist_transactions", False)
+    return http.HttpResponse("Successfully toggled waitlist transactions")
