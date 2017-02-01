@@ -1394,6 +1394,12 @@ class EighthWaitlistManager(Manager):
     def get_next_waitlist(self, activity):
         return self.filter(scheduled_activity_id=activity.id).order_by('time').first()
 
+    def position_in_waitlist(self, aid, uid):
+        try:
+            return self.filter(scheduled_activity_id=aid, time__lt=self.get(scheduled_activity_id=aid, user_id=uid).time).count()+1
+        except EighthWaitlist.DoesNotExist:
+            return 0
+
 
 class EighthWaitlist(AbstractBaseEighthModel):
     objects = EighthWaitlistManager()

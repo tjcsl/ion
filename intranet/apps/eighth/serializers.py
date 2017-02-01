@@ -133,7 +133,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "comments": scheduled_activity.comments,
             "display_text": "",
             "waitlisted": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists(),
-            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count()
+            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count(),
+            "waitlist_position": EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
         }
         return activity_info
 

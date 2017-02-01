@@ -278,6 +278,7 @@ $(function() {
                         a.attributes.waitlist_count -= 1;
                     });
                     activity.attributes.waitlist_count += 1;
+                    activity.attributes.waitlist_position = activity.attributes.waitlist_count;
                     activity.attributes.waitlisted = true;
                 }
 
@@ -343,6 +344,7 @@ $(function() {
                     a.attributes.waitlist_count -= 1;
                 });
                 activity.attributes.waitlist_count += 1;
+                activity.attributes.waitlist_position = activity.attributes.waitlist_count;
                 activity.attributes.waitlisted = true;
 
                 activityDetailView.render();
@@ -394,6 +396,7 @@ $(function() {
 
                 activity.attributes.waitlisted = false;
                 activity.attributes.waitlist_count -= 1;
+                activity.attributes.waitlist_position = 0;
 
                 activityDetailView.render();
                 activityListView.render();
