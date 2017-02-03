@@ -1120,8 +1120,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                      request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
-                            previous_activity.add_user(next_wait.user)
-                            next_wait.delete()
+                            try:
+                                previous_activity.add_user(next_wait.user)
+                                next_wait.delete()
+                            except eighth_exceptions.SignupException:
+                                pass
 
                 except EighthSignup.DoesNotExist:
                     EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)

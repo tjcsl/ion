@@ -208,6 +208,7 @@
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
@@ -526,7 +527,7 @@
                                 Join Waitlist
                             <% } %>
                         </button>
-                        <% if (isEighthAdmin && roster.count >= roster.capacity) { %>
+                        <% if (isEighthAdmin && roster.count >= roster.capacity && waitlistEnabled && !restricted_for_user && !administrative && !sticky && !one_a_day  && !both_blocks && waitlistEnabled) { %>
                         <button id="waitlist-button">
                             Add to Waitlist
                         </button>
