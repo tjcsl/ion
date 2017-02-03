@@ -178,6 +178,8 @@ class EighthActivity(AbstractBaseEighthModel):
             exists in the system and can be seen by administrators. Students can still sign up for the activity
             through the API -- this does not prevent students from signing up for it, and just merely hides it
             from view. An administrative activity should be restricted.
+        finance
+            If True, then the club has an account with the finance office.
         users_allowed
             Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make
             a group instead through the "Add and Assign Empty Group" button on the Edit Activity page. Only
@@ -216,6 +218,7 @@ class EighthActivity(AbstractBaseEighthModel):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
     administrative = models.BooleanField(default=False)
+    finance = models.BooleanField(default=False)
 
     restricted = models.BooleanField(default=False)
 
@@ -280,6 +283,7 @@ class EighthActivity(AbstractBaseEighthModel):
         name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
         name += " (Deleted)" if self.deleted else ""
+        name += " (F)" if self.finance else ""
         return name
 
     @classmethod
@@ -777,6 +781,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return self.sticky
         else:
             return self.activity.sticky
+
+    def get_finance(self):
+        """Get whether this activity has an account with the finance office."""
+        return self.activity.finance
 
     def get_administrative(self):
         """Get whether this scheduled activity is administrative."""
