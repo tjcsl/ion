@@ -126,8 +126,8 @@ class ActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = [
             "name", "description", "sponsors", "rooms", "default_capacity", "id", "presign", "one_a_day", "both_blocks", "sticky", "special",
-            "administrative", "finance", "restricted", "users_allowed", "groups_allowed", "users_blacklisted", "freshmen_allowed", "sophomores_allowed",
-            "juniors_allowed", "seniors_allowed", "wed_a", "wed_b", "fri_a", "fri_b", "admin_comments"
+            "administrative", "finance", "restricted", "users_allowed", "groups_allowed", "users_blacklisted", "freshmen_allowed",
+            "sophomores_allowed", "juniors_allowed", "seniors_allowed", "wed_a", "wed_b", "fri_a", "fri_b", "admin_comments"
         ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5,

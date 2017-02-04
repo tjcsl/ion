@@ -31,6 +31,7 @@ NO_CACHE = False
 PARKING_ENABLED = False
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
+ENABLE_WAITLIST = True
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
