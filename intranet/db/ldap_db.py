@@ -237,6 +237,8 @@ class LDAPConnection(object):
     def set_attribute(self, dn, attribute, value):
         if isinstance(value, (list, tuple)):
             value = [str(v) for v in value]
+        elif isinstance(value, bool):
+            value = ["TRUE" if value else "FALSE"]
         else:
             value = [value]
         self.conn.modify(dn, {attribute: [(ldap3.MODIFY_REPLACE, value)]})

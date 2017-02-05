@@ -906,10 +906,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             default_result = c.user_attributes(self.dn, ["perm-showpictures-self", "perm-showpictures"])
             default = default_result.first_result()
             if "perm-showpictures" in default:
-                perms["parent"] = (default["perm-showpictures"] == "TRUE")
+                perms["parent"] = (default["perm-showpictures"])
 
             if "perm-showpictures-self" in default:
-                perms["self"]["default"] = (default["perm-showpictures-self"] == "TRUE")
+                perms["self"]["default"] = (default["perm-showpictures-self"])
 
             photos_result = c.search(self.dn, "(objectclass=iodinePhoto)", ["cn", "perm-showpictures", "perm-showpictures-self"])
 
@@ -920,11 +920,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if "cn" in attrs:
                     grade = attrs["cn"][0][:-len("Photo")]
                     try:
-                        public = (attrs["perm-showpictures-self"] == "TRUE")
+                        public = (attrs["perm-showpictures-self"])
                         perms["self"][grade] = public
                     except KeyError:
                         try:
-                            public = (attrs["perm-showpictures"] == "TRUE")
+                            public = (attrs["perm-showpictures"])
                             perms["self"][grade] = public
                         except KeyError:
                             perms["self"][grade] = False
@@ -961,13 +961,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
             for perm, value in result.items():
-                bool_value = True if value == 'TRUE' else False
                 if perm.endswith("-self"):
                     perm_name = perm[5:-5]
-                    perms["self"][perm_name] = bool_value
+                    perms["self"][perm_name] = value
                 else:
                     perm_name = perm[5:]
-                    perms["parent"][perm_name] = bool_value
+                    perms["parent"][perm_name] = value
 
             cache.set(key, perms, timeout=settings.CACHE_AGE['ldap_permissions'])
             return perms
@@ -1516,24 +1515,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         if item_name.endswith("-self"):
             field_name = item_name.split("-self")[0]
             field_type = "self"
-            ldap_name = field_name + "self"
+            ldap_name = "perm-" + field_name + "-self"
         elif item_name.endswith("self"):
             field_name = item_name.split("self")[0]
             field_type = "self"
-            ldap_name = field_name + "self"
+            ldap_name = "perm-" + field_name + "-self"
         else:
             field_name = item_name
             field_type = "parent"
-            ldap_name = field_name
+            ldap_name = "perm-" + field_name
 
         if field_type == "parent" and not is_admin:
             raise Exception("You do not have permission to change this parent field.")
 
-        if value is True:
-            value = "TRUE"
-
-        if value is False:
-            value = "FALSE"
 
         if item_name.startswith("photoperm-"):
             grade = field_name.split("photoperm-")[1]
@@ -1543,11 +1537,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("Setting raw LDAP: {} = {}".format(ldap_name, value))
             self.set_raw_ldap_attribute(ldap_name, value)
 
-        if field_name == "showpictures":
-            cache.delete(":".join([self.dn, "photo_permissions"]))
+        cache.delete(":".join([self.dn, "photo_permissions"]))
 
-        if field_name in ["showschedule", "showaddress", "showphone", "showbirthday", "showpictures", "showeighth"]:
-            cache.delete(":".join([self.dn, "user_info_permissions"]))
+        cache.delete(":".join([self.dn, "user_info_permissions"]))
 
     def set_raw_ldap_photoperm(self, field_type, grade, value):
         if self.dn is None:
@@ -1570,7 +1562,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         c = LDAPConnection()
         logger.debug("SET {}: {} = {}".format(self.dn, field_name, value))
-        if value:
+        if value or field_name.startswith("perm"):
             c.set_attribute(self.dn, field_name, value)
         else:
             c.del_attribute(self.dn, field_name)
