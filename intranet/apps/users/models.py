@@ -757,7 +757,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             birthday = result.get("birthday", None)
             if not birthday:
                 return None
-            date_object = datetime.strptime(birthday, '%Y%m%d')
+            date_object = datetime.strptime(birthday[0], '%m-%d-%Y')
             cache.set(key, date_object, timeout=settings.CACHE_AGE['user_attribute'])
             return date_object
 
