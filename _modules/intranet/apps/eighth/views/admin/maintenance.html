@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -315,8 +315,11 @@
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">dn</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid DN!&quot;</span><span class="p">,</span> <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">dn</span><span class="p">})</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
         <span class="n">success</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;LDAP query failed!&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 

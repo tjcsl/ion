@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -158,7 +158,7 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="k">import</span> <span class="n">ActivityForm</span><span class="p">,</span> <span class="n">QuickActivityForm</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="k">import</span> <span class="n">Group</span>
@@ -300,6 +300,15 @@
                 <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span>
+                        <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span>
+                        <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span>
+                        <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span>
+                        <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span>
+                        <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span><span class="p">):</span>
+                    <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">all_sched_acts</span><span class="p">:</span>
+                        <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sa</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully edited activity.&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;add_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                     <span class="n">grp_name</span> <span class="o">=</span> <span class="s2">&quot;Activity: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>

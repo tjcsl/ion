@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -153,11 +153,11 @@
 
 <div class="viewcode-block" id="PhoneField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField">[docs]</a><span class="k">class</span> <span class="nc">PhoneField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
     <span class="n">widget</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span>
-    <span class="n">default_error_messages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;incomplete&#39;</span><span class="p">:</span> <span class="s1">&#39;Enter a phone number.&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid&#39;</span><span class="p">:</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">}</span>
+    <span class="n">default_error_messages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;incomplete&#39;</span><span class="p">:</span> <span class="s1">&#39;Please enter a phone number.&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid&#39;</span><span class="p">:</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validators</span><span class="o">.</span><span class="n">RegexValidator</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\+?1?\d{9,15}$&#39;</span><span class="p">,</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validators</span><span class="o">.</span><span class="n">RegexValidator</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^[\dA-Z]</span><span class="si">{3}</span><span class="s1">-?[\dA-Z]</span><span class="si">{3}</span><span class="s1">-?[\dA-Z]</span><span class="si">{4}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PhoneField.to_python"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a Unicode object.&quot;&quot;&quot;</span>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -325,6 +325,8 @@
 <span class="sd">            exists in the system and can be seen by administrators. Students can still sign up for the activity</span>
 <span class="sd">            through the API -- this does not prevent students from signing up for it, and just merely hides it</span>
 <span class="sd">            from view. An administrative activity should be restricted.</span>
+<span class="sd">        finance</span>
+<span class="sd">            If True, then the club has an account with the finance office.</span>
 <span class="sd">        users_allowed</span>
 <span class="sd">            Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make</span>
 <span class="sd">            a group instead through the &quot;Add and Assign Empty Group&quot; button on the Edit Activity page. Only</span>
@@ -363,6 +365,7 @@
     <span class="n">sticky</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">special</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">administrative</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">finance</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">restricted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -427,6 +430,7 @@
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (F)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finance</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="n">name</span>
 
     <span class="nd">@classmethod</span>
@@ -925,6 +929,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sticky</span></div>
 
+<div class="viewcode-block" id="EighthScheduledActivity.get_finance"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_finance">[docs]</a>    <span class="k">def</span> <span class="nf">get_finance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get whether this activity has an account with the finance office.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">finance</span></div>
+
 <div class="viewcode-block" id="EighthScheduledActivity.get_administrative"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_administrative">[docs]</a>    <span class="k">def</span> <span class="nf">get_administrative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this scheduled activity is administrative.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span><span class="p">:</span>
@@ -1147,10 +1155,10 @@
                     <span class="n">exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="kc">True</span>
 
                 <span class="c1"># Check if the activity is full</span>
-                <span class="k">if</span> <span class="n">add_to_waitlist</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">()</span>
-                                       <span class="ow">and</span> <span class="p">(</span><span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                                            <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span>
-                                            <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span> <span class="ow">and</span> <span class="p">(</span><span class="n">add_to_waitlist</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">()</span>
+                                                 <span class="ow">and</span> <span class="p">(</span><span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                                                 <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span>
+                                                 <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">))):</span>
                     <span class="k">if</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                         <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                     <span class="n">waitlist</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sched_act</span><span class="p">)</span>
@@ -1261,14 +1269,17 @@
                         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">,</span>
                                                            <span class="n">previous_activity_name</span><span class="o">=</span><span class="n">previous_activity_name</span><span class="p">,</span>
                                                            <span class="n">previous_activity_sponsors</span><span class="o">=</span><span class="n">previous_activity_sponsors</span><span class="p">,</span> <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">previous_activity</span><span class="o">.</span><span class="n">waitlist</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span>
-                            <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span>
-                            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disable_waitlist_transactions&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span> <span class="ow">and</span> <span class="p">(</span><span class="n">previous_activity</span><span class="o">.</span><span class="n">waitlist</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span>
+                                                     <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span>
+                                                     <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disable_waitlist_transactions&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_activity</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                             <span class="n">next_wait</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_next_waitlist</span><span class="p">(</span><span class="n">previous_activity</span><span class="p">)</span>
-                            <span class="n">previous_activity</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">next_wait</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-                            <span class="n">next_wait</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">previous_activity</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">next_wait</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+                                <span class="n">next_wait</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                            <span class="k">except</span> <span class="n">eighth_exceptions</span><span class="o">.</span><span class="n">SignupException</span><span class="p">:</span>
+                                <span class="k">pass</span>
 
                 <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                     <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
@@ -1539,7 +1550,13 @@
     <span class="sd">&quot;&quot;&quot;Model manager for EighthWaitlist.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthWaitlistManager.get_next_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.get_next_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activity</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EighthWaitlistManager.position_in_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.position_in_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">position_in_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">aid</span><span class="p">,</span> <span class="n">time__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">aid</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">except</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span></div></div>
 
 
 <div class="viewcode-block" id="EighthWaitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlist">[docs]</a><span class="k">class</span> <span class="nc">EighthWaitlist</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>

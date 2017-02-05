@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -391,6 +391,11 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="intranet.apps.eighth.context_processors.enable_waitlist">
+<code class="descclassname">intranet.apps.eighth.context_processors.</code><code class="descname">enable_waitlist</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/context_processors.html#enable_waitlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.context_processors.enable_waitlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="intranet.apps.eighth.context_processors.start_date">
 <code class="descclassname">intranet.apps.eighth.context_processors.</code><code class="descname">start_date</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/context_processors.html#start_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.context_processors.start_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the start date to the context for eighth admin views.</p>
@@ -499,6 +504,8 @@ to the top of the list.</dd>
 exists in the system and can be seen by administrators. Students can still sign up for the activity
 through the API &#8211; this does not prevent students from signing up for it, and just merely hides it
 from view. An administrative activity should be restricted.</dd>
+<dt>finance</dt>
+<dd>If True, then the club has an account with the finance office.</dd>
 <dt>users_allowed</dt>
 <dd>Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make
 a group instead through the &#8220;Add and Assign Empty Group&#8221; button on the Edit Activity page. Only
@@ -658,6 +665,13 @@ a many-to-many relation.</p>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.finance">
+<code class="descclassname">EighthActivity.</code><code class="descname">finance</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.finance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2128,6 +2142,12 @@ False if not found</dd>
 </dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.eighth.models.EighthScheduledActivity.get_finance">
+<code class="descclassname">EighthScheduledActivity.</code><code class="descname">get_finance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthScheduledActivity.get_finance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.get_finance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether this activity has an account with the finance office.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity.get_hidden_members">
 <code class="descclassname">EighthScheduledActivity.</code><code class="descname">get_hidden_members</code><span class="sig-paren">(</span><em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthScheduledActivity.get_hidden_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.get_hidden_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the members that you do not have permission to view.</p>
@@ -3062,6 +3082,11 @@ object the first time, the query is executed.</p>
 <code class="descname">get_next_waitlist</code><span class="sig-paren">(</span><em>activity</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthWaitlistManager.get_next_waitlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthWaitlistManager.get_next_waitlist" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="intranet.apps.eighth.models.EighthWaitlistManager.position_in_waitlist">
+<code class="descname">position_in_waitlist</code><span class="sig-paren">(</span><em>aid</em>, <em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthWaitlistManager.position_in_waitlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthWaitlistManager.position_in_waitlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -3462,7 +3487,7 @@ object the first time, the query is executed.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.eighth" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity">
-<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthActivity</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>name</em>, <em>description</em>, <em>default_capacity</em>, <em>presign</em>, <em>one_a_day</em>, <em>both_blocks</em>, <em>sticky</em>, <em>special</em>, <em>administrative</em>, <em>restricted</em>, <em>freshmen_allowed</em>, <em>sophomores_allowed</em>, <em>juniors_allowed</em>, <em>seniors_allowed</em>, <em>wed_a</em>, <em>wed_b</em>, <em>fri_a</em>, <em>fri_b</em>, <em>admin_comments</em>, <em>deleted</em>, <em>history_id</em>, <em>history_date</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthActivity</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>name</em>, <em>description</em>, <em>default_capacity</em>, <em>presign</em>, <em>one_a_day</em>, <em>both_blocks</em>, <em>sticky</em>, <em>special</em>, <em>administrative</em>, <em>finance</em>, <em>restricted</em>, <em>freshmen_allowed</em>, <em>sophomores_allowed</em>, <em>juniors_allowed</em>, <em>seniors_allowed</em>, <em>wed_a</em>, <em>wed_b</em>, <em>fri_a</em>, <em>fri_b</em>, <em>admin_comments</em>, <em>deleted</em>, <em>history_id</em>, <em>history_date</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.DoesNotExist">
@@ -3521,6 +3546,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.description">
 <code class="descclassname">HistoricalEighthActivity.</code><code class="descname">description</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthActivity.finance">
+<code class="descclassname">HistoricalEighthActivity.</code><code class="descname">finance</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.finance" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -147,6 +147,7 @@
   <h1>Source code for intranet.apps.eighth.context_processors</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 
 
@@ -157,6 +158,10 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;admin_start_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)}</span>
 
     <span class="k">return</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="enable_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.context_processors.enable_waitlist">[docs]</a><span class="k">def</span> <span class="nf">enable_waitlist</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;waitlist_enabled&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.context_processors.absence_count">[docs]</a><span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>

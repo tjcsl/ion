@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3515) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3533) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3515)',
+        VERSION:     'v3 (Build #3533)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -904,7 +904,7 @@
             <span class="n">birthday</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;birthday&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">birthday</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">date_object</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">birthday</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">date_object</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">birthday</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">-%Y&#39;</span><span class="p">)</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">date_object</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;user_attribute&#39;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">date_object</span>
 
@@ -1053,10 +1053,10 @@
             <span class="n">default_result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">,</span> <span class="s2">&quot;perm-showpictures&quot;</span><span class="p">])</span>
             <span class="n">default</span> <span class="o">=</span> <span class="n">default_result</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
             <span class="k">if</span> <span class="s2">&quot;perm-showpictures&quot;</span> <span class="ow">in</span> <span class="n">default</span><span class="p">:</span>
-                <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">default</span><span class="p">[</span><span class="s2">&quot;perm-showpictures&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">)</span>
+                <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">default</span><span class="p">[</span><span class="s2">&quot;perm-showpictures&quot;</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="s2">&quot;perm-showpictures-self&quot;</span> <span class="ow">in</span> <span class="n">default</span><span class="p">:</span>
-                <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">default</span><span class="p">[</span><span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">)</span>
+                <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">default</span><span class="p">[</span><span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">])</span>
 
             <span class="n">photos_result</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;(objectclass=iodinePhoto)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cn&quot;</span><span class="p">,</span> <span class="s2">&quot;perm-showpictures&quot;</span><span class="p">,</span> <span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">])</span>
 
@@ -1067,11 +1067,11 @@
                 <span class="k">if</span> <span class="s2">&quot;cn&quot;</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
                     <span class="n">grade</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;cn&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;Photo&quot;</span><span class="p">)]</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">public</span> <span class="o">=</span> <span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">)</span>
+                        <span class="n">public</span> <span class="o">=</span> <span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;perm-showpictures-self&quot;</span><span class="p">])</span>
                         <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">grade</span><span class="p">]</span> <span class="o">=</span> <span class="n">public</span>
                     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
-                            <span class="n">public</span> <span class="o">=</span> <span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;perm-showpictures&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">)</span>
+                            <span class="n">public</span> <span class="o">=</span> <span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;perm-showpictures&quot;</span><span class="p">])</span>
                             <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">grade</span><span class="p">]</span> <span class="o">=</span> <span class="n">public</span>
                         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                             <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">grade</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1108,13 +1108,12 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
             <span class="n">perms</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="p">{}}</span>
             <span class="k">for</span> <span class="n">perm</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">bool_value</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span> <span class="k">else</span> <span class="kc">False</span>
                 <span class="k">if</span> <span class="n">perm</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
                     <span class="n">perm_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
-                    <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">perm_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bool_value</span>
+                    <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">perm_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">perm_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
-                    <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">][</span><span class="n">perm_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bool_value</span>
+                    <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">][</span><span class="n">perm_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">perms</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;ldap_permissions&#39;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">perms</span>
@@ -1663,24 +1662,18 @@
         <span class="k">if</span> <span class="n">item_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
             <span class="n">field_name</span> <span class="o">=</span> <span class="n">item_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;self&quot;</span>
-            <span class="n">ldap_name</span> <span class="o">=</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;self&quot;</span>
+            <span class="n">ldap_name</span> <span class="o">=</span> <span class="s2">&quot;perm-&quot;</span> <span class="o">+</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;-self&quot;</span>
         <span class="k">elif</span> <span class="n">item_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">):</span>
             <span class="n">field_name</span> <span class="o">=</span> <span class="n">item_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;self&quot;</span>
-            <span class="n">ldap_name</span> <span class="o">=</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;self&quot;</span>
+            <span class="n">ldap_name</span> <span class="o">=</span> <span class="s2">&quot;perm-&quot;</span> <span class="o">+</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;-self&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">field_name</span> <span class="o">=</span> <span class="n">item_name</span>
             <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;parent&quot;</span>
-            <span class="n">ldap_name</span> <span class="o">=</span> <span class="n">field_name</span>
+            <span class="n">ldap_name</span> <span class="o">=</span> <span class="s2">&quot;perm-&quot;</span> <span class="o">+</span> <span class="n">field_name</span>
 
         <span class="k">if</span> <span class="n">field_type</span> <span class="o">==</span> <span class="s2">&quot;parent&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_admin</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You do not have permission to change this parent field.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;TRUE&quot;</span>
-
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;FALSE&quot;</span>
 
         <span class="k">if</span> <span class="n">item_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;photoperm-&quot;</span><span class="p">):</span>
             <span class="n">grade</span> <span class="o">=</span> <span class="n">field_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;photoperm-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
@@ -1690,11 +1683,9 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting raw LDAP: </span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ldap_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_raw_ldap_attribute</span><span class="p">(</span><span class="n">ldap_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">field_name</span> <span class="o">==</span> <span class="s2">&quot;showpictures&quot;</span><span class="p">:</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;photo_permissions&quot;</span><span class="p">]))</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;photo_permissions&quot;</span><span class="p">]))</span>
 
-        <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;showschedule&quot;</span><span class="p">,</span> <span class="s2">&quot;showaddress&quot;</span><span class="p">,</span> <span class="s2">&quot;showphone&quot;</span><span class="p">,</span> <span class="s2">&quot;showbirthday&quot;</span><span class="p">,</span> <span class="s2">&quot;showpictures&quot;</span><span class="p">,</span> <span class="s2">&quot;showeighth&quot;</span><span class="p">]:</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;user_info_permissions&quot;</span><span class="p">]))</span></div>
+        <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;user_info_permissions&quot;</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="User.set_raw_ldap_photoperm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_raw_ldap_photoperm">[docs]</a>    <span class="k">def</span> <span class="nf">set_raw_ldap_photoperm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1717,7 +1708,7 @@
 
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SET </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">field_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;perm&quot;</span><span class="p">):</span>
             <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">del_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span></div>
