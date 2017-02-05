@@ -1528,7 +1528,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if field_type == "parent" and not is_admin:
             raise Exception("You do not have permission to change this parent field.")
 
-
         if item_name.startswith("photoperm-"):
             grade = field_name.split("photoperm-")[1]
             self.set_raw_ldap_photoperm(field_type, grade, value)
