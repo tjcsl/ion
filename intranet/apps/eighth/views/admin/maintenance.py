@@ -169,9 +169,10 @@ def ldap_delete(request):
         if not dn.endswith(settings.USER_DN):
             return JsonResponse({"success": False, "error": "Invalid DN!", "details": dn})
         u = User.get_user(dn=dn)
-        u.delete()
         c = LDAPConnection()
         success = c.conn.delete(dn)
+        if success:
+            u.delete()
         return JsonResponse({"success": success, "error": "LDAP query failed!" if not success else None, "details": c.conn.last_error})
     return JsonResponse({"success": False})
 
