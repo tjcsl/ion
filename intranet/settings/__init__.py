@@ -748,7 +748,7 @@ YEAR_TURNOVER_MONTH = 7
 
 # The hour on an eighth period day to lock teachers from
 # taking attendance (10PM)
-ATTENDANCE_LOCK_HOUR = 20
+ATTENDANCE_LOCK_HOUR = 22
 
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
