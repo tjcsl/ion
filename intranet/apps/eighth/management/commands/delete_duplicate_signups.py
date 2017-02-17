@@ -16,6 +16,6 @@ class Command(BaseCommand):
         num_duplicates = duplicates.count()
         for x in duplicates:
             signups = EighthSignup.objects.filter(user__id=x['user'], scheduled_activity__block__id=x['scheduled_activity__block'])
-            signups = signups.order_by('-time')[1:]
+            signups = EighthSignup.objects.filter(pk__in=signups.order_by('-time').values_list("pk")[1:])
             signups.delete()
         sys.stdout.write("Deleted {} duplicate signup(s).\n".format(num_duplicates))
