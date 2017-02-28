@@ -182,7 +182,7 @@ def deploy():
                 try:
                     pkg_resources.require(requirements)
                 except:
-                    local("pip install -U -r requirements.txt")
+                    local("pip install -r requirements.txt")
                 else:
                     puts("Python requirements already satisfied.")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
