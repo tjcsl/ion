@@ -10,7 +10,13 @@ from rest_framework import generics, status, views
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
-from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer, EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer)
+from ..serializers import (EighthActivityDetailSerializer,
+                           EighthActivityListSerializer,
+                           EighthAddSignupSerializer,
+                           EighthBlockDetailSerializer,
+                           EighthBlockListSerializer,
+                           EighthScheduledActivitySerializer,
+                           EighthSignupSerializer)
 
 logger = logging.getLogger(__name__)
 
