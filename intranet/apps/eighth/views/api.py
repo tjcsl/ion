@@ -109,6 +109,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
+
 class EighthUserFavoritesList(generics.ListAPIView):
     serializer_class = EighthActivityListSerializer
     queryset = EighthActivity.undeleted_objects.all()
@@ -122,6 +123,7 @@ class EighthUserFavoritesList(generics.ListAPIView):
         serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
 
         return Response(serialized.data)
+
 
 class EighthUserFavoritesAdd(generics.ListCreateAPIView):
     serializer_class = EighthActivityListSerializer
@@ -150,6 +152,7 @@ class EighthUserFavoritesAdd(generics.ListCreateAPIView):
             return Response({"error": "The activity does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             return Response({"error": "An unknown error occurred"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class EighthUserFavoritesRemove(generics.ListCreateAPIView):
     serializer_class = EighthActivityListSerializer
@@ -180,6 +183,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
             return Response({"error": "The activity does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             return Response({"error": "An unknown error occurred"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class EighthScheduledActivitySignupList(views.APIView):
     """API endpoint that lists all signups for a certain scheduled activity."""
