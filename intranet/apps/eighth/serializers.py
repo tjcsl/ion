@@ -302,7 +302,6 @@ class EighthSignupSerializer(serializers.ModelSerializer):
         model = EighthSignup
         fields = ("id", "block", "activity", "scheduled_activity", "user")
 
-
 class UserSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
