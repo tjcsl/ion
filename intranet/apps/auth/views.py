@@ -126,7 +126,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             login_warning = ap_week
 
         events = Event.objects.filter(time__gte=datetime.now(), time__lte=(datetime.now().date() + relativedelta(weeks=1)), public=True).this_year()
-        shown_events = events.order_by('time')[:3]
+        shown_events = events.filter(approved=True).order_by('time')[:3]
 
         data = {
             "auth_form": auth_form,
