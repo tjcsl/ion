@@ -215,7 +215,7 @@ def request_event_view(request):
             messages.error(request, "Error adding event")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission('groups'))
-    context = {"form": form, "action": "add", "action_title": "Submit", "is_events_admin": is_events_admin}
+    context = {"form": form, "action": "request", "action_title": "Submit", "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
 
 

@@ -178,6 +178,8 @@ class EighthActivity(AbstractBaseEighthModel):
             exists in the system and can be seen by administrators. Students can still sign up for the activity
             through the API -- this does not prevent students from signing up for it, and just merely hides it
             from view. An administrative activity should be restricted.
+        finance
+            If True, then the club has an account with the finance office.
         users_allowed
             Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make
             a group instead through the "Add and Assign Empty Group" button on the Edit Activity page. Only
@@ -216,6 +218,7 @@ class EighthActivity(AbstractBaseEighthModel):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
     administrative = models.BooleanField(default=False)
+    finance = models.BooleanField(default=False)
 
     restricted = models.BooleanField(default=False)
 
@@ -280,6 +283,7 @@ class EighthActivity(AbstractBaseEighthModel):
         name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
         name += " (Deleted)" if self.deleted else ""
+        name += " (F)" if self.finance else ""
         return name
 
     @classmethod
@@ -778,6 +782,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
             return self.activity.sticky
 
+    def get_finance(self):
+        """Get whether this activity has an account with the finance office."""
+        return self.activity.finance
+
     def get_administrative(self):
         """Get whether this scheduled activity is administrative."""
         if self.administrative:
@@ -1000,10 +1008,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
-                                       and (request is not None
-                                            and not request.user.is_eighth_admin
-                                            and request.user.is_student)):
+                if settings.ENABLE_WAITLIST and (add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
+                                                 and (request is not None
+                                                 and not request.user.is_eighth_admin
+                                                 and request.user.is_student))):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
@@ -1114,14 +1122,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if (previous_activity.waitlist.all().exists() and not
-                            self.block.locked and
-                            request is not None and not
-                            request.session.get("disable_waitlist_transactions", False)):
+                    if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not
+                                                     self.block.locked and
+                                                     request is not None and not
+                                                     request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
-                            previous_activity.add_user(next_wait.user)
-                            next_wait.delete()
+                            try:
+                                previous_activity.add_user(next_wait.user)
+                                next_wait.delete()
+                            except eighth_exceptions.SignupException:
+                                pass
 
                 except EighthSignup.DoesNotExist:
                     EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)

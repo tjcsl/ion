@@ -56,6 +56,7 @@
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
@@ -129,6 +130,10 @@
 
                 <% if (presign) { %>
                     <span class="badge yellow">48-hr</span>
+                <% } %>
+
+                <%  if (finance) { %>
+                    <span class="badge green">Finance</span>
                 <% } %>
 
             </span>
@@ -267,7 +272,7 @@
                                 Join Waitlist
                             <% } %>
                         </button>
-                        <% if (isEighthAdmin && roster.count >= roster.capacity) { %>
+                        <% if (isEighthAdmin && roster.count >= roster.capacity && waitlistEnabled && !restricted_for_user && !administrative && !sticky && !one_a_day  && !both_blocks && waitlistEnabled) { %>
                         <button id="waitlist-button">
                             Add to Waitlist
                         </button>
@@ -444,14 +449,16 @@
 
         <div class="middle-wrapper">
             <div class="middle">
-                {% if not request.session.seen_feature %}
-                <div class="new-feature">
-                    <div class="new-feature-close">
-                        <i class="fa fa-close"></i>
+                {% comment %}
+                    {% if not request.session.seen_feature %}
+                    <div class="new-feature">
+                        <div class="new-feature-close">
+                            <i class="fa fa-close"></i>
+                        </div>
+                        <span class="new-feature-text"></span>
                     </div>
-                    <span class="new-feature-text"><i class="fa fa-rocket"></i> New: There is a waitlist for activities that are full. If you join a waitlist, you will be automatically assigned into the activity when a spot opens up.</span>
-                </div>
-                {% endif %}
+                    {% endif %}
+                {% endcomment %}
                 <div class="block-title">
                     <h2>
                         {% if active_block.locked %}

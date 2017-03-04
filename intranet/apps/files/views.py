@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import base64
 import datetime
 import logging
@@ -207,7 +208,7 @@ def files_type(request, fstype=None):
         filepath = request.GET.get("file")
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
-        filebase_escaped = ".".join([slugify(x) for x in filebase.split(".")])
+        filebase_escaped = re.sub(r"[^\w\s\-\.]", "", filebase).strip()
         if can_access_path(filepath):
             try:
                 fstat = sftp.stat(filepath)

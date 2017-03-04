@@ -65,6 +65,7 @@
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
@@ -208,6 +209,10 @@
             <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
+        <% if (finance) { %>
+            <span class="badge green clickable" data-append-search="is:f" title="This activity has an account with the finance office.">Finance</span>
+        <% } %>
+
         <% scheduled_activity_id = this.model.attributes.scheduled_activity.id %>
 
         <dl class="activityid">
@@ -262,7 +267,7 @@
                 <br />
                 <p><%= description %></p>
             <%}%>
-            <% if (waitlist_count > 0) { %>
+            <% if (waitlist_count > 0 && waitlistEnabled) { %>
                 <p class="waitlist-count">There <% if (waitlist_count > 1) { %>are<% } else { %>is<% } %> <%= waitlist_count %> user<% if (waitlist_count > 1) { %>s<% } %> on the waitlist for this activity.</p>
             <% } %>
 
@@ -275,7 +280,7 @@
                         <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                             View Roster
                         </a>
-                        <% if (waitlist_count > 0 && isEighthAdmin) { %>
+                        <% if (waitlist_count > 0 && isEighthAdmin && waitlistEnabled) { %>
                                 <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
                                     View Waitlist
                                 </a>
@@ -287,7 +292,7 @@
                                 Join Waitlist
                             <% } %>
                         </button>
-                        <% if (isEighthAdmin && roster.count >= roster.capacity && !both_blocks) { %>
+                        <% if (isEighthAdmin && roster.count >= roster.capacity && !restricted_for_user && !administrative && !sticky && !one_a_day  && !both_blocks && waitlistEnabled) { %>
                         <button id="waitlist-button">
                             Add to Waitlist
                         </button>
@@ -299,7 +304,7 @@
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
-                            <% if (waitlisted) { %>
+                            <% if (waitlisted && waitlistEnabled) { %>
                                 <p class="signup-waitlist-text">You are currently #<%= waitlist_position %> on the waitlist for this activity. Please keep in mind that you will be automatically signed out of your current activity and signed up for this one if a spot opens up and you are next in the queue.</p>
                                 <% if (isEighthAdmin) { %>
                                     <button id="signup-button">
@@ -323,7 +328,7 @@
                 <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                     View Roster
                 </a>
-                <% if (waitlist_count > 0 && isEighthAdmin) { %>
+                <% if (waitlist_count > 0 && isEighthAdmin && waitlistEnabled) { %>
                         <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
                             View Waitlist
                         </a>
@@ -398,14 +403,16 @@
 
         <div class="middle-wrapper">
             <div class="middle">
-                {% if not request.session.seen_feature %}
-                <div class="new-feature">
-                    <div class="new-feature-close">
-                        <i class="fa fa-close"></i>
+                {% comment %}
+                    {% if not request.session.seen_feature %}
+                    <div class="new-feature">
+                        <div class="new-feature-close">
+                            <i class="fa fa-close"></i>
+                        </div>
+                        <span class="new-feature-text"></span>
                     </div>
-                    <span class="new-feature-text"><i class="fa fa-rocket"></i> New: There is a waitlist for activities that are full. If you join a waitlist, you will be automatically assigned into the activity when a spot opens up.</span>
-                </div>
-                {% endif %}
+                    {% endif %}
+                {% endcomment %}
                 <div class="block-title">
                     <h2>
                         {% if active_block.locked %}

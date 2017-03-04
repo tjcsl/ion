@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.shortcuts import redirect, render
 
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
-from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor)
+from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -153,6 +153,15 @@ def edit_activity_view(request, activity_id):
                 error = str(error)
                 messages.error(request, error)
             else:
+                if (activity.restricted
+                        or activity.one_a_day
+                        or activity.presign
+                        or activity.both_blocks
+                        or activity.sticky
+                        or activity.administrative):
+                    all_sched_acts = EighthScheduledActivity.objects.filter(activity=activity)
+                    for sa in all_sched_acts:
+                        EighthWaitlist.objects.filter(scheduled_activity=sa).delete()
                 messages.success(request, "Successfully edited activity.")
                 if "add_group" in request.POST:
                     grp_name = "Activity: {}".format(activity.name)

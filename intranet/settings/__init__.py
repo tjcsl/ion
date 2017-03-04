@@ -31,6 +31,7 @@ NO_CACHE = False
 PARKING_ENABLED = False
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
+ENABLE_WAITLIST = True
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
@@ -297,6 +298,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.global_warning",  # For showing a global warning throughout the application (in page_base.html)
                 "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
                 "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
+                "intranet.apps.eighth.context_processors.enable_waitlist",  # For checking if the waitlist is enabled
                 "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
                 "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
                 "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
@@ -746,7 +748,7 @@ YEAR_TURNOVER_MONTH = 7
 
 # The hour on an eighth period day to lock teachers from
 # taking attendance (10PM)
-ATTENDANCE_LOCK_HOUR = 20
+ATTENDANCE_LOCK_HOUR = 22
 
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
