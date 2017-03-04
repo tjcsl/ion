@@ -5,6 +5,7 @@ import os
 import random
 import subprocess
 from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib.auth import login, logout, authenticate
@@ -19,6 +20,7 @@ from django.views.generic.base import View
 from .forms import AuthenticateForm
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
+from ..events.models import Event
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -123,6 +125,9 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if ap_week and not login_warning:
             login_warning = ap_week
 
+        events = Event.objects.filter(time__gte=datetime.now(), time__lte=(datetime.now().date() + relativedelta(weeks=1)), public=True).this_year()
+        shown_events = events.order_by('time')[:3]
+
         data = {
             "auth_form": auth_form,
             "request": request,
@@ -131,7 +136,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             "theme": get_login_theme(),
             "login_warning": login_warning,
             "senior_graduation": settings.SENIOR_GRADUATION,
-            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
+            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+            "public_events": shown_events
         }
         schedule = schedule_context(request)
         data.update(schedule)

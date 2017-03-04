@@ -1,0 +1,25 @@
+{% load dates %}
+{% load static %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
+
+<div class="event">
+    <h3>
+        {% if not event.approved %}<span style="color: red">UNAPPROVED:</span>{% endif %}
+        {{ event.title }}
+    </h3>
+
+    <div class="event-metadata">
+        {{ event.time|date:"l, F j, Y"}}{% if event.time|date:"P" != "midnight" %} {{ event.time|date:"P" }}{% endif %} @ {{ event.location }}
+    </div>
+        {% if event.show_attending %}
+        <div class="bottom-row{% if show_attend %} show-attend{% endif %}">
+            <span class="signup-status">
+                People attending: {{ event.attending.count }}
+            </span>
+        </div>
+        {% endif %}
+
+</div>

@@ -10,6 +10,7 @@
     {{ block.super }}
     {% stylesheet 'schedule' %}
     {% stylesheet 'login' %}
+    {% stylesheet 'events' %}
     {% if login_warning %}
         {% stylesheet 'emerg' %}
     {% endif %}
@@ -33,7 +34,7 @@
 {% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
-    <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
+    <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}{% if public_events|length > 0 %} has-events{% endif %}">
         {% if login_warning %}
             <div class="login-warning">{{ login_warning|safe }}</div>
         {% endif %}
@@ -76,8 +77,13 @@
                     <div class='spinner-container'></div>
                 </form>
             </div>
-            <div class="schedule-outer">
+            <div class="schedule-outer{% if public_events|length > 0 %} has-events{% endif %}">
             {% include "schedule/view.html" %}
+            </div>
+            <div class="events-outer{% if public_events|length > 0 %} has-events{% endif %}">
+                {% for event in public_events %}
+                    {% include "events/public_event.html" %}
+                {% endfor %}
             </div>
         </div>
     </div>
