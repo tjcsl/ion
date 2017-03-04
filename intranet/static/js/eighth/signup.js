@@ -23,6 +23,13 @@ $(function() {
 
     loadModels();
 
+    var waitlistedActivity = activityModels.filter(function(a) {
+        return a.attributes.waitlisted === true;
+    });
+    window.currentWaitlist = waitlistedActivity.map(function(a) {
+        return a.attributes.name;
+    }).join(", ") || false;
+
     eighth.ActivityDetailView = Backbone.View.extend({
         el: $("#activity-detail"),
 
@@ -277,6 +284,7 @@ $(function() {
                         a.attributes.waitlisted = false;
                         a.attributes.waitlist_count -= 1;
                     });
+                    window.currentWaitlist = activity.attributes.name;
                     activity.attributes.waitlist_count += 1;
                     activity.attributes.waitlist_position = activity.attributes.waitlist_count;
                     activity.attributes.waitlisted = true;
@@ -343,6 +351,7 @@ $(function() {
                     a.attributes.waitlisted = false;
                     a.attributes.waitlist_count -= 1;
                 });
+                window.currentWaitlist = activity.attributes.name;
                 activity.attributes.waitlist_count += 1;
                 activity.attributes.waitlist_position = activity.attributes.waitlist_count;
                 activity.attributes.waitlisted = true;
@@ -397,6 +406,7 @@ $(function() {
                 activity.attributes.waitlisted = false;
                 activity.attributes.waitlist_count -= 1;
                 activity.attributes.waitlist_position = 0;
+                window.currentWaitlist = false;
 
                 activityDetailView.render();
                 activityListView.render();

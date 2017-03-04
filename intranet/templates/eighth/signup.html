@@ -67,6 +67,7 @@
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
         window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        window.currentWaitlist = false;
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
     </script>
@@ -301,6 +302,9 @@
                             <div id="signup-spinner"></div>
                         </div>
                     <%} else {%>
+                        <% if (currentWaitlist && !waitlisted && waitlistEnabled) { %>
+                            <p class="signup-waitlist-current">You are currently on the waitlist for <b><%= currentWaitlist %></b>. If a spot becomes available, you will automatically be transferred to this activity.</p>
+                        <% } %>
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
