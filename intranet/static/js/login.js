@@ -34,12 +34,12 @@ $(function() {
 
         if (n.length === 0) {
             $(this).html("TJ Intra<span class='letter-n'>n</span>et");
-            $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3?1' preload></audio>");
+            $("body").append("<audio id='tdfw' src='https://ion.tjhsst.edu/uploads/tdfw.mp3?1' preload></audio>");
             $(".title h1 .letter-n").css({
                 "cursor": "pointer"
             }).dblclick(function() {
                 document.querySelector("#tdfw").play();
-                var e = $("input, .schedule, .footer a");
+                var e = $("input, .schedule, .footer a, .events-outer");
                 var ip = $(this).parent();
                 var p = ip.parent();
                 var s = $("input[type=submit]");
