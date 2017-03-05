@@ -10,6 +10,35 @@ $(function() {
         $username.focus();
     }
 
+    $(".sidebar-pull").click(function() {
+        if(".sidebar").hasClass("has-events"){
+            $(".sidebar").toggle("slide");
+            if($(this).css("left") != "200px") {
+                $(this).html('<button class="sidebar-trigger"><i class="fa fa-chevron-left"></i> Close</button>');
+                $(this).css("left", "200px");
+            }
+            else {
+                $(this).html('<button class="sidebar-trigger">Events <i class="fa fa-chevron-right"></i></button>');
+                $(this).css("left", "0px");
+            }
+            $(".center-wrapper").toggleClass("disable-interaction");
+        }
+    });
+
+    $(window).resize(function() {
+        if(".sidebar").hasClass("has-events"){
+            if($(this).width() > 600){
+                $(".center-wrapper").removeClass("disable-interaction");
+                $(".sidebar").show("slide");
+            }
+            else {
+                $(".sidebar").hide("slide");
+                $(".sidebar-pull").css("left", "0px");
+                $(".sidebar-pull").html('<button class="sidebar-trigger">Events <i class="fa fa-chevron-right"></i></button>');
+            }
+        }
+    });
+
     $(".logo").click(function() {
         location.href = (window.osearch ? "/?" + window.osearch.substring(0, window.osearch.length - 1) : "/");
     });

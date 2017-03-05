@@ -151,6 +151,8 @@ class Event(models.Model):
 
     public = models.BooleanField(default=True)
 
+    category = models.CharField(max_length=6, choices=(("school", "In School"), ("sports", "Sports")), default="school")
+
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.
 

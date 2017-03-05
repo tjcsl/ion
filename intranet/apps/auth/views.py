@@ -126,7 +126,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             login_warning = ap_week
 
         events = Event.objects.filter(time__gte=datetime.now(), time__lte=(datetime.now().date() + relativedelta(weeks=1)), public=True).this_year()
-        shown_events = events.filter(approved=True).order_by('time')[:3]
+        sports_events = events.filter(approved=True, category="sports").order_by('time')[:3]
+        school_events = events.filter(approved=True, category="school").order_by('time')[:3]
 
         data = {
             "auth_form": auth_form,
@@ -137,7 +138,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             "login_warning": login_warning,
             "senior_graduation": settings.SENIOR_GRADUATION,
             "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
-            "public_events": shown_events
+            "sports_events": sports_events,
+            "school_events": school_events
         }
         schedule = schedule_context(request)
         data.update(schedule)

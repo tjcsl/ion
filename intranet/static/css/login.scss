@@ -25,16 +25,6 @@ body {
         left: 50%;
         margin-left: -100px;
         width: 200px;
-        &.has-events {
-            @media (min-width: 600px) {
-                margin-left: -200px;
-                width: 400px;
-            }
-            @media (max-width: 600px) {
-                margin-left: -100px;
-                width: 200px;
-            }
-        }
         min-height: 530px;
         z-index: 10;
         padding-top: 30px;
@@ -78,15 +68,6 @@ h1 {
     text-align: center;
 }
 
-.center-wrapper.has-events h1 {
-    @media (min-width: 600px) {
-        width: 400px;
-    }
-    @media (max-width: 600px) {
-        width: 200px;
-    }
-}
-
 .title {
     margin-bottom: 3px;
 }
@@ -115,16 +96,6 @@ h2 {
     h2 {
         max-width: 300px;
         white-space: normal;
-    }
-    &-outer.has-events {
-        @media (min-width: 600px) {
-            width: 45%;
-            float: left;
-            margin-right: 2%;
-        }
-        @media (max-width: 600px) {
-            padding-bottom: 5px;
-        }
     }
 }
 
@@ -178,13 +149,12 @@ h2 {
     }
 }
 
-.events-outer.has-events {
-    padding-bottom: 50px;
-    @media (min-width: 600px) {
-        width: 45%;
-        float: right;
-        margin-left: 2%;
-    }
+.events-outer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+    margin: 0 auto;
+    width: 95%;
 }
 
 
@@ -282,4 +252,47 @@ a.schedule {
     .no-svg & {
         background-image: url("/static/img/logos/Login-Logo@2x.png");
     }
+}
+
+.sidebar {
+    display: none;
+    &.has-events {
+        @media (min-width: 600px) {
+            display: block;
+        }
+        z-index: 98;
+        position: absolute;
+        width: 200px;
+        height: 100%;
+        left: 1px;
+        background-color: #f2f2f4;
+        overflow-y: auto;
+    }
+    &-pull {
+        display: none;
+        &.has-events {
+            @media (max-width: 600px) {
+                display: block;
+            }
+            z-index: 98;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 1px;
+            button {
+                padding: 0;
+                margin: 0;
+                padding-right: 1px;
+                padding-left: 1px;
+            }
+        }
+    }
+    &-trigger {
+        max-height: 20px;
+        font-size: 10px;
+    }
+}
+
+.disable-interaction {
+    pointer-events: none;
 }
