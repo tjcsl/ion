@@ -11,7 +11,7 @@ $(function() {
     }
 
     $(".sidebar-pull").click(function() {
-        if(".sidebar").hasClass("has-events"){
+        if($(".sidebar").hasClass("has-events")){
             $(".sidebar").toggle("slide");
             if($(this).css("left") != "200px") {
                 $(this).html('<button class="sidebar-trigger"><i class="fa fa-chevron-left"></i> Close</button>');
@@ -26,7 +26,7 @@ $(function() {
     });
 
     $(window).resize(function() {
-        if(".sidebar").hasClass("has-events"){
+        if($(".sidebar").hasClass("has-events")){
             if($(this).width() > 600){
                 $(".center-wrapper").removeClass("disable-interaction");
                 $(".sidebar").show("slide");
