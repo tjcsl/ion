@@ -12,29 +12,29 @@ $(function() {
 
     $(".sidebar-trigger").click(function() {
         if($(".sidebar").hasClass("has-events")){
-            $(".sidebar").toggle("slide");
-            if($(this).css("left") === "255px") {
-                $(this).html("Events <i class=\"fa fa-chevron-right\"></i>");
+            if($(this).css("left") !== "5px") {
+                $(this).html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
                 $(this).css("left", "5px");
             }
             else {
-                $(this).html("<i class=\"fa fa-chevron-left\"></i> Close");
-                $(this).css("left", "255px");
+                $(this).html("<i class=\"fa fa-fw fa-times\"></i>");
+                $(this).css("left", "267px");
             }
+            $(".sidebar").toggle("slide");
             $(".center-wrapper").toggleClass("disable-interaction");
         }
     });
 
     $(window).resize(function() {
         if($(".sidebar").hasClass("has-events")){
-            if($(this).width() > 600){
+            if($(this).width() > 600) {
                 $(".center-wrapper").removeClass("disable-interaction");
                 $(".sidebar").show("slide");
             }
             else {
                 $(".sidebar").hide("slide");
                 $(".sidebar-trigger").css("left", "5px");
-                $(".sidebar-trigger").html("Events <i class=\"fa fa-chevron-right\"></i>");
+                $(".sidebar-trigger").html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
             }
         }
     });
