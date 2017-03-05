@@ -149,14 +149,6 @@ h2 {
     }
 }
 
-.events-outer {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 5px;
-    margin: 0 auto;
-    width: 95%;
-}
-
 
 /* On small height screens, disable the week view */
 
@@ -256,40 +248,48 @@ a.schedule {
 
 .sidebar {
     display: none;
+    padding: 5px;
+    .events-outer {
+        margin: 0px auto;
+    }
     &.has-events {
         @media (min-width: 600px) {
             display: block;
         }
         z-index: 98;
         position: absolute;
-        width: 200px;
+        border-right: 1px solid #ccc;
+        width: 250px;
         height: 100%;
         left: 1px;
         background-color: #f2f2f4;
         overflow-y: auto;
     }
-    &-pull {
-        display: none;
-        &.has-events {
-            @media (max-width: 600px) {
-                display: block;
-            }
-            z-index: 98;
-            position: absolute;
-            left: 0;
-            top: 0;
-            padding: 1px;
-            button {
-                padding: 0;
-                margin: 0;
-                padding-right: 1px;
-                padding-left: 1px;
-            }
-        }
-    }
     &-trigger {
+        display: none;
+        @media (max-width: 600px) {
+            display: block;
+        }
         max-height: 20px;
         font-size: 10px;
+        z-index: 99;
+        position: absolute;
+        left: 5px;
+        -webkit-transition: left 400ms linear;
+        transition: left 400ms linear;
+        top: 5px;
+        padding: 0;
+        margin: 0;
+        padding-right: 1px;
+        padding-left: 1px;
+    }
+    h1 {
+        width: auto;
+        height: auto;
+        line-height: auto;
+    }
+    h2 {
+        margin-top: 5px;
     }
 }
 

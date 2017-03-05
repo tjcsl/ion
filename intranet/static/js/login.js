@@ -10,16 +10,16 @@ $(function() {
         $username.focus();
     }
 
-    $(".sidebar-pull").click(function() {
+    $(".sidebar-trigger").click(function() {
         if($(".sidebar").hasClass("has-events")){
             $(".sidebar").toggle("slide");
-            if($(this).css("left") === "200px") {
-                $(this).html("<button class=\"sidebar-trigger\">Events <i class=\"fa fa-chevron-right\"></i></button>");
-                $(this).css("left", "0px");
+            if($(this).css("left") === "255px") {
+                $(this).html("Events <i class=\"fa fa-chevron-right\"></i>");
+                $(this).css("left", "5px");
             }
             else {
-                $(this).html("<button class=\"sidebar-trigger\"><i class=\"fa fa-chevron-left\"></i> Close</button>");
-                $(this).css("left", "200px");
+                $(this).html("<i class=\"fa fa-chevron-left\"></i> Close");
+                $(this).css("left", "255px");
             }
             $(".center-wrapper").toggleClass("disable-interaction");
         }
@@ -33,8 +33,8 @@ $(function() {
             }
             else {
                 $(".sidebar").hide("slide");
-                $(".sidebar-pull").css("left", "0px");
-                $(".sidebar-pull").html("<button class=\"sidebar-trigger\">Events <i class=\"fa fa-chevron-right\"></i></button>");
+                $(".sidebar-trigger").css("left", "5px");
+                $(".sidebar-trigger").html("Events <i class=\"fa fa-chevron-right\"></i>");
             }
         }
     });
