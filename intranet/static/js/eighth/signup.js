@@ -284,13 +284,14 @@ $(function() {
                         a.attributes.waitlisted = false;
                         a.attributes.waitlist_count -= 1;
                     });
+                    $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
                     window.currentWaitlist = activity.attributes.name;
                     activity.attributes.waitlist_count += 1;
                     activity.attributes.waitlist_position = activity.attributes.waitlist_count;
                     activity.attributes.waitlisted = true;
                 }
 
-                
+
                 activityDetailView.render();
                 activityListView.render();
 
@@ -351,6 +352,7 @@ $(function() {
                     a.attributes.waitlisted = false;
                     a.attributes.waitlist_count -= 1;
                 });
+                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
                 window.currentWaitlist = activity.attributes.name;
                 activity.attributes.waitlist_count += 1;
                 activity.attributes.waitlist_position = activity.attributes.waitlist_count;
@@ -406,6 +408,7 @@ $(function() {
                 activity.attributes.waitlisted = false;
                 activity.attributes.waitlist_count -= 1;
                 activity.attributes.waitlist_position = 0;
+                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", false);
                 window.currentWaitlist = false;
 
                 activityDetailView.render();

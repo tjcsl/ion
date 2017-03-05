@@ -123,6 +123,9 @@ def eighth_signup_view(request, block_id=None):
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
+        waitlists = EighthWaitlist.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
+        block_waitlist_map = {w.scheduled_activity.block.id: w.scheduled_activity for w in waitlists}
+
         for b in surrounding_blocks:
             info = {
                 "id": b.id,
@@ -131,6 +134,7 @@ def eighth_signup_view(request, block_id=None):
                 "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
                 "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
+                "current_waitlist": getattr(block_waitlist_map.get(b.id, {}), "activity", None),
                 "locked": b.locked
             }
 
@@ -201,6 +205,7 @@ def eighth_display_view(request, block_id=None):
 
     signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
+
     prev_block = list(block.previous_blocks(1))
     if prev_block:
         prev_block = prev_block[0]
