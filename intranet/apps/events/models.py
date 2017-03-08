@@ -153,7 +153,7 @@ class Event(models.Model):
 
     category = models.CharField(max_length=6, choices=(("school", "In School"), ("sports", "Sports")), default="school")
 
-    open_to = models.CharField(max_length=10, choices=(("everyone", "Everyone"), ("students", "Students"), ("parents", "Parents")), default="everyone")
+    open_to = models.CharField(max_length=8, choices=(("everyone", "Everyone"), ("students", "Students"), ("parents", "Parents")), default="everyone")
 
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.
