@@ -149,9 +149,11 @@ class Event(models.Model):
     approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=set_historical_user)
     rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=set_historical_user)
 
-    public = models.BooleanField(default=True)
+    public = models.BooleanField(default=True, verbose_name="Show on Login Page")
 
     category = models.CharField(max_length=6, choices=(("school", "In School"), ("sports", "Sports")), default="school")
+
+    open_to = models.CharField(max_length=10, choices=(("everyone", "Everyone"), ("students", "Students"), ("parents", "Parents")), default="everyone")
 
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.
