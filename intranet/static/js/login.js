@@ -27,7 +27,7 @@ $(function() {
 
     $(window).resize(function() {
         if($(".sidebar").hasClass("has-events")){
-            if($(this).width() > 600) {
+            if($(this).width() > 800) {
                 $(".center-wrapper").removeClass("disable-interaction");
                 $(".sidebar").show("slide");
             }
