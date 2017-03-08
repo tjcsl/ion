@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #3559) documentation</title>
+    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #3594) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3559)',
+        VERSION:     'v3 (Build #3594)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -270,6 +270,9 @@
         <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
         <span class="n">block_signup_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">}</span>
 
+        <span class="n">waitlists</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
+        <span class="n">block_waitlist_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">w</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">waitlists</span><span class="p">}</span>
+
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">surrounding_blocks</span><span class="p">:</span>
             <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
@@ -278,6 +281,7 @@
                 <span class="s2">&quot;block_letter_width&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span>
                 <span class="s2">&quot;current_signup&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block_signup_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;current_signup_cancelled&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block_signup_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                <span class="s2">&quot;current_waitlist&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block_waitlist_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="p">{}),</span> <span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;locked&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">locked</span>
             <span class="p">}</span>
 
@@ -348,6 +352,7 @@
 
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
     <span class="n">block_signup_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">}</span>
+
     <span class="n">prev_block</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">previous_blocks</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">prev_block</span><span class="p">:</span>
         <span class="n">prev_block</span> <span class="o">=</span> <span class="n">prev_block</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

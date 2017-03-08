@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events.models &#8212; TJ Intranet v3 (Build #3559) documentation</title>
+    <title>intranet.apps.events.models &#8212; TJ Intranet v3 (Build #3594) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3559)',
+        VERSION:     'v3 (Build #3594)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -265,6 +265,8 @@
 <span class="sd">        list of events that need to be approved.</span>
 <span class="sd">    rejected_by:</span>
 <span class="sd">        ForeignKey to User object, the user who rejected the event.</span>
+<span class="sd">    public:</span>
+<span class="sd">        Boolean, whether the event is public and can be shown on the login page</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">()</span>
@@ -293,6 +295,12 @@
     <span class="n">rejected</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">approved_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;approved_event&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
     <span class="n">rejected_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;rejected_event&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
+
+    <span class="n">public</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s2">&quot;Show on Login Page&quot;</span><span class="p">)</span>
+
+    <span class="n">category</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;school&quot;</span><span class="p">,</span> <span class="s2">&quot;In School&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;sports&quot;</span><span class="p">,</span> <span class="s2">&quot;Sports&quot;</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;school&quot;</span><span class="p">)</span>
+
+    <span class="n">open_to</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;everyone&quot;</span><span class="p">,</span> <span class="s2">&quot;Everyone&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;students&quot;</span><span class="p">,</span> <span class="s2">&quot;Students&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;parents&quot;</span><span class="p">,</span> <span class="s2">&quot;Parents&quot;</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;everyone&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Event.show_fuzzy_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.Event.show_fuzzy_date">[docs]</a>    <span class="k">def</span> <span class="nf">show_fuzzy_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether the event is in the next or previous 2 weeks.</span>

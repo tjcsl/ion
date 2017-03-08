@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #3559) documentation</title>
+    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #3594) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3559)',
+        VERSION:     'v3 (Build #3594)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -269,6 +269,8 @@
 list of events that need to be approved.</dd>
 <dt>rejected_by:</dt>
 <dd>ForeignKey to User object, the user who rejected the event.</dd>
+<dt>public:</dt>
+<dd>Boolean, whether the event is public and can be shown on the login page</dd>
 </dl>
 <dl class="exception">
 <dt id="intranet.apps.events.models.Event.DoesNotExist">
@@ -352,6 +354,13 @@ instances.</p>
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.category">
+<code class="descclassname">Event.</code><code class="descname">category</code><a class="headerlink" href="#intranet.apps.events.models.Event.category" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.created_hook">
 <code class="descclassname">Event.</code><code class="descname">created_hook</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Event.created_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Event.created_hook" title="Permalink to this definition">¶</a></dt>
@@ -371,6 +380,11 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.events.models.Event.get_category_display">
+<code class="descclassname">Event.</code><code class="descname">get_category_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_category_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.events.models.Event.get_next_by_added">
 <code class="descclassname">Event.</code><code class="descname">get_next_by_added</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_added" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -383,6 +397,11 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_next_by_updated">
 <code class="descclassname">Event.</code><code class="descname">get_next_by_updated</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_open_to_display">
+<code class="descclassname">Event.</code><code class="descname">get_open_to_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_open_to_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -458,9 +477,23 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.events.models.Event.open_to">
+<code class="descclassname">Event.</code><code class="descname">open_to</code><a class="headerlink" href="#intranet.apps.events.models.Event.open_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.events.models.Event.pinned">
 <code class="descclassname">Event.</code><code class="descname">pinned</code><a class="headerlink" href="#intranet.apps.events.models.Event.pinned" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO: implement event pinning</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.public">
+<code class="descclassname">Event.</code><code class="descname">public</code><a class="headerlink" href="#intranet.apps.events.models.Event.public" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
