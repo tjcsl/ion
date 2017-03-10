@@ -112,6 +112,10 @@ def touch_signage(request, sign=None, landscape=False):
     zoom = request.GET.get("zoom", 3)
     if sign and sign.zoom:
         zoom = sign.zoom
+    
+    # Chromium has a weird bug where zoom level of 300% is the same as zoom level 100%
+    if zoom == 3:
+        zoom = '301%'
 
     landscape = request.GET.get("landscape", landscape)
     if sign and sign.landscape:
