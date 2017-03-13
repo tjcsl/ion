@@ -46,7 +46,7 @@ def get_printers():
 def convert_soffice(tmpfile_name):
     try:
         output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT,
-                                         universal_newlines=True, timeout=60)
+                                         universal_newlines=True, timeout=20)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run soffice command (returned {}): {}".format(e.returncode, e.output))
         return False
