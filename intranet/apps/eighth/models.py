@@ -1355,7 +1355,7 @@ class EighthSignup(AbstractBaseEighthModel):
         else:
             block = self.scheduled_activity.block
             self.delete()
-            if self.scheduled_activity.waitlist.all().exists() and not block.locked and not dont_run_waitlist:
+            if settings.ENABLE_WAITLIST and self.scheduled_activity.waitlist.all().exists() and not block.locked and not dont_run_waitlist:
                 if not self.scheduled_activity.is_full():
                     next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.add_user(next_wait.user)

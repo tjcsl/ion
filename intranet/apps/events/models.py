@@ -118,6 +118,8 @@ class Event(models.Model):
         list of events that need to be approved.
     rejected_by:
         ForeignKey to User object, the user who rejected the event.
+    public:
+        Boolean, whether the event is public and can be shown on the login page
 
     """
     objects = EventManager()
@@ -146,6 +148,12 @@ class Event(models.Model):
     rejected = models.BooleanField(default=False)
     approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=set_historical_user)
     rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=set_historical_user)
+
+    public = models.BooleanField(default=True, verbose_name="Show on Login Page")
+
+    category = models.CharField(max_length=6, choices=(("school", "In School"), ("sports", "Sports")), default="school")
+
+    open_to = models.CharField(max_length=8, choices=(("everyone", "Everyone"), ("students", "Students"), ("parents", "Parents")), default="everyone")
 
     def show_fuzzy_date(self):
         """Return whether the event is in the next or previous 2 weeks.

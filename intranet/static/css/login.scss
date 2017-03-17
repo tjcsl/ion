@@ -245,3 +245,62 @@ a.schedule {
         background-image: url("/static/img/logos/Login-Logo@2x.png");
     }
 }
+
+.sidebar {
+    display: none;
+    padding: 5px;
+    .events-outer {
+        margin: 0px auto;
+    }
+    &.has-events {
+        @media (min-width: 800px) {
+            display: block;
+        }
+        z-index: 98;
+        position: fixed;
+        border-right: 1px solid #ccc;
+        width: 250px;
+        height: 100%;
+        left: 1px;
+        background-color: #f2f2f4;
+        overflow-y: auto;
+    }
+    &-trigger {
+        display: none;
+        cursor: pointer;
+        &.has-events {
+            @media (max-width: 800px) {
+                display: block;
+            }
+        }
+        font-size: 30px;
+        z-index: 99;
+        position: fixed;
+        left: 5px;
+        -webkit-transition: left 400ms linear;
+        transition: left 400ms linear;
+        top: 5px;
+        color: #484848;
+        background: #eaeaea;
+        background: -moz-linear-gradient(top, #eaeaea 0%, #dadada 100%);
+        background: -webkit-linear-gradient(top, #eaeaea 0%, #dadada 100%);
+        background: linear-gradient(to bottom, #eaeaea 0%, #dadada 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#dadada', GradientType=0);
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        padding: 0;
+        margin: 0;
+    }
+    h1 {
+        width: auto;
+        height: auto;
+        line-height: auto;
+    }
+    h2 {
+        margin-top: 5px;
+    }
+}
+
+.disable-interaction {
+    pointer-events: none;
+}

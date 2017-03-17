@@ -10,6 +10,35 @@ $(function() {
         $username.focus();
     }
 
+    $(".sidebar-trigger").click(function() {
+        if($(".sidebar").hasClass("has-events")){
+            if($(this).css("left") !== "5px") {
+                $(this).html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
+                $(this).css("left", "5px");
+            }
+            else {
+                $(this).html("<i class=\"fa fa-fw fa-times\"></i>");
+                $(this).css("left", "267px");
+            }
+            $(".sidebar").toggle("slide");
+            $(".center-wrapper").toggleClass("disable-interaction");
+        }
+    });
+
+    $(window).resize(function() {
+        if($(".sidebar").hasClass("has-events")){
+            if($(this).width() > 800) {
+                $(".center-wrapper").removeClass("disable-interaction");
+                $(".sidebar").show("slide");
+            }
+            else {
+                $(".sidebar").hide("slide");
+                $(".sidebar-trigger").css("left", "5px");
+                $(".sidebar-trigger").html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
+            }
+        }
+    });
+
     $(".logo").click(function() {
         location.href = (window.osearch ? "/?" + window.osearch.substring(0, window.osearch.length - 1) : "/");
     });
@@ -34,12 +63,12 @@ $(function() {
 
         if (n.length === 0) {
             $(this).html("TJ Intra<span class='letter-n'>n</span>et");
-            $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3?1' preload></audio>");
+            $("body").append("<audio id='tdfw' src='https://ion.tjhsst.edu/uploads/tdfw.mp3?1' preload></audio>");
             $(".title h1 .letter-n").css({
                 "cursor": "pointer"
             }).dblclick(function() {
                 document.querySelector("#tdfw").play();
-                var e = $("input, .schedule, .footer a");
+                var e = $("input, .schedule, .footer a, .events-outer");
                 var ip = $(this).parent();
                 var p = ip.parent();
                 var s = $("input[type=submit]");

@@ -67,6 +67,7 @@
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
         window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        window.currentWaitlist = false;
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
     </script>
@@ -301,6 +302,9 @@
                             <div id="signup-spinner"></div>
                         </div>
                     <%} else {%>
+                        <% if (currentWaitlist && !waitlisted && waitlistEnabled) { %>
+                            <p class="signup-waitlist-current">You are currently on the waitlist for <b><%= currentWaitlist %></b>. If a spot becomes available, you will automatically be transferred to this activity.</p>
+                        <% } %>
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
@@ -369,7 +373,7 @@
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
                                             <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
-                                                <span class="block-letter"{% if b.block_letter_width %} style="width: {{ b.block_letter_width }}px"{% endif %}>
+                                                <span class="block-letter{% if b.current_waitlist %} waitlist{% endif %}"{% if b.block_letter_width %} style="width: {{ b.block_letter_width }}px"{% endif %}>
                                                     {{ b.block_letter }}
                                                 </span>
                                                 {% if b.locked %}
