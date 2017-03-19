@@ -79,7 +79,7 @@ def api_root(request, format=None):
         ["Add a favorited eighth activity for current user", perma_reverse(request, "api_eighth_user_favorites_add_myid")],
         "/signups/user/favorites/remove":
         ["Remove favorited eighth activity for current user", perma_reverse(request, "api_eighth_user_favorites_remove_myid")],
-         "/signups/scheduled_activity/<scheduled_activity_id>": [
+        "/signups/scheduled_activity/<scheduled_activity_id>": [
             "Get eighth signups for a specific scheduled activity", perma_reverse(request, "api_eighth_scheduled_activity_signup_list",
                                                                                   kwargs={"scheduled_activity_id": 889})
         ]
