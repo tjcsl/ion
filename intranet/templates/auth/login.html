@@ -20,6 +20,18 @@
             background-image: url('{{ bg_pattern }}');
         }
         </style>
+        <style>
+	    #AD_MESG {
+	    	display: none;
+		padding-top: 5px;
+		padding-bottom: 15px;
+		text-align: center;
+	    	background: #D30000;
+	    	font-weight: bold;
+	    	color: #fff;
+	    	border-radius: 0px 0px 3px 3px;
+	     }
+    	</style>
     {% endif %}
 {% endblock %}
 
@@ -29,11 +41,30 @@
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ads.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/showads.js' %}"></script>
 {% endblock %}
 
 {% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
+    <script>
+	window.onload = function(){
+	if(window.canRunAds > 2 || window.canRunAds === undefined){
+	    //var adDiv = document.createElement('div');
+	    //adDiv.id = "AD_MESG";
+	    //adDiv.innerHTML = "Our website is made possible by displaying online advertisements to our visitors.<br>Please consider supporting us by disabling your ad blocker.";
+	    //document.getElementByClass('center')[0].appendChild(adDiv);
+	    //alert(document.getElementById("AD_MESG"));
+	    document.getElementById("AD_MESG").style.display = "block";
+	}
+	}
+    </script>
+    <div id="AD_MESG">
+	We depend on revenue from advertisements to keep ION running for users like you. <br>
+	Without them, we couldn't remain free and accesible to everyone. <br>
+	If you depend on ION, please consider supporting us by disabling your ad blocker.
+    </div>
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}">
         {% if login_warning %}
             <div class="login-warning">{{ login_warning|safe }}</div>
@@ -43,7 +74,7 @@
             {% include "board/login_text.html" %}
         </div>
         {% endcomment %}
-        <div class="center">
+	<div class = "center"> 
             <div class="login">
                     <div class="title">
                         <div class="logo">
