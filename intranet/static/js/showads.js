@@ -1,0 +1,1 @@
+window.canRunAds += 1;
