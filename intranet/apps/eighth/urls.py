@@ -133,6 +133,7 @@ eighth_admin_patterns = [
 
     # Sponsors
     url(r"^sponsors/add$", sponsors.add_sponsor_view, name="eighth_admin_add_sponsor"),
+    url(r"^sponsors/list$", sponsors.list_sponsor_view, name="eighth_admin_list_sponsor"),
     url(r"^sponsors/edit/(?P<sponsor_id>\d+)$", sponsors.edit_sponsor_view, name="eighth_admin_edit_sponsor"),
     url(r"^sponsors/delete/(?P<sponsor_id>\d+)$", sponsors.delete_sponsor_view, name="eighth_admin_delete_sponsor"),
     url(r"^sponsors/sanity_check$", sponsors.sponsor_sanity_check_view, name="eighth_admin_sponsor_sanity_check"),

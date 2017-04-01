@@ -32,6 +32,37 @@ def add_sponsor_view(request):
 
 
 @eighth_admin_required
+def list_sponsor_view(request):
+    blocks = EighthBlock.objects.all()
+    block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+    else:
+        blocks = blocks.filter(date__gte=get_start_date(request))
+
+    context = {"blocks": blocks, "chosen_block": block}
+
+    if block is not None:
+        acts = EighthScheduledActivity.objects.filter(block=block)
+        lst = {}
+        for sponsor in EighthSponsor.objects.all():
+            lst[sponsor] = []
+        for act in acts:
+            for sponsor in act.sponsors.all():
+                lst[sponsor].append(act)
+        lst = sorted(lst.items(), key=lambda x: x[0].name)
+        context["sponsor_list"] = lst
+
+    context["admin_page_title"] = "Sponsor Schedule List"
+    return render(request, "eighth/admin/list_sponsors.html", context)
+
+
+@eighth_admin_required
 def edit_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
