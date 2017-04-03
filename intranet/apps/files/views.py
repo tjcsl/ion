@@ -27,8 +27,6 @@ from paramiko import SSHException, SFTPError
 
 import pysftp
 
-from ..printing.views import get_printers
-from ..printing.forms import PrintJobForm
 from .forms import UploadFileForm
 from .models import Host
 
@@ -50,10 +48,7 @@ def files_view(request):
 
     hosts = Host.objects.visible_to_user(request.user)
 
-    printers = get_printers()
-    print_form = PrintJobForm(printers=printers)
-
-    context = {"hosts": hosts, "form": print_form}
+    context = {"hosts": hosts}
     return render(request, "files/home.html", context)
 
 
