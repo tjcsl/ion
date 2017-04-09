@@ -377,6 +377,7 @@ CACHE_AGE = {
     "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
     "ldap_permissions": int(datetime.timedelta(hours=24).total_seconds()),
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds())
 }
 

@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 
 from django.conf import settings
+from django.core.cache import cache
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -20,27 +21,33 @@ logger = logging.getLogger(__name__)
 
 
 def get_printers():
-    try:
-        output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True, timeout=10)
-    # Don't die if cups isn't installed.
-    except FileNotFoundError:
-        return []
-    # Don't die if lpstat -a fails
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return []
-    lines = output.splitlines()
-    names = []
-    for l in lines:
-        if "requests since" in l:
-            names.append(l.split(" ", 1)[0])
+    key = "printing:printers"
+    cached = cache.get(key)
+    if cached:
+        return cached
+    else:
+        try:
+            output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True, timeout=10)
+        # Don't die if cups isn't installed.
+        except FileNotFoundError:
+            return []
+        # Don't die if lpstat -a fails
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            return []
+        lines = output.splitlines()
+        names = []
+        for l in lines:
+            if "requests since" in l:
+                names.append(l.split(" ", 1)[0])
 
-    if "Please_Select_a_Printer" in names:
-        names.remove("Please_Select_a_Printer")
+        if "Please_Select_a_Printer" in names:
+            names.remove("Please_Select_a_Printer")
 
-    if "" in names:
-        names.remove("")
+        if "" in names:
+            names.remove("")
 
-    return names
+        cache.set(key, names, timeout=settings.CACHE_AGE['printers_list'])
+        return names
 
 
 def convert_soffice(tmpfile_name):
