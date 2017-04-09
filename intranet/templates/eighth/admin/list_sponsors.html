@@ -4,7 +4,7 @@
     {{ block.super }}
     <style>
     .contracted {
-        background-color: #dedede;
+        background-color: #e6e6e6;
     }
     #sponsor-list td {
         border: 1px solid #aaa;
@@ -43,7 +43,7 @@
                 <td><i class="fa fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
                 <td>{{ sponsor.name }}</td>
                 <td>{{ acts|join:", " }}</td>
-                <td>{% for act in acts %}{{ act.rooms.all|join:", " }}{% if not forloop.last %} / {% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.get_true_rooms|join:", "|default:"None" }}{% if not forloop.last %} / {% endif %}{% endfor %}</td>
             </tr>
             {% endfor %}
         </tbody>

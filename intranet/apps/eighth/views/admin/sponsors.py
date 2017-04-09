@@ -53,7 +53,7 @@ def list_sponsor_view(request):
         for sponsor in EighthSponsor.objects.all():
             lst[sponsor] = []
         for act in acts:
-            for sponsor in act.sponsors.all():
+            for sponsor in act.get_true_sponsors():
                 lst[sponsor].append(act)
         lst = sorted(lst.items(), key=lambda x: x[0].name)
         context["sponsor_list"] = lst
