@@ -46,6 +46,8 @@ class EighthSponsor(AbstractBaseEighthModel):
             linked to the sponsor.
         online_attendance
             Whether the sponsor takes attendance online.
+        contracted_eighth
+            Whether the sponsor is contracted to supervise 8th periods.
         show_full_name
             Whether to always show the sponsor's full name
             (e.x. because there are two teachers named Lewis)
@@ -56,6 +58,7 @@ class EighthSponsor(AbstractBaseEighthModel):
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=set_historical_user)
     online_attendance = models.BooleanField(default=True)
+    contracted_eighth = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
 
     history = HistoricalRecords()

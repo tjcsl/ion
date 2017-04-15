@@ -260,8 +260,8 @@ PIPELINE = {
 LIST_OF_INDEPENDENT_CSS = [
     'about', 'api', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search', 'dashboard', 'events',
     'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board', 'announcements.form', 'preferences', 'signage.base',
-    'signage.touch', 'signage.touch.landscape', 'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance', 'lostfound',
-    'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth'
+    'signage.touch', 'signage.touch.landscape', 'eighth.common', 'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance',
+    'lostfound', 'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth'
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
@@ -377,6 +377,7 @@ CACHE_AGE = {
     "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
     "ldap_permissions": int(datetime.timedelta(hours=24).total_seconds()),
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds())
 }
 

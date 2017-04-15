@@ -9,10 +9,14 @@ from intranet.apps.users.models import User
 from rest_framework import generics, status, views
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
-from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
-                           EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer)
+from ..serializers import (EighthActivityDetailSerializer,
+                           EighthActivityListSerializer,
+                           EighthAddSignupSerializer,
+                           EighthBlockDetailSerializer,
+                           EighthBlockListSerializer,
+                           EighthScheduledActivitySerializer,
+                           EighthSignupSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -110,6 +114,81 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         schactivity.add_user(user, request, force=force)
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
+
+
+class EighthUserFavoritesList(generics.ListAPIView):
+    serializer_class = EighthActivityListSerializer
+    queryset = EighthActivity.undeleted_objects.all()
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        user = User.objects.get(id=user_id)
+        return user.favorited_activity_set.all()
+
+    def list(self, request):
+        serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
+
+        return Response(serialized.data)
+
+
+class EighthUserFavoritesAdd(generics.ListCreateAPIView):
+    serializer_class = EighthActivityListSerializer
+    queryset = EighthActivity.undeleted_objects.all()
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        user = User.objects.get(id=user_id)
+        return user.favorited_activity_set.all()
+
+    def list(self, request):
+        serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
+        return Response(serialized.data)
+
+    def create(self, request, user_id=None):
+        if user_id:
+            user = User.objects.get(id=user_id)
+        else:
+            user = request.user
+        try:
+            activity = EighthActivity.objects.get(id=request.data.get('id'))
+            favorites = user.favorited_activity_set
+            favorites.add(activity)
+            return Response(EighthActivityDetailSerializer(activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
+        except EighthActivity.DoesNotExist:
+            return Response({"error": "The activity does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({"error": "An unknown error occurred"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EighthUserFavoritesRemove(generics.ListCreateAPIView):
+    serializer_class = EighthActivityListSerializer
+    queryset = EighthActivity.undeleted_objects.all()
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        user = User.objects.get(id=user_id)
+        return user.favorited_activity_set.all()
+
+    def list(self, request):
+        serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
+
+        return Response(serialized.data)
+
+    def create(self, request, user_id=None):
+        if user_id:
+            user = User.objects.get(id=user_id)
+        else:
+            user = request.user
+
+        try:
+            activity = EighthActivity.objects.get(id=request.data.get('id'))
+            favorites = user.favorited_activity_set
+            favorites.remove(activity)
+            return Response(EighthActivityDetailSerializer(activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
+        except EighthActivity.DoesNotExist:
+            return Response({"error": "The activity does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({"error": "An unknown error occurred"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EighthScheduledActivitySignupList(views.APIView):
