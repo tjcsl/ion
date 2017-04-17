@@ -64,7 +64,8 @@ def list_sponsor_view(request):
 
         if get_csv:
             response = http.HttpResponse(content_type="text/csv")
-            response['Content-Disposition'] = 'attachment; filename="sponsor_list_{}{}.csv"'.format(block.date.strftime("%Y%m%d"), re.sub(r'\W+', '', block.block_letter))
+            block_str = "{}{}".format(block.date.strftime("%Y%m%d"), re.sub(r'\W+', '', block.block_letter))
+            response['Content-Disposition'] = 'attachment; filename="sponsor_list_{}.csv"'.format(block_str)
             writer = csv.writer(response)
             writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted"])
             for row in context["sponsor_list"]:
