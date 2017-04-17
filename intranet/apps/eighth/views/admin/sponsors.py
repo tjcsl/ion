@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pickle
+import csv
 
 from collections import defaultdict
 
@@ -57,6 +58,22 @@ def list_sponsor_view(request):
                 lst[sponsor].append(act)
         lst = sorted(lst.items(), key=lambda x: x[0].name)
         context["sponsor_list"] = lst
+
+        get_csv = request.resolver_match.url_name == "eighth_admin_list_sponsor_csv"
+
+        if get_csv:
+            response = http.HttpResponse(content_type="text/csv")
+            response['Content-Disposition'] = 'attachment; filename="sponsor_list.csv"'
+            writer = csv.writer(response)
+            writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted"])
+            for row in context["sponsor_list"]:
+                writer.writerow([
+                    row[0].name,
+                    ", ".join([str(x) for x in row[1]]),
+                    " / ".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
+                    row[0].contracted_eighth
+                ])
+            return response
 
     context["admin_page_title"] = "Sponsor Schedule List"
     return render(request, "eighth/admin/list_sponsors.html", context)
