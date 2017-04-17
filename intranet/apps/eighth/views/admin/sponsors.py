@@ -2,6 +2,7 @@
 
 import pickle
 import csv
+import re
 
 from collections import defaultdict
 
@@ -63,7 +64,7 @@ def list_sponsor_view(request):
 
         if get_csv:
             response = http.HttpResponse(content_type="text/csv")
-            response['Content-Disposition'] = 'attachment; filename="sponsor_list.csv"'
+            response['Content-Disposition'] = 'attachment; filename="sponsor_list_{}{}.csv"'.format(block.date.strftime("%Y%m%d"), re.sub(r'\W+', '', block.block_letter))
             writer = csv.writer(response)
             writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted"])
             for row in context["sponsor_list"]:
