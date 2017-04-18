@@ -3,7 +3,7 @@
 {% block css %}
     {{ block.super }}
     <style>
-    .contracted {
+    #sponsor-list tr.nc {
         background-color: #e6e6e6;
     }
     #sponsor-list td {
@@ -40,7 +40,7 @@
         </thead>
         <tbody>
             {% for sponsor, acts in sponsor_list %}
-            <tr class="{% if sponsor.contracted_eighth %}contracted{% endif %}">
+            <tr class="{% if not sponsor.contracted_eighth %}nc{% endif %}">
                 <td><i class="fa fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
                 <td>{{ sponsor.name }}</td>
                 <td>{{ acts|join:", " }}</td>
