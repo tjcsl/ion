@@ -71,8 +71,8 @@ def list_sponsor_view(request):
             for row in context["sponsor_list"]:
                 writer.writerow([
                     row[0].name,
-                    ", ".join([str(x) for x in row[1]]),
-                    " / ".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
+                    "\n".join([str(x) for x in row[1]]),
+                    "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
                     row[0].contracted_eighth
                 ])
             return response

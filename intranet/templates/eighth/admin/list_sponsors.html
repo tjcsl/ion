@@ -1,25 +1,31 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}" />
     <style>
+    #sponsor-list {
+        margin-top: 5px;
+        width: 100%;
+    }
     #sponsor-list tr.nc {
         background-color: #e6e6e6;
     }
-    #sponsor-list td {
+    #sponsor-list td, #sponsor-list th {
         border: 1px solid #aaa;
         padding: 3px;
     }
     #sponsor-list td:first-child {
         text-align: center;
-        width: 18px;
-        padding: 3px;
-    }
-    #sponsor-list td:nth-child(2) {
-        width: 150px;
-        padding: 3px;
+        min-width: 33px;
     }
     </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
 {% endblock %}
 
 {% block admin_main %}
@@ -34,14 +40,14 @@
 
     {% if chosen_block %}
     <a class="button print-hide" href="{% url 'eighth_admin_list_sponsor_csv' %}?block={{ chosen_block.id }}">Download as CSV</a>
-    <table id="sponsor-list">
+    <table id="sponsor-list" data-sortable>
         <thead>
             <tr><th><i class="fa fa-file-text-o" title="Contracted for 8th Period"></i></th><th>Sponsor</th><th>Activity</th><th>Room</th></tr>
         </thead>
         <tbody>
             {% for sponsor, acts in sponsor_list %}
-            <tr class="{% if not sponsor.contracted_eighth %}nc{% endif %}">
-                <td><i class="fa fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
+            <tr {% if not sponsor.contracted_eighth %}class="nc"{% endif %}>
+                <td data-value="{% if sponsor.contracted_eighth %}t{% else %}f{% endif %}"><i class="fa fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
                 <td>{{ sponsor.name }}</td>
                 <td>{% for act in acts %}{{ act.activity }}{% if act.title %} - {{ act.title }}{% endif %}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
                 <td>{% for act in acts %}{{ act.get_true_rooms|join:", "|default:"None" }}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
