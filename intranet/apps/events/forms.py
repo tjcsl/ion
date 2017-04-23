@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.utils import timezone
 
 from .models import Event
 from ..groups.models import Group
@@ -12,6 +13,12 @@ class EventForm(forms.ModelForm):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
+
+    def clean_time(self):
+        time = self.cleaned_data["time"]
+        if time < timezone.now():
+            raise forms.ValidationError("The event time cannot be in the past!")
+        return time
 
     class Meta:
         model = Event

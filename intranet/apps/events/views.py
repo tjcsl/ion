@@ -178,7 +178,7 @@ def add_event_view(request):
             obj.save()
             return redirect("events")
         else:
-            messages.error(request, "Error adding event")
+            messages.error(request, "Error adding event.")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission('groups'))
     context = {"form": form, "action": "add", "action_title": "Add" if is_events_admin else "Submit", "is_events_admin": is_events_admin}
@@ -212,7 +212,7 @@ def request_event_view(request):
             obj.save()
             return redirect("events")
         else:
-            messages.error(request, "Error adding event")
+            messages.error(request, "Error adding event.")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission('groups'))
     context = {"form": form, "action": "request", "action_title": "Submit", "is_events_admin": is_events_admin}
@@ -247,7 +247,7 @@ def modify_event_view(request, id=None):
             messages.success(request, "Successfully modified event.")
             # return redirect("events")
         else:
-            messages.error(request, "Error adding event.")
+            messages.error(request, "Error modifying event.")
     else:
         if is_events_admin:
             form = AdminEventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
