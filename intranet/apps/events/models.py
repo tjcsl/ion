@@ -109,6 +109,8 @@ class Event(models.Model):
         A ManyToManyField of User objects that are attending the event.
     show_attending:
         Boolean, whether users can mark if they are attending or not attending.
+    show_on_dashboard:
+        Boolean, whether the event will be shown on the dashboard.
     approved:
         Boolean, whether the event has been approved and will be displayed.
     approved_by:
@@ -120,6 +122,10 @@ class Event(models.Model):
         ForeignKey to User object, the user who rejected the event.
     public:
         Boolean, whether the event is public and can be shown on the login page
+    category:
+        The category of the event, used for ordering on the login page.
+    open_to:
+        Whether this event is open to parents, students, or both, shown on the login page.
 
     """
     objects = EventManager()
