@@ -5,7 +5,7 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 
 from django.db.models import Q
@@ -38,10 +38,7 @@ def polls_view(request):
 
 @login_required
 def poll_vote_view(request, poll_id):
-    try:
-        poll = Poll.objects.get(id=poll_id)
-    except Poll.DoesNotExist:
-        raise http.Http404
+    poll = get_object_or_404(Poll, id=poll_id)
 
     user = request.user
     is_polls_admin = user.has_admin_permission("polls")
@@ -342,3 +339,18 @@ def add_poll_view(request):
 @login_required
 def modify_poll_view(request, poll_id):
     return redirect("polls")
+
+
+@login_required
+def delete_poll_view(request, poll_id):
+    if not request.user.has_admin_permission("polls"):
+        return redirect("polls")
+
+    poll = get_object_or_404(Poll, id=poll_id)
+
+    if request.method == "POST":
+        poll.delete()
+        messages.success(request, "The poll has been deleted!")
+        return redirect("polls")
+
+    return render(request, "polls/delete.html", {"poll": poll})

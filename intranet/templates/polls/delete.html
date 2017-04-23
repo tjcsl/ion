@@ -1,0 +1,29 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Delete Poll
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'polls' %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <h2 style="padding-left:0">Delete Poll: {{ poll }}</h2>
+        <p>Are you sure you want to delete <b>{{ poll }}</b>? All questions, answers, and results will be deleted. <b style="color:red">This action is permanant and irreversible!</b></p>
+        <ul style="margin-bottom:15px">
+            <li><b>{{ poll.question_set.count }}</b> Questions</li>
+            <li><b>{{ poll.get_users_voted|length }}</b> Users Voted</li>
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            <a class="button" href="{% url 'polls' %}"><i class="fa fa-undo"></i> Back</a> <button type="submit"><i class="fa fa-trash-o"></i> Delete Poll</button>
+        </form>
+    </div>
+
+{% endblock %}
