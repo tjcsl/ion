@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.db.models import Q
 
 from .models import Answer, Choice, Poll, Question
+from .forms import PollForm
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -333,12 +334,53 @@ def poll_results_view(request, poll_id):
 
 @login_required
 def add_poll_view(request):
-    return redirect("polls")
+    if not request.user.has_admin_permission("polls"):
+        return redirect("polls")
+
+    if request.method == "POST":
+        form = PollForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "The poll has been created.")
+            return redirect("polls")
+    else:
+        form = PollForm()
+
+    context = {
+        "action": "add",
+        "action_title": "Add",
+        "form": form,
+        "is_polls_admin": True
+    }
+
+    return render(request, "polls/add_modify.html", context)
 
 
 @login_required
 def modify_poll_view(request, poll_id):
-    return redirect("polls")
+    if not request.user.has_admin_permission("polls"):
+        return redirect("polls")
+
+    poll = get_object_or_404(Poll, id=poll_id)
+
+    if request.method == "POST":
+        form = PollForm(data=request.POST, instance=poll)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "The poll has been modified.")
+            return redirect("polls")
+    else:
+        form = PollForm(instance=poll)
+
+    context = {
+        "action": "modify",
+        "action_title": "Modify",
+        "poll": poll,
+        "form": form,
+        "is_polls_admin": True
+    }
+
+    return render(request, "polls/add_modify.html", context)
 
 
 @login_required
