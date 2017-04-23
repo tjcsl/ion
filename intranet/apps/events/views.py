@@ -241,7 +241,6 @@ def modify_event_view(request, id=None):
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
-            obj.user = request.user
             # SAFE HTML
             obj.description = bleach.linkify(obj.description)
             obj.save()
