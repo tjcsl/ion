@@ -32,9 +32,7 @@ class ChoiceAdmin(admin.ModelAdmin):
         'info',
         'get_poll',
         'question',
-        'num',
-        'std',
-        'app',)
+        'num',)
     list_filter = ('question',)
     ordering = (
         'question',

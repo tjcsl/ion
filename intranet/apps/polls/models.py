@@ -215,30 +215,12 @@ class Choice(models.Model):  # individual answer choices
             An integer order in which the question should appear; the primary sort.
         info
             Textual information about this answer choice.
-        std
-            Boolean, if the Question is Question.STD.
-        app
-            Boolean, if the Question is Question.APP.
-        free_resp
-            Textual field, if the question is Question.FREE_RESP.
-        short_resp
-            Textual field, if the question is Question.SHORT_RESP.
-        std_other
-            Textual field, if the question is Question.STD_OTHER.
-        is_writing
-            Boolean, if the Question is_writing().
 
     """
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     num = models.IntegerField()
     info = models.CharField(max_length=1000)
-    std = models.BooleanField(default=False)
-    app = models.BooleanField(default=False)
-    free_resp = models.CharField(max_length=1000, blank=True)
-    short_resp = models.CharField(max_length=100, blank=True)
-    std_other = models.CharField(max_length=100, blank=True)
-    is_writing = models.BooleanField(default=False)  # True if question.is_writing() or if last of STD_OTHER
 
     def trunc_info(self):
         comp = strip_tags(self.info)
