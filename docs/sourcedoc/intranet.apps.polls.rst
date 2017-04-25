@@ -12,6 +12,14 @@ intranet.apps.polls.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.polls.forms module
+--------------------------------
+
+.. automodule:: intranet.apps.polls.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.polls.models module
 ---------------------------------
 

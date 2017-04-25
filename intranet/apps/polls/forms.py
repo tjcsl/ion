@@ -5,7 +5,6 @@ import bleach
 from django import forms
 
 from .models import Poll
-from ..groups.models import Group
 
 
 class PollForm(forms.ModelForm):
@@ -22,4 +21,4 @@ class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        exclude = []
+        exclude = []  # type: List[str]

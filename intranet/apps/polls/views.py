@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import bleach
 import logging
 import json
 
@@ -341,8 +342,17 @@ def add_poll_view(request):
 
     if request.method == "POST":
         form = PollForm(data=request.POST)
-        if form.is_valid():
-            form.save()
+        question_data = request.POST.get("question_data", None)
+        flag = True
+        if not question_data:
+            messages.error(request, "No question information was sent with your request!")
+            flag = False
+        question_data = json.loads(question_data)
+        if flag and form.is_valid():
+            instance = form.save()
+
+            process_question_data(instance, question_data)
+
             messages.success(request, "The poll has been created.")
             return redirect("polls")
     else:
@@ -378,51 +388,7 @@ def modify_poll_view(request, poll_id):
         if flag and form.is_valid():
             instance = form.save()
 
-            # Remove all questions not returned by client
-            instance.question_set.exclude(pk__in=[x["pk"] for x in question_data if "pk" in x]).delete()
-
-            count = 1
-            for q in question_data:
-                question = None
-                if "pk" in q:
-                    # Question already exists
-                    question = instance.question_set.get(pk=q["pk"])
-                    question.question = q["question"]
-                    question.num = count
-                    question.type = q["type"]
-                    question.max_choices = q["max_choices"]
-                    question.save()
-
-                    # Delete all choices not returned by client
-                    question.choice_set.exclude(pk__in=[x["pk"] for x in q["choices"] if "pk" in x]).delete()
-                else:
-                    # Question does not exist
-                    question = Question.objects.create(
-                        poll=instance,
-                        question=q["question"],
-                        num=count,
-                        type=q["type"],
-                        max_choices=q["max_choices"]
-                    )
-
-                choice_count = 1
-                for c in q["choices"]:
-                    if "pk" in c:
-                        # Choice already exists
-                        choice = question.choice_set.get(pk=c["pk"])
-                        choice.num = choice_count
-                        choice.info = c["info"]
-                        choice.save()
-                    else:
-                        # Choice does not exist
-                        choice = Choice.objects.create(
-                            question=question,
-                            num=choice_count,
-                            info=c["info"]
-                        )
-                    choice_count += 1
-
-                count += 1
+            process_question_data(instance, question_data)
 
             messages.success(request, "The poll has been modified.")
             return redirect("polls")
@@ -455,3 +421,51 @@ def delete_poll_view(request, poll_id):
         return redirect("polls")
 
     return render(request, "polls/delete.html", {"poll": poll})
+
+
+def process_question_data(instance, question_data):
+    # Remove all questions not returned by client
+    instance.question_set.exclude(pk__in=[x["pk"] for x in question_data if "pk" in x]).delete()
+
+    count = 1
+    for q in question_data:
+        question = None
+        if "pk" in q:
+            # Question already exists
+            question = instance.question_set.get(pk=q["pk"])
+            question.question = bleach.linkify(q["question"])
+            question.num = count
+            question.type = q["type"]
+            question.max_choices = q["max_choices"]
+            question.save()
+
+            # Delete all choices not returned by client
+            question.choice_set.exclude(pk__in=[x["pk"] for x in q["choices"] if "pk" in x]).delete()
+        else:
+            # Question does not exist
+            question = Question.objects.create(
+                poll=instance,
+                question=bleach.linkify(q["question"]),
+                num=count,
+                type=q["type"],
+                max_choices=q["max_choices"]
+            )
+
+        choice_count = 1
+        for c in q["choices"]:
+            if "pk" in c:
+                # Choice already exists
+                choice = question.choice_set.get(pk=c["pk"])
+                choice.num = choice_count
+                choice.info = bleach.linkify(c["info"])
+                choice.save()
+            else:
+                # Choice does not exist
+                choice = Choice.objects.create(
+                    question=question,
+                    num=choice_count,
+                    info=bleach.linkify(c["info"])
+                )
+            choice_count += 1
+
+        count += 1
