@@ -430,7 +430,7 @@ def process_question_data(instance, question_data):
     count = 1
     for q in question_data:
         question = None
-        if not q["question"]:
+        if not q.get("question", None):
             # Don't add question if no question is entered
             continue
         if "pk" in q:
@@ -438,8 +438,8 @@ def process_question_data(instance, question_data):
             question = instance.question_set.get(pk=q["pk"])
             question.question = bleach.linkify(q["question"])
             question.num = count
-            question.type = q["type"]
-            question.max_choices = q["max_choices"]
+            question.type = q.get("type", "STD")
+            question.max_choices = q.get("max_choices", 1)
             question.save()
 
             # Delete all choices not returned by client
@@ -450,13 +450,13 @@ def process_question_data(instance, question_data):
                 poll=instance,
                 question=bleach.linkify(q["question"]),
                 num=count,
-                type=q["type"],
-                max_choices=q["max_choices"]
+                type=q.get("type", "STD"),
+                max_choices=q.get("max_choices", 1)
             )
 
         choice_count = 1
-        for c in q["choices"]:
-            if not c["info"]:
+        for c in q.get("choices", []):
+            if not c.get("info", None):
                 # Don't add choice if no text is entered
                 continue
             if "pk" in c:
