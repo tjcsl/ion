@@ -383,6 +383,7 @@ def modify_poll_view(request, poll_id):
 
             count = 1
             for q in question_data:
+                question = None
                 if "pk" in q:
                     # Question already exists
                     question = instance.question_set.get(pk=q["pk"])
@@ -391,6 +392,9 @@ def modify_poll_view(request, poll_id):
                     question.type = q["type"]
                     question.max_choices = q["max_choices"]
                     question.save()
+
+                    # Delete all choices not returned by client
+                    question.choice_set.exclude(pk__in=[x["pk"] for x in q["choices"] if "pk" in x]).delete()
                 else:
                     # Question does not exist
                     question = Question.objects.create(
@@ -400,6 +404,24 @@ def modify_poll_view(request, poll_id):
                         type=q["type"],
                         max_choices=q["max_choices"]
                     )
+
+                choice_count = 1
+                for c in q["choices"]:
+                    if "pk" in c:
+                        # Choice already exists
+                        choice = question.choice_set.get(pk=c["pk"])
+                        choice.num = choice_count
+                        choice.info = c["info"]
+                        choice.save()
+                    else:
+                        # Choice does not exist
+                        choice = Choice.objects.create(
+                            question=question,
+                            num=choice_count,
+                            info=c["info"]
+                        )
+                    choice_count += 1
+
                 count += 1
 
             messages.success(request, "The poll has been modified.")

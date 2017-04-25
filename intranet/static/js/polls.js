@@ -36,7 +36,7 @@ $(function() {
         $("#questions").append(questionTemplate(v));
     });
     $.each(poll_choices, function(k, v) {
-        $("#questions .question[data-id='" + v.pk + "']").find(".choices").append(choiceTemplate(v));
+        $("#questions .question[data-id='" + v.fields.question + "']").find(".choices").append(choiceTemplate(v));
     });
     $("#questions .type").selectize();
     $("#poll-form").submit(function() {
