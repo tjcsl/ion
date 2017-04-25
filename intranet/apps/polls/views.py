@@ -351,6 +351,7 @@ def add_poll_view(request):
         "action": "add",
         "action_title": "Add",
         "poll_questions": "[]",
+        "poll_choices": "[]",
         "form": form,
         "is_polls_admin": True
     }
@@ -379,6 +380,7 @@ def modify_poll_view(request, poll_id):
         "action_title": "Modify",
         "poll": poll,
         "poll_questions": serialize("json", poll.question_set.all()),
+        "poll_choices": serialize("json", Choice.objects.filter(question__in=poll.question_set.all())),
         "form": form,
         "is_polls_admin": True
     }

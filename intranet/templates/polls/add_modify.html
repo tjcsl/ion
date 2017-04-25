@@ -16,6 +16,7 @@
     <script type="text/javascript" src="{% static 'js/polls.js' %}"></script>
     <script>
         var poll_questions = $.parseJSON("{{ poll_questions|escapejs }}");
+        var poll_choices = $.parseJSON("{{ poll_choices|escapejs }}");
     </script>
 {% endblock %}
 
@@ -41,6 +42,16 @@
     </select>
     <b>Maximum Choices</b>
     <input type="number" class="max" value="<%= fields.max_choices %>" />
+    <b>Choices</b>
+    <div class="choices"></div>
+    <button class="add_choice"><i class="fa fa-plus"></i> Add Choice</button>
+</div>
+</script>
+<script type="text/template" id="choice-template">
+<div class="choice" <% if (pk) { %>data-id="<%= pk %>"<% } %>>
+    <div class="actions"><i class="fa fa-arrow-up"></i> <i class="fa fa-arrow-down"></i> <i class="fa fa-times"></i></div>
+    <b>Choice</b>
+    <input type="text" class="text" value="<%= fields.info %>" />
 </div>
 </script>
 <div class="primary-content polls">
