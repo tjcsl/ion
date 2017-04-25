@@ -430,6 +430,9 @@ def process_question_data(instance, question_data):
     count = 1
     for q in question_data:
         question = None
+        if not q["question"]:
+            # Don't add question if no question is entered
+            continue
         if "pk" in q:
             # Question already exists
             question = instance.question_set.get(pk=q["pk"])
@@ -453,6 +456,9 @@ def process_question_data(instance, question_data):
 
         choice_count = 1
         for c in q["choices"]:
+            if not c["info"]:
+                # Don't add choice if no text is entered
+                continue
             if "pk" in c:
                 # Choice already exists
                 choice = question.choice_set.get(pk=c["pk"])
