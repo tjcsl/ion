@@ -12,17 +12,10 @@
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.1/dist/js/standalone/selectize.min.js' %}"></script>
-    <script type="text/javascript">
-        $(function() {
-            $("select#id_groups").selectize({
-                plugins: ["remove_button"],
-                placeholder: "Everyone"
-            });
-            $("#id_start_time, #id_end_time").datetimepicker({
-                lazyInit: true,
-                format: "Y-m-d H:i:s"
-            });
-        });
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/polls.js' %}"></script>
+    <script>
+        var poll_questions = $.parseJSON("{{ poll_questions|escapejs }}");
     </script>
 {% endblock %}
 
@@ -35,6 +28,21 @@
 {% endblock %}
 
 {% block main %}
+<script type="text/template" id="question-template">
+<div class="question" <% if (pk) { %>data-id="<%= pk %>"<% } %>>
+    <div class="actions"><i class="fa fa-arrow-up"></i> <i class="fa fa-arrow-down"></i> <i class="fa fa-times"></i></div>
+    <b>Question</b>
+    <input type="text" class="text" value="<%= fields.question %>" />
+    <b>Type</b>
+    <select class="type">
+        <option value="STD" <% if (fields.type == "STD") { %>selected<% } %>>Standard</option>
+        <option value="ELC" <% if (fields.type == "ELC") { %>selected<% } %>>Election</option>
+        <option value="APP" <% if (fields.type == "APP") { %>selected<% } %>>Approval</option>
+    </select>
+    <b>Maximum Choices</b>
+    <input type="number" class="max" value="<%= fields.max_choices %>" />
+</div>
+</script>
 <div class="primary-content polls">
     <h2 style="padding-left:0">
         {{ action_title }} Poll
@@ -42,7 +50,8 @@
     <form action="/polls/{{ action }}{% if poll %}/{{ poll.id }}{% endif %}" method="post">
     <table>
     {% csrf_token %}
-    <tr><td colspan="2">
+    <tr>
+        <td colspan="2">
         {% if action == "add" %}
             <p>
                 {% if is_polls_admin %}
@@ -53,13 +62,23 @@
             </p>
             <br />
         {% endif %}
-    </td></tr>
+        </td>
+    </tr>
     {{ form.as_table }}
+    <tr>
+        <td>Questions:</td>
+        <td id="question_wrapper">
+            <div id="questions">
+            </div>
+            <button id="add_question"><i class="fa fa-plus"></i> Add Question</button>
+        </td>
+    </tr>
     <tr><td colspan="2" style="text-align:center">
         {% if poll.id %}
             <a href="{% url 'delete_poll' poll.id %}" class="button">Delete</a>
         {% endif %}
-        <input type="submit" style="width:200px" /></td></tr>
+        <input type="submit" style="width:200px" />
+    </td></tr>
     </table>
     </form>
 </div>

@@ -6,6 +6,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.core.serializers import serialize
 from django.utils import timezone
 
 from django.db.models import Q
@@ -349,6 +350,7 @@ def add_poll_view(request):
     context = {
         "action": "add",
         "action_title": "Add",
+        "poll_questions": "[]",
         "form": form,
         "is_polls_admin": True
     }
@@ -376,6 +378,7 @@ def modify_poll_view(request, poll_id):
         "action": "modify",
         "action_title": "Modify",
         "poll": poll,
+        "poll_questions": serialize("json", poll.question_set.all()),
         "form": form,
         "is_polls_admin": True
     }
