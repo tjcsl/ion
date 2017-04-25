@@ -39,6 +39,32 @@ $(function() {
         $("#questions .question[data-id='" + v.pk + "']").find(".choices").append(choiceTemplate(v));
     });
     $("#questions .type").selectize();
+    $("#poll-form").submit(function() {
+        var out = [];
+        $("#questions .question").each(function() {
+            var q = {
+                "question": $(this).find(".text").val(),
+                "type": $(this).find(".type").val(),
+                "max_choices": $(this).find(".max").val(),
+                "choices": []
+            };
+            if ($(this).attr("data-id")) {
+                q["pk"] = $(this).attr("data-id");
+            }
+            $(this).find(".choices .choice").each(function() {
+                var c = {
+                    "info": $(this).find(".info").val()
+                };
+                if ($(this).attr("data-id")) {
+                    c["pk"] = $(this).attr("data-id");
+                }
+                q["choices"].push(c);
+            });
+            out.push(q);
+        });
+        $("#id_question_data").val(JSON.stringify(out));
+        return true;
+    });
     $("#add_question").click(function(e) {
         e.preventDefault();
         var new_question = $(questionTemplate(default_question));

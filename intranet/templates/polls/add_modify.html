@@ -51,16 +51,17 @@
 <div class="choice" <% if (pk) { %>data-id="<%= pk %>"<% } %>>
     <div class="actions"><i class="fa fa-arrow-up"></i> <i class="fa fa-arrow-down"></i> <i class="fa fa-times"></i></div>
     <b>Choice</b>
-    <input type="text" class="text" value="<%= fields.info %>" />
+    <input type="text" class="info" value="<%= fields.info %>" />
 </div>
 </script>
 <div class="primary-content polls">
     <h2 style="padding-left:0">
         {{ action_title }} Poll
     </h2>
-    <form action="/polls/{{ action }}{% if poll %}/{{ poll.id }}{% endif %}" method="post">
-    <table>
+    <form id="poll-form" action="/polls/{{ action }}{% if poll %}/{{ poll.id }}{% endif %}" method="post">
     {% csrf_token %}
+    <input type="hidden" id="id_question_data" name="question_data" />
+    <table>
     <tr>
         <td colspan="2">
         {% if action == "add" %}
