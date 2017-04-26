@@ -202,8 +202,8 @@ def ldap_next_id(request):
                     if x not in res:
                         usrid = x
                         break
-            else:
-                logger.error("Out of attendance user LDAP IDs!")
+                else:
+                    logger.error("Out of attendance user LDAP IDs!")
         else:
             res = set([x for x in res if x < 1400])
             usrid = max(res) + 1
@@ -212,8 +212,8 @@ def ldap_next_id(request):
                     if x not in res:
                         usrid = x
                         break
-            else:
-                logger.error("Out of teacher LDAP IDs!")
+                else:
+                    logger.error("Out of teacher LDAP IDs!")
     return JsonResponse({"id": usrid})
 
 
