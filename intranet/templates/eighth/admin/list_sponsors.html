@@ -15,6 +15,10 @@
     #sponsor-list tr.nc {
         background-color: #e6e6e6;
     }
+    #sponsor-list tr.noacts {
+        font-weight: bold;
+        color: red;
+    }
     #sponsor-list td, #sponsor-list th {
         border: 1px solid #aaa;
         padding: 3px;
@@ -49,7 +53,7 @@
         </thead>
         <tbody>
             {% for sponsor, acts in sponsor_list %}
-            <tr class="{% if sponsor.contracted_eighth %}cont{% else %}nc{% endif %}">
+            <tr class="{% if sponsor.contracted_eighth %}cont{% else %}nc{% endif %}{% if not acts %} noacts{% endif %}">
                 <td data-value="{% if sponsor.contracted_eighth %}t{% else %}f{% endif %}"><i class="fa fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
                 <td>{{ sponsor.name }}</td>
                 <td>{% for act in acts %}{{ act.activity }}{% if act.title %} - {{ act.title }}{% endif %}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
