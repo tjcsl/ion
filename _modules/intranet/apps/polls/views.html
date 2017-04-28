@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3669) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3682) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3669)',
+        VERSION:     'v3 (Build #3682)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -147,7 +147,6 @@
   <h1>Source code for intranet.apps.polls.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">bleach</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
@@ -163,6 +162,7 @@
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Question</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PollForm</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -583,7 +583,7 @@
         <span class="k">if</span> <span class="s2">&quot;pk&quot;</span> <span class="ow">in</span> <span class="n">q</span><span class="p">:</span>
             <span class="c1"># Question already exists</span>
             <span class="n">question</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">])</span>
-            <span class="n">question</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">])</span>
+            <span class="n">question</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">])</span>
             <span class="n">question</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">count</span>
             <span class="n">question</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;STD&quot;</span><span class="p">)</span>
             <span class="n">question</span><span class="o">.</span><span class="n">max_choices</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_choices&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -595,7 +595,7 @@
             <span class="c1"># Question does not exist</span>
             <span class="n">question</span> <span class="o">=</span> <span class="n">Question</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                 <span class="n">poll</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
-                <span class="n">question</span><span class="o">=</span><span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]),</span>
+                <span class="n">question</span><span class="o">=</span><span class="n">safe_html</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]),</span>
                 <span class="n">num</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;STD&quot;</span><span class="p">),</span>
                 <span class="n">max_choices</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_choices&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -610,14 +610,14 @@
                 <span class="c1"># Choice already exists</span>
                 <span class="n">choice</span> <span class="o">=</span> <span class="n">question</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">])</span>
                 <span class="n">choice</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">choice_count</span>
-                <span class="n">choice</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">])</span>
+                <span class="n">choice</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">])</span>
                 <span class="n">choice</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Choice does not exist</span>
                 <span class="n">choice</span> <span class="o">=</span> <span class="n">Choice</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                     <span class="n">question</span><span class="o">=</span><span class="n">question</span><span class="p">,</span>
                     <span class="n">num</span><span class="o">=</span><span class="n">choice_count</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">])</span>
+                    <span class="n">info</span><span class="o">=</span><span class="n">safe_html</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">])</span>
                 <span class="p">)</span>
             <span class="n">choice_count</span> <span class="o">+=</span> <span class="mi">1</span>
 

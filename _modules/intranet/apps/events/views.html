@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events.views &#8212; TJ Intranet v3 (Build #3669) documentation</title>
+    <title>intranet.apps.events.views &#8212; TJ Intranet v3 (Build #3682) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3669)',
+        VERSION:     'v3 (Build #3682)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -150,8 +150,6 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">import</span> <span class="nn">bleach</span>
-
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
@@ -160,6 +158,8 @@
 
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AdminEventForm</span><span class="p">,</span> <span class="n">EventForm</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Event</span>
+
+<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -314,7 +314,7 @@
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
             <span class="c1"># auto-approve if admin</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="kc">True</span>
@@ -350,7 +350,7 @@
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
                              <span class="s2">&quot;Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.&quot;</span><span class="p">)</span>
@@ -389,7 +389,7 @@
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified event.&quot;</span><span class="p">)</span>
             <span class="c1"># return redirect(&quot;events&quot;)</span>
