@@ -25,7 +25,6 @@ from ...utils.html import safe_html
 logger = logging.getLogger(__name__)
 
 
-
 @login_required
 def view_announcements(request):
     """Show the dashboard with only announcements."""
