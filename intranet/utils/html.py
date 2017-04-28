@@ -2,9 +2,13 @@
 
 import bleach
 
-ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS + ['iframe', 'div', 'p']
-ALLOWED_ATTRIBUTES = bleach.sanitizer.ALLOWED_ATTRIBUTES
-ALLOWED_ATTRIBUTES['iframe'] = ['src', 'height', 'width', 'allowfullscreen', 'frameborder']
+ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'strong', 'ul', 'iframe', 'div', 'p']
+ALLOWED_ATTRIBUTES = {
+    'acronym': ['title'],
+    'a': ['href', 'title'],
+    'abbr': ['title'],
+    'iframe': ['src', 'height', 'width', 'allowfullscreen', 'frameborder']
+}
 
 
 def safe_html(txt):
