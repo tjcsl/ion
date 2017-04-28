@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 bleach.sanitizer.ALLOWED_TAGS += ['iframe', 'div', 'p']
 bleach.sanitizer.ALLOWED_ATTRIBUTES['iframe'] = ['src', 'height', 'width', 'allowfullscreen', 'frameborder']
 
+
 @login_required
 def view_announcements(request):
     """Show the dashboard with only announcements."""
