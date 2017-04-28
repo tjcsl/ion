@@ -13,4 +13,4 @@ ALLOWED_ATTRIBUTES = {
 
 
 def safe_html(txt):
-    return bleach.linkify(bleach.clean(txt, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES), skip_tags=['iframe'])
+    return bleach.linkify(bleach.clean(txt, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES))
