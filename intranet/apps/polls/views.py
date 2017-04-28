@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import bleach
 import logging
 import json
 
@@ -16,6 +15,7 @@ from django.db.models import Q
 from .models import Answer, Choice, Poll, Question
 from .forms import PollForm
 from ..users.models import User
+from ...utils.html import safe_html
 
 logger = logging.getLogger(__name__)
 
@@ -436,7 +436,7 @@ def process_question_data(instance, question_data):
         if "pk" in q:
             # Question already exists
             question = instance.question_set.get(pk=q["pk"])
-            question.question = bleach.linkify(q["question"])
+            question.question = safe_html(q["question"])
             question.num = count
             question.type = q.get("type", "STD")
             question.max_choices = q.get("max_choices", 1)
@@ -448,7 +448,7 @@ def process_question_data(instance, question_data):
             # Question does not exist
             question = Question.objects.create(
                 poll=instance,
-                question=bleach.linkify(q["question"]),
+                question=safe_html(q["question"]),
                 num=count,
                 type=q.get("type", "STD"),
                 max_choices=q.get("max_choices", 1)
@@ -463,14 +463,14 @@ def process_question_data(instance, question_data):
                 # Choice already exists
                 choice = question.choice_set.get(pk=c["pk"])
                 choice.num = choice_count
-                choice.info = bleach.linkify(c["info"])
+                choice.info = safe_html(c["info"])
                 choice.save()
             else:
                 # Choice does not exist
                 choice = Choice.objects.create(
                     question=question,
                     num=choice_count,
-                    info=bleach.linkify(c["info"])
+                    info=safe_html(c["info"])
                 )
             choice_count += 1
 

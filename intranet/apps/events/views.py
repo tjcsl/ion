@@ -3,8 +3,6 @@
 import datetime
 import logging
 
-import bleach
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -14,10 +12,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AdminEventForm, EventForm
 from .models import Event
 
-logger = logging.getLogger(__name__)
+from ...utils.html import safe_html
 
-bleach.sanitizer.ALLOWED_TAGS += ['iframe', 'div', 'p']
-bleach.sanitizer.ALLOWED_ATTRIBUTES['iframe'] = ['src', 'height', 'width', 'allowfullscreen', 'frameborder']
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -170,7 +167,7 @@ def add_event_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(bleach.clean(obj.description), skip_tags=['iframe'])
+            obj.description = safe_html(obj.description)
 
             # auto-approve if admin
             obj.approved = True
@@ -206,7 +203,7 @@ def request_event_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(bleach.clean(obj.description), skip_tags=['iframe'])
+            obj.description = safe_html(obj.description)
 
             messages.success(request,
                              "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.")
@@ -245,7 +242,7 @@ def modify_event_view(request, id=None):
         if form.is_valid():
             obj = form.save()
             # SAFE HTML
-            obj.description = bleach.linkify(bleach.clean(obj.description), skip_tags=['iframe'])
+            obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully modified event.")
             # return redirect("events")

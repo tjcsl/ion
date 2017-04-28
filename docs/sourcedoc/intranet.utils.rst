@@ -44,6 +44,14 @@ intranet.utils.helpers module
     :undoc-members:
     :show-inheritance:
 
+intranet.utils.html module
+--------------------------
+
+.. automodule:: intranet.utils.html
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.ical module
 --------------------------
 

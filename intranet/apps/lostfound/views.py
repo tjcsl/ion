@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import bleach
 import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,6 +7,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import LostItem, FoundItem
 from .forms import LostItemForm, FoundItemForm
+
+from ...utils.html import safe_html
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ def lostitem_add_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully added lost item.")
             return redirect("lostitem_view", obj.id)
@@ -73,7 +74,7 @@ def lostitem_modify_view(request, item_id=None):
             obj = form.save()
             logger.debug(form.cleaned_data)
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully modified lost item.")
             return redirect("lostitem_view", obj.id)
@@ -134,7 +135,7 @@ def founditem_add_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully added found item.")
             return redirect("founditem_view", obj.id)
@@ -159,7 +160,7 @@ def founditem_modify_view(request, item_id=None):
             obj = form.save()
             logger.debug(form.cleaned_data)
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully modified found item.")
             return redirect("founditem_view", obj.id)

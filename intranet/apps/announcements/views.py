@@ -3,8 +3,6 @@
 import datetime
 import logging
 
-import bleach
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -22,10 +20,10 @@ from ..auth.decorators import announcements_admin_required
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 
+from ...utils.html import safe_html
+
 logger = logging.getLogger(__name__)
 
-bleach.sanitizer.ALLOWED_TAGS += ['iframe', 'div', 'p']
-bleach.sanitizer.ALLOWED_ATTRIBUTES['iframe'] = ['src', 'height', 'width', 'allowfullscreen', 'frameborder']
 
 
 @login_required
@@ -98,7 +96,7 @@ def request_announcement_view(request):
                 obj = form.save(commit=True)
                 obj.user = request.user
                 # SAFE HTML
-                obj.content = bleach.linkify(bleach.clean(obj.content), skip_tags=['iframe'])
+                obj.content = safe_html(obj.content)
 
                 obj.save()
 
@@ -162,7 +160,7 @@ def approve_announcement_view(request, req_id):
         if form.is_valid():
             obj = form.save(commit=True)
             # SAFE HTML
-            obj.content = bleach.linkify(bleach.clean(obj.content), skip_tags=['iframe'])
+            obj.content = safe_html(obj.content)
             obj.save()
             if "approve" in request.POST:
                 obj.teachers_approved.add(request.user)
@@ -211,7 +209,7 @@ def admin_approve_announcement_view(request, req_id):
         if form.is_valid():
             req = form.save(commit=True)
             # SAFE HTML
-            req.content = bleach.linkify(bleach.clean(req.content), skip_tags=['iframe'])
+            req.content = safe_html(req.content)
             if "approve" in request.POST:
                 groups = []
                 if "groups" in request.POST:
@@ -268,7 +266,7 @@ def add_announcement_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.content = bleach.linkify(bleach.clean(obj.content), skip_tags=['iframe'])
+            obj.content = safe_html(obj.content)
             obj.save()
             announcement_posted_hook(request, obj)
             messages.success(request, "Successfully added announcement.")
@@ -309,7 +307,7 @@ def modify_announcement_view(request, id=None):
                 logger.debug("Update added date")
                 obj.added = timezone.now()
             # SAFE HTML
-            obj.content = bleach.linkify(bleach.clean(obj.content), skip_tags=['iframe'])
+            obj.content = safe_html(obj.content)
             obj.save()
             messages.success(request, "Successfully modified announcement.")
             return redirect("index")
