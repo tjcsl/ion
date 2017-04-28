@@ -95,7 +95,7 @@ def request_announcement_view(request):
                 obj = form.save(commit=True)
                 obj.user = request.user
                 # SAFE HTML
-                obj.content = bleach.linkify(obj.content)
+                obj.content = bleach.linkify(obj.content, skip_tags=['iframe'])
 
                 obj.save()
 
@@ -159,7 +159,7 @@ def approve_announcement_view(request, req_id):
         if form.is_valid():
             obj = form.save(commit=True)
             # SAFE HTML
-            obj.content = bleach.linkify(obj.content)
+            obj.content = bleach.linkify(obj.content, skip_tags=['iframe'])
             obj.save()
             if "approve" in request.POST:
                 obj.teachers_approved.add(request.user)
@@ -208,7 +208,7 @@ def admin_approve_announcement_view(request, req_id):
         if form.is_valid():
             req = form.save(commit=True)
             # SAFE HTML
-            req.content = bleach.linkify(req.content)
+            req.content = bleach.linkify(req.content, skip_tags=['iframe'])
             if "approve" in request.POST:
                 groups = []
                 if "groups" in request.POST:
@@ -265,7 +265,7 @@ def add_announcement_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.content = bleach.linkify(obj.content)
+            obj.content = bleach.linkify(obj.content, skip_tags=['iframe'])
             obj.save()
             announcement_posted_hook(request, obj)
             messages.success(request, "Successfully added announcement.")
@@ -306,7 +306,7 @@ def modify_announcement_view(request, id=None):
                 logger.debug("Update added date")
                 obj.added = timezone.now()
             # SAFE HTML
-            obj.content = bleach.linkify(obj.content)
+            obj.content = bleach.linkify(obj.content, skip_tags=['iframe'])
             obj.save()
             messages.success(request, "Successfully modified announcement.")
             return redirect("index")

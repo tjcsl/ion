@@ -167,7 +167,7 @@ def add_event_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = bleach.linkify(obj.description, skip_tags=['iframe'])
 
             # auto-approve if admin
             obj.approved = True
@@ -203,7 +203,7 @@ def request_event_view(request):
             obj = form.save()
             obj.user = request.user
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = bleach.linkify(obj.description, skip_tags=['iframe'])
 
             messages.success(request,
                              "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.")
@@ -242,7 +242,7 @@ def modify_event_view(request, id=None):
         if form.is_valid():
             obj = form.save()
             # SAFE HTML
-            obj.description = bleach.linkify(obj.description)
+            obj.description = bleach.linkify(obj.description, skip_tags=['iframe'])
             obj.save()
             messages.success(request, "Successfully modified event.")
             # return redirect("events")

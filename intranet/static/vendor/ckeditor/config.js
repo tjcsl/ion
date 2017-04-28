@@ -31,4 +31,11 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
+
+    // YouTube Embed
+    config.extraPlugins = 'youtube';
+    config.youtube_responsive = true;
+    config.youtube_related = false;
+    config.youtube_autoplay = false;
+    config.youtube_disabled_fields = ['chkRelated', 'chkAutoplay'];
 };
