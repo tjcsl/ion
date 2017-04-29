@@ -15,6 +15,7 @@
         var list_endpoint = "{% url 'eighth_admin_maintenance_ldap_list' %}";
         var modify_endpoint = "{% url 'eighth_admin_maintenance_ldap_modify' %}";
         var delete_endpoint = "{% url 'eighth_admin_maintenance_ldap_delete' %}";
+        var lock_endpoint = "{% url 'eighth_admin_maintenance_ldap_lock' %}";
         var next_id_endpoint = "{% url 'eighth_admin_maintenance_ldap_next_id' %}";
     </script>
 {% endblock %}
@@ -36,8 +37,10 @@
         <div id="account-list" tabindex="0"></div>
     </div>
     <div id="edit-area">
-        <h3 id="edit-title" style="margin-bottom:5px">Create Teacher Account</h3>
+        <h3 id="edit-title" style="margin-bottom:5px">Create Student Account</h3>
         <p id="create-notif" style="display:none">Deselect the currently selected user to create new accounts.</p>
+        <div id="no-db-user"><i class="fa fa-user"></i> This account has no database user associated with it!</div>
+        <div id="account-locked"><i class="fa fa-lock"></i> This account is locked!</div>
         <div class="normal-fields">
             <input type="hidden" class="ldap-field" id="ldap-dn" />
             {% for field, name in fields %}
@@ -68,7 +71,11 @@
         </div>
         <div id="additional-fields"></div>
         <div id="edit-area-buttons">
-            <button id="edit-teacher">Create Teacher</button> <span id="ldap-loading"><i class="fa fa-cog fa-spin fa-2x"></i></span> <button style="display:none" id="delete-teacher" class="pull-right"><i class="fa fa-trash-o"></i> Delete Account</button>
+            <button id="edit-account">Create Student</button> <span id="ldap-loading"><i class="fa fa-cog fa-spin fa-2x"></i></span>
+            <span class="pull-right">
+                <button style="display:none" id="delete-account"><i class="fa fa-trash-o"></i> Delete Account</button>
+                <button style="display:none" id="lock-account"><i class="fa fa-lock"></i> Lock Account</button>
+            </span>
         </div>
     </div>
 </div>
@@ -78,7 +85,11 @@
         <b id="delete-fullname"></b> (<span id="delete-username"></span>)
         <p style="color:red">This action is irreversible!</p>
         <p style="margin-bottom:15px"><b>Please avoid deleting users that have existing data associated with them</b> because this could lead to database instability. This feature is intended to be used for cases where an account is accidentally created. You can instead lock the account, preventing the user from logging in and hiding the user from other users.</p>
-        <button id="delete-modal-cancel">Cancel</button> <button id="delete-modal-confirm" class="pull-right"><i class="fa fa-trash-o"></i> Delete</button>
+        <button id="delete-modal-cancel">Cancel</button>
+        <span class="pull-right">
+            <button id="delete-modal-lock"><i class="fa fa-lock"></i> Lock</button>
+            <button id="delete-modal-confirm"><i class="fa fa-trash-o"></i> Delete</button>
+        </span>
     </div>
 </div>
 {% endblock %}

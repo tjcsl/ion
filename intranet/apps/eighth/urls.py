@@ -65,6 +65,7 @@ eighth_admin_patterns = [
     url(r"^maintenance/ldap$", admin_maintenance.ldap_management, name="eighth_admin_maintenance_ldap"),
     url(r"^maintenance/ldap/list$", admin_maintenance.ldap_list, name="eighth_admin_maintenance_ldap_list"),
     url(r"^maintenance/ldap/delete$", admin_maintenance.ldap_delete, name="eighth_admin_maintenance_ldap_delete"),
+    url(r"^maintenance/ldap/lock$", admin_maintenance.ldap_lock, name="eighth_admin_maintenance_ldap_lock"),
     url(r"^maintenance/ldap/modify$", admin_maintenance.ldap_modify, name="eighth_admin_maintenance_ldap_modify"),
     url(r"^maintenance/ldap/next_id$", admin_maintenance.ldap_next_id, name="eighth_admin_maintenance_ldap_next_id"),
 

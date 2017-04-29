@@ -179,6 +179,16 @@ def ldap_delete(request):
 
 @eighth_admin_required
 @reauthentication_required
+def ldap_lock(request):
+    dn = request.POST.get("dn", None)
+    u = User.get_user(dn=dn)
+    u.user_locked = not u.user_locked
+    u.save()
+    return JsonResponse({"success": True, "locked": u.user_locked})
+
+
+@eighth_admin_required
+@reauthentication_required
 def ldap_next_id(request):
     is_student = request.GET.get("type", "teacher") == "student"
     is_attendance = request.GET.get("type", "teacher") == "attendance"
@@ -229,7 +239,18 @@ def ldap_list(request):
         account = {k: (v[0] if isinstance(v, list) else v) for k, v in data[0]["attributes"].items()}
         account["dn"] = data[0]["dn"]
         account["userPassword"] = "NA"
-        return JsonResponse({"account": account})
+
+        u = None
+        try:
+            u = User.get_user(dn=account["dn"])
+        except User.DoesNotExist:
+            pass
+
+        return JsonResponse({
+            "account": account,
+            "db_user": bool(u),
+            "is_locked": u.user_locked if u else False
+        })
     else:
         is_student = request.GET.get("type", "teacher") == "student"
         is_attendance = request.GET.get("type", "teacher") == "attendance"

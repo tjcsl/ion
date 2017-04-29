@@ -21,10 +21,10 @@ function refreshList() {
     });
 }
 function loadAccount(id) {
-    $("#delete-teacher, #create-notif").toggle(!!id);
+    $("#delete-account, #lock-account, #create-notif").toggle(!!id);
     $("#generate-id, #default-fields").toggle(!id);
     $("#ldap-iodineUidNumber").prop("readonly", !!id);
-    $("#edit-teacher").text((id ? "Edit " : "Create ") + type);
+    $("#edit-account").text((id ? "Edit " : "Create ") + type);
     $("#edit-title").text(id ? ("Edit " + type +  " Account - " + id) : ("Create " + type + " Account"));
     $("#student-fields").toggle(type == "Student");
     $(".ldap-field").val("");
@@ -43,6 +43,9 @@ function loadAccount(id) {
                     $("#additional-fields").append("<div class='form-group'><label><b>Additional Field</b> (" + k + ")</label><input readonly class='ldap-field' id='ldap-" + k + "' type='text' value='" + v.toString().replace("'", "\\'") + "' /></div>");
                 }
             });
+            $("#no-db-user").toggle(!data.db_user);
+            $("#lock-account").html("<i class='fa fa-" + (data.is_locked ? "unlock" : "lock") + "'></i> " + (data.is_locked ? "Unlock" : "Lock") + " Account");
+            $("#account-locked").toggle(!!data.is_locked);
         }).fail(function() {
             Messenger().error("Failed to retrieve account information.");
         }).always(function() {
@@ -91,7 +94,7 @@ $(document).ready(function() {
             $("#account-list").focus();
         }
     });
-    $("#edit-teacher").click(function(e) {
+    $("#edit-account").click(function(e) {
         e.preventDefault();
         var fields = {};
         $(".ldap-field").each(function() {
@@ -125,16 +128,33 @@ $(document).ready(function() {
             Messenger().error("Failed to generate ID.");
         });
     });
-    $("#delete-teacher").click(function(e) {
+    $("#delete-account").click(function(e) {
         e.preventDefault();
         $("#delete-fullname").text($("#ldap-cn").attr("data-original"));
         $("#delete-username").text($("#ldap-iodineUid").attr("data-original"));
         $("#delete-modal-background").fadeIn("fast");
         $("#delete-modal-cancel").focus();
     });
+    $("#lock-account").click(function(e) {
+        e.preventDefault();
+        $.post(lock_endpoint, { "dn": $("#ldap-dn").val() }, function(data) {
+            if (data.success) {
+                Messenger().success(type + " account '" + $("#ldap-cn").attr("data-original") + "' " + (data.locked ? "locked" : "unlocked") + "!");
+                loadAccount($("#ldap-iodineUid").attr("data-original"));
+            }
+            else {
+                Messenger().error("Failed to change lock status for " + type.toLowerCase() + " account." + (data.error ? "<br /><b>Error:</b> " + data.error : "") + (data.details ? "<br /><b>Details</b>: " + data.details : ""));
+            }
+        });
+    });
     $("#delete-modal-cancel").click(function(e) {
         e.preventDefault();
         $("#delete-modal-background").fadeOut("fast");
+    });
+    $("#delete-modal-lock").click(function(e) {
+        e.preventDefault();
+        $("#delete-modal-background").fadeOut("fast");
+        $("#lock-account").click();
     });
     $("#delete-modal-confirm").click(function(e) {
         e.preventDefault();
