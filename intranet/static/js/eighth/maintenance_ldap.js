@@ -57,7 +57,7 @@ $(document).ready(function() {
     refreshList();
     $(window).resize(function() {
         $("#account-list").css("height", ($(window).height() - $("#account-list").offset().top - 10) + "px");
-        $("#edit-area").css("height", ($(window).height() - $("#edit-area").offset().top - 10) + "px");
+        $("#edit-area").css("height", ($(window).height() - $("#edit-area").offset().top - 60) + "px");
     });
     $(window).resize();
     $("#account-list-search").on("change keyup paste", function() {
