@@ -386,3 +386,7 @@ class EighthAddSignupSerializer(serializers.Serializer):
 
     class Meta:
         validators = [add_signup_validator]
+
+
+class EighthToggleFavoriteSerializer(serializers.Serializer):
+    activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all(), required=False)
