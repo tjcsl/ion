@@ -16,7 +16,8 @@ from ..serializers import (EighthActivityDetailSerializer,
                            EighthBlockDetailSerializer,
                            EighthBlockListSerializer,
                            EighthScheduledActivitySerializer,
-                           EighthSignupSerializer)
+                           EighthSignupSerializer,
+                           EighthToggleFavoriteSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -116,23 +117,8 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
 
-class EighthUserFavoritesList(generics.ListAPIView):
-    serializer_class = EighthActivityListSerializer
-    queryset = EighthActivity.undeleted_objects.all()
-
-    def get_queryset(self):
-        user_id = self.request.user.id
-        user = User.objects.get(id=user_id)
-        return user.favorited_activity_set.all()
-
-    def list(self, request):
-        serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
-
-        return Response(serialized.data)
-
-
-class EighthUserFavoritesAdd(generics.ListCreateAPIView):
-    serializer_class = EighthActivityListSerializer
+class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
+    serializer_class = EighthToggleFavoriteSerializer
     queryset = EighthActivity.undeleted_objects.all()
 
     def get_queryset(self):
@@ -143,6 +129,38 @@ class EighthUserFavoritesAdd(generics.ListCreateAPIView):
     def list(self, request):
         serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
         return Response(serialized.data)
+
+    def create(self, request, user_id=None):
+        if user_id:
+            user = User.objects.get(id=user_id)
+        else:
+            user = request.user
+
+        serializer = EighthToggleFavoriteSerializer(data=request.data, context={"request": request})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        activity = serializer.validated_data['activity']
+        print(activity)
+        favorites = user.favorited_activity_set
+        if activity in favorites.all():
+            favorites.remove(activity)
+        else:
+            favorites.add(activity)
+        return Response(EighthActivityDetailSerializer(activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
+        # except EighthActivity.DoesNotExist:
+        #     return Response({"error": "The activity does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        # except Exception:
+        #     return Response({"error": "An unknown error occurred"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EighthUserFavoritesAdd(generics.CreateAPIView):
+    serializer_class = EighthActivityDetailSerializer
+    queryset = EighthActivity.undeleted_objects.all()
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        user = User.objects.get(id=user_id)
+        return user.favorited_activity_set.all()
 
     def create(self, request, user_id=None):
         if user_id:
