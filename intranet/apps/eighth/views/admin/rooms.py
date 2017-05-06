@@ -177,8 +177,9 @@ def room_utilization_action(request, start_id, end_id):
     except EighthBlock.DoesNotExist:
         raise http.Http404
 
+    show_used_rooms = ("show_used" in request.GET)
     show_all_rooms = ("show_all" in request.GET)
-    show_listing = show_all_rooms or ("room" in request.GET)
+    show_listing = show_all_rooms or show_used_rooms or ("room" in request.GET)
 
     all_rooms = EighthRoom.objects.all().order_by("name")
 
@@ -205,6 +206,7 @@ def room_utilization_action(request, start_id, end_id):
         "hide_administrative": hide_administrative,
         "only_show_overbooked": only_show_overbooked,
         "show_listing": show_listing,
+        "show_used_rooms": show_used_rooms,
         "show_all_rooms": show_all_rooms
     }
     get_csv = request.resolver_match.url_name == "eighth_admin_room_utilization_csv"
