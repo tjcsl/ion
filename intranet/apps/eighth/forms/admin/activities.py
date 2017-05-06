@@ -122,6 +122,10 @@ class ActivityForm(forms.ModelForm):
         self.fields["presign"].label = "48 Hour"
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
+        # These fields are rendered on the right of the page on the edit activity page.
+        self.right_fields = set(['restricted', 'users_allowed', 'groups_allowed', 'users_blacklisted', 'freshmen_allowed', 'sophomores_allowed',
+                                 'juniors_allowed', 'seniors_allowed'])
+
     class Meta:
         model = EighthActivity
         fields = [
