@@ -255,12 +255,23 @@ def stats_global_view(request):
             response = HttpResponse(content_type="text/csv")
             response["Content-Disposition"] = 'attachment; filename="eighth.csv"'
             writer = csv.writer(response)
-            writer.writerow(["Activity", "Default Sponsors", "Default Rooms"])
+            writer.writerow(["Activity", "Default Sponsors", "Default Rooms", "Capacity", "Unique Students", "Total Blocks", "Scheduled Blocks",
+                             "Cancelled Blocks", "Empty Blocks", "Total Signups", "Average Signups per Block", "Average Signups per Student"])
             for act in EighthActivity.objects.all().order_by("name").prefetch_related("rooms").prefetch_related("sponsors"):
+                stats = calculate_statistics(act, year=year)
                 writer.writerow([
                     act.name,
                     ", ".join([x.name for x in act.sponsors.all()]),
-                    ", ".join([str(x) for x in act.rooms.all()])
+                    ", ".join([str(x) for x in act.rooms.all()]),
+                    stats["capacity"],
+                    stats["students"],
+                    stats["total_blocks"],
+                    stats["scheduled_blocks"],
+                    stats["cancelled_blocks"],
+                    stats["empty_blocks"],
+                    stats["total_signups"],
+                    stats["average_signups"],
+                    stats["average_user_signups"]
                 ])
         else:
             response = HttpResponse(content_type="application/pdf")
