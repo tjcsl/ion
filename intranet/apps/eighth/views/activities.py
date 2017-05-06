@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import csv
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -60,6 +61,9 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         activities = EighthActivity.objects.all().order_by("name")
     if year is None:
         year = current_school_year()
+
+    if not isinstance(activities, list):
+        activities = activities.prefetch_related("rooms").prefetch_related("sponsors")
 
     pdf_buffer = BytesIO()
 
@@ -198,7 +202,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
     cancelled_blocks = activities.filter(cancelled=True).count()
     empty_blocks = 0
 
-    for a in activities.filter(cancelled=False):
+    for a in activities.filter(cancelled=False).select_related("block").prefetch_related("members"):
         members = a.members.count()
         if members == 0:
             empty_blocks += 1
@@ -245,12 +249,25 @@ def stats_global_view(request):
         return render(request, "error/403.html", {"reason": "You do not have permission to generate global statistics."}, status=403)
 
     if request.method == "POST" and request.POST.get("year", False):
-        response = HttpResponse(content_type="application/pdf")
-        response["Content-Disposition"] = 'inline; filename="eighth.pdf"'
         year = int(request.POST.get("year"))
-        buf = generate_statistics_pdf(year=year)
-        response.write(buf.getvalue())
-        buf.close()
+        do_csv = request.POST.get("generate", "csv") == "csv"
+        if do_csv:
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = 'attachment; filename="eighth.csv"'
+            writer = csv.writer(response)
+            writer.writerow(["Activity", "Default Sponsors", "Default Rooms"])
+            for act in EighthActivity.objects.all().order_by("name").prefetch_related("rooms").prefetch_related("sponsors"):
+                writer.writerow([
+                    act.name,
+                    ", ".join([x.name for x in act.sponsors.all()]),
+                    ", ".join([str(x) for x in act.rooms.all()])
+                ])
+        else:
+            response = HttpResponse(content_type="application/pdf")
+            response["Content-Disposition"] = 'inline; filename="eighth.pdf"'
+            buf = generate_statistics_pdf(year=year)
+            response.write(buf.getvalue())
+            buf.close()
         return response
 
     current_year = current_school_year()
