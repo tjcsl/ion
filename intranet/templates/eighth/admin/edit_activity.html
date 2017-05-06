@@ -38,27 +38,48 @@
 
 .restriction-list {
     position: absolute;
-    top: 100px;
+    top: 410px;
     right: 10px;
     width: 500px;
 }
 
+.right-fields {
+    position: absolute;
+    right: 10px;
+    top: 100px;
+    width: 500px;
+}
+
+textarea {
+    box-sizing: border-box;
+    width: 300px;
+}
+
 @media (max-width: 1092px) {
-    .restriction-list {
+    .restriction-list, .right-fields {
         width: 400px;
+    }
+    .restriction-list {
+        top: 500px;
     }
 }
 
 @media (max-width: 992px) {
-    .restriction-list {
+    .restriction-list, .right-fields {
         width: 300px;
+    }
+    .right-fields .selectize-control {
+        width: 200px;
     }
 }
 
 @media (max-width: 892px) {
-    .restriction-list {
+    .restriction-list, .right-fields {
         position: static;
         width: auto;
+    }
+    .right-fields h2 {
+        display: none;
     }
 }
 
@@ -112,7 +133,30 @@
                 <input type="submit" value="Save" id="submit_button" />
             </td>
         </tr>
-        {{ form.as_table }}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            {% if field.name not in form.right_fields %}
+                <tr>
+                    <th>{{ field.label }}</th><td>{{ field.errors }} {{ field }} {% if field.help_text %}<br /><span class="helptext">{{ field.help_text }}</span>{% endif %}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <div class="right-fields">
+        <h2>Activity Restrictions:</h2>
+        <table class="edit-table">
+        {% for field in form.visible_fields %}
+            {% if field.name in form.right_fields %}
+                <tr>
+                    <th>{{ field.label }}</th><td>{{ field.errors }} {{ field }} {% if field.help_text %}<br /><span class="helptext">{{ field.help_text }}</span>{% endif %}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+    <table class="edit-table">
         <tr>
             <td class="left-buttons" colspan=2>
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
@@ -127,63 +171,62 @@
             </td>
         </tr>
     </table>
-</form>
 
-<div class="restriction-list">
-    <h2>Restriction List:</h2>
-    {% if activity.administrative %}
-        This activity is Administrative, so it will not appear in users' signup lists.<br />
-        {% if not activity.restricted %}<b>Students can still sign up for this activity, because it is not restricted.</b>{% endif %}
-    {% endif %}
-    {% if activity.restricted %}
-        {% if not activity.groups_allowed.all and not activity.users_allowed.all and not activity.freshmen_allowed and not activity.sophomores_allowed and not activity.juniors_allowed and not activity.seniors_allowed %}
-            This activity is restricted. No students may sign up for this activity.
-        {% else %}
-            This activity is restricted to the following members:
-            <ul>
-                {% if activity.freshmen_allowed %}
-                    <li><b>All Freshmen</b></li>
-                {% endif %}
-                {% if activity.sophomores_allowed %}
-                    <li><b>All Sophomores</b></li>
-                {% endif %}
-                {% if activity.juniors_allowed %}
-                    <li><b>All Juniors</b></li>
-                {% endif %}
-                {% if activity.seniors_allowed %}
-                    <li><b>All Seniors</b></li>
-                {% endif %}
-
-                {% for group in activity_groups %}
-                    <li><b>Group: {{ group.name }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
-                    <ul>
-                        {% if group.members_alpha|length < 50 %}
-                            {% for member in group.members_alpha %}
-                                <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
-                            {% endfor %}
-                        {% else %}
-                            <li>Over 50 members, user list not shown</li>
-                        {% endif %}
-                    </ul>
-                    </li>
-                {% endfor %}
-                {% if activity_members|length < 50 %}
-                    {% for member in activity_members %}
-                        <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
-                    {% endfor %}
-                {% else %}
-                    <li>Over 50 members, user list not shown.</li>
-                {% endif %}
-            </ul>
+    <div class="restriction-list">
+        <h2>Restriction List:</h2>
+        {% if activity.administrative %}
+            This activity is Administrative, so it will not appear in users' signup lists.<br />
+            {% if not activity.restricted %}<b>Students can still sign up for this activity, because it is not restricted.</b>{% endif %}
         {% endif %}
-    {% else %}
-        This activity is not restricted. All students may sign up for this activity.
-    {% endif %}
+        {% if activity.restricted %}
+            {% if not activity.groups_allowed.all and not activity.users_allowed.all and not activity.freshmen_allowed and not activity.sophomores_allowed and not activity.juniors_allowed and not activity.seniors_allowed %}
+                This activity is restricted. No students may sign up for this activity.
+            {% else %}
+                This activity is restricted to the following members:
+                <ul>
+                    {% if activity.freshmen_allowed %}
+                        <li><b>All Freshmen</b></li>
+                    {% endif %}
+                    {% if activity.sophomores_allowed %}
+                        <li><b>All Sophomores</b></li>
+                    {% endif %}
+                    {% if activity.juniors_allowed %}
+                        <li><b>All Juniors</b></li>
+                    {% endif %}
+                    {% if activity.seniors_allowed %}
+                        <li><b>All Seniors</b></li>
+                    {% endif %}
 
-    {% if activity.groups_allowed.count == 0 %}
-        <br />
-        <button onclick="addGroup()">Add A Group</button>
-    {% endif %}
+                    {% for group in activity_groups %}
+                        <li><b>Group: {{ group.name }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
+                        <ul>
+                            {% if group.members_alpha|length < 50 %}
+                                {% for member in group.members_alpha %}
+                                    <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
+                                {% endfor %}
+                            {% else %}
+                                <li>Over 50 members, user list not shown</li>
+                            {% endif %}
+                        </ul>
+                        </li>
+                    {% endfor %}
+                    {% if activity_members|length < 50 %}
+                        {% for member in activity_members %}
+                            <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>Over 50 members, user list not shown.</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        {% else %}
+            This activity is not restricted. All students may sign up for this activity.
+        {% endif %}
 
-</div>
+        {% if activity.groups_allowed.count == 0 %}
+            <br />
+            <button onclick="addGroup()">Add A Group</button>
+        {% endif %}
+    </div>
+</form>
 {% endblock %}
