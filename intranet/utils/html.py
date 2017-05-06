@@ -2,7 +2,7 @@
 
 import bleach
 
-ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'strong', 'ul', 'iframe', 'img', 'div', 'p']
+ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'br', 'blockquote', 'code', 'em', 'hr', 'i', 'li', 'ol', 'strong', 'ul', 'iframe', 'img', 'div', 'p']
 ALLOWED_ATTRIBUTES = {
     'acronym': ['title'],
     'a': ['href', 'title'],
