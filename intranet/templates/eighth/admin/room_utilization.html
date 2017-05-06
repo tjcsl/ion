@@ -22,6 +22,14 @@
                 }
             }
 
+            showUsedRooms = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_used' value=1 />");
+                $(form).append(el);
+            }
+
             showAllRooms = function() {
                 var form = document.forms["choose-fields"];
                 form.action = "";
@@ -33,6 +41,12 @@
             $("#rooms-submit").click(function(event) {
                 event.preventDefault();
                 updateRoomChoices();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#show-used-rooms").click(function(event) {
+                event.preventDefault();
+                showUsedRooms();
                 document.forms["choose-fields"].submit();
             });
 
@@ -173,6 +187,9 @@ i.i {
                     {% endfor %}
                 </select>
                 <input type="submit" value="Filter Rooms" id="rooms-submit" />
+                {% if not show_used_rooms %}
+                    &nbsp; &nbsp; <a href="#" id="show-used-rooms" class="button">Show Used Rooms</a>
+                {% endif %}
                 {% if not show_all_rooms %}
                     &nbsp; &nbsp; <a href="#" id="show-all-rooms" class="button">Show All Rooms</a>
                 {% endif %}
