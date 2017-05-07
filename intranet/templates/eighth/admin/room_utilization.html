@@ -258,17 +258,25 @@ i.i {
                                {% if sched_act.is_full %}full{% endif %}
                                {% if sched_act.is_almost_full %}almost-full{% endif %}">
                         {% if show.block %}
-                            <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
-                                {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
-                            </td>
+                            {% if  sched_act.empty %}
+                                <td data-value='-1'>Room is Unused</td> 
+                            {% else %}
+                                 <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
+                                    {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
+                                </td>                               
+                            {% endif %}
                         {% endif %}
                         {% if show.rooms %}
                             <td>
-                            {% for rm in sched_act.get_true_rooms %}
-                                {% if rm.to_be_determined %}
-                                    <span class="tbd-tba">{{ rm }}</span>
-                                {% else %}{{ rm.name }}{% endif %}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
+                            {% if sched_act.empty %}
+                               {{ sched_act.room.name }} 
+                            {% else %}
+                                {% for rm in sched_act.get_true_rooms %}
+                                    {% if rm.to_be_determined %}
+                                        <span class="tbd-tba">{{ rm }}</span>
+                                    {% else %}{{ rm.name }}{% endif %}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% endif %}
                             </td>
                         {% endif %}
                         {% if show.capacity %}

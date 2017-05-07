@@ -219,6 +219,7 @@ def room_utilization_action(request, start_id, end_id):
             sched_acts = sched_acts.filter(block=start_block)
 
         logger.debug("sched_acts before: {}".format(sched_acts.count()))
+
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
             rooms = EighthRoom.objects.filter(id__in=room_ids)
@@ -240,6 +241,11 @@ def room_utilization_action(request, start_id, end_id):
         logger.debug("sched_acts end: {}".format(len(sched_acts)))
 
         sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
+
+        if show_all_rooms:
+            unused = rooms.filter(eighthscheduledactivity__isnull=True)
+            for room in unused:
+                sched_acts.append({"room": room, "empty": True})
 
         context.update({"scheduled_activities": sched_acts, "rooms": rooms, "room_ids": [int(i) for i in room_ids]})
 
