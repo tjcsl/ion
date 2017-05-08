@@ -286,7 +286,6 @@ class EighthActivity(AbstractBaseEighthModel):
         name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
         name += " (Deleted)" if self.deleted else ""
-        name += " (F)" if self.finance else ""
         return name
 
     @classmethod
