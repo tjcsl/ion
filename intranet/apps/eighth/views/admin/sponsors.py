@@ -54,7 +54,7 @@ def list_sponsor_view(request):
         lst = {}
         for sponsor in EighthSponsor.objects.all():
             lst[sponsor] = []
-        for act in acts:
+        for act in acts.prefetch_related("sponsors").prefetch_related("rooms"):
             for sponsor in act.get_true_sponsors():
                 lst[sponsor].append(act)
         lst = sorted(lst.items(), key=lambda x: x[0].name)
@@ -67,13 +67,15 @@ def list_sponsor_view(request):
             block_str = "{}{}".format(block.date.strftime("%Y%m%d"), re.sub(r'\W+', '', block.block_letter))
             response['Content-Disposition'] = 'attachment; filename="sponsor_list_{}.csv"'.format(block_str)
             writer = csv.writer(response)
-            writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted"])
+            writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted", "Signups", "Capacity"])
             for row in context["sponsor_list"]:
                 writer.writerow([
                     row[0].name,
                     "\n".join([x.full_title for x in row[1]]),
                     "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
-                    row[0].contracted_eighth
+                    row[0].contracted_eighth,
+                    "\n".join([x.members.count() for x in row[1]]),
+                    "\n".join([x.get_true_capacity() for x in row[1]])
                 ])
             return response
 

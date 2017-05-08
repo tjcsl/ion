@@ -49,7 +49,7 @@
     <a class="button print-hide" href="{% url 'eighth_admin_list_sponsor_csv' %}?block={{ chosen_block.id }}">Download as CSV</a>
     <table id="sponsor-list" data-sortable>
         <thead>
-            <tr><th><i class="fa fa-file-text-o" title="Contracted for 8th Period"></i></th><th>Sponsor</th><th>Activity</th><th>Room</th></tr>
+            <tr><th><i class="fa fa-file-text-o" title="Contracted for 8th Period"></i></th><th>Sponsor</th><th>Activity</th><th>Room</th><th>Signups</th><th>Capacity</th></tr>
         </thead>
         <tbody>
             {% for sponsor, acts in sponsor_list %}
@@ -58,6 +58,8 @@
                 <td>{{ sponsor.name }}</td>
                 <td>{% for act in acts %}{{ act.activity }}{% if act.title %} - {{ act.title }}{% endif %}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
                 <td>{% for act in acts %}{{ act.get_true_rooms|join:", "|default:"None" }}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.members.count }}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.get_true_capacity }}{% if not forloop.last %}<br />{% endif %}{% endfor %}</td>
             </tr>
             {% endfor %}
         </tbody>
