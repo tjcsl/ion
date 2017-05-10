@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #3715) documentation</title>
+    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #3717) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3715)',
+        VERSION:     'v3 (Build #3717)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -163,7 +163,8 @@
                            <span class="n">EighthBlockDetailSerializer</span><span class="p">,</span>
                            <span class="n">EighthBlockListSerializer</span><span class="p">,</span>
                            <span class="n">EighthScheduledActivitySerializer</span><span class="p">,</span>
-                           <span class="n">EighthSignupSerializer</span><span class="p">)</span>
+                           <span class="n">EighthSignupSerializer</span><span class="p">,</span>
+                           <span class="n">EighthToggleFavoriteSerializer</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -263,33 +264,50 @@
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">(</span><span class="n">schactivity</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="EighthUserFavoritesList"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesList">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
+<div class="viewcode-block" id="EighthUserFavoritesListToggle"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesListToggle</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthToggleFavoriteSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-<div class="viewcode-block" id="EighthUserFavoritesList.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesList.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthUserFavoritesListToggle.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="EighthUserFavoritesList.list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesList.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthUserFavoritesListToggle.list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">serialized</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">(),</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">},</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serialized</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
 
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serialized</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="EighthUserFavoritesListToggle.create"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthToggleFavoriteSerializer</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">serializer</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s1">&#39;activity&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+        <span class="n">favorites</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span>
+        <span class="k">if</span> <span class="n">activity</span> <span class="ow">in</span> <span class="n">favorites</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">favorites</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">favorites</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span></div></div>
+        <span class="c1"># except EighthActivity.DoesNotExist:</span>
+        <span class="c1">#     return Response({&quot;error&quot;: &quot;The activity does not exist&quot;}, status=status.HTTP_400_BAD_REQUEST)</span>
+        <span class="c1"># except Exception:</span>
+        <span class="c1">#     return Response({&quot;error&quot;: &quot;An unknown error occurred&quot;}, status=status.HTTP_400_BAD_REQUEST)</span>
 
 
-<div class="viewcode-block" id="EighthUserFavoritesAdd"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
+<div class="viewcode-block" id="EighthUserFavoritesAdd"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">CreateAPIView</span><span class="p">):</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EighthUserFavoritesAdd.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="EighthUserFavoritesAdd.list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="n">serialized</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">(),</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">},</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serialized</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthUserFavoritesAdd.create"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>

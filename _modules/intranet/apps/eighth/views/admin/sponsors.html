@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.sponsors &#8212; TJ Intranet v3 (Build #3715) documentation</title>
+    <title>intranet.apps.eighth.views.admin.sponsors &#8212; TJ Intranet v3 (Build #3717) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3715)',
+        VERSION:     'v3 (Build #3717)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -201,7 +201,7 @@
         <span class="n">lst</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">lst</span><span class="p">[</span><span class="n">sponsor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">acts</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;sponsors&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">act</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">():</span>
                 <span class="n">lst</span><span class="p">[</span><span class="n">sponsor</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">act</span><span class="p">)</span>
         <span class="n">lst</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">lst</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -214,13 +214,15 @@
             <span class="n">block_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
             <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename=&quot;sponsor_list_</span><span class="si">{}</span><span class="s1">.csv&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_str</span><span class="p">)</span>
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Room&quot;</span><span class="p">,</span> <span class="s2">&quot;Eighth Contracted&quot;</span><span class="p">])</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Room&quot;</span><span class="p">,</span> <span class="s2">&quot;Eighth Contracted&quot;</span><span class="p">,</span> <span class="s2">&quot;Signups&quot;</span><span class="p">,</span> <span class="s2">&quot;Capacity&quot;</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sponsor_list&quot;</span><span class="p">]:</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span>
                     <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">full_title</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
                     <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
-                    <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contracted_eighth</span>
+                    <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contracted_eighth</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
                 <span class="p">])</span>
             <span class="k">return</span> <span class="n">response</span>
 
