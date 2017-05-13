@@ -17,7 +17,8 @@ var default_choice = {
 function addInline(item) {
     CKEDITOR.inline(item, {
         floatSpaceDockedOffsetY: 10,
-        autoParagraph: false
+        autoParagraph: false,
+        enterMode: CKEDITOR.ENTER_BR
     });
 }
 
