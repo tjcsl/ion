@@ -436,7 +436,7 @@ def process_question_data(instance, question_data):
         if "pk" in q:
             # Question already exists
             question = instance.question_set.get(pk=q["pk"])
-            question.question = safe_html(q["question"])
+            question.question = safe_html(q["question"]).strip()
             question.num = count
             question.type = q.get("type", "STD")
             question.max_choices = q.get("max_choices", 1)
@@ -448,7 +448,7 @@ def process_question_data(instance, question_data):
             # Question does not exist
             question = Question.objects.create(
                 poll=instance,
-                question=safe_html(q["question"]),
+                question=safe_html(q["question"]).strip(),
                 num=count,
                 type=q.get("type", "STD"),
                 max_choices=q.get("max_choices", 1)
@@ -463,14 +463,14 @@ def process_question_data(instance, question_data):
                 # Choice already exists
                 choice = question.choice_set.get(pk=c["pk"])
                 choice.num = choice_count
-                choice.info = safe_html(c["info"])
+                choice.info = safe_html(c["info"]).strip()
                 choice.save()
             else:
                 # Choice does not exist
                 choice = Choice.objects.create(
                     question=question,
                     num=choice_count,
-                    info=safe_html(c["info"])
+                    info=safe_html(c["info"]).strip()
                 )
             choice_count += 1
 

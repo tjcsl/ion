@@ -14,6 +14,13 @@ var default_choice = {
     }
 };
 
+function addInline(item) {
+    CKEDITOR.inline(item, {
+        floatSpaceDockedOffsetY: 10,
+        autoParagraph: false
+    });
+}
+
 $(function() {
     var questionTemplate = _.template($("#question-template").html());
     var choiceTemplate = _.template($("#choice-template").html());
@@ -39,11 +46,14 @@ $(function() {
         $("#questions .question[data-id='" + v.fields.question + "']").find(".choices").append(choiceTemplate(v));
     });
     $("#questions .type").selectize();
+    $("#questions [contenteditable='true']").each(function(k, v) {
+        addInline(v);
+    });
     $("#poll-form").submit(function() {
         var out = [];
         $("#questions .question").each(function() {
             var q = {
-                "question": $(this).find(".text").val(),
+                "question": $(this).find(".text").html(),
                 "type": $(this).find(".type").val(),
                 "max_choices": $(this).find(".max").val(),
                 "choices": []
@@ -53,7 +63,7 @@ $(function() {
             }
             $(this).find(".choices .choice").each(function() {
                 var c = {
-                    "info": $(this).find(".info").val()
+                    "info": $(this).find(".info").html()
                 };
                 if ($(this).attr("data-id")) {
                     c["pk"] = $(this).attr("data-id");
@@ -70,11 +80,13 @@ $(function() {
         var new_question = $(questionTemplate(default_question));
         new_question.appendTo("#questions").hide().slideDown("fast");
         new_question.find(".type").selectize();
+        addInline(new_question.find("[contenteditable='true']")[0]);
     });
     $("#questions").on("click", ".add_choice", function(e) {
         e.preventDefault();
         var new_choice = $(choiceTemplate(default_choice));
         new_choice.appendTo($(this).closest(".question").find(".choices")).hide().slideDown("fast");
+        addInline(new_choice.find("[contenteditable='true']")[0]);
     });
     $("#questions").on("click", ".question > .actions .fa.fa-arrow-up", function(e) {
         var ele = $(this).closest(".question");
