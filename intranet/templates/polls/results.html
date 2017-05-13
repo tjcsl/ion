@@ -47,18 +47,18 @@
 
 {% block main %}
     <div class="primary-content polls">
-        <a href="{% url 'polls' %}" class="button">
+        <a href="{% url 'polls' %}" class="button print-hide">
             <i class="fa fa-arrow-left"></i> Polls
         </a> {% if show_answers %}
-            &nbsp; <a href="#" class="button small-button" id="user-sels">Show User Selections</a><br />
+            &nbsp; <a href="#" class="button small-button print-hide" id="user-sels">Show User Selections</a><br />
         {% else %}
-            &nbsp; <a href="?show_answers=1" class="button small-button">Show answers</a><br />
+            &nbsp; <a href="?show_answers=1" class="button small-button print-hide">Show answers</a><br />
         {% endif %}
         <h2>Results: {{ poll }}</h2>
         
         <ol class="questions">
             {% for q in questions %}
-                <li id="question-{{ q.question.num }}"><b>{{ q.question.question }}</b>
+                <li id="question-{{ q.question.num }}"><b>{{ q.question.question|safe }}</b>
                 {% if q.question.is_choice %}(Choice)<br />
                 {% if q.question.type == "SAP" %}
                     <b>Note: Because this is a split approval question, each user has one vote to split for up to {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br />
