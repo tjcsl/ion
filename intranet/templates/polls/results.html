@@ -140,6 +140,7 @@
                     </tbody>
                 </table>
                 {% elif q.question.is_writing %}(Writing)<br />
+                    {% if show_answers %}
                     <table class="results-table writing-table fancy-table">
                     <thead>
                         <tr>
@@ -148,16 +149,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if show_answers %}{% for a in q.answers %}
+                        {% for a in q.answers %}
                             <tr>
                                 <td>{{ a.answer }}</td>
                                 <td>
                                     <a href="{% url 'user_profile' a.user.id %}">{{ a.user }}</a>
                                 </td>
                             </tr>
-                        {% endfor %}{% endif %}
+                        {% endfor %}
                     </tbody>
                     </table>
+                    {% else %}
+                    <p>Click <a href="?show_answers=1">here</a> to reveal free response answers. The information shown will include the user who submitted the response.</p>
+                    {% endif %}
                 {% endif %}
                 <br />
                 </li>
