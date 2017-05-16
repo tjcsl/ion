@@ -113,3 +113,63 @@ Here is some sample code using `PHP-OAuth2 <https://github.com/adoy/PHP-OAuth2>`
         var_dump($response, $response['result']);
     }
     ?>
+
+Node.js
+-------
+
+You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ library to perform authentication. Below is some sample code.
+
+.. code-block:: javascript
+
+    var simpleoauth2 = require("simple-oauth2");
+
+    // make sure these variables are set
+    var ion_client_id = process.env.ION_CLIENT_ID;
+    var ion_client_secret = process.env.ION_CLIENT_SECRET;
+    var ion_redirect_uri = process.env.ION_REDIRECT_URI;
+
+    var oauth = simpleoauth2.create({
+        client: {
+            id: ion_client_id,
+            secret: ion_client_secret
+        },
+        auth: {
+            tokenHost: 'https://ion.tjhsst.edu/oauth'
+        }
+    });
+
+    // 1) redirect the user to login_url to begin authentication
+    var login_url = oauth.authorizationCode.authorizeURL({
+        scope: "read", // remove scope: read if you also want write access
+        redirect_uri: ion_redirect_uri
+    });
+
+    // 2) on the ion_redirect_uri endpoint, add the following code to process the authentication
+    var code = req.query["code"]; // GET parameter
+    oauth.authorizationCode.getToken({code: code, redirect_uri: ion_redirect_uri}, (error, result) => {
+        const token = oauth.accessToken.create(result);
+
+        // you will want to save these variables in your session if you want to make API requests
+        var refresh_token = token.token.refresh_token;
+        var access_token = token.token.access_token;
+        var expires_in = token.token.expires_in;
+
+        // log the user in
+    });
+
+    // 3) when making an API request, add access_token as a POST parameter
+
+    // 4) to refresh the access_token, use the following code
+    var token = oauth.accessToken.create({
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "expires_in": expires_in
+    });
+
+    if (token.expired()) {
+        token.refresh((err, result) => {
+            token = result;
+            // the new access token
+            var access_token = token.token.access_token;
+        });
+    }
