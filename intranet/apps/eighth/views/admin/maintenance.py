@@ -114,6 +114,9 @@ def ldap_modify(request):
                     u.username = new_uid
                     u.save()
 
+            if not success:
+                logger.error("LDAP Modify: {}, {}".format(c.conn.last_error, str(c.conn.result)))
+
             return JsonResponse({
                 "success": success,
                 "id": new_uid if success else None,
@@ -152,7 +155,10 @@ def ldap_modify(request):
                     return JsonResponse({"success": False, "error": "iodineUidNumber must be above 30,000!"})
 
             success = c.conn.add("iodineUid={},{}".format(attrs["iodineUid"], settings.USER_DN), object_class=object_class, attributes=attrs)
-            print(c.conn.result)
+
+            if not success:
+                logger.error("LDAP Create: {}, {}".format(c.conn.last_error, str(c.conn.result)))
+
             return JsonResponse({
                 "success": success,
                 "id": request.POST.get("iodineUid", None) if success else None,
@@ -171,8 +177,12 @@ def ldap_delete(request):
         u = User.get_user(dn=dn)
         c = LDAPConnection()
         success = c.conn.delete(dn)
+
         if success:
             u.delete()
+        else:
+            logger.error("LDAP Delete: {}, {}".format(c.conn.last_error, str(c.conn.result)))
+
         return JsonResponse({"success": success, "error": "LDAP query failed!" if not success else None, "details": c.conn.last_error})
     return JsonResponse({"success": False})
 
