@@ -20,7 +20,13 @@ def parking_intro_view(request):
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("/")
-    context = {"user": request.user}
+
+    context = {
+        "user": request.user,
+        "absences": request.user.absence_count(),
+        "max_absences": settings.PARKING_MAX_ABSENCES
+    }
+
     return render(request, "parking/intro.html", context)
 
 
@@ -28,6 +34,9 @@ def parking_intro_view(request):
 def parking_form_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
+
+    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect('parking')
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
@@ -77,6 +86,9 @@ def parking_form_view(request):
 def parking_car_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
+
+    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect('parking')
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
@@ -130,6 +142,9 @@ def parking_car_view(request):
 def parking_joint_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
+
+    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect('parking')
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
