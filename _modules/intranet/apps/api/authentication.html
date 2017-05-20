@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.api.authentication &#8212; TJ Intranet v3 (Build #3730) documentation</title>
+    <title>intranet.apps.api.authentication &#8212; TJ Intranet v3 (Build #3752) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3730)',
+        VERSION:     'v3 (Build #3752)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -151,6 +151,7 @@
 <span class="kn">from</span> <span class="nn">django.views.decorators.debug</span> <span class="k">import</span> <span class="n">sensitive_variables</span>
 
 <span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">authentication</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">rest_framework.authentication</span> <span class="k">import</span> <span class="n">SessionAuthentication</span>
 
 
 <div class="viewcode-block" id="ApiBasicAuthentication"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.authentication.ApiBasicAuthentication">[docs]</a><span class="k">class</span> <span class="nc">ApiBasicAuthentication</span><span class="p">(</span><span class="n">authentication</span><span class="o">.</span><span class="n">BasicAuthentication</span><span class="p">):</span>
@@ -165,6 +166,12 @@
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">&quot;Invalid username/password.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CsrfExemptSessionAuthentication"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.authentication.CsrfExemptSessionAuthentication">[docs]</a><span class="k">class</span> <span class="nc">CsrfExemptSessionAuthentication</span><span class="p">(</span><span class="n">SessionAuthentication</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CsrfExemptSessionAuthentication.enforce_csrf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.authentication.CsrfExemptSessionAuthentication.enforce_csrf">[docs]</a>    <span class="k">def</span> <span class="nf">enforce_csrf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span></div></div>
 </pre></div>
 
     </div>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3730) documentation</title>
+    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3752) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3730)',
+        VERSION:     'v3 (Build #3752)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -261,6 +261,9 @@
                     <span class="n">u</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">new_uid</span>
                     <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;LDAP Modify: </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">result</span><span class="p">)))</span>
+
             <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
                 <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">new_uid</span> <span class="k">if</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -299,7 +302,10 @@
                     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;iodineUidNumber must be above 30,000!&quot;</span><span class="p">})</span>
 
             <span class="n">success</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;iodineUid=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">],</span> <span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">),</span> <span class="n">object_class</span><span class="o">=</span><span class="n">object_class</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;LDAP Create: </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">result</span><span class="p">)))</span>
+
             <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
                 <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -318,8 +324,12 @@
         <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
         <span class="n">success</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
             <span class="n">u</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;LDAP Delete: </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">result</span><span class="p">)))</span>
+
         <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;LDAP query failed!&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">last_error</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 

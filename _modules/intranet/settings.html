@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3730) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3752) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3730)',
+        VERSION:     'v3 (Build #3752)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -176,6 +176,7 @@
 <span class="n">USE_SASL</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">NO_CACHE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">PARKING_ENABLED</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">PARKING_MAX_ABSENCES</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">NOMINATIONS_ACTIVE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">NOMINATION_POSITION</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="n">ENABLE_WAITLIST</span> <span class="o">=</span> <span class="kc">True</span>
@@ -616,7 +617,8 @@
     <span class="s2">&quot;DEFAULT_PAGINATION_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;rest_framework.pagination.PageNumberPagination&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PAGE_SIZE&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span>
-    <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span> <span class="s2">&quot;rest_framework.authentication.SessionAuthentication&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;intranet.apps.api.authentication.CsrfExemptSessionAuthentication&quot;</span><span class="p">,</span>
      <span class="s2">&quot;oauth2_provider.ext.rest_framework.OAuth2Authentication&quot;</span><span class="p">),</span>
     <span class="s2">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,)</span>
 <span class="p">}</span>
