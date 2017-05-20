@@ -221,7 +221,7 @@ class EighthActivity(AbstractBaseEighthModel):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
     administrative = models.BooleanField(default=False)
-    finance = models.BooleanField(default=False)
+    finance = models.CharField(max_length=100, blank=True, null=True)
 
     restricted = models.BooleanField(default=False)
 
