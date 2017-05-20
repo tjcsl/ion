@@ -1,60 +1,9 @@
 {% extends "oauth2_provider/application_form.html" %}
-{% load staticfiles %}
 
 {% load i18n %}
 {% load url from compat %}
 
-{% block css %}
-    {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
-    <style>
-    textarea {
-        max-height: 150px;
-    }
-    </style>
-{% endblock %}
-
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
-    <script>
-    $(document).ready(function() {
-        var client_type_desc = {
-            "confidential": "(Recommended) You should select this option if you have a server backend.",
-            "public": "Select this option if you do not have a server backend to perform authentication."
-        };
-
-        var client_grant_desc = {
-            "authorization-code": "(Recommended) Your application will redirect the user to Ion to login.",
-            "implicit": "The application does authentication purely on the client, and there is no server backend.",
-            "password": "Your application will collect the user's username and password and pass it to Ion.",
-            "client-credentials": "Your application does not have a user login. Must be confidential type."
-        };
-
-        $("#id_client_type").selectize({
-            render: {
-                option: function(item, esc) {
-                    return "<div><b>" + item.text + "</b><br />" + client_type_desc[item.value] + "</div>";
-                }
-            }
-        });
-        $("#id_authorization_grant_type").selectize({
-            render: {
-                option: function(item, esc) {
-                    console.log(item);
-                    return "<div><b>" + item.text + "</b><br />" + client_grant_desc[item.value] + "</div>";
-                }
-            }
-        });
-    });
-    </script>
-{% endblock %}
-
 {% block app-form-title %}{% trans "Register a new application" %}{% endblock app-form-title %}
-
-{% block app-form-description %}
-<p>For more information on how to use Ion OAuth, click <a href="https://ion.readthedocs.io/en/latest/developing/oauth.html">here</a>.</p>
-{% endblock %}
 
 {% block app-form-action-url %}{% url 'oauth2_provider:register' %}{% endblock app-form-action-url %}
 

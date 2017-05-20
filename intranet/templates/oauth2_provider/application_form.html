@@ -1,7 +1,55 @@
 {% extends "oauth2_provider/base.html" %}
 
 {% load i18n %}
+{% load staticfiles %}
 {% load url from compat %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
+    <style>
+    textarea {
+        max-height: 150px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        var client_type_desc = {
+            "confidential": "You should select this option if you have a server backend.",
+            "public": "Select this option if you do not have a server backend to perform authentication."
+        };
+
+        var client_grant_desc = {
+            "authorization-code": "Your application will redirect the user to Ion to login.",
+            "implicit": "The application does authentication purely on the client, and there is no server backend.",
+            "password": "Your application will collect the user's username and password and pass it to Ion.",
+            "client-credentials": "Your application does not have a user login. Must be confidential type."
+        };
+
+        $("#id_client_type").selectize({
+            render: {
+                option: function(item, esc) {
+                    return "<div><b>" + item.text + "</b>" + (item.value == "confidential" ? " (Recommended)" : "") + "<br />" + client_type_desc[item.value] + "</div>";
+                }
+            }
+        });
+        $("#id_authorization_grant_type").selectize({
+            render: {
+                option: function(item, esc) {
+                    console.log(item);
+                    return "<div><b>" + item.text + "</b>" + (item.value == "authorization-code" ? " (Recommended)" : "") + "<br />" + client_grant_desc[item.value] + "</div>";
+                }
+            }
+        });
+    });
+    </script>
+{% endblock %}
+
 {% block content %}
     <div class="block-center">
         <form class="form-horizontal" method="post" action="{% block app-form-action-url %}{% url 'oauth2_provider:update' application.id %}{% endblock app-form-action-url %}">
@@ -10,7 +58,10 @@
                     {% trans "Edit application" %} {{ application.name }}
                 {% endblock app-form-title %}
             </h3>
-            {% block app-form-description %}{% endblock %}
+
+            {% block app-form-description %}
+            <p>For more information on how to use Ion OAuth, click <a target="_blank" href="https://ion.readthedocs.io/en/latest/developing/oauth.html">here</a>.</p>
+            {% endblock %}
 
             {% csrf_token %}
 
