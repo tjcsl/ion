@@ -1855,7 +1855,17 @@ class Class(object):
             A float value of the equation.
 
         """
-        return min(map(float, self.periods)) + (float(sum(self.quarters)) / 11)
+        periods = self.periods
+        quarters = self.quarters
+
+        value = 0
+
+        if periods:
+            value += min(map(float, periods))
+        if quarters:
+            value += float(sum(quarters)) / 11
+
+        return value
 
     @property
     def sections(self):
