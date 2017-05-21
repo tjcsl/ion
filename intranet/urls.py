@@ -51,8 +51,7 @@ urlpatterns = [
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
-    # FIXME: update when debug_toobar supports django 1.10+ properly
-    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls[:2], namespace=debug_toolbar.urls[2]))]  # type: ignore
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]  # type: ignore
 
 handler404 = handle_404_view
 handler500 = handle_500_view
