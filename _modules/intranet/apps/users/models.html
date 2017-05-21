@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3752) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #3760) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3752)',
+        VERSION:     'v3 (Build #3760)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -2002,7 +2002,17 @@
 <span class="sd">            A float value of the equation.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">periods</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quarters</span><span class="p">))</span> <span class="o">/</span> <span class="mi">11</span><span class="p">)</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">periods</span>
+        <span class="n">quarters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quarters</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">periods</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">periods</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">quarters</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">quarters</span><span class="p">))</span> <span class="o">/</span> <span class="mi">11</span>
+
+        <span class="k">return</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
