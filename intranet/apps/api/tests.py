@@ -77,3 +77,4 @@ class ApiTest(IonTestCase):
         }, HTTP_AUTHORIZATION=auth)
 
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(schact1.members.count(), 1)
