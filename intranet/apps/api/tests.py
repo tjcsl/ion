@@ -14,6 +14,7 @@ from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
 
+
 class ApiTest(IonTestCase):
     """Tests for the api module."""
 
