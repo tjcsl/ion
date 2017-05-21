@@ -14,7 +14,6 @@ class TemplateTest(IonTestCase):
     def test_validate_templates(self):
         """Validates all the templates."""
         out = StringIO()
-        return  # FIXME: re-enable when validate_templates is fixed for django 1.10+
         with contextlib.redirect_stdout(out):
             call_command('validate_templates')
         self.assertEqual(out.getvalue().strip(), '0 errors found')
