@@ -11,19 +11,25 @@ Go to https://ion.tjhsst.edu/oauth/applications/ and log in to create and regist
 
 Name
  * Some descriptive name for your application.
-Client Type
- * Choose "Confidential"
-Authorization Grant Type
- * Choose "Authorization code"
+Client Type*
+ * Choose "Confidential" if your app has a backend component
+ * Choose "Public" if your app is purely client-side
+Authorization Grant Type*
+ * Choose "Authorization code" if your client type is "Confidential"
+ * Choose "Implicit" if your client type is "Public" (for example, on a native application)
 Redirect URIs
  * Enter one or more URLs that your application will redirect back to after the authorization is completed.
 
 Store the Client ID and Client Secret tokens for use with your application.
 
+* These are the recommended settings. For a better understanding of which settings you should choose, read this [introduction to OAuth](https://aaronparecki.com/oauth-2-simplified/) and this [guide to grant types](https://alexbilbie.com/guide-to-oauth-2-grants/)
+
 Requesting authorization
 ========================
 
-Inside your application, redirect to the OAuth authorization endpoint to receive a (temporary) access token. The URL is https://ion.tjhsst.edu/oauth/authorize/
+Inside your application, redirect to the OAuth authorization endpoint to receive an authorization code. The URL is https://ion.tjhsst.edu/oauth/authorize/
+
+To access the API, exchange this code for a (temporary) access token. The URL is https://ion.tjhsst.edu/oauth/token/
 
 Python
 ------
@@ -61,7 +67,7 @@ At this point, a valid access token has been gained, and you can request API res
     except TokenExpiredError as e:
         args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
         token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
-    
+
     import json
     print(json.loads(profile.content.decode()))
     { 'ion_username': '2016jwoglom', ... }
@@ -93,14 +99,14 @@ Here is some sample code using `PHP-OAuth2 <https://github.com/adoy/PHP-OAuth2>`
     require('Client.php');
     require('GrantType/IGrantType.php');
     require('GrantType/AuthorizationCode.php');
-    
+
     const CLIENT_ID     = 'XXX';
     const CLIENT_SECRET = 'XXX';
-    
+
     const REDIRECT_URI           = 'XXX';
     const AUTHORIZATION_ENDPOINT = 'https://ion.tjhsst.edu/oauth/authorize/';
     const TOKEN_ENDPOINT         = 'https://ion.tjhsst.edu/oauth/token/';
-    
+
     $client = new OAuth2\\Client(CLIENT_ID, CLIENT_SECRET);
     if(!isset($_GET['code'])) {
         $auth_url = $client->getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
