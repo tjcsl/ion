@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import datetime
 
 from django.urls import reverse
@@ -53,6 +54,12 @@ class ApiTest(IonTestCase):
         auth = "Bearer {}".format(tok.token)
         response = self.client.get(reverse('api_announcements_list_create'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('api_user_myprofile_detail'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+        parsed_response = json.loads(response.content.decode())
+        self.assertEqual(parsed_response["id"], int(self.user.id))
+        self.assertEqual(parsed_response["ion_username"], self.user.username)
 
     def test_oauth_write(self):
         self.make_admin()
