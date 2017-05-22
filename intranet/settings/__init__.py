@@ -269,9 +269,9 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = (
-    "oauth2_provider.backends.OAuth2Backend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
-    "intranet.apps.auth.backends.KerberosAuthenticationBackend",)
+    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
+    "oauth2_provider.backends.OAuth2Backend",)
 # Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',

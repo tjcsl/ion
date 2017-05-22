@@ -13,7 +13,9 @@ class AccessLogMiddleWare(object):
     def __call__(self, request):
         response = self.get_response(request)
 
-        if request.user.is_anonymous:
+        if not request.user:
+            username = "unknown_user"
+        elif request.user.is_anonymous:
             username = "anonymous_user"
         else:
             username = request.user.username

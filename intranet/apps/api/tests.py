@@ -29,6 +29,16 @@ class ApiTest(IonTestCase):
             authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE
         )
         self.application.save()
+
+        self.client_credentials_application = Application(
+            name="Test Client Credentials Application",
+            redirect_uris="http://localhost http://example.com http://example.it",
+            user=self.user,
+            client_type=Application.CLIENT_CONFIDENTIAL,
+            authorization_grant_type=Application.GRANT_CLIENT_CREDENTIALS
+        )
+        self.client_credentials_application.save()
+
         oauth2_settings._SCOPES = ['read', 'write']
 
     def test_get_profile(self):
@@ -85,3 +95,25 @@ class ApiTest(IonTestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(schact1.members.count(), 1)
+
+    def test_oauth_client_credentials_read(self):
+        tok = AccessToken.objects.create(
+            user=None,
+            token='1234567890',
+            application=self.client_credentials_application,
+            scope='read write',
+            expires=timezone.now() + datetime.timedelta(days=1)
+        )
+        auth = "Bearer {}".format(tok.token)
+
+        # List announcements
+        response = self.client.get(reverse('api_announcements_list_create'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List schedule
+        response = self.client.get(reverse('api_schedule_day_list'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List activities
+        response = self.client.get(reverse('api_eighth_activity_list'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)

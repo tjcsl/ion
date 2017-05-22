@@ -126,6 +126,9 @@ class KerberosAuthenticationBackend(object):
         the User class returns False when the username starts with "INVALID_USER".)
         """
 
+        if not isinstance(username, str):
+            return None
+
         # remove all non-alphanumerics
         username = re.sub('\W', '', username)
 
