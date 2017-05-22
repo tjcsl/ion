@@ -392,7 +392,7 @@
                             </thead>
                             {% for class in profile_user.classes %}
                                 <tr>
-                                    <td>{{ class.periods|join:", " }} </td>
+                                    <td>{% if class.periods %}{{ class.periods|join:", " }}{% else %}None{% endif %} </td>
                                     <td>
                                         <a href="{% url 'class_section' class.section_id %}">
                                             {{ class.name }}
