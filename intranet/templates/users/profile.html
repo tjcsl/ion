@@ -415,17 +415,19 @@
                                         </a>
                                     </td>
                                     <td>
-                                        {% if class.quarters|length == 4 %}
-                                            Full Year
-                                        {% elif class.quarters|length == 2 %}
-                                            {% if 1 in class.quarters and 2 in class.quarters %}
-                                                First Semester
+                                        {% if class.quarters %}
+                                            {% if class.quarters|length == 4 %}
+                                                Full Year
+                                            {% elif class.quarters|length == 2 %}
+                                                {% if 1 in class.quarters and 2 in class.quarters %}
+                                                    First Semester
+                                                {% else %}
+                                                    Second Semester
+                                                {% endif %}
                                             {% else %}
-                                                Second Semester
+                                                Quarter{{ class.quarters|pluralize }}
+                                                {{ class.quarters|join:", " }}
                                             {% endif %}
-                                        {% else %}
-                                            Quarter{{ class.quarters|pluralize }}
-                                            {{ class.quarters|join:", " }}
                                         {% endif %}
                                     </td>
                                 </tr>
