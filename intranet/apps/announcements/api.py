@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 class IsAnnouncementAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated and
-                (request.method in permissions.SAFE_METHODS or request.user.is_announcements_admin))
+        return ((request.user and request.user.is_authenticated or request.auth) and
+                (request.method in permissions.SAFE_METHODS or request.user and request.user.is_announcements_admin))
 
 
 class ListCreateAnnouncement(generics.ListCreateAPIView):
@@ -23,6 +23,8 @@ class ListCreateAnnouncement(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
+        if not user and self.request.auth:
+            return Announcement.objects.filter(groups__isnull=True)
         return Announcement.objects.visible_to_user(user).prefetch_related("groups")
 
 

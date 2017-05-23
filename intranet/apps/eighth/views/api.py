@@ -6,7 +6,7 @@ from django.http import Http404
 
 from intranet.apps.users.models import User
 
-from rest_framework import generics, status, views
+from rest_framework import generics, status, views, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
@@ -22,15 +22,23 @@ from ..serializers import (EighthActivityDetailSerializer,
 logger = logging.getLogger(__name__)
 
 
+class IsAuthenticatedOrClientCredentials(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated or request.auth
+
+
 class EighthActivityList(generics.ListAPIView):
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityListSerializer
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that shows details of an eighth activity."""
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityDetailSerializer
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
 
 class BlockPagination(PageNumberPagination):
@@ -43,6 +51,7 @@ class EighthBlockList(generics.ListAPIView):
     """API endpoint that lists all eighth blocks."""
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get_queryset(self):
         # get_current_blocks() actually returns a list, which you
@@ -61,6 +70,7 @@ class EighthBlockList(generics.ListAPIView):
 
 class EighthBlockDetail(views.APIView):
     """API endpoint that shows details for an eighth block."""
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get(self, request, pk):
         try:
