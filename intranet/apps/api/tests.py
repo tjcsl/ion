@@ -117,3 +117,12 @@ class ApiTest(IonTestCase):
         # List activities
         response = self.client.get(reverse('api_eighth_activity_list'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
+
+    def test_no_credentials_read(self):
+        # Announcements should only be available to logged in users
+        response = self.client.get(reverse('api_announcements_list_create'))
+        self.assertEqual(response.status_code, 401)
+
+        # Activity list should only be available to logged in users
+        response = self.client.get(reverse('api_eighth_activity_list'))
+        self.assertEqual(response.status_code, 401)
