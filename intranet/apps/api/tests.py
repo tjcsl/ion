@@ -41,6 +41,10 @@ class ApiTest(IonTestCase):
 
         oauth2_settings._SCOPES = ['read', 'write']
 
+    def test_get_emerg(self):
+        response = self.client.get(reverse('api_emerg_status'))
+        self.assertEqual(response.status_code, 200)
+
     def test_get_profile(self):
         self.login()
         response = self.client.get(reverse('api_user_myprofile_detail'))
@@ -121,6 +125,10 @@ class ApiTest(IonTestCase):
         # List blocks
         response = self.client.get(reverse('api_eighth_block_list'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
+
+        # Should not be able to list profile
+        response = self.client.get(reverse('api_user_myprofile_detail'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 403)
 
     def test_no_credentials_read(self):
         # Announcements should only be available to logged in users
