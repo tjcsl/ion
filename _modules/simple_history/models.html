@@ -6,19 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>simple_history.models &#8212; TJ Intranet v3 (Build #3778) documentation</title>
+    <title>simple_history.models &#8212; TJ Intranet v3 (Build #3782) documentation</title>
     
-    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3778)',
+        VERSION:     'v3 (Build #3782)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -225,13 +222,15 @@
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">hint_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sender</span><span class="p">:</span>  <span class="c1"># set in concrete</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inherit</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">hint_class</span><span class="p">)):</span>  <span class="c1"># set in abstract</span>
-                    <span class="k">return</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inherit</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">hint_class</span><span class="p">)):</span>
+                    <span class="k">return</span>  <span class="c1"># set in abstract</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="p">,</span> <span class="s1">&#39;simple_history_manager_attribute&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleRegistrationsError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> registered multiple times for history tracking.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
-                <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
-            <span class="p">))</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleRegistrationsError</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> registered multiple times for history tracking.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
+                    <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">history_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_history_model</span><span class="p">(</span><span class="n">sender</span><span class="p">)</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">history_model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">history_model</span><span class="p">)</span>

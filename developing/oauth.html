@@ -6,19 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #3778) documentation</title>
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #3782) documentation</title>
     
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3778)',
+        VERSION:     'v3 (Build #3782)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -171,14 +168,16 @@
 <li>Some descriptive name for your application.</li>
 </ul>
 </dd>
-<dt>Client Type</dt>
+<dt>Client Type*</dt>
 <dd><ul class="first last simple">
-<li>Choose &#8220;Confidential&#8221;</li>
+<li>Choose &#8220;Confidential&#8221; if your app has a backend component</li>
+<li>Choose &#8220;Public&#8221; if your app is purely client-side</li>
 </ul>
 </dd>
-<dt>Authorization Grant Type</dt>
+<dt>Authorization Grant Type*</dt>
 <dd><ul class="first last simple">
-<li>Choose &#8220;Authorization code&#8221;</li>
+<li>Choose &#8220;Authorization code&#8221; if your client type is &#8220;Confidential&#8221;</li>
+<li>Choose &#8220;Implicit&#8221; if your client type is &#8220;Public&#8221; (for example, on a native application)</li>
 </ul>
 </dd>
 <dt>Redirect URIs</dt>
@@ -188,10 +187,14 @@
 </dd>
 </dl>
 <p>Store the Client ID and Client Secret tokens for use with your application.</p>
+<ul class="simple">
+<li>These are the recommended settings. For a better understanding of which settings you should choose, read this [introduction to OAuth](<a class="reference external" href="https://aaronparecki.com/oauth-2-simplified/">https://aaronparecki.com/oauth-2-simplified/</a>) and this [guide to grant types](<a class="reference external" href="https://alexbilbie.com/guide-to-oauth-2-grants/">https://alexbilbie.com/guide-to-oauth-2-grants/</a>)</li>
+</ul>
 </div>
 <div class="section" id="requesting-authorization">
 <h2>Requesting authorization<a class="headerlink" href="#requesting-authorization" title="Permalink to this headline">¶</a></h2>
-<p>Inside your application, redirect to the OAuth authorization endpoint to receive a (temporary) access token. The URL is <a class="reference external" href="https://ion.tjhsst.edu/oauth/authorize/">https://ion.tjhsst.edu/oauth/authorize/</a></p>
+<p>Inside your application, redirect to the OAuth authorization endpoint to receive an authorization code. The URL is <a class="reference external" href="https://ion.tjhsst.edu/oauth/authorize/">https://ion.tjhsst.edu/oauth/authorize/</a></p>
+<p>To access the API, exchange this code for a (temporary) access token. The URL is <a class="reference external" href="https://ion.tjhsst.edu/oauth/token/">https://ion.tjhsst.edu/oauth/token/</a></p>
 <div class="section" id="python">
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p>For a Python client, use requests with requests-oauthlib.</p>

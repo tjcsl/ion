@@ -6,19 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.utils.functional &#8212; TJ Intranet v3 (Build #3778) documentation</title>
+    <title>django.utils.functional &#8212; TJ Intranet v3 (Build #3782) documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #3778)',
+        VERSION:     'v3 (Build #3782)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -222,6 +219,9 @@
                 <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kw</span><span class="p">)</span> <span class="o">+</span> <span class="n">resultclasses</span>
             <span class="p">)</span>
 
+        <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__cast</span><span class="p">())</span>
+
         <span class="nd">@classmethod</span>
         <span class="k">def</span> <span class="nf">__prepare_class__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">resultclass</span> <span class="ow">in</span> <span class="n">resultclasses</span><span class="p">:</span>
@@ -372,6 +372,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">keep_lazy</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">)(</span><span class="n">func</span><span class="p">)</span>
 
+
 <span class="n">empty</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
 
@@ -443,11 +444,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">unpickle_lazyobject</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span><span class="p">,))</span>
 
-    <span class="c1"># We have to explicitly override __getstate__ so that older versions of</span>
-    <span class="c1"># pickle don&#39;t try to pickle the __dict__ (which in the case of a</span>
-    <span class="c1"># SimpleLazyObject may contain a lambda). The value will end up being</span>
-    <span class="c1"># ignored by our __reduce__ and custom unpickler.</span>
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prevent older versions of pickle from trying to pickle the __dict__</span>
+<span class="sd">        (which in the case of a SimpleLazyObject may contain a lambda). The</span>
+<span class="sd">        value will be ignored by __reduce__() and the custom unpickler.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -552,27 +554,6 @@
             <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">result</span>
             <span class="k">return</span> <span class="n">result</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">lazy_property</span><span class="p">(</span><span class="nb">property</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A property that works with subclasses by wrapping the decorated</span>
-<span class="sd">    functions of the base class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">fget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nd">@wraps</span><span class="p">(</span><span class="n">fget</span><span class="p">)</span>
-            <span class="k">def</span> <span class="nf">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fget</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)()</span>
-        <span class="k">if</span> <span class="n">fset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nd">@wraps</span><span class="p">(</span><span class="n">fset</span><span class="p">)</span>
-            <span class="k">def</span> <span class="nf">fset</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fset</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fdel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nd">@wraps</span><span class="p">(</span><span class="n">fdel</span><span class="p">)</span>
-            <span class="k">def</span> <span class="nf">fdel</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fdel</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)()</span>
-        <span class="k">return</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>

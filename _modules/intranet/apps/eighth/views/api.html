@@ -6,19 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #3778) documentation</title>
+    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #3782) documentation</title>
     
-    <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3778)',
+        VERSION:     'v3 (Build #3782)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -153,7 +150,7 @@
 
 <span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">views</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">permissions</span>
 <span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="k">import</span> <span class="n">PageNumberPagination</span>
 <span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="k">import</span> <span class="n">Response</span>
 <span class="kn">from</span> <span class="nn">..models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">)</span>
@@ -169,15 +166,23 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="IsAuthenticatedOrClientCredentials"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials">[docs]</a><span class="k">class</span> <span class="nc">IsAuthenticatedOrClientCredentials</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IsAuthenticatedOrClientCredentials.has_permission"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials.has_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">auth</span></div></div>
+
+
 <div class="viewcode-block" id="EighthActivityList"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthActivityList">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span></div>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="EighthActivityDetail"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthActivityDetail">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API endpoint that shows details of an eighth activity.&quot;&quot;&quot;</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span></div>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="BlockPagination"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.BlockPagination">[docs]</a><span class="k">class</span> <span class="nc">BlockPagination</span><span class="p">(</span><span class="n">PageNumberPagination</span><span class="p">):</span>
@@ -190,6 +195,7 @@
     <span class="sd">&quot;&quot;&quot;API endpoint that lists all eighth blocks.&quot;&quot;&quot;</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthBlockListSerializer</span>
     <span class="n">pagination_class</span> <span class="o">=</span> <span class="n">BlockPagination</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthBlockList.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthBlockList.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># get_current_blocks() actually returns a list, which you</span>
@@ -208,6 +214,7 @@
 
 <div class="viewcode-block" id="EighthBlockDetail"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthBlockDetail">[docs]</a><span class="k">class</span> <span class="nc">EighthBlockDetail</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API endpoint that shows details for an eighth block.&quot;&quot;&quot;</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthBlockDetail.get"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthBlockDetail.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
