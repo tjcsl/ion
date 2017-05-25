@@ -28,6 +28,14 @@ intranet.apps.polls.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.polls.tests module
+--------------------------------
+
+.. automodule:: intranet.apps.polls.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.polls.urls module
 -------------------------------
 
