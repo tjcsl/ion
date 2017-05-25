@@ -347,8 +347,9 @@ def add_poll_view(request):
         if not question_data:
             messages.error(request, "No question information was sent with your request!")
             flag = False
-        question_data = json.loads(question_data)
         if flag and form.is_valid():
+            question_data = json.loads(question_data)
+
             instance = form.save()
 
             process_question_data(instance, question_data)
