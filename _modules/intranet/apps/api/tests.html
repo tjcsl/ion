@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.api.tests &#8212; TJ Intranet v3 (Build #3782) documentation</title>
+    <title>intranet.apps.api.tests &#8212; TJ Intranet v3 (Build #3785) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3782)',
+        VERSION:     'v3 (Build #3785)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -185,6 +185,10 @@
 
         <span class="n">oauth2_settings</span><span class="o">.</span><span class="n">_SCOPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">]</span></div>
 
+<div class="viewcode-block" id="ApiTest.test_get_emerg"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.test_get_emerg">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_emerg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_emerg_status&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ApiTest.test_get_profile"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.test_get_profile">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_user_myprofile_detail&#39;</span><span class="p">))</span>
@@ -264,7 +268,11 @@
 
         <span class="c1"># List blocks</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_eighth_block_list&#39;</span><span class="p">),</span> <span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="n">auth</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="c1"># Should not be able to list profile</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_user_myprofile_detail&#39;</span><span class="p">),</span> <span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="n">auth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ApiTest.test_no_credentials_read"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.test_no_credentials_read">[docs]</a>    <span class="k">def</span> <span class="nf">test_no_credentials_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Announcements should only be available to logged in users</span>
