@@ -118,14 +118,13 @@ def get_authinfo(request):
 
 def windows_dir_format(host_dir, user):
     """Format a string for the location of the user's folder on the Windows (TJ03) fileserver."""
-    grade_folders = {9: "Freshman M:", 10: "Sophomore M:", 11: "Junior M:", 12: "Senior M:"}
     if user and user.grade:
         grade = int(user.grade)
     else:
         return host_dir
 
     if grade in range(9, 13):
-        win_path = "{}/{}/".format(grade_folders[grade], user.username)
+        win_path = "/{}/".format(user.username)
     else:
         win_path = ""
     return host_dir.replace("{win}", win_path)
