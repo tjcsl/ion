@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -179,15 +177,15 @@
 <span class="n">exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="ne">EOFError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="ne">PermissionError</span><span class="p">,</span> <span class="n">SSHException</span><span class="p">,</span> <span class="n">SFTPError</span><span class="p">)</span>
 
 
-<span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="create_session"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.create_session">[docs]</a><span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<div class="viewcode-block" id="create_session"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.create_session">[docs]</a><span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
     <span class="n">cnopts</span> <span class="o">=</span> <span class="n">pysftp</span><span class="o">.</span><span class="n">CnOpts</span><span class="p">()</span>
     <span class="n">cnopts</span><span class="o">.</span><span class="n">hostkeys</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">pysftp</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">cnopts</span><span class="o">=</span><span class="n">cnopts</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="files_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_view">[docs]</a><span class="k">def</span> <span class="nf">files_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="files_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">files_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The main filecenter view.&quot;&quot;&quot;</span>
 
     <span class="n">hosts</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -196,10 +194,10 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
+<div class="viewcode-block" id="files_auth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_auth">[docs]</a><span class="nd">@login_required</span>
 <span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;iv&#39;</span><span class="p">,</span> <span class="s1">&#39;ciphertext&#39;</span><span class="p">)</span>
 <span class="nd">@sensitive_post_parameters</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="files_auth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_auth">[docs]</a><span class="k">def</span> <span class="nf">files_auth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">files_auth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Display authentication for filecenter.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -236,8 +234,8 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/auth.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;is_admin&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)})</span></div>
 
 
-<span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="get_authinfo"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.get_authinfo">[docs]</a><span class="k">def</span> <span class="nf">get_authinfo</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="get_authinfo"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.get_authinfo">[docs]</a><span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_authinfo</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get authentication info from the encrypted message.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">((</span><span class="s2">&quot;files_iv&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;files_text&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;files_key&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">)):</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -274,8 +272,8 @@
     <span class="k">return</span> <span class="n">host_dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{win}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">win_path</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="files_type"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_type">[docs]</a><span class="k">def</span> <span class="nf">files_type</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="files_type"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_type">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">files_type</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Do all processing (directory listing, file downloads) for a given filesystem.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">host</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="n">fstype</span><span class="p">)</span>
@@ -490,8 +488,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/directory.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="files_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_delete">[docs]</a><span class="k">def</span> <span class="nf">files_delete</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="files_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_delete">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">files_delete</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -584,8 +582,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/delete.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="files_upload"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_upload">[docs]</a><span class="k">def</span> <span class="nf">files_upload</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="files_upload"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_upload">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">files_upload</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">fsdir</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fsdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>

@@ -1,51 +1,51 @@
-intranet.apps.parking package
-=============================
+intranet\.apps\.parking package
+===============================
 
 Submodules
 ----------
 
-intranet.apps.parking.admin module
-----------------------------------
+intranet\.apps\.parking\.admin module
+-------------------------------------
 
 .. automodule:: intranet.apps.parking.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.parking.apps module
----------------------------------
+intranet\.apps\.parking\.apps module
+------------------------------------
 
 .. automodule:: intranet.apps.parking.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.parking.forms module
-----------------------------------
+intranet\.apps\.parking\.forms module
+-------------------------------------
 
 .. automodule:: intranet.apps.parking.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.parking.models module
------------------------------------
+intranet\.apps\.parking\.models module
+--------------------------------------
 
 .. automodule:: intranet.apps.parking.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.parking.urls module
----------------------------------
+intranet\.apps\.parking\.urls module
+------------------------------------
 
 .. automodule:: intranet.apps.parking.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.parking.views module
-----------------------------------
+intranet\.apps\.parking\.views module
+-------------------------------------
 
 .. automodule:: intranet.apps.parking.views
     :members:

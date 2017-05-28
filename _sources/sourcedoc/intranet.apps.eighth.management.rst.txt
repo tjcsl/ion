@@ -1,5 +1,5 @@
-intranet.apps.eighth.management package
-=======================================
+intranet\.apps\.eighth\.management package
+==========================================
 
 Subpackages
 -----------

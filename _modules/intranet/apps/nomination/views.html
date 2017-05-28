@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.nomination.views &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.nomination.views &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -158,8 +156,8 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="vote_for_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.nomination.html#intranet.apps.nomination.views.vote_for_user">[docs]</a><span class="k">def</span> <span class="nf">vote_for_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+<div class="viewcode-block" id="vote_for_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.nomination.html#intranet.apps.nomination.views.vote_for_user">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">vote_for_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">nominated_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">nominated_user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">&lt;</span> <span class="mi">13</span><span class="p">:</span>

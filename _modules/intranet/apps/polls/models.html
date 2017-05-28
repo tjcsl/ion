@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -297,14 +295,8 @@
     <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s1">&#39;FRE&#39;</span>
     <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s1">&#39;SRE&#39;</span>
     <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s1">&#39;STO&#39;</span>
-    <span class="n">TYPE</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s1">&#39;Standard&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s1">&#39;Election&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;Approval&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s1">&#39;Split approval&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s1">&#39;Free response&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s1">&#39;Short response&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s1">&#39;Standard other&#39;</span><span class="p">),)</span>
+    <span class="n">TYPE</span> <span class="o">=</span> <span class="p">((</span><span class="n">STD</span><span class="p">,</span> <span class="s1">&#39;Standard&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s1">&#39;Election&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;Approval&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s1">&#39;Split approval&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s1">&#39;Free response&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s1">&#39;Short response&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s1">&#39;Standard other&#39;</span><span class="p">),)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STD</span><span class="p">)</span>
     <span class="n">max_choices</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -335,8 +327,8 @@
         <span class="c1"># return &quot;{} + #{} (&#39;{}&#39;)&quot;.format(self.poll, self.num, self.trunc_question())</span>
         <span class="k">return</span> <span class="s2">&quot;Question #</span><span class="si">{}</span><span class="s2">: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc_question</span><span class="p">())</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Question.get_question_types"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.get_question_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_question_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="Question.get_question_types"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.get_question_types">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_question_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TYPE</span><span class="p">}</span></div>
 
     <span class="nd">@property</span>

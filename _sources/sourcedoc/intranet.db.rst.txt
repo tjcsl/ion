@@ -1,11 +1,11 @@
-intranet.db package
-===================
+intranet\.db package
+====================
 
 Submodules
 ----------
 
-intranet.db.ldap_db module
---------------------------
+intranet\.db\.ldap\_db module
+-----------------------------
 
 .. automodule:: intranet.db.ldap_db
     :members:

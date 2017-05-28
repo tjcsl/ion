@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -163,8 +161,8 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="eighth_signup_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_signup_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="eighth_signup_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_signup_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">eighth_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">block_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;block&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">block_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
@@ -217,8 +215,8 @@
             <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotFound</span><span class="p">(</span><span class="s2">&quot;Given user does not exist.&quot;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span>
-                                                                                                                              <span class="n">activity</span><span class="o">=</span><span class="n">aid</span><span class="p">))</span>
+            <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">block</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">aid</span><span class="p">))</span>
 
         <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotFound</span><span class="p">(</span><span class="s2">&quot;Given activity not scheduled for given block.&quot;</span><span class="p">)</span>
@@ -312,8 +310,8 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/signup.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="eighth_display_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_display_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_display_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="eighth_display_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_display_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">eighth_display_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">block_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">next_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">next_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -402,8 +400,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/display.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="eighth_multi_signup_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_multi_signup_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_multi_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="eighth_multi_signup_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.eighth_multi_signup_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">eighth_multi_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;unsignup&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="s2">&quot;aid&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="n">uid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uid&quot;</span><span class="p">)</span>
@@ -475,8 +473,8 @@
             <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Block did not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span>
-                                                                                                                                  <span class="n">activity</span><span class="o">=</span><span class="n">aid</span><span class="p">))</span>
+                <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">block</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">aid</span><span class="p">))</span>
 
             <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="n">display_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Activity was not scheduled for block&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">btxt</span><span class="p">))</span>
@@ -554,8 +552,8 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/multi_signup.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="toggle_favorite_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.toggle_favorite_view">[docs]</a><span class="k">def</span> <span class="nf">toggle_favorite_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="toggle_favorite_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.toggle_favorite_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">toggle_favorite_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;aid&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;aid&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
@@ -572,9 +570,9 @@
             <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Favorited activity.&quot;</span><span class="p">)</span></div>
 
 
-<span class="nd">@require_POST</span>
+<div class="viewcode-block" id="leave_waitlist_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.leave_waitlist_view">[docs]</a><span class="nd">@require_POST</span>
 <span class="nd">@login_required</span>
-<div class="viewcode-block" id="leave_waitlist_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.leave_waitlist_view">[docs]</a><span class="k">def</span> <span class="nf">leave_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">leave_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseForbidden</span><span class="p">(</span><span class="s2">&quot;Waitlist functionality is currently disabled.&quot;</span><span class="p">)</span>
 
@@ -593,14 +591,14 @@
     <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Successfully left waitlist for this activity.&quot;</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="seen_new_feature_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.seen_new_feature_view">[docs]</a><span class="k">def</span> <span class="nf">seen_new_feature_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="seen_new_feature_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.seen_new_feature_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">seen_new_feature_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;seen_feature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Saved to session.&quot;</span><span class="p">)</span></div>
 
 
-<span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="toggle_waitlist_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.toggle_waitlist_view">[docs]</a><span class="k">def</span> <span class="nf">toggle_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="toggle_waitlist_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.signup.toggle_waitlist_view">[docs]</a><span class="nd">@eighth_admin_required</span>
+<span class="k">def</span> <span class="nf">toggle_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseForbidden</span><span class="p">(</span><span class="s2">&quot;Waitlist functionality is currently disabled.&quot;</span><span class="p">)</span>
 

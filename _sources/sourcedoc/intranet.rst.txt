@@ -16,8 +16,8 @@ Subpackages
 Submodules
 ----------
 
-intranet.wsgi module
---------------------
+intranet\.wsgi module
+---------------------
 
 .. automodule:: intranet.wsgi
     :members:

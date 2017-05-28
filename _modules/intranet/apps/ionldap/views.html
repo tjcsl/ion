@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.ionldap.views &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.ionldap.views &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -155,8 +153,8 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="main_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.main_view">[docs]</a><span class="k">def</span> <span class="nf">main_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="main_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.main_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">main_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Show the current user&#39;s class schedule.&quot;&quot;&quot;</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
@@ -167,8 +165,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ionldap/main.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="class_section_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.class_section_view">[docs]</a><span class="k">def</span> <span class="nf">class_section_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
+<div class="viewcode-block" id="class_section_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.class_section_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">class_section_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">course</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -194,8 +192,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ionldap/class.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="class_room_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.class_room_view">[docs]</a><span class="k">def</span> <span class="nf">class_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+<div class="viewcode-block" id="class_room_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.class_room_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">class_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
     <span class="n">courses</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room_name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">room_id</span><span class="p">))</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;room&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">,</span> <span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">courses</span><span class="p">}</span>
@@ -203,8 +201,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ionldap/class_room.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="all_classes_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.all_classes_view">[docs]</a><span class="k">def</span> <span class="nf">all_classes_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="all_classes_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.ionldap.html#intranet.apps.ionldap.views.all_classes_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">all_classes_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">courses</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">courses</span><span class="p">}</span>

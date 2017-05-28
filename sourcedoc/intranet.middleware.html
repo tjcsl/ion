@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware package &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.middleware package &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -40,7 +38,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -184,9 +182,9 @@
 <dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare">
 <em class="property">class </em><code class="descclassname">intranet.middleware.ajax.</code><code class="descname">AjaxNotAuthenticatedMiddleWare</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Django doesn&#8217;t handle login redirects with AJAX very nicely, so we have to work around the
+<p>Django doesn’t handle login redirects with AJAX very nicely, so we have to work around the
 default behavior a little.</p>
-<p>If a user&#8217;s
+<p>If a user’s
 session has expired, but they still have a window open, they client
 may send AJAX requests to a view wrapped in &#64;login_required or
 something similar. When this happens, Django <code class="docutils literal"><span class="pre">302</span></code> redirects to
@@ -223,7 +221,7 @@ LDAP requests.</p>
 <p>For a login request, the KRB5CCNAME environmental variable has
 already been set in the authentication backend, but for all other
 requests, it must be reset from the Kerberos cache stored in a
-user&#8217;s session. Otherwise all requests to a a particular Gunicorn
+user’s session. Otherwise all requests to a a particular Gunicorn
 worker would use the Kerberos cache of the user who most recently
 logged in through that worker.</p>
 <p>The environmental variable must be set by middleware so it is
@@ -278,16 +276,16 @@ it does not have access to the current session (request.session).</p>
 <p>Record the time taken by Django and the project code to generate the web page and by the database to make the
 queries. Accumulate repeated web page visits and display the accumulated
 statistics in the web browser in place of the normal web page. The availability of this middleware is
-controlled by the DEBUG flas in settings.py. To time a page, add &#8216;?time&#8217; (or &#8216;&amp;time&#8217;). To clear
-out accumulated timings, add &#8216;&amp;reset&#8217;.</p>
+controlled by the DEBUG flas in settings.py. To time a page, add ‘?time’ (or ‘&amp;time’). To clear
+out accumulated timings, add ‘&amp;reset’.</p>
 <p>Alternatively, profile the python function calls executed to create the web page and
 display the profiling statistics in the web browser. To profile a page,
-add &#8216;?prof&#8217; (or &#8216;&amp;prof&#8217;) to the url. By default the statistics are sorted by cumulative time. To
-specify an alternative sort, add one or more &#8216;sort&#8217; parameters, e.g.,
-&#8216;&amp;sort=time&amp;sort=calls&#8217;. By default the display is limited to the first 40 function calls. To
-specify an alternative, add a limit parameter, e.g., &#8216;&amp;limit=.50&#8217;. To write the profile data to
-a permanent file in <cite>PROFILE_LOG_BASE</cite> add &#8216;&amp;log&#8217;. To strip the directory paths from the profile
-statistics, add &#8216;&amp;strip&#8217;. (Note that the file and group summaries are also removed by &#8216;strip&#8217;.)</p>
+add ‘?prof’ (or ‘&amp;prof’) to the url. By default the statistics are sorted by cumulative time. To
+specify an alternative sort, add one or more ‘sort’ parameters, e.g.,
+‘&amp;sort=time&amp;sort=calls’. By default the display is limited to the first 40 function calls. To
+specify an alternative, add a limit parameter, e.g., ‘&amp;limit=.50’. To write the profile data to
+a permanent file in <cite>PROFILE_LOG_BASE</cite> add ‘&amp;log’. To strip the directory paths from the profile
+statistics, add ‘&amp;strip’. (Note that the file and group summaries are also removed by ‘strip’.)</p>
 <dl class="method">
 <dt id="intranet.middleware.profiler.ProfileMiddleware.process_request">
 <code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#ProfileMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.ProfileMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
@@ -352,7 +350,7 @@ server-side for the loading indicators to show up instantly.</p>
 <dt id="intranet.middleware.templates.NoReferrerMiddleware">
 <em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">NoReferrerMiddleware</code><span class="sig-paren">(</span><em>get_response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#NoReferrerMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.NoReferrerMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Set all links to have rel=&#8217;noreferrer noopener&#8217; to prevent malicious JS from editing what the user sees</p>
+<p>Set all links to have rel=’noreferrer noopener’ to prevent malicious JS from editing what the user sees</p>
 </dd></dl>
 
 <dl class="class">

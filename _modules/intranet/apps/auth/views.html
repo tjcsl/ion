@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -245,8 +243,8 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<span class="nd">@sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
-<div class="viewcode-block" id="index_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.index_view">[docs]</a><span class="k">def</span> <span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">auth_form</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="index_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.index_view">[docs]</a><span class="nd">@sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">auth_form</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Process and show the main login page or dashboard if logged in.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force_login</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -295,8 +293,8 @@
 <div class="viewcode-block" id="LoginView"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView">[docs]</a><span class="k">class</span> <span class="nc">LoginView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Log in and redirect a user.&quot;&quot;&quot;</span>
 
-    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
-<div class="viewcode-block" id="LoginView.post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="LoginView.post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView.post">[docs]</a>    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Validate and process the login POST request.&quot;&quot;&quot;</span>
         <span class="sd">&quot;&quot;&quot;Before September 1st, do not allow Class of [year+4] to log in.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
@@ -356,8 +354,8 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Login failed as </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)))</span>
             <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">auth_form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
 
-    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
-<div class="viewcode-block" id="LoginView.get"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="LoginView.get"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView.get">[docs]</a>    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Redirect to the login page.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 

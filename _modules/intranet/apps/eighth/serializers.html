@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -292,8 +290,8 @@
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span></div>
 
-    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
-<div class="viewcode-block" id="EighthBlockDetailSerializer.fetch_activity_list_with_metadata"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.fetch_activity_list_with_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_activity_list_with_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthBlockDetailSerializer.fetch_activity_list_with_metadata"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.fetch_activity_list_with_metadata">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
+    <span class="k">def</span> <span class="nf">fetch_activity_list_with_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 
         <span class="n">favorited_activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -317,8 +315,8 @@
         <span class="c1"># Find the number of students signed up for every activity</span>
         <span class="c1"># in this block</span>
         <span class="n">activities_with_signups</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
-                                   <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">scheduled_activity__activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity_id&quot;</span><span class="p">)</span>
-                                   <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">user_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">)))</span>
+                                   <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">scheduled_activity__activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+                                       <span class="n">user_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">)))</span>
 
         <span class="k">for</span> <span class="n">activity</span><span class="p">,</span> <span class="n">user_count</span> <span class="ow">in</span> <span class="n">activities_with_signups</span><span class="p">:</span>
             <span class="n">activity_list</span><span class="p">[</span><span class="n">activity</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_count</span>

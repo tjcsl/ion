@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -169,8 +167,8 @@
 <span class="n">ScheduledActivityFormset</span> <span class="o">=</span> <span class="n">formset_factory</span><span class="p">(</span><span class="n">ScheduledActivityForm</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 
-<span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="schedule_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">[docs]</a><span class="k">def</span> <span class="nf">schedule_activity_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="schedule_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">[docs]</a><span class="nd">@eighth_admin_required</span>
+<span class="k">def</span> <span class="nf">schedule_activity_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">formset</span> <span class="o">=</span> <span class="n">ScheduledActivityFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -330,8 +328,8 @@
         <span class="c1"># , date__lte=end_date)</span>
         <span class="n">initial_formset_data</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">sched_act_queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span>
-                                                                                                                                 <span class="s2">&quot;members&quot;</span><span class="p">))</span>
+        <span class="n">sched_act_queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
+            <span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">))</span>
         <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="p">{</span><span class="n">sa</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">sa</span> <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_act_queryset</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
@@ -377,8 +375,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/schedule_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a><span class="k">def</span> <span class="nf">show_activity_schedule_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a><span class="nd">@eighth_admin_required</span>
+<span class="k">def</span> <span class="nf">show_activity_schedule_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>  <span class="c1"># show deleted</span>
     <span class="n">activity_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">activity</span> <span class="o">=</span> <span class="kc">None</span>
@@ -393,23 +391,23 @@
 
     <span class="k">if</span> <span class="n">activity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span>
-                                                                                                                  <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
+            <span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
         <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scheduled_activities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheduled_activities</span>
 
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;View Activity Schedule&quot;</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/view_activity_schedule.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a><span class="k">def</span> <span class="nf">distribute_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a><span class="nd">@eighth_admin_required</span>
+<span class="k">def</span> <span class="nf">distribute_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/distribute_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminTransferStudentsWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
-             <span class="p">(</span><span class="s2">&quot;activity_2&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_2&quot;</span><span class="p">,</span>
+                                                                                                                       <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
 
     <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
@@ -507,8 +505,8 @@
 <span class="n">unsignup_students_view</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminUnsignupStudentsWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminUnsignupStudentsWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
 
 
-<span class="nd">@eighth_admin_required</span>
-<div class="viewcode-block" id="transfer_students_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action">[docs]</a><span class="k">def</span> <span class="nf">transfer_students_action</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="transfer_students_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action">[docs]</a><span class="nd">@eighth_admin_required</span>
+<span class="k">def</span> <span class="nf">transfer_students_action</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Do the actual process of transferring students.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;source_act&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">source_act</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_act&quot;</span><span class="p">))</span>

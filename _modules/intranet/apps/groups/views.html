@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.groups.views &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.groups.views &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -159,8 +157,8 @@
 <span class="c1"># this is the one that students see</span>
 <span class="c1"># has add/remove from groups form</span>
 <span class="c1"># students can only add themselves to non-admin groups unless they are already an admin</span>
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="groups_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.views.groups_view">[docs]</a><span class="k">def</span> <span class="nf">groups_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="groups_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.views.groups_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">groups_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">group_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">group_admin</span> <span class="ow">and</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
@@ -170,8 +168,8 @@
 
 
 <span class="c1"># Create individual views for each form action</span>
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="add_group_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.views.add_group_view">[docs]</a><span class="k">def</span> <span class="nf">add_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="add_group_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.views.add_group_view">[docs]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">add_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">GroupForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>

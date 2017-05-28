@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.forms.admin.activities &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.apps.eighth.forms.admin.activities &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -198,8 +196,8 @@
                 <span class="n">sponsoring_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">activity__sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)))</span>
                 <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsoring_filter</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span>
-                                                                                                                                <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span>
+                    <span class="s2">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">include_cancelled</span><span class="p">:</span>
                     <span class="n">activity_ids</span> <span class="o">=</span> <span class="n">activity_ids</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -267,8 +265,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;default_capacity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;Overrides the sum of each room&#39;s capacity above, if set.&quot;</span>
 
         <span class="c1"># These fields are rendered on the right of the page on the edit activity page.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">right_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;restricted&#39;</span><span class="p">,</span> <span class="s1">&#39;users_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;groups_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;users_blacklisted&#39;</span><span class="p">,</span> <span class="s1">&#39;freshmen_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomores_allowed&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;juniors_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;seniors_allowed&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
+            <span class="s1">&#39;restricted&#39;</span><span class="p">,</span> <span class="s1">&#39;users_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;groups_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;users_blacklisted&#39;</span><span class="p">,</span> <span class="s1">&#39;freshmen_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomores_allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;juniors_allowed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;seniors_allowed&#39;</span>
+        <span class="p">])</span>
 
 <div class="viewcode-block" id="ActivityForm.Meta"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthActivity</span>

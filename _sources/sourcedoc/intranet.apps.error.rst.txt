@@ -1,11 +1,11 @@
-intranet.apps.error package
-===========================
+intranet\.apps\.error package
+=============================
 
 Submodules
 ----------
 
-intranet.apps.error.views module
---------------------------------
+intranet\.apps\.error\.views module
+-----------------------------------
 
 .. automodule:: intranet.apps.error.views
     :members:

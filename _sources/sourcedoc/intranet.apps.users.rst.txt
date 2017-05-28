@@ -1,5 +1,5 @@
-intranet.apps.users package
-===========================
+intranet\.apps\.users package
+=============================
 
 Subpackages
 -----------
@@ -12,72 +12,72 @@ Subpackages
 Submodules
 ----------
 
-intranet.apps.users.admin module
---------------------------------
+intranet\.apps\.users\.admin module
+-----------------------------------
 
 .. automodule:: intranet.apps.users.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.api module
-------------------------------
+intranet\.apps\.users\.api module
+---------------------------------
 
 .. automodule:: intranet.apps.users.api
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.forms module
---------------------------------
+intranet\.apps\.users\.forms module
+-----------------------------------
 
 .. automodule:: intranet.apps.users.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.models module
----------------------------------
+intranet\.apps\.users\.models module
+------------------------------------
 
 .. automodule:: intranet.apps.users.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.renderers module
-------------------------------------
+intranet\.apps\.users\.renderers module
+---------------------------------------
 
 .. automodule:: intranet.apps.users.renderers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.serializers module
---------------------------------------
+intranet\.apps\.users\.serializers module
+-----------------------------------------
 
 .. automodule:: intranet.apps.users.serializers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.tests module
---------------------------------
+intranet\.apps\.users\.tests module
+-----------------------------------
 
 .. automodule:: intranet.apps.users.tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.urls module
--------------------------------
+intranet\.apps\.users\.urls module
+----------------------------------
 
 .. automodule:: intranet.apps.users.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.users.views module
---------------------------------
+intranet\.apps\.users\.views module
+-----------------------------------
 
 .. automodule:: intranet.apps.users.views
     :members:

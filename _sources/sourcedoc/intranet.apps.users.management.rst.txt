@@ -1,5 +1,5 @@
-intranet.apps.users.management package
-======================================
+intranet\.apps\.users\.management package
+=========================================
 
 Subpackages
 -----------

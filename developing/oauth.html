@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -40,7 +38,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -170,14 +168,14 @@
 </dd>
 <dt>Client Type*</dt>
 <dd><ul class="first last simple">
-<li>Choose &#8220;Confidential&#8221; if your app has a backend component</li>
-<li>Choose &#8220;Public&#8221; if your app is purely client-side</li>
+<li>Choose “Confidential” if your app has a backend component</li>
+<li>Choose “Public” if your app is purely client-side</li>
 </ul>
 </dd>
 <dt>Authorization Grant Type*</dt>
 <dd><ul class="first last simple">
-<li>Choose &#8220;Authorization code&#8221; if your client type is &#8220;Confidential&#8221;</li>
-<li>Choose &#8220;Implicit&#8221; if your client type is &#8220;Public&#8221; (for example, on a native application)</li>
+<li>Choose “Authorization code” if your client type is “Confidential”</li>
+<li>Choose “Implicit” if your client type is “Public” (for example, on a native application)</li>
 </ul>
 </dd>
 <dt>Redirect URIs</dt>
@@ -212,7 +210,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">authorization_url</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">authorization_url</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/authorize/&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a &#8220;code&#8221; GET parameter.</p>
+<p>The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a “code” GET parameter.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">code</span><span class="o">=</span><span class="n">CODE</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">client_secret</span><span class="o">=</span><span class="n">CLIENT_SECRET</span><span class="p">)</span>
@@ -232,7 +230,7 @@
 <span class="p">{</span> <span class="s1">&#39;ion_username&#39;</span><span class="p">:</span> <span class="s1">&#39;2016jwoglom&#39;</span><span class="p">,</span> <span class="o">...</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>After 36,000 seconds (1 hour), the token will expire; you need to renew it. This can be handled by putting API commands inside a try-except for a oauthlib.oauth2.TokenExpiredError, such as seen above. Alternatively, you can provide &#8220;auto_refresh_url=refresh_url, auto_refresh_kwargs=args&#8221; as additional arguments to OAuth2Session when it is created.</p>
+<p>After 36,000 seconds (1 hour), the token will expire; you need to renew it. This can be handled by putting API commands inside a try-except for a oauthlib.oauth2.TokenExpiredError, such as seen above. Alternatively, you can provide “auto_refresh_url=refresh_url, auto_refresh_kwargs=args” as additional arguments to OAuth2Session when it is created.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
 <span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 </pre></div>
@@ -242,7 +240,7 @@
 <h3>Python-social-auth<a class="headerlink" href="#python-social-auth" title="Permalink to this headline">¶</a></h3>
 <p>If you want to use python-social-auth, a plugin is available in the ion_oauth package.
 See <a class="reference external" href="https://pypi.python.org/pypi/ion_oauth">ion_oauth</a></p>
-<p>For a Django project, add AUTHENTICATION_BACKENDS = [&#8216;ion_oauth.oauth.IonOauth2&#8217;] and define SOCIAL_AUTH_ION_KEY and SOCIAL_AUTH_ION_SECRET in your settings.py file.</p>
+<p>For a Django project, add AUTHENTICATION_BACKENDS = [‘ion_oauth.oauth.IonOauth2’] and define SOCIAL_AUTH_ION_KEY and SOCIAL_AUTH_ION_SECRET in your settings.py file.</p>
 </div>
 <div class="section" id="php">
 <h3>PHP<a class="headerlink" href="#php" title="Permalink to this headline">¶</a></h3>

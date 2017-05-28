@@ -1,5 +1,5 @@
-intranet.apps.ionldap package
-=============================
+intranet\.apps\.ionldap package
+===============================
 
 Subpackages
 -----------
@@ -11,32 +11,32 @@ Subpackages
 Submodules
 ----------
 
-intranet.apps.ionldap.apps module
----------------------------------
+intranet\.apps\.ionldap\.apps module
+------------------------------------
 
 .. automodule:: intranet.apps.ionldap.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.ionldap.models module
------------------------------------
+intranet\.apps\.ionldap\.models module
+--------------------------------------
 
 .. automodule:: intranet.apps.ionldap.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.ionldap.urls module
----------------------------------
+intranet\.apps\.ionldap\.urls module
+------------------------------------
 
 .. automodule:: intranet.apps.ionldap.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.ionldap.views module
-----------------------------------
+intranet\.apps\.ionldap\.views module
+-------------------------------------
 
 .. automodule:: intranet.apps.ionldap.views
     :members:

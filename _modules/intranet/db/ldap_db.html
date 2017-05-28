@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.db.ldap_db &#8212; TJ Intranet v3 (Build #3793) documentation</title>
+    <title>intranet.db.ldap_db &#8212; TJ Intranet v3 (Build #3794) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/_static/custom.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #3793)',
+        VERSION:     'v3 (Build #3794)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -38,7 +36,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -170,31 +168,31 @@
 
 <div class="viewcode-block" id="LDAPFilter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter">[docs]</a><span class="k">class</span> <span class="nc">LDAPFilter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.operator"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.operator">[docs]</a>    <span class="k">def</span> <span class="nf">operator</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+<div class="viewcode-block" id="LDAPFilter.operator"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.operator">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">operator</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">operator</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.and_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.and_filter">[docs]</a>    <span class="k">def</span> <span class="nf">and_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+<div class="viewcode-block" id="LDAPFilter.and_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.and_filter">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">and_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">)</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.or_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.or_filter">[docs]</a>    <span class="k">def</span> <span class="nf">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+<div class="viewcode-block" id="LDAPFilter.or_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.or_filter">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">)</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.escape"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.escape">[docs]</a>    <span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="LDAPFilter.escape"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.escape">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.attribute_in_list"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.attribute_in_list">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_in_list</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<div class="viewcode-block" id="LDAPFilter.attribute_in_list"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.attribute_in_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attribute_in_list</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all entries for which a specified attribute is contained</span>
 <span class="sd">        in a specified list of values.&quot;&quot;&quot;</span>
         <span class="n">conditions</span> <span class="o">=</span> <span class="p">(</span><span class="n">attribute</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">)</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="LDAPFilter.all_users"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.all_users">[docs]</a>    <span class="k">def</span> <span class="nf">all_users</span><span class="p">():</span>
+<div class="viewcode-block" id="LDAPFilter.all_users"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.all_users">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">all_users</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all user objects in LDAP.&quot;&quot;&quot;</span>
 
         <span class="n">user_object_classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LDAP_OBJECT_CLASSES</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
@@ -418,8 +416,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div></div>
 
 
-<span class="nd">@receiver</span><span class="p">(</span><span class="n">request_finished</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;close_ldap_connection&quot;</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">WSGIHandler</span><span class="p">)</span>
-<div class="viewcode-block" id="close_ldap_connection"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.close_ldap_connection">[docs]</a><span class="k">def</span> <span class="nf">close_ldap_connection</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="close_ldap_connection"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.close_ldap_connection">[docs]</a><span class="nd">@receiver</span><span class="p">(</span><span class="n">request_finished</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;close_ldap_connection&quot;</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">WSGIHandler</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">close_ldap_connection</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Closes the request&#39;s LDAP connection and clears up thread locals.</span>
 
 <span class="sd">    Listens for the request_finished signal from Django and upon</span>

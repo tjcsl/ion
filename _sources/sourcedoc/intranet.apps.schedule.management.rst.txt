@@ -1,5 +1,5 @@
-intranet.apps.schedule.management package
-=========================================
+intranet\.apps\.schedule\.management package
+============================================
 
 Subpackages
 -----------
