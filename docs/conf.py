@@ -330,3 +330,4 @@ def setup(app):
     import django
     django.setup()
     app.connect('autodoc-skip-member', skip)
+    app.add_stylesheet('_static/custom.css')
