@@ -181,7 +181,7 @@ def deploy():
                 requirements = req_file.read().strip().split()
                 try:
                     pkg_resources.require(requirements)
-                except:
+                except pkg_resources.DistributionNotFound:
                     local("pip install -r requirements.txt")
                 else:
                     puts("Python requirements already satisfied.")
