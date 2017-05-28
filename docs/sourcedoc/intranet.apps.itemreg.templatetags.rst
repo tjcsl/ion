@@ -1,11 +1,11 @@
-intranet.apps.itemreg.templatetags package
-==========================================
+intranet\.apps\.itemreg\.templatetags package
+=============================================
 
 Submodules
 ----------
 
-intranet.apps.itemreg.templatetags.texthighlight module
--------------------------------------------------------
+intranet\.apps\.itemreg\.templatetags\.texthighlight module
+-----------------------------------------------------------
 
 .. automodule:: intranet.apps.itemreg.templatetags.texthighlight
     :members:

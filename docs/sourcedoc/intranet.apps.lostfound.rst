@@ -1,51 +1,51 @@
-intranet.apps.lostfound package
-===============================
+intranet\.apps\.lostfound package
+=================================
 
 Submodules
 ----------
 
-intranet.apps.lostfound.admin module
-------------------------------------
+intranet\.apps\.lostfound\.admin module
+---------------------------------------
 
 .. automodule:: intranet.apps.lostfound.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.lostfound.apps module
------------------------------------
+intranet\.apps\.lostfound\.apps module
+--------------------------------------
 
 .. automodule:: intranet.apps.lostfound.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.lostfound.forms module
-------------------------------------
+intranet\.apps\.lostfound\.forms module
+---------------------------------------
 
 .. automodule:: intranet.apps.lostfound.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.lostfound.models module
--------------------------------------
+intranet\.apps\.lostfound\.models module
+----------------------------------------
 
 .. automodule:: intranet.apps.lostfound.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.lostfound.urls module
------------------------------------
+intranet\.apps\.lostfound\.urls module
+--------------------------------------
 
 .. automodule:: intranet.apps.lostfound.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.lostfound.views module
-------------------------------------
+intranet\.apps\.lostfound\.views module
+---------------------------------------
 
 .. automodule:: intranet.apps.lostfound.views
     :members:

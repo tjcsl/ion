@@ -1,5 +1,5 @@
-intranet.apps.itemreg package
-=============================
+intranet\.apps\.itemreg package
+===============================
 
 Subpackages
 -----------
@@ -11,48 +11,48 @@ Subpackages
 Submodules
 ----------
 
-intranet.apps.itemreg.admin module
-----------------------------------
+intranet\.apps\.itemreg\.admin module
+-------------------------------------
 
 .. automodule:: intranet.apps.itemreg.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.itemreg.apps module
----------------------------------
+intranet\.apps\.itemreg\.apps module
+------------------------------------
 
 .. automodule:: intranet.apps.itemreg.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.itemreg.forms module
-----------------------------------
+intranet\.apps\.itemreg\.forms module
+-------------------------------------
 
 .. automodule:: intranet.apps.itemreg.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.itemreg.models module
------------------------------------
+intranet\.apps\.itemreg\.models module
+--------------------------------------
 
 .. automodule:: intranet.apps.itemreg.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.itemreg.urls module
----------------------------------
+intranet\.apps\.itemreg\.urls module
+------------------------------------
 
 .. automodule:: intranet.apps.itemreg.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.itemreg.views module
-----------------------------------
+intranet\.apps\.itemreg\.views module
+-------------------------------------
 
 .. automodule:: intranet.apps.itemreg.views
     :members:

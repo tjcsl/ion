@@ -1,27 +1,27 @@
-intranet.apps.search package
-============================
+intranet\.apps\.search package
+==============================
 
 Submodules
 ----------
 
-intranet.apps.search.urls module
---------------------------------
+intranet\.apps\.search\.urls module
+-----------------------------------
 
 .. automodule:: intranet.apps.search.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.search.utils module
----------------------------------
+intranet\.apps\.search\.utils module
+------------------------------------
 
 .. automodule:: intranet.apps.search.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.search.views module
----------------------------------
+intranet\.apps\.search\.views module
+------------------------------------
 
 .. automodule:: intranet.apps.search.views
     :members:

@@ -1,51 +1,51 @@
-intranet.apps.polls package
-===========================
+intranet\.apps\.polls package
+=============================
 
 Submodules
 ----------
 
-intranet.apps.polls.admin module
---------------------------------
+intranet\.apps\.polls\.admin module
+-----------------------------------
 
 .. automodule:: intranet.apps.polls.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.polls.forms module
---------------------------------
+intranet\.apps\.polls\.forms module
+-----------------------------------
 
 .. automodule:: intranet.apps.polls.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.polls.models module
----------------------------------
+intranet\.apps\.polls\.models module
+------------------------------------
 
 .. automodule:: intranet.apps.polls.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.polls.tests module
---------------------------------
+intranet\.apps\.polls\.tests module
+-----------------------------------
 
 .. automodule:: intranet.apps.polls.tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.polls.urls module
--------------------------------
+intranet\.apps\.polls\.urls module
+----------------------------------
 
 .. automodule:: intranet.apps.polls.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.polls.views module
---------------------------------
+intranet\.apps\.polls\.views module
+-----------------------------------
 
 .. automodule:: intranet.apps.polls.views
     :members:

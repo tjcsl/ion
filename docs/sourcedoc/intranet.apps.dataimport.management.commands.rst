@@ -1,27 +1,27 @@
-intranet.apps.dataimport.management.commands package
-====================================================
+intranet\.apps\.dataimport\.management\.commands package
+========================================================
 
 Submodules
 ----------
 
-intranet.apps.dataimport.management.commands.import_photos module
------------------------------------------------------------------
+intranet\.apps\.dataimport\.management\.commands\.import\_photos module
+-----------------------------------------------------------------------
 
 .. automodule:: intranet.apps.dataimport.management.commands.import_photos
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.dataimport.management.commands.import_sis module
---------------------------------------------------------------
+intranet\.apps\.dataimport\.management\.commands\.import\_sis module
+--------------------------------------------------------------------
 
 .. automodule:: intranet.apps.dataimport.management.commands.import_sis
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.dataimport.management.commands.year_cleanup module
-----------------------------------------------------------------
+intranet\.apps\.dataimport\.management\.commands\.year\_cleanup module
+----------------------------------------------------------------------
 
 .. automodule:: intranet.apps.dataimport.management.commands.year_cleanup
     :members:

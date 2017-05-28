@@ -1,5 +1,5 @@
-intranet.apps.ionldap.management package
-========================================
+intranet\.apps\.ionldap\.management package
+===========================================
 
 Subpackages
 -----------

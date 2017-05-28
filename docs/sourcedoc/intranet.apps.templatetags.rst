@@ -1,51 +1,51 @@
-intranet.apps.templatetags package
-==================================
+intranet\.apps\.templatetags package
+====================================
 
 Submodules
 ----------
 
-intranet.apps.templatetags.dates module
----------------------------------------
+intranet\.apps\.templatetags\.dates module
+------------------------------------------
 
 .. automodule:: intranet.apps.templatetags.dates
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.templatetags.dictionaries module
-----------------------------------------------
+intranet\.apps\.templatetags\.dictionaries module
+-------------------------------------------------
 
 .. automodule:: intranet.apps.templatetags.dictionaries
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.templatetags.forms module
----------------------------------------
+intranet\.apps\.templatetags\.forms module
+------------------------------------------
 
 .. automodule:: intranet.apps.templatetags.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.templatetags.math module
---------------------------------------
+intranet\.apps\.templatetags\.math module
+-----------------------------------------
 
 .. automodule:: intranet.apps.templatetags.math
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.templatetags.strings module
------------------------------------------
+intranet\.apps\.templatetags\.strings module
+--------------------------------------------
 
 .. automodule:: intranet.apps.templatetags.strings
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.templatetags.tests module
----------------------------------------
+intranet\.apps\.templatetags\.tests module
+------------------------------------------
 
 .. automodule:: intranet.apps.templatetags.tests
     :members:

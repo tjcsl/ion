@@ -1,5 +1,5 @@
-intranet.apps.dataimport package
-================================
+intranet\.apps\.dataimport package
+==================================
 
 Subpackages
 -----------
@@ -11,16 +11,16 @@ Subpackages
 Submodules
 ----------
 
-intranet.apps.dataimport.apps module
-------------------------------------
+intranet\.apps\.dataimport\.apps module
+---------------------------------------
 
 .. automodule:: intranet.apps.dataimport.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.dataimport.tests module
--------------------------------------
+intranet\.apps\.dataimport\.tests module
+----------------------------------------
 
 .. automodule:: intranet.apps.dataimport.tests
     :members:
