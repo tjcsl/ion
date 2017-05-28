@@ -7,33 +7,19 @@ from .models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledAct
 
 
 class EighthSponsorAdmin(SimpleHistoryAdmin):
-    list_display = (
-        'first_name',
-        'last_name',
-        'user',
-        'online_attendance',
-        'show_full_name',)
+    list_display = ('first_name', 'last_name', 'user', 'online_attendance', 'show_full_name',)
     list_filter = ('online_attendance', 'show_full_name')
     ordering = ('last_name', 'first_name')
 
 
 class EighthRoomAdmin(SimpleHistoryAdmin):
-    list_display = (
-        'name',
-        'capacity',)
+    list_display = ('name', 'capacity',)
     ordering = ('name',)
 
 
 class EighthActivityAdmin(SimpleHistoryAdmin):
-    list_display = (
-        'name',
-        'special',
-        'administrative',
-        'deleted',)
-    list_filter = (
-        'special',
-        'administrative',
-        'deleted',)
+    list_display = ('name', 'special', 'administrative', 'deleted',)
+    list_filter = ('special', 'administrative', 'deleted',)
     ordering = ('name',)
 
 
@@ -45,9 +31,7 @@ class EighthBlockAdmin(SimpleHistoryAdmin):
 
 class EighthScheduledActivityAdmin(SimpleHistoryAdmin):
     list_display = ('activity', 'block', 'comments', 'admin_comments', 'cancelled')
-    list_filter = (
-        'block',
-        'cancelled',)
+    list_filter = ('block', 'cancelled',)
     ordering = ('block', 'activity')
 
 
@@ -65,12 +49,7 @@ class EighthSignupAdmin(SimpleHistoryAdmin):
     get_block.short_description = "Block"  # type: ignore
     get_block.admin_order_field = "scheduled_activity__block"  # type: ignore
 
-    list_display = (
-        'user',
-        'get_activity',
-        'get_block',
-        'after_deadline',
-        'was_absent',)
+    list_display = ('user', 'get_activity', 'get_block', 'after_deadline', 'was_absent',)
     list_filter = ('scheduled_activity__block',)
     ordering = ('scheduled_activity', 'user')
     raw_id_fields = ('user', 'scheduled_activity')

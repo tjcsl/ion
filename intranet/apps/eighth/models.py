@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractBaseEighthModel(models.Model):
-
     """Abstract base model that includes created and last modified times."""
 
     created_time = models.DateTimeField(auto_now_add=True, null=True)
@@ -31,7 +30,6 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
-
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
@@ -65,9 +63,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance"),)
-        ordering = (
-            "last_name",
-            "first_name",)
+        ordering = ("last_name", "first_name",)
 
     @property
     def name(self):
@@ -85,7 +81,6 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 
 class EighthRoom(AbstractBaseEighthModel):
-
     """Represents a room in which an eighth period activity can be held.
 
     Attributes:
@@ -142,7 +137,6 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 
 class EighthActivity(AbstractBaseEighthModel):
-
     """Represents an eighth period activity.
 
     Attributes:
@@ -426,7 +420,6 @@ class EighthBlockManager(models.Manager):
 
 
 class EighthBlock(AbstractBaseEighthModel):
-
     """Represents an eighth period block.
 
     Attributes:
@@ -594,7 +587,6 @@ class EighthBlock(AbstractBaseEighthModel):
 
 
 class EighthScheduledActivityManager(Manager):
-
     """Model Manager for EighthScheduledActivity."""
 
     def for_sponsor(self, sponsor, include_cancelled=False):
@@ -618,7 +610,6 @@ class EighthScheduledActivityManager(Manager):
 
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
-
     """Represents the relationship between an activity and a block in which it has been scheduled.
 
     Attributes:
@@ -1010,10 +1001,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if settings.ENABLE_WAITLIST and (add_to_waitlist or (sched_act.is_full() and not self.is_both_blocks()
-                                                 and (request is not None
-                                                 and not request.user.is_eighth_admin
-                                                 and request.user.is_student))):
+                if settings.ENABLE_WAITLIST and (add_to_waitlist or
+                                                 (sched_act.is_full() and not self.is_both_blocks() and
+                                                  (request is not None and not request.user.is_eighth_admin and request.user.is_student))):
                     if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                         EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                     waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
@@ -1124,10 +1114,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not
-                                                     self.block.locked and
-                                                     request is not None and not
-                                                     request.session.get("disable_waitlist_transactions", False)):
+                    if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not self.block.locked and request is not None and
+                                                     not request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             try:
@@ -1245,7 +1233,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
 
 class EighthSignupManager(Manager):
-
     """Model manager for EighthSignup."""
 
     def create_signup(self, user, scheduled_activity, **kwargs):
@@ -1258,7 +1245,6 @@ class EighthSignupManager(Manager):
 
 
 class EighthSignup(AbstractBaseEighthModel):
-
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:
@@ -1401,7 +1387,6 @@ class EighthSignup(AbstractBaseEighthModel):
 
 
 class EighthWaitlistManager(Manager):
-
     """Model manager for EighthWaitlist."""
 
     def get_next_waitlist(self, activity):
@@ -1409,7 +1394,7 @@ class EighthWaitlistManager(Manager):
 
     def position_in_waitlist(self, aid, uid):
         try:
-            return self.filter(scheduled_activity_id=aid, time__lt=self.get(scheduled_activity_id=aid, user_id=uid).time).count()+1
+            return self.filter(scheduled_activity_id=aid, time__lt=self.get(scheduled_activity_id=aid, user_id=uid).time).count() + 1
         except EighthWaitlist.DoesNotExist:
             return 0
 
@@ -1419,8 +1404,8 @@ class EighthWaitlist(AbstractBaseEighthModel):
     time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
     block = models.ForeignKey(EighthBlock, null=False, on_delete=models.CASCADE)
-    scheduled_activity = models.ForeignKey(
-        EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True, on_delete=models.CASCADE)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True,
+                                           on_delete=models.CASCADE)
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)

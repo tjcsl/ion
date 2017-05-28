@@ -14,26 +14,20 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='choice',
-            name='app',
-        ),
+            name='app',),
         migrations.RemoveField(
             model_name='choice',
-            name='free_resp',
-        ),
+            name='free_resp',),
         migrations.RemoveField(
             model_name='choice',
-            name='is_writing',
-        ),
+            name='is_writing',),
         migrations.RemoveField(
             model_name='choice',
-            name='short_resp',
-        ),
+            name='short_resp',),
         migrations.RemoveField(
             model_name='choice',
-            name='std',
-        ),
+            name='std',),
         migrations.RemoveField(
             model_name='choice',
-            name='std_other',
-        ),
+            name='std_other',),
     ]

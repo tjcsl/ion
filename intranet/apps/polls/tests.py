@@ -17,28 +17,28 @@ class ApiTest(IonTestCase):
         user = self.make_admin()
 
         # Test poll creation
-        question_data = json.dumps([
-            {
-                "question": "What is your favorite color?",
-                "type": "STD",
-                "max_choices": "1",
-                "choices": [
-                    {"info": "Red"},
-                    {"info": "Green"},
-                    {"info": "Blue"}
-                ]
-            }
-        ])
+        question_data = json.dumps([{
+            "question": "What is your favorite color?",
+            "type": "STD",
+            "max_choices": "1",
+            "choices": [{
+                "info": "Red"
+            }, {
+                "info": "Green"
+            }, {
+                "info": "Blue"
+            }]
+        }])
 
-        response = self.client.post(reverse('add_poll'),
-                                    data={
-                                        "title": "Test Poll",
-                                        "description": "This is a test poll!",
-                                        "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                                        "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                                        "visible": True,
-                                        "question_data": question_data
-                                    })
+        response = self.client.post(
+            reverse('add_poll'), data={
+                "title": "Test Poll",
+                "description": "This is a test poll!",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "visible": True,
+                "question_data": question_data
+            })
 
         # User redirected to poll home screen
         self.assertEqual(response.status_code, 302)
@@ -51,9 +51,7 @@ class ApiTest(IonTestCase):
         self.assertEqual(Choice.objects.filter(question__poll=poll).count(), 3)
 
         # Make sure that the user can vote in the poll
-        response = self.client.post(reverse('poll_vote', kwargs={"poll_id": poll.first().id}), data={
-                                        "question-1": 3
-                                    })
+        response = self.client.post(reverse('poll_vote', kwargs={"poll_id": poll.first().id}), data={"question-1": 3})
 
         self.assertEqual(response.status_code, 200)
 

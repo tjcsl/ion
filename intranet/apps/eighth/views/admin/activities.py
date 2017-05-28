@@ -153,12 +153,8 @@ def edit_activity_view(request, activity_id):
                 error = str(error)
                 messages.error(request, error)
             else:
-                if (activity.restricted
-                        or activity.one_a_day
-                        or activity.presign
-                        or activity.both_blocks
-                        or activity.sticky
-                        or activity.administrative):
+                if (activity.restricted or activity.one_a_day or activity.presign or activity.both_blocks or activity.sticky or
+                        activity.administrative):
                     all_sched_acts = EighthScheduledActivity.objects.filter(activity=activity)
                     for sa in all_sched_acts:
                         EighthWaitlist.objects.filter(scheduled_activity=sa).delete()
@@ -262,8 +258,10 @@ def delete_activity_view(request, activity_id=None):
         return redirect("eighth_admin_dashboard")
     else:
         context = {
-            "admin_page_title": "Delete Activity",
-            "item_name": activity.name,
+            "admin_page_title":
+            "Delete Activity",
+            "item_name":
+            activity.name,
             "help_text": ("Deleting will not destroy past attendance data for this "
                           "activity. The activity will just be marked as deleted "
                           "and hidden from non-attendance views." if not perm_delete else "This will destroy past attendance data.")

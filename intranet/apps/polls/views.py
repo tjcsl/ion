@@ -359,14 +359,7 @@ def add_poll_view(request):
     else:
         form = PollForm()
 
-    context = {
-        "action": "add",
-        "action_title": "Add",
-        "poll_questions": "[]",
-        "poll_choices": "[]",
-        "form": form,
-        "is_polls_admin": True
-    }
+    context = {"action": "add", "action_title": "Add", "poll_questions": "[]", "poll_choices": "[]", "form": form, "is_polls_admin": True}
 
     return render(request, "polls/add_modify.html", context)
 
@@ -447,13 +440,8 @@ def process_question_data(instance, question_data):
             question.choice_set.exclude(pk__in=[x["pk"] for x in q["choices"] if "pk" in x]).delete()
         else:
             # Question does not exist
-            question = Question.objects.create(
-                poll=instance,
-                question=safe_html(q["question"]).strip(),
-                num=count,
-                type=q.get("type", "STD"),
-                max_choices=q.get("max_choices", 1)
-            )
+            question = Question.objects.create(poll=instance, question=safe_html(q["question"]).strip(), num=count, type=q.get("type", "STD"),
+                                               max_choices=q.get("max_choices", 1))
 
         choice_count = 1
         for c in q.get("choices", []):
@@ -468,11 +456,7 @@ def process_question_data(instance, question_data):
                 choice.save()
             else:
                 # Choice does not exist
-                choice = Choice.objects.create(
-                    question=question,
-                    num=choice_count,
-                    info=safe_html(c["info"]).strip()
-                )
+                choice = Choice.objects.create(question=question, num=choice_count, info=safe_html(c["info"]).strip())
             choice_count += 1
 
         count += 1

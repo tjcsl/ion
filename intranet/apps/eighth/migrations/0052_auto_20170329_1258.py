@@ -15,11 +15,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthsponsor',
             name='contracted_eighth',
-            field=models.BooleanField(default=True),
-        ),
+            field=models.BooleanField(default=True),),
         migrations.AddField(
             model_name='historicaleighthsponsor',
             name='contracted_eighth',
-            field=models.BooleanField(default=True),
-        ),
+            field=models.BooleanField(default=True),),
     ]

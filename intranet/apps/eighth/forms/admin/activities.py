@@ -54,8 +54,8 @@ class ActivitySelectionForm(forms.Form):
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
                 activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id", flat=True))
             else:
-                activity_ids = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list("activity__id",
-                                                                                                                                flat=True))
+                activity_ids = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list(
+                    "activity__id", flat=True))
                 if not include_cancelled:
                     activity_ids = activity_ids.exclude(cancelled=True)
 
@@ -123,8 +123,10 @@ class ActivityForm(forms.ModelForm):
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
         # These fields are rendered on the right of the page on the edit activity page.
-        self.right_fields = set(['restricted', 'users_allowed', 'groups_allowed', 'users_blacklisted', 'freshmen_allowed', 'sophomores_allowed',
-                                 'juniors_allowed', 'seniors_allowed'])
+        self.right_fields = set([
+            'restricted', 'users_allowed', 'groups_allowed', 'users_blacklisted', 'freshmen_allowed', 'sophomores_allowed', 'juniors_allowed',
+            'seniors_allowed'
+        ])
 
     class Meta:
         model = EighthActivity

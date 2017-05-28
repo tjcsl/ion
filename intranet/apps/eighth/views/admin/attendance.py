@@ -295,8 +295,8 @@ def activities_without_attendance_view(request):
             logger.debug(signups)
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
-            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(),
-                                                                                                                       signups.count()))
+            messages.success(request, "Took attendance for {} cancelled activities. {} students marked absent.".format(
+                cancelled.count(), signups.count()))
             return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
 
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
@@ -358,8 +358,8 @@ def out_of_building_schedules_view(request, block_id=None):
         rooms = EighthRoom.objects.filter(name__icontains="out of building")
 
         if len(rooms) > 0:
-            rooms_filter = Q(scheduled_activity__rooms__in=rooms) | (Q(scheduled_activity__rooms=None) &
-                                                                     Q(scheduled_activity__activity__rooms__in=rooms))
+            rooms_filter = Q(
+                scheduled_activity__rooms__in=rooms) | (Q(scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms))
             signups = (EighthSignup.objects.filter(scheduled_activity__block=block).filter(rooms_filter)
                        .distinct().order_by("scheduled_activity__activity"))
             context["signups"] = signups

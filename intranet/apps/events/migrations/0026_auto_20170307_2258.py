@@ -15,10 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='open_to',
-            field=models.CharField(choices=[
-                    ('everyone', 'Everyone'),
-                    ('students', 'Students'),
-                    ('parents', 'Parents')
-                ], default='everyone', max_length=8),
-        ),
+            field=models.CharField(choices=[('everyone', 'Everyone'), ('students', 'Students'), ('parents', 'Parents')], default='everyone',
+                                   max_length=8),),
     ]

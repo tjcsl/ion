@@ -73,8 +73,8 @@ def eighth_signup_view(request, block_id=None):
             return http.HttpResponseNotFound("Given user does not exist.")
 
         try:
-            scheduled_activity = (EighthScheduledActivity.objects.exclude(activity__deleted=True).exclude(cancelled=True).get(block=bid,
-                                                                                                                              activity=aid))
+            scheduled_activity = (EighthScheduledActivity.objects.exclude(activity__deleted=True).exclude(cancelled=True).get(
+                block=bid, activity=aid))
 
         except EighthScheduledActivity.DoesNotExist:
             return http.HttpResponseNotFound("Given activity not scheduled for given block.")
@@ -331,8 +331,8 @@ def eighth_multi_signup_view(request):
             except EighthBlock.DoesNotExist:
                 return http.HttpResponse("{}: Block did not exist.".format(bid), status=403)
             try:
-                scheduled_activity = (EighthScheduledActivity.objects.exclude(activity__deleted=True).exclude(cancelled=True).get(block=bid,
-                                                                                                                                  activity=aid))
+                scheduled_activity = (EighthScheduledActivity.objects.exclude(activity__deleted=True).exclude(cancelled=True).get(
+                    block=bid, activity=aid))
 
             except EighthScheduledActivity.DoesNotExist:
                 display_messages.append("{}: Activity was not scheduled for block".format(btxt))

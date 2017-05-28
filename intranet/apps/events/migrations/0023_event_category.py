@@ -15,6 +15,5 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='category',
-            field=models.CharField(choices=[('school', 'In School'), ('sports', 'Sports')], default='school', max_length=6),
-        ),
+            field=models.CharField(choices=[('school', 'In School'), ('sports', 'Sports')], default='school', max_length=6),),
     ]

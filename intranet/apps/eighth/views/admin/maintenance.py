@@ -256,11 +256,7 @@ def ldap_list(request):
         except User.DoesNotExist:
             pass
 
-        return JsonResponse({
-            "account": account,
-            "db_user": bool(u),
-            "is_locked": u.user_locked if u else False
-        })
+        return JsonResponse({"account": account, "db_user": bool(u), "is_locked": u.user_locked if u else False})
     else:
         is_student = request.GET.get("type", "teacher") == "student"
         is_attendance = request.GET.get("type", "teacher") == "attendance"

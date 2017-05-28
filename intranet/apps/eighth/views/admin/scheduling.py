@@ -186,8 +186,8 @@ def schedule_activity_view(request):
         # , date__lte=end_date)
         initial_formset_data = []
 
-        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related("rooms", "sponsors",
-                                                                                                                                 "members"))
+        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related(
+            "rooms", "sponsors", "members"))
         all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
 
         for block in blocks:
@@ -249,8 +249,8 @@ def show_activity_schedule_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by("block__date",
-                                                                                                                  "block__block_letter"))
+        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by(
+            "block__date", "block__block_letter"))
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "View Activity Schedule"
@@ -264,8 +264,8 @@ def distribute_students_view(request):
 
 
 class EighthAdminTransferStudentsWizard(SessionWizardView):
-    FORMS = [("block_1", BlockSelectionForm), ("activity_1", ActivitySelectionForm), ("block_2", BlockSelectionForm),
-             ("activity_2", ActivitySelectionForm)]
+    FORMS = [("block_1", BlockSelectionForm), ("activity_1", ActivitySelectionForm), ("block_2", BlockSelectionForm), ("activity_2",
+                                                                                                                       ActivitySelectionForm)]
 
     TEMPLATES = {
         "block_1": "eighth/admin/transfer_students.html",

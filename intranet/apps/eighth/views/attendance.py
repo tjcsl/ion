@@ -228,9 +228,7 @@ def raw_waitlist_view(request, scheduled_activity_id):
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
-    context = {
-        "ordered_waitlist": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).order_by('time')
-    }
+    context = {"ordered_waitlist": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).order_by('time')}
     return render(request, "eighth/waitlist_list.html", context)
 
 
@@ -456,8 +454,8 @@ def accept_all_passes_view(request, scheduled_activity_id):
         raise http.Http404
 
     sponsor = request.user.get_eighth_sponsor()
-    can_accept = (scheduled_activity.block.locked and (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or
-                                                       request.user.is_eighth_admin))
+    can_accept = (scheduled_activity.block.locked and (sponsor and
+                                                       (sponsor in scheduled_activity.get_true_sponsors()) or request.user.is_eighth_admin))
 
     if not can_accept:
         return render(request, "error/403.html", {"reason": "You do not have permission to take accept these passes."}, status=403)
@@ -532,8 +530,8 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         header_data = [[
             Paragraph("<b>Activity ID: {}<br />Scheduled ID: {}</b>".format(sact.activity.id, sact.id), styles["Normal"]),
-            Paragraph("{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")),
-                      styles["ActivityAttribute"]), Paragraph(block_letter, styles[block_letter_style])
+            Paragraph("{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")), styles["ActivityAttribute"]),
+            Paragraph(block_letter, styles[block_letter_style])
         ]]
         header_style = TableStyle([("VALIGN", (0, 0), (0, 0), "TOP"), ("VALIGN", (1, 0), (2, 0), "MIDDLE"), ("TOPPADDING", (0, 0), (0, 0), 15),
                                    ("RIGHTPADDING", (1, 0), (1, 0), 0)])
@@ -548,7 +546,9 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Spacer(0, 5))
 
         attendance_data = [[
-            Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])
+            Paragraph("Present", styles["Heading5"]),
+            Paragraph("Student Name (ID)", styles["Heading5"]),
+            Paragraph("Grade", styles["Heading5"])
         ]]
 
         members = []
@@ -606,8 +606,8 @@ def eighth_absences_view(request, user_id=None):
         else:
             return redirect("eighth_admin_dashboard")
 
-    absences = (EighthSignup.objects.filter(user=user, was_absent=True, scheduled_activity__attendance_taken=True)
-                .select_related("scheduled_activity__block", "scheduled_activity__activity").order_by("scheduled_activity__block"))
+    absences = (EighthSignup.objects.filter(user=user, was_absent=True, scheduled_activity__attendance_taken=True).select_related(
+        "scheduled_activity__block", "scheduled_activity__activity").order_by("scheduled_activity__block"))
     context = {"absences": absences, "user": user}
     return render(request, "eighth/absences.html", context)
 

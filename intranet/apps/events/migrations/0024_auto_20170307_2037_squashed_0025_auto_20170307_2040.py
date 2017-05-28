@@ -17,11 +17,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='public',
-            field=models.BooleanField(default=True, verbose_name='Show Event on Dashboard'),
-        ),
+            field=models.BooleanField(default=True, verbose_name='Show Event on Dashboard'),),
         migrations.AlterField(
             model_name='event',
             name='public',
-            field=models.BooleanField(default=True, verbose_name='Show on Login Page'),
-        ),
+            field=models.BooleanField(default=True, verbose_name='Show on Login Page'),),
     ]
