@@ -17,6 +17,7 @@ from intranet.middleware import threadlocals
 
 from ..groups.models import Group
 from ..preferences.fields import PhoneField
+from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
 
@@ -202,6 +203,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     gender = models.NullBooleanField()
     preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     primary_email = models.OneToOneField('Email', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True)
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"

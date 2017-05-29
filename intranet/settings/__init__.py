@@ -247,7 +247,7 @@ LIST_OF_INDEPENDENT_CSS = [
     'about', 'api', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search', 'dashboard', 'events',
     'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board', 'announcements.form', 'polls.form', 'preferences', 'signage.base',
     'signage.touch', 'signage.touch.landscape', 'eighth.common', 'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance',
-    'lostfound', 'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth'
+    'lostfound', 'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth', 'bus'
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
@@ -474,6 +474,7 @@ INSTALLED_APPS = [
     "intranet.apps.announcements",
     "intranet.apps.api",
     "intranet.apps.auth",
+    "intranet.apps.bus",
     "intranet.apps.eighth",
     "intranet.apps.events",
     "intranet.apps.groups",
