@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import traceback
 
 from fabric.api import abort, env, hide, lcd, local, prefix, prompt, puts, shell_env
 from fabric.contrib.console import confirm
@@ -182,6 +183,9 @@ def deploy():
                 try:
                     pkg_resources.require(requirements)
                 except pkg_resources.DistributionNotFound:
+                    local("pip install -r requirements.txt")
+                except:
+                    traceback.format_exc()
                     local("pip install -r requirements.txt")
                 else:
                     puts("Python requirements already satisfied.")
