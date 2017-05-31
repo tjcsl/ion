@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 
 from .forms import (NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
 from ..users.models import User, Email
+from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
 
@@ -203,6 +204,40 @@ def save_notification_options(request, user):
                         pass
     return notification_options_form
 
+def get_bus_route(user):
+    """Get a user's bus route to pass as an initial value to a
+    BusRouteForm."""
+
+    return {'bus_route': user.bus_route.route_name}
+
+def save_bus_route(request, user):
+    bus_route = get_bus_route(user)
+    logger.debug(bus_route)
+    bus_route_form = BusRouteForm(user, data=request.POST, initial=bus_route)
+    if bus_route_form.is_valid():
+        logger.debug("Notification options form: valid")
+        if bus_route_form.has_changed():
+            fields = bus_route_form.cleaned_data
+            logger.debug(fields)
+            for field in fields:
+                if field in bus_route and bus_route[field] == fields[field]:
+                    logger.debug("{}: same ({})".format(field, fields[field]))
+                else:
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field]
+                                                               if field in bus_route else None))
+                    try:
+                        print(fields[field])
+                        route = Route.objects.get(route_name=fields[field])
+                        setattr(user, field, route)
+                        user.save()
+                    except:
+                        logger.debug("well shoot")
+                    try:
+                        messages.success(request, "Set field {} to {}".format(field, fields[field]
+                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                    except TypeError:
+                        pass
+    return bus_route_form
 
 def save_gcm_options(request, user):
     if request.user.notificationconfig and request.user.notificationconfig.gcm_token:
@@ -231,8 +266,10 @@ def preferences_view(request):
         phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
+            bus_route_form = save_bus_route(request, user)
         else:
             preferred_pic_form = None
+            bus_route_form = None
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
 
@@ -253,8 +290,10 @@ def preferences_view(request):
 
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
+            bus_route = get_bus_route(user)
             logger.debug(preferred_pic)
             preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+            bus_route_form = BusRouteForm(user, initial=bus_route)
         else:
             preferred_pic = None
             preferred_pic_form = None
@@ -274,6 +313,11 @@ def preferences_view(request):
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
+<<<<<<< HEAD
+=======
+        "bus_route_form": bus_route_form,
+        "ldap_error": ldap_error
+>>>>>>> db50a98d72... Add Bus to User Preferences
     }
     return render(request, "preferences/preferences.html", context)
 

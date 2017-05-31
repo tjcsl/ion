@@ -35,10 +35,15 @@ def home(request):
             'd': 'delayed.'
     }
 
-    user_bus = Route.objects.get(user=request.user)
-    print(user_bus.status, '================')
+    user_bus_qs = Route.objects.filter(user=request.user)
+    if len(user_bus_qs) == 0:
+        user_bus = None
+        user_bus_status = None
+    else:
+        user_bus = user_bus_qs[0]
+        user_bus_status = verbose_status[user_bus.status]
     ctx = {'admin': is_bus_admin,
             'statuses': sorted(statuses.items(), key=lambda k: (k[1]['order'])),
             'user_bus': user_bus,
-            'user_bus_status': verbose_status[user_bus.status]}
+            'user_bus_status': user_bus_status}
     return render(request, 'bus/home.html', context=ctx)

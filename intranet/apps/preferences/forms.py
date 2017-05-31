@@ -4,8 +4,19 @@ import logging
 from django import forms
 
 from ..users.models import User, Grade, Phone, Email, Website
+from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
+
+
+class BusRouteForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        super(BusRouteForm, self).__init__(*args, **kwargs)
+        self.BUS_ROUTE_CHOICES = [(None, "Set bus route...")]
+        routes = Route.objects.all()
+        for route in routes:
+            self.BUS_ROUTE_CHOICES += [(route.route_name, route.route_name)]
+        self.fields['bus_route'] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select)
 
 
 class PreferredPictureForm(forms.Form):
