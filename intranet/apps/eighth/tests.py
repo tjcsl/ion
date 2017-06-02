@@ -176,11 +176,19 @@ class EighthTest(IonTestCase):
 
         act1 = self.add_activity(name='Test Activity 1', sticky=True)
         act1.rooms.add(room1)
+
+        self.assertTrue(act1.sticky)
+
         schact1 = self.schedule_activity(act1.id, block1.id)
 
         act2 = self.add_activity(name='Test Activity 2', both_blocks=True)
         act2.rooms.add(room1)
+
+        self.assertTrue(act2.both_blocks)
+
         schact2 = self.schedule_activity(act2.id, block2.id)
+
+        self.assertTrue(schact2.is_both_blocks())
 
         response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
         self.assertEqual(response.status_code, 302)
