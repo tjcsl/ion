@@ -396,7 +396,6 @@ def eighth_multi_signup_view(request):
                     activities[a]["blocks"] = [info]
                     activities[a]["total_num_blocks"] = len(blocks)
 
-        # logger.debug(activities)
         context = {
             "user": user,
             "profile_user": user,
