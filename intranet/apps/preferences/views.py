@@ -208,7 +208,7 @@ def get_bus_route(user):
     """Get a user's bus route to pass as an initial value to a
     BusRouteForm."""
 
-    return {'bus_route': user.bus_route.route_name}
+    return {'bus_route': user.bus_route.route_name if user.bus_route else None}
 
 def save_bus_route(request, user):
     bus_route = get_bus_route(user)
