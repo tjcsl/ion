@@ -1110,7 +1110,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     else:
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
-                        existing_blocks = [existing_signup.scheduled_activity.block, existing_signup.scheduled_activity.get_both_blocks_sibling().block]
+                        existing_blocks = [existing_signup.scheduled_activity.block,
+                                           existing_signup.scheduled_activity.get_both_blocks_sibling().block]
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
