@@ -28,7 +28,7 @@ def nav_categorizer(request):
 
     categories = [(r"^/$", "dashboard"), (r"^/announcements", "dashboard"), (r"^/eighth/admin", "eighth_admin"), (r"^/eighth", "eighth"),
                   (r"^/events", "events"), (r"^/files", "files"), (r"^/printing", "printing"), (r"^/groups", "groups"), (r"^/polls", "polls"),
-                  (r"^/board", "board")]
+                  (r"^/board", "board"), (r"/bus", "bus")]
 
     for pattern, category in categories:
         p = re.compile(pattern)
@@ -111,3 +111,11 @@ def is_tj_ip(request):
     ip = _get_current_ip(request)
 
     return {"is_tj_ip": (ip in settings.TJ_IPS)}
+
+def show_bus_button(request):
+    is_bus_admin = request.user.has_admin_permission("bus")
+    now = datetime.datetime.now()
+    is_valid_time = (now.hour > 14 and now.minute > 30) \
+                    and (now.hour < 17 and now.minute < 30)
+
+    return {'show_bus_nav': (is_bus_admin or is_valid_time)}

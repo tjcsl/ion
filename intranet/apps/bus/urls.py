@@ -4,5 +4,5 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r"^$", views.home, name="board"),
+    url(r"^$", views.home, name="bus"),
 ]

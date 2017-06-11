@@ -289,7 +289,8 @@ TEMPLATES = [
                 "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
                 "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
                 "intranet.apps.context_processors.show_homecoming",  # Sitewide custom themes (special events, etc)
-                "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
+                "intranet.apps.context_processors.global_custom_theme",  # Sitewide custom themes (special events, etc)
+                "intranet.apps.context_processors.show_bus_button"
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             'loaders': ('django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'),
@@ -503,6 +504,14 @@ INSTALLED_APPS = [
     "cacheops",
     "simple_history"
 ]
+
+# Django Channels Configuration (we use this for websockets)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "ROUTING": "intranet.routing.channel_routing"
+    }
+}
 
 if PRODUCTION:
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]

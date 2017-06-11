@@ -105,6 +105,15 @@
             </li>
         {% endif %}
 
+        {% if not show_bus_button %}
+             <li {% if nav_category == "bus" %}class="selected"{% endif %}>
+                <a href="{% url 'bus' %}">
+                    <i class="nav-icon print-icon"></i>
+                    Bus
+                </a>
+            </li>
+        {% endif %}
+
         {% if request.user.is_teacher or request.user.is_eighth_admin %}
         <li>
             <a href="/static/teacher-guide.pdf" target="_blank">

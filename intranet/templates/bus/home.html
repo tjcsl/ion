@@ -15,33 +15,65 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript">
+        window.firstname = "{{ request.user.first_name }}";
+        window.isAdmin = {{ admin | yesno:"true,false" }};
+        window.label_status_strings = {
+            "a": {
+                empty_text: "No buses have arrived yet.",
+                name: "Arrived",
+                personal: "already here!"
+            },
+            "o": {
+                empty_text: "All buses have arrived or are delayed.",
+                name: "On Time",
+                personal: "on time."
+            },
+            "d": {
+                empty_text: "No delays.",
+                name: "Delayed",
+                personal: "delayed. 😢"
+            },
+        };
+    </script>
+    <script type="text/javascript" src="{% static 'js/bus.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
 {% endblock %}
 
 {% block main %}
-    <div class="primary-content">
-        {# {% if admin %} #}
-        {#     Hello, there. You're an admin. #}
-        {# {% endif %} #}
-        {% if user_bus %}
-            <h2 class="personal-status">Hi {{ request.user.first_name }}, your bus (<strong>{{user_bus.route_name}}</strong>) is {{ user_bus_status }} Have a great day!</h2>
-        {% else %}
+    {% verbatim %}
+    <script type="text/template" id="personal-status">
+        <% if (route_name !== "Empty route") { %>
+            <h2 class="personal-status">Hi <%= firstname %>, your bus (<strong><%= route_name %></strong>) is <%= label_status_strings[status].personal %> Have a great day!</h2>
+        <% } else { %>
             <h2 class="personal-status"> It looks like you don't have a bus registered. </h2>
-        {% endif %}
-        {% for name, status in statuses %}
-            <h2 class="status">{{ name }}</h2>
-            {% for bus in status.buses %}
-                <div class="bus">
-                    <span class="route-name">{{ bus.route_name }}</span>
-                    <br>
-                    {% if bus.bus_number %}
-                        <span class="bus-number"> #{{bus.bus_number}} </span>
-                    {% else %}
-                        <span class="bus-number"> No bus number recorded. </span>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <h3 class="empty">{{ status.empty }}</h3>
-            {% endfor %}
-        {% endfor %}
+        <% } %>
+    </script>
+    <script type="text/template" id="route-view">
+        <span class="route-name"><%= route_name %></span>
+        <br>
+        <% if (bus_number) { %>
+            <span class="bus-number"> #<%= bus_number %> </span>
+        <% } else { %>
+            <span class="bus-number"> No bus number recorded. </span>
+        <% } %>
+        <% if (isAdmin) { %>
+            <select name="status" id="<%= id %>">
+                <% for (var key in label_status_strings) { %>
+                    <option value="<%= key %>" <% if (key === status) print("selected") %>> <%= label_status_strings[key].name %> </option>
+                <% } %>
+            </select>
+        <% } %>
+    </script>
+    <script type="text/template" id="status-group-view">
+        <% console.log(name, empty_text, collection)%>
+        <h2 class="status"> <%= name %> </h2>
+        <% if (collection.length === 0) { %>
+            <h3 class="empty"> <%= empty_text %> </h3>
+        <% } %>
+    </script>
+    {% endverbatim %}
+    <div class="primary-content">
     </div>
 {% endblock %}
