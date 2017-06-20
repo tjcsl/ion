@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #3802) documentation</title>
+    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #3816) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3802)',
+        VERSION:     'v3 (Build #3816)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -316,13 +316,21 @@
         <span class="n">block2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2015-01-01&#39;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
         <span class="n">room1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_room</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 1&#39;</span><span class="p">)</span>
         <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">sticky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">act1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
         <span class="n">schact1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-        <span class="n">act2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 2&#39;</span><span class="p">,</span> <span class="n">both_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">act2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test Activity 2&#39;</span><span class="p">)</span>
         <span class="n">act2</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
+        <span class="n">act2</span><span class="o">.</span><span class="n">both_blocks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">act2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
         <span class="n">schact2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">schact2</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">())</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_signup_group_action&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;confirm&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>

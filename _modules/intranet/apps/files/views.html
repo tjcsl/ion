@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #3802) documentation</title>
+    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #3816) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3802)',
+        VERSION:     'v3 (Build #3816)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -422,8 +422,8 @@
                         <span class="n">localpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">rd</span><span class="p">,</span> <span class="n">fsdir</span><span class="p">))</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">localpath</span><span class="p">):</span>
                             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">localpath</span><span class="p">)</span>
-                        <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localpath</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
-                        <span class="n">sftp</span><span class="o">.</span><span class="n">getfo</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">fh</span><span class="p">)</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localpath</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                            <span class="n">sftp</span><span class="o">.</span><span class="n">getfo</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">fh</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exception </span><span class="si">%s</span><span class="s2"> on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
                         <span class="k">continue</span>
