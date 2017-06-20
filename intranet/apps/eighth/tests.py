@@ -174,17 +174,17 @@ class EighthTest(IonTestCase):
         block2 = self.add_block(date='2015-01-01', block_letter='B')
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1', sticky=True)
+        act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
-
-        self.assertTrue(act1.sticky)
+        act1.sticky = True
+        act1.save()
 
         schact1 = self.schedule_activity(act1.id, block1.id)
 
-        act2 = self.add_activity(name='Test Activity 2', both_blocks=True)
+        act2 = self.add_activity(name='Test Activity 2')
         act2.rooms.add(room1)
-
-        self.assertTrue(act2.both_blocks)
+        act2.both_blocks = True
+        act2.save()
 
         schact2 = self.schedule_activity(act2.id, block2.id)
 
