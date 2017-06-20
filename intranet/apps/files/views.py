@@ -280,8 +280,8 @@ def files_type(request, fstype=None):
                         localpath = os.path.join(tmpdir, os.path.relpath(rd, fsdir))
                         if not os.path.exists(localpath):
                             os.makedirs(localpath)
-                        fh = open(os.path.join(localpath, item), "wb")
-                        sftp.getfo(itempath, fh)
+                        with open(os.path.join(localpath, item), "wb") as fh:
+                            sftp.getfo(itempath, fh)
                     except exceptions as e:
                         logger.debug("Exception %s on %s" % (e, item))
                         continue
