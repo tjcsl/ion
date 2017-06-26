@@ -10,7 +10,7 @@ from intranet.apps.error.views import (handle_404_view, handle_500_view, handle_
 
 admin.autodiscover()
 
-admin.site.site_header = "Ion administration"
+admin.site.site_header = "Ion administration"  # type: ignore
 
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
