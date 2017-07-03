@@ -152,7 +152,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def fetch_activity_list_with_metadata(self, block):
         user = self.context.get("user", self.context["request"].user)
 
-        favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
+        if user:
+            favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
+        else:
+            favorited_activities = set()
 
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
