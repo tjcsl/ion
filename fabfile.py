@@ -190,8 +190,8 @@ def deploy():
                 else:
                     puts("Python requirements already satisfied.")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
-                local("./manage.py collectstatic --noinput")
-                local("./manage.py migrate")
+                local("./manage.py collectstatic --noinput", shell="/bin/bash")
+                local("./manage.py migrate", shell="/bin/bash")
             restart_production_gunicorn(True)
 
     puts("Deploy complete.")
