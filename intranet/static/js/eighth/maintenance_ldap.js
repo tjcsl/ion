@@ -6,7 +6,11 @@ function refreshList() {
     if (!$("#account-list .loading").length) {
         $("#account-list").append("<div class='loading'><i class=' fa fa-cog fa-spin fa-3x'></i></div>");
     }
+    var old_type = type;
     $.get(list_endpoint + "?type=" + type.toLowerCase(), function(data) {
+        if (type != old_type) {
+            return;
+        }
         var adata = data.accounts;
         var output = "";
         $.each(adata, function(k, v) {
