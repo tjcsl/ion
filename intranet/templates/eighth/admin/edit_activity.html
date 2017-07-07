@@ -1,12 +1,16 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load  static %}
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
     <script type="text/javascript">
     $(function() {
         addGroup = function() {
             $("#submit_button").attr("name", "add_group").click();
         }
+
+        $("[name='edit_form']").areYouSure();
 
         $("a#edit-activity").click(function() {
             var v = $("#activity-select").val();

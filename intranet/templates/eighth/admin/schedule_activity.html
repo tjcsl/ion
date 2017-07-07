@@ -9,6 +9,7 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
     <script type="text/javascript">
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
         window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
@@ -17,6 +18,7 @@
 
     <script type="text/javascript">
     $(function() {
+        $(".schedule-form").areYouSure();
         $("a#schedule-activity").click(function() {
             var v = $("#activity-select").val();
             if(v && v.length > 0) {
