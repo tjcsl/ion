@@ -26,4 +26,38 @@ $(function() {
             button.prop("disabled", false);
         }
     });
+
+    // name of <textarea> is content
+    var editor = CKEDITOR.replace("content", {
+        width: "600px"
+    });
+    var end_index = 0;
+    editor.on("change", function () {
+        // TODO: Optimize by only parsing on new spaces
+        var text = editor.getData();
+        dates = chrono.parse(text)
+            .sort(function (a, b) {
+                var a_date = a.end ? a.end.date() : a.start.date();
+                var b_date = b.end ? b.end.date() : b.start.date();
+                return b_date.getTime() - a_date.getTime();
+            })
+            .filter(function (val, ind, ary) {
+                if (ind) {
+                    var a_date = val.end ? val.end.date() : val.start.date();
+                    var b_date = ary[ind - 1].end ? ary[ind - 1].end.date() : ary[ind - 1].start.date();
+                    return !ind || a_date.getTime() != b_date.getTime();
+                } else {
+                    return true;
+                }
+            });
+        $(".exp-list").empty();
+        if (dates.length > 0)
+            $(".exp-header").css("display", "block");
+        else
+            $(".exp-header").css("display", "none");
+        for (var i = 0; i < dates.length; i++) {
+            var use_date = dates[i].end ? dates[i].end.date() : dates[i].start.date();
+            $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${use_date}</a></li>`);
+        }
+    });
 });

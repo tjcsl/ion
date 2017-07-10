@@ -32,8 +32,8 @@
                 var date = new Date("3000-01-01 00:00:00");
                 exp.val(dateFormat(date));
             }
-            
-                
+
+
             author.attr("placeholder", "{{ user.full_name|escape }}");
             dateReset();
 
@@ -42,10 +42,14 @@
                 notes.html("Enter something here!\n");
             }
 
+            $(".helptext", exp.parent()).before("<h5 style='display: none' class='exp-header'><b>Suggested Expiration Dates</b></h4><ul class='exp-list'></ul>");
             $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
                                                "<a onclick='dateReset()' class='button small-button'>Reset to Default</a>" +
                                                "<a onclick='date3000()' class='button small-button'>Don't Expire</a>" +
                                                "</span>");
+            $(".exp-list").on("click", "a", function () {
+                exp.val(dateFormat(new Date($(this).data("date"))));
+            })
             {% if request.user.is_teacher %}
                 $("#id_teachers_requested")[0].selectize.setValue({{ request.user.id }});
             {% endif %}
@@ -141,11 +145,4 @@
         </table>
     </form>
 </div>
-<script type="text/javascript">
-    // name of <textarea> is content
-    CKEDITOR.replace("content", {
-        width: "600px"
-    });
-
-</script>
 {% endblock %}
