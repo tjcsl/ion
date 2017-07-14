@@ -45,6 +45,8 @@ ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 # /, /eighth, /eighth/attendance, and /eighth/attendance/<activity_id>
 # TODO: replace this regex with a better method of checking if the path is allowed
 ATTENDANCE_ALLOWED_PATHS_REGEX = r"^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/logout$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))"
+
+SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 try:
     from .secret import *  # noqa
 except ImportError:

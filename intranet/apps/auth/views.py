@@ -16,11 +16,14 @@ from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
+from django.core.urlresolvers import reverse
 
 from .forms import AuthenticateForm
+from .helpers import change_password
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
 from ..events.models import Event
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -155,7 +158,7 @@ class LoginView(View):
     def post(self, request):
         """Validate and process the login POST request."""
         """Before September 1st, do not allow Class of [year+4] to log in."""
-        if request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today().month < 9:
+        if request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today() < settings.SCHOOL_START_DATE:
             return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
 
         form = AuthenticateForm(data=request.POST)
@@ -166,6 +169,9 @@ class LoginView(View):
             logger.warning("No cookie support detected! This could cause problems.")
 
         if form.is_valid():
+            reset_user, status = User.objects.get_or_create(username="RESET_PASSWORD", id=999999)
+            if form.get_user() == reset_user:
+                return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())
             # Initial load into session
             if "KRB5CCNAME" in os.environ:
@@ -252,3 +258,23 @@ def reauthentication_view(request):
         else:
             context["login_failed"] = True
     return render(request, "auth/reauth.html", context)
+
+
+def reset_password_view(request):
+    context = {"password_match": True,
+               "unable_to_set": False,
+               "password_expired": request.GET.get("expired", "false").lower() == "true"}
+    if request.method == "POST":
+        form_data = {
+            "username": request.POST.get("username", "unknown"),
+            "old_password": request.POST.get("old_password", None),
+            "new_password": request.POST.get("new_password", None),
+            "new_password_confirm": request.POST.get("new_password_confirm", None)
+        }
+        ret = change_password(form_data)
+        if ret is True:
+            do_logout(request)
+            return redirect("/")
+        else:
+            context.update(ret)
+    return render(request, "auth/reset_password.html", context)

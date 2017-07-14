@@ -71,25 +71,15 @@ class KerberosAuthenticationBackend(object):
             kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
             kinit.expect(":")
             kinit.sendline(password)
-            kinit.expect(pexpect.EOF)
+            returned = kinit.expect([pexpect.EOF, ":"])
+            if returned == 1:
+                logger.debug("Password for {}@{} expired, needs reset".format(username, realm))
+                return "reset"
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
             KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
             exitstatus = 1
-
-        if exitstatus != 0:
-            realm = settings.AD_REALM
-            try:
-                kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
-                kinit.expect(":", timeout=5)
-                kinit.sendline(password)
-                kinit.expect(pexpect.EOF)
-                kinit.close()
-                exitstatus = kinit.exitstatus
-            except pexpect.TIMEOUT:
-                KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
-                exitstatus = 1
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
@@ -124,6 +114,10 @@ class KerberosAuthenticationBackend(object):
         username = re.sub('\W', '', username)
 
         krb_ticket = self.get_kerberos_ticket(username, password)
+
+        if krb_ticket == "reset":
+            user, status = User.objects.get_or_create(username="RESET_PASSWORD", id=999999)
+            return user
 
         if not krb_ticket:
             return None

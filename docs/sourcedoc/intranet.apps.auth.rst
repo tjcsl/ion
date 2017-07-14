@@ -43,6 +43,14 @@ intranet\.apps\.auth\.forms module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.auth\.helpers module
+------------------------------------
+
+.. automodule:: intranet.apps.auth.helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet\.apps\.auth\.tests module
 ----------------------------------
 
