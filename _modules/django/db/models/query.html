@@ -3,17 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #3831) documentation</title>
-    
+    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #3853) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3831)',
+        VERSION:     'v3 (Build #3853)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -660,12 +657,14 @@
                 <span class="n">lookup</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">LOOKUP_SEP</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">}</span>
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="n">property_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">_property_names</span>
         <span class="n">invalid_params</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FieldDoesNotExist</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">param</span> <span class="o">!=</span> <span class="s1">&#39;pk&#39;</span><span class="p">:</span>  <span class="c1"># It&#39;s okay to use a model&#39;s pk property.</span>
+                <span class="c1"># It&#39;s okay to use a model&#39;s property if it has a setter.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">param</span> <span class="ow">in</span> <span class="n">property_names</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span><span class="o">.</span><span class="n">fset</span><span class="p">):</span>
                     <span class="n">invalid_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">invalid_params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FieldError</span><span class="p">(</span>
@@ -978,12 +977,25 @@
                     <span class="s2">&quot;union() received an unexpected keyword argument &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
                     <span class="p">(</span><span class="n">unexpected_kwarg</span><span class="p">,)</span>
                 <span class="p">)</span>
+        <span class="c1"># If the query is an EmptyQuerySet, combine all nonempty querysets.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">EmptyQuerySet</span><span class="p">):</span>
+            <span class="n">qs</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">other_qs</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">EmptyQuerySet</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="n">qs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_combinator_query</span><span class="p">(</span><span class="s1">&#39;union&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">qs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">qs</span> <span class="k">else</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combinator_query</span><span class="p">(</span><span class="s1">&#39;union&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">other_qs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other_qs</span><span class="p">):</span>
+        <span class="c1"># If any query is an EmptyQuerySet, return it.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">EmptyQuerySet</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">other_qs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">EmptyQuerySet</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">other</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combinator_query</span><span class="p">(</span><span class="s1">&#39;intersection&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">other_qs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other_qs</span><span class="p">):</span>
+        <span class="c1"># If the query is an EmptyQuerySet, return it.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">EmptyQuerySet</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combinator_query</span><span class="p">(</span><span class="s1">&#39;difference&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">other_qs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">select_for_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nowait</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
