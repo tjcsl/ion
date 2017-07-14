@@ -324,7 +324,6 @@ MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
-    "intranet.middleware.ldap_db.CheckEnvironment",  # Check environment variables for LDAP
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
@@ -341,7 +340,6 @@ MIDDLEWARE = [
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
     "intranet.middleware.simple_history.HistoryRequestMiddleware",
     "intranet.middleware.restrict_users.RestrictUserMiddleware",  # Restrict tjhsstUser from most things
 ]
