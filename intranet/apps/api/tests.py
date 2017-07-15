@@ -114,6 +114,10 @@ class ApiTest(IonTestCase):
         response = self.client.get(reverse('api_announcements_list_create'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
 
+        # List emergency status
+        response = self.client.get(reverse('api_emerg_status'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
         # List schedule
         response = self.client.get(reverse('api_schedule_day_list'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
@@ -124,6 +128,11 @@ class ApiTest(IonTestCase):
 
         # List blocks
         response = self.client.get(reverse('api_eighth_block_list'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List specific block
+        block = EighthBlock.objects.create(date=datetime.datetime(2015, 1, 1), block_letter='A')
+        response = self.client.get(reverse('api_eighth_block_detail', kwargs={"pk": block.pk}), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
 
         # Should not be able to list profile
