@@ -285,6 +285,9 @@ class EighthActivity(AbstractBaseEighthModel):
     @classmethod
     def restricted_activities_available_to_user(cls, user):
         """Find the restricted activities available to the given user."""
+        if not user:
+            return []
+
         activities = set(user.restricted_activity_set.values_list("id", flat=True))
 
         if user and user.grade and user.grade.number and user.grade.name:
