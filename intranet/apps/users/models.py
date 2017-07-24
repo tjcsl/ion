@@ -15,7 +15,6 @@ from django.core.signing import Signer
 from django.db import models
 from django.utils import timezone
 
-from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
 
 import ldap3
@@ -217,8 +216,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     """
 
+    GRADE_NUMBERS = (
+        (9, 'Freshman'),
+        (10, 'Sophomore'),
+        (11, 'Junior'),
+        (12, 'Senior'),
+        (13, 'Staff')
+    )
+
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
+    first_name = models.CharField(max_length=35)
+    last_name = models.CharField(max_length=70)
+
+    graduation_year = models.IntegerField(max_length=4)
+    grade_number = models.IntegerField()
 
     user_locked = models.BooleanField(default=False)
 
@@ -231,12 +243,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_eighth_emails = models.BooleanField(default=False)
 
     receive_schedule_notifications = models.BooleanField(default=False)
-
-    # LDAP values cached to the db are stored in the UserCache class
-    cache = models.OneToOneField('UserCache', related_name="user", blank=True, null=True, on_delete=models.SET_NULL)
-
-    # Private dn cache
-    _dn = None  # type: str
 
     _student_id = models.PositiveIntegerField(null=True)
 
@@ -251,151 +257,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     custom UserManager to add table-level functionality."""
     objects = UserManager()
 
-    @classmethod
-    def get_user(cls, dn=None, id=None, username=None):
-        """Retrieve a user object from LDAP and save it to the SQL database if necessary.
-
-        Creates a User object from a dn, user id, or a username based on
-        data in the LDAP database. If the user also exists in the SQL
-        database, it is linked up with that model. If it does not exist,
-        then it is created.
-
-        Args:
-            dn
-                The full LDAP Distinguished Name of a user.
-            id
-                The user ID of the user to return.
-            username
-                The username of the user to return.
-
-        Returns:
-            The User object if the user could be found in LDAP,
-            otherwise User.DoesNotExist is raised.
-
-        """
-
-        if id is not None:
-            try:
-                if isinstance(id, (tuple, list)):
-                    id = id[0]
-                user = User.objects.get(id=id)
-            except User.DoesNotExist:
-                user_dn = User.dn_from_id(id)
-                if user_dn is not None:
-                    user = User.get_user(dn=user_dn)
-                else:
-                    raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
-
-        elif username is not None:
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
-                user_dn = User.dn_from_username(username)
-                user = User.get_user(dn=user_dn)
-        elif dn is not None:
-            try:
-                user = User(dn=dn)
-                user.id = user.ion_id
-
-                try:
-                    user = User.objects.get(id=user.id)
-                except User.DoesNotExist:
-                    if user.ion_username and user.ion_id:
-                        user.username = user.ion_username
-
-                        user.set_unusable_password()
-                        user.last_login = timezone.make_aware(datetime(9999, 1, 1))
-
-                        user.save()
-                    else:
-                        raise User.DoesNotExist("`User` with DN '{}' does not have a username.".format(dn))
-            except (LDAPInvalidDNSyntaxResult, LDAPNoSuchObjectResult):
-                raise User.DoesNotExist("`User` with DN '{}' does not exist.".format(dn))
-        else:
-            raise TypeError("get_user() requires at least one argument.")
-
-        return user
-
-    @staticmethod
-    def dn_from_id(id):
-        """Get a dn, given an ID.
-
-        Args:
-            id
-                the ID of the user.
-
-        Returns:
-            String if dn was found, otherwise None
-
-        """
-        logger.debug("Fetching DN of User with ID {}.".format(id))
-        key = ":".join([str(id), 'dn'])
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("DN of User with ID {} loaded " "from cache.".format(id))
-            return cached
-        else:
-            c = LDAPConnection()
-            result = c.search(settings.USER_DN, "iodineUidNumber={}".format(id), None)
-            if len(result) == 1:
-                dn = result[0]['dn']
-            else:
-                logger.debug("No such User with ID {}.".format(id))
-                dn = None
-            cache.set(key, dn, timeout=settings.CACHE_AGE['dn_id_mapping'])
-            return dn
-
-    @staticmethod
-    def dn_from_username(username):
-        # logger.debug("Fetching DN of User with username {}.".format(username))
-        return "iodineUid=" + ldap3.utils.dn.escape_attribute_value(username) + "," + settings.USER_DN
-
-    @staticmethod
-    def username_from_dn(dn):
-        # logger.debug("Fetching username of User with ID {}.".format(id))
-        return ldap3.utils.dn.parse_dn(dn)[0][1]
-
-    @staticmethod
-    def create_secure_cache_key(identifier):
-        """Create a cache key for sensitive information.
-
-        Caching personal information that was once access-protected
-        introduces an inherent security risk. To prevent human retrieval
-        of a value from the cache, the plaintext key is first signed
-        with the secret key and then hashed using the SHA1 algorithm.
-        That way, one would need the secret key to query for a specific
-        cached value and an existing key would indicate nothing about
-        the relevance of the cooresponding value. For maximum
-        effectiveness, cache attributes of an object separately so the
-        context of a cached value can not be inferred (e.g. cache a
-        user's name separate from his or her address so the two can not
-        be associated).
-
-        This effectively makes sure non-root users on the production
-        server can't access private data from the cache.
-
-        Args:
-            identifier
-                The plaintext identifier (generally of the form
-                "<dn>.<attribute>" for the cached data).
-
-        Returns:
-            String
-
-        """
-
-        if os.environ.get("SECURE_CACHE", "YES") == "NO":
-            return identifier
-        signer = Signer()
-        signed = signer.sign(identifier)
-        hash = hashlib.sha1(signed.encode())
-        return hash.hexdigest()
-
     @staticmethod
     def get_signage_user():
         return User(id=99999)
 
+    # TODO: throw away cache
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
@@ -423,18 +289,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-
-        if perm == "ldap":
-            # not all of admin_all has LDAP permissions
-            return self.member_of("admin_ldap")
-
         return self.member_of("admin_all") or self.member_of("admin_" + perm)
 
+    # TODO: replace with field
     @property
     def first_name(self):
         """ Return first name, e.g. Angela """
         return self.get_or_set_cache('first_name')
 
+    # TODO: replace with field
     @property
     def last_name(self):
         """ Return last name, e.g. William """
@@ -494,23 +357,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.short_name
 
     @property
-    def dn(self):
-        """Return the full distinguished name for a user in LDAP."""
-        if not self._dn and self.id:
-            self._dn = User.dn_from_id(self.id)
-        elif self.username:
-            self._dn = User.dn_from_username(self.username)
-        return self._dn
-
-    @dn.setter
-    def dn(self, dn):
-        """Set DN for a user."""
-        if not self._dn:
-            self._dn = dn
-        # if not self.username:
-        # self.username = ldap.dn.str2dn(dn)[0][0][1]
-
-    @property
     def tj_email(self):
         """Get (or guess) a user's TJ email.
 
@@ -533,21 +379,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return "{}@{}".format(self.username, domain)
 
+    # TODO: remove cache
     @property
     def graduation_year(self):
         """Get the user's graduation year from the database cache"""
         return self.get_or_set_cache('graduation_year')
 
+    # TODO: remove cache
     @property
     def grade_number(self):
         """Get the user's grade number from the database cache"""
         return self.get_or_set_cache('grade_number')
 
+    # TODO: ok to remove
     @property
     def object_class(self):
         """Get the user's objectClass for the database cache"""
         return self.get_or_set_cache('objectClass')
 
+    # TODO: replace with Many-to-One relationship with Grade
     @property
     def grade(self):
         """Returns the grade of a user.
@@ -589,6 +439,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return can_view_anyway
 
+    # TODO: Get rid of classes
     @property
     def classes(self):
         """Returns a list of Class objects for a user ordered by period number.
@@ -658,6 +509,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    # TODO: Get rid of classes
     @property
     def ionldap_courses(self):
         if self.is_student:
@@ -671,6 +523,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return courses.order_by("period", "end_period")
 
+    # TODO: Many-to-One relationship with counselor User
     @property
     def counselor(self):
         """Returns a user's counselor as a User object.
@@ -697,6 +550,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             user_object = User.get_user(id=counselor)
             return user_object
 
+    # TODO: One-to-One relationship?
     @property
     def address(self):
         """Returns the address of a user.
@@ -734,6 +588,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    # TODO: repalce with DateTimeField
     @property
     def birthday(self):
         """Returns a user's birthday.
@@ -769,10 +624,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    # TODO: replace cache
     @property
     def is_male(self):
         return self.get_or_set_cache('gender') is True
 
+    # TODO: replace cache
     @property
     def is_female(self):
         return self.get_or_set_cache('gender') is False
@@ -793,6 +650,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return None
 
+    # TODO: don't use cache/don't use LDAP (duh)
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.
 
@@ -847,6 +705,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    # TODO: replace with field!?
     def photo_base64(self, photo_year):
         """Returns base64 encoded binary data for a user's picture.
 
@@ -860,6 +719,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return None
 
+    # Ugh.
     def default_photo(self):
         """Returns the default photo (in binary) that should be used.
 
@@ -937,6 +797,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             cache.set(key, perms, timeout=settings.CACHE_AGE["ldap_permissions"])
             return perms
 
+    # Implement a different permissions system
     @property
     def permissions(self):
         """Fetches the LDAP permissions for a user.
@@ -1030,6 +891,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.grade_number == 11 or self.is_parking_admin
 
+    # TODO: obviously should get rid of this
     @property
     def is_ldap_admin(self):
         """Checks if user is an LDAP admin.
@@ -1074,6 +936,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.has_admin_permission("board")
 
+    # TODO: replace this with a BooleanField maybe?
     @property
     def is_teacher(self):
         """Checks if user is a teacher.
@@ -1084,6 +947,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.object_class == "tjhsstTeacher"
 
+    # TODO: replace this with a BooleanField maybe?
     @property
     def is_student(self):
         """Checks if user is a student.
@@ -1141,6 +1005,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.is_superuser or self.has_admin_permission("staff")
 
+    # TODO: replace with...?
     @property
     def is_attendance_user(self):
         """Checks if user is an attendance-only user.
@@ -1151,6 +1016,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.object_class == "tjhsstUser"
 
+    # TODO: replace object class
     @property
     def is_simple_user(self):
         """Checks if user is a simple user (e.g. eighth office user)
@@ -1189,6 +1055,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
 
+    # TODO: wtf.
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
 
@@ -1218,6 +1085,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return False
 
+    # TODO: replace with our permissions system
     def attribute_is_visible(self, ldap_perm_name):
         """Checks if an attribute is visible to the public.
 
@@ -1254,6 +1122,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return public
 
     # Maps Python names for attributes to LDAP names and metadata
+    # TODO: make most or all of these fields
     ldap_user_attributes = {
         "ion_id": {
             "ldap_name": "iodineUidNumber",
@@ -1405,6 +1274,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
     }
 
+    # TODO: get rid of this entirely and replace with database
     def __getattr__(self, name):
         """Return simple attributes of User.
 
@@ -1484,6 +1354,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    # TODO: replace this with DB
     def set_ldap_attribute(self, name, value, override_set=False):
         """Set a user attribute in LDAP."""
 
@@ -1514,6 +1385,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
 
+    # TODO: permissions system
     def set_ldap_preference(self, item_name, value, is_admin=False):
         logger.debug("Pref: {} {}".format(item_name, value))
 
@@ -1593,54 +1465,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.cache.gender = bool_gender
         self.cache.save()
         self.save()
-
-    def get_or_set_cache(self, attribute):
-        mappings = {
-            "objectClass": "user_type",
-            "gender": "sex",
-            "first_name": "first_name",
-            "last_name": "last_name",
-            "graduation_year": "graduation_year"
-        }
-        try:
-            if not self.cache:
-                logger.debug("Initializing UserCache for {}".format(self))
-                self.cache = UserCache.objects.create(user=self)
-                self.cache.save()
-                self.save()
-        except UserCache.DoesNotExist:
-            logger.debug("Initializing UserCache for {}".format(self))
-            self.cache = UserCache.objects.create(user=self)
-            self.save()
-            return self.get_or_set_cache(attribute)
-        val = getattr(self.cache, attribute)
-        if val:
-            return val
-        logger.debug("Value not found in cache, attempting to set from LDAP")
-        if attribute in mappings:
-            if attribute == "gender":
-                logger.debug("Setting gender from LDAP")
-                if self.sex:
-                    self.cache.gender = True if self.sex.lower()[:1] == "m" else False
-                else:
-                    self.cache.gender = None
-            else:
-                logger.debug("Setting {} from LDAP".format(attribute))
-                if str(self.__getattr__(mappings[attribute])).isdigit():
-                    setattr(self.cache, attribute, int(self.__getattr__(mappings[attribute])))
-                else:
-                    setattr(self.cache, attribute, self.__getattr__(mappings[attribute]))
-        elif attribute == "grade_number":
-            logger.debug("Setting grade_number from LDAP")
-            self.cache.grade_number = self.grade.number if self.grade else None
-        self.cache.save()
-        if getattr(self.cache, attribute) is not None:
-            return getattr(self.cache, attribute)
-        else:
-            try:
-                return self.__getattr__(mappings[attribute])
-            except AttributeError:
-                return None
 
     @property
     def is_eighth_sponsor(self):
@@ -1731,6 +1555,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.id
 
 
+# TODO: remove this entirely because no schedules
 class Class(object):
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
@@ -1983,6 +1808,7 @@ class Class(object):
         return "{}".format(self.dn)
 
 
+# TODO: remove this
 class ClassSections(object):
     """Represents a list of tjhsstClass LDAP objects.
 
@@ -2139,7 +1965,7 @@ class Grade(object):
         """Return name of the grade."""
         return self._name
 
-
+# TODO: DIE
 class UserCache(models.Model):
     """ Stores all the data from LDAP to speed up page loading and make filtering objects easier """
     gender = models.NullBooleanField(null=True)
