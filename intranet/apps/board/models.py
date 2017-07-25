@@ -3,7 +3,6 @@
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from ..eighth.models import EighthActivity
-from ..ionldap.models import LDAPCourse
 from ..users.models import User
 from ...utils.deletion import set_historical_user
 
@@ -55,29 +54,6 @@ class Board(models.Model):
         elif self.group:
             return self.group.title
         return None
-
-    @property
-    def courses_list(self):
-        """Get a list of IonLDAP Section objects if that is the type."""
-        if self.type == "course":
-            return LDAPCourse.objects.filter(course_id=self.course_id)
-
-    @property
-    def course_title(self):
-        """Get the course title from an IonLDAP Course object if that is the type."""
-        if self.type == "course":
-            l = self.courses_list
-            if l and l.count() > 0:
-                return l[0].course_title
-
-    @property
-    def section_obj(self):
-        """Get the IonLDAP Course object if that is the type."""
-        if self.type == "section":
-            try:
-                return LDAPCourse.objects.get(section_id=self.section_id)
-            except LDAPCourse.DoesNotExist:
-                return None
 
     @property
     def add_button_route(self):
@@ -133,22 +109,10 @@ class Board(models.Model):
                 return self.activity.id in EighthActivity.restricted_activities_available_to_user(user)
             else:
                 return True
-        elif self.type == "course":
-            is_teacher = (user.ionldap_course_teacher.filter(course_id=self.course_id).count() > 0)
-            return (user.ionldap_courses.filter(course_id=self.course_id).count() > 0) or is_teacher
-        elif self.type == "section":
-            is_teacher = (user.ionldap_course_teacher.filter(section_id=self.section_id).count() > 0)
-            return (user.ionldap_courses.filter(section_id=self.section_id).count() > 0) or is_teacher
-        elif self.type == "group":
+            elif self.type == "group":
             return self.group.user_set.filter(id=user.id).count() > 0
 
         return False
-
-    def is_teacher(self, user):
-        if self.type == "course":
-            return (user.ionldap_course_teacher.filter(course_id=self.course_id).count() > 0)
-        elif self.type == "section":
-            return (user.ionldap_course_teacher.filter(section_id=self.section_id).count() > 0)
 
     def is_admin(self, user):
         return user.is_board_admin or self.is_teacher(user)
