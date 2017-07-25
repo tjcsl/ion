@@ -37,43 +37,23 @@ class UserManager(DjangoUserManager):
 
     def user_with_student_id(self, student_id):
         """Get a unique user object by student ID."""
-        """if isinstance(student_id, str) and not student_id.isdigit():
-            return None"""
-        c = LDAPConnection()
-
-        results = c.search(settings.USER_DN, "tjhsstStudentId={}".format(student_id), None)
-
+        results = User.objects.filter(student_id=student_id)
         if len(results) == 1:
-            return User.get_user(dn=results[0]["dn"])
+            return results[0]
         return None
-        """u = User.objects.filter(_student_id=student_id)
-        if u:
-            return u.first()
-        return None"""
 
     def user_with_ion_id(self, student_id):
         """Get a unique user object by Ion ID."""
         if isinstance(student_id, str) and not student_id.isdigit():
             return None
-        c = LDAPConnection()
-
-        results = c.search(settings.USER_DN, "iodineUidNumber={}".format(student_id), None)
-
+        results = User.objects.filter(ion_id=student_id)
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
         return None
 
     def users_in_year(self, year):
         """Get a list of users in a specific graduation year."""
-        c = LDAPConnection()
-
-        results = c.search(settings.USER_DN, "graduationYear={}".format(year), None)
-
-        users = []
-        for user in results:
-            users.append(User.get_user(dn=user["dn"]))
-
-        return users
+        return User.objects.filter(graduation_year=year)
 
     def _ldap_and_string(self, opts):
         """Combine LDAP queries with AND.
@@ -226,11 +206,36 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
+
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=70)
 
     graduation_year = models.IntegerField(max_length=4)
     grade_number = models.IntegerField()
+
+    birthday = models.DateField()
+
+    counselor = models.ForeignKey('self', on_delete=models.CASCADE)
+
+# TODO: replace objectClass
+# TODO: create Address model, add ManyToOne rel
+
+# TODO: find solution for student pictures (maybe store them in another static directory???)
+#       also need to store:
+#           - base64 maybe?
+#           - preferred picture
+
+# TODO: permissions system. current LDAP permissions include
+#           - showpictures
+#           - showaddress
+#           - showtelephone
+#           - showbirthday
+#           - showmap (show a map to the house apparently)
+#           - showschedule (this will be deprecated)
+#           - showeighth (eighth schedule)
+#           - showlocker (deprecated since TJ no longer has lockers)
+#           - showtelephone-friend (plans to add friend system??)
+#       These permissions also require parent consent most of the time.
 
     user_locked = models.BooleanField(default=False)
 
@@ -261,7 +266,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_signage_user():
         return User(id=99999)
 
-    # TODO: throw away cache
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
@@ -273,13 +277,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        if not hasattr(self, "_groups_cache"):
-            self._groups_cache = self.groups.values_list("name", flat=True)
-
         if isinstance(group, Group):
             group = group.name
-
-        return group in self._groups_cache
+        return self.groups.filter(name=group).exists()
 
     def has_admin_permission(self, perm):
         """Returns whether a user has an admin permission (explicitly, or implied by being in the
@@ -290,18 +290,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return self.member_of("admin_all") or self.member_of("admin_" + perm)
-
-    # TODO: replace with field
-    @property
-    def first_name(self):
-        """ Return first name, e.g. Angela """
-        return self.get_or_set_cache('first_name')
-
-    # TODO: replace with field
-    @property
-    def last_name(self):
-        """ Return last name, e.g. William """
-        return self.get_or_set_cache('last_name')
 
     @property
     def full_name(self):
@@ -379,25 +367,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return "{}@{}".format(self.username, domain)
 
-    # TODO: remove cache
-    @property
-    def graduation_year(self):
-        """Get the user's graduation year from the database cache"""
-        return self.get_or_set_cache('graduation_year')
-
-    # TODO: remove cache
-    @property
-    def grade_number(self):
-        """Get the user's grade number from the database cache"""
-        return self.get_or_set_cache('grade_number')
-
-    # TODO: ok to remove
-    @property
-    def object_class(self):
-        """Get the user's objectClass for the database cache"""
-        return self.get_or_set_cache('objectClass')
-
-    # TODO: replace with Many-to-One relationship with Grade
+    # TODO: cache or otherwise fix
     @property
     def grade(self):
         """Returns the grade of a user.
@@ -406,20 +376,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Grade object
 
         """
-        if not self.dn:
-            return None
-        key = ":".join([self.dn, 'grade'])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Grade of user {} loaded from cache.".format(self.id))
-            return cached
-        else:
-            grade = Grade(self.graduation_year)
-
-            cache.set(key, grade, timeout=settings.CACHE_AGE['ldap_permissions'])
-            return grade
+        return Grade(self.graduation_year)
 
     def _current_user_override(self):
         """Return whether the currently logged in user is a teacher, and can view all of a student's
@@ -436,203 +393,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         except (AttributeError, KeyError) as e:
             logger.error("Could not check teacher/eighth override: {}".format(e))
             can_view_anyway = False
-
         return can_view_anyway
 
-    # TODO: Get rid of classes
-    @property
-    def classes(self):
-        """Returns a list of Class objects for a user ordered by period number.
-
-        Returns:
-            List of Class objects
-
-        """
-        is_student = self.is_student
-
-        identifier = ":".join([self.dn, "classes"])
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-        if self.is_http_request_sender():
-            visible = True
-        elif self._current_user_override():
-            visible = True
-        elif is_student:
-            visible = self.attribute_is_visible("showschedule")
-        else:
-            visible = True
-
-        if cached and visible:
-            logger.debug("Attribute 'classes' of user {} loaded from cache.".format(self.id))
-            schedule = []
-            for dn in cached:
-                class_object = Class(dn=dn)
-                schedule.append(class_object)
-
-            return schedule
-        elif not cached and visible:
-            c = LDAPConnection()
-            if is_student:
-                result = c.user_attributes(self.dn, ['enrolledclass']).first_result()
-                classes = result.get("enrolledclass", None)
-            else:
-                query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
-                results = c.search(settings.CLASS_DN, query, None)
-                classes = [r["dn"] for r in results]
-
-            logger.debug("Classes: {}".format(classes))
-            if not classes:
-                return None
-            else:
-                schedule = []
-                for dn in classes:
-                    class_object = Class(dn=dn)
-
-                    # Temporarily pack the classes in tuples so we can
-                    # sort on an integer key instead of the periods
-                    # property to avoid tons of needless LDAP queries
-                    #
-                    sortvalue = class_object.sortvalue
-                    schedule.append((sortvalue, class_object, dn))
-
-                ordered_schedule = sorted(schedule, key=lambda e: e[0])
-                if not ordered_schedule:
-                    return None
-                # Prepare a list of DNs for caching
-                # (pickling a Class class loads all properties
-                # recursively and quickly reaches the maximum
-                # recursion depth)
-                dn_list = list(zip(*ordered_schedule))[2]
-                cache.set(key, dn_list, timeout=settings.CACHE_AGE['user_classes'])
-                return list(zip(*ordered_schedule))[1]  # Unpacked class list
-        else:
-            return None
-
-    # TODO: Get rid of classes
-    @property
-    def ionldap_courses(self):
-        if self.is_student:
-            courses = self.ldapcourse_set.all()
-        elif self.is_teacher:
-            # FIXME: refactor to remove recursive dep
-            from ..ionldap.models import LDAPCourse
-            courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
-        else:
-            return None
-
-        return courses.order_by("period", "end_period")
-
-    # TODO: Many-to-One relationship with counselor User
-    @property
-    def counselor(self):
-        """Returns a user's counselor as a User object.
-
-        Returns:
-            :class:`User` object for the user's counselor
-
-        """
-        key = ":".join([self.dn, "counselor"])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Attribute 'counselor' of user {} loaded " "from cache.".format(self.id))
-            user_object = User.get_user(id=cached)
-            return user_object
-        else:
-            c = LDAPConnection()
-            result = c.user_attributes(self.dn, ["counselor"]).first_result()
-            counselor = result.get("counselor", None)
-            if not counselor:
-                return None
-            cache.set(key, counselor, timeout=settings.CACHE_AGE['user_attribute'])
-            user_object = User.get_user(id=counselor)
-            return user_object
-
-    # TODO: One-to-One relationship?
-    @property
-    def address(self):
-        """Returns the address of a user.
-
-        Returns:
-            Address object
-
-        """
-        identifier = ":".join([self.dn, "address"])
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-        visible = self.attribute_is_visible("showaddress")
-
-        visible = self._current_user_override() or visible
-
-        if cached and visible:
-            logger.debug("Attribute 'address' of user {} loaded from cache.".format(self.id))
-            return cached
-        elif not cached and visible:
-            c = LDAPConnection()
-            result = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode']).first_result()
-            if not result:
-                return None
-            try:
-                street = result['street'][0]
-                city = result['l'][0]
-                state = result['st'][0]
-                postal_code = result['postalCode'][0]
-            except IndexError:
-                return None
-            address_object = Address(street, city, state, postal_code)
-            cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
-            return address_object
-        else:
-            return None
-
-    # TODO: repalce with DateTimeField
-    @property
-    def birthday(self):
-        """Returns a user's birthday.
-
-        Returns:
-            datetime object
-
-        """
-        identifier = ":".join([self.dn, "birthday"])
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-        visible = self.attribute_is_visible("showbirthday")
-
-        if cached and visible:
-            logger.debug("Attribute 'birthday' of user {} loaded " "from cache.".format(self.id))
-            return cached
-        elif not cached and visible:
-            c = LDAPConnection()
-            result = c.user_attributes(self.dn, ["birthday"]).first_result()
-            birthday = result.get("birthday", None)
-            if not birthday:
-                return None
-            if isinstance(birthday, (list, tuple)):
-                date_object = datetime.strptime(birthday[0], '%m-%d-%Y')
-            elif isinstance(birthday, str):
-                date_object = datetime.strptime(birthday, '%Y%m%d')
-            else:
-                return None
-            cache.set(key, date_object, timeout=settings.CACHE_AGE['user_attribute'])
-            return date_object
-
-        else:
-            return None
-
-    # TODO: replace cache
     @property
     def is_male(self):
-        return self.get_or_set_cache('gender') is True
+        return self.gender is True
 
-    # TODO: replace cache
     @property
     def is_female(self):
-        return self.get_or_set_cache('gender') is False
+        return self.gender is False
 
     @property
     def age(self):
@@ -649,193 +418,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return int((date - b).days / 365)
 
         return None
-
-    # TODO: don't use cache/don't use LDAP (duh)
-    def photo_binary(self, photo_year):
-        """Returns the binary data for a user's picture.
-
-        Returns:
-            Binary data
-
-        """
-        identifier = ":".join([self.dn, "photo", photo_year])
-        key = identifier  # User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-
-        if self.is_http_request_sender():
-            visible = True
-        elif self._current_user_override():
-            visible = True
-        else:
-            perms = self.photo_permissions
-
-            if perms["self"][photo_year] is None:
-                visible_self = perms["self"]["default"]
-            else:
-                visible_self = perms["self"][photo_year]
-            visible_parent = perms["parent"]
-
-            visible = visible_self and visible_parent
-
-        if cached and visible:
-            logger.debug("{} photo of user {} loaded from cache.".format(photo_year.title(), self.id))
-            return cached
-        elif not cached and visible:
-            c = LDAPConnection()
-            dn = "cn={}Photo,{}".format(photo_year, self.dn)
-            try:
-                results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
-                if len(results) == 1:
-                    data = results[0]['attributes']['jpegPhoto']
-                    logger.debug("{} photo of user {} loaded from LDAP.".format(photo_year.title(), self.id))
-                else:
-                    data = None
-            except (LDAPNoSuchObjectResult, KeyError):
-                data = None
-
-            if isinstance(data, (list, tuple)):
-                if data:
-                    data = data[0]
-                else:
-                    data = None
-
-            cache.set(key, data, timeout=settings.CACHE_AGE['ldap_permissions'])
-            return data
-        else:
-            return None
-
-    # TODO: replace with field!?
-    def photo_base64(self, photo_year):
-        """Returns base64 encoded binary data for a user's picture.
-
-        Returns:
-            Base64 string, or None
-
-        """
-        binary = self.photo_binary(photo_year)
-        if binary:
-            return b64encode(binary)
-
-        return None
-
-    # Ugh.
-    def default_photo(self):
-        """Returns the default photo (in binary) that should be used.
-
-        Returns:
-            Binary data
-
-        """
-        data = None
-        preferred = self.preferred_photo
-        if preferred is not None:
-            if preferred.endswith("Photo"):
-                preferred = preferred[:-len("Photo")]
-
-        if preferred == "AUTO" or preferred is None:
-            if self.user_type == "tjhsstTeacher":
-                current_grade = 12
-            else:
-                current_grade = int(self.grade)
-                if current_grade > 12:
-                    current_grade = 12
-
-            for i in reversed(range(9, current_grade + 1)):
-                data = self.photo_binary(Grade.names[i - 9])
-                if data:
-                    return data
-
-        return None
-
-    @property
-    def photo_permissions(self):
-        """Fetches the LDAP permissions for a user's photos.
-
-        Returns:
-            Dictionary
-
-        """
-        key = ":".join([self.dn, 'photo_permissions'])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Photo permissions of user {} loaded " "from cache.".format(self.id))
-            return cached
-        else:
-            c = LDAPConnection()
-
-            perms = {"parent": False, "self": {"default": False, "freshman": None, "sophomore": None, "junior": None, "senior": None}}
-
-            default_result = c.user_attributes(self.dn, ["perm-showpictures-self", "perm-showpictures"])
-            default = default_result.first_result()
-            if "perm-showpictures" in default:
-                perms["parent"] = (default["perm-showpictures"])
-
-            if "perm-showpictures-self" in default:
-                perms["self"]["default"] = (default["perm-showpictures-self"])
-
-            photos_result = c.search(self.dn, "(objectclass=iodinePhoto)", ["cn", "perm-showpictures", "perm-showpictures-self"])
-
-            photos = photos_result
-
-            for photo in photos:
-                attrs = photo['attributes']
-                if "cn" in attrs:
-                    grade = attrs["cn"][0][:-len("Photo")]
-                    try:
-                        public = (attrs["perm-showpictures-self"])
-                        perms["self"][grade] = public
-                    except KeyError:
-                        try:
-                            public = (attrs["perm-showpictures"])
-                            perms["self"][grade] = public
-                        except KeyError:
-                            perms["self"][grade] = False
-
-            cache.set(key, perms, timeout=settings.CACHE_AGE["ldap_permissions"])
-            return perms
-
-    # Implement a different permissions system
-    @property
-    def permissions(self):
-        """Fetches the LDAP permissions for a user.
-
-        Returns:
-            Dictionary with keys "parent" and "self", each mapping to a
-            list of permissions.
-
-        """
-        if self.dn is None:
-            return None
-
-        key = "{}:{}".format(self.dn, "user_info_permissions")
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Permissions of user {} loaded " "from cache.".format(self.id))
-            return cached
-        else:
-            c = LDAPConnection()
-            results = c.user_attributes(self.dn, [
-                "perm-showaddress", "perm-showtelephone", "perm-showbirthday", "perm-showschedule", "perm-showeighth", "perm-showpictures",
-                "perm-showaddress-self", "perm-showtelephone-self", "perm-showbirthday-self", "perm-showschedule-self", "perm-showeighth-self",
-                "perm-showpictures-self"
-            ])
-            result = results.first_result()
-            perms = {"parent": {}, "self": {}}
-            for perm, value in result.items():
-                if perm.endswith("-self"):
-                    perm_name = perm[5:-5]
-                    perms["self"][perm_name] = value
-                else:
-                    perm_name = perm[5:]
-                    perms["parent"][perm_name] = value
-
-            cache.set(key, perms, timeout=settings.CACHE_AGE['ldap_permissions'])
-            return perms
 
     @property
     def can_view_eighth(self):
@@ -1085,42 +667,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return False
 
-    # TODO: replace with our permissions system
-    def attribute_is_visible(self, ldap_perm_name):
-        """Checks if an attribute is visible to the public.
-
-        Args:
-            ldap_perm_name
-                The name of the permission to check.
-
-        Returns:
-            Boolean
-
-        """
-
-        if ldap_perm_name == "specialPerm_studentID":
-            try:
-                # threadlocals is a module, not an actual thread locals object
-                requesting_user = threadlocals.request().user
-                return requesting_user.is_teacher or requesting_user.is_simple_user
-            except (AttributeError, KeyError):
-                return False
-            return False
-
-        perms = self.permissions
-
-        if perms is None:
-            return False
-        elif self.is_http_request_sender():
-            return True
-        else:
-            public = True
-            if ldap_perm_name in perms["parent"]:
-                public = perms["parent"][ldap_perm_name]
-            if ldap_perm_name in perms["self"]:
-                public = public and perms["self"][ldap_perm_name]
-            return public
-
     # Maps Python names for attributes to LDAP names and metadata
     # TODO: make most or all of these fields
     ldap_user_attributes = {
@@ -1274,198 +820,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
     }
 
-    # TODO: get rid of this entirely and replace with database
-    def __getattr__(self, name):
-        """Return simple attributes of User.
-
-        This is used to retrieve ldap fields that don't require special
-        processing, e.g. email or graduation year. Fields names are
-        mapped to more user friendly names to increase readability of
-        templates. When more complex processing is required or a complex
-        return type is required, (such as a datetime object for a
-        birthday), properties should be used instead.
-
-        Note that __getattr__ is used instead of __getattribute__ so the
-        method is called after checking regular attributes instead of
-        before.
-
-        Returns:
-            Either a list of strings or a string, depending on
-            the attribute fetched.
-
-        """
-
-        if name not in User.ldap_user_attributes:
-            # If the property raises an AttributeError, __getattribute__ falls back to __getattr__, hence this special case.
-            if isinstance(User.__dict__.get(name), property):
-                return User.__dict__.get(name).fget(self)
-            raise AttributeError("'User' has no attribute '{}'".format(name))
-
-        if self.dn is None:
-            if not self.is_active:
-                return None
-
-            raise exceptions.ObjectDoesNotExist("Could not determine DN of User with ID {} (requesting {})".format(self.id, name))
-
-        attr = User.ldap_user_attributes[name]
-        should_cache = attr["cache"]
-        if should_cache:
-            identifier = ":".join((self.dn, name))
-            key = User.create_secure_cache_key(identifier)
-
-            cached = cache.get(key)
-        else:
-            cached = False
-
-        if attr["perm"] is None:
-            visible = True
-        else:
-            visible = self.attribute_is_visible(attr["perm"])
-
-        if name not in ["ion_id", "ion_username", "user_type"]:
-            visible = self._current_user_override() or visible
-
-        if cached and visible:
-            logger.debug("Attribute '{}' of user {} loaded " "from cache.".format(name, self.id or self.dn))
-            return cached
-        elif not cached and visible:
-            c = LDAPConnection()
-            field_name = attr["ldap_name"]
-            try:
-                results = c.user_attributes(self.dn, [field_name])
-                try:
-                    result = results.first_result()[field_name]
-                except TypeError:
-                    result = None
-
-                if attr["is_list"] or not isinstance(result, (list, tuple)):
-                    value = result
-                elif result:
-                    value = result[0]
-                else:
-                    value = None
-                    should_cache = False
-
-                if should_cache:
-                    cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
-                return value
-            except KeyError:
-                return None
-        else:
-            return None
-
-    # TODO: replace this with DB
-    def set_ldap_attribute(self, name, value, override_set=False):
-        """Set a user attribute in LDAP."""
-
-        if name not in User.ldap_user_attributes:
-            raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
-
-        if User.ldap_user_attributes[name]["can_set"]:
-            pass
-        elif override_set:
-            pass
-        else:
-            raise Exception("Not allowed to set User attribute '{}'".format(name))
-
-        if self.dn is None:
-            raise Exception("Could not determine DN of User")
-
-        attr = User.ldap_user_attributes[name]
-        should_cache = attr["cache"]
-
-        if attr["is_list"] and not isinstance(value, (list, tuple)):
-            raise Exception("Expected list for attribute '{}'".format(name))
-
-        field_name = attr["ldap_name"]
-        self.set_raw_ldap_attribute(field_name, value)
-
-        if should_cache:
-            identifier = ":".join((self.dn, name))
-            key = User.create_secure_cache_key(identifier)
-            cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
-
-    # TODO: permissions system
-    def set_ldap_preference(self, item_name, value, is_admin=False):
-        logger.debug("Pref: {} {}".format(item_name, value))
-
-        if item_name.endswith("-self"):
-            field_name = item_name.split("-self")[0]
-            field_type = "self"
-            ldap_name = "perm-" + field_name + "-self"
-        elif item_name.endswith("self"):
-            field_name = item_name.split("self")[0]
-            field_type = "self"
-            ldap_name = "perm-" + field_name + "-self"
-        else:
-            field_name = item_name
-            field_type = "parent"
-            ldap_name = "perm-" + field_name
-
-        if field_type == "parent" and not is_admin:
-            raise Exception("You do not have permission to change this parent field.")
-
-        if item_name.startswith("photoperm-"):
-            grade = field_name.split("photoperm-")[1]
-            self.set_raw_ldap_photoperm(field_type, grade, value)
-            cache.delete(":".join([self.dn, "photo_permissions"]))
-        else:
-            logger.debug("Setting raw LDAP: {} = {}".format(ldap_name, value))
-            self.set_raw_ldap_attribute(ldap_name, value)
-
-        cache.delete(":".join([self.dn, "photo_permissions"]))
-
-        cache.delete(":".join([self.dn, "user_info_permissions"]))
-
-    def set_raw_ldap_photoperm(self, field_type, grade, value):
-        if self.dn is None:
-            raise Exception("Could not determine DN of User")
-
-        if field_type not in ["parent", "self"]:
-            raise Exception("Invalid photo field type")
-
-        photo_dn = "cn={}Photo,{}".format(grade, self.dn)
-        photo_field = "perm-showpictures" + ("-self" if field_type == "self" else "")
-
-        c = LDAPConnection()
-        logger.debug("SET {}: {} = {}".format(photo_dn, photo_field, value))
-        c.set_attribute(photo_dn, photo_field, value)
-
-    def set_raw_ldap_attribute(self, field_name, value):
-        """Set a raw user attribute in LDAP."""
-        if self.dn is None:
-            raise Exception("Could not determine DN of User")
-
-        c = LDAPConnection()
-        logger.debug("SET {}: {} = {}".format(self.dn, field_name, value))
-        if value or field_name.startswith("perm"):
-            c.set_attribute(self.dn, field_name, value)
-        else:
-            c.del_attribute(self.dn, field_name)
-
-    def clear_cache(self):
-        logger.debug("Clearing LDAP user cache for {}".format(self.dn))
-        for attr in User.ldap_user_attributes:
-            cache.delete(":".join((self.dn, attr)))
-            cache.delete(User.create_secure_cache_key(":".join((self.dn, attr))))
-        logger.debug("Clearing cached DB values")
-        if self.cache:
-            UserCache.objects.get(pk=self.cache.pk).delete()
-        self.set_cache()
-
-    def set_cache(self):
-        logger.debug("Setting DB cache using LDAP values")
-        if not self.cache:
-            self.cache = UserCache.objects.create(objectClass=self.user_type, first_name=self.first_name, last_name=self.last_name, user=self)
-        self.cache.grade_number = self.grade.number if self.grade else None
-        self.cache.graduation_year = int(self.graduation_year) if self.graduation_year else None
-        bool_gender = None
-        if self.sex:
-            bool_gender = True if self.sex.lower()[:1] == "m" else False
-        self.cache.gender = bool_gender
-        self.cache.save()
-        self.save()
-
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an.
@@ -1553,312 +907,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __int__(self):
         return self.id
-
-
-# TODO: remove this entirely because no schedules
-class Class(object):
-    """Represents a tjhsstClass LDAP object in which a user is enrolled.
-
-    Note that this is not a Django model, but rather an interface
-    to LDAP classes.
-
-    Attributes:
-        dn
-            The DN of the cooresponding tjhsstClass in LDAP
-        section_id
-            The section ID of the class
-
-    """
-
-    def __init__(self, dn=None, id=None):
-        """Initialize the Class object.
-
-        Either dn or id is required.
-
-        Args:
-            dn
-                The full DN of the class.
-            id
-                The tjhsstSectionId of the class.
-
-        """
-        self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
-
-    @property
-    def section_id(self):
-        return ldap3.utils.dn.parse_dn(self.dn)[0][1]
-
-    pk = section_id
-
-    @property
-    def students(self):
-        """Returns a list of students in the class. This may not always return all of the actual
-        students if you do not have permission to view that information.
-
-        Returns:
-            List of user objects
-
-        """
-        c = LDAPConnection()
-        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), None)
-
-        users = []
-        for row in students:
-            dn = row["dn"]
-            try:
-                user = User.get_user(dn=dn)
-            except User.DoesNotExist:
-                continue
-            users.append(user)
-
-        return users
-
-    @property
-    def teacher(self):
-        """Returns the teacher/sponsor of the class.
-
-        Returns:
-            User object
-
-        """
-        key = ":".join([self.dn, 'teacher'])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Attribute 'teacher' of class {} loaded " "from cache.".format(self.section_id))
-            return User.get_user(dn=cached)
-        else:
-            c = LDAPConnection()
-            result = c.class_attributes(self.dn, ['sponsorDn']).first_result()
-            if not result:
-                return None
-            dn = result['sponsorDn'][0]
-
-            # Only cache the dn, since pickling would recursively fetch
-            # all of the properties and quickly reach the maximum
-            # recursion depth
-            cache.set(key, dn, timeout=settings.CACHE_AGE['class_teacher'])
-            return User.get_user(dn=dn)
-
-    @property
-    def quarters(self):
-        """Returns the quarters a class is in session.
-
-        Returns:
-            Integer list
-
-        """
-        key = ":".join([self.dn, "quarters"])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Attribute 'quarters' of class {} loaded from cache.".format(self.section_id))
-            return cached
-        else:
-            c = LDAPConnection()
-            result = c.class_attributes(self.dn, ["quarterNumber"]).first_result()
-            if not result:
-                return None
-            result = [int(i) for i in result["quarterNumber"]]
-
-            cache.set(key, result, timeout=settings.CACHE_AGE["class_attribute"])
-            return result
-
-    @property
-    def sortvalue(self):
-        """Returns the sort value of this class.
-
-        This can be derived from the following formula:
-            Minimum Period + Sum of values of quarters / 11
-
-        We divide by 11 because the maximum sum is 10 and we want the
-        quarters to be a secondary sort.
-
-        Returns:
-            A float value of the equation.
-
-        """
-        periods = self.periods
-        quarters = self.quarters
-
-        value = 0
-
-        if periods:
-            value += min(map(float, periods))
-        if quarters:
-            value += float(sum(quarters)) / 11
-
-        return value
-
-    @property
-    def sections(self):
-        """Returns a list of other Class objects which are of the same class type.
-
-        Returns:
-            A list of class objects.
-
-        """
-        class_sections = ClassSections(id=self.class_id)
-
-        schedule = []
-        classes = class_sections.classes
-        # Sort in order
-        for class_object in classes:
-            sortvalue = class_object.sortvalue
-            schedule.append((sortvalue, class_object))
-
-        ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        if ordered_schedule:
-            return list(zip(*ordered_schedule))[1]  # The class objects
-        else:
-            return []
-
-    def __getattr__(self, name):
-        """Return simple attributes of Class.
-
-        This is used to retrieve ldap fields that don't require special
-        processing, e.g. roomNumber or period. Fields names are
-        mapped to more user friendly names to increase readability of
-        templates. When more complex processing is required or a
-        complex return type is required, (such as a Class object),
-        properties should be used instead.
-
-        Note that __getattr__ is used instead of __getattribute__ so
-        the method is called after checking regular attributes instead
-        of before.
-
-        This method should not be called directly - use dot notation or
-        getattr() to fetch an attribute.
-
-        Args:
-            name
-                The string name of the attribute.
-
-        Returns:
-            Either a list of strings or a string, depending on the attribute fetched.
-
-        """
-
-        class_attributes = {
-            "name": {
-                "ldap_name": "cn",
-                "is_list": False
-            },
-            "periods": {
-                "ldap_name": "classPeriod",
-                "is_list": True  # Some classes run for two periods
-            },
-            "class_id": {
-                "ldap_name": "tjhsstClassId",
-                "is_list": False
-            },
-            "course_length": {
-                "ldap_name": "courseLength",
-                "is_list": False
-            },
-            "room_number": {
-                "ldap_name": "roomNumber",
-                "is_list": False
-            }
-        }
-
-        if name not in class_attributes:
-            raise AttributeError("'Class' has no attribute '{}'".format(name))
-
-        key = ":".join([self.dn, name])
-
-        cached = cache.get(key)
-
-        if cached:
-            logger.debug("Attribute '{}' of class {} loaded " "from cache.".format(name, self.section_id))
-            return cached
-        else:
-            c = LDAPConnection()
-            attr = class_attributes[name]
-            field_name = attr["ldap_name"]
-            try:
-                result = c.class_attributes(self.dn, [field_name]).first_result()
-                if result:
-                    result = result[field_name]
-                else:
-                    return None
-            except KeyError:
-                logger.warning("KeyError fetching " + name + " for class " + self.dn)
-                return None
-            else:
-                if attr["is_list"]:
-                    value = result
-                    if name == "periods":
-                        value = sorted(list(map(int, value)))
-                else:
-                    value = result[0] if isinstance(result, (list, tuple)) else result
-
-                cache.set(key, value, timeout=settings.CACHE_AGE['class_attribute'])
-                return value
-
-    @property
-    def period(self):
-        return ", ".join([str(i) for i in self.periods])
-
-    def __str__(self):
-        if self.name and self.teacher.last_name:
-            return "{}, Period {} ({})".format(self.name, self.period, self.teacher.last_name)
-        return "{}".format(self.dn)
-
-
-# TODO: remove this
-class ClassSections(object):
-    """Represents a list of tjhsstClass LDAP objects.
-
-    Note that this is not a Django model, but rather an interface
-    to LDAP classes.
-
-    Attributes:
-        class_id
-            The class ID of the class(es) (tjhsstClassId)
-
-    """
-
-    def __init__(self, dn=None, id=None):
-        """Initialize the Class object.
-
-        Either dn or id is required.
-
-        Args:
-            id
-                The tjhsstClassId of the class.
-
-        """
-        self.dn = dn or "ou=schedule,dc=tjhsst,dc=edu"
-        self.id = id
-
-    @property
-    def classes(self):
-        """Returns a list of classes sections for the given class.
-
-        Returns:
-            List of Class objects
-
-        """
-        c = LDAPConnection()
-        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId"])
-
-        classes = []
-        for row in query:
-            dn = row["dn"]
-            c = Class(dn=dn)
-            classes.append(c)
-
-        return classes
-
-    def __str__(self):
-        if self.classes:
-            return "{}".format(self.classes[0].name)
-
-        return "{}".format(self.id)
-
 
 class Address(object):
     """Represents a user's address.
