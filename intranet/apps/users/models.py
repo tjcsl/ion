@@ -12,6 +12,7 @@ from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, Permissi
 from django.core import exceptions
 from django.core.cache import cache
 from django.core.signing import Signer
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 
@@ -156,20 +157,68 @@ class User(AbstractBaseUser, PermissionsMixin):
         (13, 'Staff')
     )
 
+    TITLES = (
+        ('Mr.', 'Mr.'),
+        ('Ms.', 'Ms.'),
+        ('Mrs.', 'Mrs.'),
+        ('Dr.', 'Dr.')
+    )
+
+    USER_TYPES = (
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+        ('counselor', 'Counselor'),
+        ('tjstar_presenter', 'tjStar Presenter'),
+    )
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
+    student_id = models.IntegerField(max_length=10, unique=True)
+    user_type = models.CharField(tjstar_presenter)
 
     first_name = models.CharField(max_length=35)
+    middle_name = models.CharField(max_length=70)
     last_name = models.CharField(max_length=70)
+    nickname = models.CharField(max_length=35)
+
+    gender = models.BooleanField()
+    birthday = models.DateField()
 
     graduation_year = models.IntegerField(max_length=4)
     grade_number = models.IntegerField()
 
-    birthday = models.DateField()
-
     counselor = models.ForeignKey('self', on_delete=models.CASCADE)
+    admin_comments = models.TextField()
+
+    # TODO: figure out phones
+    home_phone = models.OneToOneField(Phone)
+    mobile_phone = models.OneToOneField(Phone)
+
+# TODO: Fields
+#           - iodineUidNumber (is this just the id of the model?)
+#           - iodineUid x
+#           - tjhsstStudentId x
+#           - cn (useless) x
+#           - displayName x
+#           - nickname x
+#           - title (excluding) x
+#           - givenName (excluding) x
+#           - middlename x
+#           - sn x
+#           - gender x
+#           - objectClass (replaced with user_type) x
+#           - graduationYear x
+#           - preferredPhoto
+#           - mail (list) x
+#           - homePhone x
+#           - mobilePhone x
+#           - telephoneNumber (list) x
+#           - webpage (list)
+#           - startpage (useless) x
+#           - adminComments x
 
 # TODO: replace objectClass
+#       replaced with user_type
+
 # TODO: create Address model, add ManyToOne rel
 
 # TODO: find solution for student pictures (maybe store them in another static directory???)
@@ -188,29 +237,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 #           - showlocker (deprecated since TJ no longer has lockers)
 #           - showtelephone-friend (plans to add friend system??)
 #       These permissions also require parent consent most of the time.
-
-# TODO: Fields
-#           - iodineUidNumber
-#           - iodineUid
-#           - tjhsstStudentId
-#           - cn (useless)
-#           - displayName
-#           - nickname
-#           - title
-#           - givenName
-#           - middlename
-#           - sn (useless)
-#           - gender
-#           - objectClass
-#           - graduationYear
-#           - preferredPhoto
-#           - mail (list)
-#           - homePhone
-#           - mobilePhone
-#           - telephoneNumber (list)
-#           - webpage (list)
-#           - startpage (useless)
-#           - adminComments
 
 
     user_locked = models.BooleanField(default=False)
@@ -726,6 +752,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __int__(self):
         return self.id
+
+class Email(models.Model):
+    """Represents an email address"""
+    address = models.EmailField()
+    user = models.ForeignKey(User, related_name='emails')
+
+    def __str__():
+        return address
+
+class Phone(models.Model):
+    """Represents a phone number"""
+    regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    user = models.ForeignKey(User, related_name='other_phones')
+    number = models.CharField(validators=[regex], blank=True) # validators should be a list
 
 class Address(object):
     """Represents a user's address.

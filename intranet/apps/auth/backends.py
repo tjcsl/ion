@@ -139,7 +139,7 @@ class KerberosAuthenticationBackend(object):
         else:
             logger.debug("Authentication successful")
             try:
-                user = User.get_user(username=username)
+                user = User.objects.get(username=username)
             except User.DoesNotExist:
                 # Most likely recently graduated user who has been removed from ldap, but can still login.
                 logger.warning("User {} successfully authenticated but not found in LDAP.".format(username))
