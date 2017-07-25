@@ -4,7 +4,7 @@ import hashlib
 import logging
 import os
 from base64 import b64encode
-from datetime import datetime
+from datetime import datetime, date
 
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
@@ -36,79 +36,56 @@ class UserManager(DjangoUserManager):
     """
 
     def user_with_student_id(self, student_id):
-        """Get a unique user object by student ID."""
+        """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
         results = User.objects.filter(student_id=student_id)
         if len(results) == 1:
             return results.first()
         return None
 
     def user_with_ion_id(self, student_id):
-        """Get a unique user object by Ion ID."""
+        """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not student_id.isdigit():
             return None
         results = User.objects.filter(ion_id=student_id)
         if len(results) == 1:
-            return User.get_user(dn=results[0]["dn"])
+            return results.first()
         return None
 
     def users_in_year(self, year):
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
-    def _ldap_and_string(self, opts):
-        """Combine LDAP queries with AND.
-
-        e.x.: ["a=b"]        => "a=b"
-              ["a=b", "c=d"] => "(&(a=b)(c=d))"
-
-        """
-        if len(opts) == 1:
-            return opts[0]
-        else:
-            return "(&" + "".join(["({})".format(i) for i in opts]) + ")"
-
     def user_with_name(self, given_name=None, sn=None):
         """Get a unique user object by given name (first/nickname and last)."""
-        c = LDAPConnection()
-
         results = []
 
         if sn and not given_name:
-            results = c.search(settings.USER_DN, "sn={}".format(sn), None)
+            results = User.objects.filter(last_name=sn)
         elif given_name:
-            query = ["givenName={}".format(given_name)]
+            query = {
+                'first_name': given_name
+            }
             if sn:
-                query.append("sn={}".format(sn))
-            results = c.search(settings.USER_DN, self._ldap_and_string(query), None)
+                query['last_name'] = sn
+            results = User.objects.filter(**query)
 
             if len(results) == 0:
                 # Try their first name as a nickname
-                query[0] = "nickname={}".format(given_name)
-                results = c.search(settings.USER_DN, self._ldap_and_string(query), None)
+                del query['first_name']
+                query['nickname'] = given_name
+                results = User.objects.filter(**query)
 
         if len(results) == 1:
-            return User.get_user(dn=results[0]["dn"])
+            return results.first()
 
         return None
 
     def users_with_birthday(self, month, day):
         """Return a list of user objects who have a birthday on a given date."""
-        c = LDAPConnection()
 
-        month = int(month)
-        if month < 10:
-            month = "0" + str(month)
-
-        day = int(day)
-        if day < 10:
-            day = "0" + str(day)
-
-        search_query = "birthday=*{}{}".format(month, day)
-        results = c.search(settings.USER_DN, search_query, None)
-
-        users = []
-        for res in results:
-            u = User.get_user(dn=res["dn"])
+        users = User.objects.filter(birthday__month=month, birthday__day=day)
+        for user in users:
+            # TODO: permissions system
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
 
@@ -118,42 +95,21 @@ class UserManager(DjangoUserManager):
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
 
-    # FIXME: save userClass in db.
-
     def get_students(self):
         """Get user objects that are students (quickly)."""
-        key = "users:students"
-        cached = cache.get(key)
-        if cached:
-            logger.debug("Using cached User.get_students")
-            return cached
-        else:
-            try:
-                users = Group.objects.get(name__istartswith="All Students").user_set.all()
-            except Group.DoesNotExist:
-                users = User.objects.filter(username__startswith="2")
-            # Add possible exceptions handling here
-            logger.debug("Set cache for User.get_students")
-            cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
-            return users
+        # TODO: figure out if we want to use tjhsstStudent or ditch that naming scheme
+        return User.objects.filter(user_type="tjhsstStudent")
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
-        key = "users:teachers"
-        cached = cache.get(key)
-        if cached:
-            logger.debug("Using cached User.get_teachers")
-            return cached
-        else:
-            users = User.objects.exclude(username__startswith="2")
-            extra = [9996, 8888, 7011]
-            users = users.exclude(id__in=extra)
-            # Add possible exceptions handling here
-            users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
+        # TODO: naming scheme
+        users = User.objects.filter(user_type="tjhsstTeacher")
+        extra = [9996, 8888, 7011]
+        users = users.exclude(id__in=extra)
+        # Add possible exceptions handling here
+        users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
 
-            logger.debug("Set cache for User.get_teachers")
-            cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
-            return users
+        return users
 
     def get_teachers_sorted(self):
         """Get teachers sorted by last name.
