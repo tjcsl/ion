@@ -5,8 +5,6 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from ldap3.core.exceptions import LDAPNoSuchObjectResult
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
@@ -21,9 +19,6 @@ def custom_exception_handler(exc, context):
 
     if isinstance(exc, eighth_exceptions.SignupException):
         response = Response({'details': exc.messages()}, status=status.HTTP_400_BAD_REQUEST)
-
-    elif isinstance(exc, LDAPNoSuchObjectResult):
-        response = Response({'details': ['Object does not exist (in LDAP).']}, status=status.HTTP_404_NOT_FOUND)
 
     elif isinstance(exc, ObjectDoesNotExist):
         response = Response({'details': ['Object does not exist (in database).']}, status=status.HTTP_404_NOT_FOUND)
