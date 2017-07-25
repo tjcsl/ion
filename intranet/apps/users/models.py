@@ -39,7 +39,7 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by student ID."""
         results = User.objects.filter(student_id=student_id)
         if len(results) == 1:
-            return results[0]
+            return results.first()
         return None
 
     def user_with_ion_id(self, student_id):
@@ -236,6 +236,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 #           - showlocker (deprecated since TJ no longer has lockers)
 #           - showtelephone-friend (plans to add friend system??)
 #       These permissions also require parent consent most of the time.
+
+# TODO: Fields
+#           - iodineUidNumber
+#           - iodineUid
+#           - tjhsstStudentId
+#           - cn (useless)
+#           - displayName
+#           - nickname
+#           - title
+#           - givenName
+#           - middlename
+#           - sn (useless)
+#           - gender
+#           - objectClass
+#           - graduationYear
+#           - preferredPhoto
+#           - mail (list)
+#           - homePhone
+#           - mobilePhone
+#           - telephoneNumber (list)
+#           - webpage (list)
+#           - startpage (useless)
+#           - adminComments
+
 
     user_locked = models.BooleanField(default=False)
 
@@ -898,10 +922,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
-    # def has_perm(self, perm, obj=None):
-    #    """Return whether user has a permission."""
-    #    return perm in self.user_permissions.all().values_list("codename", flat=True)
-
     def __str__(self):
         return self.username or self.ion_username or self.id
 
@@ -1012,16 +1032,3 @@ class Grade(object):
     def __str__(self):
         """Return name of the grade."""
         return self._name
-
-# TODO: DIE
-class UserCache(models.Model):
-    """ Stores all the data from LDAP to speed up page loading and make filtering objects easier """
-    gender = models.NullBooleanField(null=True)
-    objectClass = models.CharField(max_length=15, null=True)
-    first_name = models.CharField(max_length=64, null=True)
-    last_name = models.CharField(max_length=128, null=True)
-    graduation_year = models.PositiveIntegerField(null=True)
-    grade_number = models.PositiveIntegerField(null=True)
-
-    def __str__(self):
-        return self.user.username
