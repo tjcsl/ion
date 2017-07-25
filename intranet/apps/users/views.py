@@ -14,8 +14,6 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from raven.contrib.django.raven_compat.models import client
 
-from intranet.db.ldap_db import LDAPConnection, LDAPFilter
-
 from .models import Class, Grade, User
 from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..eighth.utils import get_start_date
@@ -88,10 +86,6 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
-    ionldap_courses = None
-    if settings.USE_IONLDAP:
-        ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
-
     has_been_nominated = profile_user.username in [
         u.nominee.username for u in request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION)
     ]
@@ -101,23 +95,11 @@ def profile_view(request, user_id=None):
         "can_view_eighth": can_view_eighth,
         "eighth_restricted_msg": eighth_restricted_msg,
         "eighth_sponsor_schedule": eighth_sponsor_schedule,
-        "ionldap_courses": ionldap_courses,
         "nominations_active": settings.NOMINATIONS_ACTIVE,
         "nomination_position": settings.NOMINATION_POSITION,
         "has_been_nominated": has_been_nominated
     }
     return render(request, "users/profile.html", context)
-
-
-def get_ionldap_courses(profile_user, current_user=None):
-    can_view = (not current_user or (current_user and (current_user == profile_user or current_user.is_teacher or current_user.is_eighth_admin)))
-    if not can_view:
-        return None
-
-    if profile_user.is_student or profile_user.is_teacher:
-        return profile_user.ionldap_courses
-
-    return None
 
 
 @login_required
@@ -182,108 +164,3 @@ def picture_view(request, user_id, year=None):
         response.write(img)
 
         return response
-
-
-@login_required
-def class_section_view(request, section_id):
-    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
-        return redirect("ionldap_class_section", section_id=section_id)
-
-    c = Class(id=section_id)
-    try:
-        c.name
-    except Exception:
-        raise Http404
-
-    if c.name is None:
-        raise Http404
-
-    students = sorted(c.students, key=lambda x: (x.last_name, x.first_name))
-
-    attrs = {
-        "name": c.name,
-        "students": students,
-        "teacher": c.teacher,
-        "quarters": c.quarters,
-        "periods": c.periods,
-        "course_length": c.course_length,
-        "room_number": c.room_number,
-        "class_id": c.class_id,
-        "section_id": c.section_id,
-        "sections": c.sections
-    }
-
-    if request.resolver_match.url_name == "class_section_csv":
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=\"class_{}.csv\"".format(section_id)
-
-        writer = csv.writer(response)
-
-        writer.writerow(["Name", "Student ID", "Grade", "TJ Email"])
-
-        for s in students:
-            writer.writerow([s.last_first, s.student_id if s.student_id else "", s.grade.number, s.tj_email if s.tj_email else ""])
-        return response
-
-    context = {"class": attrs, "show_emails": (request.user.is_teacher or request.user.is_eighth_admin)}
-
-    return render(request, "users/class.html", context)
-
-
-@login_required
-def class_room_view(request, room_id):
-    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
-        return redirect("ionldap_class_room", room_id=room_id)
-
-    c = LDAPConnection()
-    room_id = LDAPFilter.escape(room_id)
-
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id), ["tjhsstSectionId"])
-
-    if len(classes) > 0:
-        schedule = []
-        for row in classes:
-            class_dn = row["dn"]
-            class_object = Class(dn=class_dn)
-            sortvalue = class_object.sortvalue
-            schedule.append((sortvalue, class_object))
-
-        ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
-    else:
-        classes_objs = []
-        raise Http404
-
-    context = {"room": room_id, "classes": classes_objs}
-
-    return render(request, "users/class_room.html", context)
-
-
-@login_required
-def all_classes_view(request):
-    if settings.USE_IONLDAP and (request.user.is_eighthoffice or not request.user.is_eighth_admin):
-        return redirect("ionldap_all_classes")
-
-    c = LDAPConnection()
-
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "objectClass=tjhsstClass", ["tjhsstSectionId"])
-
-    logger.debug("{} classes found.".format(len(classes)))
-
-    if len(classes) > 0:
-        schedule = []
-        for row in classes:
-            class_dn = row["dn"]
-            class_object = Class(dn=class_dn)
-            sortvalue = class_object.sortvalue
-            schedule.append((sortvalue, class_object))
-
-        ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
-    else:
-        classes_objs = []
-        raise Http404
-
-    context = {"classes": classes_objs}
-
-    return render(request, "users/all_classes.html", context)

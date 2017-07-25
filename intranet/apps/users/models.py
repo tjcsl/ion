@@ -17,10 +17,6 @@ from django.utils import timezone
 
 from intranet.middleware import threadlocals
 
-import ldap3
-import ldap3.utils.dn
-from ldap3.core.exceptions import LDAPInvalidDNSyntaxResult, LDAPNoSuchObjectResult
-
 from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
