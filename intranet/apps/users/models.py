@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
 import logging
-import os
-from base64 import b64encode
-from datetime import datetime, date
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
-from django.core import exceptions
-from django.core.cache import cache
-from django.core.signing import Signer
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
@@ -81,10 +75,11 @@ class UserManager(DjangoUserManager):
         """Return a list of user objects who have a birthday on a given date."""
 
         users = User.objects.filter(birthday__month=month, birthday__day=day)
+        results = []
         for user in users:
             # TODO: permissions system
-            if u.attribute_is_visible("showbirthday"):
-                users.append(u)
+            if user.attribute_is_visible("showbirthday"):
+                results.append(user)
 
         return users
 
@@ -173,7 +168,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
     student_id = models.IntegerField(max_length=10, unique=True)
-    user_type = models.CharField(tjstar_presenter)
+    user_type = models.CharField(choices=USER_TYPES)
 
     first_name = models.CharField(max_length=35)
     middle_name = models.CharField(max_length=70)
@@ -189,9 +184,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     counselor = models.ForeignKey('self', on_delete=models.CASCADE)
     admin_comments = models.TextField()
 
-    # TODO: figure out phones
-    home_phone = models.OneToOneField(Phone)
-    mobile_phone = models.OneToOneField(Phone)
+    # See Email model for emails
+    # See Phone model for phone numbers
 
 # TODO: Fields
 #           - iodineUidNumber (is this just the id of the model?)
@@ -237,7 +231,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 #           - showlocker (deprecated since TJ no longer has lockers)
 #           - showtelephone-friend (plans to add friend system??)
 #       These permissions also require parent consent most of the time.
-
 
     user_locked = models.BooleanField(default=False)
 
@@ -753,19 +746,39 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __int__(self):
         return self.id
 
+
 class Email(models.Model):
     """Represents an email address"""
     address = models.EmailField()
     user = models.ForeignKey(User, related_name='emails')
 
-    def __str__():
-        return address
+    def __str__(self):
+        return self.address
+
 
 class Phone(models.Model):
     """Represents a phone number"""
+    PURPOSES = (
+        ('h', 'Home Phone'),
+        ('m', 'Mobile Phone'),
+        ('o', 'Other Phone')
+    )
+
     regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    user = models.ForeignKey(User, related_name='other_phones')
-    number = models.CharField(validators=[regex], blank=True) # validators should be a list
+
+    purpose = models.CharField(choices=PURPOSES, default='o')
+    user = models.ForeignKey(User, related_name='phones')
+    number = models.CharField(validators=[regex]) # validators should be a list
+
+
+class Website(models.Model):
+    """Represents a user's website"""
+    url = models.URLField()
+    user = models.ForeignKey(User, related_name='websites')
+
+    def __str__(self):
+        return self.url
+
 
 class Address(object):
     """Represents a user's address.
