@@ -2,7 +2,6 @@
 
 import logging
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -143,7 +142,7 @@ def get_preferred_pic(user):
     """Get a user's preferred picture attributes to pass as an initial value to a
     PreferredPictureForm."""
 
-    preferred_pic = {"preferred_photo": user.preferred_photo}
+    preferred_pic = {"preferred_photo": user.preferred_photo.grade_number}
 
     return preferred_pic
 
@@ -185,11 +184,6 @@ def get_privacy_options(user):
                 privacy_options["{}-{}".format(field, ptype)] = user.permissions[ptype][field]
             else:
                 privacy_options[field] = user.permissions[ptype][field]
-
-    for field in user.photo_permissions["self"]:
-        if field != "default":  # photo_permissions["default"] is the same as show on import
-            privacy_options["photoperm-{}".format(field)] = user.photo_permissions["parent"]
-            privacy_options["photoperm-{}-{}".format(field, "self")] = user.photo_permissions["self"][field]
 
     return privacy_options
 
@@ -298,9 +292,6 @@ def preferences_view(request):
         except AttributeError:
             pass
 
-        if LDAPConnection().did_use_simple_bind():
-            ldap_error = True
-
     else:
         personal_info, num_fields = get_personal_info(user)
         logger.debug(personal_info)
@@ -354,62 +345,3 @@ def privacy_options_view(request):
 
     context = {"privacy_options_form": privacy_options_form, "profile_user": user}
     return render(request, "preferences/privacy_options.html", context)
-
-
-@login_required
-def ldap_test(request):
-    c = LDAPConnection()
-
-    results = ""
-
-    search_dn = request.POST.get("search_dn")
-    search_q = request.POST.get("search_q")
-    search_attrs = request.POST.getlist("search_attrs")
-
-    user_attribute_dn = request.POST.get("user_attribute_dn")
-    user_attribute_attrs = request.POST.getlist("user_attribute_attrs")
-    if request.method == "POST":
-        if "search_q" in request.POST:
-            try:
-                req = c.search(search_dn, search_q, search_attrs)
-            except Exception as e:
-                results += "EXCEPTION: {}\n".format(e)
-            else:
-                logger.debug(req)
-                if not isinstance(req, list):
-                    req = [req]
-                for row in req:
-                    results += "{}: \n".format(row[0])
-                    for perm, value in row[1].items():
-                        results += "\t{}: {}\n".format(perm, value)
-
-        if "user_attribute_dn" in request.POST:
-            if "dc=edu" not in user_attribute_dn:
-                user_attribute_dn = User.objects.get(id=user_attribute_dn).dn
-            try:
-                req = c.user_attributes(user_attribute_dn, user_attribute_attrs)
-            except Exception as e:
-                results += "EXCEPTION: {}\n".format(e)
-            else:
-                logger.debug(req)
-                result = req.first_result()
-                logger.debug(result)
-                if isinstance(result, dict):
-                    for perm, value in result.items():
-                        logger.debug("{} {}".format(perm, value))
-                        results += "{}: {}\n".format(perm, value)
-                else:
-                    results += "Empty result"
-
-    logger.debug(results)
-
-    context = {
-        "search_dn": search_dn or settings.USER_DN or "",
-        "search_q": search_q or "",
-        "search_attrs": search_attrs or "",
-        "user_attribute_dn": user_attribute_dn or "",
-        "user_attribute_attrs": user_attribute_attrs or "",
-        "results": results
-    }
-
-    return render(request, "preferences/ldap.html", context)
