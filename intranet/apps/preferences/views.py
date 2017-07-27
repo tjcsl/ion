@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def get_personal_info(user):
     """Get a user's personal info attributes to pass as an initial value to a
     PersonalInformationForm."""
-    # number of additional phones (other_phones)
+    # change this to not use other_phones
     num_phones = len(user.other_phones or [])
     num_emails = len(user.emails or [])
     num_webpages = len(user.webpages or [])

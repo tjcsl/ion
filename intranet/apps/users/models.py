@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime
+from base64 import b64encode
 
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
@@ -9,12 +10,23 @@ from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, Permissi
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 from intranet.middleware import threadlocals
 
 from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
+
+
+# TODO: this is disgusting
+GRADE_NUMBERS = (
+    (9, 'Freshman'),
+    (10, 'Sophomore'),
+    (11, 'Junior'),
+    (12, 'Senior'),
+    (13, 'Staff')
+)
 
 
 class UserManager(DjangoUserManager):
@@ -89,13 +101,11 @@ class UserManager(DjangoUserManager):
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
-        # TODO: figure out if we want to use tjhsstStudent or ditch that naming scheme
-        return User.objects.filter(user_type="tjhsstStudent")
+        return User.objects.filter(user_type="student")
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
-        # TODO: naming scheme
-        users = User.objects.filter(user_type="tjhsstTeacher")
+        users = User.objects.filter(user_type="teacher")
         extra = [9996, 8888, 7011]
         users = users.exclude(id__in=extra)
         # Add possible exceptions handling here
@@ -143,15 +153,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     necessarily in the SQL database.
 
     """
-
-    GRADE_NUMBERS = (
-        (9, 'Freshman'),
-        (10, 'Sophomore'),
-        (11, 'Junior'),
-        (12, 'Senior'),
-        (13, 'Staff')
-    )
-
     TITLES = (
         ('Mr.', 'Mr.'),
         ('Ms.', 'Ms.'),
@@ -163,6 +164,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('student', 'Student'),
         ('teacher', 'Teacher'),
         ('counselor', 'Counselor'),
+        ('user', 'Attendance-Only User'),
+        ('simple_user', 'Simple User'),
         ('tjstar_presenter', 'tjStar Presenter'),
     )
     # Django Model Fields
@@ -177,6 +180,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     gender = models.BooleanField()
     birthday = models.DateField()
+    preferred_photo = models.ForeignKey('Photo')
 
     graduation_year = models.IntegerField(max_length=4)
     grade_number = models.IntegerField()
@@ -188,7 +192,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # See Phone model for phone numbers
 
 # TODO: Fields
-#           - iodineUidNumber (is this just the id of the model?)
+#           - iodineUidNumber (is this just the pk of the model?)
 #           - iodineUid x
 #           - tjhsstStudentId x
 #           - cn (useless) x
@@ -201,24 +205,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 #           - gender x
 #           - objectClass (replaced with user_type) x
 #           - graduationYear x
-#           - preferredPhoto
+#           - preferredPhoto x
 #           - mail (list) x
 #           - homePhone x
 #           - mobilePhone x
 #           - telephoneNumber (list) x
-#           - webpage (list)
+#           - webpage (list) x
 #           - startpage (useless) x
 #           - adminComments x
 
-# TODO: replace objectClass
-#       replaced with user_type
-
-# TODO: create Address model, add ManyToOne rel
-
 # TODO: find solution for student pictures (maybe store them in another static directory???)
 #       also need to store:
-#           - base64 maybe?
-#           - preferred picture
+#           - preferred picture x
 
 # TODO: permissions system. current LDAP permissions include
 #           - showpictures
@@ -245,11 +243,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_schedule_notifications = models.BooleanField(default=False)
 
     _student_id = models.PositiveIntegerField(null=True)
-
-    # @property
-    # def student_id(self):
-    #    if self._student_id and (self._current_user_override() or self.is_http_request_sender()):
-    #        return self._student_id
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -362,7 +355,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return "{}@{}".format(self.username, domain)
 
-    # TODO: cache or otherwise fix
+    @property
+    def default_photo(self):
+        """Returns default photo (in binary) that should be used
+
+        Returns:
+            Binary data
+
+        """
+        preferred = self.preferred_photo
+        if preferred is not None:
+            return preferred.binary
+
+        if preferred is None:
+            if self.user_type == "teacher":
+                current_grade = 12
+            else:
+                current_grade = int(self.grade)
+                if current_grade > 12:
+                    current_grade = 12
+            for i in reversed(range(9, current_grade + 1)):
+                data = self.photo_binary(Grade.names[i - 9])
+                if data:
+                    return data
+
     @property
     def grade(self):
         """Returns the grade of a user.
@@ -413,6 +429,17 @@ class User(AbstractBaseUser, PermissionsMixin):
             return int((date - b).days / 365)
 
         return None
+
+    @property
+    def permissions(self):
+        permissions = self.permission_set.all()
+        perm_dict = {
+            'self': {},
+            'parent': {}
+        }
+        for permission in permissions:
+            perm_dict['self'][permission.name] = permission.self_permission
+            perm_dict['parent'][permission.name] = permission.parent_permission
 
     @property
     def can_view_eighth(self):
@@ -468,18 +495,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.grade_number == 11 or self.is_parking_admin
 
-    # TODO: obviously should get rid of this
-    @property
-    def is_ldap_admin(self):
-        """Checks if user is an LDAP admin.
-
-        Returns:
-            Boolean
-
-        """
-
-        return self.has_admin_permission('ldap')
-
     @property
     def is_announcements_admin(self):
         """Checks if user is an announcements admin.
@@ -513,7 +528,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.has_admin_permission("board")
 
-    # TODO: replace this with a BooleanField maybe?
     @property
     def is_teacher(self):
         """Checks if user is a teacher.
@@ -522,9 +536,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "tjhsstTeacher"
+        return self.user_type == "teacher"
 
-    # TODO: replace this with a BooleanField maybe?
     @property
     def is_student(self):
         """Checks if user is a student.
@@ -533,7 +546,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "tjhsstStudent"
+        return self.user_type == "student"
 
     @property
     def is_senior(self):
@@ -582,7 +595,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.is_superuser or self.has_admin_permission("staff")
 
-    # TODO: replace with...?
     @property
     def is_attendance_user(self):
         """Checks if user is an attendance-only user.
@@ -591,9 +603,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "tjhsstUser"
+        return self.object_class == "user"
 
-    # TODO: replace object class
     @property
     def is_simple_user(self):
         """Checks if user is a simple user (e.g. eighth office user)
@@ -602,7 +613,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "simpleUser"
+        return self.object_class == "simple_user"
 
     @property
     def male(self):
@@ -632,7 +643,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
 
-    # TODO: wtf.
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
 
@@ -747,6 +757,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.id
 
 
+class Permission(models.Model):
+    """Personal information permission"""
+
+    name = models.CharField(max_length=30)
+
+    user = models.ForeignKey(User)
+    self_permission = models.BooleanField()
+    parent_permission = models.BooleanField()
+
+
 class Email(models.Model):
     """Represents an email address"""
     address = models.EmailField()
@@ -780,7 +800,7 @@ class Website(models.Model):
         return self.url
 
 
-class Address(object):
+class Address(models.Model):
     """Represents a user's address.
 
     Attributes:
@@ -795,16 +815,37 @@ class Address(object):
 
     """
 
-    def __init__(self, street, city, state, postal_code):
-        """Initialize the Address object."""
-        self.street = street
-        self.city = city
-        self.state = state
-        self.postal_code = postal_code
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=40)
+    state = models.CharField(max_length=20)
+    postal_code = models.CharField(max_length=20)
+
+    user = models.ForeignKey(User, related_name='addresses')
 
     def __str__(self):
         """Returns full address string."""
         return "{}\n{}, {} {}".format(self.street, self.city, self.state, self.postal_code)
+
+
+class Photo(models.Model):
+    """Represents a user photo"""
+
+    grade_number = models.CharField(choices=GRADE_NUMBERS)
+    binary = models.BinaryField()
+    user = models.ForeignKey(User, related_name="photos")
+
+    @cached_property
+    def base64(self):
+        """Returns base64 encoded binary data for a user's picture.
+
+        Returns:
+           Base64 string, or None
+        """
+
+        binary = self.binary
+        if binary:
+            return b64encode(binary)
+        return None
 
 
 class Grade(object):
