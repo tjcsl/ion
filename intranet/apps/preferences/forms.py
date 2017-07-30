@@ -88,7 +88,7 @@ class PrivacyOptionsForm(forms.Form):
         # self.fields["showlocker"] = flag(None, False)
         # self.fields["showlocker-self"] = flag("Show Locker", False)
 
-        if not user.is_ldap_admin:
+        if not user.has_admin_permission("preferences"):
             for name in self.fields:
                 if not name.endswith("-self"):
                     self.fields[name].widget.attrs['class'] = 'disabled'

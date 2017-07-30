@@ -19,10 +19,7 @@ class KerberosCacheMiddleware(object):
 
     The environmental variable must be set by middleware so it is
     available for requests to any view and so each view does not have
-    to load the environmental variable. The LDAP wrapper
-    (intranet.db.ldap_db) cannot set the environmental variable because
-    it does not have access to the current session (request.session).
-
+    to load the environmental variable.
     """
 
     def __init__(self, get_response):

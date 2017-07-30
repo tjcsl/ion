@@ -26,11 +26,7 @@ class KerberosAuthenticationBackend(object):
 
     @staticmethod
     def kinit_timeout_handle(username, realm):
-        """Check if the user exists before we throw an error.
-
-        If the user does not exist in LDAP, only throw a warning.
-
-        """
+        """Check if the user exists before we throw an error."""
         try:
             u = User.get_user(username=username)
         except User.DoesNotExist:
@@ -119,11 +115,6 @@ class KerberosAuthenticationBackend(object):
         Returns:
             `User`
 
-        NOTE: None is returned when the user account does not exist. However,
-        if the account exists but does not exist in LDAP, which is the case for
-        former and future students who do not have Intranet access, a dummy user
-        is returned that has the flag is_active=False. (The is_active property in
-        the User class returns False when the username starts with "INVALID_USER".)
         """
 
         if not isinstance(username, str):
@@ -141,10 +132,7 @@ class KerberosAuthenticationBackend(object):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                # Most likely recently graduated user who has been removed from ldap, but can still login.
-                logger.warning("User {} successfully authenticated but not found in LDAP.".format(username))
-
-                user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
+                return None
             return user
 
     def get_user(self, user_id):
@@ -166,8 +154,6 @@ class KerberosAuthenticationBackend(object):
 
 class MasterPasswordAuthenticationBackend(object):
     """Authenticate as any user against a master password whose hash is in secret.py.
-
-    Forces a simple LDAP bind.
 
     """
 

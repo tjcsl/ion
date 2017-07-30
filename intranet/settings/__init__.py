@@ -361,22 +361,6 @@ def get_month_seconds():
     return datetime.timedelta(hours=24).total_seconds() * 30
 
 
-# Age of cache information
-CACHE_AGE = {
-    "dn_id_mapping": int(12 * get_month_seconds()),
-    "user_grade": int(10 * get_month_seconds()),
-    "user_classes": int(6 * get_month_seconds()),
-    "user_photo": int(6 * get_month_seconds()),
-    "class_teacher": int(6 * get_month_seconds()),
-    "class_attribute": int(6 * get_month_seconds()),
-    "user_attribute": int(2 * get_month_seconds()),
-    "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
-    "ldap_permissions": int(datetime.timedelta(hours=24).total_seconds()),
-    "users_list": int(datetime.timedelta(hours=24).total_seconds()),
-    "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
-    "emerg": int(datetime.timedelta(minutes=5).total_seconds())
-}
-
 if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
     # Make the cache age last just long enough to reload the page to
     # check if caching worked
@@ -432,23 +416,6 @@ else:
         },
         "KEY_PREFIX": VIRTUAL_ENV
     }
-
-# LDAP configuration
-AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
-CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
-HOST = "ion.tjhsst.edu"
-LDAP_REALM = CSL_REALM
-LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
-KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
-
-AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
-
-# LDAP schema config
-BASE_DN = "dc=tjhsst,dc=edu"
-USER_DN = "ou=people,dc=tjhsst,dc=edu"
-CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
-
-LDAP_OBJECT_CLASSES = {"student": "tjhsstStudent", "teacher": "tjhsstTeacher", "simple_user": "simpleUser", "attendance_user": "tjhsstUser"}
 
 FCPS_STUDENT_ID_LENGTH = 7
 
@@ -518,7 +485,6 @@ INSTALLED_APPS = [
     "intranet.apps.signage",
     "intranet.apps.seniors",
     "intranet.apps.emerg",
-    "intranet.apps.ionldap",
     "intranet.apps.itemreg",
     "intranet.apps.lostfound",
     "intranet.apps.emailfwd",
@@ -757,9 +723,6 @@ FCPS_EMERGENCY_PAGE = None  # type: str
 
 # The timeout for the request to FCPS' emergency page (in seconds)
 FCPS_EMERGENCY_TIMEOUT = 0
-
-# Whether to grab schedule information from local database (ionldap)
-USE_IONLDAP = False
 
 # Show an iframe with tjStar activity data
 if TJSTAR_MAP is None:

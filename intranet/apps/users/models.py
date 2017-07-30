@@ -188,47 +188,34 @@ class User(AbstractBaseUser, PermissionsMixin):
     counselor = models.ForeignKey('self', on_delete=models.CASCADE)
     admin_comments = models.TextField()
 
+    """ User preference permissions
+
+        When setting permissions, use set_permission(permission, value , parent=False)
+        The permission attribute should be the part after "self_" or "parent_"
+            e.g. show_pictures
+        If you're setting permission of the student, but the parent permission is false,
+        the method will fail and return False.
+
+        To define a new permission, just create two new BooleanFields in the same
+        pattern as below.
+    """
+    self_show_pictures = models.BooleanField()
+    parent_show_pictures = models.BooleanField()
+
+    self_show_address = models.BooleanField()
+    parent_show_address = models.BooleanField()
+
+    self_show_telephone = models.BooleanField()
+    parent_show_telephone = models.BooleanField()
+
+    self_show_birthday = models.BooleanField()
+    parent_show_birthday = models.BooleanField()
+
+    self_show_eighth = models.BooleanField()
+    parent_show_eighth = models.BooleanField()
+
     # See Email model for emails
     # See Phone model for phone numbers
-
-# TODO: Fields
-#           - iodineUidNumber (is this just the pk of the model?)
-#           - iodineUid x
-#           - tjhsstStudentId x
-#           - cn (useless) x
-#           - displayName x
-#           - nickname x
-#           - title (excluding) x
-#           - givenName (excluding) x
-#           - middlename x
-#           - sn x
-#           - gender x
-#           - objectClass (replaced with user_type) x
-#           - graduationYear x
-#           - preferredPhoto x
-#           - mail (list) x
-#           - homePhone x
-#           - mobilePhone x
-#           - telephoneNumber (list) x
-#           - webpage (list) x
-#           - startpage (useless) x
-#           - adminComments x
-
-# TODO: find solution for student pictures (maybe store them in another static directory???)
-#       also need to store:
-#           - preferred picture x
-
-# TODO: permissions system. current LDAP permissions include
-#           - showpictures
-#           - showaddress
-#           - showtelephone
-#           - showbirthday
-#           - showmap (show a map to the house apparently)
-#           - showschedule (this will be deprecated)
-#           - showeighth (eighth schedule)
-#           - showlocker (deprecated since TJ no longer has lockers)
-#           - showtelephone-friend (plans to add friend system??)
-#       These permissions also require parent consent most of the time.
 
     user_locked = models.BooleanField(default=False)
 
@@ -253,6 +240,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     @staticmethod
     def get_signage_user():
         return User(id=99999)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Default permissions that are filled on user creation
+            pass
+        super(User, self).save(args, kwargs)
 
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
@@ -750,21 +743,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
+    def set_permission(self, permission, value, parent=False):
+        """ Sets permission for personal information.
+            Fails silently if unable to set permission.
+        """
+        if not self.get_attr('parent_{}'.format(permission)):
+            return False
+        level = 'parent' if parent else 'self'
+        self.set_attr('{}_{}'.format(level, permission), value)
+        self.save()
+
     def __str__(self):
         return self.username or self.ion_username or self.id
 
     def __int__(self):
         return self.id
-
-
-class Permission(models.Model):
-    """Personal information permission"""
-
-    name = models.CharField(max_length=30)
-
-    user = models.ForeignKey(User)
-    self_permission = models.BooleanField()
-    parent_permission = models.BooleanField()
 
 
 class Email(models.Model):
