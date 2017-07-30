@@ -11,17 +11,18 @@ from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
-# TODO[LDAP]: after figuring out permissions and fields, change this
+# TODO[LDAP]: Change the forms to match the new fields
+
 
 def get_personal_info(user):
     """Get a user's personal info attributes to pass as an initial value to a
     PersonalInformationForm."""
     # change this to not use other_phones
-    num_phones = len(user.other_phones or [])
+    num_phones = len(user.phones or [])
     num_emails = len(user.emails or [])
-    num_webpages = len(user.webpages or [])
+    num_webpages = len(user.websites or [])
 
-    personal_info = {"mobile_phone": user.mobile_phone, "home_phone": user.home_phone}
+    personal_info = {}
 
     for i in range(num_phones):
         personal_info["other_phone_{}".format(i)] = user.other_phones[i]
@@ -156,20 +157,24 @@ def save_preferred_pic(request, user):
         if preferred_pic_form.has_changed():
             fields = preferred_pic_form.cleaned_data
             logger.debug(fields)
-            for field in fields:
-                if field == "preferred_photo":
-                    if preferred_pic[field] == fields[field]:
-                        logger.debug("{}: same ({})".format(field, fields[field]))
+            if "preferred_photo" in fields:
+                # These aren't actually the Photos, these are the grade_numbers of the Photos
+                new_preferred_pic = fields["preferred_photo"]
+                old_preferred_pic = preferred_pic["preferred_photo"]
+                if old_preferred_pic == new_preferred_pic:
+                    logger.debug("{}: same ({})".format("preferred_photo", new_preferred_pic))
+                else:
+                    logger.debug("{}: new: {} from: {}".format("preferred_photo",
+                                 new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None))
+                    try:
+                        user.preferred_photo = user.photos.filter(grade_number=old_preferred_pic)
+                    except Exception as e:
+                        messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
+                        logger.debug("Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                     else:
-                        logger.debug("{}: new: {} from: {}".format(field, fields[field], preferred_pic[field] if field in preferred_pic else None))
-                        try:
-                            user.set_ldap_attribute(field, fields[field])
-                        except Exception as e:
-                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
-                            logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
-                        else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
-                                                                                  ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format("preferred_pic",
+                                         new_preferred_pic if not isinstance(new_preferred_pic, list) else
+                                                                              ", ".join(new_preferred_pic)))
     return preferred_pic_form
 
 
@@ -272,11 +277,6 @@ def preferences_view(request):
     """View and process updates to the preferences page."""
     user = request.user
 
-    # Clear cache on every pageload
-    user.clear_cache()
-
-    ldap_error = None
-
     if request.method == "POST":
 
         personal_info_form = save_personal_info(request, user)
@@ -318,7 +318,6 @@ def preferences_view(request):
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
-        "ldap_error": ldap_error
     }
     return render(request, "preferences/preferences.html", context)
 

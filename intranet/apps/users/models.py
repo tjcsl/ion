@@ -151,7 +151,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     should only be used to add a user to the SQL database and
     User.objects.get() should not be used because users in LDAP are not
     necessarily in the SQL database.
-
     """
     TITLES = (
         ('Mr.', 'Mr.'),
@@ -188,8 +187,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     counselor = models.ForeignKey('self', on_delete=models.CASCADE)
     admin_comments = models.TextField()
 
-    """ User preference permissions
-
+    """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
         The permission attribute should be the part after "self_" or "parent_"
             e.g. show_pictures
@@ -240,12 +238,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     @staticmethod
     def get_signage_user():
         return User(id=99999)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            # Default permissions that are filled on user creation
-            pass
-        super(User, self).save(args, kwargs)
 
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
@@ -382,6 +374,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return Grade(self.graduation_year)
 
+    @property
+    def permissions(self):
+        """Dynamically generate dictionary of privacy options
+        """
+        # TODO: optimize this, it's kind of a bad solution for listing a mostly
+        # static set of files.
+        # We could either add a permissions dict as an attribute or cache this
+        # in some way. Creating a dict would be another place we have to define
+        # the permission, so I'm not a huge fan, but it would definitely be the
+        # easier option.
+        permissions_dict = {
+            "self": {},
+            "parent": {}
+        }
+
+        for field in self._meta.get_fields():
+            split_field = field.name.split('_', 1)
+            if len(split_field) <= 0 or split_field[0] not in ['self', 'parent']:
+                continue
+            permissions_dict[split_field[0]] = split_field[1]
+
+        return permissions_dict
+
     def _current_user_override(self):
         """Return whether the currently logged in user is a teacher, and can view all of a student's
         information regardless of their privacy settings."""
@@ -422,17 +437,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return int((date - b).days / 365)
 
         return None
-
-    @property
-    def permissions(self):
-        permissions = self.permission_set.all()
-        perm_dict = {
-            'self': {},
-            'parent': {}
-        }
-        for permission in permissions:
-            perm_dict['self'][permission.name] = permission.self_permission
-            perm_dict['parent'][permission.name] = permission.parent_permission
 
     @property
     def can_view_eighth(self):
@@ -747,11 +751,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         """ Sets permission for personal information.
             Fails silently if unable to set permission.
         """
-        if not self.get_attr('parent_{}'.format(permission)):
-            return False
-        level = 'parent' if parent else 'self'
-        self.set_attr('{}_{}'.format(level, permission), value)
-        self.save()
+        try:
+            if not self.get_attr('parent_{}'.format(permission)):
+                return False
+            level = 'parent' if parent else 'self'
+            self.set_attr('{}_{}'.format(level, permission), value)
+            self.save()
+        except Exception as e:
+            logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
 
     def __str__(self):
         return self.username or self.ion_username or self.id
@@ -781,7 +788,7 @@ class Phone(models.Model):
 
     purpose = models.CharField(choices=PURPOSES, default='o')
     user = models.ForeignKey(User, related_name='phones')
-    number = models.CharField(validators=[regex]) # validators should be a list
+    number = models.CharField(validators=[regex])  # validators should be a list
 
 
 class Website(models.Model):
