@@ -15,9 +15,6 @@ apt-get -y dist-upgrade
 # Timezone
 timedatectl set-timezone America/New_York
 
-# DNS
-echo 198.38.16.8 iodine-ldap.tjhsst.edu >> /etc/hosts
-
 # Kerberos
 cp intranet/config/krb5.conf /etc/krb5.conf
 apt-get -y install heimdal-clients
@@ -27,16 +24,6 @@ apt-get -y install python3-pip
 pip3 install -U virtualenvwrapper
 apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
-
-# LDAP
-apt-get -y install ldap-utils
-apt-get -y install libldap2-dev
-apt-get -y install libsasl2-dev
-apt-get -y install libssl-dev
-apt-get -y install libsasl2-modules-gssapi-mit
-
-# LDAP-GSSAPI
-apt-get -y install libkrb5-dev
 
 # Git
 apt-get -y install git

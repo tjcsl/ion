@@ -11,9 +11,9 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Class, Grade, User
+from .models import Grade, User
 from .renderers import JPEGRenderer
-from .serializers import (ClassSerializer, CounselorTeacherSerializer, StudentSerializer, UserSerializer)
+from .serializers import (CounselorTeacherSerializer, StudentSerializer, UserSerializer)
 
 
 class ProfileDetail(generics.RetrieveAPIView):
@@ -72,18 +72,6 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
 
         response = Response(binary, content_type='image/jpeg')
         return response
-
-
-class ClassDetail(generics.RetrieveAPIView):
-    """API endpoint that retrieves details of a TJHSST class."""
-    serializer_class = ClassSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def retrieve(self, request, *args, **kwargs):
-        cl = Class(id=kwargs['pk'])
-
-        serializer = self.get_serializer(cl)
-        return Response(serializer.data)
 
 
 class Search(generics.RetrieveAPIView):

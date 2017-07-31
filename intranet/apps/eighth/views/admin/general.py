@@ -17,7 +17,7 @@ from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, Ei
 from ...utils import get_start_date, set_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
-from ....users.models import User, UserCache
+from ....users.models import User
 
 
 @eighth_admin_required
@@ -99,12 +99,12 @@ def edit_start_date_view(request):
     return render(request, "eighth/admin/edit_start_date.html", context)
 
 
+# TODO: UserCache
 @eighth_admin_required
 def cache_view(request):
     if request.method == "POST":
         if "invalidate_all" in request.POST:
             invalidate_all()
-            UserCache.objects.all().delete()
             messages.success(request, "Invalidated all of the cache")
 
     try:

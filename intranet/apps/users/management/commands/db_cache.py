@@ -2,9 +2,10 @@
 
 from django.core.management.base import BaseCommand
 
-from intranet.apps.users.models import User, UserCache
+from intranet.apps.users.models import User
 
 
+# TODO: UserCache
 class Command(BaseCommand):
     help = "Set DB cache from LDAP for users"
 
@@ -13,7 +14,6 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         if options['action'][0] == "flush":
-            UserCache.objects.all().delete()
             for user in User.objects.exclude(cache=None):
                 user.cache.delete()
             self.stdout.write("Done.")

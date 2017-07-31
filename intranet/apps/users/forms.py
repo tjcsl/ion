@@ -16,7 +16,8 @@ class ProfileEditForm(forms.Form):
     graduation_year = forms.IntegerField(label="Graduation Year")
     sex = forms.CharField(label="Sex (M or F)")
     birthday = forms.DateField(label="Birth Date")
-    home_phone = PhoneField(label="Home Phone")
+    # TODO: fix this
+    # home_phone = PhoneField(label="Home Phone")
 
     street = forms.CharField(label="Street")
     city = forms.CharField(label="City")

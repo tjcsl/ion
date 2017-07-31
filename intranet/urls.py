@@ -35,7 +35,6 @@ urlpatterns = [
     url(r"^notifications", include("intranet.apps.notifications.urls")),
     url(r"^signage", include("intranet.apps.signage.urls")),
     url(r"^printing", include("intranet.apps.printing.urls")),
-    url(r"^board", include("intranet.apps.board.urls")),
     url(r"^itemreg", include("intranet.apps.itemreg.urls")),
     url(r"^lostfound", include("intranet.apps.lostfound.urls")),
     url(r"^emailfwd", include("intranet.apps.emailfwd.urls")),

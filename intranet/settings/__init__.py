@@ -419,6 +419,8 @@ else:
         "KEY_PREFIX": VIRTUAL_ENV
     }
 
+CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+
 FCPS_STUDENT_ID_LENGTH = 7
 
 # Django REST framework configuration
@@ -471,7 +473,6 @@ INSTALLED_APPS = [
     "intranet.apps.announcements",
     "intranet.apps.api",
     "intranet.apps.auth",
-    "intranet.apps.board",
     "intranet.apps.eighth",
     "intranet.apps.events",
     "intranet.apps.groups",

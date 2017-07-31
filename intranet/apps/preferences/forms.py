@@ -5,7 +5,7 @@ from django import forms
 
 from .fields import PhoneField
 
-from ..users.models import Grade
+from ..users.models import Grade, Phone
 
 logger = logging.getLogger(__name__)
 
@@ -15,21 +15,14 @@ class PersonalInformationForm(forms.Form):
     def __init__(self, num_fields, *args, **kwargs):
         super(PersonalInformationForm, self).__init__(*args, **kwargs)
 
-        self.num_phones = max(num_fields["phones"], 1)
         self.num_emails = max(num_fields["emails"], 1)
-        self.num_webpages = max(num_fields["webpages"], 1)
-
-        for i in range(self.num_phones):
-            self.fields["other_phone_{}".format(i)] = PhoneField(required=False, label="Other phone(s)")
+        self.num_webpages = max(num_fields["websites"], 1)
 
         for i in range(self.num_emails):
             self.fields["email_{}".format(i)] = forms.EmailField(required=False, label="Email(s)")
 
         for i in range(self.num_webpages):
             self.fields["webpage_{}".format(i)] = forms.URLField(required=False, label="Webpage(s)")
-
-    mobile_phone = PhoneField(required=False, label="Mobile phone")
-    home_phone = PhoneField(required=False, label="Home phone")
 
 
 class PreferredPictureForm(forms.Form):
@@ -104,3 +97,11 @@ class NotificationOptionsForm(forms.Form):
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
         self.fields["receive_eighth_emails"] = flag("Receive Eighth Period Emails", False)
+
+
+class PhoneForm(forms.ModelForm):
+
+    """Represents a phone number (number + purpose)"""
+    class Meta:
+        model = Phone
+        fields = ['purpose', 'number']

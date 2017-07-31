@@ -4,6 +4,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.forms import formset_factory
 from django.shortcuts import render
 
 from .forms import (NotificationOptionsForm, PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm)

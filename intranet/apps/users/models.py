@@ -7,7 +7,6 @@ from base64 import b64encode
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -15,6 +14,7 @@ from django.utils.functional import cached_property
 from intranet.middleware import threadlocals
 
 from ..groups.models import Group
+from ..preferences.fields import PhoneField
 
 logger = logging.getLogger(__name__)
 
@@ -169,8 +169,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
-    student_id = models.IntegerField(max_length=10, unique=True)
-    user_type = models.CharField(choices=USER_TYPES)
+    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
+                                  unique=True)
+    user_type = models.CharField(max_length=30, choices=USER_TYPES)
 
     first_name = models.CharField(max_length=35)
     middle_name = models.CharField(max_length=70)
@@ -179,12 +180,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     gender = models.BooleanField()
     birthday = models.DateField()
-    preferred_photo = models.ForeignKey('Photo')
+    preferred_photo = models.OneToOneField('Photo', related_name='+')
 
-    graduation_year = models.IntegerField(max_length=4)
-    grade_number = models.IntegerField()
+    graduation_year = models.IntegerField()
+    grade_number = models.IntegerField(choices=GRADE_NUMBERS)
 
-    counselor = models.ForeignKey('self', on_delete=models.CASCADE)
+    counselor = models.ForeignKey('self', on_delete=models.CASCADE, related_name='students')
     admin_comments = models.TextField()
 
     """ User preference permissions (privacy options)
@@ -784,11 +785,9 @@ class Phone(models.Model):
         ('o', 'Other Phone')
     )
 
-    regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-
-    purpose = models.CharField(choices=PURPOSES, default='o')
+    purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
     user = models.ForeignKey(User, related_name='phones')
-    number = models.CharField(validators=[regex])  # validators should be a list
+    number = PhoneField()  # validators should be a list
 
 
 class Website(models.Model):
@@ -830,7 +829,7 @@ class Address(models.Model):
 class Photo(models.Model):
     """Represents a user photo"""
 
-    grade_number = models.CharField(choices=GRADE_NUMBERS)
+    grade_number = models.IntegerField(choices=GRADE_NUMBERS)
     binary = models.BinaryField()
     user = models.ForeignKey(User, related_name="photos")
 

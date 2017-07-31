@@ -14,7 +14,7 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from raven.contrib.django.raven_compat.models import client
 
-from .models import Class, Grade, User
+from .models import Grade, User
 from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..eighth.utils import get_start_date
 
