@@ -38,33 +38,6 @@
             addText: '<button><i class="fa fa-plus"></i> Add Another</button>'
         });
     })
-    add_field = function(btn) {
-        var tr = $(btn).parent().parent();
-        var pr = tr.prev();
-        var newPr = pr.clone();
-        var inp = $('input', newPr);
-        inp.val('');
-        var newName = inp.attr('name');
-        var r = newName.split('_');
-        newName = [parseInt(r.pop())+1, r.join('_')].reverse().join('_');
-        inp.attr("name", newName);
-        inp.attr("id", "id_" + newName);
-
-        $('td.label', newPr).html('');
-
-        var r = $('td.remove', newPr);
-        if (r.html().trim().length == 0) {
-            r.html('<button onclick="remove_field(this)"><i class="fa fa-times"></i></button>')
-        }
-
-        tr.before(newPr);
-    }
-
-    remove_field = function(btn) {
-        var tr = $(btn).parent().parent();
-        tr.remove();
-    }
-
     $(function() {
         $('input.disabled').each(function() {
             $(this).attr('data-state', $(this).prop('checked'));

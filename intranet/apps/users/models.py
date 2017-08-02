@@ -762,12 +762,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         except:
             logger.error("Could not retrieve permissions for {}".format(permission))
 
-    def set_permission(self, permission, value, parent=False):
+    def set_permission(self, permission, value, parent=False, admin=False):
         """ Sets permission for personal information.
-            Fails silently if unable to set permission.
+            Returns False silently if unable to set permission.
+            Returns True if successful.
         """
         try:
-            if not getattr(self, 'parent_{}'.format(permission)) and not parent:
+            if not getattr(self, 'parent_{}'.format(permission)) and not parent and not admin:
                 return False
             level = 'parent' if parent else 'self'
             setattr(self, '{}_{}'.format(level, permission), value)
@@ -777,8 +778,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 setattr(self, 'self_{}'.format(permission), False)
 
             self.save()
+            return True
         except Exception as e:
             logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
+            return False
 
     @classmethod
     def get_user(cls, dn=None, id=None, username=None):

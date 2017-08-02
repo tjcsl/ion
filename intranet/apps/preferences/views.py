@@ -4,14 +4,12 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .forms import (NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
-
-# TODO[LDAP]: Change the forms to match the new fields
 
 
 def get_personal_info(user):
@@ -134,7 +132,23 @@ def save_privacy_options(request, user):
                 else:
                     logger.debug("{}: new: {} from: {}".format(field, fields[field], privacy_options[field] if field in privacy_options else None))
                     try:
-                        user.set_ldap_preference(field, fields[field], request.user.is_eighth_admin)
+                        if field.endswith("-self"):
+                            field_name = field.split("-self")[0]
+                            field_type = "self"
+                        elif field.endswith("self"):
+                            field_name = field.split("self")[0]
+                            field_type = "self"
+                        else:
+                            field_name = field
+                            field_type = "parent"
+                        if field_type == "self":
+                            success = user.set_permission(field_name, fields[field], admin=user.is_eighth_admin)
+                        elif user.is_eighth_admin:
+                            success = user.set_permission(field_name, fields[field], parent=True)
+                        else:
+                            raise Exception("You do not have permission to change this parent field.")
+                        if not success:
+                            raise Exception("You cannot override the parent field.")
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
@@ -219,14 +233,13 @@ def preferences_view(request):
         except AttributeError:
             pass
 
-    else:
-        personal_info, num_fields = get_personal_info(user)
+        return redirect("preferences")
 
+    else:
         phone_formset = PhoneFormset(instance=user, prefix='pf')
         email_formset = EmailFormset(instance=user, prefix='ef')
         website_formset = WebsiteFormset(instance=user, prefix='wf')
 
-        logger.debug(personal_info)
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
             logger.debug(preferred_pic)

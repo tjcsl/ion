@@ -36,20 +36,20 @@ class PrivacyOptionsForm(forms.Form):
         def flag(label, default):
             return forms.BooleanField(initial=default, label=label, required=False)
 
-        self.fields["showaddress"] = flag(None, False)
-        self.fields["showaddress-self"] = flag("Show Address", False)
+        self.fields["show_address"] = flag(None, False)
+        self.fields["show_address-self"] = flag("Show Address", False)
 
-        self.fields["showtelephone"] = flag(None, False)
-        self.fields["showtelephone-self"] = flag("Show Phone", False)
+        self.fields["show_telephone"] = flag(None, False)
+        self.fields["show_telephone-self"] = flag("Show Phone", False)
 
-        self.fields["showbirthday"] = flag(None, False)
-        self.fields["showbirthday-self"] = flag("Show Birthday", False)
+        self.fields["show_birthday"] = flag(None, False)
+        self.fields["show_birthday-self"] = flag("Show Birthday", False)
 
         pictures_label = "Show Pictures"
         if user.is_student:
             pictures_label += " on Import"
-        self.fields["showpictures"] = flag(None, False)
-        self.fields["showpictures-self"] = flag(pictures_label, False)
+        self.fields["show_pictures"] = flag(None, False)
+        self.fields["show_pictures-self"] = flag(pictures_label, False)
 
         # photos = user.photo_permissions["self"]
 
@@ -58,15 +58,8 @@ class PrivacyOptionsForm(forms.Form):
         #     if photos[grade] is not None:
         #         self.fields["photoperm-{}".format(grade)] = flag(None, False)
         #         self.fields["photoperm-{}-self".format(grade)] = flag("Show {} Photo".format(grade.capitalize()), False)
-
-        self.fields["showschedule"] = flag(None, False)
-        self.fields["showschedule-self"] = flag("Show Class Schedule", False)
-
-        self.fields["showeighth"] = flag(None, False)
-        self.fields["showeighth-self"] = flag("Show Eighth Period Schedule", False)
-
-        # self.fields["showlocker"] = flag(None, False)
-        # self.fields["showlocker-self"] = flag("Show Locker", False)
+        self.fields["show_eighth"] = flag(None, False)
+        self.fields["show_eighth-self"] = flag("Show Eighth Period Schedule", False)
 
         if not user.has_admin_permission("preferences"):
             for name in self.fields:
