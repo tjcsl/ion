@@ -767,10 +767,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             Fails silently if unable to set permission.
         """
         try:
-            if not getattr(self, 'parent_{}'.format(permission)):
+            if not getattr(self, 'parent_{}'.format(permission)) and not parent:
                 return False
             level = 'parent' if parent else 'self'
             setattr(self, '{}_{}'.format(level, permission), value)
+
+            # Set student permission to false if parent sets permission to false.
+            if parent and not value:
+                setattr(self, 'self_{}'.format(permission), False)
+
             self.save()
         except Exception as e:
             logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
