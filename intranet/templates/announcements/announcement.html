@@ -15,8 +15,8 @@
         {% if announcement.pinned %}
             <i class="fa fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
         {% endif %}
-        
-        {% if link_to_announcement and request.user.object_class != "tjhsstUser" %}
+
+        {% if link_to_announcement and request.user.user_type != "user" %}
         <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
             {{ announcement.title }}
         </a>
@@ -34,7 +34,7 @@
                 {% endif %}
                 </a>
             {% endif %}
-            {% if request.user.object_class != "tjhsstUser" %}
+            {% if request.user.user_type != "user" %}
                 <a href="{% url 'view_announcement' announcement.id %}" title="Announcement permalink">
                     <i class="fa fa-paperclip fa-flip-horizontal"></i>
                 </a>

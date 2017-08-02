@@ -183,11 +183,6 @@ class LoginView(View):
 
             default_next_page = "/"
 
-            dn = request.user.dn
-            if dn is None or not dn:
-                do_logout(request)
-                return index_view(request, added_context={"auth_message": "Your account is disabled."})
-
             if request.user.startpage == "eighth":
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"

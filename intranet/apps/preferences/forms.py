@@ -3,42 +3,29 @@ import logging
 
 from django import forms
 
-from .fields import PhoneField
-
-from ..users.models import Grade, Phone
+from ..users.models import User, Grade, Phone, Email, Website
 
 logger = logging.getLogger(__name__)
-
-
-class PersonalInformationForm(forms.Form):
-
-    def __init__(self, num_fields, *args, **kwargs):
-        super(PersonalInformationForm, self).__init__(*args, **kwargs)
-
-        self.num_emails = max(num_fields["emails"], 1)
-        self.num_webpages = max(num_fields["websites"], 1)
-
-        for i in range(self.num_emails):
-            self.fields["email_{}".format(i)] = forms.EmailField(required=False, label="Email(s)")
-
-        for i in range(self.num_webpages):
-            self.fields["webpage_{}".format(i)] = forms.URLField(required=False, label="Webpage(s)")
 
 
 class PreferredPictureForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(PreferredPictureForm, self).__init__(*args, **kwargs)
+
         self.PREFERRED_PICTURE_CHOICES = [("AUTO", "Auto-select the most recent photo")]
 
-        photos = user.photo_permissions["self"]
-
         for i in range(4):
-            grade = Grade.names[i]
-            if photos[grade] is not None:
+            try:
+                grade = Grade.names[i]
+                user.photos.get(grade=grade)  # Only display option if the photo exists
                 self.PREFERRED_PICTURE_CHOICES += [(grade, grade.title() + " Photo")]
+            except:
+                pass
 
-        self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES, widget=forms.RadioSelect(), required=True)
+        self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
+                                                           widget=forms.RadioSelect(),
+                                                           required=True)
 
 
 class PrivacyOptionsForm(forms.Form):
@@ -64,13 +51,13 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["showpictures"] = flag(None, False)
         self.fields["showpictures-self"] = flag(pictures_label, False)
 
-        photos = user.photo_permissions["self"]
+        # photos = user.photo_permissions["self"]
 
-        for i in range(4):
-            grade = Grade.names[i]
-            if photos[grade] is not None:
-                self.fields["photoperm-{}".format(grade)] = flag(None, False)
-                self.fields["photoperm-{}-self".format(grade)] = flag("Show {} Photo".format(grade.capitalize()), False)
+        # for i in range(4):
+        #     grade = Grade.names[i]
+        #     if photos[grade] is not None:
+        #         self.fields["photoperm-{}".format(grade)] = flag(None, False)
+        #         self.fields["photoperm-{}-self".format(grade)] = flag("Show {} Photo".format(grade.capitalize()), False)
 
         self.fields["showschedule"] = flag(None, False)
         self.fields["showschedule-self"] = flag("Show Class Schedule", False)
@@ -105,3 +92,21 @@ class PhoneForm(forms.ModelForm):
     class Meta:
         model = Phone
         fields = ['purpose', 'number']
+
+
+class EmailForm(forms.ModelForm):
+
+    class Meta:
+        model = Email
+        fields = ['address']
+
+
+class WebsiteForm(forms.ModelForm):
+
+    class Meta:
+        model = Website
+        fields = ['url']
+
+PhoneFormset = forms.inlineformset_factory(User, Phone, form=PhoneForm, extra=1)
+EmailFormset = forms.inlineformset_factory(User, Email, form=EmailForm, extra=1)
+WebsiteFormset = forms.inlineformset_factory(User, Website, form=WebsiteForm, extra=1)

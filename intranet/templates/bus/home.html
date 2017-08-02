@@ -1,0 +1,59 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'polls' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.user_bus = {
+             
+        }
+        window.statuses = $.parseJSON("{{ statuses }}");
+    </script>
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <script type="text/template" >
+    {% verbatim %}
+         <div class="primary-content">
+            {# {% if admin %} #}
+            {#     Hello, there. You're an admin. #}
+            {# {% endif %} #}
+            <% if (user_bus) { %>
+                <h2 class="personal-status">Hey there, your bus (<strong><%= user_bus.route_name %></strong>) is {{ user_bus_status }}</h2>
+            <% } else { %>
+                <h2 class="personal-status"> It looks like you don't have a bus registered. </h2>
+            <% } %>
+            {% for name, status in statuses %}
+                <h2 class="status">{{ name }}</h2>
+                {% for bus in status.buses %}
+                    <div class="bus">
+                        <span class="route-name">{{ bus.route_name }}</span>
+                        <br>
+                        {% if bus.bus_number %}
+                            <span class="bus-number"> #{{bus.bus_number}} </span>
+                        {% else %}
+                            <span class="bus-number"> No bus number recorded. </span>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <h3 class="empty">{{ status.empty }}</h3>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endverbatim %}
+    </script>
+{% endblock %}

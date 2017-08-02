@@ -182,22 +182,23 @@
                             <td>{{ profile_user.birthday|date:"F j, Y" }}</td>
                         </tr>
                         {% endif %}
-                        {% if profile_user.object_class == "tjhsstStudent" and profile_user.counselor %}
+                        {% if profile_user.user_type == "student" and profile_user.counselor %}
                             <tr>
                                 <th>Counselor</th>
                                 <td> {{ profile_user.counselor.last_name }} </td>
                             </div>
                         {% endif %}
                         {% if profile_user.emails %}
-                            {% if request.user.is_teacher or request.user.is_eighth_admin and profile_user.emails.0 == profile_user.tj_email %}
-                            <!-- Don't duplicate TJ email -->
-                            {% else %}
+                        {% with profile_user.emails.all|first as first_email %}
+                        {% if request.user.is_teacher or request.user.is_eighth_admin and first_email == profile_user.tj_email %}
+                        <!-- Don't duplicate TJ email -->
+                        {% else %}
                         <tr>
                             <th>
-                                Email{{ profile_user.emails|pluralize }}
+                                Email{{ profile_user.emails.all|pluralize }}
                             </th>
                             <td>
-                                {% for email in profile_user.emails %}
+                                {% for email in profile_user.emails.all %}
                                 {% if request.user.is_teacher or request.user.is_eighth_admin and email == profile_user.tj_email %}
                                     <!-- Don't duplicate TJ email -->
                                 {% else %}
@@ -209,7 +210,8 @@
                                 {% endfor %}
                             </td>
                         </tr>
-                            {% endif %}
+                        {% endif %}
+                        {% endwith %}
                         {% endif %}
                         {% if profile_user.webpages %}
                         <tr>
@@ -246,36 +248,17 @@
                         {% endif %}
                         {% endcomment %}
 
-                        {% if profile_user.home_phone %}
-                        <tr>
-                            <th>Home Phone</th>
-                            <td>
-                                <a href="tel:{{ profile_user.home_phone }}">
-                                    {{ profile_user.home_phone|dashes }}
-                                </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% if profile_user.mobile_phone %}
-                        <tr>
-                            <th>Cell Phone</th>
-                            <td>
-                                <a href="tel:{{ profile_user.mobile_phone }}">
-                                    {{ profile_user.mobile_phone|dashes }}
-                                </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% if profile_user.other_phones %}
+                        {% if profile_user.phones %}
                         <tr>
                             <th>
-                                Other Phone{{ profile_user.other_phones|pluralize }}
+                                Phone Number{{ profile_user.phones.all|pluralize }}
                             </th>
                             <td>
-                                {% for phone in profile_user.other_phones %}
-                                    <a href="tel:{{ phone }}">
-                                        {{ phone|dashes }}
+                                {% for phone in profile_user.phones.all %}
+                                    <a href="tel:{{ phone.number }}">
+                                        {{ phone.number|dashes }}
                                     </a>
+                                    <span>({{ phone.get_purpose_display }})</span>
                                     <br />
                                 {% endfor %}
                             </td>

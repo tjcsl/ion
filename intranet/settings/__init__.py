@@ -362,6 +362,21 @@ VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"]) if "VIRTUAL_ENV" in os
 def get_month_seconds():
     return datetime.timedelta(hours=24).total_seconds() * 30
 
+CACHE_AGE = {
+    "dn_id_mapping": int(12 * get_month_seconds()),
+    "user_grade": int(10 * get_month_seconds()),
+    "user_classes": int(6 * get_month_seconds()),
+    "user_photo": int(6 * get_month_seconds()),
+    "class_teacher": int(6 * get_month_seconds()),
+    "class_attribute": int(6 * get_month_seconds()),
+    "user_attribute": int(2 * get_month_seconds()),
+    "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
+    "ldap_permissions": int(datetime.timedelta(hours=24).total_seconds()),
+    "users_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "emerg": int(datetime.timedelta(minutes=5).total_seconds())
+}
+
 
 if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
     # Make the cache age last just long enough to reload the page to
@@ -420,6 +435,7 @@ else:
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 FCPS_STUDENT_ID_LENGTH = 7
 
@@ -468,6 +484,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "maintenancemode",
     "pipeline",
+    "channels",
     # Intranet apps
     "intranet.apps",
     "intranet.apps.announcements",

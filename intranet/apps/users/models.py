@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 
 # TODO: this is disgusting
 GRADE_NUMBERS = (
-    (9, 'Freshman'),
-    (10, 'Sophomore'),
-    (11, 'Junior'),
-    (12, 'Senior'),
-    (13, 'Staff')
+    (9, 'freshman'),
+    (10, 'sophomore'),
+    (11, 'junior'),
+    (12, 'senior'),
+    (13, 'staff')
 )
 
 
@@ -170,23 +170,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
     student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
-                                  unique=True)
-    user_type = models.CharField(max_length=30, choices=USER_TYPES)
+                                  unique=True,
+                                  null=True)
+    user_type = models.CharField(max_length=30,
+                                 choices=USER_TYPES,
+                                 default='student')
 
-    first_name = models.CharField(max_length=35)
-    middle_name = models.CharField(max_length=70)
-    last_name = models.CharField(max_length=70)
-    nickname = models.CharField(max_length=35)
+    first_name = models.CharField(max_length=35, null=True)
+    middle_name = models.CharField(max_length=70, null=True)
+    last_name = models.CharField(max_length=70, null=True)
+    nickname = models.CharField(max_length=35, null=True)
 
-    gender = models.BooleanField()
-    birthday = models.DateField()
-    preferred_photo = models.OneToOneField('Photo', related_name='+')
+    gender = models.NullBooleanField()
+    birthday = models.DateField(null=True)
+    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True)
 
-    graduation_year = models.IntegerField()
-    grade_number = models.IntegerField(choices=GRADE_NUMBERS)
+    graduation_year = models.IntegerField(null=True)
+    grade_number = models.IntegerField(choices=GRADE_NUMBERS, default=9)
 
-    counselor = models.ForeignKey('self', on_delete=models.CASCADE, related_name='students')
-    admin_comments = models.TextField()
+    counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
+    admin_comments = models.TextField(blank=True, null=True)
 
     """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
@@ -198,23 +201,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         To define a new permission, just create two new BooleanFields in the same
         pattern as below.
     """
-    self_show_pictures = models.BooleanField()
-    parent_show_pictures = models.BooleanField()
+    self_show_pictures = models.BooleanField(default=False)
+    parent_show_pictures = models.BooleanField(default=False)
 
-    self_show_address = models.BooleanField()
-    parent_show_address = models.BooleanField()
+    self_show_address = models.BooleanField(default=False)
+    parent_show_address = models.BooleanField(default=False)
 
-    self_show_telephone = models.BooleanField()
-    parent_show_telephone = models.BooleanField()
+    self_show_telephone = models.BooleanField(default=False)
+    parent_show_telephone = models.BooleanField(default=False)
 
-    self_show_birthday = models.BooleanField()
-    parent_show_birthday = models.BooleanField()
+    self_show_birthday = models.BooleanField(default=False)
+    parent_show_birthday = models.BooleanField(default=False)
 
-    self_show_eighth = models.BooleanField()
-    parent_show_eighth = models.BooleanField()
+    self_show_eighth = models.BooleanField(default=False)
+    parent_show_eighth = models.BooleanField(default=False)
 
     # See Email model for emails
     # See Phone model for phone numbers
+    # See Website model for websites
 
     user_locked = models.BooleanField(default=False)
 
@@ -276,10 +280,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def display_name(self):
-        display_name = self.__getattr__("display_name")
-        if not display_name:
-            return self.full_name
-        return display_name
+        return self.full_name
 
     @property
     def last_first(self):
@@ -329,10 +330,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        if self.emails:
-            for email in self.emails:
-                if email.endswith(("@fcps.edu", "@tjhsst.edu")):
-                    return email
+        for email in self.emails.all():
+            if email.address.endswith(("@fcps.edu", "@tjhsst.edu")):
+                return email
 
         if self.is_teacher:
             domain = "fcps.edu"
@@ -394,7 +394,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             split_field = field.name.split('_', 1)
             if len(split_field) <= 0 or split_field[0] not in ['self', 'parent']:
                 continue
-            permissions_dict[split_field[0]] = split_field[1]
+            permissions_dict[split_field[0]][split_field[1]] = getattr(self, field.name)
 
         return permissions_dict
 
@@ -601,7 +601,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "user"
+        return self.user_type == "user"
 
     @property
     def is_simple_user(self):
@@ -611,7 +611,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.object_class == "simple_user"
+        return self.user_type == "simple_user"
 
     @property
     def male(self):
@@ -683,6 +683,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSponsor.objects.filter(user=self).exists()
 
+    @property
+    def startpage(self):
+        return "eighth" if self.is_simple_user else None
+
     def get_eighth_sponsor(self):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
         associated with.
@@ -748,18 +752,50 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
+    def attribute_is_visible(self, permission):
+        """ Checks privacy options ot see if an attribute is visible to public
+        """
+        try:
+            parent = getattr(self, "parent_{}".format(permission))
+            student = getattr(self, "self_{}".format(permission))
+            return parent and student
+        except:
+            logger.error("Could not retrieve permissions for {}".format(permission))
+
     def set_permission(self, permission, value, parent=False):
         """ Sets permission for personal information.
             Fails silently if unable to set permission.
         """
         try:
-            if not self.get_attr('parent_{}'.format(permission)):
+            if not getattr(self, 'parent_{}'.format(permission)):
                 return False
             level = 'parent' if parent else 'self'
-            self.set_attr('{}_{}'.format(level, permission), value)
+            setattr(self, '{}_{}'.format(level, permission), value)
             self.save()
         except Exception as e:
             logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
+
+    @classmethod
+    def get_user(cls, dn=None, id=None, username=None):
+        """ Gets a User object from the database.
+
+            Implemented only for backwards compatibility. I recommend you use User.objects.get() now.
+        """
+        try:
+            if username is not None:
+                user = User.objects.get(username=username)
+                except_message = "`User` with username '{}' does not exist.".format(username)
+            elif id is not None:
+                user = User.objects.get(id=id)
+                except_message = "`User` with ID '{}' does not exist.".format(id)
+            elif dn is not None:
+                user = User.objects.get(dn=dn)
+                except_message = "`User` with DN '{}' does not exist.".format(dn)
+            else:
+                raise TypeError("get_user() requires at least one argument.")
+            return user
+        except User.DoesNotExist:
+            raise User.DoesNotExist(except_message)
 
     def __str__(self):
         return self.username or self.ion_username or self.id
@@ -776,6 +812,9 @@ class Email(models.Model):
     def __str__(self):
         return self.address
 
+    class Meta:
+        unique_together = ('user', 'address')
+
 
 class Phone(models.Model):
     """Represents a phone number"""
@@ -789,6 +828,12 @@ class Phone(models.Model):
     user = models.ForeignKey(User, related_name='phones')
     number = PhoneField()  # validators should be a list
 
+    def __str__(self):
+        return "{}: {}".format(self.get_purpose_display(), self.number)
+
+    class Meta:
+        unique_together = ('user', 'number')
+
 
 class Website(models.Model):
     """Represents a user's website"""
@@ -797,6 +842,9 @@ class Website(models.Model):
 
     def __str__(self):
         return self.url
+
+    class Meta:
+        unique_together = ('user', 'url')
 
 
 class Address(models.Model):

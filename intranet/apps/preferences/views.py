@@ -4,10 +4,9 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.forms import formset_factory
 from django.shortcuts import render
 
-from .forms import (NotificationOptionsForm, PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm)
+from .forms import (NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -19,132 +18,57 @@ def get_personal_info(user):
     """Get a user's personal info attributes to pass as an initial value to a
     PersonalInformationForm."""
     # change this to not use other_phones
-    num_phones = len(user.phones or [])
-    num_emails = len(user.emails or [])
-    num_webpages = len(user.websites or [])
+    num_phones = len(user.phones.all() or [])
+    num_emails = len(user.emails.all() or [])
+    num_websites = len(user.websites.all() or [])
 
     personal_info = {}
 
     for i in range(num_phones):
-        personal_info["other_phone_{}".format(i)] = user.other_phones[i]
+        personal_info["phone_{}".format(i)] = user.phones.all()[i]
 
     for i in range(num_emails):
-        personal_info["email_{}".format(i)] = user.emails[i]
+        personal_info["email_{}".format(i)] = user.emails.all()[i]
 
-    for i in range(num_webpages):
-        personal_info["webpage_{}".format(i)] = user.webpages[i]
+    for i in range(num_websites):
+        personal_info["website_{}".format(i)] = user.websites.all()[i]
 
-    num_fields = {"phones": num_phones, "emails": num_emails, "webpages": num_webpages}
+    num_fields = {"phones": num_phones, "emails": num_emails, "websites": num_websites}
 
     return personal_info, num_fields
 
 
 def save_personal_info(request, user):
-    personal_info, _num_fields = get_personal_info(user)
-    num_fields = {
-        "phones": sum([1 if "other_phone_" in name else 0 for name in request.POST]),
-        "emails": sum([1 if "email_" in name else 0 for name in request.POST]),
-        "webpages": sum([1 if "webpage_" in name else 0 for name in request.POST])
-    }
-    logger.debug(num_fields)
-    logger.debug(request.POST)
-    personal_info_form = PersonalInformationForm(num_fields=num_fields, data=request.POST, initial=personal_info)
-    logger.debug(personal_info_form)
-    if personal_info_form.is_valid():
-        logger.debug("Personal info: valid")
+    phone_formset = PhoneFormset(request.POST, instance=user, prefix='pf')
+    email_formset = EmailFormset(request.POST, instance=user, prefix='ef')
+    website_formset = WebsiteFormset(request.POST, instance=user, prefix='wf')
 
-        # form.has_changed() will not report a change if a field is missing
-        num_fields_changed = False
-        for f in num_fields:
-            if num_fields[f] != _num_fields[f]:
-                num_fields_changed = True
+    errors = []
 
-        if personal_info_form.has_changed() or num_fields_changed:
-            logger.debug("Personal info: changed")
-            fields = personal_info_form.cleaned_data
-            logger.debug(fields)
+    if phone_formset.is_valid():
+        phone_formset.save()
+    else:
+        errors.append('Could not set phone numbers.')
+    if email_formset.is_valid():
+        email_formset.save()
+    else:
+        errors.append('Could not set emails.')
+    if website_formset.is_valid():
+        website_formset.save()
+    else:
+        errors.append('Could not set websites.')
 
-            # add None value for fields missing
-            for f in _num_fields:
-                # remove "s" from end of field name
-                fld = f[:-1]
-                fld_num_max = _num_fields[f]
-                for fld_num in range(0, fld_num_max):
-                    fld_name = "{}_{}".format(fld, fld_num)
-                    if fld_name not in fields:
-                        logger.debug("Field {} removed, setting as None".format(fld_name))
-                        fields[fld_name] = None
-
-            single_fields = ["mobile_phone", "home_phone"]
-            multi_fields = {}
-            multi_fields_to_update = []
-
-            for field in fields:
-                if field not in single_fields:
-                    full_field_arr = field.rsplit("_", 1)
-                    full_field_name = full_field_arr[0]
-                    field_num = int(full_field_arr[1])
-
-                    if full_field_name in multi_fields:
-                        multi_fields[full_field_name][field_num] = fields[field]
-                    else:
-                        multi_fields[full_field_name] = {field_num: fields[field]}
-
-                if field in personal_info and personal_info[field] == fields[field]:
-                    logger.debug("{}: same ({})".format(field, fields[field]))
-                else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], personal_info[field] if field in personal_info else None))
-                    if field in single_fields:
-                        if len(str(fields[field])) < 1:
-                            logger.debug("Field {} with blank value becomes None".format(field))
-                            fields[field] = None
-
-                        try:
-                            user.set_ldap_attribute(field, "{}".format(fields[field]))
-                        except Exception as e:
-                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
-                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
-                        else:
-                            try:
-                                if fields[field] is None or len(str(fields[field])) < 1:
-                                    pass
-                                else:
-                                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list)
-                                                                                          else ", ".join(fields[field])))
-                            except Exception as e:
-                                messages.error(request, "Unable to set field {}: {}".format(field, e))
-                    else:
-                        logger.debug("Need to update {} because {} changed".format(full_field_name, field))
-                        multi_fields_to_update.append(full_field_name)
-
-            logger.debug("multi_fields_to_update: {}".format(multi_fields_to_update))
-            for full_field in multi_fields_to_update:
-                ldap_full_field = "{}s".format(full_field)
-                field_vals = list(multi_fields[full_field].values())
-                logger.debug(field_vals)
-                for v in field_vals:
-                    logger.debug("field vals: {} {}".format(v, field_vals))
-                    if not v:
-                        field_vals.remove(v)
-                try:
-                    user.set_ldap_attribute(ldap_full_field, field_vals)
-                except Exception as e:
-                    messages.error(request, "Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                    logger.debug("Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                else:
-                    if field_vals is None or len(field_vals) == 0 or (len(field_vals) == 1 and (field_vals[0] is None or len(field_vals[0]) < 1)):
-                        pass
-                    else:
-                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals
-                                                                              if not isinstance(field_vals, list) else ", ".join(field_vals)))
-    return personal_info_form
+    return phone_formset, email_formset, website_formset, errors
 
 
 def get_preferred_pic(user):
     """Get a user's preferred picture attributes to pass as an initial value to a
     PreferredPictureForm."""
 
-    preferred_pic = {"preferred_photo": user.preferred_photo.grade_number}
+    # FIXME: remove this hardcoded junk
+    preferred_pic = {"preferred_photo": "AUTO"}
+    if user.preferred_photo:
+        preferred_pic["preferred_photo"] = user.preferred_photo.grade_number
 
     return preferred_pic
 
@@ -161,14 +85,14 @@ def save_preferred_pic(request, user):
             if "preferred_photo" in fields:
                 # These aren't actually the Photos, these are the grade_numbers of the Photos
                 new_preferred_pic = fields["preferred_photo"]
-                old_preferred_pic = preferred_pic["preferred_photo"]
+                old_preferred_pic = preferred_pic["preferred_photo"] if preferred_pic else None
                 if old_preferred_pic == new_preferred_pic:
                     logger.debug("{}: same ({})".format("preferred_photo", new_preferred_pic))
                 else:
                     logger.debug("{}: new: {} from: {}".format("preferred_photo",
                                  new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None))
                     try:
-                        user.preferred_photo = user.photos.filter(grade_number=old_preferred_pic)
+                        user.preferred_photo = user.photos.filter(grade_number=new_preferred_pic)
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                         logger.debug("Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
@@ -279,14 +203,16 @@ def preferences_view(request):
     user = request.user
 
     if request.method == "POST":
-
-        personal_info_form = save_personal_info(request, user)
+        phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
         else:
             preferred_pic_form = None
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
+
+        for error in errors:
+            messages.error(request, error)
 
         try:
             save_gcm_options(request, user)
@@ -295,9 +221,12 @@ def preferences_view(request):
 
     else:
         personal_info, num_fields = get_personal_info(user)
-        logger.debug(personal_info)
-        personal_info_form = PersonalInformationForm(num_fields=num_fields, initial=personal_info)
 
+        phone_formset = PhoneFormset(instance=user, prefix='pf')
+        email_formset = EmailFormset(instance=user, prefix='ef')
+        website_formset = WebsiteFormset(instance=user, prefix='wf')
+
+        logger.debug(personal_info)
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
             logger.debug(preferred_pic)
@@ -315,7 +244,9 @@ def preferences_view(request):
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
 
     context = {
-        "personal_info_form": personal_info_form,
+        "phone_formset": phone_formset,
+        "email_formset": email_formset,
+        "website_formset": website_formset,
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
