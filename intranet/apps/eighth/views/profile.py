@@ -3,8 +3,6 @@
 import logging
 from datetime import datetime, timedelta
 
-from cacheops import invalidate_obj
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -39,6 +37,9 @@ def edit_profile_view(request, user_id=None):
             user.address = address_form.save()
             user.counselor = counselor
             user.save()
+            messages.success(request, "Successfully updated student profile.")
+        else:
+            messages.error(request, "An error occurred updating the student profile.")
     else:
         user_form = ProfileEditForm(initial={'counselor_id': '' if not user.counselor else user.counselor.id}, instance=user)
         address_form = AddressForm(instance=user.address)
