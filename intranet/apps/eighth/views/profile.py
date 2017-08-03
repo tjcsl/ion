@@ -14,7 +14,7 @@ from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, Eighth
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required
-from ...users.forms import ProfileEditForm
+from ...users.forms import ProfileEditForm, AddressForm
 from ...users.models import User
 from ....utils.serialization import safe_json
 
@@ -28,63 +28,22 @@ def date_fmt(date):
 @eighth_admin_required
 def edit_profile_view(request, user_id=None):
     user = get_object_or_404(User, id=user_id)
-
-    defaults = {}
-    for field in ProfileEditForm.FIELDS:
-        defaults[field] = getattr(user, field)
-
-    for field in ProfileEditForm.ADDRESS_FIELDS:
-        if user.address:
-            defaults[field] = getattr(user.address, field)
-        else:
-            defaults[field] = None
-    defaults["birthday"] = str(defaults["birthday"]).split(" ")[0]
-    defaults["counselor_id"] = user.counselor.id if user.counselor else None
-
     if request.method == "POST":
         logger.debug("Saving")
-        form = ProfileEditForm(request.POST)
-        if form.is_valid():
-            pass  # We don't care.
-        items = form.cleaned_data
-        new_data = {}
-        for field in items:
-            new = items[field]
-            # old = defaults[field]
-            # if str(new) != str(old):
-            #    new_data[field] = new
-            new_data[field] = new
-        logger.debug(new_data)
-
-        raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
-        raw_ldap_override = {"city": "l", "state": "st", "postal_code": "postalCode", "counselor_id": "counselor"}
-        override_set = ["graduation_year"]
-
-        for key in new_data:
-            if key in raw_ldap_attributes:
-                if key in raw_ldap_override:
-                    key = raw_ldap_override[key]
-                if key in new_data:
-                    if new_data[key] == " ":
-                        new_data[key] = None
-                    logger.debug("Setting raw {}={}".format(key, new_data[key]))
-                    user.set_raw_ldap_attribute(key, new_data[key])
-            else:
-                logger.debug("Setting regular {}={}".format(key, new_data[key]))
-                try:
-                    user.set_ldap_attribute(key, new_data[key], key in override_set)
-                except Exception as e:
-                    messages.error(request, "Field {} with value {}: {}".format(key, new_data[key], e))
-                    logger.debug("Field {} with value {}: {}".format(key, new_data[key], e))
-                else:
-                    messages.success(request, "Set field {} to {}".format(key, new_data[key]))
-        user.save()
-        invalidate_obj(user)
-        user.clear_cache()
+        user_form = ProfileEditForm(request.POST, instance=user)
+        address_form = AddressForm(request.POST, instance=user.address)
+        if user_form.is_valid():
+            user = user_form.save()
+            counselor_id = user_form.cleaned_data['counselor_id']
+            counselor = User.objects.get(id=counselor_id)
+            user.address = address_form.save()
+            user.counselor = counselor
+            user.save()
     else:
-        form = ProfileEditForm(initial=defaults)
+        user_form = ProfileEditForm(initial={'counselor_id': '' if not user.counselor else user.counselor.id}, instance=user)
+        address_form = AddressForm(instance=user.address)
 
-    context = {"profile_user": user, "form": form}
+    context = {"profile_user": user, "user_form": user_form, "address_form": address_form}
     return render(request, "eighth/edit_profile.html", context)
 
 

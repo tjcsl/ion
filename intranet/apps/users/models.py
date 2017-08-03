@@ -167,6 +167,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('simple_user', 'Simple User'),
         ('tjstar_presenter', 'tjStar Presenter'),
     )
+
+    TITLES = (
+        ('mr', 'Mr.'),
+        ('ms', 'Ms.'),
+        ('mrs', 'Mrs.'),
+        ('dr', 'Dr.')
+    )
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
     student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
@@ -176,10 +183,13 @@ class User(AbstractBaseUser, PermissionsMixin):
                                  choices=USER_TYPES,
                                  default='student')
 
+    title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
     first_name = models.CharField(max_length=35, null=True)
     middle_name = models.CharField(max_length=70, null=True)
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
+
+    address = models.OneToOneField('Address', null=True, blank=True)
 
     gender = models.NullBooleanField()
     birthday = models.DateField(null=True)
@@ -874,8 +884,6 @@ class Address(models.Model):
     city = models.CharField(max_length=40)
     state = models.CharField(max_length=20)
     postal_code = models.CharField(max_length=20)
-
-    user = models.ForeignKey(User, related_name='addresses')
 
     def __str__(self):
         """Returns full address string."""

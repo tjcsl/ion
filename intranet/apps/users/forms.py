@@ -1,36 +1,33 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from ..preferences.fields import PhoneField
+from .models import User, Address
 
 
-class ProfileEditForm(forms.Form):
+class ProfileEditForm(forms.ModelForm):
     """A form containing editable fields in the User model."""
-    admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
+    GENDERS = ((True, 'Male'), (False, 'Female'))
 
+    admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
     student_id = forms.IntegerField(label="FCPS Student ID")
     first_name = forms.CharField(label="First Name")
     middle_name = forms.CharField(label="Middle Name", required=False)
     last_name = forms.CharField(label="Last Name")
-    title = forms.CharField(label="Title")
     nickname = forms.CharField(label="Nickname", required=False)
     graduation_year = forms.IntegerField(label="Graduation Year")
-    sex = forms.CharField(label="Sex (M or F)")
+    gender = forms.ChoiceField(choices=GENDERS, label="Sex (M or F)")
     birthday = forms.DateField(label="Birth Date")
-    # TODO: fix this
-    # home_phone = PhoneField(label="Home Phone")
 
-    street = forms.CharField(label="Street")
-    city = forms.CharField(label="City")
-    state = forms.CharField(label="State")
-    postal_code = forms.CharField(label="ZIP")
     counselor_id = forms.IntegerField(label="Counselor ID")
-    # locker = forms.CharField(label="Locker")
+    # # locker = forms.CharField(label="Locker")
 
-    FIELDS = [
-        "admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "sex", "birthday",
-        "home_phone"
-    ]
-    ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
+    # FIELDS = []
+    # ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
+
+    class Meta:
+        model = User
+        fields = [
+            "admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender", "birthday",
+        ]
 
 
 class UserChoiceField(forms.ModelChoiceField):
@@ -79,3 +76,16 @@ class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         name = obj.last_first_initial
         return "{} ({})".format(name, obj.username) if self.show_username else name
+
+
+class AddressForm(forms.ModelForm):
+    """Form for user address"""
+
+    street = forms.CharField(label="Street")
+    city = forms.CharField(label="City")
+    state = forms.CharField(label="State")
+    postal_code = forms.CharField(label="ZIP")
+
+    class Meta:
+        model = Address
+        fields = ['street', 'city', 'state', 'postal_code']
