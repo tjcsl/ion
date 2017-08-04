@@ -20,7 +20,7 @@ class ApiTest(IonTestCase):
     """Tests for the api module."""
 
     def setUp(self):
-        self.user = User.get_user(username="awilliam")
+        self.user = User.objects.get_or_create(username="awilliam")[0]
         self.application = Application(
             name="Test Application",
             redirect_uris="http://localhost http://example.com http://example.it",

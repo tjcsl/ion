@@ -44,7 +44,7 @@ def eighth_signup_view(request, block_id=None):
                 force = False
 
             try:
-                user = User.get_user(id=uid)
+                user = User.objects.get(id=uid)
             except User.DoesNotExist:
                 return http.HttpResponseNotFound("Given user does not exist.")
 
@@ -68,7 +68,7 @@ def eighth_signup_view(request, block_id=None):
         aid = request.POST["aid"]
 
         try:
-            user = User.get_user(id=uid)
+            user = User.objects.get(id=uid)
         except User.DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
@@ -98,7 +98,7 @@ def eighth_signup_view(request, block_id=None):
 
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
-                user = User.get_user(id=request.GET["user"])
+                user = User.objects.get(id=request.GET["user"])
             except (User.DoesNotExist, ValueError):
                 raise http.Http404
         else:
@@ -181,7 +181,7 @@ def eighth_display_view(request, block_id=None):
 
     if "user" in request.GET and request.user.is_eighth_admin:
         try:
-            user = User.get_user(id=request.GET["user"])
+            user = User.objects.get(id=request.GET["user"])
         except (User.DoesNotExist, ValueError):
             raise http.Http404
     else:
@@ -273,7 +273,7 @@ def eighth_multi_signup_view(request):
             bids = bids_comma.split(",")
 
             try:
-                user = User.get_user(id=uid)
+                user = User.objects.get(id=uid)
             except User.DoesNotExist:
                 return http.HttpResponseNotFound("Given user does not exist.")
 
@@ -319,7 +319,7 @@ def eighth_multi_signup_view(request):
         bids = bids_comma.split(",")
 
         try:
-            user = User.get_user(id=uid)
+            user = User.objects.get(id=uid)
         except User.DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
@@ -351,7 +351,7 @@ def eighth_multi_signup_view(request):
     else:
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
-                user = User.get_user(id=request.GET["user"])
+                user = User.objects.get(id=request.GET["user"])
             except (User.DoesNotExist, ValueError):
                 raise http.Http404
         else:
@@ -441,7 +441,7 @@ def leave_waitlist_view(request):
     bid = request.POST["bid"]
 
     try:
-        user = User.get_user(id=uid)
+        user = User.objects.get(id=uid)
     except User.DoesNotExist:
         return http.HttpResponseNotFound("Given user does not exist.")
     EighthWaitlist.objects.filter(user_id=user.id, block_id=bid).delete()

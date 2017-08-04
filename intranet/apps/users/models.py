@@ -137,20 +137,7 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Django User model subclass with properties that fetch data from LDAP.
-
-    Represents a user object in LDAP.Extends AbstractBaseUser so the
-    model will work with Django's built-in authorization functionality.
-
-    The User model is primarily an abstraction of LDAP which has just
-    enough fields duplicated in the SQL database for Django to accept it
-    as a valid user model that can have relations to other models in the
-    database.
-
-    When creating a user object always use, use User.get_user(). User()
-    should only be used to add a user to the SQL database and
-    User.objects.get() should not be used because users in LDAP are not
-    necessarily in the SQL database.
+    """Django User model subclass
     """
     TITLES = (
         ('Mr.', 'Mr.'),
@@ -424,6 +411,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.error("Could not check teacher/eighth override: {}".format(e))
             can_view_anyway = False
         return can_view_anyway
+
+    @property
+    def ion_username(self):
+        return self.username
+
+    @property
+    def sex(self):
+        return "Male" if self.is_male else "Female"
 
     @property
     def is_male(self):
@@ -792,28 +787,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         except Exception as e:
             logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
             return False
-
-    @classmethod
-    def get_user(cls, dn=None, id=None, username=None):
-        """ Gets a User object from the database.
-
-            Implemented only for backwards compatibility. I recommend you use User.objects.get() now.
-        """
-        try:
-            if username is not None:
-                user = User.objects.get(username=username)
-                except_message = "`User` with username '{}' does not exist.".format(username)
-            elif id is not None:
-                user = User.objects.get(id=id)
-                except_message = "`User` with ID '{}' does not exist.".format(id)
-            elif dn is not None:
-                user = User.objects.get(dn=dn)
-                except_message = "`User` with DN '{}' does not exist.".format(dn)
-            else:
-                raise TypeError("get_user() requires at least one argument.")
-            return user
-        except User.DoesNotExist:
-            raise User.DoesNotExist(except_message)
 
     def __str__(self):
         return self.username or self.ion_username or self.id

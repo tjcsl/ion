@@ -19,7 +19,7 @@ class AnnouncementTest(IonTestCase):
     def test_change_announcements(self):
         self.login()
         group = Group.objects.get_or_create(name="admin_all")[0]
-        User.get_user(username='awilliam').groups.add(group)
+        User.objects.get_or_create(username='awilliam')[0].groups.add(group)
 
         response = self.client.get(reverse('add_announcement'))
         self.assertEqual(response.status_code, 200)

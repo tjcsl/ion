@@ -691,7 +691,7 @@ def remove_member_from_group_view(request, group_id, user_id):
         next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
 
     try:
-        user = User.get_user(id=user_id)
+        user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         messages.error(request, "There was an error removing this user.")
         return redirect(next_url, status=400)

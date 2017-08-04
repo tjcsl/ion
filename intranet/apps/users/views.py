@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import csv
 import io
 import logging
 import os
@@ -36,7 +35,7 @@ def profile_view(request, user_id=None):
 
     if user_id is not None:
         try:
-            profile_user = User.get_user(id=user_id)
+            profile_user = User.objects.get(id=user_id)
 
             if profile_user is None:
                 raise Http404
@@ -115,7 +114,7 @@ def picture_view(request, user_id, year=None):
 
     """
     try:
-        user = User.get_user(id=user_id)
+        user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         raise Http404
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")

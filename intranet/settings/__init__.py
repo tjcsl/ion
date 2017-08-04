@@ -362,6 +362,7 @@ VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"]) if "VIRTUAL_ENV" in os
 def get_month_seconds():
     return datetime.timedelta(hours=24).total_seconds() * 30
 
+
 CACHE_AGE = {
     "dn_id_mapping": int(12 * get_month_seconds()),
     "user_grade": int(10 * get_month_seconds()),

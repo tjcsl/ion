@@ -19,7 +19,7 @@ class EighthTest(IonTestCase):
     def make_admin(self):
         self.login()
         # Make user an eighth admin
-        user = User.get_user(username='awilliam')
+        user = User.objects.get_or_create(username='awilliam')[0]
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
         return user

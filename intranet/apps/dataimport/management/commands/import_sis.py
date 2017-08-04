@@ -54,7 +54,7 @@ class Command(BaseCommand):
         if self.load_users:
             for i in range(self.last_uid_number, self.last_uid_number + 500):
                 try:
-                    u = User.get_user(id=i)
+                    u = User.objects.get(id=i)
                 except User.DoesNotExist:
                     self.stdout.write("UID %d None" % i)
                 else:

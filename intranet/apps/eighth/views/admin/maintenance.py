@@ -17,10 +17,7 @@ from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
 
-from cacheops import invalidate_obj
-
 from ....auth.decorators import eighth_admin_required, reauthentication_required
-from ....users.models import User
 
 from ....notifications.emails import email_send
 

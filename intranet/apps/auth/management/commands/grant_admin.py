@@ -14,5 +14,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         g = Group.objects.get_or_create(name="admin_%s" % options['admin_group'])[0]
-        User.get_user(username=options['username']).groups.add(g)
+        User.objects.get_or_create(username=options['username'])[0].groups.add(g)
         self.stdout.write('Added %s to %s' % (options['username'], options['admin_group']))

@@ -20,7 +20,7 @@ class AutoCreateUserField(forms.ChoiceField):
             raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 
         try:
-            user = User.get_user(id=id_value)
+            user = User.objects.get(id=id_value)
         except User.DoesNotExist:
             raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 

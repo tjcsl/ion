@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Email, Website, Phone
 
 
 class UserListSerializer(serializers.Serializer):
@@ -71,11 +71,9 @@ class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
 
 class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()
-    classes = SubClassSerializer(many=True)
     address = AddressSerializer()
     counselor = CounselorTeacherSerializer()
     ion_username = serializers.CharField(max_length=500)
-    common_name = serializers.CharField(max_length=200)
     display_name = serializers.CharField(max_length=400)
     nickname = serializers.CharField(max_length=200)
     title = serializers.CharField(max_length=200)
@@ -85,19 +83,16 @@ class UserSerializer(serializers.ModelSerializer):
     sex = serializers.CharField(max_length=10)
     user_type = serializers.CharField(max_length=100)
     graduation_year = serializers.IntegerField()
-    emails = serializers.ListField(child=serializers.CharField(max_length=500))
-    home_phone = serializers.CharField(max_length=17)
-    mobile_phone = serializers.CharField(max_length=17)
-    other_phones = serializers.ListField(child=serializers.CharField(max_length=17))
-    webpages = serializers.ListField(child=serializers.CharField(max_length=300))
+    emails = serializers.StringRelatedField(many=True)
+    phones = serializers.StringRelatedField(many=True)
+    websites = serializers.StringRelatedField(many=True)
     picture = HyperlinkedImageField(view_name="api_user_profile_picture_default", format="jpg")
 
     class Meta:
         model = User
         fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name',
-                  'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone',
-                  'other_phones', 'webpages', 'counselor', 'address', 'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher',
-                  'is_student', 'classes')
+                  'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'phones', 'websites', 'counselor', 'address',
+                  'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student')
 
 
 class ClassSerializer(serializers.Serializer):

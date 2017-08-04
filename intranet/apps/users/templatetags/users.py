@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @register.filter
 def user_attr(username, attribute):
     """Gets an attribute of the user with the given username."""
-    return getattr(User.get_user(username=username), attribute)
+    return getattr(User.objects.get(username=username), attribute)
 
 
 @register.filter
