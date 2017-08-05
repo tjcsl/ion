@@ -18,19 +18,26 @@ def change_password(form_data):
     if form_data["new_password"] != form_data["new_password_confirm"]:
         return {"unable_to_set": True, "password_match": False}
     realm = settings.CSL_REALM
+    errors = []
     try:
         kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(form_data["username"], realm), timeout=settings.KINIT_TIMEOUT)
-        kinit.expect(":")
+        match = kinit.expect([":", pexpect.EOF])
+        if match == 1:
+            return {"unable_to_set": True, "error": "User {} does not exist.".format(form_data["username"])}
         kinit.sendline(form_data["old_password"])
-        kinit.expect(":")
+        kinit.expect(":", pexpect.EOF)
+        if match == 1:
+            return {"unable_to_set": True, "error": "Old password was incorrect."}
         kinit.sendline(form_data["new_password"])
-        kinit.expect(":")
+        kinit.expect(":", pexpect.EOF)
+        if match == 1:
+            return {"unable_to_set": True}
         kinit.sendline(form_data["new_password_confirm"])
         kinit.expect(pexpect.EOF)
         kinit.close()
         exitstatus = kinit.exitstatus
     except pexpect.TIMEOUT:
-        return {"unable_to_set": True}
+        return {"unable_to_set": True, "errors": errors}
         exitstatus = 1
     if exitstatus == 0:
         return True

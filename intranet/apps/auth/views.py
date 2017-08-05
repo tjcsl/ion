@@ -8,6 +8,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
@@ -269,7 +270,10 @@ def reset_password_view(request):
         ret = change_password(form_data)
         if ret is True:
             do_logout(request)
+            messages.success(request, "Successfully changed password.")
             return redirect("/")
         else:
+            if ret.error:
+                messages.error(request, ret.error)
             context.update(ret)
     return render(request, "auth/reset_password.html", context)
