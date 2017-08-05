@@ -36,14 +36,6 @@ intranet\.middleware\.environment module
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.ldap\_db module
--------------------------------------
-
-.. automodule:: intranet.middleware.ldap_db
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet\.middleware\.maintenancemode module
 --------------------------------------------
 

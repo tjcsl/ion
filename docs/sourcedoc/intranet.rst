@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     intranet.apps
-    intranet.db
     intranet.middleware
     intranet.settings
     intranet.test
