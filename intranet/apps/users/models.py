@@ -176,14 +176,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
 
-    address = models.OneToOneField('Address', null=True, blank=True)
+    address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
 
     gender = models.NullBooleanField()
     birthday = models.DateField(null=True)
     preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True)
 
     graduation_year = models.IntegerField(null=True)
-    grade_number = models.IntegerField(choices=GRADE_NUMBERS, default=9)
 
     counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
     admin_comments = models.TextField(blank=True, null=True)
@@ -415,6 +414,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def ion_username(self):
         return self.username
+
+    @property
+    def grade_number(self):
+        return self.grade.number
 
     @property
     def sex(self):

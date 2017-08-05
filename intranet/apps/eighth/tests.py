@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.urls import reverse
 from django.utils.http import urlencode
 
 from ..eighth.exceptions import SignupException
 from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ..groups.models import Group
-from ..users.models import User
+from ..users.models import User, Email
 from ...test.ion_test import IonTestCase
 from .notifications import signup_status_email, absence_email
 """
@@ -15,6 +16,9 @@ Tests for the eighth module.
 
 
 class EighthTest(IonTestCase):
+
+    def setUp(self):
+        self.user = User.objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
 
     def make_admin(self):
         self.login()
@@ -90,7 +94,7 @@ class EighthTest(IonTestCase):
         """Do some sample signups."""
 
         self.make_admin()
-        user1 = User.objects.create(username="user1")
+        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -104,7 +108,7 @@ class EighthTest(IonTestCase):
         """Make sure users cannot sign up for blacklisted activities."""
 
         self.make_admin()
-        user1 = User.objects.create(username="user1")
+        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -167,7 +171,7 @@ class EighthTest(IonTestCase):
     def test_both_blocks(self):
         """Make sure that signing up for a both blocks activity works."""
         self.make_admin()
-        user1 = User.objects.create(username="user1")
+        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
@@ -197,8 +201,8 @@ class EighthTest(IonTestCase):
 
     def test_signup_status_email(self):
         self.make_admin()
-        user1 = User.objects.create(username="user1")
-        user1.emails = ["awilliam@tjhsst.edu"]
+        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
         block1 = self.add_block(date="2015-01-01", block_letter='A')
         block2 = self.add_block(date="2015-01-01", block_letter='B')
         act1 = self.add_activity(name='Test Activity 1')
@@ -226,7 +230,7 @@ class EighthTest(IonTestCase):
     def test_absence_email(self):
         self.make_admin()
         user1 = User.objects.create(username="user1")
-        user1.emails = ["awilliam@tjhsst.edu"]
+        Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
         block1 = self.add_block(date="2015-01-01", block_letter='A')
         act1 = self.add_activity(name='Test Activity 1')
         room1 = self.add_room(name="room1", capacity=1)
@@ -264,7 +268,7 @@ class EighthTest(IonTestCase):
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
         self.make_admin()
-        user1 = User.objects.create(username="user1")
+        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         block1 = self.add_block(date='3000-11-11', block_letter='A')
 
         room1 = self.add_room(name="room1", capacity=1)

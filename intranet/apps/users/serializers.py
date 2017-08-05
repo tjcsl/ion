@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import User, Email, Website, Phone
+from .models import User, Address
 
 
 class UserListSerializer(serializers.Serializer):
@@ -12,7 +12,7 @@ class UserListSerializer(serializers.Serializer):
     ion_id = serializers.IntegerField()
     ion_username = serializers.CharField(max_length=15)
 
-    email = serializers.EmailField()
+    email = serializers.StringRelatedField(many=True)
     content = serializers.CharField(max_length=200)
     created = serializers.DateTimeField()
 
@@ -28,11 +28,15 @@ class SubClassSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=500)
 
 
-class AddressSerializer(serializers.Serializer):
+class AddressSerializer(serializers.ModelSerializer):
     street = serializers.CharField(max_length=500)
     city = serializers.CharField(max_length=200)
     state = serializers.CharField(max_length=100)
     postal_code = serializers.CharField(max_length=10)
+
+    class Meta:
+        model = Address
+        fields = ('street', 'city', 'state', 'postal_code')
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):

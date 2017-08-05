@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.db import models
 
 from ..users.models import User
@@ -19,7 +20,7 @@ class College(models.Model):
 class SeniorManager(models.Manager):
 
     def filled(self):
-        return Senior.objects.exclude(college=None, major=None).filter(user__grade_number=12)
+        return Senior.objects.exclude(college=None, major=None).filter(user__graduation_year=settings.SENIOR_GRADUATION_YEAR)
 
 
 class Senior(models.Model):

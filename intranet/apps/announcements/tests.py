@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.urls import reverse
 from ..users.models import Group, User
 
@@ -8,6 +9,8 @@ from ...test.ion_test import IonTestCase
 
 class AnnouncementTest(IonTestCase):
     """Tests for the announcements module."""
+    def setUp(self):
+        self.user = User.objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)[0]
 
     def test_get_announcements(self):
         self.login()
