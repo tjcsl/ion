@@ -25,11 +25,11 @@ def change_password(form_data):
         if match == 1:
             return {"unable_to_set": True, "error": "User {} does not exist.".format(form_data["username"])}
         kinit.sendline(form_data["old_password"])
-        kinit.expect(":", pexpect.EOF)
+        kinit.expect([":", pexpect.EOF])
         if match == 1:
             return {"unable_to_set": True, "error": "Old password was incorrect."}
         kinit.sendline(form_data["new_password"])
-        kinit.expect(":", pexpect.EOF)
+        kinit.expect([":", pexpect.EOF])
         if match == 1:
             return {"unable_to_set": True}
         kinit.sendline(form_data["new_password_confirm"])
