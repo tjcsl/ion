@@ -27,7 +27,7 @@ before_script:
 - cp intranet/settings/travis_secret.py intranet/settings/secret.py
 - psql -U postgres -c 'create database ion'
 script:
-- flake8 --max-line-length 150 .
+- flake8 --max-line-length 150 --exclude=*/migrations/* .
 - coverage run ./setup.py test
 - coverage run -a ./manage.py migrate
 - "./manage.py collectstatic --noinput -v 0"
