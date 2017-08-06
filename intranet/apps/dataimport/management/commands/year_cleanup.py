@@ -4,7 +4,7 @@ import sys
 import datetime
 from django.conf import settings
 from django.utils import timezone
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
 
@@ -27,7 +27,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write("ERROR: %s" % q)
             self.stdout.write("Abort.")
-            sys.exit()
+            return False
 
     def handle(self, *args, **options):
         do_run = options["run"]
@@ -46,7 +46,8 @@ class Command(BaseCommand):
         turnover_date = datetime.datetime(current_year, 7, 1)
         self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
 
-        self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year), settings.SENIOR_GRADUATION_YEAR == new_senior_year)
+        self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year), settings.SENIOR_GRADUATION_YEAR == new_senior_year):
+            return
 
         """
         EIGHTH:
