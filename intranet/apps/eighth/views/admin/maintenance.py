@@ -17,6 +17,8 @@ from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
 
+from raven import client
+
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
 from ....notifications.emails import email_send
@@ -119,10 +121,14 @@ def sis_import(request):
 def start_of_year_view(request):
     context = {"admin_page_title": "Start of Year Operations", "completed": False}
     if request.method == "POST" and request.POST.get("confirm"):
-        content = StringIO()
-        call_command("year_cleanup", run=True, confirm=True, stdout=content)
-        content.seek(0)
-        context["output"] = content.read()
+        try:
+            content = StringIO()
+            call_command("year_cleanup", run=True, confirm=True, stdout=content)
+            content.seek(0)
+            context["output"] = content.read()
+        except Exception as e:
+            client.captureException()
+            context["output"] = "An error occured while running the start of year scripts!\n\n{}".format(e)
         context["completed"] = True
     return render(request, "eighth/admin/start_of_year.html", context)
 

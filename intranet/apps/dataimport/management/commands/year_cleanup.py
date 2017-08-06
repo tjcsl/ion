@@ -3,11 +3,10 @@
 import sys
 import datetime
 from django.conf import settings
-from djang.utils import timezone
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class Command(BaseCommand):
