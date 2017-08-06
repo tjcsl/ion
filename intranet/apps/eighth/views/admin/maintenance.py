@@ -17,7 +17,7 @@ from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
 
-from raven import client
+from raven.contrib.django.raven_compat.models import client
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
