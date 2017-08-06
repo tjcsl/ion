@@ -357,7 +357,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if current_grade > 12:
                     current_grade = 12
             for i in reversed(range(9, current_grade + 1)):
-                data = self.photo_binary(Grade.names[i - 9])
+                if self.photos.filter(grade_number=i).exists():
+                    data = self.photos.filter(grade_number=i).first().binary
                 if data:
                     return data
 
@@ -936,6 +937,12 @@ class Grade(object):
             return "Grade {}".format(self._number)
         else:
             return self._name
+
+    @staticmethod
+    def number_from_name(name):
+        if name in Grade.names:
+            return Grade.names.index(name) + 9
+        return None
 
     @classmethod
     def grade_from_year(cls, graduation_year):

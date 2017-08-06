@@ -137,7 +137,11 @@ def picture_view(request, user_id, year=None):
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names:
-                data = user.photo_binary(preferred)
+                grade_number = Grade.number_from_name(preferred)
+                if user.photos.filter(grade_number=grade_number).exists():
+                    data = user.photos.filter(grade_number=grade_number).first().binary
+                else:
+                    data = None
 
                 if data:
                     image_buffer = io.BytesIO(data)
@@ -146,7 +150,11 @@ def picture_view(request, user_id, year=None):
             else:
                 image_buffer = io.open(default_image_path, mode="rb")
         else:
-            data = user.photo_binary(year)
+            grade_number = Grade.number_from_name(year)
+            if user.photos.filter(grade_number=grade_number).exists():
+                data = user.photos.filter(grade_number=grade_number).first().binary
+            else:
+                data = None
             if data:
                 image_buffer = io.BytesIO(data)
             else:

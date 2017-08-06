@@ -63,7 +63,11 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
         if 'photo_year' in kwargs:
             photo_year = kwargs['photo_year']
             if photo_year in Grade.names:
-                binary = user.photo_binary(photo_year)
+                grade_number = Grade.number_from_name(name)
+                if user.photos.filter(grade_number=grade_number).exists():
+                    binary = user.photos.filter(grade_number=grade_number).first().binary
+                else:
+                    binary = None
         else:
             binary = user.default_photo()
         if not binary:
