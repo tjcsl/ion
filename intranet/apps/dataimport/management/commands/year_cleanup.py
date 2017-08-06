@@ -47,6 +47,7 @@ class Command(BaseCommand):
         self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
 
         self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year), settings.SENIOR_GRADUATION_YEAR == new_senior_year)
+
         """
         EIGHTH:
             EighthBlock: filtered
@@ -74,7 +75,7 @@ class Command(BaseCommand):
 
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
-        self.stdout.write("{} absents".format(absents.count()))
+        self.stdout.write("{} absent eighth signups".format(absents.count()))
         for a in absents:
             a.archive_remove_absence()
         self.stdout.write("Archived absences")
@@ -83,13 +84,9 @@ class Command(BaseCommand):
         User.objects.all().update(seen_welcome=False)
 
     def handle_delete(self):
-        for usr in User.objects.all():
-            try:
-                usr.first_name
-            except ObjectDoesNotExist:
-                self.stdout.write("User %s DELETE" % usr)
+        for usr in User.objects.all(graduation_year=datetime.datetime.now().year):
+            if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
                 self.stdout.write(usr.delete())
             else:
-                # self.stdout.write("User %s KEEP" % usr)
-                pass
+                self.stdout.write("User {} KEEP".format(usr.username))
