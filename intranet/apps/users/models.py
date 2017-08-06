@@ -449,14 +449,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def can_view_eighth(self):
-        """Checks if a user has the showeighth permission.
+        """Checks if a user has the show_eighth permission.
 
         Returns:
             Boolean
 
         """
 
-        return self.attribute_is_visible("showeighth")
+        return self.attribute_is_visible("show_eighth")
 
     @property
     def is_eighth_admin(self):
