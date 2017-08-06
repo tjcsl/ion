@@ -3,6 +3,7 @@
 import sys
 import datetime
 from django.conf import settings
+from djang.utils import timezone
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
@@ -41,7 +42,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write("In pretend mode.")
 
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         new_senior_year = current_year + 1
         turnover_date = datetime.datetime(current_year, 7, 1)
         self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
@@ -84,7 +85,7 @@ class Command(BaseCommand):
         User.objects.all().update(seen_welcome=False)
 
     def handle_delete(self):
-        for usr in User.objects.all(graduation_year=datetime.datetime.now().year):
+        for usr in User.objects.all(graduation_year=timezone.now().year):
             if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
                 self.stdout.write(usr.delete())
