@@ -186,11 +186,12 @@ def query(q, admin=False):
             default_categories = ["first_name", "last_name", "nickname", "id"]
             if admin:
                 default_categories.append("middle_name")
+            query = Q(pk=-1)
             if exact:
                 logger.debug("Simple exact: {}".format(p))
                 # No implied wildcard
                 for cat in default_categories:
-                    search_query &= Q(**{cat: p})
+                    query |= Q(**{cat: p})
             else:
                 logger.debug("Simple wildcard: {}".format(p))
                 if p.endswith("*"):
@@ -200,7 +201,8 @@ def query(q, admin=False):
                 # Search for first, last, middle, nickname uid, with implied
                 # wildcard at beginning and end
                 for cat in default_categories:
-                    search_query &= Q(**{"{}__icontains".format(cat): p})
+                    query |= Q(**{"{}__icontains".format(cat): p})
+            search_query &= query
 
             logger.debug("Running query: {}".format(search_query))
 
