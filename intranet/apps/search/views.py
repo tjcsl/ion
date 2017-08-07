@@ -16,9 +16,6 @@ from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
 
-USE_SID_LDAP = True
-
-
 def query(q, admin=False):
     # If only a digit, search for student ID and user ID
     results = []
@@ -31,7 +28,7 @@ def query(q, admin=False):
 
         for u in uid_users:
             results.append(u)
-    elif ":" in q:
+    elif ":" in q or ">" in q or "<" in q or "=" in q:
         logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
         map_attrs = {
@@ -71,19 +68,18 @@ def query(q, admin=False):
             "type": ("usertype",)
         }
 
-        inner = ""
         parts = q.split(" ")
         # split each word
-        search_query = Q(pk=-1)  # Initial query to avoid an empty Q() object.
+        search_query = Q(pk__gte=-1)  # Initial query that selects all to avoid an empty Q() object.
         for p in parts:
             # Check for less than/greater than, and replace =
             sep = "__icontains"
             if ":" in p:
                 cat, val = p.split(":")
-                sep = ""
+                sep = "__icontains"
             elif "=" in p:
                 cat, val = p.split("=")
-                sep = ""
+                sep = "__icontains"
             elif "<" in p:
                 cat, val = p.split("<")
                 sep = "__lte"
@@ -111,17 +107,20 @@ def query(q, admin=False):
                 default_categories = ["first_name", "last_name", "nickname", "id"]
                 if admin:
                     default_categories.append("middle_name")
+
+                query = Q(pk=-1)
                 if exact:
                     # No implied wildcard
                     for cat in default_categories:
-                        search_query |= Q(**{cat: p})
+                        query |= Q(**{cat: p})
 
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
                     # implied wildcard at beginning and end of the search
                     # string
                     for cat in default_categories:
-                        search_query |= Q(**{"{}__icontains".fomrat(cat): p})
+                        query |= Q(**{"{}__icontains".fomrat(cat): p})
+                search_query &= query
 
                 continue  # skip rest of processing
 
@@ -159,10 +158,11 @@ def query(q, admin=False):
 
             attrs = map_attrs[cat]
 
-            inner += "(|"
             # for each of the possible LDAP fields, add to the search query
+            query = Q(pk=-1)
             for attr in attrs:
-                search_query |= Q(**{"{}{}".format(attr, sep): val})
+                query |= Q(**{"{}{}".format(attr, sep): val})
+            search_query &= query
 
         try:
             results = User.objects.filter(search_query)
@@ -176,7 +176,7 @@ def query(q, admin=False):
         # Non-advanced search; no ":"
         parts = q.split(" ")
         # split on each word
-        search_query = Q(pk=-1)  # Initial query to avoid an empty Q() object.
+        search_query = Q(pk__gte=-1)  # Initial query containing all objects to avoid an empty Q() object.
         for p in parts:
             exact = False
             logger.debug(p)
@@ -190,7 +190,7 @@ def query(q, admin=False):
                 logger.debug("Simple exact: {}".format(p))
                 # No implied wildcard
                 for cat in default_categories:
-                    search_query |= Q(**{cat: p})
+                    search_query &= Q(**{cat: p})
             else:
                 logger.debug("Simple wildcard: {}".format(p))
                 if p.endswith("*"):
@@ -200,7 +200,7 @@ def query(q, admin=False):
                 # Search for first, last, middle, nickname uid, with implied
                 # wildcard at beginning and end
                 for cat in default_categories:
-                    search_query |= Q(**{"{}__icontains".format(cat): p})
+                    search_query &= Q(**{"{}__icontains".format(cat): p})
 
             logger.debug("Running query: {}".format(search_query))
 
