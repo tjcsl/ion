@@ -20,7 +20,7 @@ def change_password(form_data):
     realm = settings.CSL_REALM
     errors = []
     try:
-        kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(form_data["username"], realm), timeout=settings.KINIT_TIMEOUT)
+        kinit = pexpect.spawnu("/usr/bin/kpasswd {}@{}".format(form_data["username"], realm), timeout=settings.KINIT_TIMEOUT)
         match = kinit.expect([":", pexpect.EOF])
         if match == 1:
             return {"unable_to_set": True, "error": "User {} does not exist.".format(form_data["username"])}
