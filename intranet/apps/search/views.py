@@ -65,8 +65,8 @@ def query(q, admin=False):
             "gender": ("gender",),
             "id": ("id",),
             "username": ("username",),
-            "counselor": ("counselor",),
-            "type": ("usertype",)
+            "counselor": ("counselor__last_name",),
+            "type": ("user_type",)
         }
 
         parts = q.split(" ")
@@ -214,7 +214,7 @@ def query(q, admin=False):
 
     # loop through the DNs saved and get actual user objects
     users = []
-    for user in results:
+    for user in results and user not in users:
         if user.is_active:
             users.append(user)
 
