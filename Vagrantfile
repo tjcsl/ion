@@ -35,7 +35,7 @@ devconfig = JSON.parse(File.read("config/devconfig.json"))
 # end
 
 # Make sure the host computer is set up every time a vagrant command is run
-setup_host
+# setup_host
 
 
 VAGRANTFILE_API_VERSION = "2"

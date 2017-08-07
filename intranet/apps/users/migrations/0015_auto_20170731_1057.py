@@ -167,7 +167,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='user_type',
-            field=models.CharField(choices=[('student', 'Student'), ('teacher', 'Teacher'), ('counselor', 'Counselor'), ('user', 'Attendance-Only User'), ('simple_user', 'Simple User'), ('tjstar_presenter', 'tjStar Presenter')], default='student', max_length=30),
+            field=models.CharField(choices=[('student', 'Student'), ('teacher', 'Teacher'), ('counselor', 'Counselor'), (
+                'user', 'Attendance-Only User'), ('simple_user', 'Simple User'), ('tjstar_presenter', 'tjStar Presenter')],
+                default='student', max_length=30),
         ),
         migrations.DeleteModel(
             name='UserCache',

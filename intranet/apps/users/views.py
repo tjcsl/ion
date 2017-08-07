@@ -124,31 +124,21 @@ def picture_view(request, user_id, year=None):
     else:
         if year is None:
             preferred = user.preferred_photo
-            if preferred is not None:
-                if preferred.endswith("Photo"):
-                    preferred = preferred[:-len("Photo")]
 
-            if preferred == "AUTO":
-                data = user.default_photo()
+            if preferred is None:
+                data = user.default_photo
                 if data is None:
                     image_buffer = io.open(default_image_path, mode="rb")
                 else:
                     image_buffer = io.BytesIO(data)
 
             # Exclude 'graduate' from names array
-            elif preferred in Grade.names:
-                grade_number = Grade.number_from_name(preferred)
-                if user.photos.filter(grade_number=grade_number).exists():
-                    data = user.photos.filter(grade_number=grade_number).first().binary
-                else:
-                    data = None
-
+            else:
+                data = preferred.binary
                 if data:
                     image_buffer = io.BytesIO(data)
                 else:
                     image_buffer = io.open(default_image_path, mode="rb")
-            else:
-                image_buffer = io.open(default_image_path, mode="rb")
         else:
             grade_number = Grade.number_from_name(year)
             if user.photos.filter(grade_number=grade_number).exists():

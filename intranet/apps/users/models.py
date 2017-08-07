@@ -5,7 +5,6 @@ from datetime import datetime
 from base64 import b64encode
 
 from django.conf import settings
-from django.contrib.auth import BACKEND_SESSION_KEY
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.db import models
 from django.utils import timezone
@@ -86,14 +85,14 @@ class UserManager(DjangoUserManager):
     def users_with_birthday(self, month, day):
         """Return a list of user objects who have a birthday on a given date."""
 
-        users = User.objects.filter(birthday__month=month, birthday__day=day)
+        users = User.objects.filter(properties___birthday__month=month, properties___birthday__day=day)
         results = []
         for user in users:
             # TODO: permissions system
-            if user.attribute_is_visible("showbirthday"):
+            if user.attribute_is_visible("show_birthday"):
                 results.append(user)
 
-        return users
+        return results
 
     # Simple way to filter out teachers and students without hitting LDAP.
     # This shouldn't be a problem unless the username scheme changes and
@@ -163,54 +162,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
-    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
-                                  unique=True,
-                                  null=True)
-    user_type = models.CharField(max_length=30,
-                                 choices=USER_TYPES,
-                                 default='student')
-
-    title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
-    first_name = models.CharField(max_length=35, null=True)
-    middle_name = models.CharField(max_length=70, null=True)
-    last_name = models.CharField(max_length=70, null=True)
-    nickname = models.CharField(max_length=35, null=True)
-
-    address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
-
-    gender = models.NullBooleanField()
-    birthday = models.DateField(null=True)
-    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True)
-
-    graduation_year = models.IntegerField(null=True)
-
-    counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
-    admin_comments = models.TextField(blank=True, null=True)
-
-    """ User preference permissions (privacy options)
-        When setting permissions, use set_permission(permission, value , parent=False)
-        The permission attribute should be the part after "self_" or "parent_"
-            e.g. show_pictures
-        If you're setting permission of the student, but the parent permission is false,
-        the method will fail and return False.
-
-        To define a new permission, just create two new BooleanFields in the same
-        pattern as below.
-    """
-    self_show_pictures = models.BooleanField(default=False)
-    parent_show_pictures = models.BooleanField(default=False)
-
-    self_show_address = models.BooleanField(default=False)
-    parent_show_address = models.BooleanField(default=False)
-
-    self_show_telephone = models.BooleanField(default=False)
-    parent_show_telephone = models.BooleanField(default=False)
-
-    self_show_birthday = models.BooleanField(default=False)
-    parent_show_birthday = models.BooleanField(default=False)
-
-    self_show_eighth = models.BooleanField(default=False)
-    parent_show_eighth = models.BooleanField(default=False)
 
     # See Email model for emails
     # See Phone model for phone numbers
@@ -228,7 +179,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     receive_schedule_notifications = models.BooleanField(default=False)
 
-    _student_id = models.PositiveIntegerField(null=True)
+    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
+                                  unique=True,
+                                  null=True)
+    user_type = models.CharField(max_length=30,
+                                 choices=USER_TYPES,
+                                 default='student')
+    admin_comments = models.TextField(blank=True, null=True)
+    counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
+    graduation_year = models.IntegerField(null=True)
+    title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
+    first_name = models.CharField(max_length=35, null=True)
+    middle_name = models.CharField(max_length=70, null=True)
+    last_name = models.CharField(max_length=70, null=True)
+    nickname = models.CharField(max_length=35, null=True)
+    gender = models.NullBooleanField()
+    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True)
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -239,6 +205,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     @staticmethod
     def get_signage_user():
         return User(id=99999)
+
+    @property
+    def address(self):
+        return self.properties.address
+
+    @property
+    def birthday(self):
+        return self.properties.birthday
 
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
@@ -387,11 +361,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             "parent": {}
         }
 
-        for field in self._meta.get_fields():
+        for field in self.properties._meta.get_fields():
             split_field = field.name.split('_', 1)
             if len(split_field) <= 0 or split_field[0] not in ['self', 'parent']:
                 continue
-            permissions_dict[split_field[0]][split_field[1]] = getattr(self, field.name)
+            permissions_dict[split_field[0]][split_field[1]] = getattr(self.properties, field.name)
 
         return permissions_dict
 
@@ -457,7 +431,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.attribute_is_visible("show_eighth")
+        return self.properties.attribute_is_visible("show_eighth")
 
     @property
     def is_eighth_admin(self):
@@ -543,7 +517,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return self.user_type == "teacher"
+        return self.user_type == "teacher" or self.user_type == "counselor"
 
     @property
     def is_student(self):
@@ -650,35 +624,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
 
-    def is_http_request_sender(self):
-        """Checks if a user the HTTP request sender (accessing own info)
-
-        Used primarily to load private personal information from the
-        cache. (A student should see all info on his or her own profile
-        regardless of how the permissions are set.)
-
-        Returns:
-            Boolean
-
-        """
-        try:
-            # threadlocals is a module, not an actual thread locals object
-            request = threadlocals.request()
-            if request and request.user and request.user.is_authenticated:
-                requesting_user_id = request.user.id
-                if BACKEND_SESSION_KEY not in request.session:
-                    logger.warning("Backend session key not in session")
-                    return False
-                else:
-                    auth_backend = request.session[BACKEND_SESSION_KEY]
-                    master_pwd_backend = "MasterPasswordAuthenticationBackend"
-                    return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
-        except (AttributeError, KeyError) as e:
-            logger.error("Could not check request sender: {}".format(e))
-            return False
-
-        return False
-
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an.
@@ -761,15 +706,69 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
-    def attribute_is_visible(self, permission):
-        """ Checks privacy options ot see if an attribute is visible to public
-        """
-        try:
-            parent = getattr(self, "parent_{}".format(permission))
-            student = getattr(self, "self_{}".format(permission))
-            return parent and student
-        except:
-            logger.error("Could not retrieve permissions for {}".format(permission))
+    def __getattr__(self, name):
+        if name == "properties":
+            return UserProperties.objects.get_or_create(user=self)[0]
+        raise AttributeError
+
+    def __str__(self):
+        return self.username or self.ion_username or self.id
+
+    def __int__(self):
+        return self.id
+
+
+class UserProperties(models.Model):
+    user = models.OneToOneField('User', related_name="properties", on_delete=models.CASCADE)
+
+    _address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
+    _birthday = models.DateField(null=True)
+
+    """ User preference permissions (privacy options)
+        When setting permissions, use set_permission(permission, value , parent=False)
+        The permission attribute should be the part after "self_" or "parent_"
+            e.g. show_pictures
+        If you're setting permission of the student, but the parent permission is false,
+        the method will fail and return False.
+
+        To define a new permission, just create two new BooleanFields in the same
+        pattern as below.
+    """
+    self_show_pictures = models.BooleanField(default=False)
+    parent_show_pictures = models.BooleanField(default=False)
+
+    self_show_address = models.BooleanField(default=False)
+    parent_show_address = models.BooleanField(default=False)
+
+    self_show_telephone = models.BooleanField(default=False)
+    parent_show_telephone = models.BooleanField(default=False)
+
+    self_show_birthday = models.BooleanField(default=False)
+    parent_show_birthday = models.BooleanField(default=False)
+
+    self_show_eighth = models.BooleanField(default=False)
+    parent_show_eighth = models.BooleanField(default=False)
+
+    def __getattr__(self, name):
+        if name.startswith("self") or name.startswith("parent"):
+            return object.__getattribute__(self, name)
+        if name == "address":
+            return self._address if self.attribute_is_visible("show_address") else None
+        if name == "birthday":
+            return self._birthday if self.attribute_is_visible("show_birthday") else None
+        raise AttributeError
+
+    def __setattr__(self, name, value):
+        if name == "address":
+            if self.attribute_is_visible("show_address"):
+                self._address = value
+        if name == "birthday":
+            if self.attribute_is_visible("show_birthday"):
+                self._birthday = value
+        super(UserProperties, self).__setattr__(name, value)
+
+    def __str__(self):
+        return self.user.__str__()
 
     def set_permission(self, permission, value, parent=False, admin=False):
         """ Sets permission for personal information.
@@ -792,11 +791,55 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
             return False
 
-    def __str__(self):
-        return self.username or self.ion_username or self.id
+    def _current_user_override(self):
+        """Return whether the currently logged in user is a teacher, and can view all of a student's
+        information regardless of their privacy settings."""
+        try:
+            # threadlocals is a module, not an actual thread locals object
+            request = threadlocals.request()
+            if request is None:
+                return False
+            requesting_user = request.user
+            if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated:
+                return False
+            can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
+        except (AttributeError, KeyError) as e:
+            logger.error("Could not check teacher/eighth override: {}".format(e))
+            can_view_anyway = False
+        return can_view_anyway
 
-    def __int__(self):
-        return self.id
+    def is_http_request_sender(self):
+        """Checks if a user the HTTP request sender (accessing own info)
+
+        Used primarily to load private personal information from the
+        cache. (A student should see all info on his or her own profile
+        regardless of how the permissions are set.)
+
+        Returns:
+            Boolean
+
+        """
+        try:
+            # threadlocals is a module, not an actual thread locals object
+            request = threadlocals.request()
+            if request and request.user and request.user.is_authenticated:
+                requesting_user_id = request.user.id
+                return (str(requesting_user_id) == str(self.user.id))
+        except (AttributeError, KeyError) as e:
+            logger.error("Could not check request sender: {}".format(e))
+            return False
+
+        return False
+
+    def attribute_is_visible(self, permission):
+        """ Checks privacy options to see if an attribute is visible to public
+        """
+        try:
+            parent = getattr(self, "parent_{}".format(permission))
+            student = getattr(self, "self_{}".format(permission))
+            return (parent and student) or (self.is_http_request_sender() or self._current_user_override())
+        except:
+            logger.error("Could not retrieve permissions for {}".format(permission))
 
 
 class Email(models.Model):
@@ -821,13 +864,26 @@ class Phone(models.Model):
 
     purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
     user = models.ForeignKey(User, related_name='phones')
-    number = PhoneField()  # validators should be a list
+    _number = PhoneField()  # validators should be a list
+
+    def __setattr__(self, name, value):
+        if name == "number":
+            if self.user.properties.attribute_is_visible("show_telephone"):
+                self._number = value
+                self.save()
+        else:
+            super(Phone, self).__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name == "number":
+            return self._number if self.user.properties.attribute_is_visible("show_telephone") else None
+        raise AttributeError
 
     def __str__(self):
         return "{}: {}".format(self.get_purpose_display(), self.number)
 
     class Meta:
-        unique_together = ('user', 'number')
+        unique_together = ('user', '_number')
 
 
 class Website(models.Model):
@@ -871,8 +927,21 @@ class Photo(models.Model):
     """Represents a user photo"""
 
     grade_number = models.IntegerField(choices=GRADE_NUMBERS)
-    binary = models.BinaryField()
+    _binary = models.BinaryField()
     user = models.ForeignKey(User, related_name="photos")
+
+    def __setattr__(self, name, value):
+        if name == "binary":
+            if self.user.properties.attribute_is_visible("show_pictures"):
+                self._binary = value
+                self.save()
+        else:
+            super(Photo, self).__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name == "binary":
+            return self._binary if self.user.properties.attribute_is_visible("show_pictures") else None
+        raise AttributeError
 
     @cached_property
     def base64(self):

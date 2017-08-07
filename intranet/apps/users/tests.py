@@ -30,7 +30,8 @@ class ProfileTest(IonTestCase):
     def setUp(self):
         user = User.objects.get_or_create(username="awilliam")[0]
         address = Address.objects.get_or_create(street="6560 Braddock Rd", city="Alexandria", state="VA", postal_code="22312")[0]
-        user.address = address
+        user.properties._address = address
+        user.properties.save()
         user.save()
 
     def test_get_profile(self):

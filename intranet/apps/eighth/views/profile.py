@@ -29,20 +29,23 @@ def edit_profile_view(request, user_id=None):
     if request.method == "POST":
         logger.debug("Saving")
         user_form = ProfileEditForm(request.POST, instance=user)
-        address_form = AddressForm(request.POST, instance=user.address)
+        address_form = AddressForm(request.POST, instance=user.properties.address)
         if user_form.is_valid():
             user = user_form.save()
             counselor_id = user_form.cleaned_data['counselor_id']
             counselor = User.objects.get(id=counselor_id)
-            user.address = address_form.save()
+            user.properties.birthday = user_form.cleaned_data['birthday']
+            user.properties.address = address_form.save()
+            user.properties.save()
             user.counselor = counselor
             user.save()
             messages.success(request, "Successfully updated student profile.")
         else:
             messages.error(request, "An error occurred updating the student profile.")
     else:
-        user_form = ProfileEditForm(initial={'counselor_id': '' if not user.counselor else user.counselor.id}, instance=user)
-        address_form = AddressForm(instance=user.address)
+        user_form = ProfileEditForm(initial={'counselor_id': '' if not user.counselor else user.counselor.id,
+                                             'birthday': user.properties.birthday}, instance=user)
+        address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}
     return render(request, "eighth/edit_profile.html", context)
@@ -56,11 +59,10 @@ def get_profile_context(request, user_id=None, date=None):
             raise http.Http404
     else:
         profile_user = request.user
-
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
         return False
 
-    logger.debug("is request sender: {}".format(profile_user.is_http_request_sender()))
+    # logger.debug("is request sender: {}".format(profile_user.properties.is_http_request_sender()))
 
     try:
         custom_date_set = False

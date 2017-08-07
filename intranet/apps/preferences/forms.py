@@ -18,7 +18,7 @@ class PreferredPictureForm(forms.Form):
         for i in range(4):
             try:
                 grade = Grade.names[i]
-                user.photos.get(grade=grade)  # Only display option if the photo exists
+                user.photos.get(grade=i + 9)  # Only display option if the photo exists
                 self.PREFERRED_PICTURE_CHOICES += [(grade, grade.title() + " Photo")]
             except:
                 pass
@@ -84,7 +84,7 @@ class PhoneForm(forms.ModelForm):
     """Represents a phone number (number + purpose)"""
     class Meta:
         model = Phone
-        fields = ['purpose', 'number']
+        fields = ['purpose', '_number']
 
 
 class EmailForm(forms.ModelForm):

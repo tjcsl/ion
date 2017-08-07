@@ -184,7 +184,7 @@ class LoginView(View):
 
             default_next_page = "/"
 
-            if request.user.startpage == "eighth":
+            if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
 

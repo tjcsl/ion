@@ -16,6 +16,7 @@ from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
 
+
 def query(q, admin=False):
     # If only a digit, search for student ID and user ID
     results = []

@@ -44,7 +44,7 @@
                 <p>Logged in as: {{ request.user.full_name }}{% if request.user.graduation_year %}, Class of {{ request.user.graduation_year }}{% endif %}</p>
                 <p>Email addresses on file:</p>
                 <ul>
-                    {% for email in request.user.emails %}
+                    {% for email in request.user.emails.all %}
                     <li>{{ email }}</li>
                     {% empty %}
                     <li>(No custom addresses)</li>
@@ -53,7 +53,7 @@
 
                 <br />
 
-                {% if request.user.emails %}
+                {% if request.user.emails.exists %}
                 <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
                 {% else %}
                 <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>

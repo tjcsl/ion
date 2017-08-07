@@ -4,7 +4,7 @@ import sys
 import datetime
 from django.conf import settings
 from django.utils import timezone
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthSignup
 
@@ -24,6 +24,7 @@ class Command(BaseCommand):
     def chk(self, q, test):
         if test:
             self.stdout.write("OK: %s" % q)
+            return True
         else:
             self.stdout.write("ERROR: %s" % q)
             self.stdout.write("Abort.")
