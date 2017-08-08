@@ -848,7 +848,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         members = []
         for member in self.members.all():
             show = False
-            if member.dn and member.can_view_eighth:
+            if member.can_view_eighth:
                 show = member.can_view_eighth
 
             if not show and user and user.is_eighth_admin:
@@ -874,7 +874,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         user = request.user
         for member in self.members.all():
             show = False
-            if member.dn and member.can_view_eighth:
+            if member.can_view_eighth:
                 show = member.can_view_eighth
 
             if not show and user and user.is_eighth_admin:
@@ -898,7 +898,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         hidden_members = []
         for member in self.members.all():
             show = False
-            if member.dn and member.can_view_eighth:
+            if member.can_view_eighth:
                 show = member.can_view_eighth
 
             if not show and user and user.is_eighth_admin:
