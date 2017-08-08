@@ -214,8 +214,8 @@ def query(q, admin=False):
 
     # loop through the DNs saved and get actual user objects
     users = []
-    for user in results and user not in users:
-        if user.is_active:
+    for user in results:
+        if user.is_active and user not in users:
             users.append(user)
 
     return users
