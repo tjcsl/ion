@@ -8,6 +8,10 @@ flake8 --max-line-length 150 .
 ./manage.py migrate
 ./scripts/build_docs.sh
 
+git add .
+./setup.py egg_info
+git reset HEAD
+
 if ! [ -z "`git status --porcelain -uno`" ]; then
     echo "Modified files found, did you forget to commit something?"
     git status --porcelain

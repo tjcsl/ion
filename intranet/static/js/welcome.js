@@ -12,8 +12,14 @@ $(document).ready(function() {
         scroll();
     });
 
-    $(".continue-step-1-policy").click(function() {
+    $(".continue-step-1-mail").click(function() {
         $("#step-1").slideUp(tm);
+        $("#mail-forwarding").slideDown(tm);
+        scroll();
+    });
+
+    $(".continue-step-1-policy").click(function() {
+        $("#mail-forwarding").slideUp(tm);
         $("#eighth-policy").slideDown(tm);
         scroll();
     });

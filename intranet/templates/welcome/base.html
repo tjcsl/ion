@@ -16,6 +16,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/welcome.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/mailforwarding.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -62,8 +63,11 @@
 
                 <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
 
-                <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
+                <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account.</p>
             {% endblock %}
+        </div>
+        <div id="mail-forwarding">
+            {% include "welcome/mail_forwarding.html" %}
         </div>
 
         <div id="eighth-policy">
