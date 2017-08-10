@@ -90,6 +90,6 @@ class Command(BaseCommand):
         for usr in User.objects.filter(graduation_year=timezone.now().year):
             if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
-                self.stdout.write(usr.delete())
+                self.stdout.write(str(usr.delete()))
             else:
                 self.stdout.write("User {} KEEP".format(usr.username))
