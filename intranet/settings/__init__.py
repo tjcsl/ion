@@ -435,6 +435,7 @@ else:
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+AD_REALM = "LOCAL.TJHSST.EDU"
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 FCPS_STUDENT_ID_LENGTH = 7
