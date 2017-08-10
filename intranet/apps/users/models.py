@@ -48,7 +48,7 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not student_id.isdigit():
             return None
-        results = User.objects.filter(ion_id=student_id)
+        results = User.objects.filter(id=student_id)
         if len(results) == 1:
             return results.first()
         return None
