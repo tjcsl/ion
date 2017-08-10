@@ -7,6 +7,7 @@ import shutil
 import traceback
 import subprocess
 import datetime
+import csv
 
 from tempfile import gettempdir
 from io import StringIO
@@ -50,29 +51,48 @@ class ImportThread(threading.Thread):
         failure = False
 
         try:
-            content.write("=== Starting CSV to LDIF script.\n\n")
-            os.chdir(self.folder)
-            call_command("import_sis", csv_file=os.path.join(self.folder, "data.csv"), run=True, confirm=True, stdout=content, stderr=content)
-            content.write("\n=== Finished CSV to LDIF script.\n")
-
-            content.write("=== Starting LDIF import.\n")
-            ldifs_imported = 0
-            for f in os.listdir(self.folder):
-                if f.endswith(".ldif"):
-                    content.write("=== Importing {}\n".format(f))
-                    # ldap3 does not support importing LDIF files
-                    subprocess.check_call("ldapmodify", "-h", settings.LDAP_SERVER[7:], "-Y", "GSSAPI", "-f", f,
-                                          env={"KRB5CCNAME": os.environ["KRB5CCNAME"]}, stdout=content, stderr=content)
-                    content.write("=== Imported {}\n".format(f))
-                    ldifs_imported += 1
-            if ldifs_imported == 0:
-                content.write("=== WARNING: No LDIF files were imported!\n")
-                failure = True
-            else:
-                content.write("=== {} LDIF files were imported.\n".format(ldifs_imported))
-            content.write("=== Finished LDIF import.\n")
-
-            content.write("Processing complete.\n")
+            content.write("=== Starting Import.\n\n")
+            with open(os.path.join(self.folder, "data.csv"), "r") as f:
+                reader = csv.reader(f)
+                next(reader) # Skip header row
+                for row in reader:
+                    try:
+                        u =  User.objects.get(student_id=row[0].strip())
+                        u.first_name = row[3].strip()
+                        u.last_name = row[2].strip()
+                        u.middle_name = row[4].strip()
+                        u.nickname = row[11].strip() if row[11].strip() != "" else None
+                        u.gender = row[1].strip().upper() == "M"
+                        u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[5].strip()) + 12
+                        props = u.properties
+                        if props._address:
+                            props._address.delete()
+                        props._address = Address.objects.create(street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
+                        birthday_values = row[12].strip().split("/")
+                        props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
+                        props.save()
+                        u.save()
+                        content.write("Updated information for {}\n".format(u.username))
+                    except User.DoesNotExist:
+                        if row[10].strip() == "":
+                            content.write("Skipping {}, no username available and user does not exist in database\n".format(row))
+                        u = User.objects.create(username=row[10].strip().lower(), student_id=row[0].strip())
+                        u.first_name = row[3].strip()
+                        u.last_name = row[2].strip()
+                        u.middle_name = row[4].strip()
+                        u.nickname = row[11].strip() if row[11].strip() != "" else None
+                        u.gender = row[1].strip().upper() == "M"
+                        u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[5].strip()) + 12
+                        props = u.properties
+                        if props._address:
+                            props._address.delete()
+                        props._address = Address.objects.create(street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
+                        birthday_values = row[12].strip().split("/")
+                        props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
+                        props.save()
+                        u.save()
+                        content.write("User {} did not exist in database - created and updated information\n".format(u.username))
+            content.write("\n\n==== Successfully completed SIS Import\n\n")
         except Exception:
             failure = True
             content.write("\n=== An error occured during the import process!\n\n")
