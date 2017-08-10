@@ -5,7 +5,6 @@ import os
 import threading
 import shutil
 import traceback
-import subprocess
 import datetime
 import csv
 
@@ -21,6 +20,8 @@ from django.contrib import messages
 from raven.contrib.django.raven_compat.models import client
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
+
+from ....users.models import User, Address
 
 from ....notifications.emails import email_send
 
@@ -44,6 +45,8 @@ class ImportThread(threading.Thread):
         threading.Thread.__init__(self)
         self.email = email
         self.folder = folder
+        logger.debug(self.folder)
+        logger.debug(self.email)
 
     def run(self):
         start_time = datetime.datetime.now()
@@ -54,10 +57,10 @@ class ImportThread(threading.Thread):
             content.write("=== Starting Import.\n\n")
             with open(os.path.join(self.folder, "data.csv"), "r") as f:
                 reader = csv.reader(f)
-                next(reader) # Skip header row
+                next(reader)  # Skip header row
                 for row in reader:
                     try:
-                        u =  User.objects.get(student_id=row[0].strip())
+                        u = User.objects.get(student_id=row[0].strip())
                         u.first_name = row[3].strip()
                         u.last_name = row[2].strip()
                         u.middle_name = row[4].strip()
@@ -67,7 +70,8 @@ class ImportThread(threading.Thread):
                         props = u.properties
                         if props._address:
                             props._address.delete()
-                        props._address = Address.objects.create(street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
+                        props._address = Address.objects.create(
+                            street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
                         birthday_values = row[12].strip().split("/")
                         props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
                         props.save()
@@ -76,6 +80,7 @@ class ImportThread(threading.Thread):
                     except User.DoesNotExist:
                         if row[10].strip() == "":
                             content.write("Skipping {}, no username available and user does not exist in database\n".format(row))
+                            continue
                         u = User.objects.create(username=row[10].strip().lower(), student_id=row[0].strip())
                         u.first_name = row[3].strip()
                         u.last_name = row[2].strip()
@@ -86,7 +91,8 @@ class ImportThread(threading.Thread):
                         props = u.properties
                         if props._address:
                             props._address.delete()
-                        props._address = Address.objects.create(street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
+                        props._address = Address.objects.create(
+                            street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
                         birthday_values = row[12].strip().split("/")
                         props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
                         props.save()
@@ -98,13 +104,14 @@ class ImportThread(threading.Thread):
             content.write("\n=== An error occured during the import process!\n\n")
             content.write(traceback.format_exc())
             content.write("\n=== The import process has been aborted.")
-
+        shutil.rmtree(self.folder)
+        content.seek(0)
+        logger.debug(content.read())
         content.seek(0)
 
         data = {"log": content.read(), "failure": failure, "help_email": settings.FEEDBACK_EMAIL, "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")}
         email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data,
                    "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
-        shutil.rmtree(self.folder)
 
 
 @eighth_admin_required

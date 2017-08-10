@@ -184,7 +184,7 @@ def query(q, admin=False):
             if p.startswith('"') and p.endswith('"'):
                 exact = True
                 p = p[1:-1]
-            default_categories = ["first_name", "last_name", "nickname", "id"]
+            default_categories = ["first_name", "last_name", "nickname", "id", "username", "student_id"]
             if admin:
                 default_categories.append("middle_name")
             query = Q(pk=-1)
@@ -208,9 +208,7 @@ def query(q, admin=False):
             logger.debug("Running query: {}".format(search_query))
 
             res = User.objects.filter(search_query)
-            # if multiple words, delete those that weren't in previous searches
-            for user in res:
-                results.append(user)
+            results = list(res)
 
     # loop through the DNs saved and get actual user objects
     users = []
