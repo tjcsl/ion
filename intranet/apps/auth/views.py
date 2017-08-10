@@ -273,7 +273,7 @@ def reset_password_view(request):
             messages.success(request, "Successfully changed password.")
             return redirect("/")
         else:
-            if ret.error:
-                messages.error(request, ret.error)
+            if ret['error']:
+                messages.error(request, ret['error'])
             context.update(ret)
     return render(request, "auth/reset_password.html", context)
