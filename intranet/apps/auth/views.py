@@ -262,7 +262,7 @@ def reset_password_view(request):
                "password_expired": request.GET.get("expired", "false").lower() == "true"}
     if request.method == "POST":
         form_data = {
-            "username": request.POST.get("username", "unknown"),
+            "username": request.POST.get("username", request.user.username if request.user.is_authenticated else "unknown"),
             "old_password": request.POST.get("old_password", None),
             "new_password": request.POST.get("new_password", None),
             "new_password_confirm": request.POST.get("new_password_confirm", None)
