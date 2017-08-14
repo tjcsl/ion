@@ -135,6 +135,8 @@ class ApiTest(IonTestCase):
         block = EighthBlock.objects.create(date=datetime.datetime(2015, 1, 1), block_letter='A')
         response = self.client.get(reverse('api_eighth_block_detail', kwargs={"pk": block.pk}), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
+        resp = json.loads(response.text)
+        self.assertTrue("id" in resp)
 
         # Should not be able to list profile
         response = self.client.get(reverse('api_user_myprofile_detail'), HTTP_AUTHORIZATION=auth)
