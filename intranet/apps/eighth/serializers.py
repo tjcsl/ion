@@ -85,7 +85,11 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
     def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, available_restricted_acts=None):
         activity = scheduled_activity.activity
-        restricted_for_user = (scheduled_activity.get_restricted() and not (user.is_eighth_admin and not user.is_student) and
+        if user:
+            is_non_student_admin = user.is_eighth_admin and not user.is_student
+        else:
+            is_non_student_admin = False
+        restricted_for_user = (scheduled_activity.get_restricted() and not is_non_student_admin and
                                (activity.id not in available_restricted_acts))
         prefix = "Special: " if activity.special else ""
         prefix += activity.name
