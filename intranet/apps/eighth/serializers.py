@@ -137,10 +137,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
             "display_text": "",
-            "waitlisted": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists(),
-            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count(),
-            "waitlist_position": EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
+            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count()
         }
+
+        if user:
+            activity_info["waitlisted"] = EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
+            activity_info["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
+
         return activity_info
 
     def get_activity(self, user, favorited_activities, available_restricted_acts, activity_id, scheduled_activity=None):
