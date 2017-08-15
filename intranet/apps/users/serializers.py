@@ -87,6 +87,7 @@ class UserSerializer(serializers.ModelSerializer):
     sex = serializers.CharField(max_length=10)
     user_type = serializers.CharField(max_length=100)
     graduation_year = serializers.IntegerField()
+    tj_email = serializers.StringRelatedField()
     emails = serializers.StringRelatedField(many=True)
     phones = serializers.StringRelatedField(many=True)
     websites = serializers.StringRelatedField(many=True)
