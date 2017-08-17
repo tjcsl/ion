@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.api.utils &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.api.utils &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -144,8 +144,6 @@
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">ObjectDoesNotExist</span>
 
-<span class="kn">from</span> <span class="nn">ldap3.core.exceptions</span> <span class="k">import</span> <span class="n">LDAPNoSuchObjectResult</span>
-
 <span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">status</span>
 <span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="k">import</span> <span class="n">Response</span>
 <span class="kn">from</span> <span class="nn">rest_framework.views</span> <span class="k">import</span> <span class="n">exception_handler</span>
@@ -160,9 +158,6 @@
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">eighth_exceptions</span><span class="o">.</span><span class="n">SignupException</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">({</span><span class="s1">&#39;details&#39;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">messages</span><span class="p">()},</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">LDAPNoSuchObjectResult</span><span class="p">):</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">({</span><span class="s1">&#39;details&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Object does not exist (in LDAP).&#39;</span><span class="p">]},</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">ObjectDoesNotExist</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">({</span><span class="s1">&#39;details&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Object does not exist (in database).&#39;</span><span class="p">]},</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>

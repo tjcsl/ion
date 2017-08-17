@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -140,13 +140,12 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">login</span><span class="p">,</span> <span class="n">logout</span><span class="p">,</span> <span class="n">authenticate</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="k">import</span> <span class="n">get_template</span>
@@ -155,11 +154,14 @@
 <span class="kn">from</span> <span class="nn">django.utils.decorators</span> <span class="k">import</span> <span class="n">method_decorator</span>
 <span class="kn">from</span> <span class="nn">django.views.decorators.debug</span> <span class="k">import</span> <span class="n">sensitive_post_parameters</span>
 <span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="k">import</span> <span class="n">View</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">reverse</span>
 
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AuthenticateForm</span>
+<span class="kn">from</span> <span class="nn">.helpers</span> <span class="k">import</span> <span class="n">change_password</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="k">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="k">import</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">auth_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet_auth&quot;</span><span class="p">)</span>
@@ -294,7 +296,7 @@
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Validate and process the login POST request.&quot;&quot;&quot;</span>
         <span class="sd">&quot;&quot;&quot;Before September 1st, do not allow Class of [year+4] to log in.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_START_DATE</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;auth_message&quot;</span><span class="p">:</span> <span class="s2">&quot;Your account is not yet active for use with this application.&quot;</span><span class="p">})</span>
 
         <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticateForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -305,10 +307,11 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No cookie support detected! This could cause problems.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">reset_user</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;RESET_PASSWORD&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">get_user</span><span class="p">()</span> <span class="o">==</span> <span class="n">reset_user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;reset_password&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;?expired=True&quot;</span><span class="p">)</span>
             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_user</span><span class="p">())</span>
             <span class="c1"># Initial load into session</span>
-            <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Login succeeded as </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)))</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;request.user: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
 
@@ -316,12 +319,7 @@
 
             <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
 
-            <span class="n">dn</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">dn</span>
-            <span class="k">if</span> <span class="n">dn</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">dn</span><span class="p">:</span>
-                <span class="n">do_logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;auth_message&quot;</span><span class="p">:</span> <span class="s2">&quot;Your account is disabled.&quot;</span><span class="p">})</span>
-
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">startpage</span> <span class="o">==</span> <span class="s2">&quot;eighth&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
                 <span class="sd">&quot;&quot;&quot;Default to eighth admin view (for eighthoffice).&quot;&quot;&quot;</span>
                 <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;eighth_admin_dashboard&quot;</span>
 
@@ -363,10 +361,7 @@
 
 
 <div class="viewcode-block" id="do_logout"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.do_logout">[docs]</a><span class="k">def</span> <span class="nf">do_logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Clear the Kerberos cache and logout.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;kdestroy&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]])</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Destroying kerberos cache and logging out&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Logout.&quot;&quot;&quot;</span>
     <span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
 
@@ -391,6 +386,32 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">&quot;login_failed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;auth/reauth.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reset_password_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.reset_password_view">[docs]</a><span class="k">def</span> <span class="nf">reset_password_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;password_match&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;unable_to_set&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;password_expired&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;expired&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="k">else</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;old_password&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;old_password&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="s2">&quot;new_password&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;new_password&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="s2">&quot;new_password_confirm&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;new_password_confirm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">change_password</span><span class="p">(</span><span class="n">form_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">do_logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully changed password.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;auth/reset_password.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

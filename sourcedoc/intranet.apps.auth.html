@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -114,6 +114,7 @@
 <li><a class="reference internal" href="#module-intranet.apps.auth.backends">intranet.apps.auth.backends module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.decorators">intranet.apps.auth.decorators module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.forms">intranet.apps.auth.forms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.helpers">intranet.apps.auth.helpers module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.tests">intranet.apps.auth.tests module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.urls">intranet.apps.auth.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.views">intranet.apps.auth.views module</a></li>
@@ -222,11 +223,6 @@
 <dt>Returns:</dt>
 <dd><cite>User</cite></dd>
 </dl>
-<p>NOTE: None is returned when the user account does not exist. However,
-if the account exists but does not exist in LDAP, which is the case for
-former and future students who do not have Intranet access, a dummy user
-is returned that has the flag is_active=False. (The is_active property in
-the User class returns False when the username starts with “INVALID_USER”.)</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -250,14 +246,15 @@ the User class returns False when the username starts with “INVALID_USER”.)<
 <dl class="method">
 <dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">
 <code class="descname">get_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.get_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
+<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.
+Args:</p>
+<blockquote>
+<div><dl class="docutils">
 <dt>user_id</dt>
 <dd>The user id of the user to fetch.</dd>
 </dl>
-</dd>
+</div></blockquote>
+<dl class="docutils">
 <dt>Returns:</dt>
 <dd>User or None</dd>
 </dl>
@@ -267,7 +264,6 @@ the User class returns False when the username starts with “INVALID_USER”.)<
 <dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle">
 <em class="property">static </em><code class="descname">kinit_timeout_handle</code><span class="sig-paren">(</span><em>username</em>, <em>realm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.kinit_timeout_handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the user exists before we throw an error.</p>
-<p>If the user does not exist in LDAP, only throw a warning.</p>
 </dd></dl>
 
 </dd></dl>
@@ -277,7 +273,6 @@ the User class returns False when the username starts with “INVALID_USER”.)<
 <em class="property">class </em><code class="descclassname">intranet.apps.auth.backends.</code><code class="descname">MasterPasswordAuthenticationBackend</code><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Authenticate as any user against a master password whose hash is in secret.py.</p>
-<p>Forces a simple LDAP bind.</p>
 <dl class="method">
 <dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">
 <code class="descname">authenticate</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
@@ -300,14 +295,15 @@ the User class returns False when the username starts with “INVALID_USER”.)<
 <dl class="method">
 <dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">
 <code class="descname">get_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.get_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
+<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.
+Args:</p>
+<blockquote>
+<div><dl class="docutils">
 <dt>user_id</dt>
 <dd>The user id of the user to fetch.</dd>
 </dl>
-</dd>
+</div></blockquote>
+<dl class="docutils">
 <dt>Returns:</dt>
 <dd>User or None</dd>
 </dl>
@@ -394,6 +390,14 @@ in the “admin_polls” group or in the “admin_all” group.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-intranet.apps.auth.helpers">
+<span id="intranet-apps-auth-helpers-module"></span><h2>intranet.apps.auth.helpers module<a class="headerlink" href="#module-intranet.apps.auth.helpers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.auth.helpers.change_password">
+<code class="descclassname">intranet.apps.auth.helpers.</code><code class="descname">change_password</code><span class="sig-paren">(</span><em>form_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/helpers.html#change_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.helpers.change_password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-intranet.apps.auth.tests">
 <span id="intranet-apps-auth-tests-module"></span><h2>intranet.apps.auth.tests module<a class="headerlink" href="#module-intranet.apps.auth.tests" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -443,7 +447,7 @@ in the “admin_polls” group or in the “admin_all” group.</p>
 <dl class="function">
 <dt id="intranet.apps.auth.views.do_logout">
 <code class="descclassname">intranet.apps.auth.views.</code><code class="descname">do_logout</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#do_logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.do_logout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clear the Kerberos cache and logout.</p>
+<dd><p>Logout.</p>
 </dd></dl>
 
 <dl class="function">
@@ -484,6 +488,11 @@ in the “admin_polls” group or in the “admin_all” group.</p>
 <dl class="function">
 <dt id="intranet.apps.auth.views.reauthentication_view">
 <code class="descclassname">intranet.apps.auth.views.</code><code class="descname">reauthentication_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#reauthentication_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.reauthentication_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.reset_password_view">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">reset_password_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#reset_password_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.reset_password_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

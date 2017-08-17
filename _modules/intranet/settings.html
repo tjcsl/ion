@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -180,10 +180,12 @@
 <span class="c1"># not done, an email failure notification gets sent whenever someone messes with</span>
 <span class="c1"># the HTTP Host header.</span>
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
-<span class="c1"># We want to restrict the access for `tjhsstUser` to the following paths:</span>
+<span class="c1"># We want to restrict the access for certain users to the following paths:</span>
 <span class="c1"># /, /eighth, /eighth/attendance, and /eighth/attendance/&lt;activity_id&gt;</span>
 <span class="c1"># TODO: replace this regex with a better method of checking if the path is allowed</span>
-<span class="n">ATTENDANCE_ALLOWED_PATHS_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/logout$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))&quot;</span>
+<span class="n">RESTRICTED_ALLOWED_PATHS_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/logout$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))&quot;</span>
+
+<span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.secret</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -463,13 +465,11 @@
     <span class="s2">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>  <span class="c1"># Remove slashes in URLs</span>
     <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django default</span>
     <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django sessions</span>
-    <span class="s2">&quot;intranet.middleware.ldap_db.CheckEnvironment&quot;</span><span class="p">,</span>  <span class="c1"># Check environment variables for LDAP</span>
     <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django CSRF</span>
     <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django X-Frame-Options</span>
     <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django auth</span>
     <span class="s2">&quot;intranet.middleware.oauth2_provider.OAuth2TokenMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Oauth toolkit</span>
     <span class="s2">&quot;intranet.middleware.maintenancemode.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Maintenance mode</span>
-    <span class="s2">&quot;intranet.middleware.environment.KerberosCacheMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Kerberos</span>
     <span class="s2">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Thread locals</span>
     <span class="s2">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Include user in traceback</span>
     <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Messages</span>
@@ -480,7 +480,6 @@
     <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
-    <span class="s2">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Show ldap simple bind message</span>
     <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.middleware.restrict_users.RestrictUserMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Restrict tjhsstUser from most things</span>
 <span class="p">]</span>
@@ -502,7 +501,6 @@
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">30</span></div>
 
 
-<span class="c1"># Age of cache information</span>
 <span class="n">CACHE_AGE</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dn_id_mapping&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;user_grade&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">()),</span>
@@ -512,11 +510,11 @@
     <span class="s2">&quot;class_attribute&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;user_attribute&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;bell_schedule&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()),</span>
-    <span class="s2">&quot;ldap_permissions&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;users_list&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;printers_list&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()),</span>
     <span class="s2">&quot;emerg&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
 <span class="p">}</span>
+
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SHORT_CACHE&quot;</span><span class="p">,</span> <span class="s2">&quot;NO&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span><span class="p">:</span>
     <span class="c1"># Make the cache age last just long enough to reload the page to</span>
@@ -574,22 +572,9 @@
         <span class="s2">&quot;KEY_PREFIX&quot;</span><span class="p">:</span> <span class="n">VIRTUAL_ENV</span>
     <span class="p">}</span>
 
-<span class="c1"># LDAP configuration</span>
-<span class="n">AD_REALM</span> <span class="o">=</span> <span class="s2">&quot;LOCAL.TJHSST.EDU&quot;</span>  <span class="c1"># Active Directory (LOCAL) Realm</span>
 <span class="n">CSL_REALM</span> <span class="o">=</span> <span class="s2">&quot;CSL.TJHSST.EDU&quot;</span>  <span class="c1"># CSL Realm</span>
-<span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;ion.tjhsst.edu&quot;</span>
-<span class="n">LDAP_REALM</span> <span class="o">=</span> <span class="n">CSL_REALM</span>
-<span class="n">LDAP_SERVER</span> <span class="o">=</span> <span class="s2">&quot;ldap://iodine-ldap.tjhsst.edu&quot;</span>
+<span class="n">AD_REALM</span> <span class="o">=</span> <span class="s2">&quot;LOCAL.TJHSST.EDU&quot;</span>
 <span class="n">KINIT_TIMEOUT</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># seconds before pexpect timeouts</span>
-
-<span class="n">AUTHUSER_DN</span> <span class="o">=</span> <span class="s2">&quot;cn=authuser,dc=tjhsst,dc=edu&quot;</span>
-
-<span class="c1"># LDAP schema config</span>
-<span class="n">BASE_DN</span> <span class="o">=</span> <span class="s2">&quot;dc=tjhsst,dc=edu&quot;</span>
-<span class="n">USER_DN</span> <span class="o">=</span> <span class="s2">&quot;ou=people,dc=tjhsst,dc=edu&quot;</span>
-<span class="n">CLASS_DN</span> <span class="o">=</span> <span class="s2">&quot;ou=schedule,dc=tjhsst,dc=edu&quot;</span>
-
-<span class="n">LDAP_OBJECT_CLASSES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;student&quot;</span><span class="p">:</span> <span class="s2">&quot;tjhsstStudent&quot;</span><span class="p">,</span> <span class="s2">&quot;teacher&quot;</span><span class="p">:</span> <span class="s2">&quot;tjhsstTeacher&quot;</span><span class="p">,</span> <span class="s2">&quot;simple_user&quot;</span><span class="p">:</span> <span class="s2">&quot;simpleUser&quot;</span><span class="p">,</span> <span class="s2">&quot;attendance_user&quot;</span><span class="p">:</span> <span class="s2">&quot;tjhsstUser&quot;</span><span class="p">}</span>
 
 <span class="n">FCPS_STUDENT_ID_LENGTH</span> <span class="o">=</span> <span class="mi">7</span>
 
@@ -638,12 +623,12 @@
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
     <span class="s2">&quot;maintenancemode&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pipeline&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;channels&quot;</span><span class="p">,</span>
     <span class="c1"># Intranet apps</span>
     <span class="s2">&quot;intranet.apps&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.announcements&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.api&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;intranet.apps.board&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.eighth&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.events&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.groups&quot;</span><span class="p">,</span>
@@ -659,15 +644,12 @@
     <span class="s2">&quot;intranet.apps.signage&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.seniors&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.emerg&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;intranet.apps.ionldap&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.itemreg&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.lostfound&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.emailfwd&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.parking&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.dataimport&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.nomination&quot;</span><span class="p">,</span>
-    <span class="c1"># Intranet middleware</span>
-    <span class="s2">&quot;intranet.middleware.environment&quot;</span><span class="p">,</span>
     <span class="c1"># Django plugins</span>
     <span class="s2">&quot;widget_tweaks&quot;</span><span class="p">,</span>
     <span class="s2">&quot;oauth2_provider&quot;</span><span class="p">,</span>
@@ -876,7 +858,7 @@
 <span class="p">}</span>
 
 <span class="c1"># Senior graduation year</span>
-<span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2017</span>
+<span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2018</span>
 
 <span class="c1"># Senior graduation date in Javascript-readable format</span>
 <span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B </span><span class="si">%d</span><span class="s1"> %Y %H:%M:%S&#39;</span><span class="p">)</span>
@@ -898,9 +880,6 @@
 
 <span class="c1"># The timeout for the request to FCPS&#39; emergency page (in seconds)</span>
 <span class="n">FCPS_EMERGENCY_TIMEOUT</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="c1"># Whether to grab schedule information from local database (ionldap)</span>
-<span class="n">USE_IONLDAP</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># Show an iframe with tjStar activity data</span>
 <span class="k">if</span> <span class="n">TJSTAR_MAP</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

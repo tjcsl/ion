@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.search.views &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.search.views &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -143,111 +143,89 @@
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-
-<span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="k">import</span> <span class="n">LDAPConnection</span>
-
-<span class="kn">from</span> <span class="nn">ldap3.utils.conv</span> <span class="k">import</span> <span class="n">escape_filter_chars</span>
 
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="k">import</span> <span class="n">Announcement</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthActivity</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..search.utils</span> <span class="k">import</span> <span class="n">get_query</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">Class</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">..users.views</span> <span class="k">import</span> <span class="n">profile_view</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">USE_SID_LDAP</span> <span class="o">=</span> <span class="kc">True</span>
 
-
-<div class="viewcode-block" id="do_ldap_query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_ldap_query">[docs]</a><span class="k">def</span> <span class="nf">do_ldap_query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-    <span class="n">result_dns</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">q</span> <span class="o">=</span> <span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-    <span class="c1"># Allow wildcards</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
-
+<div class="viewcode-block" id="query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.query">[docs]</a><span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># If only a digit, search for student ID and user ID</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Digit search: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">USE_SID_LDAP</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;(&amp;(|(tjhsstStudentId=</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;(iodineUidNumber=</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;)(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">sid_users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">student_id</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">uid_users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">sid_users</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running LDAP query: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-
-            <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-                <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-                <span class="n">result_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sid_users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">_student_id</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
-            <span class="n">uid_users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">sid_users</span><span class="p">:</span>
-                <span class="n">result_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">dn</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">uid_users</span><span class="p">:</span>
-                <span class="n">result_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">dn</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running local DB query for UID and SID&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">q</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">uid_users</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">q</span> <span class="ow">or</span> <span class="s2">&quot;&gt;&quot;</span> <span class="ow">in</span> <span class="n">q</span> <span class="ow">or</span> <span class="s2">&quot;&lt;&quot;</span> <span class="ow">in</span> <span class="n">q</span> <span class="ow">or</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">q</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Advanced search&quot;</span><span class="p">)</span>
         <span class="c1"># A mapping between search keys and LDAP entires</span>
         <span class="n">map_attrs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;firstname&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">&quot;givenname&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;nickname&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;first&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">&quot;givenname&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;nickname&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;lastname&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;sn&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;lastname&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;last&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;sn&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;nick&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;nickname&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;nickname&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">&quot;sn&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;mname&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;givenname&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_name&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;middle_name&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;nickname&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;town&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;middlename&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;mname&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;middle&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;mname&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">&quot;homephone&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;mobile&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;homephone&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;homephone&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;cell&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;mobile&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;street&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;zip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;postalcode&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduationYear&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;gradyear&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduationYear&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;mail&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;studentid&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;tjhsstStudentId&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;iodineUidNumber&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;counselor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;counselor&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;objectClass&quot;</span><span class="p">,)</span>
+            <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__city&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;town&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__city&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;middlename&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;middle&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;homephone&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;cell&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__street&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;zip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__postal_code&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduation_year&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;gradyear&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduation_year&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;emails__address&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;studentid&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;counselor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;counselor__last_name&quot;</span><span class="p">,),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;user_type&quot;</span><span class="p">,)</span>
         <span class="p">}</span>
 
-        <span class="n">inner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="c1"># split each word</span>
+        <span class="n">search_query</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">pk__gte</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Initial query that selects all to avoid an empty Q() object.</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
             <span class="c1"># Check for less than/greater than, and replace =</span>
-            <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;__icontains&quot;</span>
             <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
                 <span class="n">cat</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;__icontains&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
                 <span class="n">cat</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;__icontains&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;&lt;&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
                 <span class="n">cat</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span>
-                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&lt;=&quot;</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;__lte&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;&gt;&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
                 <span class="n">cat</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
-                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&gt;=&quot;</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;__gte&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Advanced fallback: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
                 <span class="c1"># Fall back on regular searching (there&#39;s no key)</span>
@@ -266,27 +244,26 @@
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">continue</span>
 
+                <span class="n">default_categories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;nickname&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">admin</span><span class="p">:</span>
+                    <span class="n">default_categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">)</span>
+
+                <span class="n">query</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">pk</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">exact</span><span class="p">:</span>
                     <span class="c1"># No implied wildcard</span>
-                    <span class="n">inner</span> <span class="o">+=</span> <span class="p">((</span><span class="s2">&quot;(|(givenName=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                               <span class="s2">&quot;(sn=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                               <span class="s2">&quot;(iodineUid=</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(mname=</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(nickname=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                                                        <span class="s2">&quot;)&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">default_categories</span><span class="p">:</span>
+                        <span class="n">query</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">cat</span><span class="p">:</span> <span class="n">p</span><span class="p">})</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Search firstname, lastname, uid, nickname (+ middlename if admin) with</span>
                     <span class="c1"># implied wildcard at beginning and end of the search</span>
                     <span class="c1"># string</span>
-                    <span class="n">inner</span> <span class="o">+=</span> <span class="p">((</span><span class="s2">&quot;(|(givenName=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                               <span class="s2">&quot;(givenName=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                               <span class="s2">&quot;(sn=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                               <span class="s2">&quot;(sn=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                               <span class="s2">&quot;(iodineUid=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                               <span class="s2">&quot;(iodineUid=</span><span class="si">{0}</span><span class="s2">*)&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(mname=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                      <span class="s2">&quot;(mname=</span><span class="si">{0}</span><span class="s2">*)&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(nickname=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                                                          <span class="s2">&quot;(nickname=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                                                                                          <span class="s2">&quot;)&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">default_categories</span><span class="p">:</span>
+                        <span class="n">query</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">__icontains&quot;</span><span class="o">.</span><span class="n">fomrat</span><span class="p">(</span><span class="n">cat</span><span class="p">):</span> <span class="n">p</span><span class="p">})</span>
+                <span class="n">search_query</span> <span class="o">&amp;=</span> <span class="n">query</span>
 
                 <span class="k">continue</span>  <span class="c1"># skip rest of processing</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Advanced exact: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">):</span>
                 <span class="c1"># Already exact</span>
@@ -306,13 +283,14 @@
                 <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;student&quot;</span>
 
             <span class="k">if</span> <span class="n">cat</span> <span class="o">==</span> <span class="s2">&quot;type&quot;</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;teacher&quot;</span><span class="p">:</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;tjhsstTeacher&quot;</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;teacher&quot;</span>
             <span class="k">elif</span> <span class="n">cat</span> <span class="o">==</span> <span class="s2">&quot;type&quot;</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;student&quot;</span><span class="p">:</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;tjhsstStudent&quot;</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;student&quot;</span>
 
             <span class="c1"># replace sex:male with sex:m and sex:female with sex:f</span>
             <span class="k">if</span> <span class="n">cat</span> <span class="o">==</span> <span class="s2">&quot;sex&quot;</span> <span class="ow">or</span> <span class="n">cat</span> <span class="o">==</span> <span class="s2">&quot;gender&quot;</span><span class="p">:</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span> <span class="k">else</span> <span class="kc">False</span>
 
             <span class="c1"># if an invalid key, ignore</span>
             <span class="k">if</span> <span class="n">cat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">map_attrs</span><span class="p">:</span>
@@ -320,42 +298,40 @@
 
             <span class="n">attrs</span> <span class="o">=</span> <span class="n">map_attrs</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span>
 
-            <span class="n">inner</span> <span class="o">+=</span> <span class="s2">&quot;(|&quot;</span>
             <span class="c1"># for each of the possible LDAP fields, add to the search query</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">pk</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
-                <span class="n">inner</span> <span class="o">+=</span> <span class="s2">&quot;(</span><span class="si">{}{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-            <span class="n">inner</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>
+                <span class="n">query</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span> <span class="n">val</span><span class="p">})</span>
+            <span class="n">search_query</span> <span class="o">&amp;=</span> <span class="n">query</span>
 
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;(&amp;</span><span class="si">{}</span><span class="s2">(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inner</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running LDAP query: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-
-        <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-            <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-            <span class="n">result_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_query</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># TODO: handle this error</span>
+            <span class="k">pass</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Simple search&quot;</span><span class="p">)</span>
         <span class="c1"># Non-advanced search; no &quot;:&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="c1"># split on each word</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">search_query</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">pk__gte</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Initial query containing all objects to avoid an empty Q() object.</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
             <span class="n">exact</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">):</span>
                 <span class="n">exact</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
+            <span class="n">default_categories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;nickname&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;student_id&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">admin</span><span class="p">:</span>
+                <span class="n">default_categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">pk</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">exact</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Simple exact: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
                 <span class="c1"># No implied wildcard</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;(&amp;(|(givenName=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                          <span class="s2">&quot;(sn=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                          <span class="s2">&quot;(iodineUid=</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(mname=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(nickname=</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                                     <span class="s2">&quot;)(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">default_categories</span><span class="p">:</span>
+                    <span class="n">query</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">cat</span><span class="p">:</span> <span class="n">p</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Simple wildcard: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
@@ -364,37 +340,19 @@
                     <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="c1"># Search for first, last, middle, nickname uid, with implied</span>
                 <span class="c1"># wildcard at beginning and end</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;(&amp;(|(givenName=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                          <span class="s2">&quot;(givenName=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                          <span class="s2">&quot;(sn=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                          <span class="s2">&quot;(sn=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                          <span class="s2">&quot;(iodineUid=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                          <span class="s2">&quot;(iodineUid=</span><span class="si">{0}</span><span class="s2">*)&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(mname=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                 <span class="s2">&quot;(mname=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                                                 <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;(nickname=*</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                                                                      <span class="s2">&quot;(nickname=</span><span class="si">{0}</span><span class="s2">*)&quot;</span>
-                                                                      <span class="s2">&quot;)(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">default_categories</span><span class="p">:</span>
+                    <span class="n">query</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">__icontains&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cat</span><span class="p">):</span> <span class="n">p</span><span class="p">})</span>
+            <span class="n">search_query</span> <span class="o">&amp;=</span> <span class="n">query</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running LDAP query: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running query: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">search_query</span><span class="p">))</span>
 
-            <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">new_dns</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="c1"># if multiple words, delete those that weren&#39;t in previous searches</span>
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-                <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">new_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">result_dns</span><span class="p">:</span>
-                    <span class="n">new_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-
-            <span class="n">result_dns</span> <span class="o">=</span> <span class="n">new_dns</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_query</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
     <span class="c1"># loop through the DNs saved and get actual user objects</span>
     <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">result_dns</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span> <span class="ow">and</span> <span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">users</span></div>
@@ -406,65 +364,11 @@
 
     <span class="k">for</span> <span class="n">qu</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; OR &quot;</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">users</span> <span class="o">+=</span> <span class="n">do_ldap_query</span><span class="p">(</span><span class="n">qu</span><span class="p">,</span> <span class="n">admin</span><span class="p">)</span>
+            <span class="n">users</span> <span class="o">+=</span> <span class="n">query</span><span class="p">(</span><span class="n">qu</span><span class="p">,</span> <span class="n">admin</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid query&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">users</span></div>
-
-
-<div class="viewcode-block" id="do_classes_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_classes_search">[docs]</a><span class="k">def</span> <span class="nf">do_classes_search</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-    <span class="n">result_dns</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
-    <span class="n">parts</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-    <span class="c1"># split on each word</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
-        <span class="n">exact</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">):</span>
-            <span class="n">exact</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">exact</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Simple exact: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-            <span class="c1"># No implied wildcard</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;(&amp;(|(tjhsstClassId=</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;(cn=</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;)(|(objectClass=tjhsstClass)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Simple wildcard: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="c1"># Search for first, last, middle, nickname uid, with implied</span>
-            <span class="c1"># wildcard at beginning and end</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;(&amp;(|(tjhsstClassId=*</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;(tjhsstClassId=</span><span class="si">{0}</span><span class="s2">*)&quot;</span> <span class="s2">&quot;(cn=*</span><span class="si">{0}</span><span class="s2">)&quot;</span> <span class="s2">&quot;(cn=</span><span class="si">{0}</span><span class="s2">*)&quot;</span> <span class="s2">&quot;)(|(objectClass=tjhsstClass)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running LDAP query: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-
-        <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">CLASS_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">new_dns</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># if multiple words, delete those that weren&#39;t in previous searches</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-            <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">new_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">result_dns</span><span class="p">:</span>
-                <span class="n">new_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
-
-        <span class="n">result_dns</span> <span class="o">=</span> <span class="n">new_dns</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="c1"># loop through the DNs saved and get actual user objects</span>
-    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">result_dns</span><span class="p">:</span>
-        <span class="n">result_class</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">result_class</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-            <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_class</span><span class="p">)</span>
-    <span class="n">classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">classes</span></div>
 
 
 <div class="viewcode-block" id="do_activities_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_activities_search">[docs]</a><span class="k">def</span> <span class="nf">do_activities_search</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
@@ -522,7 +426,6 @@
         <span class="n">activities</span> <span class="o">=</span> <span class="n">do_activities_search</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
         <span class="n">announcements</span> <span class="o">=</span> <span class="n">do_announcements_search</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">do_events_search</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-        <span class="n">classes</span> <span class="o">=</span> <span class="n">do_classes_search</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">announcements</span><span class="p">)</span>
@@ -541,7 +444,6 @@
             <span class="s2">&quot;announcements&quot;</span><span class="p">:</span> <span class="n">announcements</span><span class="p">,</span>  <span class="c1"># Announcement objects</span>
             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>  <span class="c1"># Event objects</span>
             <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>  <span class="c1"># EighthActivity objects</span>
-            <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">classes</span>  <span class="c1"># Class from LDAP</span>
         <span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;search_results&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>

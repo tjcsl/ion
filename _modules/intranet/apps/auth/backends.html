@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -150,6 +150,7 @@
 <span class="c1"># from django.views.decorators.debug import sensitive_variables</span>
 
 <span class="kn">import</span> <span class="nn">pexpect</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
@@ -165,13 +166,9 @@
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.kinit_timeout_handle"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.</span>
-
-<span class="sd">        If the user does not exist in LDAP, only throw a warning.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2"> (invalid user)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
             <span class="k">return</span>
@@ -214,7 +211,10 @@
             <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+            <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2"> expired, needs reset&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
+                <span class="k">return</span> <span class="s2">&quot;reset&quot;</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">exitstatus</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span>
         <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
@@ -222,25 +222,30 @@
             <span class="n">exitstatus</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">AD_REALM</span>
             <span class="k">try</span><span class="p">:</span>
+                <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">AD_REALM</span>
                 <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
-                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
-                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+                <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2"> expired, needs reset&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="s2">&quot;reset&quot;</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="n">exitstatus</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span>
             <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
                 <span class="n">KerberosAuthenticationBackend</span><span class="o">.</span><span class="n">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
                 <span class="n">exitstatus</span> <span class="o">=</span> <span class="mi">1</span>
 
+        <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;kdestroy&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]])</span>
+            <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos authorized </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
     <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
@@ -258,11 +263,6 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            `User`</span>
 
-<span class="sd">        NOTE: None is returned when the user account does not exist. However,</span>
-<span class="sd">        if the account exists but does not exist in LDAP, which is the case for</span>
-<span class="sd">        former and future students who do not have Intranet access, a dummy user</span>
-<span class="sd">        is returned that has the flag is_active=False. (The is_active property in</span>
-<span class="sd">        the User class returns False when the username starts with &quot;INVALID_USER&quot;.)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -273,40 +273,36 @@
 
         <span class="n">krb_ticket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">krb_ticket</span> <span class="o">==</span> <span class="s2">&quot;reset&quot;</span><span class="p">:</span>
+            <span class="n">user</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;RESET_PASSWORD&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">krb_ticket</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication successful&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="c1"># Most likely recently graduated user who has been removed from ldap, but can still login.</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2"> successfully authenticated but not found in LDAP.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
-
-                <span class="n">user</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;INVALID_USER&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">99999</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="n">user</span></div>
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
-
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
-
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div></div>
 
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">MasterPasswordAuthenticationBackend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is in secret.py.</span>
-
-<span class="sd">    Forces a simple LDAP bind.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -330,7 +326,7 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_PASSWORD</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_NOTIFY</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication FAILED due to invalid username </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
@@ -345,17 +341,14 @@
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
-
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
-
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>

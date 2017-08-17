@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -142,10 +142,10 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
 <span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
-<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">ObjectDoesNotExist</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -163,10 +163,11 @@
 <div class="viewcode-block" id="Command.chk"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.chk">[docs]</a>    <span class="k">def</span> <span class="nf">chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OK: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ERROR: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="n">do_run</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">]</span>
@@ -180,12 +181,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;In pretend mode.&quot;</span><span class="p">)</span>
 
-        <span class="n">current_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">current_year</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
         <span class="n">new_senior_year</span> <span class="o">=</span> <span class="n">current_year</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">turnover_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">current_year</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Turnover date set to: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">turnover_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span><span class="p">)))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span><span class="s2">&quot;SENIOR_GRADUATION_YEAR = </span><span class="si">{}</span><span class="s2"> in settings/__init__.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_senior_year</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">==</span> <span class="n">new_senior_year</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span><span class="s2">&quot;SENIOR_GRADUATION_YEAR = </span><span class="si">{}</span><span class="s2"> in settings/__init__.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_senior_year</span><span class="p">),</span>
+                        <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">==</span> <span class="n">new_senior_year</span><span class="p">):</span>
+            <span class="k">return</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        EIGHTH:</span>
 <span class="sd">            EighthBlock: filtered</span>
@@ -213,7 +217,7 @@
 
 <div class="viewcode-block" id="Command.clear_absences"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.clear_absences">[docs]</a>    <span class="k">def</span> <span class="nf">clear_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">absents</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> absents&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absents</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> absent eighth signups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absents</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">absents</span><span class="p">:</span>
             <span class="n">a</span><span class="o">.</span><span class="n">archive_remove_absence</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Archived absences&quot;</span><span class="p">)</span></div>
@@ -222,16 +226,14 @@
         <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seen_welcome</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.handle_delete"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">usr</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">usr</span><span class="o">.</span><span class="n">first_name</span>
-            <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">%s</span><span class="s2"> DELETE&quot;</span> <span class="o">%</span> <span class="n">usr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">usr</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year__lt</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usr</span><span class="o">.</span><span class="n">is_superuser</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">usr</span><span class="o">.</span><span class="n">is_staff</span><span class="p">:</span>
                 <span class="n">usr</span><span class="o">.</span><span class="n">handle_delete</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">usr</span><span class="o">.</span><span class="n">delete</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">usr</span><span class="o">.</span><span class="n">delete</span><span class="p">()))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># self.stdout.write(&quot;User %s KEEP&quot; % usr)</span>
-                <span class="k">pass</span></div></div>
+                <span class="n">usr</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;alum&quot;</span>
+                <span class="n">usr</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2"> KEEP&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">usr</span><span class="o">.</span><span class="n">username</span><span class="p">))</span></div></div>
 </pre></div>
 
     </div>

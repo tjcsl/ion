@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -139,7 +139,6 @@
   <h1>Source code for intranet.apps.users.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -153,9 +152,7 @@
 
 <span class="kn">from</span> <span class="nn">raven.contrib.django.raven_compat.models</span> <span class="k">import</span> <span class="n">client</span>
 
-<span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="k">import</span> <span class="n">LDAPConnection</span><span class="p">,</span> <span class="n">LDAPFilter</span>
-
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Class</span><span class="p">,</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..eighth.utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 
@@ -177,7 +174,7 @@
 
     <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">profile_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="n">profile_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">profile_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">Http404</span>
@@ -227,10 +224,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_eighth</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
         <span class="n">eighth_schedule</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">ionldap_courses</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_IONLDAP</span><span class="p">:</span>
-        <span class="n">ionldap_courses</span> <span class="o">=</span> <span class="n">get_ionldap_courses</span><span class="p">(</span><span class="n">profile_user</span><span class="p">,</span> <span class="n">current_user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-
     <span class="n">has_been_nominated</span> <span class="o">=</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">username</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="n">u</span><span class="o">.</span><span class="n">nominee</span><span class="o">.</span><span class="n">username</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">nomination_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">position__position_name</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">NOMINATION_POSITION</span><span class="p">)</span>
     <span class="p">]</span>
@@ -240,23 +233,11 @@
         <span class="s2">&quot;can_view_eighth&quot;</span><span class="p">:</span> <span class="n">can_view_eighth</span><span class="p">,</span>
         <span class="s2">&quot;eighth_restricted_msg&quot;</span><span class="p">:</span> <span class="n">eighth_restricted_msg</span><span class="p">,</span>
         <span class="s2">&quot;eighth_sponsor_schedule&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor_schedule</span><span class="p">,</span>
-        <span class="s2">&quot;ionldap_courses&quot;</span><span class="p">:</span> <span class="n">ionldap_courses</span><span class="p">,</span>
         <span class="s2">&quot;nominations_active&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">NOMINATIONS_ACTIVE</span><span class="p">,</span>
         <span class="s2">&quot;nomination_position&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">NOMINATION_POSITION</span><span class="p">,</span>
         <span class="s2">&quot;has_been_nominated&quot;</span><span class="p">:</span> <span class="n">has_been_nominated</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/profile.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_ionldap_courses"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.views.get_ionldap_courses">[docs]</a><span class="k">def</span> <span class="nf">get_ionldap_courses</span><span class="p">(</span><span class="n">profile_user</span><span class="p">,</span> <span class="n">current_user</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">can_view</span> <span class="o">=</span> <span class="p">(</span><span class="ow">not</span> <span class="n">current_user</span> <span class="ow">or</span> <span class="p">(</span><span class="n">current_user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">current_user</span> <span class="o">==</span> <span class="n">profile_user</span> <span class="ow">or</span> <span class="n">current_user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">current_user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">or</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">ionldap_courses</span>
-
-    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="picture_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.views.picture_view">[docs]</a><span class="nd">@login_required</span>
@@ -272,7 +253,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">Http404</span>
     <span class="n">default_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;static/img/default_profile_pic.png&quot;</span><span class="p">)</span>
@@ -282,29 +263,27 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">year</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">preferred</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span>
-            <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">preferred</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;Photo&quot;</span><span class="p">):</span>
-                    <span class="n">preferred</span> <span class="o">=</span> <span class="n">preferred</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;Photo&quot;</span><span class="p">)]</span>
 
-            <span class="k">if</span> <span class="n">preferred</span> <span class="o">==</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">default_photo</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">default_photo</span>
                 <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
             <span class="c1"># Exclude &#39;graduate&#39; from names array</span>
-            <span class="k">elif</span> <span class="n">preferred</span> <span class="ow">in</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photo_binary</span><span class="p">(</span><span class="n">preferred</span><span class="p">)</span>
-
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">preferred</span><span class="o">.</span><span class="n">binary</span>
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
                     <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photo_binary</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+            <span class="n">grade_number</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">number_from_name</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">binary</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
                 <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -321,111 +300,6 @@
         <span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">response</span></div>
-
-
-<div class="viewcode-block" id="class_section_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.views.class_section_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">class_section_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_IONLDAP</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;ionldap_class_section&quot;</span><span class="p">,</span> <span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
-
-    <span class="n">c</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">name</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-
-    <span class="n">students</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">students</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
-
-    <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;students&quot;</span><span class="p">:</span> <span class="n">students</span><span class="p">,</span>
-        <span class="s2">&quot;teacher&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">teacher</span><span class="p">,</span>
-        <span class="s2">&quot;quarters&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">quarters</span><span class="p">,</span>
-        <span class="s2">&quot;periods&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">periods</span><span class="p">,</span>
-        <span class="s2">&quot;course_length&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">course_length</span><span class="p">,</span>
-        <span class="s2">&quot;room_number&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">room_number</span><span class="p">,</span>
-        <span class="s2">&quot;class_id&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">class_id</span><span class="p">,</span>
-        <span class="s2">&quot;section_id&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">section_id</span><span class="p">,</span>
-        <span class="s2">&quot;sections&quot;</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">sections</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;class_section_csv&quot;</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
-        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="s2">class_</span><span class="si">{}</span><span class="s2">.csv</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section_id</span><span class="p">)</span>
-
-        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-
-        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Student ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;TJ Email&quot;</span><span class="p">])</span>
-
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">students</span><span class="p">:</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">last_first</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">student_id</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">student_id</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">response</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">attrs</span><span class="p">,</span> <span class="s2">&quot;show_emails&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)}</span>
-
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/class.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="class_room_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.views.class_room_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">class_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_IONLDAP</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;ionldap_class_room&quot;</span><span class="p">,</span> <span class="n">room_id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
-
-    <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-    <span class="n">room_id</span> <span class="o">=</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
-
-    <span class="n">classes</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;ou=schedule,dc=tjhsst,dc=edu&quot;</span><span class="p">,</span> <span class="s2">&quot;(&amp;(objectClass=tjhsstClass)(roomNumber=</span><span class="si">{}</span><span class="s2">))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;tjhsstSectionId&quot;</span><span class="p">])</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">schedule</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-            <span class="n">class_dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-            <span class="n">class_object</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">class_dn</span><span class="p">)</span>
-            <span class="n">sortvalue</span> <span class="o">=</span> <span class="n">class_object</span><span class="o">.</span><span class="n">sortvalue</span>
-            <span class="n">schedule</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sortvalue</span><span class="p">,</span> <span class="n">class_object</span><span class="p">))</span>
-
-        <span class="n">ordered_schedule</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">classes_objs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">ordered_schedule</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># The class objects</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">classes_objs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;room&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">,</span> <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">classes_objs</span><span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/class_room.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="all_classes_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.views.all_classes_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">all_classes_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_IONLDAP</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;ionldap_all_classes&quot;</span><span class="p">)</span>
-
-    <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
-
-    <span class="n">classes</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;ou=schedule,dc=tjhsst,dc=edu&quot;</span><span class="p">,</span> <span class="s2">&quot;objectClass=tjhsstClass&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;tjhsstSectionId&quot;</span><span class="p">])</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> classes found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)))</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">schedule</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-            <span class="n">class_dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]</span>
-            <span class="n">class_object</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">class_dn</span><span class="p">)</span>
-            <span class="n">sortvalue</span> <span class="o">=</span> <span class="n">class_object</span><span class="o">.</span><span class="n">sortvalue</span>
-            <span class="n">schedule</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sortvalue</span><span class="p">,</span> <span class="n">class_object</span><span class="p">))</span>
-
-        <span class="n">ordered_schedule</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">classes_objs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">ordered_schedule</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># The class objects</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">classes_objs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">classes_objs</span><span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/all_classes.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

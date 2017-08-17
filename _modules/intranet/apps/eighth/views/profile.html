@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -142,8 +142,6 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_obj</span>
-
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
@@ -153,7 +151,7 @@
 <span class="kn">from</span> <span class="nn">..serializers</span> <span class="k">import</span> <span class="n">EighthBlockDetailSerializer</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 <span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
-<span class="kn">from</span> <span class="nn">...users.forms</span> <span class="k">import</span> <span class="n">ProfileEditForm</span>
+<span class="kn">from</span> <span class="nn">...users.forms</span> <span class="k">import</span> <span class="n">ProfileEditForm</span><span class="p">,</span> <span class="n">AddressForm</span>
 <span class="kn">from</span> <span class="nn">...users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">....utils.serialization</span> <span class="k">import</span> <span class="n">safe_json</span>
 
@@ -167,63 +165,28 @@
 <div class="viewcode-block" id="edit_profile_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.edit_profile_view">[docs]</a><span class="nd">@eighth_admin_required</span>
 <span class="k">def</span> <span class="nf">edit_profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
-
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">ProfileEditForm</span><span class="o">.</span><span class="n">FIELDS</span><span class="p">:</span>
-        <span class="n">defaults</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">ProfileEditForm</span><span class="o">.</span><span class="n">ADDRESS_FIELDS</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">address</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">defaults</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">defaults</span><span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">defaults</span><span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">defaults</span><span class="p">[</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="kc">None</span>
-
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving&quot;</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="k">pass</span>  <span class="c1"># We don&#39;t care.</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span>
-        <span class="n">new_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="n">new</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
-            <span class="c1"># old = defaults[field]</span>
-            <span class="c1"># if str(new) != str(old):</span>
-            <span class="c1">#    new_data[field] = new</span>
-            <span class="n">new_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
-
-        <span class="n">raw_ldap_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">,</span> <span class="s2">&quot;street&quot;</span><span class="p">,</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;postal_code&quot;</span><span class="p">,</span> <span class="s2">&quot;counselor&quot;</span><span class="p">]</span>
-        <span class="n">raw_ldap_override</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;st&quot;</span><span class="p">,</span> <span class="s2">&quot;postal_code&quot;</span><span class="p">:</span> <span class="s2">&quot;postalCode&quot;</span><span class="p">,</span> <span class="s2">&quot;counselor_id&quot;</span><span class="p">:</span> <span class="s2">&quot;counselor&quot;</span><span class="p">}</span>
-        <span class="n">override_set</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;graduation_year&quot;</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">new_data</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">raw_ldap_attributes</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">raw_ldap_override</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="n">raw_ldap_override</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">new_data</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
-                        <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting raw </span><span class="si">{}</span><span class="s2">=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
-                    <span class="n">user</span><span class="o">.</span><span class="n">set_raw_ldap_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting regular </span><span class="si">{}</span><span class="s2">=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">user</span><span class="o">.</span><span class="n">set_ldap_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">override_set</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">address_form</span> <span class="o">=</span> <span class="n">AddressForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">counselor_id</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;counselor_id&#39;</span><span class="p">]</span>
+            <span class="n">counselor</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">counselor_id</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;birthday&#39;</span><span class="p">]</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="o">=</span> <span class="n">counselor</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully updated student profile.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;An error occurred updating the student profile.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;counselor_id&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                             <span class="s1">&#39;birthday&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span><span class="p">},</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">address_form</span> <span class="o">=</span> <span class="n">AddressForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;user_form&quot;</span><span class="p">:</span> <span class="n">user_form</span><span class="p">,</span> <span class="s2">&quot;address_form&quot;</span><span class="p">:</span> <span class="n">address_form</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/edit_profile.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
@@ -235,11 +198,10 @@
             <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-
     <span class="k">if</span> <span class="n">profile_user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;is request sender: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile_user</span><span class="o">.</span><span class="n">is_http_request_sender</span><span class="p">()))</span>
+    <span class="c1"># logger.debug(&quot;is request sender: {}&quot;.format(profile_user.properties.is_http_request_sender()))</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">custom_date_set</span> <span class="o">=</span> <span class="kc">False</span>

@@ -20,14 +20,6 @@ intranet\.apps\.users\.management\.commands\.dynamic\_groups module
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.users\.management\.commands\.fix\_bad\_users module
--------------------------------------------------------------------
-
-.. automodule:: intranet.apps.users.management.commands.fix_bad_users
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet\.apps\.users\.management\.commands\.import\_groups module
 ------------------------------------------------------------------
 

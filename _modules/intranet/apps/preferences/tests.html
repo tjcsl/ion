@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -138,33 +138,17 @@
       
   <h1>Source code for intranet.apps.preferences.tests</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
 <div class="viewcode-block" id="PreferencesTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest">[docs]</a><span class="k">class</span> <span class="nc">PreferencesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 
-    <span class="n">settings_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;showpictures-self&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;mobile_phone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;5555555555&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;showschedule-self&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;home_phone&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;5555555555&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;webpage_0&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;https://ion.tjhsst.edu/logout&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;receive_push_notifications&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;email_0&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;awilliam@tjhsst.edu&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;showbirthday-self&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;preferred_photo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AUTO&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;other_phone_0&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;5555555555&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;showschedule&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showeighth-self&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showeighth&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showbirthday&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showpictures&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showtelephone-self&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showtelephone&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showaddress-self&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;showaddress&#39;</span><span class="p">:</span> <span class="kc">None</span>
-    <span class="p">}</span>
+<div class="viewcode-block" id="PreferencesTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;99999&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PreferencesTest.test_get_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -173,20 +157,81 @@
 
 <div class="viewcode-block" id="PreferencesTest.test_set_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_set_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_set_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;preferences&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+        <span class="n">settings_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pf-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-0-number&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;555-555-5555&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;preferred_photo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AUTO&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-0-address&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;awilliam@tjhsst.edu&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;show_pictures-self&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-0-purpose&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;ef-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;receive_push_notifications&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-0-url&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;http://ion.tjhsst.edu/logout&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;wf-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;pf-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                         <span class="s1">&#39;show_pictures&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">]}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;preferences&#39;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PreferencesTest.test_clear_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_clear_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="n">pref_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mobile_phone&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;home_phone&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;other_phone_0&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
-        <span class="n">pref_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">)</span>
+        <span class="n">pref_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pf-1-number&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-1-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-0-number&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;555-555-5555&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-1-purpose&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-0-url&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;http://ion.tjhsst.edu/logout&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-1-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-0-DELETE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-1-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-0-DELETE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-1-address&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-1-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-MIN_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-0-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-1-url&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;preferred_photo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AUTO&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-0-address&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;awilliam@tjhsst.edu&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-0-purpose&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1000&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-1-id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;wf-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-0-DELETE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;pf-0-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;ef-1-user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;99999&#39;</span><span class="p">],</span>
+                     <span class="s1">&#39;show_pictures&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">]}</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertLogs</span><span class="p">(</span><span class="s2">&quot;intranet.apps.preferences.views&quot;</span><span class="p">,</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;preferences&#39;</span><span class="p">),</span> <span class="n">pref_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="p">[</span>
             <span class="s2">&quot;DEBUG:intranet.apps.preferences.views:Unable to set field phones with value []&quot;</span>
             <span class="s2">&quot;: Can not set User attribute &#39;phones&#39; -- not in user attribute list.&quot;</span>
         <span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

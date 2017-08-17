@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -139,30 +139,55 @@
   <h1>Source code for intranet.apps.preferences.fields</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.core</span> <span class="k">import</span> <span class="n">validators</span>
 <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">force_text</span>
 
 
-<div class="viewcode-block" id="PhoneField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField">[docs]</a><span class="k">class</span> <span class="nc">PhoneField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
+<div class="viewcode-block" id="PhoneField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField">[docs]</a><span class="k">class</span> <span class="nc">PhoneField</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Model field for a phone number&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;max_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">17</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PhoneField.deconstruct"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.deconstruct">[docs]</a>    <span class="k">def</span> <span class="nf">deconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">deconstruct</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;max_length&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span></div>
+
+<div class="viewcode-block" id="PhoneField.get_internal_type"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.get_internal_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_internal_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;CharField&#39;</span></div>
+
+<div class="viewcode-block" id="PhoneField.formfield"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.formfield">[docs]</a>    <span class="k">def</span> <span class="nf">formfield</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># This is a fairly standard way to set up some defaults</span>
+        <span class="c1"># while letting the caller override them.</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form_class&#39;</span><span class="p">:</span> <span class="n">PhoneFormField</span><span class="p">}</span>
+        <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">formfield</span><span class="p">(</span><span class="o">**</span><span class="n">defaults</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PhoneFormField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField">[docs]</a><span class="k">class</span> <span class="nc">PhoneFormField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
     <span class="n">widget</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span>
     <span class="n">default_error_messages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;incomplete&#39;</span><span class="p">:</span> <span class="s1">&#39;Please enter a phone number.&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid&#39;</span><span class="p">:</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PhoneFormField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validators</span><span class="o">.</span><span class="n">RegexValidator</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^[\dA-Z]</span><span class="si">{3}</span><span class="s1">-?[\dA-Z]</span><span class="si">{3}</span><span class="s1">-?[\dA-Z]</span><span class="si">{4}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="s1">&#39;Please enter a valid phone number.&#39;</span><span class="p">))</span>
 
-<div class="viewcode-block" id="PhoneField.to_python"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="PhoneFormField.to_python"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a Unicode object.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_values</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="PhoneField.prepare_value"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.prepare_value">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PhoneFormField.prepare_value"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField.prepare_value">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span> <span class="k">else</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="PhoneField.widget_attrs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.widget_attrs">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PhoneFormField.widget_attrs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField.widget_attrs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">widget_attrs</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Max phone number is 15, and US numbers can start with +1, so max length is 17</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;maxlength&quot;</span><span class="p">:</span> <span class="s2">&quot;17&quot;</span><span class="p">}</span></div></div>

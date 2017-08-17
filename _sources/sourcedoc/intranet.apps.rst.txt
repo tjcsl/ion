@@ -9,7 +9,6 @@ Subpackages
     intranet.apps.announcements
     intranet.apps.api
     intranet.apps.auth
-    intranet.apps.board
     intranet.apps.dashboard
     intranet.apps.dataimport
     intranet.apps.eighth
@@ -20,7 +19,6 @@ Subpackages
     intranet.apps.feedback
     intranet.apps.files
     intranet.apps.groups
-    intranet.apps.ionldap
     intranet.apps.itemreg
     intranet.apps.lostfound
     intranet.apps.nomination

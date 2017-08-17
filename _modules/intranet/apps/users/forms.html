@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.forms &#8212; TJ Intranet v3 (Build #3896) documentation</title>
+    <title>intranet.apps.users.forms &#8212; TJ Intranet v3 (Build #3957) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3896)',
+        VERSION:     'v3 (Build #3957)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -139,36 +139,33 @@
   <h1>Source code for intranet.apps.users.forms</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">..preferences.fields</span> <span class="k">import</span> <span class="n">PhoneField</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Address</span>
 
 
-<div class="viewcode-block" id="ProfileEditForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.ProfileEditForm">[docs]</a><span class="k">class</span> <span class="nc">ProfileEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+<div class="viewcode-block" id="ProfileEditForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.ProfileEditForm">[docs]</a><span class="k">class</span> <span class="nc">ProfileEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A form containing editable fields in the User model.&quot;&quot;&quot;</span>
-    <span class="n">admin_comments</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Admin Comments&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">GENDERS</span> <span class="o">=</span> <span class="p">((</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">),</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">))</span>
 
+    <span class="n">admin_comments</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Admin Comments&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">student_id</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;FCPS Student ID&quot;</span><span class="p">)</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;First Name&quot;</span><span class="p">)</span>
     <span class="n">middle_name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Middle Name&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">last_name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Last Name&quot;</span><span class="p">)</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">)</span>
     <span class="n">nickname</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nickname&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">graduation_year</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Graduation Year&quot;</span><span class="p">)</span>
-    <span class="n">sex</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sex (M or F)&quot;</span><span class="p">)</span>
-    <span class="n">birthday</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Birth Date&quot;</span><span class="p">)</span>
-    <span class="n">home_phone</span> <span class="o">=</span> <span class="n">PhoneField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Home Phone&quot;</span><span class="p">)</span>
-
-    <span class="n">street</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Street&quot;</span><span class="p">)</span>
-    <span class="n">city</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;City&quot;</span><span class="p">)</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;State&quot;</span><span class="p">)</span>
-    <span class="n">postal_code</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;ZIP&quot;</span><span class="p">)</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">GENDERS</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sex (M or F)&quot;</span><span class="p">)</span>
     <span class="n">counselor_id</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Counselor ID&quot;</span><span class="p">)</span>
-    <span class="c1"># locker = forms.CharField(label=&quot;Locker&quot;)</span>
+    <span class="n">birthday</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Birth Date&quot;</span><span class="p">)</span>
+    <span class="c1"># # locker = forms.CharField(label=&quot;Locker&quot;)</span>
 
-    <span class="n">FIELDS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;admin_comments&quot;</span><span class="p">,</span> <span class="s2">&quot;student_id&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;middle_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;nickname&quot;</span><span class="p">,</span> <span class="s2">&quot;graduation_year&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;birthday&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;home_phone&quot;</span>
-    <span class="p">]</span>
-    <span class="n">ADDRESS_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;street&quot;</span><span class="p">,</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;postal_code&quot;</span><span class="p">]</span></div>
+    <span class="c1"># FIELDS = []</span>
+    <span class="c1"># ADDRESS_FIELDS = [&quot;street&quot;, &quot;city&quot;, &quot;state&quot;, &quot;postal_code&quot;]</span>
+
+<div class="viewcode-block" id="ProfileEditForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.ProfileEditForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;admin_comments&quot;</span><span class="p">,</span> <span class="s2">&quot;student_id&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;middle_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;nickname&quot;</span><span class="p">,</span> <span class="s2">&quot;graduation_year&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span>
+        <span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="UserChoiceField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserChoiceField">[docs]</a><span class="k">class</span> <span class="nc">UserChoiceField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">):</span>
@@ -217,6 +214,19 @@
 <div class="viewcode-block" id="SortedTeacherMultipleChoiceField.label_from_instance"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.SortedTeacherMultipleChoiceField.label_from_instance">[docs]</a>    <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_first_initial</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_username</span> <span class="k">else</span> <span class="n">name</span></div></div>
+
+
+<div class="viewcode-block" id="AddressForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.AddressForm">[docs]</a><span class="k">class</span> <span class="nc">AddressForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Form for user address&quot;&quot;&quot;</span>
+
+    <span class="n">street</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Street&quot;</span><span class="p">)</span>
+    <span class="n">city</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;City&quot;</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;State&quot;</span><span class="p">)</span>
+    <span class="n">postal_code</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;ZIP&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AddressForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.AddressForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Address</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;street&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">]</span></div></div>
 </pre></div>
 
     </div>
