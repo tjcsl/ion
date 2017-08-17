@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
 import random
-import subprocess
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
@@ -175,8 +173,6 @@ class LoginView(View):
                 return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())
             # Initial load into session
-            if "KRB5CCNAME" in os.environ:
-                request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
             logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
             logger.info("request.user: {}".format(request.user))
 
@@ -226,10 +222,7 @@ def about_view(request):
 
 
 def do_logout(request):
-    """Clear the Kerberos cache and logout."""
-    if "KRB5CCNAME" in request.session:
-        subprocess.check_call(['kdestroy', '-c', request.session["KRB5CCNAME"]])
-    logger.info("Destroying kerberos cache and logging out")
+    """Logout."""
     logout(request)
 
 

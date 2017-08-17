@@ -28,14 +28,6 @@ intranet\.middleware\.email\_handler module
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.environment module
-----------------------------------------
-
-.. automodule:: intranet.middleware.environment
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet\.middleware\.maintenancemode module
 --------------------------------------------
 

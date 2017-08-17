@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import check_password
 # from django.views.decorators.debug import sensitive_variables
 
 import pexpect
+import subprocess
 
 from ..users.models import User
 
@@ -97,13 +98,15 @@ class KerberosAuthenticationBackend(object):
                 KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
                 exitstatus = 1
 
+        if "KRB5CCNAME" in os.environ:
+            subprocess.check_call(['kdestroy', '-c', os.environ["KRB5CCNAME"]])
+            del os.environ["KRB5CCNAME"]
+
         if exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
             return True
         else:
             logger.debug("Kerberos failed to authorize {}".format(username))
-            if "KRB5CCNAME" in os.environ:
-                del os.environ["KRB5CCNAME"]
             return False
 
     # @method_decorator(sensitive_variables("password"))

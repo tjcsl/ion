@@ -331,7 +331,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "intranet.middleware.oauth2_provider.OAuth2TokenMiddleware",  # Django Oauth toolkit
     "intranet.middleware.maintenancemode.MaintenanceModeMiddleware",  # Maintenance mode
-    "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
     "django.contrib.messages.middleware.MessageMiddleware",  # Messages
@@ -512,8 +511,6 @@ INSTALLED_APPS = [
     "intranet.apps.parking",
     "intranet.apps.dataimport",
     "intranet.apps.nomination",
-    # Intranet middleware
-    "intranet.middleware.environment",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",
