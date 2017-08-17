@@ -533,6 +533,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "student"
 
     @property
+    def is_alum(self):
+        """Checks if user is an alumnus.
+
+        Returns:
+            Boolean
+
+        """
+        return self.user_type == "alum"
+
+    @property
     def is_senior(self):
         """Checks if user is a student in Grade 12.
 
