@@ -52,7 +52,7 @@
                 <div class="logo"></div>
                 <h1>Intranet</h1>
             </a>
-            {% if request.user.user_type != "user" %}
+            {% if not request.user.is_restricted %}
             <form class="search" action="/search" method="get" autocomplete="off">
                 <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" aria-label="Search directory and more" />
                 <button type="submit" class="search-button" aria-label="Search">
@@ -91,7 +91,7 @@
                 </div>
                 <ul class="dropdown-menu">
                     <div class="arrow"></div>
-                    {% if request.user.user_type != "user" %}
+                    {% if not request.user.is_restricted %}
                     <li><a href="{% url 'user_profile'%}"><i class="fa fa-user"></i> My Profile</a></li>
                     <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> Preferences</a></li>
                     <li><a href="{% url 'itemreg' %}"><i class="fa fa-pencil-square-o"></i> Item Registration</a></li>

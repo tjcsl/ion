@@ -16,7 +16,7 @@
             <i class="fa fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
         {% endif %}
 
-        {% if link_to_announcement and request.user.user_type != "user" %}
+        {% if link_to_announcement and not request.user.is_restricted %}
         <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
             {{ announcement.title }}
         </a>
@@ -34,7 +34,7 @@
                 {% endif %}
                 </a>
             {% endif %}
-            {% if request.user.user_type != "user" %}
+            {% if not request.user.is_restricted %}
                 <a href="{% url 'view_announcement' announcement.id %}" title="Announcement permalink">
                     <i class="fa fa-paperclip fa-flip-horizontal"></i>
                 </a>

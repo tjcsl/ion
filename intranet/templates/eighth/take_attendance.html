@@ -444,7 +444,7 @@
                 </form>
 
                 <br />
-                {% if request.user.user_type != "user" %}
+                {% if not request.user.is_restricted %}
                 <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 &nbsp; &nbsp;
                 {% endif %}

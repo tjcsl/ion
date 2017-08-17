@@ -47,7 +47,7 @@
             </a>
         </li>
         {% endcomment %}
-        {% if request.user.user_type != "user" %}
+        {% if not request.user.is_restricted %}
         <li {% if nav_category == "events" %}class="selected"{% endif %}>
             <a href="{% url 'events' %}">
                 <i class="nav-icon events-icon"></i>

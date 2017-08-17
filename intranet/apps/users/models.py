@@ -566,6 +566,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return not self.username.startswith("INVALID_USER") and not self.user_locked
 
     @property
+    def is_restricted(self):
+        """Checks if user needs the restricted view of Ion
+
+        This applies to users that are user_type 'user', user_type 'alum'
+        or user_type 'service'
+
+        """
+
+        return self.user_type in ['user', 'alum', 'service']
+
+    @property
     def is_staff(self):
         """Checks if a user should have access to the Django Admin interface.
 

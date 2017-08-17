@@ -12,8 +12,8 @@ class RestrictUserMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        if (request.user.is_authenticated and request.user.user_type == "user" and
-                not re.match(settings.ATTENDANCE_ALLOWED_PATHS_REGEX, request.path)):
+        if (request.user.is_authenticated and request.user.is_restricted and
+                not re.match(settings.RESTRICTED_ALLOWED_PATHS_REGEX, request.path)):
             messages.error(request, "You are not allowed to access this page.")
             return redirect("/")
         else:

@@ -63,9 +63,9 @@
     {% if show_admin_widget %}
         {% include "dashboard/admin.html" %}
     {% endif %}
-    
+
     {% include "dashboard/links.html" %}
-    
+
     {% if is_student %}
         {% include "dashboard/seniors.html" %}
     {% endif %}
@@ -89,7 +89,7 @@
                 <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
-            {% if request.user.user_type != "user" %}
+            {% if not request.user.is_restricted %}
             {% if announcements_admin %}
                 {% if "show_all" not in request.GET %}
                     <a class="button" href="{% url view_announcements_url %}?show_all=1">
@@ -157,7 +157,7 @@
             {% include "dashboard/senior_forwarding.html" %}
         {% endif %}
         {% endcomment %}
-        
+
         {% for item in items %}
             {% if item.dashboard_type in ignore_dashboard_types %}
                 <!-- {{ item.dashboard_type }} hidden -->
@@ -175,7 +175,7 @@
                 There are no announcements to display at this time.
             </div>
         {% endfor %}
-        {% if request.user.user_type != "user" %}
+        {% if not request.user.is_restricted %}
         {% if start_num == 0 and view_announcements_url != 'announcements_archive' %}
             <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
