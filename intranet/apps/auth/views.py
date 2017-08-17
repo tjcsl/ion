@@ -170,7 +170,7 @@ class LoginView(View):
             logger.warning("No cookie support detected! This could cause problems.")
 
         if form.is_valid():
-            reset_user, status = User.objects.get_or_create(username="RESET_PASSWORD", id=999999)
+            reset_user, status = User.objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             if form.get_user() == reset_user:
                 return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())

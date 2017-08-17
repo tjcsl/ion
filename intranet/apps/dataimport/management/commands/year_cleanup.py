@@ -87,9 +87,11 @@ class Command(BaseCommand):
         User.objects.all().update(seen_welcome=False)
 
     def handle_delete(self):
-        for usr in User.objects.filter(graduation_year=timezone.now().year):
+        for usr in User.objects.filter(graduation_year__lt=settings.SENIOR_GRADUATION_YEAR):
             if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
                 self.stdout.write(str(usr.delete()))
             else:
+                usr.user_type = "alum"
+                usr.save()
                 self.stdout.write("User {} KEEP".format(usr.username))

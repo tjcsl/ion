@@ -132,7 +132,7 @@ class KerberosAuthenticationBackend(object):
         krb_ticket = self.get_kerberos_ticket(username, password)
 
         if krb_ticket == "reset":
-            user, status = User.objects.get_or_create(username="RESET_PASSWORD", id=999999)
+            user, status = User.objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
 
         if not krb_ticket:

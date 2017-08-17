@@ -100,7 +100,7 @@ class UserManager(DjangoUserManager):
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
-        return User.objects.filter(user_type="student")
+        return User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
@@ -152,6 +152,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('user', 'Attendance-Only User'),
         ('simple_user', 'Simple User'),
         ('tjstar_presenter', 'tjStar Presenter'),
+        ('alum', 'Alumnus'),
+        ('service', 'Service Account'),
     )
 
     TITLES = (
@@ -194,7 +196,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
     gender = models.NullBooleanField()
-    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True)
+    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True, on_delete=models.CASCADE)
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -846,7 +848,7 @@ class UserProperties(models.Model):
 class Email(models.Model):
     """Represents an email address"""
     address = models.EmailField()
-    user = models.ForeignKey(User, related_name='emails')
+    user = models.ForeignKey(User, related_name='emails', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.address
@@ -864,7 +866,7 @@ class Phone(models.Model):
     )
 
     purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
-    user = models.ForeignKey(User, related_name='phones')
+    user = models.ForeignKey(User, related_name='phones', on_delete=models.CASCADE)
     _number = PhoneField()  # validators should be a list
 
     def __setattr__(self, name, value):
@@ -890,7 +892,7 @@ class Phone(models.Model):
 class Website(models.Model):
     """Represents a user's website"""
     url = models.URLField()
-    user = models.ForeignKey(User, related_name='websites')
+    user = models.ForeignKey(User, related_name='websites', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.url
@@ -929,7 +931,7 @@ class Photo(models.Model):
 
     grade_number = models.IntegerField(choices=GRADE_NUMBERS)
     _binary = models.BinaryField()
-    user = models.ForeignKey(User, related_name="photos")
+    user = models.ForeignKey(User, related_name="photos", on_delete=models.CASCADE)
 
     def __setattr__(self, name, value):
         if name == "binary":
