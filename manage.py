@@ -3,7 +3,7 @@
 import os
 import sys
 import warnings
-from django.utils.deprecation import RemovedInDjango20Warning
+from django.utils.deprecation import RemovedInDjango20Warning, RemovedInDjango21Warning
 
 warnings.simplefilter('default')
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='cacheops')
@@ -11,6 +11,7 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='funcy')
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='pipeline')
 warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='distutils')
 warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='django')
+warnings.filterwarnings('ignore', category=ImportWarning, module='importlib')
 
 # FIXME: remove when upstream supports django 1.10+ properly
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='oauth2_provider')
@@ -18,6 +19,7 @@ warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='sim
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='cacheops')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='debug_toolbar')
 warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='pipeline')
+warnings.filterwarnings('ignore', category=RemovedInDjango21Warning, module='simple_history')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
