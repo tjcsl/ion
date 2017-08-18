@@ -13,6 +13,7 @@ from ..events.models import Event
 from ..search.utils import get_query
 from ..users.models import Grade, User
 from ..users.views import profile_view
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
@@ -263,6 +264,7 @@ def do_events_search(q):
 
 
 @login_required
+@deny_restricted
 def search_view(request):
     q = request.GET.get("q", "").strip()
     is_admin = (not request.user.is_student and request.user.is_eighthoffice)

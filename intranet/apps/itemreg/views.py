@@ -8,11 +8,13 @@ from django.shortcuts import render, redirect
 from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 from .forms import CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
 from ..search.views import get_search_results
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def home_view(request):
     calculators = CalculatorRegistration.objects.filter(user=request.user)
     phones = PhoneRegistration.objects.filter(user=request.user)
@@ -28,6 +30,7 @@ def home_view(request):
 
 
 @login_required
+@deny_restricted
 def search_view(request):
     if not request.user.has_admin_permission("itemreg") and not request.user.is_teacher:
         raise http.Http404
@@ -147,6 +150,7 @@ def search_view(request):
 
 
 @login_required
+@deny_restricted
 def register_calculator_view(request):
     """Register a calculator."""
     if request.method == "POST":
@@ -166,6 +170,7 @@ def register_calculator_view(request):
 
 
 @login_required
+@deny_restricted
 def register_computer_view(request):
     """Register a computer."""
     if request.method == "POST":
@@ -185,6 +190,7 @@ def register_computer_view(request):
 
 
 @login_required
+@deny_restricted
 def register_phone_view(request):
     """Register a phone."""
     if request.method == "POST":
@@ -204,6 +210,7 @@ def register_phone_view(request):
 
 
 @login_required
+@deny_restricted
 def register_delete_view(request, type, id):
     if type == "calculator":
         obj = CalculatorRegistration.objects.get(id=id)

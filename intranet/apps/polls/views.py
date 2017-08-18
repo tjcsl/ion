@@ -15,12 +15,14 @@ from django.db.models import Q
 from .models import Answer, Choice, Poll, Question
 from .forms import PollForm
 from ..users.models import User
+from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def polls_view(request):
     is_polls_admin = request.user.has_admin_permission("polls")
 
@@ -41,6 +43,7 @@ def polls_view(request):
 
 
 @login_required
+@deny_restricted
 def poll_vote_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
 
@@ -302,6 +305,7 @@ def handle_choice(q, do_gender=True, show_answers=False):
 
 
 @login_required
+@deny_restricted
 def poll_results_view(request, poll_id):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
@@ -336,6 +340,7 @@ def poll_results_view(request, poll_id):
 
 
 @login_required
+@deny_restricted
 def add_poll_view(request):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
@@ -365,6 +370,7 @@ def add_poll_view(request):
 
 
 @login_required
+@deny_restricted
 def modify_poll_view(request, poll_id):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
@@ -403,6 +409,7 @@ def modify_poll_view(request, poll_id):
 
 
 @login_required
+@deny_restricted
 def delete_poll_view(request, poll_id):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")

@@ -35,6 +35,8 @@ board_admin_required = admin_required("board")
 #: Restrict the wrapped view to users who can take attendance
 attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous and u.is_attendance_taker)
 
+deny_restricted = user_passes_test(lambda u: not u.is_anonymous and not u.is_restricted)
+
 
 def reauthentication_required(wrapped):
 

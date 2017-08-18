@@ -9,12 +9,13 @@ from django.urls import reverse
 from .models import NominationPosition, Nomination
 # from .forms import CreateNominationPositionForm
 from ..users.models import User
-# from ..auth.decorators import eighth_admin_required
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def vote_for_user(request, username, position):
     try:
         nominated_user = User.objects.get(username=username)

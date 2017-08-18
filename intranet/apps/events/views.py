@@ -12,12 +12,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AdminEventForm, EventForm
 from .models import Event
 
+from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def events_view(request):
     """Events homepage.
 
@@ -88,6 +90,7 @@ def events_view(request):
 
 
 @login_required
+@deny_restricted
 def join_event_view(request, id):
     """Join event page. If a POST request, actually add or remove the attendance of the current
     user. Otherwise, display a page with confirmation.
@@ -117,6 +120,7 @@ def join_event_view(request, id):
 
 
 @login_required
+@deny_restricted
 def event_roster_view(request, id):
     """Show the event roster. Users with hidden eighth period permissions will not be displayed.
     Users will be able to view all other users, along with a count of the number of hidden users.
@@ -148,6 +152,7 @@ def event_roster_view(request, id):
 
 
 @login_required
+@deny_restricted
 def add_event_view(request):
     """Add event page.
 
@@ -186,6 +191,7 @@ def add_event_view(request):
 
 
 @login_required
+@deny_restricted
 def request_event_view(request):
     """Request event page.
 
@@ -220,6 +226,7 @@ def request_event_view(request):
 
 
 @login_required
+@deny_restricted
 def modify_event_view(request, id=None):
     """Modify event page. You may only modify an event if you were the creator or you are an
     administrator.
@@ -258,6 +265,7 @@ def modify_event_view(request, id=None):
 
 
 @login_required
+@deny_restricted
 def delete_event_view(request, id):
     """Delete event page. You may only delete an event if you were the creator or you are an
     administrator. Confirmation page if not POST.
@@ -282,6 +290,7 @@ def delete_event_view(request, id):
 
 
 @login_required
+@deny_restricted
 def show_event_view(request):
     """ Unhide an event that was hidden by the logged-in user.
 
@@ -301,6 +310,7 @@ def show_event_view(request):
 
 
 @login_required
+@deny_restricted
 def hide_event_view(request):
     """ Hide an event for the logged-in user.
 

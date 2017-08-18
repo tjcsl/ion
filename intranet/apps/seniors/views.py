@@ -8,11 +8,13 @@ from django.shortcuts import redirect, render
 
 from .forms import SeniorForm
 from .models import Senior
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def seniors_home_view(request):
     seniors = Senior.objects.exclude(college=None, major=None).filter(
         user__cache__grade_number=12).order_by('user__cache__last_name', 'user__cache__first_name')
@@ -25,6 +27,7 @@ def seniors_home_view(request):
 
 
 @login_required
+@deny_restricted
 def seniors_add_view(request):
     if not request.user.is_senior:
         messages.error(request, "You are not a senior, so you cannot submit destination information.")

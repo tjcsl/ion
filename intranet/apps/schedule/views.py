@@ -16,6 +16,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .forms import DayForm, DayTypeForm
 from .models import Block, Day, DayType, Time
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous and u.has_admin_permission("schedule"))
@@ -220,6 +221,7 @@ def get_day_data(firstday, daynum):
 
 
 @schedule_admin_required
+@deny_restricted
 def do_default_fill(request):
     """Change all Mondays to 'Anchor Day' Change all Tuesday/Thursdays to 'Blue Day' Change all
     Wednesday/Fridays to 'Red Day'."""
@@ -270,6 +272,7 @@ def delete_cache():
 
 
 @schedule_admin_required
+@deny_restricted
 def admin_home_view(request):
     if "default_fill" in request.POST:
         return do_default_fill(request)
@@ -324,6 +327,7 @@ def admin_home_view(request):
 
 
 @schedule_admin_required
+@deny_restricted
 def admin_add_view(request):
     if request.method == "POST":
         delete_cache()
@@ -347,6 +351,7 @@ def admin_add_view(request):
 
 
 @schedule_admin_required
+@deny_restricted
 def admin_comment_view(request):
     date = request.GET.get("date")
     if request.method == "POST" and "comment" in request.POST:
@@ -371,6 +376,7 @@ def admin_comment_view(request):
 
 
 @schedule_admin_required
+@deny_restricted
 def admin_daytype_view(request, id=None):
     if request.method == "POST":
         delete_cache()

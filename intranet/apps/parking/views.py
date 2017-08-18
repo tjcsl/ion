@@ -8,11 +8,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import ParkingApplication, CarApplication
 from .forms import ParkingApplicationForm, CarApplicationForm
 from ..users.models import User
+from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def parking_intro_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
@@ -31,6 +33,7 @@ def parking_intro_view(request):
 
 
 @login_required
+@deny_restricted
 def parking_form_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
@@ -83,6 +86,7 @@ def parking_form_view(request):
 
 
 @login_required
+@deny_restricted
 def parking_car_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')
@@ -139,6 +143,7 @@ def parking_car_view(request):
 
 
 @login_required
+@deny_restricted
 def parking_joint_view(request):
     if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
         return redirect('index')

@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
-from ...auth.decorators import eighth_admin_required
+from ...auth.decorators import eighth_admin_required, deny_restricted
 from ...users.forms import ProfileEditForm, AddressForm
 from ...users.models import User
 from ....utils.serialization import safe_json
@@ -24,6 +24,7 @@ def date_fmt(date):
 
 
 @eighth_admin_required
+@deny_restricted
 def edit_profile_view(request, user_id=None):
     user = get_object_or_404(User, id=user_id)
     if request.method == "POST":
@@ -136,6 +137,7 @@ def get_profile_context(request, user_id=None, date=None):
 
 
 @login_required
+@deny_restricted
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
     if context:
@@ -146,6 +148,7 @@ def profile_view(request, user_id=None):
 
 
 @login_required
+@deny_restricted
 def profile_history_view(request, user_id=None):
     if user_id:
         try:
@@ -185,6 +188,7 @@ def profile_history_view(request, user_id=None):
 
 
 @login_required
+@deny_restricted
 def profile_often_view(request, user_id=None):
     if user_id:
         try:

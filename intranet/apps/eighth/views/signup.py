@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from ..exceptions import SignupException
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist)
 from ..serializers import EighthBlockDetailSerializer
-from ...auth.decorators import eighth_admin_required
+from ...auth.decorators import eighth_admin_required, deny_restricted
 from ...users.models import User
 from ....utils.serialization import safe_json
 
@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def eighth_signup_view(request, block_id=None):
 
     if block_id is None and "block" in request.GET:
@@ -169,6 +170,7 @@ def eighth_signup_view(request, block_id=None):
 
 
 @login_required
+@deny_restricted
 def eighth_display_view(request, block_id=None):
     if block_id is None:
         next_block = EighthBlock.objects.get_first_upcoming_block()
@@ -259,6 +261,7 @@ def eighth_display_view(request, block_id=None):
 
 
 @login_required
+@deny_restricted
 def eighth_multi_signup_view(request):
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
@@ -410,6 +413,7 @@ def eighth_multi_signup_view(request):
 
 
 @login_required
+@deny_restricted
 def toggle_favorite_view(request):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
@@ -429,6 +433,7 @@ def toggle_favorite_view(request):
 
 @require_POST
 @login_required
+@deny_restricted
 def leave_waitlist_view(request):
     if not settings.ENABLE_WAITLIST:
         return http.HttpResponseForbidden("Waitlist functionality is currently disabled.")
@@ -449,12 +454,14 @@ def leave_waitlist_view(request):
 
 
 @login_required
+@deny_restricted
 def seen_new_feature_view(request):
     request.session["seen_feature"] = True
     return http.HttpResponse("Saved to session.")
 
 
 @eighth_admin_required
+@deny_restricted
 def toggle_waitlist_view(request):
     if not settings.ENABLE_WAITLIST:
         return http.HttpResponseForbidden("Waitlist functionality is currently disabled.")

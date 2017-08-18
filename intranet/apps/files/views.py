@@ -30,6 +30,8 @@ import pysftp
 from .forms import UploadFileForm
 from .models import Host
 
+from ..auth.decorators import deny_restricted
+
 logger = logging.getLogger(__name__)
 
 exceptions = (EOFError, OSError, PermissionError, SSHException, SFTPError)
@@ -43,6 +45,7 @@ def create_session(hostname, username, password):
 
 
 @login_required
+@deny_restricted
 def files_view(request):
     """The main filecenter view."""
 
@@ -53,6 +56,7 @@ def files_view(request):
 
 
 @login_required
+@deny_restricted
 @sensitive_variables('message', 'key', 'iv', 'ciphertext')
 @sensitive_post_parameters('password')
 def files_auth(request):
@@ -131,6 +135,7 @@ def windows_dir_format(host_dir, user):
 
 
 @login_required
+@deny_restricted
 def files_type(request, fstype=None):
     """Do all processing (directory listing, file downloads) for a given filesystem."""
     try:
@@ -347,6 +352,7 @@ def files_type(request, fstype=None):
 
 
 @login_required
+@deny_restricted
 def files_delete(request, fstype=None):
     if "confirm" in request.POST:
         filepath = request.POST.get("path", None)
@@ -441,6 +447,7 @@ def files_delete(request, fstype=None):
 
 
 @login_required
+@deny_restricted
 def files_upload(request, fstype=None):
     fsdir = request.GET.get("dir", None)
     if fsdir is None:

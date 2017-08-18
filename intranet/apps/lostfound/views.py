@@ -8,12 +8,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import LostItem, FoundItem
 from .forms import LostItemForm, FoundItemForm
 
+from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def home_view(request):
     lost_all = LostItem.objects.all()
     lost_pg = Paginator(lost_all, 20)
@@ -40,6 +42,7 @@ def home_view(request):
 
 
 @login_required
+@deny_restricted
 def lostitem_add_view(request):
     """Add a lostitem."""
     if request.method == "POST":
@@ -61,6 +64,7 @@ def lostitem_add_view(request):
 
 
 @login_required
+@deny_restricted
 def lostitem_modify_view(request, item_id=None):
     """Modify a lostitem.
 
@@ -89,6 +93,7 @@ def lostitem_modify_view(request, item_id=None):
 
 
 @login_required
+@deny_restricted
 def lostitem_delete_view(request, item_id):
     """Delete a lostitem.
 
@@ -115,6 +120,7 @@ def lostitem_delete_view(request, item_id):
 
 
 @login_required
+@deny_restricted
 def lostitem_view(request, item_id):
     """View a lostitem.
 
@@ -126,6 +132,7 @@ def lostitem_view(request, item_id):
 
 
 @login_required
+@deny_restricted
 def founditem_add_view(request):
     """Add a founditem."""
     if request.method == "POST":
@@ -147,6 +154,7 @@ def founditem_add_view(request):
 
 
 @login_required
+@deny_restricted
 def founditem_modify_view(request, item_id=None):
     """Modify a founditem.
 
@@ -175,6 +183,7 @@ def founditem_modify_view(request, item_id=None):
 
 
 @login_required
+@deny_restricted
 def founditem_delete_view(request, item_id):
     """Delete a founditem.
 
@@ -201,6 +210,7 @@ def founditem_delete_view(request, item_id):
 
 
 @login_required
+@deny_restricted
 def founditem_view(request, item_id):
     """View a founditem.
 

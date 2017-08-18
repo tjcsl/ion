@@ -9,6 +9,8 @@ from .forms import GroupForm
 from .models import Group
 from ..users.models import User
 
+from ..auth.decorators import deny_restricted
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,6 +18,7 @@ logger = logging.getLogger(__name__)
 # has add/remove from groups form
 # students can only add themselves to non-admin groups unless they are already an admin
 @login_required
+@deny_restricted
 def groups_view(request):
     group_admin = request.user.has_admin_permission("groups")
     if group_admin and "user" in request.GET:
@@ -27,6 +30,7 @@ def groups_view(request):
 
 # Create individual views for each form action
 @login_required
+@deny_restricted
 def add_group_view(request):
     success = False
     if request.method == 'POST':

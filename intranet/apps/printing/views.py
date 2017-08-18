@@ -15,6 +15,7 @@ from django.utils.text import slugify
 import magic
 
 from .forms import PrintJobForm
+from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
 
 logger = logging.getLogger(__name__)
@@ -228,6 +229,7 @@ def print_job(obj, do_print=True):
 
 
 @login_required
+@deny_restricted
 def print_view(request):
     if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
         messages.error(request, "You don't have printer access outside of the TJ network.")

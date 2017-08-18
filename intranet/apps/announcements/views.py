@@ -16,7 +16,7 @@ from .forms import AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
                             request_announcement_email)
-from ..auth.decorators import announcements_admin_required
+from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 
@@ -77,6 +77,7 @@ def announcement_approved_hook(request, obj, req):
 
 
 @login_required
+@deny_restricted
 def request_announcement_view(request):
     """The request announcement page."""
     if request.method == "POST":
@@ -130,16 +131,19 @@ def request_announcement_view(request):
 
 
 @login_required
+@deny_restricted
 def request_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "request"})
 
 
 @login_required
+@deny_restricted
 def request_announcement_success_self_view(request):
     return render(request, "announcements/success.html", {"type": "request", "self": True})
 
 
 @login_required
+@deny_restricted
 def approve_announcement_view(request, req_id):
     """The approve announcement page. Teachers will be linked to this page from an email.
 
@@ -181,16 +185,19 @@ def approve_announcement_view(request, req_id):
 
 
 @login_required
+@deny_restricted
 def approve_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "approve", "status": "accept"})
 
 
 @login_required
+@deny_restricted
 def approve_announcement_reject_view(request):
     return render(request, "announcements/success.html", {"type": "approve", "status": "reject"})
 
 
 @announcements_admin_required
+@deny_restricted
 def admin_approve_announcement_view(request, req_id):
     """The administrator approval announcement request page. Admins will view this page through the
     UI.
@@ -243,6 +250,7 @@ def admin_approve_announcement_view(request, req_id):
 
 
 @announcements_admin_required
+@deny_restricted
 def admin_request_status_view(request):
     all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year()
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
@@ -256,6 +264,7 @@ def admin_request_status_view(request):
 
 
 @announcements_admin_required
+@deny_restricted
 def add_announcement_view(request):
     """Add an announcement."""
     if request.method == "POST":
@@ -290,6 +299,7 @@ def view_announcement_view(request, id):
 
 
 @announcements_admin_required
+@deny_restricted
 def modify_announcement_view(request, id=None):
     """Modify an announcement.
 
@@ -321,6 +331,7 @@ def modify_announcement_view(request, id=None):
 
 
 @announcements_admin_required
+@deny_restricted
 def delete_announcement_view(request, id):
     """Delete an announcement.
 

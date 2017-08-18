@@ -41,11 +41,6 @@ ENABLE_WAITLIST = True
 # not done, an email failure notification gets sent whenever someone messes with
 # the HTTP Host header.
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
-# We want to restrict the access for certain users to the following paths:
-# /, /eighth, /eighth/attendance, and /eighth/attendance/<activity_id>
-# TODO: replace this regex with a better method of checking if the path is allowed
-RESTRICTED_ALLOWED_PATHS_REGEX = (r"^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/feedback$|\/about$|\/profile$|\/logout$"
-                                  r"|\/oauth.*$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))")
 
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 try:
@@ -343,7 +338,6 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.simple_history.HistoryRequestMiddleware",
-    "intranet.middleware.restrict_users.RestrictUserMiddleware",  # Restrict tjhsstUser from most things
 ]
 
 if PRODUCTION:
