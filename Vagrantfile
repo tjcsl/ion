@@ -64,7 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.network :private_network, ip: '192.168.50.50'
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/home/ubuntu/intranet", nfs: true
+  config.vm.synced_folder ".", "/home/ubuntu/intranet"
   config.nfs.map_uid = Process.uid
   config.nfs.map_gid = Process.gid
 
