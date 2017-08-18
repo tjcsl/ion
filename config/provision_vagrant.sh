@@ -50,6 +50,7 @@ apt-get -y install glances
 
 # CSS
 apt-get -y install rubygems || apt-get -y install rubygems-integration
+apt-get -y install ruby-dev
 gem install sass
 
 # PostsgreSQL
