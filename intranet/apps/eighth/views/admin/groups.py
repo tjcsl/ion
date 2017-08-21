@@ -94,7 +94,7 @@ def edit_group_view(request, group_id):
     else:
         ion_ids = [sid.strip() for sid in student_query.split(",")]
         users = group.user_set.filter(username__in=ion_ids)
-
+    users = users.order_by('username', 'first_name', 'last_name', 'student_id')
     p = Paginator(users, 100)  # Paginating to limit LDAP queries (slow)
 
     page_num = request.GET.get('p', 1)

@@ -325,8 +325,8 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
-    "intranet.middleware.oauth2_provider.OAuth2TokenMiddleware",  # Django Oauth toolkit
-    "intranet.middleware.maintenancemode.MaintenanceModeMiddleware",  # Maintenance mode
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
+    "maintenance_mode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
     "django.contrib.messages.middleware.MessageMiddleware",  # Messages
@@ -337,7 +337,7 @@ MIDDLEWARE = [
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
-    "intranet.middleware.simple_history.HistoryRequestMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 if PRODUCTION:
@@ -449,7 +449,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES":
     ("intranet.apps.api.authentication.ApiBasicAuthentication",
      "intranet.apps.api.authentication.CsrfExemptSessionAuthentication",
-     "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
+     "oauth2_provider.contrib.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
 }
 
@@ -477,7 +477,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_requestlogging",
     "rest_framework",
-    "maintenancemode",
+    "maintenance_mode",
     "pipeline",
     "channels",
     # Intranet apps
@@ -689,6 +689,9 @@ if SHOW_DEBUG_TOOLBAR:
 # ./manage.py maintenance [on|off]
 if MAINTENANCE_MODE is None:
     MAINTENANCE_MODE = False
+
+MAINTENANCE_MODE_TEMPLATE = "error/503.html"
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
 CORS_ORIGIN_ALLOW_ALL = False

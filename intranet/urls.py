@@ -41,7 +41,7 @@ urlpatterns = [
     url(r"^parking", include("intranet.apps.parking.urls")),
     url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
     # FIXME: update when admin supports django 1.10+ properly
-    url(r"^djangoadmin/", include(admin.site.urls[:2], namespace=admin.site.urls[2])),  # type: ignore
+    url(r"^djangoadmin/", admin.site.urls),
     url(r"^oauth/applications/(?P<pk>\d+)/update/$", ApplicationUpdateView.as_view()),
     url(r"^oauth/", include(("oauth2_provider.urls", "oauth2_provider"))),
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),

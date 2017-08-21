@@ -23,14 +23,14 @@ class IsAuthenticatedOrClientCredentials(permissions.BasePermission):
 
 
 class EighthActivityList(generics.ListAPIView):
-    queryset = EighthActivity.undeleted_objects.all()
+    queryset = EighthActivity.undeleted_objects.all().order_by('id')
     serializer_class = EighthActivityListSerializer
     permission_classes = (IsAuthenticatedOrClientCredentials,)
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that shows details of an eighth activity."""
-    queryset = EighthActivity.undeleted_objects.all()
+    queryset = EighthActivity.undeleted_objects.all().order_by('id')
     serializer_class = EighthActivityDetailSerializer
     permission_classes = (IsAuthenticatedOrClientCredentials,)
 
@@ -54,10 +54,10 @@ class EighthBlockList(generics.ListAPIView):
         blk_ids = [b.id for b in queryset]
 
         if "start_date" in self.request.GET:
-            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date"))
+            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date")).order_by('id')
 
         if "date" in self.request.GET:
-            return EighthBlock.objects.filter(id__in=blk_ids, date=self.request.GET.get("date"))
+            return EighthBlock.objects.filter(id__in=blk_ids, date=self.request.GET.get("date")).order_by('id')
 
         return queryset
 
@@ -78,7 +78,7 @@ class EighthBlockDetail(views.APIView):
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
-    queryset = EighthSignup.objects.all()
+    queryset = EighthSignup.objects.all().order_by('id')
 
     def list(self, request, user_id=None):
         if not user_id:

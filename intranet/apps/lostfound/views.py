@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 @login_required
 @deny_restricted
 def home_view(request):
-    lost_all = LostItem.objects.all()
+    lost_all = LostItem.objects.all().order_by('id')
     lost_pg = Paginator(lost_all, 20)
 
-    found_all = FoundItem.objects.all()
+    found_all = FoundItem.objects.all().order_by('id')
     found_pg = Paginator(found_all, 20)
 
     page = request.GET.get("page", 1)

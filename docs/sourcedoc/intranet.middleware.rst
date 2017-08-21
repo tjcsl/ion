@@ -28,42 +28,10 @@ intranet\.middleware\.email\_handler module
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.maintenancemode module
---------------------------------------------
-
-.. automodule:: intranet.middleware.maintenancemode
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet\.middleware\.oauth2\_provider module
----------------------------------------------
-
-.. automodule:: intranet.middleware.oauth2_provider
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet\.middleware\.profiler module
 -------------------------------------
 
 .. automodule:: intranet.middleware.profiler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet\.middleware\.restrict\_users module
---------------------------------------------
-
-.. automodule:: intranet.middleware.restrict_users
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet\.middleware\.simple\_history module
---------------------------------------------
-
-.. automodule:: intranet.middleware.simple_history
     :members:
     :undoc-members:
     :show-inheritance:
