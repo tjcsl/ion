@@ -6,7 +6,7 @@ from .views import activities, attendance, profile, routers, signup
 from .views.admin import activities as admin_activities
 from .views.admin import attendance as admin_attendance
 from .views.admin import maintenance as admin_maintenance
-from .views.admin import blocks, general, groups, rooms, scheduling, sponsors
+from .views.admin import blocks, general, groups, rooms, scheduling, sponsors, users
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
@@ -69,6 +69,10 @@ eighth_admin_patterns = [
     url(r"^blocks/edit/(?P<block_id>\d+)$", blocks.edit_block_view, name="eighth_admin_edit_block"),
     url(r"^blocks/copy/(?P<block_id>\d+)$", blocks.copy_block_view, name="eighth_admin_copy_block"),
     url(r"^blocks/delete/(?P<block_id>\d+)$", blocks.delete_block_view, name="eighth_admin_delete_block"),
+
+    # Users
+    url(r"^users$", users.list_user_view, name="eighth_admin_manage_users"),
+    url(r"^users/delete/(\d+)$", users.delete_user_view, name="eighth_admin_manage_users"),
 
     # Scheduling
     url(r"^scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
