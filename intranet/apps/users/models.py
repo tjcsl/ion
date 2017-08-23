@@ -747,6 +747,7 @@ class UserProperties(models.Model):
 
     _address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
     _birthday = models.DateField(null=True)
+    _schedule = models.ManyToManyField('Section', related_name='_students')
 
     """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
@@ -773,6 +774,9 @@ class UserProperties(models.Model):
     self_show_eighth = models.BooleanField(default=False)
     parent_show_eighth = models.BooleanField(default=False)
 
+    self_show_schedule = models.BooleanField(default=False)
+    parent_show_schedule = models.BooleanField(default=False)
+
     def __getattr__(self, name):
         if name.startswith("self") or name.startswith("parent"):
             return object.__getattribute__(self, name)
@@ -780,6 +784,8 @@ class UserProperties(models.Model):
             return self._address if self.attribute_is_visible("show_address") else None
         if name == "birthday":
             return self._birthday if self.attribute_is_visible("show_birthday") else None
+        if name == "schedule":
+            return self._schedule if self.attribute_is_visible("show_schedule") else None
         raise AttributeError
 
     def __setattr__(self, name, value):
@@ -1064,3 +1070,21 @@ class Grade(object):
     def __str__(self):
         """Return name of the grade."""
         return self._name
+
+
+class Course(models.Model):
+    """Represents a course at TJ (not to be confused with section)"""
+
+    title = models.CharField(max_length=50)
+    short_title = models.CharField(max_length=50)
+    course_id = models.CharField(max_length=12, unique=True)
+
+
+class Section(models.Model):
+    """Represents a section - a class with teacher, period, and room assignments"""
+
+    course = models.ForeignKey(Course)
+    teacher = models.ForeignKey(User)
+    room = models.CharField(max_length=16)
+    period = models.IntegerField()
+    section_id = models.CharField(max_length=16, unique=True)
