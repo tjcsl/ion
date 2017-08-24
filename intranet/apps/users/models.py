@@ -1083,8 +1083,41 @@ class Course(models.Model):
 class Section(models.Model):
     """Represents a section - a class with teacher, period, and room assignments"""
 
-    course = models.ForeignKey(Course)
+    course = models.ForeignKey(Course, related_name="sections")
     teacher = models.ForeignKey(User)
     room = models.CharField(max_length=16)
     period = models.IntegerField()
     section_id = models.CharField(max_length=16, unique=True)
+
+    # Store list of quarters as a string
+    # ex: if a class is in session 1st and 3rd quarters, _quarters will be "13"
+    _quarters = models.CharField(max_length=4, default="1234")
+
+    @property
+    def quarters(self):
+        """Returns an integer list of all of the quarters the section is in session"""
+        return [int(quarter) for quarter in self._quarters.split("")]
+
+    @quarters.setter
+    def quarters(self, quarters):
+        """Accepts an Integer list"""
+        self._quarters = ''.join([str(i) for i in quarters])
+        self.save()
+
+    @property
+    def sortvalue(self):
+        """Returns the sort value of this class.
+
+        This can be derived from the following formula:
+            Minimum Period + Sum of values of quarters / 11
+
+        We divide by 11 because the maximum sum is 10 and we want the
+        quarters to be a secondary sort.
+
+        Returns:
+            A float value of the equation.
+        """
+        period = self.period
+        quarters = self.quarters
+
+        return period + float(sum(quarters)) / 11
