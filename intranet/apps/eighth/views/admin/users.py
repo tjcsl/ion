@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
 
-from django import http
-from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 
 from ....auth.decorators import eighth_admin_required
