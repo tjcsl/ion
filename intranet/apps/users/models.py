@@ -216,6 +216,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def birthday(self):
         return self.properties.birthday
 
+    @property
+    def schedule(self):
+        return self.properties.schedule
+
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
@@ -1075,49 +1079,27 @@ class Grade(object):
 class Course(models.Model):
     """Represents a course at TJ (not to be confused with section)"""
 
-    title = models.CharField(max_length=50)
-    short_title = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     course_id = models.CharField(max_length=12, unique=True)
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.course_id)
 
 
 class Section(models.Model):
     """Represents a section - a class with teacher, period, and room assignments"""
 
-    course = models.ForeignKey(Course, related_name="sections")
-    teacher = models.ForeignKey(User)
+    course = models.ForeignKey(Course, related_name="sections", on_delete=models.CASCADE)
+    teacher = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     room = models.CharField(max_length=16)
     period = models.IntegerField()
     section_id = models.CharField(max_length=16, unique=True)
+    sem = models.CharField(max_length=2)
 
-    # Store list of quarters as a string
-    # ex: if a class is in session 1st and 3rd quarters, _quarters will be "13"
-    _quarters = models.CharField(max_length=4, default="1234")
+    def __str__(self):
+        return "{} ({}) - {} Pd. {}".format(self.course.name, self.section_id, self.teacher.full_name if self.teacher else "Unknown", self.period)
 
-    @property
-    def quarters(self):
-        """Returns an integer list of all of the quarters the section is in session"""
-        return [int(quarter) for quarter in self._quarters.split("")]
-
-    @quarters.setter
-    def quarters(self, quarters):
-        """Accepts an Integer list"""
-        self._quarters = ''.join([str(i) for i in quarters])
-        self.save()
-
-    @property
-    def sortvalue(self):
-        """Returns the sort value of this class.
-
-        This can be derived from the following formula:
-            Minimum Period + Sum of values of quarters / 11
-
-        We divide by 11 because the maximum sum is 10 and we want the
-        quarters to be a secondary sort.
-
-        Returns:
-            A float value of the equation.
-        """
-        period = self.period
-        quarters = self.quarters
-
-        return period + float(sum(quarters)) / 11
+    def __getattr__(self, name):
+        if name == "students":
+            return [s.user for s in self._students.all() if s.attribute_is_visible("show_schedule")]
+        raise AttributeError

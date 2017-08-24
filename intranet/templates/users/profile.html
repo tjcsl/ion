@@ -299,6 +299,56 @@
 
                     </table>
                 </div>
+                {% if profile_user.schedule and profile_user.schedule.exists %}
+                <section class="user-info-schedule class-info">
+                        <div class="inline-warning">This is class schedule information for the 2017-2018 school year, as of August 24.</div>
+                        <h3>Schedule</h3>
+                        <table class="fancy-table zebra" data-sortable>
+                            <thead>
+                                <th>Period</th>
+                                <th>Name</th>
+                                {% if profile_user.is_student %}
+                                    <th>Teacher</th>
+                                {% endif %}
+                                <th>Room</th>
+                                <th>Semester</th>
+                            </thead>
+                            {% for class in profile_user.schedule.all|dictsort:"sem"|dictsort:"period" %}
+                                <tr>
+                                    <td>{{ class.period }}</td>
+                                    <td>
+                                        {{ class.course.name }}
+                                    </td>
+                                    {% if profile_user.is_student %}
+                                        <td>
+                                        {% if class.teacher %}
+                                            <a href="{% url 'user_profile' class.teacher.id %}">
+                                                {{ class.teacher.last_name }}
+                                            </a>
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                        </td>
+                                    {% endif %}
+                                    <td>
+                                        {{ class.room }}
+                                    </td>
+                                    <td>
+                                        {% if class.sem == "YR" %}
+                                          Full Year
+                                        {% elif class.sem == "S1" %}
+                                            First Semester
+                                        {% elif class.sem == "S2" %}
+                                            Second Semester
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                </section>
+                {% endif %}
            </div>
 
             {% if nominations_active %}

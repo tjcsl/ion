@@ -21,7 +21,7 @@ from raven.contrib.django.raven_compat.models import client
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
-from ....users.models import User, Address
+from ....users.models import User, Address, Course, Section
 
 from ....notifications.emails import email_send
 
@@ -48,6 +48,55 @@ class ImportThread(threading.Thread):
         logger.debug(self.folder)
         logger.debug(self.email)
 
+    def handle_user(self, u, row, index_dict, content):
+        u.first_name = row[index_dict["First Name"]].strip()
+        u.last_name = row[index_dict["Last Name"]].strip()
+        u.middle_name = row[index_dict["Middle Name"]].strip()
+        u.nickname = row[index_dict["Nick Name"]].strip() if row[11].strip() != "" else None
+        u.gender = row[index_dict["Gender"]].strip().upper() == "M"
+        u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[index_dict["Grade"]].strip()) + 12
+        counselor = User.objects.filter(user_type="counselor", last_name__iexact=row[index_dict["Counselor Last Name"]].strip())
+        if counselor.exists():
+            u.counselor = counselor.first()
+        props = u.properties
+        if props._address:
+            props._address.delete()
+        props._address = Address.objects.create(
+            street=row[index_dict["Address"]].strip(),
+            city=row[index_dict["City"]].strip(),
+            state=row[index_dict["State"]].strip(),
+            postal_code=row[index_dict["Zipcode"]].strip())
+        birthday_values = row[index_dict["Birth Date"]].strip().split("/")
+        props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
+        course, created = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
+                                                       defaults={
+                                                       'name': row[index_dict["Course Title"]].strip()})
+        teacher_name = row[index_dict["Teacher Staff Name"]].strip().lower().split(",")
+        no_teacher = False
+        if len(teacher_name) == 1:
+            content.write("Unable to determine teacher for {} for {}".format(row[index_dict["Section ID"]].strip(), u.full_name))
+            no_teacher = True
+        if not no_teacher:
+            teacher = User.objects.filter(user_type='teacher',
+                                          last_name__iexact=teacher_name[0].strip(),
+                                          first_name__istartswith=teacher_name[1].strip(".").strip())
+        if not no_teacher and (not teacher.count() == 1):
+            content.write("Unable to determine teacher for {}; {} options: {}".format(
+                row[index_dict["Section ID"]].strip(),
+                teacher.count(),
+                ', '.join([t.full_name for t in teacher])
+            ))
+            no_teacher = True
+        section, created = Section.objects.get_or_create(section_id=row[index_dict["Section ID"]].strip(),
+                                                         defaults={'teacher': teacher.first() if not no_teacher else None,
+                                                                   'period': int(row[index_dict["Per"]].strip()),
+                                                                   'room': row[index_dict["Room"]].strip(),
+                                                                   'sem': row[index_dict["Term Code"]].strip(),
+                                                                   'course': course})
+        section._students.add(props)
+        props.save()
+        u.save()
+
     def run(self):
         start_time = datetime.datetime.now()
         content = StringIO()
@@ -57,46 +106,22 @@ class ImportThread(threading.Thread):
             content.write("=== Starting Import.\n\n")
             with open(os.path.join(self.folder, "data.csv"), "r") as f:
                 reader = csv.reader(f)
-                next(reader)  # Skip header row
+                headers = next(reader)
+                index_dict = {}
+                for i in range(len(headers)):
+                    index_dict[headers[i].strip()] = i
                 for row in reader:
                     try:
-                        u = User.objects.get(student_id=row[0].strip())
-                        u.first_name = row[3].strip()
-                        u.last_name = row[2].strip()
-                        u.middle_name = row[4].strip()
-                        u.nickname = row[11].strip() if row[11].strip() != "" else None
-                        u.gender = row[1].strip().upper() == "M"
-                        u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[5].strip()) + 12
-                        props = u.properties
-                        if props._address:
-                            props._address.delete()
-                        props._address = Address.objects.create(
-                            street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
-                        birthday_values = row[12].strip().split("/")
-                        props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
-                        props.save()
-                        u.save()
+                        u = User.objects.get(student_id=row[index_dict["Student ID"]].strip())
+                        self.handle_user(u, row, index_dict, content)
                         content.write("Updated information for {}\n".format(u.username))
                     except User.DoesNotExist:
-                        if row[10].strip() == "":
+                        if row[index_dict["Other Name"]].strip() == "":
                             content.write("Skipping {}, no username available and user does not exist in database\n".format(row))
                             continue
-                        u = User.objects.create(username=row[10].strip().lower(), student_id=row[0].strip())
-                        u.first_name = row[3].strip()
-                        u.last_name = row[2].strip()
-                        u.middle_name = row[4].strip()
-                        u.nickname = row[11].strip() if row[11].strip() != "" else None
-                        u.gender = row[1].strip().upper() == "M"
-                        u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[5].strip()) + 12
-                        props = u.properties
-                        if props._address:
-                            props._address.delete()
-                        props._address = Address.objects.create(
-                            street=row[6].strip(), city=row[7].strip(), state=row[8].strip(), postal_code=row[9].strip())
-                        birthday_values = row[12].strip().split("/")
-                        props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
-                        props.save()
-                        u.save()
+                        u = User.objects.create(username=row[index_dict["Other Name"]].strip().lower(),
+                                                student_id=row[index_dict["Student ID"]].strip())
+                        self.handle_user(u, row, index_dict, content)
                         content.write("User {} did not exist in database - created and updated information\n".format(u.username))
             content.write("\n\n==== Successfully completed SIS Import\n\n")
         except Exception:

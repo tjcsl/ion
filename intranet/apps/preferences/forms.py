@@ -61,6 +61,9 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["show_eighth"] = flag(None, False)
         self.fields["show_eighth-self"] = flag("Show Eighth Period Schedule", False)
 
+        self.fields["show_schedule"] = flag(None, False)
+        self.fields["show_schedule-self"] = flag("Show Class Schedule", False)
+
         if not user.has_admin_permission("preferences"):
             for name in self.fields:
                 if not name.endswith("-self"):
