@@ -8,12 +8,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
 
 from raven.contrib.django.raven_compat.models import client
 
-from .models import Grade, User
+from .models import Grade, User, Section, Course
+from ..auth.decorators import deny_restricted
 from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..eighth.utils import get_start_date
 
@@ -161,3 +162,54 @@ def picture_view(request, user_id, year=None):
         response.write(img)
 
         return response
+
+
+@login_required
+@deny_restricted
+def all_courses_view(request):
+    context = {
+        "courses": Course.objects.all().order_by('name', 'course_id').distinct()
+    }
+    return render(request, "users/all_courses.html", context)
+
+
+@login_required
+@deny_restricted
+def courses_by_period_view(request, period_number):
+    context = {
+        "courses": Course.objects.filter(sections__period=period_number).order_by('name', 'course_id').distinct()
+    }
+    return render(request, "users/all_courses.html", context)
+
+
+@login_required
+@deny_restricted
+def course_info_view(request, course_id):
+    course = get_object_or_404(Course, course_id=course_id)
+    context = {
+        "course": course
+    }
+    return render(request, "users/all_classes.html", context)
+
+
+@login_required
+@deny_restricted
+def sections_by_room_view(request, room_number):
+    sections = Section.objects.filter(room=room_number).order_by('period')
+    if not sections.exists():
+        raise Http404
+    context = {
+        "room_number": room_number,
+        "classes": sections
+    }
+    return render(request, "users/class_room.html", context)
+
+
+@login_required
+@deny_restricted
+def course_section_view(request, section_id):
+    section = get_object_or_404(Section, section_id=section_id)
+    context = {
+        "class": section
+    }
+    return render(request, "users/class.html", context)

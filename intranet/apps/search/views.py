@@ -11,7 +11,7 @@ from ..announcements.models import Announcement
 from ..eighth.models import EighthActivity
 from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import Grade, User
+from ..users.models import Grade, User, Course
 from ..users.views import profile_view
 from ..auth.decorators import deny_restricted
 
@@ -243,6 +243,11 @@ def do_activities_search(q):
     return final_entires
 
 
+def do_courses_search(q):
+    filter_query = get_query(q, ["name", "course_id"])
+    return Course.objects.filter(filter_query).order_by('name')
+
+
 def do_announcements_search(q):
     filter_query = get_query(q, ["title"])
     entires = Announcement.objects.filter(filter_query).order_by("title")
@@ -289,6 +294,7 @@ def search_view(request):
         activities = do_activities_search(q)
         announcements = do_announcements_search(q)
         events = do_events_search(q)
+        classes = do_courses_search(q)
 
         logger.debug(activities)
         logger.debug(announcements)
@@ -307,6 +313,7 @@ def search_view(request):
             "announcements": announcements,  # Announcement objects
             "events": events,  # Event objects
             "activities": activities,  # EighthActivity objects
+            "classes": classes,  # Course objects
         }
     else:
         context = {"search_results": None}

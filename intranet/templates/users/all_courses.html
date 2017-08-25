@@ -1,0 +1,62 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - All Classes
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}" />
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'profile' %}
+    <style type="text/css">
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    section {
+        float: left;
+        padding: 0 100px 25px 0;
+    }
+
+    section:last-child {
+        padding-right: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content class-info">
+        <h2>All Courses</h2>
+        <table class="fancy-table zebra" data-sortable>
+            <thead>
+                <th>Name</th>
+                <th>Course ID</th>
+            </thead>
+            {% for course in courses %}
+                <tr>
+                    <td>
+                      <a href="{% url 'course_sections' course.course_id %}">{{ course.name }}</a>
+                    </td>
+                    <td>
+                      {{ course.course_id }}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No courses were found.</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

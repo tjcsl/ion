@@ -28,6 +28,14 @@ intranet\.apps\.users\.api module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.users\.class\_urls module
+-----------------------------------------
+
+.. automodule:: intranet.apps.users.class_urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet\.apps\.users\.forms module
 -----------------------------------
 

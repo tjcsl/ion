@@ -299,7 +299,7 @@
 
                     </table>
                 </div>
-                {% if profile_user.schedule and profile_user.schedule.exists %}
+                {% if profile_user.section_set.exists or profile_user.schedule and profile_user.schedule.exists %}
                 <section class="user-info-schedule class-info">
                         <div class="inline-warning">This is class schedule information for the 2017-2018 school year, as of August 24.</div>
                         <h3>Schedule</h3>
@@ -313,39 +313,11 @@
                                 <th>Room</th>
                                 <th>Semester</th>
                             </thead>
-                            {% for class in profile_user.schedule.all|dictsort:"sem"|dictsort:"period" %}
-                                <tr>
-                                    <td>{{ class.period }}</td>
-                                    <td>
-                                        {{ class.course.name }}
-                                    </td>
-                                    {% if profile_user.is_student %}
-                                        <td>
-                                        {% if class.teacher %}
-                                            <a href="{% url 'user_profile' class.teacher.id %}">
-                                                {{ class.teacher.last_name }}
-                                            </a>
-                                        {% else %}
-                                            Unknown
-                                        {% endif %}
-                                        </td>
-                                    {% endif %}
-                                    <td>
-                                        {{ class.room }}
-                                    </td>
-                                    <td>
-                                        {% if class.sem == "YR" %}
-                                          Full Year
-                                        {% elif class.sem == "S1" %}
-                                            First Semester
-                                        {% elif class.sem == "S2" %}
-                                            Second Semester
-                                        {% else %}
-                                            Unknown
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                            {% if profile_user.is_student %}
+                              {% include "users/schedule_rows.html" with classes=profile_user.schedule.all|dictsort:"sem"|dictsort:"period" %}
+                            {% elif profile_user.is_teacher %}
+                              {% include "users/schedule_rows.html" with classes=profile_user.section_set.all|dictsort:"sem"|dictsort:"period" %}
+                            {% endif %}
                         </table>
                 </section>
                 {% endif %}

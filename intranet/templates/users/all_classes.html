@@ -37,51 +37,54 @@
 
 {% block main %}
     <div class="primary-content class-info">
-        <h2>All Classes</h2>
+        <h2>All Sections for {{ course.name }}</h2>
         <table class="fancy-table zebra" data-sortable>
             <thead>
                 <th>Period</th>
                 <th>Name</th>
                 <th>Teacher</th>
                 <th>Room</th>
-                <th>Quarters</th>
+                <th>Semester</th>
             </thead>
-            {% for class in classes %}
+            {% for class in course.sections.all|dictsort:"period" %}
                 <tr>
-                    <td>{{ class.periods|join:", " }} </td>
+                    <td><a href="{% url 'period_courses' class.period %}">{{ class.period }}</a></td>
                     <td>
                         <a href="{% url 'class_section' class.section_id %}">
-                            {{ class.name }}
+                            {{ class.course.name }}
                         </a>
                     </td>
                     <td>
+                        {% if class.teacher %}
                         <a href="{% url 'user_profile' class.teacher.id %}">
                             {{ class.teacher.last_name }}
                         </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'class_room' class.room_number %}">
-                            {{ class.room_number }}
-                        </a>
-                    </td>
-                    <td>
-                        {% if class.quarters|length == 4 %}
-                            Full Year
-                        {% elif class.quarters|length == 2 %}
-                            {% if 1 in class.quarters and 2 in class.quarters %}
-                                First Semester
-                            {% else %}
-                                Second Semester
-                            {% endif %}
                         {% else %}
-                            Quarter{{ class.quarters|pluralize }}
-                            {{ class.quarters|join:", " }}
+                        Unknown
                         {% endif %}
+                    </td>
+                    <td>
+                      {% if class.room %}
+                        <a href="{% url 'room_sections' class.room %}">{{ class.room }}</a>
+                      {% else %}
+                        Unknown
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if class.sem == "YR" %}
+                        Full Year
+                      {% elif class.sem == "S1" %}
+                          First Semester
+                      {% elif class.sem == "S2" %}
+                          Second Semester
+                      {% else %}
+                          Unknown
+                      {% endif %}
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5">No classes were found.</td>
+                    <td colspan="5">No sections were found.</td>
                 </tr>
             {% endfor %}
         </table>
