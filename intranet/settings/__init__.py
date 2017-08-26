@@ -111,18 +111,6 @@ if ADMINS is None:
 
 DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
 
-# In-memory sqlite3 databases significantly speed up running tests.
-if TESTING:
-    DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
-    # Horrible hack to suppress all migrations to speed up the tests.
-    MIGRATION_MODULES = helpers.MigrationMock()
-    # FIXME: we really shouldn't have to do this.
-    LOGGING_VERBOSE = re.search('-v ?[2-3]|--verbosity [2-3]', ' '.join(sys.argv)) is not None
-elif PRODUCTION or SECRET_DATABASE_URL is not None:
-    DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
-else:
-    # Default testing db config.
-    DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
 
 MANAGERS = ADMINS
 
@@ -751,3 +739,16 @@ try:
     from .secret import *  # noqa
 except ImportError:
     pass
+
+# In-memory sqlite3 databases significantly speed up running tests.
+if TESTING:
+    DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+    # Horrible hack to suppress all migrations to speed up the tests.
+    MIGRATION_MODULES = helpers.MigrationMock()
+    # FIXME: we really shouldn't have to do this.
+    LOGGING_VERBOSE = re.search('-v ?[2-3]|--verbosity [2-3]', ' '.join(sys.argv)) is not None
+elif PRODUCTION or SECRET_DATABASE_URL is not None:
+    DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
+else:
+    # Default testing db config.
+    DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
