@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #3970) documentation</title>
+    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #3991) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3970)',
+        VERSION:     'v3 (Build #3991)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -208,7 +208,7 @@
 <p>This is the default authentication backend.</p>
 <dl class="method">
 <dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">
-<code class="descname">authenticate</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">authenticate</code><span class="sig-paren">(</span><em>request</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate a username-password pair.</p>
 <p>Creates a new user if one is not already in the database.</p>
 <dl class="docutils">
@@ -275,7 +275,7 @@ Args:</p>
 <p>Authenticate as any user against a master password whose hash is in secret.py.</p>
 <dl class="method">
 <dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">
-<code class="descname">authenticate</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">authenticate</code><span class="sig-paren">(</span><em>request</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate a username-password pair.</p>
 <p>Creates a new user if one is not already in the database.</p>
 <dl class="docutils">
@@ -340,6 +340,11 @@ in the “admin_polls” group or in the “admin_all” group.</p>
 <code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">board_admin_required</code><span class="sig-paren">(</span><em>view_func</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.auth.decorators.board_admin_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restrict the wrapped view to board admins</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.deny_restricted">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">deny_restricted</code><span class="sig-paren">(</span><em>wrapped</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/decorators.html#deny_restricted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.decorators.deny_restricted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.auth.decorators.eighth_admin_required">

@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #3970) documentation</title>
+    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #3991) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #3970)',
+        VERSION:     'v3 (Build #3991)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -868,81 +868,6 @@ object the first time, the query is executed.</p>
 </div>
 <div class="section" id="module-intranet.apps.events.views">
 <span id="intranet-apps-events-views-module"></span><h2>intranet.apps.events.views module<a class="headerlink" href="#module-intranet.apps.events.views" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="intranet.apps.events.views.add_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">add_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#add_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.add_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add event page.</p>
-<p>Currently, there is an approval process for events. If a user is an
-events administrator, they can create events directly. Otherwise,
-their event is added in the system but must be approved.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.delete_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">delete_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#delete_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.delete_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete event page. You may only delete an event if you were the creator or you are an
-administrator. Confirmation page if not POST.</p>
-<p>id: event id</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.event_roster_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">event_roster_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#event_roster_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.event_roster_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the event roster. Users with hidden eighth period permissions will not be displayed.
-Users will be able to view all other users, along with a count of the number of hidden users.
-(Same as 8th roster page.) Admins will see a full roster at the bottom.</p>
-<p>id: event id</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.events_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">events_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#events_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.events_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Events homepage.</p>
-<p>Shows a list of events occurring in the next week, month, and
-future.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.hide_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">hide_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#hide_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.hide_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hide an event for the logged-in user.</p>
-<p>events_hidden in the user model is the related_name for
-“users_hidden” in the EventUserMap model.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.join_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">join_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#join_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.join_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join event page. If a POST request, actually add or remove the attendance of the current
-user. Otherwise, display a page with confirmation.</p>
-<p>id: event id</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.modify_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">modify_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#modify_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.modify_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify event page. You may only modify an event if you were the creator or you are an
-administrator.</p>
-<p>id: event id</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.request_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">request_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#request_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.request_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Request event page.</p>
-<p>Currently, there is an approval process for events. If a user is an
-events administrator, they can create events directly. Otherwise,
-their event is added in the system but must be approved.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="intranet.apps.events.views.show_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">show_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#show_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.show_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unhide an event that was hidden by the logged-in user.</p>
-<p>events_hidden in the user model is the related_name for
-“users_hidden” in the EventUserMap model.</p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-intranet.apps.events">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.events" title="Permalink to this headline">¶</a></h2>

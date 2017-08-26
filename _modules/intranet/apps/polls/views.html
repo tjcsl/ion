@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3970) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #3991) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #3970)',
+        VERSION:     'v3 (Build #3991)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -154,12 +154,14 @@
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Question</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PollForm</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="polls_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.polls_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">polls_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">is_polls_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
 
@@ -176,10 +178,11 @@
         <span class="n">polls</span> <span class="o">=</span> <span class="n">polls</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="n">polls</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-end_time&quot;</span><span class="p">),</span> <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="n">is_polls_admin</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="poll_vote_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.poll_vote_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">poll_vote_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">poll_id</span><span class="p">):</span>
     <span class="n">poll</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Poll</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">poll_id</span><span class="p">)</span>
 
@@ -297,7 +300,7 @@
 
     <span class="n">can_vote</span> <span class="o">=</span> <span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;poll&quot;</span><span class="p">:</span> <span class="n">poll</span><span class="p">,</span> <span class="s2">&quot;can_vote&quot;</span><span class="p">:</span> <span class="n">can_vote</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;questions&quot;</span><span class="p">:</span> <span class="n">questions</span><span class="p">,</span> <span class="s2">&quot;question_types&quot;</span><span class="p">:</span> <span class="n">Question</span><span class="o">.</span><span class="n">get_question_types</span><span class="p">()}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/vote.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/vote.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="fmt"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.fmt">[docs]</a><span class="k">def</span> <span class="nf">fmt</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
@@ -440,7 +443,8 @@
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s2">&quot;choices&quot;</span><span class="p">:</span> <span class="n">choices</span><span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="poll_results_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.poll_results_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">poll_results_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">poll_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
@@ -471,10 +475,11 @@
             <span class="n">questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;poll&quot;</span><span class="p">:</span> <span class="n">poll</span><span class="p">,</span> <span class="s2">&quot;grades&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="s2">&quot;questions&quot;</span><span class="p">:</span> <span class="n">questions</span><span class="p">,</span> <span class="s2">&quot;show_answers&quot;</span><span class="p">:</span> <span class="n">show_answers</span><span class="p">,</span> <span class="s2">&quot;do_gender&quot;</span><span class="p">:</span> <span class="n">do_gender</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/results.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/results.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="add_poll_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.add_poll_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">add_poll_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
@@ -500,10 +505,11 @@
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="s2">&quot;poll_questions&quot;</span><span class="p">:</span> <span class="s2">&quot;[]&quot;</span><span class="p">,</span> <span class="s2">&quot;poll_choices&quot;</span><span class="p">:</span> <span class="s2">&quot;[]&quot;</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="modify_poll_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.modify_poll_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">modify_poll_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">poll_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
@@ -538,10 +544,11 @@
         <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="kc">True</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="delete_poll_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.delete_poll_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">delete_poll_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">poll_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
@@ -553,7 +560,7 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;The poll has been deleted!&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;poll&quot;</span><span class="p">:</span> <span class="n">poll</span><span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;poll&quot;</span><span class="p">:</span> <span class="n">poll</span><span class="p">})</span>
 
 
 <div class="viewcode-block" id="process_question_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.process_question_data">[docs]</a><span class="k">def</span> <span class="nf">process_question_data</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">question_data</span><span class="p">):</span>

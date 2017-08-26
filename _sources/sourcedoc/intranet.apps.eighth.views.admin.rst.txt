@@ -76,6 +76,14 @@ intranet\.apps\.eighth\.views\.admin\.sponsors module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.eighth\.views\.admin\.users module
+--------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.views.admin.users
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

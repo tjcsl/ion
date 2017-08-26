@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3970) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #3991) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #3970)',
+        VERSION:     'v3 (Build #3991)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -180,17 +180,8 @@
 <span class="c1"># not done, an email failure notification gets sent whenever someone messes with</span>
 <span class="c1"># the HTTP Host header.</span>
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
-<span class="c1"># We want to restrict the access for certain users to the following paths:</span>
-<span class="c1"># /, /eighth, /eighth/attendance, and /eighth/attendance/&lt;activity_id&gt;</span>
-<span class="c1"># TODO: replace this regex with a better method of checking if the path is allowed</span>
-<span class="n">RESTRICTED_ALLOWED_PATHS_REGEX</span> <span class="o">=</span> <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:\/$|.*\.(?:js|ico|json|css)|\/login$|\/feedback$|\/about$|\/profile$|\/logout$&quot;</span>
-                                  <span class="sa">r</span><span class="s2">&quot;|\/oauth.*$|\/eighth(?:$|\/attendance(?:$|\/\d+$)))&quot;</span><span class="p">)</span>
 
 <span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.secret</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">pass</span>
 
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
@@ -259,18 +250,6 @@
 
 <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span> <span class="s1">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
 
-<span class="c1"># In-memory sqlite3 databases significantly speed up running tests.</span>
-<span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
-    <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
-    <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
-    <span class="n">MIGRATION_MODULES</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">MigrationMock</span><span class="p">()</span>
-    <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
-    <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;-v ?[2-3]|--verbosity [2-3]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="k">elif</span> <span class="n">PRODUCTION</span> <span class="ow">or</span> <span class="n">SECRET_DATABASE_URL</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">DATABASES</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">parse_db_url</span><span class="p">(</span><span class="n">SECRET_DATABASE_URL</span><span class="p">))</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Default testing db config.</span>
-    <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;USER&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;PASSWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;pwd&quot;</span><span class="p">})</span>
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
@@ -411,6 +390,7 @@
     <span class="n">PIPELINE</span><span class="p">[</span><span class="s1">&#39;STYLESHEETS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">single_css_map</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
 <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth.backends.MasterPasswordAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,)</span>
@@ -469,8 +449,8 @@
     <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django CSRF</span>
     <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django X-Frame-Options</span>
     <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django auth</span>
-    <span class="s2">&quot;intranet.middleware.oauth2_provider.OAuth2TokenMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Oauth toolkit</span>
-    <span class="s2">&quot;intranet.middleware.maintenancemode.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Maintenance mode</span>
+    <span class="s2">&quot;oauth2_provider.middleware.OAuth2TokenMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Oauth toolkit</span>
+    <span class="s2">&quot;maintenance_mode.middleware.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Maintenance mode</span>
     <span class="s2">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Thread locals</span>
     <span class="s2">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Include user in traceback</span>
     <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Messages</span>
@@ -481,8 +461,7 @@
     <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
-    <span class="s2">&quot;intranet.middleware.simple_history.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;intranet.middleware.restrict_users.RestrictUserMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Restrict tjhsstUser from most things</span>
+    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
@@ -594,7 +573,7 @@
     <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span>
     <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span>
      <span class="s2">&quot;intranet.apps.api.authentication.CsrfExemptSessionAuthentication&quot;</span><span class="p">,</span>
-     <span class="s2">&quot;oauth2_provider.ext.rest_framework.OAuth2Authentication&quot;</span><span class="p">),</span>
+     <span class="s2">&quot;oauth2_provider.contrib.rest_framework.OAuth2Authentication&quot;</span><span class="p">),</span>
     <span class="s2">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,)</span>
 <span class="p">}</span>
 
@@ -622,7 +601,7 @@
     <span class="s2">&quot;django_extensions&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django_requestlogging&quot;</span><span class="p">,</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;maintenancemode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;maintenance_mode&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pipeline&quot;</span><span class="p">,</span>
     <span class="s2">&quot;channels&quot;</span><span class="p">,</span>
     <span class="c1"># Intranet apps</span>
@@ -835,6 +814,9 @@
 <span class="k">if</span> <span class="n">MAINTENANCE_MODE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
 
+<span class="n">MAINTENANCE_MODE_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;error/503.html&quot;</span>
+<span class="n">MAINTENANCE_MODE_IGNORE_SUPERUSER</span> <span class="o">=</span> <span class="kc">True</span>
+
 <span class="c1"># Allow *.tjhsst.edu sites to access API, signage, and other resources</span>
 <span class="n">CORS_ORIGIN_ALLOW_ALL</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">CORS_ORIGIN_REGEX_WHITELIST</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;^(https?://)?(\w+\.)?tjhsst\.edu$&#39;</span><span class="p">)</span>
@@ -891,6 +873,24 @@
 
 <span class="c1"># Shows a warning message with yellow background on the login and all interior pages</span>
 <span class="c1"># GLOBAL_WARNING = &quot;This is a message to display throughout the application.&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.secret</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1"># In-memory sqlite3 databases significantly speed up running tests.</span>
+<span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
+    <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
+    <span class="n">MIGRATION_MODULES</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">MigrationMock</span><span class="p">()</span>
+    <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
+    <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;-v ?[2-3]|--verbosity [2-3]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="k">elif</span> <span class="n">PRODUCTION</span> <span class="ow">or</span> <span class="n">SECRET_DATABASE_URL</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">parse_db_url</span><span class="p">(</span><span class="n">SECRET_DATABASE_URL</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Default testing db config.</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;USER&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;PASSWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;pwd&quot;</span><span class="p">})</span>
 </pre></div>
 
     </div>
