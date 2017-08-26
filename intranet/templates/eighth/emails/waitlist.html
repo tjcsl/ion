@@ -1,0 +1,17 @@
+{% with description="You have been signed up for a new activity" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    You have been signed up for an activity from the waitlist. Here is some more information about the activity:</p>
+
+
+    <b>{{ activity.block }}</b>:
+        <span style="color: orange">{{ activity.full_title }}</span>
+    <br />
+    <br />
+    <br />
+
+    <p>If you have any questions or believe this is an error, please sign up for the correct activity and email <a href="mailto:intranet@tjhsst.edu">the Intranet admins</a>.</p>
+
+{% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

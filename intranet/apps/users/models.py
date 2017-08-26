@@ -196,7 +196,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
     gender = models.NullBooleanField()
-    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True, on_delete=models.CASCADE)
+    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    primary_email = models.OneToOneField('Email', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"

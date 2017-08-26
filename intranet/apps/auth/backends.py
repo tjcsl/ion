@@ -110,7 +110,7 @@ class KerberosAuthenticationBackend(object):
             return False
 
     # @method_decorator(sensitive_variables("password"))
-    def authenticate(self, username=None, password=None):
+    def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
         Creates a new user if one is not already in the database.
@@ -168,7 +168,7 @@ class MasterPasswordAuthenticationBackend(object):
     """
 
     # @method_decorator(sensitive_variables("password"))
-    def authenticate(self, username=None, password=None):
+    def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
         Creates a new user if one is not already in the database.

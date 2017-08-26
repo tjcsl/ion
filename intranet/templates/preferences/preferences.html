@@ -12,12 +12,14 @@
 {% block css %}
     {{ block.super }}
     {% stylesheet 'preferences' %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script src="{% static 'js/vendor/jquery.formset.js' %}" charset="utf-8"></script>
     <script src="{% static 'js/mailforwarding.js' %}" charset="utf-8"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript">
     $(document).ready(function () {
         $('#phone-formset-table tr').formset({
@@ -37,6 +39,9 @@
             formCssClass: 'website-formset',
             deleteText: '<button><i class="fa fa-times"></i></button>',
             addText: '<button><i class="fa fa-plus"></i> Add Another</button>'
+        });
+        $("#id_primary_email").selectize({
+          "allowEmptyOption": true
         });
     })
     $(function() {
@@ -68,6 +73,25 @@
             <h3>Notification Options</h3>
             <p>Change how you receive notifications from Intranet.</p>
             <table class="notification-options">
+              {% if request.user.notificationconfig and request.user.notificationconfig.gcm_token %}
+              <tr>
+                  <td>
+                      <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}/>
+                  </td>
+                  <td>
+                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
+                  </td>
+              </tr>
+              {% else %}
+              <tr>
+                  <td>
+                      <input id="id_receive_push_notifications" type="checkbox" disabled />
+                  </td>
+                  <td>
+                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
+                  </td>
+              </tr>
+              {% endif %}
                 {% for field in notification_options_form %}
                 <tr>
                     <td>
@@ -79,25 +103,7 @@
                     </td>
                 </tr>
                 {% endfor %}
-                {% if request.user.notificationconfig and request.user.notificationconfig.gcm_token %}
-                <tr>
-                    <td>
-                        <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}/>
-                    </td>
-                    <td>
-                        <label for="id_receive_push_notifications">Receive Push Notifications</label>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td>
-                        <input id="id_receive_push_notifications" type="checkbox" disabled />
-                    </td>
-                    <td>
-                        <label for="id_receive_push_notifications">Receive Push Notifications</label>
-                    </td>
-                </tr>
-                {% endif %}
+
             </table>
 
             <br />

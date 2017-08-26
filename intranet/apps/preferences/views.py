@@ -165,6 +165,7 @@ def get_notification_options(user):
     notification_options = {}
     notification_options["receive_news_emails"] = user.receive_news_emails
     notification_options["receive_eighth_emails"] = user.receive_eighth_emails
+    notification_options["primary_email"] = user.primary_email
 
     return notification_options
 
@@ -177,7 +178,7 @@ def save_notification_options(request, user):
         logger.debug("Notification options form: valid")
         if notification_options_form.has_changed():
             fields = notification_options_form.cleaned_data
-            logger.debug(fields)
+            logger.debug("Fields: {}".format(fields))
             for field in fields:
                 if field in notification_options and notification_options[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))

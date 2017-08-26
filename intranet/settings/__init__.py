@@ -43,10 +43,6 @@ ENABLE_WAITLIST = True
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
-try:
-    from .secret import *  # noqa
-except ImportError:
-    pass
 
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
 TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
@@ -267,6 +263,7 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
     "oauth2_provider.backends.OAuth2Backend",)
@@ -749,3 +746,8 @@ if TJSTAR_MAP is None:
 
 # Shows a warning message with yellow background on the login and all interior pages
 # GLOBAL_WARNING = "This is a message to display throughout the application."
+
+try:
+    from .secret import *  # noqa
+except ImportError:
+    pass

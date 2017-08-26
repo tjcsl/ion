@@ -38,6 +38,9 @@ class SignupException(Exception):
         "OverrideBlockPermissions":
         m("Your signup ({0}) on an override block ({1}) cannot be changed out of. You will be unable to sign up for any activities on this block.",
           "Your signup ({0}) on an override block ({1}) cannot be changed out of."),
+        "PrimaryEmailNotSet":
+        m("Please set a primary email in your preferences before joining the waitlist",
+          "This user does not have a primary email set and cannot be added to a waitlist"),
     }
 
     def __init__(self):

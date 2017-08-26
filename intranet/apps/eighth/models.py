@@ -12,9 +12,11 @@ from django.db.models import Manager, Q
 from django.utils import formats
 
 from . import exceptions as eighth_exceptions
+from ..notifications.emails import email_send
 from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 from ...utils.deletion import set_historical_user
+
 
 logger = logging.getLogger(__name__)
 
@@ -942,6 +944,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return False
 
+    def notify_waitlist(self, user, activity):
+        data = {"activity": activity}
+        email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
+                   "Waitlist Signup Notification", [user.primary_email])
+
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
         """Sign up a user to this scheduled activity if possible. This is where the magic happens.
@@ -1007,9 +1014,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if settings.ENABLE_WAITLIST and (add_to_waitlist or
                                                  (sched_act.is_full() and not self.is_both_blocks() and
                                                   (request is not None and not request.user.is_eighth_admin and request.user.is_student))):
-                    if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
-                        EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
-                    waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
+                    if user.primary_email:
+                        if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
+                            EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
+                        waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
+                    else:
+                        exception.PrimaryEmailNotSet = True
                 elif sched_act.is_full():
                     exception.ActivityFull = True
 
@@ -1126,6 +1136,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             try:
                                 previous_activity.add_user(next_wait.user)
+                                self.notify_waitlist(next_wait.user, previous_activity)
                                 next_wait.delete()
                             except eighth_exceptions.SignupException:
                                 pass
@@ -1353,6 +1364,7 @@ class EighthSignup(AbstractBaseEighthModel):
                 if not self.scheduled_activity.is_full():
                     next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.add_user(next_wait.user)
+                    self.notify_waitlist(next_wait.user, self.scheduled_activity)
                     next_wait.delete()
             return "Successfully removed signup for {}.".format(block)
 
