@@ -29,7 +29,7 @@ class KerberosAuthenticationBackend(object):
     def kinit_timeout_handle(username, realm):
         """Check if the user exists before we throw an error."""
         try:
-            u = User.objects.get(username=username)
+            u = User.objects.get(username__iexact=username)
         except User.DoesNotExist:
             logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
             return
@@ -143,7 +143,7 @@ class KerberosAuthenticationBackend(object):
         else:
             logger.debug("Authentication successful")
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(username__iexact=username)
             except User.DoesNotExist:
                 return None
             return user
@@ -187,7 +187,7 @@ class MasterPasswordAuthenticationBackend(object):
             return None
         if check_password(password, settings.MASTER_PASSWORD):
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(username__iexact=username)
             except User.DoesNotExist:
                 if settings.MASTER_NOTIFY:
                     logger.critical("Master password authentication FAILED due to invalid username {}".format(username))
