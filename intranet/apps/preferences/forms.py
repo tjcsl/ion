@@ -80,7 +80,11 @@ class NotificationOptionsForm(forms.Form):
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
         self.fields["receive_eighth_emails"] = flag("Receive Eighth Period Emails", False)
-        self.fields["primary_email"] = forms.ModelChoiceField(queryset=Email.objects.filter(user=user), required=False)
+        label = "Primary Email"
+        if user.emails.all().count() == 0:
+            label = "You can set a primary email after adding emails below."
+        self.fields["primary_email"] = forms.ModelChoiceField(queryset=Email.objects.filter(
+            user=user), required=False, label=label, disabled=(user.emails.all().count() == 0))
 
 
 class PhoneForm(forms.ModelForm):

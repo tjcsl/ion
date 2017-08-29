@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import (NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
-from ..users.models import User
+from ..users.models import User, Email
 
 logger = logging.getLogger(__name__)
 
@@ -165,7 +165,12 @@ def get_notification_options(user):
     notification_options = {}
     notification_options["receive_news_emails"] = user.receive_news_emails
     notification_options["receive_eighth_emails"] = user.receive_eighth_emails
-    notification_options["primary_email"] = user.primary_email
+    try:
+        notification_options["primary_email"] = user.primary_email
+    except Email.DoesNotExist:
+        user.primary_email = None
+        user.save()
+        notification_options["primary_email"] = None
 
     return notification_options
 
