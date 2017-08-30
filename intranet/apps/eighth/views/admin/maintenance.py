@@ -71,15 +71,17 @@ class ImportThread(threading.Thread):
         course, created = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
                                                        defaults={
                                                        'name': row[index_dict["Course Title"]].strip()})
-        teacher_name = row[index_dict["Teacher Staff Name"]].strip().lower().split(",")
+        teacher_name = row[index_dict["Teacher"]].strip().lower().split(",")
         no_teacher = False
         if len(teacher_name) == 1:
             content.write("Unable to determine teacher for {} for {}".format(row[index_dict["Section ID"]].strip(), u.full_name))
             no_teacher = True
         if not no_teacher:
+            fname = teacher_name[1].split()[0].strip()
+            lname = teacher_name[0].strip()
             teacher = User.objects.filter(user_type='teacher',
-                                          last_name__iexact=teacher_name[0].strip(),
-                                          first_name__istartswith=teacher_name[1].strip(".").strip())
+                                          last_name__iexact=lname,
+                                          first_name__iexact=fname)
         if not no_teacher and (not teacher.count() == 1):
             content.write("Unable to determine teacher for {}; {} options: {}".format(
                 row[index_dict["Section ID"]].strip(),
