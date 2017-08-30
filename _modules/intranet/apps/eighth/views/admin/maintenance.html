@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3995) documentation</title>
+    <title>intranet.apps.eighth.views.admin.maintenance &#8212; TJ Intranet v3 (Build #3996) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #3995)',
+        VERSION:     'v3 (Build #3996)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -210,15 +210,17 @@
         <span class="n">course</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Course ID&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
                                                        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
                                                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Course Title&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">()})</span>
-        <span class="n">teacher_name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Teacher Staff Name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">teacher_name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="n">no_teacher</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">teacher_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">content</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to determine teacher for </span><span class="si">{}</span><span class="s2"> for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Section ID&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">u</span><span class="o">.</span><span class="n">full_name</span><span class="p">))</span>
             <span class="n">no_teacher</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">no_teacher</span><span class="p">:</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">teacher_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">lname</span> <span class="o">=</span> <span class="n">teacher_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">teacher</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s1">&#39;teacher&#39;</span><span class="p">,</span>
-                                          <span class="n">last_name__iexact</span><span class="o">=</span><span class="n">teacher_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
-                                          <span class="n">first_name__istartswith</span><span class="o">=</span><span class="n">teacher_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                                          <span class="n">last_name__iexact</span><span class="o">=</span><span class="n">lname</span><span class="p">,</span>
+                                          <span class="n">first_name__iexact</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">no_teacher</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">teacher</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">content</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to determine teacher for </span><span class="si">{}</span><span class="s2">; </span><span class="si">{}</span><span class="s2"> options: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">row</span><span class="p">[</span><span class="n">index_dict</span><span class="p">[</span><span class="s2">&quot;Section ID&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
