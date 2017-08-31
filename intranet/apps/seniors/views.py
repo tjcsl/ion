@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render
 from .forms import SeniorForm
 from .models import Senior
 from ..auth.decorators import deny_restricted
+from ...settings import SENIOR_GRADUATION_YEAR
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 @deny_restricted
 def seniors_home_view(request):
     seniors = Senior.objects.exclude(college=None, major=None).filter(
-        user__cache__grade_number=12).order_by('user__cache__last_name', 'user__cache__first_name')
+        user__graduation_year=SENIOR_GRADUATION_YEAR).order_by('user__last_name', 'user__first_name')
     try:
         own_senior = Senior.objects.get(user=request.user)
     except Senior.DoesNotExist:
