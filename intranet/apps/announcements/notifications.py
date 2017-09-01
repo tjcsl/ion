@@ -129,7 +129,7 @@ def announcement_posted_email(request, obj, send_all=False):
         for u in users:
             if len(send_groups) == 0:
                 # no groups, public.
-                em = u.emails[0] if u.emails and len(u.emails) >= 1 else u.tj_email
+                em = u.emails.first() if u.emails and u.emails.count() >= 1 else u.tj_email
                 if em:
                     emails.append(em)
                 users_send.append(u)
