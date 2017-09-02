@@ -90,6 +90,8 @@ class NotificationOptionsForm(forms.Form):
 class PhoneForm(forms.ModelForm):
 
     """Represents a phone number (number + purpose)"""
+    _number = forms.CharField(max_length=14)
+
     class Meta:
         model = Phone
         fields = ['purpose', '_number']

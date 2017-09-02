@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
 {% load forms %}
+{% load form_field %}
 {% load math %}
 {% load strings %}
 {% load pipeline %}
@@ -118,7 +119,7 @@
                     {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                     {% endfor %}
-                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form.number }}</td><td>{{ form.purpose }}</td>
+                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form|field_:'_number' }}</td><td>{{ form.purpose }}</td>
                 </tr>
                 {% endfor %}
             </table>
