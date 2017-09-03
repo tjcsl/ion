@@ -19,7 +19,7 @@ class PreferredPictureForm(forms.Form):
             try:
                 grade = Grade.names[i]
                 user.photos.get(grade_number=(i + 9))  # Only display option if the photo exists
-                self.PREFERRED_PICTURE_CHOICES += [(grade, grade.title() + " Photo")]
+                self.PREFERRED_PICTURE_CHOICES += [(i + 9, grade.title() + " Photo")]
             except:
                 pass
 
