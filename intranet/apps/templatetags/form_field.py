@@ -10,7 +10,7 @@ def field_(self, name):
     From https://github.com/halfnibble/django-underscore-filters
 
     Get a form field starting with _.
-    Taken near directly from Djano > forms.
+    Taken near directly from Django > forms.
     Returns a BoundField with the given name.
     """
     try:

@@ -20,6 +20,14 @@ intranet\.apps\.templatetags\.dictionaries module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.templatetags\.form\_field module
+------------------------------------------------
+
+.. automodule:: intranet.apps.templatetags.form_field
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet\.apps\.templatetags\.forms module
 ------------------------------------------
 
