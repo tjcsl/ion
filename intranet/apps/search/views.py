@@ -106,7 +106,9 @@ def query(q, admin=False):
                 if len(p) == 0:
                     continue
 
-                default_categories = ["first_name", "last_name", "nickname", "id"]
+                default_categories = ["first_name", "last_name", "nickname"]
+                if p.isdigit():
+                    default_categories.append('id')
                 if admin:
                     default_categories.append("middle_name")
 
@@ -185,7 +187,9 @@ def query(q, admin=False):
             if p.startswith('"') and p.endswith('"'):
                 exact = True
                 p = p[1:-1]
-            default_categories = ["first_name", "last_name", "nickname", "id", "username", "student_id"]
+            default_categories = ["first_name", "last_name", "nickname", "username"]
+            if p.isdigit():
+                default_categories += ["student_id", "id"]
             if admin:
                 default_categories.append("middle_name")
             query = Q(pk=-1)
