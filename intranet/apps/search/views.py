@@ -116,7 +116,7 @@ def query(q, admin=False):
                 if exact:
                     # No implied wildcard
                     for cat in default_categories:
-                        query |= Q(**{cat: p})
+                        query |= Q(**{"{}__iexact".format(cat): p})
 
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
@@ -197,7 +197,7 @@ def query(q, admin=False):
                 logger.debug("Simple exact: {}".format(p))
                 # No implied wildcard
                 for cat in default_categories:
-                    query |= Q(**{cat: p})
+                    query |= Q(**{"{}__iexact".format(cat): p})
             else:
                 logger.debug("Simple wildcard: {}".format(p))
                 if p.endswith("*"):
