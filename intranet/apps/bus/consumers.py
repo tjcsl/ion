@@ -2,6 +2,7 @@ from channels.generic.websockets import JsonWebsocketConsumer
 
 from .models import Route
 
+
 class BusConsumer(JsonWebsocketConsumer):
     http_user = True
 
