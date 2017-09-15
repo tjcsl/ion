@@ -41,7 +41,7 @@ def query(q, admin=False):
                 "first_name",
                 "nickname",),
             "lastname": ("last_name",),
-            "last": ("sn",),
+            "last": ("last_name",),
             "nick": ("nickname",),
             "nickname": ("nickname",),
             "name": (
