@@ -278,7 +278,7 @@ def preferences_view(request):
 def privacy_options_view(request):
     """View and edit privacy options for a user."""
     if "user" in request.GET:
-        user = User.objects.user_with_ion_id(id=request.GET.get("user"))
+        user = User.objects.user_with_ion_id(request.GET.get("user"))
     elif "student_id" in request.GET:
         user = User.objects.user_with_student_id(request.GET.get("student_id"))
     else:
