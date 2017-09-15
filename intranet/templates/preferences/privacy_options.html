@@ -81,11 +81,16 @@
 
         <br />
 
+        {% if profile_user %}
         <h3>Student: {{ profile_user.full_name }} ({{ profile_user.student_id|default:profile_user.id }})</h3>
+        {% else %}
+        <h3>Student not found.</h3>
+        {% endif %}
     {% endif %}
 
     <section class="user-privacy-edit">
-        <form action="" method="post">
+        {% if privacy_options_form %}
+         <form action="" method="post">
             {% csrf_token %}
             <table class="privacy-options">
                 <thead>
@@ -125,7 +130,7 @@
 
             <button type="submit">Save</button>
         </form>
-
+        {% endif %}
     </section>
 </div>
 {% endblock %}

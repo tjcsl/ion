@@ -278,7 +278,7 @@ def preferences_view(request):
 def privacy_options_view(request):
     """View and edit privacy options for a user."""
     if "user" in request.GET:
-        user = User.objects.get(id=request.GET.get("user"))
+        user = User.objects.user_with_ion_id(id=request.GET.get("user"))
     elif "student_id" in request.GET:
         user = User.objects.user_with_student_id(request.GET.get("student_id"))
     else:
@@ -288,11 +288,19 @@ def privacy_options_view(request):
         messages.error(request, "Invalid user.")
         user = request.user
 
-    if request.method == "POST":
-        privacy_options_form = save_privacy_options(request, user)
-    else:
-        privacy_options = get_privacy_options(user)
-        privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
+    # Don't default to request.user if user is Eighth Office
+    # TODO: remove this magic value
+    if user.id == 9999:
+        user = None
 
-    context = {"privacy_options_form": privacy_options_form, "profile_user": user}
+    if user:
+        if request.method == "POST":
+            privacy_options_form = save_privacy_options(request, user)
+        else:
+            privacy_options = get_privacy_options(user)
+            privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
+
+        context = {"privacy_options_form": privacy_options_form, "profile_user": user}
+    else:
+        context = {"profile_user": user}
     return render(request, "preferences/privacy_options.html", context)
