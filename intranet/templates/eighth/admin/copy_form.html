@@ -14,13 +14,13 @@
     <script>
     $(document).ready(function() {
         $("form").submit(function() {
-            $(this).find("button").prop("disabled", true).html("<i class='fa fa-cog fa-spin'></i> Copying...");
+            $(this).find("button").prop("disabled", true).html("<i class='fa fa-cog fa-spin'></i> Importing...");
         });
         var block_selectize = $("#block-select")[0].selectize;
         block_selectize.on("change", function() {
             var from = block_selectize.getItem(block_selectize.getValue())[0].innerHTML;
             if (from) {
-                $("#summary").html("You will be copying all of the activites from <b>" + from + "</b> to " + "<b>{{ to_block }}</b>" + ".");
+                $("#summary").html("You will be importing all of the activites from <b>" + from + "</b> to " + "<b>{{ to_block }}</b>" + ".");
             }
             else {
                 $("#summary").html("");
@@ -43,11 +43,11 @@
     {% if existing_activities > 0 or existing_signups > 0 %}
         <p>
             <i class="fa fa-exclamation-triangle"></i> <b>{{ existing_activities }}</b> activit{{ existing_activities|pluralize:"y,ies" }} and <b>{{ existing_signups }}</b> signup{{ existing_signups|pluralize }} already exist for this block.
-            Copying from another block will <b style="color:red">delete</b> these activities and signups.
+            Importing from another block will <b style="color:red">delete</b> these activities and signups.
         </p>
     {% endif %}
 
-    <p>Select a block below to import activities from. Checking copy signups will copy over student signups without attendance information.</p>
+    <p>Select a block below to import activities from. Checking import signups will import student signups without attendance information.</p>
     <form action="" method="post">
         {% csrf_token %}
         <select id="block-select" name="block" placeholder="Select or search for a block">
@@ -57,11 +57,11 @@
             {% endfor %}
         </select>
         <div style="margin-bottom: 10px">
-            <label><input type="checkbox" name="signups" /> Copy Signups</label>
+            <label><input type="checkbox" name="signups" /> Import Signups</label>
         </div>
         <p id="summary"></p>
         <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
-        <button type="submit">Copy Block</button>
+        <button type="submit">Import Block</button>
     </form>
 {% endif %}
 
