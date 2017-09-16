@@ -288,9 +288,7 @@ def privacy_options_view(request):
         messages.error(request, "Invalid user.")
         user = request.user
 
-    # Don't default to request.user if user is Eighth Office
-    # TODO: remove this magic value
-    if user.id == 9999:
+    if user.is_eighthoffice:
         user = None
 
     if user:
