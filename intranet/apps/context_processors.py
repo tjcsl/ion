@@ -92,6 +92,11 @@ def global_custom_theme(request):
     return {"theme": theme}
 
 
+def show_homecoming(request):
+    """Show homecoming ribbon / scores """
+    return {'show_homecoming': settings.HOCO_START_DATE < datetime.date.today() and datetime.date.today() < settings.HOCO_END_DATE}
+
+
 def _get_current_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:

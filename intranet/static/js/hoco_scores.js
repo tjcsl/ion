@@ -1,9 +1,11 @@
 $(document).ready(function() {
+    console.log('hello');
     $.get("https://homecoming.tjhsst.edu/api/", function(data) {
-        $("#score-senior").text(data.senior_total);
-        $("#score-sophomore").text(data.sophomore_total);
-        $("#score-junior").text(data.junior_total);
-        $("#score-freshman").text(data.freshman_total);
+        console.log(data.senior_total ? data.senior_total : 0);
+        $("#score-senior").text(data.senior_total ? data.senior_total : 0);
+        $("#score-sophomore").text(data.sophomore_total ? data.sophomore_total : 0);
+        $("#score-junior").text(data.junior_total ? data.junior_total : 0);
+        $("#score-freshman").text(data.freshman_total ? data.freshman_total : 0);
         giveRibbons();
         $("#hoco-scores").fadeIn();
     });

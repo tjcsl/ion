@@ -34,6 +34,9 @@
 {% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
+{% if show_homecoming %}
+{% include "special/hoco_scores.html" %}
+{% endif %}
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}">
         {% if login_warning %}
             <div class="login-warning">{{ login_warning|safe }}</div>
