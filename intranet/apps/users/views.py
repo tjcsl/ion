@@ -45,11 +45,6 @@ def profile_view(request, user_id=None):
     else:
         profile_user = request.user
 
-    if "clear_cache" in request.GET and request.user.is_eighth_admin:
-        profile_user.clear_cache()
-        messages.success(request, "Cleared cache for {}".format(profile_user))
-        return redirect("/profile/{}".format(profile_user.id))
-
     num_blocks = 6
 
     eighth_schedule = []
