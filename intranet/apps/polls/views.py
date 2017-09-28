@@ -11,8 +11,6 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.serializers import serialize
 from django.utils import timezone
 
-from django.db.models import Q
-
 from .models import Answer, Choice, Poll, Question
 from .forms import PollForm
 from ..users.models import User
