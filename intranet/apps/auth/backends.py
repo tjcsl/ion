@@ -88,10 +88,7 @@ class KerberosAuthenticationBackend(object):
                 kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
                 kinit.expect(":")
                 kinit.sendline(password)
-                returned = kinit.expect([pexpect.EOF, "password:"])
-                if returned == 1:
-                    logger.debug("Password for {}@{} expired, needs reset".format(username, realm))
-                    return "reset"
+                kinit.expect(pexpect.EOF)
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
