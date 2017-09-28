@@ -74,7 +74,7 @@ def get_preferred_pic(user):
 def save_preferred_pic(request, user):
     preferred_pic = get_preferred_pic(user)
     logger.debug(preferred_pic)
-    preferred_pic_form = PreferredPictureForm(user, data=request.POST, initial=user.preferred_photo)
+    preferred_pic_form = PreferredPictureForm(user, data=request.POST, initial=preferred_pic)
     if preferred_pic_form.is_valid():
         logger.debug("Preferred pic form: valid")
         if preferred_pic_form.has_changed():
@@ -90,7 +90,10 @@ def save_preferred_pic(request, user):
                     logger.debug("{}: new: {} from: {}".format("preferred_photo",
                                                                new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None))
                     try:
-                        user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
+                        if new_preferred_pic == 'AUTO':
+                            user.preferred_photo = None
+                        else:
+                            user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
                         user.save()
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
