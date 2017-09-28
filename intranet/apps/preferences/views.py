@@ -91,6 +91,7 @@ def save_preferred_pic(request, user):
                                                                new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None))
                     try:
                         user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
+                        user.save()
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                         logger.debug("Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
