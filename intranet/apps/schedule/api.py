@@ -19,7 +19,7 @@ class OnePagePagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 7
 
- class DayList(generics.ListAPIView):
+class DayList(generics.ListAPIView):
     def get_queryset(self):
         return Day.objects.get_future_days()
     serializer_class = DaySerializer
