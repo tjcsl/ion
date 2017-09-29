@@ -228,7 +228,8 @@ def find_birthdays(request):
                         "grade": {
                             "name": u.grade.name
                         },
-                        "age": (u.age + yr_inc) if u.age is not None else -1
+                        "age": (u.age + yr_inc) if u.age is not None else -1,
+                        "public": u.properties.attribute_is_public("show_birthday")
                     } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
                     "inc": 0
                 },
@@ -240,7 +241,8 @@ def find_birthdays(request):
                         "grade": {
                             "name": u.grade.name
                         },
-                        "age": (u.age - 1)
+                        "age": (u.age - 1),
+                        "public": u.properties.attribute_is_public("show_birthday")
                     } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
                     "inc": 1
                 }
@@ -250,6 +252,16 @@ def find_birthdays(request):
         else:
             cache.set(key, data, timeout=60 * 60 * 6)
             return data
+
+
+def find_visible_birthdays(request, data):
+    """Return only the birthdays visible to current user.
+    """
+    if request.user and (request.user.is_teacher or request.user.is_eighthoffice or request.user.is_eighth_admin):
+        return data
+    data['today']['users'] = [u for u in data['today']['users'] if u['public']]
+    data['tomorrow']['users'] = [u for u in data['tomorrow']['users'] if u['public']]
+    return data
 
 
 def get_prerender_url(request):
@@ -414,7 +426,7 @@ def add_widgets_context(request, context):
         # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
     birthdays = find_birthdays(request)
-    context["birthdays"] = birthdays
+    context["birthdays"] = find_visible_birthdays(request, birthdays)
 
     sched_ctx = schedule_context(request)
     context.update(sched_ctx)

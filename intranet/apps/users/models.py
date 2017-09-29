@@ -87,10 +87,11 @@ class UserManager(DjangoUserManager):
 
         users = User.objects.filter(properties___birthday__month=month, properties___birthday__day=day)
         results = []
+        print('=============================')
         for user in users:
             # TODO: permissions system
-            if user.attribute_is_visible("show_birthday"):
-                results.append(user)
+            print(user.first_name)
+            results.append(user)
 
         return results
 
@@ -422,7 +423,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             integer
 
         """
-        date = datetime.now()
+        date = datetime.today().date()
 
         b = self.birthday
         if b:
@@ -873,6 +874,16 @@ class UserProperties(models.Model):
             parent = getattr(self, "parent_{}".format(permission))
             student = getattr(self, "self_{}".format(permission))
             return (parent and student) or (self.is_http_request_sender() or self._current_user_override())
+        except:
+            logger.error("Could not retrieve permissions for {}".format(permission))
+
+    def attribute_is_public(self, permission):
+        """ Checks if attribute is visible to public (regardless of admins status)
+        """
+        try:
+            parent = getattr(self, "parent_{}".format(permission))
+            student = getattr(self, "self_{}".format(permission))
+            return (parent and student)
         except:
             logger.error("Could not retrieve permissions for {}".format(permission))
 
