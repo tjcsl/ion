@@ -84,7 +84,7 @@ $(function() {
 
         initialize: function () {
             _.bindAll(this, "render");
-            this.on("ws:receive", this.update, this);
+            this.on("wss:receive", this.update, this);
             this.categories = ["a", "o", "d"];
             this.routeList = new bus.RouteList();
 
@@ -139,10 +139,10 @@ $(function() {
         }
     });
 
-    let socket = new WebSocket(`ws://${base_url}/bus/`);
+    let socket = new WebSocket(`wss://${base_url}/bus/`);
     window.appView = new bus.AppView();
     socket.onmessage = (event) => {
-        window.appView.trigger("ws:receive", JSON.parse(event.data));
+        window.appView.trigger("wss:receive", JSON.parse(event.data));
     };
     socket.onclose = () => {
         Messenger().error({
