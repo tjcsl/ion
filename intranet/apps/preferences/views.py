@@ -239,6 +239,7 @@ def save_bus_route(request, user):
                         pass
     return bus_route_form
 
+
 def save_gcm_options(request, user):
     if request.user.notificationconfig and request.user.notificationconfig.gcm_token:
         receive = ("receive_push_notifications" in request.POST)

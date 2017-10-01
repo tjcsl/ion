@@ -4,7 +4,6 @@ import logging
 from django import forms
 
 from ..users.models import User, Grade, Phone, Email, Website
-from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
 
