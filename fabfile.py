@@ -77,13 +77,14 @@ def clean_production_pyc():
         clean_pyc()
 
 
+# TODO: rename from gunicorn
 def restart_production_gunicorn(skip=False):
     """Restart the production gunicorn instance as root."""
     _require_root()
 
     if skip or confirm("Are you sure you want to restart the production " "Gunicorn instance?"):
         clean_production_pyc()
-        local("supervisorctl restart ion")
+        local("supervisorctl restart ion_async_workers:")
 
 
 def clear_sessions(venv=None):
@@ -192,7 +193,6 @@ def deploy():
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
                 local("./manage.py collectstatic --noinput", shell="/bin/bash")
                 local("./manage.py migrate", shell="/bin/bash")
-            restart_production_gunicorn(True)
 
     puts("Deploy complete.")
 
