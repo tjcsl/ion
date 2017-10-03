@@ -28,14 +28,6 @@ intranet\.apps\.bus\.models module
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.bus\.tests module
----------------------------------
-
-.. automodule:: intranet.apps.bus.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet\.apps\.bus\.urls module
 --------------------------------
 
