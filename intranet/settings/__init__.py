@@ -733,6 +733,8 @@ FCPS_EMERGENCY_TIMEOUT = 0
 if TJSTAR_MAP is None:
     TJSTAR_MAP = False
 
+SIMILAR_THRESHOLD = 5
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

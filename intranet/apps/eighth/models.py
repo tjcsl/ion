@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from simple_history.models import HistoricalRecords
 from django.db import models, transaction
-from django.db.models import Manager, Q
+from django.db.models import Manager, Q, Count
 from django.utils import formats
 
 from . import exceptions as eighth_exceptions
@@ -240,6 +240,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
 
+    similarities = models.ManyToManyField('EighthActivitySimilarity', related_name='activity_set', blank=True)
+
     deleted = models.BooleanField(blank=True, default=False)
 
     history = HistoricalRecords()
@@ -337,6 +339,18 @@ class EighthActivity(AbstractBaseEighthModel):
         been scheduled at all this year."""
         scheduled_activities = self.get_active_schedulings()
         return scheduled_activities and scheduled_activities.count() > 0
+
+    @property
+    def frequent_users(self):
+        """Return a QuerySet of user id's and counts that have signed up for this activity more than
+        `settings.SIMILAR_THRESHOLD` times. This is be used for suggesting activities to users."""
+        return self.eighthscheduledactivity_set.exclude(
+            eighthsignup_set__user=None).exclude(
+            administrative=True).exclude(
+            special=True).exclude(
+            restricted=True).values('eighthsignup_set__user').annotate(
+            count=Count('eighthsignup_set__user')).filter(
+            count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
 
     class Meta:
         verbose_name_plural = "eighth activities"
@@ -1427,3 +1441,15 @@ class EighthWaitlist(AbstractBaseEighthModel):
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)
+
+
+class EighthActivitySimilarity(AbstractBaseEighthModel):
+    count = models.IntegerField()
+
+    @property
+    def true_count(self):
+        return self.count / (self.activity_set.first().capacity() + self.activity_set.last().capacity())
+
+    def __str__(self):
+        act_set = self.activity_set.all()
+        return "{} and {}: {}".format(act_set.first(), act_set.last(), self.count)

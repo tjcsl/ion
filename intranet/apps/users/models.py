@@ -7,6 +7,7 @@ from base64 import b64encode
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.db import models
+from django.db.models import Count
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -670,6 +671,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def startpage(self):
         return "eighth" if self.is_simple_user else None
+
+    @property
+    def frequent_signups(self):
+        """Return a QuerySet of activity id's and counts for the activities that a given user
+        has signed up for more than `settings.SIMILAR_THRESHOLD` times"""
+        return self.eighthsignup_set.exclude(
+            scheduled_activity__activity__administrative=True).exclude(
+            scheduled_activity__activity__special=True).exclude(
+            scheduled_activity__activity__restricted=True).values(
+            'scheduled_activity__activity').annotate(
+            count=Count('scheduled_activity__activity')).filter(
+            count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
 
     def get_eighth_sponsor(self):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
