@@ -155,6 +155,7 @@ $(function() {
                 "data-administrative": this.model.attributes.administrative,
                 "data-cancelled": this.model.attributes.cancelled,
                 "data-favorited": this.model.attributes.favorited,
+                "data-recommended": this.model.attributes.is_recommended,
                 "data-sticky": this.model.attributes.sticky
             };
         },
@@ -498,6 +499,18 @@ $(function() {
                 $(".special-header").addClass("no-activities");
             } else {
                 $(".special-header").removeClass("no-activities");
+            }
+
+            var recommendeds = _.filter(this.activities.models, function(activity) {
+                return activity.attributes.is_recommended;
+            });
+
+            renderActivitiesInContainer(recommendeds, $(".recommended-activities", this.el));
+
+            if (recommendeds.length === 0) {
+                $(".recommended-header").addClass("no-activities");
+            } else {
+                $(".recommended-header").removeClass("no-activities");
             }
 
             if (!$("#activity-picker").hasClass("different-user")) {

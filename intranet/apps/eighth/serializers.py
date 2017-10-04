@@ -143,6 +143,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         if user:
             activity_info["waitlisted"] = EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
             activity_info["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
+            activity_info["is_recommended"] = activity in user.recommended_activities
 
         return activity_info
 
