@@ -108,6 +108,10 @@
                     <span class="badge green">Special</span>
                 <% } %>
 
+                <% if (is_recommended) { %>
+                    <span class="badge green" title="This activity is recommended for you based on previous signups.">Recommended</span>
+                <% } %>
+
                 <% if (cancelled) { %>
                     <span class="badge darkred">CANCELLED</span>
                 <% } %>
@@ -168,6 +172,10 @@
 
         <% if (special) { %>
             <span class="badge green clickable" data-append-search="is:sp" title="This is a special activity.">Special</span>
+        <% } %>
+
+        <% if (is_recommended) { %>
+            <span class="badge green clickable" title="This activity is recommended for you based on previous signups.">Recommended</span>
         <% } %>
 
         <% if (restricted_for_user) { %>
@@ -515,6 +523,10 @@
                     Special
                 </h5>
                 <ul class="special-activities" data-header="special-header"></ul>
+                <h5 class="sticky-header recommended-header" data-header="recommended-header">
+                    Recommended Activities
+                </h5>
+                <ul class="recommended-activities" data-header="recommended-header"></ul>
                 <h5 class="sticky-header all-header" data-header="all-header">
                     All
                 </h5>
