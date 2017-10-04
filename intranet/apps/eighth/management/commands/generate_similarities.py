@@ -16,10 +16,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print(EighthActivitySimilarity.objects.all().delete())
         start = time.time()
-        acts = EighthActivity.objects.exclude(
+        acts = EighthActivity.exclude(
             restricted=True).exclude(
             special=True).exclude(
-            administrative=True).order_by('name')
+            administrative=True).exclude(
+            deleted=True).order_by('name')
         for act in acts:
             start_act = time.time()
             freq_users = act.frequent_users
@@ -27,7 +28,7 @@ class Command(BaseCommand):
                 u_id = u_info['eighthsignup_set__user']
                 for act_info in User.objects.get(id=u_id).frequent_signups.exclude(scheduled_activity__activity=act):
                     act_id = act_info['scheduled_activity__activity']
-                    act2 = EighthActivity.objects.get(id=act_id)
+                    act2 = EighthActivity.undeleted_objects.get(id=act_id)
                     if EighthActivitySimilarity.objects.filter(
                             activity_set__id=act.id).filter(
                             activity_set__id=act2.id).exists():
@@ -41,5 +42,9 @@ class Command(BaseCommand):
                         sim.count = 1
                     sim.save()
             print("Finished similarities for {} in {} seconds".format(act, time.time() - start_act))
-
+        for act in acts:
+            if act.is_popular:
+                for sim in act.similarities.all():
+                    sim.count *= 2
+                    sim.save()
         print("Generated similarities in {} seconds".format(time.time() - start))

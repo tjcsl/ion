@@ -352,6 +352,10 @@ class EighthActivity(AbstractBaseEighthModel):
             count=Count('eighthsignup_set__user')).filter(
             count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
 
+    @property
+    def is_popular(self):
+        return self.frequent_users.count() > (settings.SIMILAR_THRESHOLD * 2)
+
     class Meta:
         verbose_name_plural = "eighth activities"
 
@@ -1445,10 +1449,18 @@ class EighthWaitlist(AbstractBaseEighthModel):
 
 class EighthActivitySimilarity(AbstractBaseEighthModel):
     count = models.IntegerField()
+    true_count = models.FloatField()
 
     @property
-    def true_count(self):
-        return self.count / (self.activity_set.first().capacity() + self.activity_set.last().capacity())
+    def _true_count(self):
+        cap = self.activity_set.first().capacity() + self.activity_set.last().capacity()
+        if cap == 0:
+            cap = 100
+        return self.count / cap
+
+    def save(self, *args, **kwargs):
+        self.true_count = self._true_count
+        super(EighthActivitySimilarity, self).save(*args, **kwargs)
 
     def __str__(self):
         act_set = self.activity_set.all()

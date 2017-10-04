@@ -679,10 +679,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.eighthsignup_set.exclude(
             scheduled_activity__activity__administrative=True).exclude(
             scheduled_activity__activity__special=True).exclude(
-            scheduled_activity__activity__restricted=True).values(
+            scheduled_activity__activity__restricted=True).exclude(
+            scheduled_activity__activity__deleted=True).values(
             'scheduled_activity__activity').annotate(
             count=Count('scheduled_activity__activity')).filter(
             count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+
+    @property
+    def recommended_activities(self):
+        # FIXME: remove recursive dep
+        from ..eighth.models import EighthActivity
+        acts = EighthActivity.objects.filter(
+            id__in=self.frequent_signups.values_list('scheduled_activity__activity', flat=True))
+        close_acts = set()
+        for act in acts:
+            sim = act.similarities.order_by('-true_count').first()
+            close_acts.add(sim.activity_set.exclude(id=act.id).first())
+        return close_acts
 
     def get_eighth_sponsor(self):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
