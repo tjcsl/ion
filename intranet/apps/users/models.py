@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from base64 import b64encode
 
 from django.conf import settings
@@ -687,14 +688,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def recommended_activities(self):
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthActivity
-        acts = EighthActivity.objects.filter(
-            id__in=self.frequent_signups.values_list('scheduled_activity__activity', flat=True))
+        acts = set()
+        for signup in self.eighthsignup_set.exclude(
+                scheduled_activity__activity__administrative=True).exclude(
+                scheduled_activity__activity__special=True).exclude(
+                scheduled_activity__activity__restricted=True).exclude(
+                scheduled_activity__activity__deleted=True).exclude(
+                scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
+            acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
             sim = act.similarities.order_by('-true_count').first()
-            close_acts.add(sim.activity_set.exclude(id=act.id).first())
+            if sim:
+                close_acts.add(sim.activity_set.exclude(id=act.id).first())
         return close_acts
 
     def get_eighth_sponsor(self):
