@@ -37,7 +37,7 @@ class Command(BaseCommand):
                             activity_set__id=act2.id).first()
                         sim.count += 1
                     else:
-                        sim = EighthActivitySimilarity.objects.create(count=0)
+                        sim = EighthActivitySimilarity.objects.create(count=0, weighted=0)
                         sim.activity_set.add(act, act2)
                         sim.count = 1
                     sim.save()
