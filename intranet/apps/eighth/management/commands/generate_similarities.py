@@ -47,4 +47,6 @@ class Command(BaseCommand):
                 for sim in act.similarities.all():
                     sim.count *= 2
                     sim.save()
+        for sim in EighthActivitySimilarity.objects.all():
+            sim.update_weighted()
         print("Generated similarities in {} seconds".format(time.time() - start))

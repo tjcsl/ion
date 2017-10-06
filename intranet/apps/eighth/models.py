@@ -1458,9 +1458,9 @@ class EighthActivitySimilarity(AbstractBaseEighthModel):
             cap = 100
         return self.count / cap
 
-    def save(self, *args, **kwargs):
+    def update_weighted(self):
         self.weighted = self._weighted
-        super(EighthActivitySimilarity, self).save(*args, **kwargs)
+        self.save()
 
     def __str__(self):
         act_set = self.activity_set.all()
