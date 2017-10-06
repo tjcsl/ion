@@ -16,7 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print(EighthActivitySimilarity.objects.all().delete())
         start = time.time()
-        acts = EighthActivity.exclude(
+        acts = EighthActivity.objects.all().exclude(
             restricted=True).exclude(
             special=True).exclude(
             administrative=True).exclude(
