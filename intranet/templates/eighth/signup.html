@@ -290,13 +290,15 @@
                                     View Waitlist
                                 </a>
                         <% } %>
+                        <% if (roster.count < roster.capacity || both_blocks || isEighthAdmin) { %>
                         <button id="signup-button">
-                            <% if (roster.count < roster.capacity || both_blocks || isEighthAdmin) { %>
-                                Sign Up
-                            <% } else if (waitlistEnabled) { %>
-                                Join Waitlist
-                            <% } %>
+                            Sign Up
                         </button>
+                        <% } else if (waitlistEnabled) { %>
+                        <button id="signup-button">
+                            Join Waitlist
+                        </button>
+                        <% } %>
                         <% if (isEighthAdmin && roster.count >= roster.capacity && !restricted_for_user && !administrative && !sticky && !one_a_day  && !both_blocks && waitlistEnabled) { %>
                         <button id="waitlist-button">
                             Add to Waitlist
