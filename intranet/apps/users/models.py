@@ -689,17 +689,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def recommended_activities(self):
         acts = set()
+        freq_acts = set([a['scheduled_activity__activity'] for a in self.frequent_signups])
         for signup in self.eighthsignup_set.exclude(
                 scheduled_activity__activity__administrative=True).exclude(
                 scheduled_activity__activity__special=True).exclude(
                 scheduled_activity__activity__restricted=True).exclude(
                 scheduled_activity__activity__deleted=True).exclude(
                 scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
-            acts.add(signup.scheduled_activity.activity)
+            if signup.scheduled_activity.activity.id in freq_acts:
+                acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
             sim = act.similarities.order_by('-true_count').first()
-            if sim:
+            if sim and sim.true_count > 1:
                 close_acts.add(sim.activity_set.exclude(id=act.id).first())
         return close_acts
 
