@@ -7,6 +7,7 @@ from base64 import b64encode
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
+from django.core.cache import cache
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -688,6 +689,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def recommended_activities(self):
+        key = "{}:recommended_activities".format(self.username)
+        cached = cache.get(key)
+        if cached:
+            return cached
         acts = set()
         freq_acts = set([a['scheduled_activity__activity'] for a in self.frequent_signups])
         for signup in self.eighthsignup_set.exclude(
@@ -703,6 +708,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             sim = act.similarities.order_by('-weighted').first()
             if sim and sim.weighted > 1:
                 close_acts.add(sim.activity_set.exclude(id=act.id).first())
+        cache.set(key, close_acts, timeout=60 * 60 * 24 * 7)
         return close_acts
 
     def get_eighth_sponsor(self):
