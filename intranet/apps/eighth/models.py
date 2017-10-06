@@ -5,6 +5,7 @@ from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
+from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from simple_history.models import HistoricalRecords
 from django.db import models, transaction
@@ -344,13 +345,19 @@ class EighthActivity(AbstractBaseEighthModel):
     def frequent_users(self):
         """Return a QuerySet of user id's and counts that have signed up for this activity more than
         `settings.SIMILAR_THRESHOLD` times. This is be used for suggesting activities to users."""
-        return self.eighthscheduledactivity_set.exclude(
+        key = "eighthactivity_{}:frequent_users".format(self.id)
+        cached = cache.get(key)
+        if cached:
+            return cached
+        freq_users = self.eighthscheduledactivity_set.exclude(
             eighthsignup_set__user=None).exclude(
             administrative=True).exclude(
             special=True).exclude(
             restricted=True).values('eighthsignup_set__user').annotate(
             count=Count('eighthsignup_set__user')).filter(
             count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        cache.set(key, freq_users, timeout=60 * 60 * 24 * 7)
+        return freq_users
 
     @property
     def is_popular(self):

@@ -678,7 +678,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def frequent_signups(self):
         """Return a QuerySet of activity id's and counts for the activities that a given user
         has signed up for more than `settings.SIMILAR_THRESHOLD` times"""
-        return self.eighthsignup_set.exclude(
+        key = "{}:frequent_signups".format(self.username)
+        cached = cache.get(key)
+        if cached:
+            return cached
+        freq_signups = self.eighthsignup_set.exclude(
             scheduled_activity__activity__administrative=True).exclude(
             scheduled_activity__activity__special=True).exclude(
             scheduled_activity__activity__restricted=True).exclude(
@@ -686,6 +690,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             'scheduled_activity__activity').annotate(
             count=Count('scheduled_activity__activity')).filter(
             count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        cache.set(key, freq_signups, timeout=60 * 60 * 24 * 7)
+        return freq_signups
 
     @property
     def recommended_activities(self):
