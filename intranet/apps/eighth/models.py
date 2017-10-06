@@ -1449,17 +1449,17 @@ class EighthWaitlist(AbstractBaseEighthModel):
 
 class EighthActivitySimilarity(AbstractBaseEighthModel):
     count = models.IntegerField()
-    true_count = models.FloatField()
+    weighted = models.FloatField()
 
     @property
-    def _true_count(self):
+    def _weighted(self):
         cap = self.activity_set.first().capacity() + self.activity_set.last().capacity()
         if cap == 0:
             cap = 100
         return self.count / cap
 
     def save(self, *args, **kwargs):
-        self.true_count = self._true_count
+        self.weighted = self._weighted
         super(EighthActivitySimilarity, self).save(*args, **kwargs)
 
     def __str__(self):

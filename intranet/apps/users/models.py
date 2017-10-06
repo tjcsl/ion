@@ -700,8 +700,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
-            sim = act.similarities.order_by('-true_count').first()
-            if sim and sim.true_count > 1:
+            sim = act.similarities.order_by('-weighted').first()
+            if sim and sim.weighted > 1:
                 close_acts.add(sim.activity_set.exclude(id=act.id).first())
         return close_acts
 
