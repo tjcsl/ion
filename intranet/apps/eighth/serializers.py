@@ -150,7 +150,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
-        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, available_restricted_acts)
+        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities, available_restricted_acts)
 
     def get_scheduled_activity(self, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
