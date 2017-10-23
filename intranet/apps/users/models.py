@@ -707,8 +707,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 scheduled_activity__activity__restricted=True).exclude(
                 scheduled_activity__activity__deleted=True).exclude(
                 scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
-            if signup.scheduled_activity.activity.id in freq_acts:
-                acts.add(signup.scheduled_activity.activity)
+            acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
             sim = act.similarities.order_by('-weighted').first()
