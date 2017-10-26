@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
 from django.urls import reverse
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .forms import DayForm, DayTypeForm
@@ -384,7 +384,7 @@ def admin_daytype_view(request, id=None):
             id = request.POST["id"]
 
             if "make_copy" in request.POST:
-                daytype = DayType.objects.get(id=id)
+                daytype = get_object_or_404(DayType, id=id)
                 blocks = daytype.blocks.all()
                 daytype.pk = None
                 daytype.name += " (Copy)"
@@ -399,14 +399,14 @@ def admin_daytype_view(request, id=None):
                 return redirect("schedule_daytype", daytype.id)
 
             if "delete" in request.POST:
-                daytype = DayType.objects.get(id=id)
+                daytype = get_object_or_404(DayType, id=id)
                 name = "{}".format(daytype)
                 daytype.delete()
                 messages.success(request, "Deleted {}".format(name))
                 return redirect("schedule_admin")
 
         if id:
-            daytype = DayType.objects.get(id=id)
+            daytype = get_object_or_404(DayType, id=id)
             logger.debug("instance: %s", daytype)
             form = DayTypeForm(request.POST, instance=daytype)
         else:
@@ -448,7 +448,7 @@ def admin_daytype_view(request, id=None):
         else:
             messages.error(request, "Error adding Day Type")
     elif id:
-        daytype = DayType.objects.get(id=id)
+        daytype = get_object_or_404(DayType, id=id)
         form = DayTypeForm(instance=daytype)
     else:
         daytype = None
