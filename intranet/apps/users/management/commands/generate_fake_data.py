@@ -9,7 +9,7 @@ fake = Faker()
 
 def generate_fake(users, modify=False):
     if settings.PRODUCTION:
-        print("Not running in production!")
+        print("You shouldn't run this in production! Quitting.")
         return
     for user in users:
         print("Faking {}".format(user.username))
