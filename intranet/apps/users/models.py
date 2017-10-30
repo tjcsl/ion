@@ -700,7 +700,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached:
             return cached
         acts = set()
-        freq_acts = set([a['scheduled_activity__activity'] for a in self.frequent_signups])
         for signup in self.eighthsignup_set.exclude(
                 scheduled_activity__activity__administrative=True).exclude(
                 scheduled_activity__activity__special=True).exclude(

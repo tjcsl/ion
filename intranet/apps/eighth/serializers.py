@@ -83,7 +83,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     block_letter = serializers.CharField(max_length=10)
     comments = serializers.CharField(max_length=100)
 
-    def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None, available_restricted_acts=None):
+    def process_scheduled_activity(self,
+                                   scheduled_activity,
+                                   request=None,
+                                   user=None,
+                                   favorited_activities=None,
+                                   recommended_activities=None,
+                                   available_restricted_acts=None):
         activity = scheduled_activity.activity
         if user:
             is_non_student_admin = user.is_eighth_admin and not user.is_student
@@ -150,7 +156,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
-        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities, available_restricted_acts)
+        return self.process_scheduled_activity(scheduled_activity,
+                                               self.context["request"],
+                                               user,
+                                               favorited_activities,
+                                               recommended_activities,
+                                               available_restricted_acts)
 
     def get_scheduled_activity(self, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -169,7 +180,11 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
-        activity_list = FallbackDict(functools.partial(self.get_activity, user, favorited_activities, recommended_activities, available_restricted_acts))
+        activity_list = FallbackDict(functools.partial(self.get_activity,
+                                                       user,
+                                                       favorited_activities,
+                                                       recommended_activities,
+                                                       available_restricted_acts))
         scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to
