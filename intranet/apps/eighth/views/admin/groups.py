@@ -113,7 +113,7 @@ def edit_group_view(request, group_id):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "student_id": user.student_id,
-            "email": user.tj_email if user.tj_email else emails[0] if emails else "",
+            "email": user.tj_email if user.tj_email else emails.first() if emails else "",
             "grade": grade.number if user.grade and not user.grade.number == 13 else "Staff"
         })
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
@@ -362,7 +362,7 @@ def download_group_csv_view(request, group_id):
         grade = user.grade
         row.append(grade.number if grade else "Staff")
         emails = user.emails
-        row.append(user.tj_email if user.tj_email else emails[0] if emails else None)
+        row.append(user.tj_email if user.tj_email else emails.first() if emails else None)
         writer.writerow(row)
 
     return response

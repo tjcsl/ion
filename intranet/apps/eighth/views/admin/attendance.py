@@ -160,7 +160,7 @@ def delinquent_students_view(request):
             counselor = delinquent["user"].counselor
             row.append(counselor.last_name if counselor else "")
             row.append("{}".format(delinquent["user"].tj_email))
-            row.append(delinquent["user"].emails[0] if delinquent["user"].emails and delinquent["user"].emails.count() > 0 else "")
+            row.append(delinquent["user"].emails.first() if delinquent["user"].emails and delinquent["user"].emails.count() > 0 else "")
             writer.writerow(row)
 
         return response
@@ -199,7 +199,7 @@ def no_signups_roster(request, block_id):
             counselor = user.counselor
             row.append(counselor.last_name if counselor else "")
             row.append("{}".format(user.tj_email))
-            row.append(user.emails[0] if user.emails and len(user.emails) > 0 else "")
+            row.append(user.emails.first() if user.emails and user.emails.count() > 0 else "")
             writer.writerow(row)
 
         return response
