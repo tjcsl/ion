@@ -64,7 +64,7 @@
                 document.forms["choose-fields"].submit();
 
             });
-            
+
             $("#apply-btn").click(function(event) {
                 event.preventDefault();
                 updateRoomChoices();
@@ -231,7 +231,7 @@ i.i {
                 {% endif %}
             </tr>
         </table>
-        
+
     {% if show_listing %}
         <br />
         Click on column titles to sort.
@@ -251,25 +251,25 @@ i.i {
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} 
-                               {% if not sched_act.is_overbooked %}underbooked{% endif %} 
-                               {% if sched_act.cancelled %}cancelled{% endif %} 
-                               {% if sched_act.activity.restricted %}restricted{% endif %} 
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}
+                               {% if not sched_act.is_overbooked %}underbooked{% endif %}
+                               {% if sched_act.cancelled %}cancelled{% endif %}
+                               {% if sched_act.activity.restricted %}restricted{% endif %}
                                {% if sched_act.is_full %}full{% endif %}
                                {% if sched_act.is_almost_full %}almost-full{% endif %}">
                         {% if show.block %}
                             {% if  sched_act.empty %}
-                                <td data-value='-1'>Room is Unused</td> 
+                                <td data-value='-1'>Room is Unused</td>
                             {% else %}
                                  <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
                                     {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
-                                </td>                               
+                                </td>
                             {% endif %}
                         {% endif %}
                         {% if show.rooms %}
                             <td>
                             {% if sched_act.empty %}
-                               {{ sched_act.room.name }} 
+                               {{ sched_act.room.name }}
                             {% else %}
                                 {% for rm in sched_act.get_true_rooms %}
                                     {% if rm.to_be_determined %}
