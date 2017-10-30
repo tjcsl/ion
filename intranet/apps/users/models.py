@@ -918,7 +918,7 @@ class UserProperties(models.Model):
             parent = getattr(self, "parent_{}".format(permission))
             student = getattr(self, "self_{}".format(permission))
             return (parent and student) or (self.is_http_request_sender() or self._current_user_override())
-        except:
+        except Exception:
             logger.error("Could not retrieve permissions for {}".format(permission))
 
     def attribute_is_public(self, permission):
@@ -928,7 +928,7 @@ class UserProperties(models.Model):
             parent = getattr(self, "parent_{}".format(permission))
             student = getattr(self, "self_{}".format(permission))
             return (parent and student)
-        except:
+        except Exception:
             logger.error("Could not retrieve permissions for {}".format(permission))
 
 

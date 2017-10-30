@@ -184,7 +184,7 @@ def deploy():
                     pkg_resources.require(requirements)
                 except pkg_resources.DistributionNotFound:
                     local("pip install -r requirements.txt")
-                except:
+                except Exception:
                     traceback.format_exc()
                     local("pip install -r requirements.txt")
                 else:

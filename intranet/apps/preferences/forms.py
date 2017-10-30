@@ -20,7 +20,7 @@ class PreferredPictureForm(forms.Form):
                 grade = Grade.names[i]
                 user.photos.get(grade_number=(i + 9))  # Only display option if the photo exists
                 self.PREFERRED_PICTURE_CHOICES += [(i + 9, grade.title() + " Photo")]
-            except:
+            except Exception:
                 pass
 
         self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,

@@ -172,7 +172,7 @@ def query(q, admin=False):
             results = User.objects.filter(search_query)
             for result in results:
                 results.append(result)
-        except:
+        except Exception:
             # TODO: handle this error
             pass
     else:
