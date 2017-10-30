@@ -224,7 +224,7 @@ def room_utilization_action(request, start_id, end_id):
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
             rooms = EighthRoom.objects.filter(id__in=room_ids)
-            sched_acts = sched_acts.filter(Q(rooms__in=rooms) | Q(activity__rooms__in=rooms))
+            sched_acts = sched_acts.filter(Q(rooms__in=rooms) | Q(activity__rooms__in=rooms)).distinct()
 
         logger.debug("sched_acts: {}".format(sched_acts.count()))
 
