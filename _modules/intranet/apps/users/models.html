@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -141,11 +141,14 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 <span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">AnonymousUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">,</span> <span class="n">UserManager</span> <span class="k">as</span> <span class="n">DjangoUserManager</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Count</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
 
@@ -226,10 +229,11 @@
 
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">properties___birthday__month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">properties___birthday__day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=============================&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="c1"># TODO: permissions system</span>
-            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">):</span>
-                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">results</span></div>
 
@@ -561,7 +565,7 @@
 <span class="sd">            integer</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
 
         <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span>
         <span class="k">if</span> <span class="n">b</span><span class="p">:</span>
@@ -809,6 +813,47 @@
     <span class="k">def</span> <span class="nf">startpage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;eighth&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_simple_user</span> <span class="k">else</span> <span class="kc">None</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">frequent_signups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a QuerySet of activity id&#39;s and counts for the activities that a given user</span>
+<span class="sd">        has signed up for more than `settings.SIMILAR_THRESHOLD` times&quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:frequent_signups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached</span>
+        <span class="n">freq_signups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">scheduled_activity__activity__administrative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">scheduled_activity__activity__special</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">scheduled_activity__activity__restricted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">scheduled_activity__activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span>
+            <span class="s1">&#39;scheduled_activity__activity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;scheduled_activity__activity&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">count__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-count&#39;</span><span class="p">)</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">freq_signups</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">freq_signups</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">recommended_activities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:recommended_activities&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached</span>
+        <span class="n">acts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">scheduled_activity__activity__administrative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">scheduled_activity__activity__special</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">scheduled_activity__activity__restricted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">scheduled_activity__activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=-</span><span class="mi">6</span><span class="p">))):</span>
+            <span class="n">acts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="p">)</span>
+        <span class="n">close_acts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">:</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="n">act</span><span class="o">.</span><span class="n">similarities</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-weighted&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sim</span> <span class="ow">and</span> <span class="n">sim</span><span class="o">.</span><span class="n">weighted</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">close_acts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">act</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">())</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">close_acts</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">close_acts</span>
+
 <div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is</span>
 <span class="sd">        associated with.</span>
@@ -1012,7 +1057,17 @@
             <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
             <span class="n">student</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;self_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">parent</span> <span class="ow">and</span> <span class="n">student</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_http_request_sender</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_user_override</span><span class="p">())</span>
-        <span class="k">except</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not retrieve permissions for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UserProperties.attribute_is_public"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.attribute_is_public">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_public</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Checks if attribute is visible to public (regardless of admins status)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
+            <span class="n">student</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;self_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">parent</span> <span class="ow">and</span> <span class="n">student</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not retrieve permissions for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span></div></div>
 
 

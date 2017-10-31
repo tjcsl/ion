@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -143,13 +143,12 @@
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span>
 <span class="kn">from</span> <span class="nn">django.core.serializers</span> <span class="k">import</span> <span class="n">serialize</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
-
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Question</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PollForm</span>
@@ -377,8 +376,8 @@
                 <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                 <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">question_votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                 <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()),</span>
-                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cache__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cache__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cache__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -403,19 +402,19 @@
             <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                 <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">total_count</span><span class="p">),</span>
-                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__cache__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__cache__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user__cache__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">user</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">]</span> <span class="k">if</span> <span class="n">show_answers</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
-        <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__cache__grade_number</span><span class="o">=</span><span class="n">yr</span><span class="p">)</span>
+        <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">yr</span><span class="p">)</span>
         <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="n">yr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-            <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__cache__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__cache__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user__cache__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__gender__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user__gender</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="p">}</span>
     <span class="k">return</span> <span class="n">choice</span></div>
 
@@ -455,13 +454,6 @@
         <span class="n">poll</span> <span class="o">=</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">poll_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">Poll</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
-
-    <span class="c1"># Set the database cache of all users that participated in the poll.</span>
-    <span class="n">participants</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__in</span><span class="o">=</span><span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
-    <span class="n">participants</span> <span class="o">=</span> <span class="n">participants</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">user__cache__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">user__cache__gender__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">user__cache__grade_number</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-    <span class="n">participants</span> <span class="o">=</span> <span class="n">participants</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">participants</span><span class="p">):</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">set_cache</span><span class="p">()</span>
 
     <span class="n">questions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>

@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -367,7 +367,8 @@
                         <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">{</span>
                             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span>
                         <span class="p">},</span>
-                        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">+</span> <span class="n">yr_inc</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">+</span> <span class="n">yr_inc</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_public</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">)</span>
                     <span class="p">}</span> <span class="k">if</span> <span class="n">u</span> <span class="k">else</span> <span class="p">{}</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">users_with_birthday</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">)],</span>
                     <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">0</span>
                 <span class="p">},</span>
@@ -379,7 +380,8 @@
                         <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">{</span>
                             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span>
                         <span class="p">},</span>
-                        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_public</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">)</span>
                     <span class="p">}</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">users_with_birthday</span><span class="p">(</span><span class="n">tomorrow</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">tomorrow</span><span class="o">.</span><span class="n">day</span><span class="p">)],</span>
                     <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">1</span>
                 <span class="p">}</span>
@@ -389,6 +391,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="find_visible_birthdays"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.find_visible_birthdays">[docs]</a><span class="k">def</span> <span class="nf">find_visible_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return only the birthdays visible to current user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;today&#39;</span><span class="p">][</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;today&#39;</span><span class="p">][</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s1">&#39;public&#39;</span><span class="p">]]</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;tomorrow&#39;</span><span class="p">][</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;tomorrow&#39;</span><span class="p">][</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s1">&#39;public&#39;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
 <div class="viewcode-block" id="get_prerender_url"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_prerender_url">[docs]</a><span class="k">def</span> <span class="nf">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -553,7 +565,7 @@
         <span class="c1"># &quot;sponsor_schedule_cur_date&quot;, &quot;sponsor_schedule_prev_date&quot;, &quot;sponsor_schedule_next_date&quot;</span>
 
     <span class="n">birthdays</span> <span class="o">=</span> <span class="n">find_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;birthdays&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">birthdays</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;birthdays&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_visible_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">birthdays</span><span class="p">)</span>
 
     <span class="n">sched_ctx</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sched_ctx</span><span class="p">)</span>

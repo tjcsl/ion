@@ -36,6 +36,14 @@ intranet\.apps\.eighth\.management\.commands\.find\_duplicates module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.eighth\.management\.commands\.generate\_similarities module
+---------------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.generate_similarities
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet\.apps\.eighth\.management\.commands\.generate\_statistics module
 -------------------------------------------------------------------------
 

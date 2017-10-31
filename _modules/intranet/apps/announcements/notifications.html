@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -268,7 +268,7 @@
         <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">send_groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># no groups, public.</span>
-                <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">u</span><span class="o">.</span><span class="n">tj_email</span>
+                <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">u</span><span class="o">.</span><span class="n">tj_email</span>
                 <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
                     <span class="n">emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
                 <span class="n">users_send</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
@@ -277,7 +277,7 @@
                 <span class="n">user_groups</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
                 <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">send_groups</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">user_groups</span><span class="p">):</span>
                     <span class="c1"># group intersection exists</span>
-                    <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">u</span><span class="o">.</span><span class="n">tj_email</span>
+                    <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">u</span><span class="o">.</span><span class="n">tj_email</span>
                     <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
                         <span class="n">emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
                     <span class="n">users_send</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>

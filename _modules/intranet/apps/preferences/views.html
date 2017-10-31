@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -229,7 +229,11 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: new: </span><span class="si">{}</span><span class="s2"> from: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">,</span>
                                                                <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">old_preferred_pic</span> <span class="k">if</span> <span class="s2">&quot;preferred_photo&quot;</span> <span class="ow">in</span> <span class="n">preferred_pic</span> <span class="k">else</span> <span class="kc">None</span><span class="p">))</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">new_preferred_pic</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">new_preferred_pic</span> <span class="o">==</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">:</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">new_preferred_pic</span><span class="p">)</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Unable to set field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;preferred_pic&quot;</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unable to set field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;preferred_pic&quot;</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
@@ -417,7 +421,7 @@
 <span class="k">def</span> <span class="nf">privacy_options_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View and edit privacy options for a user.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
     <span class="k">elif</span> <span class="s2">&quot;student_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
@@ -427,13 +431,19 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid user.&quot;</span><span class="p">)</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span> <span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span> <span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/privacy_options.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 

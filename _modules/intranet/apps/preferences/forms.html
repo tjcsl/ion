@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -158,8 +158,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">grade</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">))</span>  <span class="c1"># Only display option if the photo exists</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">grade</span><span class="p">,</span> <span class="n">grade</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; Photo&quot;</span><span class="p">)]</span>
-            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">,</span> <span class="n">grade</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; Photo&quot;</span><span class="p">)]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span><span class="p">,</span>
@@ -229,6 +229,8 @@
 <div class="viewcode-block" id="PhoneForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PhoneForm">[docs]</a><span class="k">class</span> <span class="nc">PhoneForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Represents a phone number (number + purpose)&quot;&quot;&quot;</span>
+    <span class="n">_number</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
 <div class="viewcode-block" id="PhoneForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PhoneForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Phone</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">,</span> <span class="s1">&#39;_number&#39;</span><span class="p">]</span></div></div>

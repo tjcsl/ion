@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.schedule.views &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.schedule.views &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -150,7 +150,7 @@
 <span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span>
 <span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="k">import</span> <span class="n">xframe_options_exempt</span>
 
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">DayForm</span><span class="p">,</span> <span class="n">DayTypeForm</span>
@@ -523,7 +523,7 @@
             <span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="s2">&quot;make_copy&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+                <span class="n">daytype</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DayType</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
                 <span class="n">blocks</span> <span class="o">=</span> <span class="n">daytype</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (Copy)&quot;</span>
@@ -538,14 +538,14 @@
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_daytype&quot;</span><span class="p">,</span> <span class="n">daytype</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+                <span class="n">daytype</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DayType</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">daytype</span><span class="p">)</span>
                 <span class="n">daytype</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Deleted </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;schedule_admin&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
-            <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="n">daytype</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DayType</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;instance: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">daytype</span><span class="p">)</span>
             <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">daytype</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -587,7 +587,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding Day Type&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">id</span><span class="p">:</span>
-        <span class="n">daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="n">daytype</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DayType</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">DayTypeForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">daytype</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">daytype</span> <span class="o">=</span> <span class="kc">None</span>

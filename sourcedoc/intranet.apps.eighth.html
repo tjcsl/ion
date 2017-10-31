@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -188,6 +188,7 @@
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.delete_duplicate_signups">intranet.apps.eighth.management.commands.delete_duplicate_signups module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.delete_nonexistent_users">intranet.apps.eighth.management.commands.delete_nonexistent_users module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.find_duplicates">intranet.apps.eighth.management.commands.find_duplicates module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.generate_similarities">intranet.apps.eighth.management.commands.generate_similarities module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.generate_statistics">intranet.apps.eighth.management.commands.generate_statistics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.import_attendance">intranet.apps.eighth.management.commands.import_attendance module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.import_permissions">intranet.apps.eighth.management.commands.import_permissions module</a></li>
@@ -526,13 +527,13 @@ takes effect if the activity is restricted.</dd>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -655,6 +656,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.frequent_users">
+<code class="descname">frequent_users</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.frequent_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a QuerySet of user id’s and counts that have signed up for this activity more than
+<cite>settings.SIMILAR_THRESHOLD</cite> times. This is be used for suggesting activities to users.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthActivity.freshmen_allowed">
 <code class="descname">freshmen_allowed</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.freshmen_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -715,6 +723,11 @@ object the first time, the query is executed.</p>
 <dd><p>Return whether an activity is “active.” An activity is considered to be active if it has
 been scheduled at all this year.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.is_popular">
+<code class="descname">is_popular</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.is_popular" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthActivity.juniors_allowed">
@@ -804,6 +817,22 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <code class="descname">seniors_allowed</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.seniors_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity.similarities">
+<code class="descname">similarities</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.similarities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -908,19 +937,84 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthActivitySimilarity</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>count</em>, <em>weighted</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthActivitySimilarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#intranet.apps.eighth.models.AbstractBaseEighthModel" title="intranet.apps.eighth.models.AbstractBaseEighthModel"><code class="xref py py-class docutils literal"><span class="pre">intranet.apps.eighth.models.AbstractBaseEighthModel</span></code></a></p>
+<dl class="exception">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.activity_set">
+<code class="descname">activity_set</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.activity_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.count">
+<code class="descname">count</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.id">
+<code class="descname">id</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.update_weighted">
+<code class="descname">update_weighted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthActivitySimilarity.update_weighted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.update_weighted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivitySimilarity.weighted">
+<code class="descname">weighted</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivitySimilarity.weighted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="intranet.apps.eighth.models.EighthActivity_favorites">
 <em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthActivity_favorites</code><span class="sig-paren">(</span><em>id</em>, <em>eighthactivity</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_favorites" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_favorites.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_favorites.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_favorites.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_favorites.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -984,13 +1078,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_groups_allowed.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_groups_allowed.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_groups_allowed.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_groups_allowed.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1054,13 +1148,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_rooms.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_rooms.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_rooms.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_rooms.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1118,19 +1212,89 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthActivity_similarities</code><span class="sig-paren">(</span><em>id</em>, <em>eighthactivity</em>, <em>eighthactivitysimilarity</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.eighthactivity">
+<code class="descname">eighthactivity</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.eighthactivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.eighthactivity_id">
+<code class="descname">eighthactivity_id</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.eighthactivity_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.eighthactivitysimilarity">
+<code class="descname">eighthactivitysimilarity</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.eighthactivitysimilarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.eighthactivitysimilarity_id">
+<code class="descname">eighthactivitysimilarity_id</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.eighthactivitysimilarity_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.id">
+<code class="descname">id</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthActivity_similarities.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_similarities.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="intranet.apps.eighth.models.EighthActivity_sponsors">
 <em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthActivity_sponsors</code><span class="sig-paren">(</span><em>id</em>, <em>eighthactivity</em>, <em>eighthsponsor</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_sponsors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_sponsors.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_sponsors.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_sponsors.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_sponsors.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1194,13 +1358,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_users_allowed.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_users_allowed.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_users_allowed.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_users_allowed.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1264,13 +1428,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_users_blacklisted.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_users_blacklisted.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthActivity_users_blacklisted.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity_users_blacklisted.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1365,13 +1529,13 @@ override block A.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthBlock.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlock.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthBlock.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlock.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1681,7 +1845,7 @@ block in the future, the most recent block will be returned.</p>
 <dl class="class">
 <dt id="intranet.apps.eighth.models.EighthBlockQuerySet">
 <em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthBlockQuerySet</code><span class="sig-paren">(</span><em>model=None</em>, <em>query=None</em>, <em>using=None</em>, <em>hints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthBlockQuerySet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlockQuerySet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/models/querysets/#django.db.models.query.QuerySet" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.query.QuerySet</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/models/querysets/#django.db.models.query.QuerySet" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.query.QuerySet</span></code></a></p>
 <dl class="method">
 <dt id="intranet.apps.eighth.models.EighthBlockQuerySet.this_year">
 <code class="descname">this_year</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthBlockQuerySet.this_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlockQuerySet.this_year" title="Permalink to this definition">¶</a></dt>
@@ -1697,13 +1861,13 @@ block in the future, the most recent block will be returned.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthBlock_override_blocks.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlock_override_blocks.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthBlock_override_blocks.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthBlock_override_blocks.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1778,13 +1942,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthRoom.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthRoom.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthRoom.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthRoom.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1923,13 +2087,13 @@ not set, falls back on the EighthActivity’s special setting.</dd>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2409,13 +2573,13 @@ counted.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity_rooms.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity_rooms.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity_rooms.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity_rooms.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2479,13 +2643,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity_sponsors.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity_sponsors.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity_sponsors.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity_sponsors.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2578,13 +2742,13 @@ signed up for.</dd>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthSignup.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignup.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthSignup.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignup.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2827,13 +2991,13 @@ linked to the sponsor.</dd>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthSponsor.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthSponsor.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2965,13 +3129,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthWaitlist.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthWaitlist.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthWaitlist.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthWaitlist.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3188,7 +3352,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity">
-<code class="descname">get_activity</code><span class="sig-paren">(</span><em>user</em>, <em>favorited_activities</em>, <em>available_restricted_acts</em>, <em>activity_id</em>, <em>scheduled_activity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthBlockDetailSerializer.get_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_activity</code><span class="sig-paren">(</span><em>user</em>, <em>favorited_activities</em>, <em>recommended_activities</em>, <em>available_restricted_acts</em>, <em>activity_id</em>, <em>scheduled_activity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthBlockDetailSerializer.get_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3198,7 +3362,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.eighth.serializers.EighthBlockDetailSerializer.process_scheduled_activity">
-<code class="descname">process_scheduled_activity</code><span class="sig-paren">(</span><em>scheduled_activity</em>, <em>request=None</em>, <em>user=None</em>, <em>favorited_activities=None</em>, <em>available_restricted_acts=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthBlockDetailSerializer.process_scheduled_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.process_scheduled_activity" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_scheduled_activity</code><span class="sig-paren">(</span><em>scheduled_activity</em>, <em>request=None</em>, <em>user=None</em>, <em>favorited_activities=None</em>, <em>recommended_activities=None</em>, <em>available_restricted_acts=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthBlockDetailSerializer.process_scheduled_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.process_scheduled_activity" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3496,13 +3660,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthActivity.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthActivity.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3767,13 +3931,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthBlock.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthBlock.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthBlock.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthBlock.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3936,13 +4100,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthRoom.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthRoom.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthRoom.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthRoom.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4074,13 +4238,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthScheduledActivity.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthScheduledActivity.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthScheduledActivity.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthScheduledActivity.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4322,13 +4486,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthSignup.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSignup.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthSignup.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSignup.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4566,13 +4730,13 @@ object the first time, the query is executed.</p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.0)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v2.1)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">

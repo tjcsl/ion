@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -182,6 +182,9 @@
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
 
 <span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+<span class="n">HOCO_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">HOCO_END_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
@@ -424,6 +427,7 @@
                 <span class="s2">&quot;intranet.apps.eighth.context_processors.enable_waitlist&quot;</span><span class="p">,</span>  <span class="c1"># For checking if the waitlist is enabled</span>
                 <span class="s2">&quot;intranet.apps.context_processors.mobile_app&quot;</span><span class="p">,</span>  <span class="c1"># For the custom android app functionality (tbd?)</span>
                 <span class="s2">&quot;intranet.apps.context_processors.is_tj_ip&quot;</span><span class="p">,</span>  <span class="c1"># Whether on the internal TJ or FCPS network</span>
+                <span class="s2">&quot;intranet.apps.context_processors.show_homecoming&quot;</span><span class="p">,</span>  <span class="c1"># Sitewide custom themes (special events, etc)</span>
                 <span class="s2">&quot;intranet.apps.context_processors.global_custom_theme&quot;</span>  <span class="c1"># Sitewide custom themes (special events, etc)</span>
             <span class="p">),</span>
             <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Only enabled if DEBUG is true as well</span>
@@ -867,6 +871,8 @@
 <span class="c1"># Show an iframe with tjStar activity data</span>
 <span class="k">if</span> <span class="n">TJSTAR_MAP</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">TJSTAR_MAP</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">SIMILAR_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="c1"># Shows a warning message with yellow background on the login page</span>
 <span class="c1"># LOGIN_WARNING = &quot;This is a message to display on the login page.&quot;</span>

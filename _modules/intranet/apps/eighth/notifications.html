@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -148,7 +148,7 @@
 
 
 <div class="viewcode-block" id="signup_status_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.signup_status_email">[docs]</a><span class="k">def</span> <span class="nf">signup_status_email</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">next_blocks</span><span class="p">):</span>
-    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
         <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">em</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -200,7 +200,7 @@
 
 <div class="viewcode-block" id="absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.absence_email">[docs]</a><span class="k">def</span> <span class="nf">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">user</span>
-    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
         <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">em</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>

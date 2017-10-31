@@ -20,6 +20,14 @@ intranet\.apps\.users\.management\.commands\.dynamic\_groups module
     :undoc-members:
     :show-inheritance:
 
+intranet\.apps\.users\.management\.commands\.generate\_fake\_data module
+------------------------------------------------------------------------
+
+.. automodule:: intranet.apps.users.management.commands.generate_fake_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet\.apps\.users\.management\.commands\.import\_groups module
 ------------------------------------------------------------------
 

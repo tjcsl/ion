@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4001) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4140) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4001)',
+        VERSION:     'v3 (Build #4140)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -144,10 +144,11 @@
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">DjangoGroup</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">NON_FIELD_ERRORS</span><span class="p">,</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="k">import</span> <span class="n">HistoricalRecords</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transaction</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Count</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">formats</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">eighth_exceptions</span>
@@ -379,6 +380,8 @@
 
     <span class="n">favorites</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;favorited_activity_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="n">similarities</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;EighthActivitySimilarity&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;activity_set&#39;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="n">deleted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>
@@ -476,6 +479,28 @@
 <span class="sd">        been scheduled at all this year.&quot;&quot;&quot;</span>
         <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">scheduled_activities</span> <span class="ow">and</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">frequent_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a QuerySet of user id&#39;s and counts that have signed up for this activity more than</span>
+<span class="sd">        `settings.SIMILAR_THRESHOLD` times. This is be used for suggesting activities to users.&quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;eighthactivity_</span><span class="si">{}</span><span class="s2">:frequent_users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached</span>
+        <span class="n">freq_users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">eighthsignup_set__user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">administrative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">special</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">restricted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">count__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-count&#39;</span><span class="p">)</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">freq_users</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">freq_users</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_popular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequent_users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;eighth activities&quot;</span>
@@ -1566,6 +1591,26 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EighthActivitySimilarity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivitySimilarity">[docs]</a><span class="k">class</span> <span class="nc">EighthActivitySimilarity</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">weighted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FloatField</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_weighted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cap</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cap</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">/</span> <span class="n">cap</span>
+
+<div class="viewcode-block" id="EighthActivitySimilarity.update_weighted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivitySimilarity.update_weighted">[docs]</a>    <span class="k">def</span> <span class="nf">update_weighted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weighted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">act_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">act_set</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span> <span class="n">act_set</span><span class="o">.</span><span class="n">last</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
