@@ -1,14 +1,19 @@
 import datetime
 
 from faker import Faker
+from django.conf import settings
 
 from ...models import User
 fake = Faker()
 
 
 def generate_fake(users, modify=False):
+    if settings.PRODUCTION:
+        print("You shouldn't run this in production! Quitting.")
+        return
     for user in users:
         print("Faking {}".format(user.username))
+        # TODO: Remove this list of hardcoded usernames
         if user.username in ["2018nzhou", "2019okulkarn", "2018wzhang", "2020djones", "2020klanzill"]:
             print("Skipping {}".format(user))
             continue
@@ -30,7 +35,7 @@ def generate_fake(users, modify=False):
                 possible_start = datetime.date(user.graduation_year - 19, 8, 1)
                 possible_end = datetime.date(user.graduation_year - 18, 5, 30)
                 user.properties._birthday = fake.date_between_dates(date_start=possible_start, date_end=possible_end)
-            except:
+            except Exception:
                 # TODO: maybe handle this sometime. Right now it doesn't matter that much.
                 pass
         else:
