@@ -362,11 +362,7 @@ def download_group_csv_view(request, group_id):
         grade = user.grade
         row.append(grade.number if grade else "Staff")
         emails = user.emails
-<<<<<<< HEAD
         row.append(user.tj_email if user.tj_email else emails.first() if emails.count() > 0 else None)
-=======
-        row.append(user.tj_email if user.tj_email else emails.first() if emails else None)
->>>>>>> User emails are RelatedManagers, not lists
         writer.writerow(row)
 
     return response
