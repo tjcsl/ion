@@ -49,7 +49,7 @@ class HostManager(Manager):
 
         """
 
-        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) | Q(groups_visible__isnull=True))
+        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) | Q(groups_visible__isnull=True)).distinct()
 
 
 class Host(models.Model):
