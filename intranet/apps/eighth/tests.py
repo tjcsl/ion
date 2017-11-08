@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 
 from ..eighth.exceptions import SignupException
-from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
+from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..groups.models import Group
 from ..users.models import User, Email
 from ...test.ion_test import IonTestCase
@@ -27,6 +27,13 @@ class EighthTest(IonTestCase):
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
         return user
+
+    def test_sponsor(self):
+        sponsor = EighthSponsor.objects.get_or_create(user=self.user, first_name="Eighth", last_name="Sponsor")[0]
+        self.assertEqual(sponsor.name, "Sponsor")
+        sponsor.show_full_name = True
+        self.assertEqual(sponsor.name, "Sponsor, Eighth")
+        self.assertEqual(str(sponsor), "Sponsor, Eighth")
 
     def add_block(self, **args):
         # Bypass the manual block creation form.
