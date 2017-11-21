@@ -194,7 +194,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
         else:
             year_start, year_end = get_date_range_this_year(datetime(year, 1, 1))
         year_filtered = filtered_activities.filter(block__date__gte=year_start, block__date__lte=year_end)
-        old_blocks = filtered_activities.count() - len(year_filtered)
+        old_blocks = filtered_activities.count() - year_filtered.count()
         filtered_activities = year_filtered
 
     activities = filtered_activities
@@ -203,7 +203,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
     empty_blocks = 0
 
     for a in activities.filter(cancelled=False).select_related("block").prefetch_related("members"):
-        members = a.members.count()
+        members = a.members.filter(eighthsignup__was_absent=False).count()
         if members == 0:
             empty_blocks += 1
         else:
@@ -213,7 +213,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
 
-    total_blocks = len(activities)
+    total_blocks = activities.count()
     scheduled_blocks = total_blocks - cancelled_blocks
     total_signups = sum(n for _, n in signups)
 

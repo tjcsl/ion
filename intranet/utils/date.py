@@ -15,9 +15,9 @@ def get_date_range_this_year(now=None):
     if now is None:
         now = datetime.datetime.now().date()
     if now.month <= settings.YEAR_TURNOVER_MONTH:
-        date_start = datetime.datetime(now.year - 1, 9, 1)
+        date_start = datetime.datetime(now.year - 1, 8, 1)  # TODO; don't hardcode these values
         date_end = datetime.datetime(now.year, 7, 1)
     else:
-        date_start = datetime.datetime(now.year, 9, 1)
+        date_start = datetime.datetime(now.year, 8, 1)
         date_end = datetime.datetime(now.year + 1, 7, 1)
     return timezone.make_aware(date_start), timezone.make_aware(date_end)
