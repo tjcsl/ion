@@ -38,6 +38,14 @@
                 $(form).append(el);
             }
 
+            showAvailableForEighth = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_available_for_eighth' value=1 />");
+                $(form).append(el);
+            }
+
             $("#rooms-submit").click(function(event) {
                 event.preventDefault();
                 updateRoomChoices();
@@ -56,6 +64,11 @@
                 document.forms["choose-fields"].submit();
             });
 
+            $("#show-available-for-eighth").click(function(event) {
+                event.preventDefault();
+                showAvailableForEighth();
+                document.forms["choose-fields"].submit();
+            });
 
             $("#export-csv").click(function(event) {
                 event.preventDefault();
@@ -192,6 +205,9 @@ i.i {
                 {% endif %}
                 {% if not show_all_rooms %}
                     &nbsp; &nbsp; <a href="#" id="show-all-rooms" class="button">Show All Rooms</a>
+                {% endif %}
+                {% if not show_available_for_eighth %}
+                    &nbsp; &nbsp; <a href="#" id="show-available-for-eighth" class="button">Show Availabe for Eighth</a>
                 {% endif %}
             </form>
         </td>

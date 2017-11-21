@@ -95,6 +95,7 @@ class EighthRoom(AbstractBaseEighthModel):
     """
     name = models.CharField(max_length=100)
     capacity = models.SmallIntegerField(default=28)
+    available_for_eighth = models.BooleanField(default=True)
 
     history = HistoricalRecords()
 

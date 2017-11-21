@@ -178,10 +178,15 @@ def room_utilization_action(request, start_id, end_id):
         raise http.Http404
 
     show_used_rooms = ("show_used" in request.GET)
+    show_available_for_eighth = ("show_available_for_eighth" in request.GET)
     show_all_rooms = ("show_all" in request.GET)
-    show_listing = show_all_rooms or show_used_rooms or ("room" in request.GET)
+    show_listing = show_all_rooms or show_used_rooms or show_available_for_eighth or ("room" in request.GET)
 
-    all_rooms = EighthRoom.objects.all().order_by("name")
+    if show_available_for_eighth:
+        all_rooms = EighthRoom.objects.filter(available_for_eighth=True).order_by("name")
+        logger.debug("{} rooms are available for eighth".format(all_rooms.count()))
+    else:
+        all_rooms = EighthRoom.objects.all().order_by("name")
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
@@ -207,7 +212,9 @@ def room_utilization_action(request, start_id, end_id):
         "only_show_overbooked": only_show_overbooked,
         "show_listing": show_listing,
         "show_used_rooms": show_used_rooms,
-        "show_all_rooms": show_all_rooms
+        "show_all_rooms": show_all_rooms,
+        "show_available_for_eighth": show_available_for_eighth
+
     }
     get_csv = request.resolver_match.url_name == "eighth_admin_room_utilization_csv"
     if show_listing or get_csv:
@@ -219,7 +226,7 @@ def room_utilization_action(request, start_id, end_id):
             sched_acts = sched_acts.filter(block=start_block)
 
         logger.debug("sched_acts before: {}".format(sched_acts.count()))
-        logger.debug("total rooms: {}".format(len(all_rooms)))
+        logger.debug("total rooms: {}".format(all_rooms.count()))
 
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
@@ -244,7 +251,7 @@ def room_utilization_action(request, start_id, end_id):
 
         sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
 
-        if show_all_rooms:
+        if show_all_rooms or show_available_for_eighth:
             unused = rooms.exclude(Q(eighthscheduledactivity__in=sched_acts) | Q(eighthactivity__eighthscheduledactivity__in=sched_acts))
             logger.debug("number of unused: {}".format(len(unused)))
             for room in unused:
