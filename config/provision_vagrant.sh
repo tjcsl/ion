@@ -24,6 +24,7 @@ apt-get -y install python3-pip
 pip3 install -U virtualenvwrapper
 apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
+apt-get -y install libkrb5-dev
 
 # Git
 apt-get -y install git
