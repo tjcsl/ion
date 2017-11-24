@@ -5,7 +5,7 @@ function devconfig() {
     python3 -c "
 import json
 with open('/home/ubuntu/intranet/config/devconfig.json', 'r') as f:
-	print(json.load(f)['$1'])"
+    print(json.load(f)['$1'])"
 }
 
 export DEBIAN_FRONTEND=noninteractive
