@@ -78,6 +78,10 @@
 
             });
 
+            $("#print-page").click(function(event) {
+                window.print();
+            })
+
             $("#apply-btn").click(function(event) {
                 event.preventDefault();
                 updateRoomChoices();
@@ -244,6 +248,7 @@ i.i {
                 {% if show_listing %}
                     <th><input type="submit" value="Apply" id="apply-btn" /></th>
                     <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
+                    <th><a href="" class="button" id="print-page">Print</a></th>
                 {% endif %}
             </tr>
         </table>
