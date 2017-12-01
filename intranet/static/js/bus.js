@@ -139,7 +139,8 @@ $(function() {
         }
     });
 
-    let socket = new WebSocket(`wss://${base_url}/bus/`);
+    const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
+    let socket = new WebSocket(`${protocol}://${base_url}/bus/`);
     window.appView = new bus.AppView();
     socket.onmessage = (event) => {
         window.appView.trigger("wss:receive", JSON.parse(event.data));
