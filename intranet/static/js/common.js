@@ -47,9 +47,9 @@ $(function() {
 });
 
 function ytwin(id) {
-    $("body").click(function() {
-        $("iframe#ytwin").remove();
-    }).append('<iframe id="ytwin" style="position:fixed;top:50%;left:50%;width:640px;height:480px;margin:-240px -320px" width="640" height="480" src="https://www.youtube.com/embed/' + id + '?autoplay=1&loop=0" frameborder="0" allowfullscreen></iframe>');
+    // $("body").click(function() {
+    //     $("iframe#ytwin").remove();
+    // }).append('<iframe id="ytwin" style="position:fixed;top:50%;left:50%;width:640px;height:480px;margin:-240px -320px" width="640" height="480" src="https://www.youtube.com/embed/' + id + '?autoplay=1&loop=0" frameborder="0" allowfullscreen></iframe>');
 };
 
 try {
@@ -143,7 +143,7 @@ try {
         $("body").addClass("fire").click(function() {
             $("iframe#udlr").remove();
             $("body").removeClass('fire');
-        }).append('<iframe id="udlr" style="position:fixed;top:50%;left:50%;width:640px;height:480px;margin:-240px -320px" width="640" height="480" src="https://www.youtube.com/embed/kfATGWeWqgc?autoplay=1&loop=0" frameborder="0" allowfullscreen></iframe>')
+        });
     });
     $(function() {
         if (location.search.indexOf('creffett=1') !== -1) creffettMode()
