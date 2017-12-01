@@ -1390,7 +1390,7 @@ class EighthSignup(AbstractBaseEighthModel):
                 if not self.scheduled_activity.is_full():
                     next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.add_user(next_wait.user)
-                    self.notify_waitlist(next_wait.user, self.scheduled_activity)
+                    self.scheduled_activity.notify_waitlist(next_wait.user, self.scheduled_activity)
                     next_wait.delete()
             return "Successfully removed signup for {}.".format(block)
 
