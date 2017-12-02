@@ -173,7 +173,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
     return pdf_buffer
 
 
-def calculate_statistics(activity, start_date=None, all_years=False, year=None):
+def calculate_statistics(activity, start_date=None, all_years=False, year=None, future=False):
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
     signups = defaultdict(int)
@@ -181,7 +181,10 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
 
     old_blocks = 0
 
-    if start_date is None:
+    if year is not None and year == settings.SENIOR_GRADUATION_YEAR:
+        start_date = datetime.today()
+
+    if start_date is None or future:
         filtered_activities = activities
         past_start_date = 0
     else:
@@ -189,7 +192,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None):
         past_start_date = activities.count() - filtered_activities.count()
 
     if not all_years:
-        if year is None:
+        if year is None or year == settings.SENIOR_GRADUATION_YEAR:
             year_start, year_end = get_date_range_this_year()
         else:
             year_start, year_end = get_date_range_this_year(datetime(year, 1, 1))
@@ -295,6 +298,13 @@ def stats_global_view(request):
 
 @login_required
 def stats_view(request, activity_id=None):
+    """ If a the GET parameter `year` is set, it uses stats from given year
+        with the following caveats:
+            - If it's the current year and start_date is set, start_date is ignored
+            - If it's the current year, stats will only show up to today - they won't
+              go into the future.
+        `all_years` (obviously) displays all years.
+    """
     if not (request.user.is_eighth_admin or request.user.is_teacher):
         return render(request, "error/403.html", {"reason": "You do not have permission to view statistics for this activity."}, status=403)
 
@@ -319,10 +329,12 @@ def stats_view(request, activity_id=None):
     else:
         year = None
 
-    context = {"activity": activity, "years": list(reversed(range(earliest_year, current_year + 1))), "year": year}
+    future = request.GET.get("future", False)
+
+    context = {"activity": activity, "years": list(reversed(range(earliest_year, current_year + 1))), "year": year, "future": future}
 
     if year:
-        context.update(calculate_statistics(activity, year=year))
+        context.update(calculate_statistics(activity, year=year, future=future))
     else:
-        context.update(calculate_statistics(activity, get_start_date(request)))
+        context.update(calculate_statistics(activity, get_start_date(request), future=future))
     return render(request, "eighth/statistics.html", context)
