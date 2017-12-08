@@ -970,10 +970,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return False
 
-    def notify_waitlist(self, user, activity):
+    def notify_waitlist(self, users, activity):
         data = {"activity": activity}
-        email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
-                   "Waitlist Signup Notification", [user.primary_email])
+        for user in users:
+            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
+                   "Open Spot Notification", [user.primary_email])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
@@ -1153,17 +1154,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                            existing_signup.scheduled_activity.get_both_blocks_sibling().block]
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
+                        EighthWaitlist.objects.filter(user=user, activity=self).delete()
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
                     if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not self.block.locked and request is not None and
                                                      not request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
-                            next_wait = EighthWaitlist.objects.get_next_waitlist(previous_activity)
+                            waitlists = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             try:
-                                previous_activity.add_user(next_wait.user)
-                                self.notify_waitlist(next_wait.user, previous_activity)
-                                next_wait.delete()
+                                self.notify_waitlist(waitlists, previous_activity)
                             except eighth_exceptions.SignupException:
                                 pass
 
@@ -1434,7 +1434,10 @@ class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
     def get_next_waitlist(self, activity):
-        return self.filter(scheduled_activity_id=activity.id).order_by('time').first()
+        return self.filter(scheduled_activity_id=activity.id).order_by('time')
+
+    def check_for_prescence(self, activity, user):
+        return self.filter(scheduled_activity_id=activity.id, user=user).exists()
 
     def position_in_waitlist(self, aid, uid):
         try:
