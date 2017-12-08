@@ -296,33 +296,26 @@
                         </button>
                         <% } else if (waitlistEnabled) { %>
                         <button id="signup-button">
-                            Join Waitlist
-                        </button>
-                        <% } %>
-                        <% if (isEighthAdmin && roster.count >= roster.capacity && !restricted_for_user && !administrative && !sticky && !one_a_day  && !both_blocks && waitlistEnabled) { %>
-                        <button id="waitlist-button">
-                            Add to Waitlist
+                            Get Notifications
                         </button>
                         <% } %>
                         <div id="signup-spinner-container">
                             <div id="signup-spinner"></div>
                         </div>
                     <%} else {%>
-                        <% if (currentWaitlist && !waitlisted && waitlistEnabled) { %>
-                            <p class="signup-waitlist-current">You are currently on the waitlist for <b><%= currentWaitlist %></b>. If a spot becomes available, you will automatically be transferred to this activity.</p>
-                        <% } %>
+
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
                             <% if (waitlisted && waitlistEnabled) { %>
-                                <p class="signup-waitlist-text">You are currently #<%= waitlist_position %> on the waitlist for this activity. Please keep in mind that you will be automatically signed out of your current activity and signed up for this one if a spot opens up and you are next in the queue.</p>
+                                <p class="signup-waitlist-text">You are signed up for notifications for this activity</p>
                                 <% if (isEighthAdmin) { %>
                                     <button id="signup-button">
                                         Sign Up
                                     </button>
                                 <% } %>
                                 <button id="leave-waitlist">
-                                    Leave Waitlist
+                                    Leave Notifications List
                                 </button>
                             <% } else { %>
                                 <strong>You are currently signed up for this activity.</strong>
