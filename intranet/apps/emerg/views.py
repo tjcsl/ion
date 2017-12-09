@@ -2,12 +2,14 @@
 
 import datetime
 import logging
+import re
 import time
 
 from django.conf import settings
 from django.core.cache import cache
 
 import requests
+from bs4 import BeautifulSoup, CData
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ def check_emerg():
 
     timeout = settings.FCPS_EMERGENCY_TIMEOUT
 
-    r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time())), timeout=timeout)
+    r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
     res = r.text
     if not res or len(res) < 1:
         status = False
@@ -43,9 +45,15 @@ def check_emerg():
             status = False
             break
 
-    emerg_split = '<p><a href="https://youtu.be/jo_8QFIEf64'
-    message = res.split(emerg_split)[0]
-
+    # emerg_split = '<p><a href="https://youtu.be/jo_8QFIEf64'
+    # message = res.split(emerg_split)[0]
+    soup = BeautifulSoup(res, "html.parser")
+    title = soup.title.text
+    body = ""
+    for cd in soup.findAll(text=True):
+        if isinstance(cd, CData):
+            body += cd
+    message = "<h3>{}: </h3>{}".format(title, body)
     message = message.strip()
 
     return status, message
@@ -66,6 +74,7 @@ def get_emerg():
     """
     key = "emerg:{}".format(datetime.datetime.now().date())
     cached = cache.get(key)
+    cached = None  # Remove this for production
     if cached:
         logger.debug("Returning emergency info from cache")
         return cached

@@ -723,11 +723,11 @@ ATTENDANCE_LOCK_HOUR = 22
 CLEAR_ABSENCE_DAYS = 14
 
 # The address for FCPS' Emergency Announcement page
-FCPS_EMERGENCY_PAGE = None  # type: str
+FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 # "http://www.fcps.edu/content/emergencyContent.html"
 
 # The timeout for the request to FCPS' emergency page (in seconds)
-FCPS_EMERGENCY_TIMEOUT = 0
+FCPS_EMERGENCY_TIMEOUT = 5
 
 # Show an iframe with tjStar activity data
 if TJSTAR_MAP is None:
