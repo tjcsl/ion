@@ -974,7 +974,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         data = {"activity": activity}
         for user in users:
             email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
-                   "Open Spot Notification", [user.primary_email])
+                       "Open Spot Notification", [user.primary_email])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
