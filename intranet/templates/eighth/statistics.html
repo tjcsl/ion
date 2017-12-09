@@ -51,6 +51,20 @@
             $("#year").change(function() {
                 window.location.href = location.protocol + "//" + location.host + location.pathname + "?year=" + encodeURIComponent($("#year").val());
             });
+            $("#future").change(function () {
+                params = location.search;
+                params = params.slice(1).trim('&')
+                               .replace(/^&+/g, '')
+                               .replace(/&+$/g, '');
+                params = params.replace(/future=(True|False)/g, '');
+                parray = params.split('&');
+                if ($("#future").is(':checked')) {
+                    parray.push("future=True");
+                }
+                params = parray.join("&")
+
+                window.location.href = location.protocol + "//" + location.host + location.pathname + "?" + params;
+            })
         });
     </script>
 {% endblock %}
@@ -81,15 +95,17 @@
 
     <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
 
+    <a href="{% url 'eighth_statistics' activity.id %}?print=true{% if year %}&year={{ year }}{% endif %}">
+        Printer friendly version
+    </a>
+    <br>
     <select id="year">
         {% for y in years %}
         <option value="{{ y }}"{% if y == year %}selected{% endif %}>{{ y|add:"-1" }} - {{ y }}</option>
         {% endfor %}
     </select>
-
-    <a href="{% url 'eighth_statistics' activity.id %}?print=true{% if year %}&year={{ year }}{% endif %}">
-        Printer friendly version
-    </a>
+    <label for=future>Future: </label>
+    <input type="checkbox" name="future" id="future"{% if future %} checked{% endif %}/>
 
     <h3>Activity Information</h3>
     {% if activity.sponsors.count > 0 %}
