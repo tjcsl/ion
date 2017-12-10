@@ -970,11 +970,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return False
 
-    def notify_waitlist(self, users, activity):
+    def notify_waitlist(self, waitlists, activity):
         data = {"activity": activity}
-        for user in users:
+        for waitlist in waitlists:
             email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
-                       "Open Spot Notification", [user.primary_email])
+                       "Open Spot Notification", [waitlist.user.primary_email])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
@@ -1162,10 +1162,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                      not request.session.get("disable_waitlist_transactions", False)):
                         if not previous_activity.is_full():
                             waitlists = EighthWaitlist.objects.get_next_waitlist(previous_activity)
-                            try:
-                                self.notify_waitlist(waitlists, previous_activity)
-                            except eighth_exceptions.SignupException:
-                                pass
+                            self.notify_waitlist(waitlists, previous_activity)
 
                 except EighthSignup.DoesNotExist:
                     EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
@@ -1388,10 +1385,8 @@ class EighthSignup(AbstractBaseEighthModel):
             self.delete()
             if settings.ENABLE_WAITLIST and self.scheduled_activity.waitlist.all().exists() and not block.locked and not dont_run_waitlist:
                 if not self.scheduled_activity.is_full():
-                    next_wait = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
-                    self.scheduled_activity.add_user(next_wait.user)
-                    self.scheduled_activity.notify_waitlist(next_wait.user, self.scheduled_activity)
-                    next_wait.delete()
+                    waitlists = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
+                    self.scheduled_activity.notify_waitlist(waitlists, self.scheduled_activity)
             return "Successfully removed signup for {}.".format(block)
 
     def accept_pass(self):
