@@ -47,13 +47,16 @@ def check_emerg():
     # emerg_split = '<p><a href="https://youtu.be/jo_8QFIEf64'
     # message = res.split(emerg_split)[0]
     soup = BeautifulSoup(res, "html.parser")
-    title = soup.title.text
-    body = ""
-    for cd in soup.findAll(text=True):
-        if isinstance(cd, CData):
-            body += cd
-    message = "<h3>{}: </h3>{}".format(title, body)
-    message = message.strip()
+    if soup.title:
+        title = soup.title.text
+        body = ""
+        for cd in soup.findAll(text=True):
+            if isinstance(cd, CData):
+                body += cd
+        message = "<h3>{}: </h3>{}".format(title, body)
+        message = message.strip()
+    else:
+        status = False
 
     return status, message
 
