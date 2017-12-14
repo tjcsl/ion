@@ -1154,7 +1154,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                            existing_signup.scheduled_activity.get_both_blocks_sibling().block]
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
-                        EighthWaitlist.objects.filter(user=user, activity=self).delete()
+                        EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()
                         EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                            previous_activity_name=previous_activity_name,
                                                            previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
