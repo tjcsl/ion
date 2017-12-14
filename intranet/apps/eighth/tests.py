@@ -205,6 +205,8 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
         response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact2.id]), {'confirm': True})
         self.assertEqual(response.status_code, 302)
+        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
+        self.assertEqual(response.status_code, 302)
 
     def test_signup_status_email(self):
         self.make_admin()
