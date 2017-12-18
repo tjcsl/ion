@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4197) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4200) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4197)',
+        VERSION:     'v3 (Build #4200)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -227,7 +227,7 @@
                 <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
-                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
+                <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
