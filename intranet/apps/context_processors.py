@@ -116,7 +116,6 @@ def is_tj_ip(request):
 def show_bus_button(request):
     is_bus_admin = request.user.is_authenticated and request.user.has_admin_permission("bus")
     now = datetime.datetime.now()
-    is_valid_time = (now.hour > 14 and now.minute > 30) \
-        and (now.hour < 17 and now.minute < 30)
+    is_valid_time = (now.hour > 14 and now.minute > 30) and (now.hour < 17 and now.minute < 30)
 
-    return {'show_bus_nav': (is_bus_admin or is_valid_time)}
+    return {'show_bus_nav': (is_bus_admin or is_valid_time) and settings.ENABLE_BUS_APP}
