@@ -17,6 +17,7 @@ from intranet.middleware import threadlocals
 
 from ..groups.models import Group
 from ..preferences.fields import PhoneField
+from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
 

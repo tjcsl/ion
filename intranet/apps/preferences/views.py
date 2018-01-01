@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import (NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
+from .forms import (BusRouteForm, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
 from ..users.models import User, Email
 from ..bus.models import Route
 
@@ -314,11 +314,7 @@ def preferences_view(request):
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
-<<<<<<< HEAD
-=======
         "bus_route_form": bus_route_form,
-        "ldap_error": ldap_error
->>>>>>> db50a98d72... Add Bus to User Preferences
     }
     return render(request, "preferences/preferences.html", context)
 
