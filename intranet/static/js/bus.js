@@ -10,10 +10,10 @@ $(function() {
 
     bus.Route = Backbone.Model.extend({
         defaults: {
-            "id": "0",
-            "status": "o",
-            "bus_number": "No bus number set.",
-            "route_name": "Empty route"
+            'id': '0',
+            'status': 'o',
+            'bus_number': 'No bus number set.',
+            'route_name': 'Empty route'
         }
     });
 
@@ -80,12 +80,12 @@ $(function() {
     });
 
     bus.AppView = Backbone.View.extend({
-        el: ".primary-content",
+        el: '.primary-content',
 
         initialize: function () {
-            _.bindAll(this, "render");
-            this.on("wss:receive", this.update, this);
-            this.categories = ["a", "o", "d"];
+            _.bindAll(this, 'render');
+            this.on('wss:receive', this.update, this);
+            this.categories = ['a', 'o', 'd'];
             this.routeList = new bus.RouteList();
 
             this.personalStatusView = new bus.PersonalStatusView();
@@ -94,11 +94,11 @@ $(function() {
 
         render: function () {
             var container = this.$el;
-                // renderedContent = this.template();
+            // renderedContent = this.template();
             container.empty();
             container.append(this.personalStatusView.render().el);
 
-            let statusGroups = this.routeList.groupBy("status");
+            let statusGroups = this.routeList.groupBy('status');
 
             _.each(this.categories, function (cat) {
                 let statusGroup = new bus.StatusGroupModel({
@@ -114,7 +114,7 @@ $(function() {
         },
 
         update: function (data) {
-            console.log(data)
+            console.log(data);
             if (data.error) {
                 Messenger().error(data.error);
                 return;
@@ -122,35 +122,52 @@ $(function() {
             this.routeList.reset(data.allRoutes);
 
             this.user_bus = this.routeList.find((route) => {
-                if (data.userRouteId)
+                if (data.userRouteId) {
                     return route.id === data.userRouteId;
-                else if (this.user_bus)
+                } else if (this.user_bus) {
                     return route.id === this.user_bus.id;
+                }
             });
 
-            console.log(this.user_bus)
+            console.log(this.user_bus);
 
             this.user_bus = this.user_bus ? this.user_bus : new bus.Route();
             this.personalStatusView.model = this.user_bus;
 
-            console.log(this.user_bus)
+            console.log(this.user_bus);
 
             this.render();
         }
     });
 
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
-    let socket = new WebSocket(`${protocol}://${base_url}/bus/`);
+    let socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
+    let disconnected = false;
     window.appView = new bus.AppView();
-    socket.onmessage = (event) => {
-        window.appView.trigger("wss:receive", JSON.parse(event.data));
+    console.log('Connected');
+
+    socket.onopen = () => {
+        if (disconnected) {
+            disconnected.update({
+                message: 'Connection Restored',
+                type: 'success',
+                hideAfter: 3
+            });
+        }
     };
+
+    socket.onmessage = (event) => {
+        window.appView.trigger('wss:receive', JSON.parse(event.data));
+    };
+
     socket.onclose = () => {
-        Messenger().error({
-            message: "Connection Lost",
+        console.log('disconnected');
+        let msg = Messenger().error({
+            message: 'Connection Lost',
             hideAfter: 0,
             showCloseButton: false
         });
+        disconnected = msg;
     };
 
     // window.personalStatusView = new bus.personalStatusView();
