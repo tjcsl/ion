@@ -204,18 +204,20 @@ def save_notification_options(request, user):
                         pass
     return notification_options_form
 
+
 def get_bus_route(user):
     """Get a user's bus route to pass as an initial value to a
     BusRouteForm."""
 
     return {'bus_route': user.bus_route.route_name if user.bus_route else None}
 
+
 def save_bus_route(request, user):
     bus_route = get_bus_route(user)
     logger.debug(bus_route)
     bus_route_form = BusRouteForm(user, data=request.POST, initial=bus_route)
     if bus_route_form.is_valid():
-        logger.debug("Notification options form: valid")
+        logger.debug("Bus form: valid")
         if bus_route_form.has_changed():
             fields = bus_route_form.cleaned_data
             logger.debug(fields)
@@ -230,8 +232,9 @@ def save_bus_route(request, user):
                         route = Route.objects.get(route_name=fields[field])
                         setattr(user, field, route)
                         user.save()
-                    except:
-                        logger.debug("well shoot")
+                    except Exception as e:
+                        # TODO: replace with better error handling
+                        logger.error("Error processing Bus Route Form: {}".format(e))
                     try:
                         messages.success(request, "Set field {} to {}".format(field, fields[field]
                                                                               if not isinstance(fields[field], list) else ", ".join(fields[field])))

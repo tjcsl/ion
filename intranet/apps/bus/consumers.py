@@ -31,7 +31,8 @@ class BusConsumer(JsonWebsocketConsumer):
                 route.save()
                 data = self._serialize()
                 self.group_send('bus', data)
-            except:
+            except Exception:
+                # TODO: Add logging
                 self.send({'error': 'An error occurred.'})
 
     def _serialize(self, user=None):
