@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
+{% load svg %}
 {% load pipeline %}
 
 {% block title %}
@@ -36,6 +37,8 @@
             },
         };
     </script>
+    <script type="text/javascript" src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/svg.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bus.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
@@ -75,5 +78,9 @@
     </script>
     {% endverbatim %}
     <div class="primary-content">
+        <div class="info"> </div>
+        <div class="map">
+            {% svg 'optimized_bus_map' %}
+        </div>
     </div>
 {% endblock %}

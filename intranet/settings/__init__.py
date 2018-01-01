@@ -504,6 +504,7 @@ INSTALLED_APPS = [
     "oauth2_provider",
     "corsheaders",
     "cacheops",
+    "svg",
     "simple_history"
 ]
 

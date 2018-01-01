@@ -25,8 +25,8 @@ $(function() {
 
     bus.PersonalStatusView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, "render");
-            this.template = _.template($("#personal-status").html());
+            _.bindAll(this, 'render');
+            this.template = _.template($('#personal-status').html());
         },
         render: function() {
             var container = this.$el,
@@ -36,15 +36,20 @@ $(function() {
         }
     });
 
-    bus.RouteView = Backbone.View.extend({
-        className: "bus",
+    bus.MapView = Backbone.View.extend({
         initialize: function () {
-            _.bindAll(this, "render");
-            this.template = _.template($("#route-view").html());
+        }
+    });
+
+    bus.RouteView = Backbone.View.extend({
+        className: 'bus',
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#route-view').html());
         },
 
         events: {
-            "change select": "update"
+            'change select': 'update'
         },
 
         render: function () {
@@ -54,7 +59,7 @@ $(function() {
         },
 
         update: function () {
-            let val = this.$el.children("select").val();
+            let val = this.$el.children('select').val();
             bus.sendUpdate({
                 id: this.model.attributes.id,
                 status: val
@@ -64,8 +69,8 @@ $(function() {
 
     bus.StatusGroupView = Backbone.View.extend({
         initialize: function () {
-            _.bindAll(this, "render");
-            this.template = _.template($("#status-group-view").html());
+            _.bindAll(this, 'render');
+            this.template = _.template($('#status-group-view').html());
         },
 
         render: function () {
@@ -80,7 +85,7 @@ $(function() {
     });
 
     bus.AppView = Backbone.View.extend({
-        el: '.primary-content',
+        el: '.primary-content .info',
 
         initialize: function () {
             _.bindAll(this, 'render');
@@ -98,16 +103,16 @@ $(function() {
             container.empty();
             container.append(this.personalStatusView.render().el);
 
-            let statusGroups = this.routeList.groupBy('status');
+            // let statusGroups = this.routeList.groupBy('status');
 
-            _.each(this.categories, function (cat) {
-                let statusGroup = new bus.StatusGroupModel({
-                    name: window.label_status_strings[cat].name,
-                    empty_text: window.label_status_strings[cat].empty_text,
-                    collection: statusGroups[cat] || []
-                });
-                container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
-            });
+            // _.each(this.categories, function (cat) {
+            //     let statusGroup = new bus.StatusGroupModel({
+            //         name: window.label_status_strings[cat].name,
+            //         empty_text: window.label_status_strings[cat].empty_text,
+            //         collection: statusGroups[cat] || []
+            //     });
+            //     container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
+            // });
 
             // container.append(renderedContent);
             return this;
