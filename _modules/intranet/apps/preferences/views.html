@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4202) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4206) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4202)',
+        VERSION:     'v3 (Build #4206)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -145,8 +145,9 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
 
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="p">(</span><span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">WebsiteFormset</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">WebsiteFormset</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Email</span>
+<span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -343,6 +344,44 @@
     <span class="k">return</span> <span class="n">notification_options_form</span></div>
 
 
+<div class="viewcode-block" id="get_bus_route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.get_bus_route">[docs]</a><span class="k">def</span> <span class="nf">get_bus_route</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a user&#39;s bus route to pass as an initial value to a</span>
+<span class="sd">    BusRouteForm.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;bus_route&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span><span class="o">.</span><span class="n">route_name</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="save_bus_route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.save_bus_route">[docs]</a><span class="k">def</span> <span class="nf">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="n">bus_route</span> <span class="o">=</span> <span class="n">get_bus_route</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">bus_route</span><span class="p">)</span>
+    <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">BusRouteForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">bus_route</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bus_route_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Bus form: valid&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bus_route_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">bus_route_form</span><span class="o">.</span><span class="n">cleaned_data</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">bus_route</span> <span class="ow">and</span> <span class="n">bus_route</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">==</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: same (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: new: </span><span class="si">{}</span><span class="s2"> from: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">bus_route</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                                                               <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">bus_route</span> <span class="k">else</span> <span class="kc">None</span><span class="p">))</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
+                        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="c1"># TODO: replace with better error handling</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error processing Bus Route Form: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                                                                              <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])))</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">bus_route_form</span></div>
+
+
 <div class="viewcode-block" id="save_gcm_options"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.save_gcm_options">[docs]</a><span class="k">def</span> <span class="nf">save_gcm_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span><span class="o">.</span><span class="n">gcm_token</span><span class="p">:</span>
         <span class="n">receive</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;receive_push_notifications&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -370,8 +409,10 @@
         <span class="n">phone_formset</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">website_formset</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">save_notification_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
@@ -392,8 +433,10 @@
 
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="n">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">bus_route</span> <span class="o">=</span> <span class="n">get_bus_route</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">PreferredPictureForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">preferred_pic</span><span class="p">)</span>
+            <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">BusRouteForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">bus_route</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="kc">None</span>
@@ -413,6 +456,7 @@
         <span class="s2">&quot;preferred_pic_form&quot;</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
         <span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
         <span class="s2">&quot;notification_options_form&quot;</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
+        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/preferences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
@@ -461,7 +505,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2017, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2018, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

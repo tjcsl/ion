@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #4202) documentation</title>
+    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #4206) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4202)',
+        VERSION:     'v3 (Build #4206)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -142,6 +142,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.core.management</span> <span class="k">import</span> <span class="n">call_command</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
@@ -152,7 +153,7 @@
 
 <div class="viewcode-block" id="YearCleanupTest.test_year_cleanup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.YearCleanupTest.test_year_cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">test_year_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
         <span class="n">turnover_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="o">=</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;year_cleanup&#39;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
@@ -178,7 +179,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2017, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2018, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

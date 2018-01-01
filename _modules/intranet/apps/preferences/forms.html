@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #4202) documentation</title>
+    <title>intranet.apps.preferences.forms &#8212; TJ Intranet v3 (Build #4206) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4202)',
+        VERSION:     'v3 (Build #4206)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -143,8 +143,19 @@
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
 
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">Phone</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Website</span>
+<span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BusRouteForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.BusRouteForm">[docs]</a><span class="k">class</span> <span class="nc">BusRouteForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Set bus route...&quot;</span><span class="p">)]</span>
+        <span class="n">routes</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;bus_route&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">Select</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PreferredPictureForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.forms.PreferredPictureForm">[docs]</a><span class="k">class</span> <span class="nc">PreferredPictureForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
@@ -269,7 +280,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2017, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2018, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>
