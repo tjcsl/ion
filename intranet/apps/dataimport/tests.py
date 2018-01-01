@@ -3,6 +3,7 @@
 from datetime import datetime
 from io import StringIO
 
+from django.utils import timezone
 from django.core.management import call_command
 
 from ...test.ion_test import IonTestCase
@@ -13,7 +14,7 @@ class YearCleanupTest(IonTestCase):
 
     def test_year_cleanup(self):
         out = StringIO()
-        year = datetime.now().year
+        year = timezone.now().year
         turnover_date = datetime(year, 7, 1)
         with self.settings(SENIOR_GRADUATION_YEAR=year + 1):
             call_command('year_cleanup', stdout=out)
