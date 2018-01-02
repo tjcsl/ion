@@ -709,6 +709,10 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Already set on nginx level
 SECURE_BROWSER_XSS_FILTER = True
 
+# To accomodate for the fact that nginx "swallows" https connections
+# by forwarding to http://gunicorn
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Add git information for the login page
 GIT = {
     "commit_short_hash": helpers.get_current_commit_short_hash(PROJECT_ROOT),
