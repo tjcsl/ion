@@ -42,10 +42,14 @@ $(function() {
             this.template = _.template($('#action-button-view').html());
             this.icon = 'fa-search';
             this.text = 'search for bus';
+            this.action = 'search';
 
             Backbone.on('selectEmptySpace', this.handleEmptySpace, this);
             Backbone.on('selectFilledSpace', this.handleFilledSpace, this);
             Backbone.on('deselectSpace', this.handleDeselectSpace, this);
+        },
+        events: {
+            'click': 'handleAction'
         },
         render: function () {
             let data = {
@@ -56,22 +60,46 @@ $(function() {
             console.log(data);
             return this;
         },
-        handleEmptySpace: function () {
+        handleAction: function () {
+            switch (this.action) {
+                case 'search':
+                    break;
+                case 'assign':
+                    break;
+                case 'unassign':
+                    this.unassignBus();
+                    break;
+                default:
+                    break;
+            }
+        },
+        unassignBus: function () {
+            let route = $(this.selected).data('route');
+            route.status = 'o';
+            route.space = '';
+            bus.sendUpdate(route);
+        },
+        handleEmptySpace: function (space) {
             console.log('hi');
             this.icon = 'fa-plus-square';
             this.text = 'assign bus';
+            this.action = 'assign';
+            this.selected = space;
             this.render();
         },
-        handleFilledSpace: function () {
+        handleFilledSpace: function (space) {
             console.log('hi');
             this.icon = 'fa-minus-square';
             this.text = 'unassign bus';
+            this.action = 'unassign';
+            this.selected = space;
             this.render();
         },
         handleDeselectSpace: function () {
             console.log('hi');
             this.icon = 'fa-search';
             this.text = 'search for bus';
+            this.action = 'search';
             this.render();
         }
     });
@@ -122,10 +150,10 @@ $(function() {
             }
             const space = e.target;
             if (!$(space).data('filled')) {
-                Backbone.trigger('selectEmptySpace');
+                Backbone.trigger('selectEmptySpace', space);
                 console.log('select empty');
             } else {
-                Backbone.trigger('selectFilledSpace');
+                Backbone.trigger('selectFilledSpace', space);
                 console.log('select full');
             }
             space.style.stroke = 'black';
