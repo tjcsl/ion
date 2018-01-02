@@ -36,8 +36,109 @@ $(function() {
         }
     });
 
+    bus.ActionButtonView = Backbone.View.extend({
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#action-button-view').html());
+            this.icon = 'fa-search';
+            this.text = 'search for bus';
+
+            Backbone.on('selectEmptySpace', this.handleEmptySpace, this);
+            Backbone.on('selectFilledSpace', this.handleFilledSpace, this);
+            Backbone.on('deselectSpace', this.handleDeselectSpace, this);
+        },
+        render: function () {
+            let data = {
+                'icon': this.icon,
+                'text': this.text
+            };
+            this.$el.html(this.template(data));
+            console.log(data);
+            return this;
+        },
+        handleEmptySpace: function () {
+            console.log('hi');
+            this.icon = 'fa-plus-square';
+            this.text = 'assign bus';
+            this.render();
+        },
+        handleFilledSpace: function () {
+            console.log('hi');
+            this.icon = 'fa-minus-square';
+            this.text = 'unassign bus';
+            this.render();
+        },
+        handleDeselectSpace: function () {
+            console.log('hi');
+            this.icon = 'fa-search';
+            this.text = 'search for bus';
+            this.render();
+        }
+    });
+
     bus.MapView = Backbone.View.extend({
         initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#map-view').html());
+            this.selected = null;
+        },
+
+        events: {
+            'click path': 'selectSpace',
+            'click': 'deselectSpace'
+        },
+
+        render: function (collection) {
+            var container = this.$el,
+                renderedContent = this.template({});
+            container.html(renderedContent);
+            console.log(container);
+            var draw = SVG.adopt(container.find('svg')[0]);
+            collection.forEach(function (route) {
+                if (route.attributes.status === 'a' && route.attributes.space) {
+                    var space = container.find(`#${route.attributes.space}`)[0];
+                    if (space) {
+                        let text = draw.text(route.attributes.route_name);
+                        text.path(space.getAttribute('d'));
+                        space.style.fill = '#FFD800';
+                        $(space).data({
+                            'filled': true,
+                            'route': route.attributes
+                        });
+                    }
+                }
+            });
+            return this;
+        },
+
+        selectSpace: function (e) {
+            e.stopPropagation();
+            if (this.selected) {
+                this.selected.style.stroke = 'none';
+                if (e.target === this.selected) {
+                    this.deselectSpace(e);
+                    return;
+                }
+            }
+            const space = e.target;
+            if (!$(space).data('filled')) {
+                Backbone.trigger('selectEmptySpace');
+                console.log('select empty');
+            } else {
+                Backbone.trigger('selectFilledSpace');
+                console.log('select full');
+            }
+            space.style.stroke = 'black';
+            this.selected = space;
+        },
+
+        deselectSpace: function (e) {
+            if (this.selected) {
+                this.selected.style.stroke = 'none';
+                this.selected = null;
+                Backbone.trigger('deselectSpace');
+                console.log('deselect');
+            }
         }
     });
 
@@ -94,25 +195,29 @@ $(function() {
             this.routeList = new bus.RouteList();
 
             this.personalStatusView = new bus.PersonalStatusView();
+            this.mapView = new bus.MapView();
+            this.actionButtonView = new bus.ActionButtonView();
             // this.render();
         },
 
         render: function () {
             var container = this.$el;
             // renderedContent = this.template();
-            container.empty();
+            container.children().detach();
             container.append(this.personalStatusView.render().el);
+            container.append(this.actionButtonView.render().el);
+            container.append(this.mapView.render(this.routeList).el);
 
-            // let statusGroups = this.routeList.groupBy('status');
+            let statusGroups = this.routeList.groupBy('status');
 
-            // _.each(this.categories, function (cat) {
-            //     let statusGroup = new bus.StatusGroupModel({
-            //         name: window.label_status_strings[cat].name,
-            //         empty_text: window.label_status_strings[cat].empty_text,
-            //         collection: statusGroups[cat] || []
-            //     });
-            //     container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
-            // });
+            _.each(this.categories, function (cat) {
+                let statusGroup = new bus.StatusGroupModel({
+                    name: window.label_status_strings[cat].name,
+                    empty_text: window.label_status_strings[cat].empty_text,
+                    collection: statusGroups[cat] || []
+                });
+                container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
+            });
 
             // container.append(renderedContent);
             return this;

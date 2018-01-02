@@ -1,3 +1,4 @@
+import random
 from channels.generic.websockets import JsonWebsocketConsumer
 
 from .models import Route
@@ -28,11 +29,16 @@ class BusConsumer(JsonWebsocketConsumer):
             try:
                 route = Route.objects.get(id=content['id'])
                 route.status = content['status']
+                if route.status == 'a':
+                    route.space = '_{}'.format(random.randint(1, 28))
+                else:
+                    route.space = ''
                 route.save()
                 data = self._serialize()
                 self.group_send('bus', data)
-            except Exception:
+            except Exception as e:
                 # TODO: Add logging
+                print(e)
                 self.send({'error': 'An error occurred.'})
 
     def _serialize(self, user=None):
@@ -44,6 +50,7 @@ class BusConsumer(JsonWebsocketConsumer):
             serialized = {
                 'id': route.id,
                 'bus_number': route.bus_number,
+                'space': route.space,
                 'route_name': route.route_name,
                 'status': route.status,
             }
