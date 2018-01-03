@@ -30,7 +30,7 @@ class BusConsumer(JsonWebsocketConsumer):
                 route = Route.objects.get(id=content['id'])
                 route.status = content['status']
                 if route.status == 'a':
-                    route.space = '_{}'.format(random.randint(1, 28))
+                    route.space = content['space']
                 else:
                     route.space = ''
                 route.save()

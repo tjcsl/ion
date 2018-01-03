@@ -36,37 +36,6 @@ $(function() {
         }
     });
 
-    bus.SearchWidgetView = Backbone.View.extend({
-        initialize: function() {
-            _.bindAll(this, 'render');
-            this.template = _.template($('#search-widget-view').html());
-            this.action = 'search';
-        },
-        render: function(action, routeList) {
-            var container = this.$el,
-                renderedContent = this.template();
-            container.html(renderedContent);
-            console.log(routeList);
-            let busList = [];
-            if (action === 'search') {
-                busList = routeList.filter(bus => bus.attributes.status === 'a')
-                                   .map(bus => bus.attributes);
-            } else {
-                busList = routeList.filter(bus => bus.attributes.status !== 'a')
-                                   .map(bus => bus.attributes);
-            }
-            console.log(busList);
-            container.find('select').selectize({
-                'options': busList,
-                'valueField': 'route_name',
-                'labelField': 'route_name',
-                'placeholder': action,
-                'searchField': 'route_name'
-            });
-            return this;
-        }
-    });
-
     bus.ActionButtonView = Backbone.View.extend({
         className: 'action-view',
         initialize: function () {
@@ -80,6 +49,7 @@ $(function() {
 
             this.clicked = false;
             this.hlBus = null;
+            this.selected = null;
 
             Backbone.on('selectEmptySpace', this.handleEmptySpace, this);
             Backbone.on('selectFilledSpace', this.handleFilledSpace, this);
@@ -136,11 +106,17 @@ $(function() {
             if (this.clicked === false) {
                 return;
             }
-
             if (this.action === 'search') {
-                console.log(e.target.value);
                 Backbone.trigger('searchForBus', e.target.value);
                 this.hlBus = e.target.value;
+            } else if (this.action === 'assign') {
+                if (!this.selected) {
+                    return;
+                }
+                let route = this.model.findWhere({route_name: e.target.value}).attributes;
+                route.space = this.selected.id;
+                route.status = 'a';
+                bus.sendUpdate(route);
             }
 
             this.handleReturnClick();
@@ -185,6 +161,9 @@ $(function() {
         },
         handleEmptySpace: function (space) {
             console.log('hi');
+            if (!isAdmin) {
+                return;
+            }
             this.icon = 'fa-plus-square';
             this.text = 'assign bus';
             this.action = 'assign';
@@ -193,6 +172,9 @@ $(function() {
         },
         handleFilledSpace: function (space) {
             console.log('hi');
+            if (!isAdmin) {
+                return;
+            }
             this.icon = 'fa-minus-square';
             this.text = 'unassign bus';
             this.action = 'unassign';
@@ -362,7 +344,6 @@ $(function() {
             this.personalStatusView = new bus.PersonalStatusView();
             this.mapView = new bus.MapView();
             this.actionButtonView = new bus.ActionButtonView();
-            this.searchWidgetView = new bus.SearchWidgetView();
             // this.render();
         },
 
@@ -374,16 +355,16 @@ $(function() {
             container.append(this.actionButtonView.render().el);
             container.append(this.mapView.render().el);
 
-            let statusGroups = this.routeList.groupBy('status');
+            // let statusGroups = this.routeList.groupBy('status');
 
-            _.each(this.categories, function (cat) {
-                let statusGroup = new bus.StatusGroupModel({
-                    name: window.label_status_strings[cat].name,
-                    empty_text: window.label_status_strings[cat].empty_text,
-                    collection: statusGroups[cat] || []
-                });
-                container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
-            });
+            // _.each(this.categories, function (cat) {
+            //     let statusGroup = new bus.StatusGroupModel({
+            //         name: window.label_status_strings[cat].name,
+            //         empty_text: window.label_status_strings[cat].empty_text,
+            //         collection: statusGroups[cat] || []
+            //     });
+            //     container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
+            // });
 
             // container.append(renderedContent);
             return this;
