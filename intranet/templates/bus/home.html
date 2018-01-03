@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
     {{ block.super }}
     {% stylesheet 'bus' %}
     {% stylesheet 'polls' %}
@@ -39,6 +40,7 @@
     </script>
     <script type="text/javascript" src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/svg.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bus.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
@@ -79,6 +81,11 @@
     <script type="text/template" id="action-button-view">
         <div class="action-button">
             <i class="fa <%= icon %>"></i><span class="action-button-text"> <%= text %></span>
+        </div>
+    </script>
+    <script type="text/template" id="search-widget-view">
+        <div class="search-widget">
+            <i class="back-button fa fa-arrow-left"></i><select name="buses" id="buses"></select>
         </div>
     </script>
     {% endverbatim %}

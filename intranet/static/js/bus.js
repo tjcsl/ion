@@ -36,35 +36,126 @@ $(function() {
         }
     });
 
+    bus.SearchWidgetView = Backbone.View.extend({
+        initialize: function() {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#search-widget-view').html());
+            this.action = 'search';
+        },
+        render: function(action, routeList) {
+            var container = this.$el,
+                renderedContent = this.template();
+            container.html(renderedContent);
+            console.log(routeList);
+            let busList = [];
+            if (action === 'search') {
+                busList = routeList.filter(bus => bus.attributes.status === 'a')
+                                   .map(bus => bus.attributes);
+            } else {
+                busList = routeList.filter(bus => bus.attributes.status !== 'a')
+                                   .map(bus => bus.attributes);
+            }
+            console.log(busList);
+            container.find('select').selectize({
+                'options': busList,
+                'valueField': 'route_name',
+                'labelField': 'route_name',
+                'placeholder': action,
+                'searchField': 'route_name'
+            });
+            return this;
+        }
+    });
+
     bus.ActionButtonView = Backbone.View.extend({
+        className: 'action-view',
         initialize: function () {
             _.bindAll(this, 'render');
-            this.template = _.template($('#action-button-view').html());
+            this.buttonTemplate = _.template($('#action-button-view').html());
+            this.searchTemplate = _.template($('#search-widget-view').html());
+            this.model = [];
             this.icon = 'fa-search';
             this.text = 'search for bus';
             this.action = 'search';
+
+            this.clicked = false;
+            this.hlBus = null;
 
             Backbone.on('selectEmptySpace', this.handleEmptySpace, this);
             Backbone.on('selectFilledSpace', this.handleFilledSpace, this);
             Backbone.on('deselectSpace', this.handleDeselectSpace, this);
         },
         events: {
-            'click': 'handleAction'
+            'click .action-button': 'handleAction',
+            'click .back-button': 'handleReturnClick',
+            'change select': 'handleBusSelect'
         },
         render: function () {
+            if (this.clicked) {
+                return this.renderSearchView(this.model, this.action);
+            } else {
+                return this.renderButton();
+            }
+        },
+        renderButton: function () {
             let data = {
                 'icon': this.icon,
                 'text': this.text
             };
-            this.$el.html(this.template(data));
+            this.$el.html(this.buttonTemplate(data))
+                    .removeClass('search-widget');
             console.log(data);
             return this;
+        },
+        renderSearchView: function (routeList, action) {
+            var container = this.$el,
+                renderedContent = this.searchTemplate();
+            container.addClass('search-widget');
+            container.html(renderedContent);
+            console.log(routeList);
+            let busList = [];
+            if (action === 'search') {
+                busList = routeList.filter(bus => bus.attributes.status === 'a')
+                                   .map(bus => bus.attributes);
+            } else {
+                busList = routeList.filter(bus => bus.attributes.status !== 'a')
+                                   .map(bus => bus.attributes);
+            }
+            console.log(busList);
+            container.find('select').selectize({
+                'options': busList,
+                'valueField': 'route_name',
+                'labelField': 'route_name',
+                'placeholder': action,
+                'searchField': 'route_name'
+            });
+            return this;
+        },
+        handleBusSelect: function (e) {
+            console.log(e);
+            if (this.clicked === false) {
+                return;
+            }
+
+            if (this.action === 'search') {
+                console.log(e.target.value);
+                Backbone.trigger('searchForBus', e.target.value);
+                this.hlBus = e.target.value;
+            }
+
+            this.handleReturnClick();
+        },
+        handleReturnClick: function () {
+            this.clicked = false;
+            this.render();
         },
         handleAction: function () {
             switch (this.action) {
                 case 'search':
+                    this.searchBus();
                     break;
                 case 'assign':
+                    this.assignBus();
                     break;
                 case 'unassign':
                     this.unassignBus();
@@ -72,6 +163,19 @@ $(function() {
                 default:
                     break;
             }
+        },
+        searchBus: function () {
+            this.clicked = true;
+            if (this.hlBus) {
+                console.log(this.hlBus);
+                Backbone.trigger('deselectBus', this.hlBus);
+                this.hlBus = null;
+            }
+            this.render();
+        },
+        assignBus: function () {
+            this.clicked = true;
+            this.render();
         },
         unassignBus: function () {
             let route = $(this.selected).data('route');
@@ -108,7 +212,12 @@ $(function() {
         initialize: function () {
             _.bindAll(this, 'render');
             this.template = _.template($('#map-view').html());
+            this.model = [];
+            this.hlRouteNames = [];
             this.selected = null;
+
+            Backbone.on('searchForBus', this.selectBus, this);
+            Backbone.on('deselectBus', this.deselectBus, this);
         },
 
         events: {
@@ -116,27 +225,54 @@ $(function() {
             'click': 'deselectSpace'
         },
 
-        render: function (collection) {
+        render: function () {
             var container = this.$el,
-                renderedContent = this.template({});
+                renderedContent = this.template({}),
+                hlRouteNames = this.hlRouteNames,
+                collection = this.model;
             container.html(renderedContent);
             console.log(container);
             var draw = SVG.adopt(container.find('svg')[0]);
+            console.log(hlRouteNames);
             collection.forEach(function (route) {
                 if (route.attributes.status === 'a' && route.attributes.space) {
                     var space = container.find(`#${route.attributes.space}`)[0];
                     if (space) {
                         let text = draw.text(route.attributes.route_name);
                         text.path(space.getAttribute('d'));
+                        text.style('pointer-events', 'none');
                         space.style.fill = '#FFD800';
                         $(space).data({
                             'filled': true,
                             'route': route.attributes
                         });
+
+                        if (hlRouteNames.includes(route.attributes.route_name)) {
+                            space.style.fill = '#0048ab';
+                            text.fill('white');
+                        }
                     }
                 }
             });
             return this;
+        },
+
+        selectBus: function (routeNumber) {
+            console.log(routeNumber);
+            this.hlRouteNames.push(routeNumber);
+            this.render();
+        },
+
+        deselectBus: function (routeNumber) {
+            console.log(this.hlRouteNames);
+            console.log(routeNumber);
+            let i = this.hlRouteNames.indexOf(routeNumber);
+            if (i === -1) {
+                return;
+            }
+            this.hlRouteNames.splice(i, 1);
+            console.log(this.hlRouteNames);
+            this.render();
         },
 
         selectSpace: function (e) {
@@ -221,10 +357,12 @@ $(function() {
             this.on('wss:receive', this.update, this);
             this.categories = ['a', 'o', 'd'];
             this.routeList = new bus.RouteList();
+            this.showingWidget = false;
 
             this.personalStatusView = new bus.PersonalStatusView();
             this.mapView = new bus.MapView();
             this.actionButtonView = new bus.ActionButtonView();
+            this.searchWidgetView = new bus.SearchWidgetView();
             // this.render();
         },
 
@@ -234,7 +372,7 @@ $(function() {
             container.children().detach();
             container.append(this.personalStatusView.render().el);
             container.append(this.actionButtonView.render().el);
-            container.append(this.mapView.render(this.routeList).el);
+            container.append(this.mapView.render().el);
 
             let statusGroups = this.routeList.groupBy('status');
 
@@ -258,6 +396,8 @@ $(function() {
                 return;
             }
             this.routeList.reset(data.allRoutes);
+            this.actionButtonView.model = this.routeList;
+            this.mapView.model = this.routeList;
 
             this.user_bus = this.routeList.find((route) => {
                 if (data.userRouteId) {
@@ -274,6 +414,8 @@ $(function() {
 
             console.log(this.user_bus);
 
+            // FIXME: hacky solution to reset action button.
+            Backbone.trigger('deselectSpace');
             this.render();
         }
     });
