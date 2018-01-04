@@ -1,4 +1,6 @@
 #!/bin/bash
+# run every day at 8pm (0 20 * * *)
+
 timestamp=$(date +"%Y-%m-%d-%H%M")
 cd /usr/local/www/intranet3
 ./cron/env.sh ./manage.py signup_status_email --only-tomorrow --silent
