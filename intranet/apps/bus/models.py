@@ -14,3 +14,9 @@ class Route(models.Model):
     space = models.CharField(max_length=4, blank=True)
     bus_number = models.CharField(max_length=5, blank=True)
     status = models.CharField('arrival status', choices=ARRIVAL_STATUSES, max_length=1, default='o')
+
+    def reset_status(self):
+        """Reset status to (on time) """
+        self.status = 'o'
+        self.space = ''
+        self.save()
