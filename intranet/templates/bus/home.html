@@ -50,9 +50,11 @@
     {% verbatim %}
     <script type="text/template" id="personal-status">
         <% if (route_name !== "Empty route") { %>
-            <h2 class="personal-status">Hi <%= firstname %>, your bus (<strong><%= route_name %></strong>) is <%= label_status_strings[status].personal %> Have a great day!</h2>
+            <h2 class="personal-status bordered-element">Hi <%= firstname %>, your bus (<strong><%= route_name %></strong>) is <%= label_status_strings[status].personal %> Have a great day!</h2>
         <% } else { %>
-            <h2 class="personal-status"> It looks like you don't have a bus registered. </h2>
+        {% endverbatim %}
+            <h2 class="personal-status bordered-element">It looks like you don't have a bus registered. <a href="{% url 'preferences' %}#id_bus_route" target="_blank">Register.</a></h2>
+        {% verbatim %}
         <% } %>
     </script>
     <script type="text/template" id="route-view">
@@ -93,6 +95,9 @@
         {% svg 'optimized_bus_map' %}
     </script>
     <div class="primary-content">
+        <div class="beta-warning bordered-element">
+            <i class="fa fa-flask"></i> Bus is still a beta feature, and may not be entirely accurate!
+        </div>
         <div class="info"> </div>
     </div>
 {% endblock %}

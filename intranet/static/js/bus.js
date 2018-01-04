@@ -37,7 +37,7 @@ $(function() {
     });
 
     bus.ActionButtonView = Backbone.View.extend({
-        className: 'action-view',
+        className: 'action-view bordered-element',
         initialize: function () {
             _.bindAll(this, 'render');
             this.buttonTemplate = _.template($('#action-button-view').html());
