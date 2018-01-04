@@ -25,7 +25,9 @@ class BusConsumer(JsonWebsocketConsumer):
 
     def receive(self, content):
         print("received message")
-        if (self.message.user.has_admin_permission('bus')):
+        if not self.message.user.is_authenticated():
+            self.send({'error': 'You are not logged in.'})
+        if self.message.user.has_admin_permission('bus'):
             try:
                 route = Route.objects.get(id=content['id'])
                 route.status = content['status']
@@ -40,6 +42,8 @@ class BusConsumer(JsonWebsocketConsumer):
                 # TODO: Add logging
                 print(e)
                 self.send({'error': 'An error occurred.'})
+        else:
+            self.send({'error': 'User does not have permissions.'})
 
     def _serialize(self, user=None):
         print(user)
