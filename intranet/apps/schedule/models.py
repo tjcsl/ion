@@ -76,6 +76,29 @@ class DayType(models.Model):
         else:
             return "day-type-{}".format(t)
 
+    @property
+    def start_time(self):
+        """ Returns Time the school day begins.
+            Returns None if there are no blocks.
+        """
+        if self.no_school:
+            return None
+        return self.blocks.first().start
+
+    @property
+    def end_time(self):
+        """ Returns Time the school day ends.
+            Returns None if there are no blocks.
+        """
+        if self.no_school:
+            return None
+        return self.blocks.last().end
+
+    @property
+    def no_school(self):
+        """Returns True if no blocks are scheduled."""
+        return self.blocks.count() == 0
+
     class Meta:
         ordering = ("name",)
 
@@ -88,12 +111,28 @@ class DayManager(models.Manager):
 
         return Day.objects.filter(date__gte=today)
 
+    def today(self):
+        """Return the Day for the current day"""
+        today = timezone.now().date()
+
+        return Day.objects.get(date=today)
+
 
 class Day(models.Model):
     objects = DayManager()
     date = models.DateField(unique=True)
     day_type = models.ForeignKey('DayType', on_delete=models.CASCADE)
     comment = models.CharField(max_length=1000, blank=True)
+
+    @property
+    def start_time(self):
+        """Return time the school day begins """
+        return self.day_type.start_time
+
+    @property
+    def end_time(self):
+        """Return time the school day ends """
+        return self.day_type.end_time
 
     def __str__(self):
         return "{}: {}".format(str(self.date), self.day_type)
