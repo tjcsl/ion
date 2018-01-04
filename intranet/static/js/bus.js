@@ -56,8 +56,8 @@ $(function() {
             Backbone.on('deselectSpace', this.handleDeselectSpace, this);
         },
         events: {
-            'click .action-button': 'handleAction',
             'click .back-button': 'handleReturnClick',
+            'click': 'handleAction',
             'change select': 'handleBusSelect'
         },
         render: function () {
@@ -98,7 +98,7 @@ $(function() {
                 'labelField': 'route_name',
                 'placeholder': action,
                 'searchField': 'route_name'
-            });
+            })[0].selectize.focus();
             return this;
         },
         handleBusSelect: function (e) {
@@ -121,11 +121,17 @@ $(function() {
 
             this.handleReturnClick();
         },
-        handleReturnClick: function () {
+        handleReturnClick: function (e) {
+            if (e) {
+                e.stopPropagation();
+            }
             this.clicked = false;
             this.render();
         },
         handleAction: function () {
+            if (this.clicked) {
+                return;
+            }
             switch (this.action) {
                 case 'search':
                     this.searchBus();
