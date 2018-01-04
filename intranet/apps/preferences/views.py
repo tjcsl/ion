@@ -2,6 +2,7 @@
 
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -317,7 +318,7 @@ def preferences_view(request):
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
-        "bus_route_form": bus_route_form,
+        "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None
     }
     return render(request, "preferences/preferences.html", context)
 
