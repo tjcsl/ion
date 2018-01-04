@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4215) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4217) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4215)',
+        VERSION:     'v3 (Build #4217)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -141,6 +141,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
@@ -456,7 +457,7 @@
         <span class="s2">&quot;preferred_pic_form&quot;</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
         <span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
         <span class="s2">&quot;notification_options_form&quot;</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
-        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span><span class="p">,</span>
+        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/preferences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
