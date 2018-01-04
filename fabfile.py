@@ -193,7 +193,7 @@ def deploy():
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
                 local("./manage.py collectstatic --noinput", shell="/bin/bash")
                 local("./manage.py migrate", shell="/bin/bash")
-                restart_production_gunicorn(skip=True)
+            restart_production_gunicorn(skip=True)
 
     puts("Deploy complete.")
 
