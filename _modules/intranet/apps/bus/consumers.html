@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #4206) documentation</title>
+    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #4212) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4206)',
+        VERSION:     'v3 (Build #4212)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -163,16 +163,25 @@
 
 <div class="viewcode-block" id="BusConsumer.receive"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;received message&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;bus&#39;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;You are not logged in.&#39;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;bus&#39;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span>
+                    <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;space&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">group_send</span><span class="p">(</span><span class="s1">&#39;bus&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># TODO: Add logging</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;An error occurred.&#39;</span><span class="p">})</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;An error occurred.&#39;</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;User does not have permissions.&#39;</span><span class="p">})</span></div>
 
     <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -183,6 +192,7 @@
             <span class="n">serialized</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                 <span class="s1">&#39;bus_number&#39;</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">bus_number</span><span class="p">,</span>
+                <span class="s1">&#39;space&#39;</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">space</span><span class="p">,</span>
                 <span class="s1">&#39;route_name&#39;</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">,</span>
                 <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="p">}</span>
