@@ -74,7 +74,6 @@ $(function() {
             };
             this.$el.html(this.buttonTemplate(data))
                     .removeClass('search-widget');
-            console.log(data);
             return this;
         },
         renderSearchView: function (routeList, action) {
@@ -82,7 +81,6 @@ $(function() {
                 renderedContent = this.searchTemplate();
             container.addClass('search-widget');
             container.html(renderedContent);
-            console.log(routeList);
             let busList = [];
             if (action === 'search') {
                 busList = routeList.filter(bus => bus.attributes.status === 'a')
@@ -91,7 +89,6 @@ $(function() {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
                                    .map(bus => bus.attributes);
             }
-            console.log(busList);
             container.find('select').selectize({
                 'options': busList,
                 'valueField': 'route_name',
@@ -102,7 +99,6 @@ $(function() {
             return this;
         },
         handleBusSelect: function (e) {
-            console.log(e);
             if (this.clicked === false) {
                 return;
             }
@@ -149,7 +145,6 @@ $(function() {
         searchBus: function () {
             this.clicked = true;
             if (this.hlBus) {
-                console.log(this.hlBus);
                 Backbone.trigger('deselectBus', this.hlBus);
                 this.hlBus = null;
             }
@@ -166,7 +161,6 @@ $(function() {
             bus.sendUpdate(route);
         },
         handleEmptySpace: function (space) {
-            console.log('hi');
             if (!isAdmin) {
                 return;
             }
@@ -177,7 +171,6 @@ $(function() {
             this.render();
         },
         handleFilledSpace: function (space) {
-            console.log('hi');
             if (!isAdmin) {
                 return;
             }
@@ -188,7 +181,6 @@ $(function() {
             this.render();
         },
         handleDeselectSpace: function () {
-            console.log('hi');
             this.icon = 'fa-search';
             this.text = 'search for bus';
             this.action = 'search';
@@ -219,9 +211,7 @@ $(function() {
                 hlRouteNames = this.hlRouteNames,
                 collection = this.model;
             container.html(renderedContent);
-            console.log(container);
             var draw = SVG.adopt(container.find('svg')[0]);
-            console.log(hlRouteNames);
             collection.forEach(function (route) {
                 if (route.attributes.status === 'a' && route.attributes.space) {
                     var space = container.find(`#${route.attributes.space}`)[0];
@@ -246,20 +236,16 @@ $(function() {
         },
 
         selectBus: function (routeNumber) {
-            console.log(routeNumber);
             this.hlRouteNames.push(routeNumber);
             this.render();
         },
 
         deselectBus: function (routeNumber) {
-            console.log(this.hlRouteNames);
-            console.log(routeNumber);
             let i = this.hlRouteNames.indexOf(routeNumber);
             if (i === -1) {
                 return;
             }
             this.hlRouteNames.splice(i, 1);
-            console.log(this.hlRouteNames);
             this.render();
         },
 
@@ -275,10 +261,8 @@ $(function() {
             const space = e.target;
             if (!$(space).data('filled')) {
                 Backbone.trigger('selectEmptySpace', space);
-                console.log('select empty');
             } else {
                 Backbone.trigger('selectFilledSpace', space);
-                console.log('select full');
             }
             space.style.stroke = 'black';
             this.selected = space;
@@ -289,7 +273,6 @@ $(function() {
                 this.selected.style.stroke = 'none';
                 this.selected = null;
                 Backbone.trigger('deselectSpace');
-                console.log('deselect');
             }
         }
     });
@@ -377,7 +360,6 @@ $(function() {
         },
 
         update: function (data) {
-            console.log(data);
             if (data.error) {
                 Messenger().error(data.error);
                 return;
@@ -394,12 +376,10 @@ $(function() {
                 }
             });
 
-            console.log(this.user_bus);
 
             this.user_bus = this.user_bus ? this.user_bus : new bus.Route();
             this.personalStatusView.model = this.user_bus;
 
-            console.log(this.user_bus);
 
             // FIXME: hacky solution to reset action button.
             Backbone.trigger('deselectSpace');
@@ -428,7 +408,7 @@ $(function() {
     };
 
     socket.onclose = () => {
-        console.log('disconnected');
+        console.log('Disconnected');
         let msg = Messenger().error({
             message: 'Connection Lost',
             hideAfter: 0,
