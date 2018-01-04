@@ -711,6 +711,7 @@ SECURE_BROWSER_XSS_FILTER = True
 
 # To accomodate for the fact that nginx "swallows" https connections
 # by forwarding to http://gunicorn
+# https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Add git information for the login page

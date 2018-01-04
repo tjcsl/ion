@@ -1,4 +1,3 @@
-import random
 from channels.generic.websockets import JsonWebsocketConsumer
 
 from .models import Route
