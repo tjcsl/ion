@@ -10,6 +10,10 @@ $(function() {
         $username.focus();
     }
 
+    $('.login-warning').click(function (e) {
+        $(this).toggleClass('collapsed');
+    });
+
     $(".sidebar-trigger").click(function() {
         if($(".sidebar").hasClass("has-events")){
             if($(this).css("left") !== "5px") {
@@ -97,5 +101,4 @@ $(function() {
             });
         }
     });
-
 });

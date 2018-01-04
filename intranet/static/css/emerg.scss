@@ -1,8 +1,6 @@
-.login-warning {
-    display: none;
-    > p {
-        vertical-align: middle;
-    }
+.dash-warning {
+    max-height: 100vh;
+    position: relative;
 }
 
 body.has-login-warning {
@@ -10,18 +8,12 @@ body.has-login-warning {
         display: block;
         position: absolute;
         top: 10px;
-        width: 578px; // 600px total
-        max-height: 140px;
+        width: 578px;
         left: -200px;
-        background-color: yellow;
-        border: 1px solid rgb(210, 208, 66);
-        padding: 10px;
-        border-radius: 4px;
         overflow-y: auto;
         z-index: 999999999999;
-        ul {
-            text-align: left;
-        }
+        max-height: 130px;
+
         @media (max-width: 600px) {
             width: calc(160% - 20px);
             left: -30%;
@@ -47,5 +39,38 @@ body.has-login-warning {
         &.has-snow .center {
             margin-top: -229px;
         }
+    }
+}
+
+.dash-warning, .login-warning {
+    background-color: yellow;
+    border: 1px solid #d2d042;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    transition: max-height .2s ease-in-out;
+
+    &.collapsed {
+        max-height: 50px !important;
+        overflow: hidden;
+        &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: linear-gradient(to bottom, rgba(255,255,255, 0), yellow 90%);
+            width: 100%;
+            height: 4em;
+        }
+    }
+
+    ul {
+        text-align: left;
+    }
+
+    &:hover {
+        cursor: pointer;
     }
 }
