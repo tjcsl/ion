@@ -44,7 +44,7 @@ REDIS_PASSWORD = ""
 # In production, Nginx filters requests that are not in this list. If this is
 # not done, an email failure notification gets sent whenever someone messes with
 # the HTTP Host header.
-ALLOWED_HOSTS = ["ion-balancer.tjhsst.edu", "ion-staging1.tjhsst.edu", "ion-staging2.tjhsst.edu", "ion-staging3.tjhsst.edu", "ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["ion-balancer.tjhsst.edu", "ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 
