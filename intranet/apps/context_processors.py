@@ -120,11 +120,13 @@ def show_bus_button(request):
     now = datetime.datetime.now()
     window = datetime.timedelta(hours=1)
     today = Day.objects.today()
-    if today is None:
-        end_of_day = datetime.datetime(now.year, now.month, now.day, 16, 0)
-    else:
+    try:
+        if today is None or today.day_type.no_school:
+            return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}
+
         end_of_day = Day.objects.today().end_time.date_obj(now.date())
+        is_valid_time = (now > end_of_day - window) and (now < end_of_day + window)
+        return {'show_bus_nav': (is_bus_admin or is_valid_time) and settings.ENABLE_BUS_APP}
 
-    is_valid_time = (now > end_of_day - window) and (now < end_of_day + window)
-
-    return {'show_bus_nav': (is_bus_admin or is_valid_time) and settings.ENABLE_BUS_APP}
+    except AttributeError:
+        return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}
