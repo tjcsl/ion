@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.schedule package &#8212; TJ Intranet v3 (Build #4223) documentation</title>
+    <title>intranet.apps.schedule package &#8212; TJ Intranet v3 (Build #4229) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4223)',
+        VERSION:     'v3 (Build #4229)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -532,6 +532,12 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.schedule.models.Day.end_time">
+<code class="descname">end_time</code><a class="headerlink" href="#intranet.apps.schedule.models.Day.end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return time the school day ends</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.schedule.models.Day.get_next_by_date">
 <code class="descname">get_next_by_date</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.schedule.models.Day.get_next_by_date" title="Permalink to this definition">¶</a></dt>
@@ -554,6 +560,12 @@ object the first time, the query is executed.</p>
 <code class="descname">objects</code><em class="property"> = &lt;intranet.apps.schedule.models.DayManager object&gt;</em><a class="headerlink" href="#intranet.apps.schedule.models.Day.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.schedule.models.Day.start_time">
+<code class="descname">start_time</code><a class="headerlink" href="#intranet.apps.schedule.models.Day.start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return time the school day begins</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -564,6 +576,12 @@ object the first time, the query is executed.</p>
 <dt id="intranet.apps.schedule.models.DayManager.get_future_days">
 <code class="descname">get_future_days</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/schedule/models.html#DayManager.get_future_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.schedule.models.DayManager.get_future_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return only future Day objects.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.schedule.models.DayManager.today">
+<code class="descname">today</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/schedule/models.html#DayManager.today"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.schedule.models.DayManager.today" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Day for the current day</p>
 </dd></dl>
 
 </dd></dl>
@@ -637,6 +655,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.schedule.models.DayType.end_time">
+<code class="descname">end_time</code><a class="headerlink" href="#intranet.apps.schedule.models.DayType.end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Time the school day ends.
+Returns None if there are no blocks.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.schedule.models.DayType.id">
 <code class="descname">id</code><a class="headerlink" href="#intranet.apps.schedule.models.DayType.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -651,6 +676,12 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.schedule.models.DayType.no_school">
+<code class="descname">no_school</code><a class="headerlink" href="#intranet.apps.schedule.models.DayType.no_school" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if no blocks are scheduled.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.schedule.models.DayType.objects">
 <code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.schedule.models.DayType.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -660,6 +691,13 @@ object the first time, the query is executed.</p>
 <code class="descname">special</code><a class="headerlink" href="#intranet.apps.schedule.models.DayType.special" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.schedule.models.DayType.start_time">
+<code class="descname">start_time</code><a class="headerlink" href="#intranet.apps.schedule.models.DayType.start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Time the school day begins.
+Returns None if there are no blocks.</p>
 </dd></dl>
 
 </dd></dl>
