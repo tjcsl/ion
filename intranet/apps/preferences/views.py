@@ -300,6 +300,7 @@ def preferences_view(request):
             preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
             bus_route_form = BusRouteForm(user, initial=bus_route)
         else:
+            bus_route_form = None
             preferred_pic = None
             preferred_pic_form = None
 
