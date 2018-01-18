@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from io import StringIO
-import datetime
+from django.utils import timezone
 
 from django.core.management import call_command
 
@@ -22,7 +22,7 @@ class ScheduleTest(IonTestCase):
         snow_daytype = DayType.objects.get_or_create(name="No School -- Snow Day",
                                                      special=True)[0]
 
-        day = Day.objects.get_or_create(date=datetime.date.today(), day_type=snow_daytype)[0]
+        day = Day.objects.get_or_create(date=timezone.now().date(), day_type=snow_daytype)[0]
 
         # Test Snow Days
         self.assertEqual(Day.objects.today(), day)
