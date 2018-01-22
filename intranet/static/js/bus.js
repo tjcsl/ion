@@ -5,6 +5,7 @@ $(function() {
     let base_url = window.location.host;
 
     bus.sendUpdate = function (data) {
+        console.log('Sending data:', data)
         socket.send(JSON.stringify(data));
     };
 
@@ -43,9 +44,20 @@ $(function() {
             this.buttonTemplate = _.template($('#action-button-view').html());
             this.searchTemplate = _.template($('#search-widget-view').html());
             this.model = [];
-            this.icon = 'fa-search';
-            this.text = 'search for bus';
-            this.action = 'search';
+            if (!window.isAdmin) {
+                console.log('Not admin');
+            } else {
+                console.log('Admin');
+            }
+            if (!window.isAdmin) {
+                this.icon = 'fa-search';
+                this.text = 'search for bus';
+                this.action = 'search';
+            } else {
+                this.icon = 'fa-check-square';
+                this.text = 'mark bus arrived';
+                this.action = 'arrive';
+            }
 
             this.clicked = false;
             this.hlBus = null;
@@ -84,8 +96,21 @@ $(function() {
             let busList = [];
             if (action === 'search') {
                 busList = routeList.filter(bus => bus.attributes.status === 'a')
+                                   .filter(bus => bus.attributes.route_name.includes('JT'))
                                    .map(bus => bus.attributes);
-            } else {
+            } else if (action === 'arrive') {
+                busList = routeList.filter(bus => !bus.attributes.route_name.includes('JT'))
+                                   .map(bus => {
+                                       if (bus.attributes.status === 'a') {
+                                           // TODO: less hacky deep copy
+                                           let attr = JSON.parse(JSON.stringify(bus.attributes));
+                                           attr.route_name = `Mark ${bus.attributes.route_name} on time`;
+                                           return attr;
+                                       } else {
+                                           return bus.attributes;
+                                       }
+                                   });
+            } else if (action === 'assign') {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
                                    .map(bus => bus.attributes);
             }
@@ -94,7 +119,16 @@ $(function() {
                 'valueField': 'route_name',
                 'labelField': 'route_name',
                 'placeholder': action,
-                'searchField': 'route_name'
+                'searchField': 'route_name',
+                'sortField': [
+                    {
+                        field: 'route_name',
+                        direction: 'asc'
+                    },
+                    {
+                        field: '$score'
+                    }
+                ]
             })[0].selectize.focus();
             return this;
         },
@@ -112,6 +146,25 @@ $(function() {
                 let route = this.model.findWhere({route_name: e.target.value}).attributes;
                 route.space = this.selected.id;
                 route.status = 'a';
+                bus.sendUpdate(route);
+            } else if (this.action === 'arrive') {
+                let route_name = '';
+                let st = '';
+                // TODO: this is also super hacky
+                // Essentially, this checks if the selected route has "Mark"
+                // at the beginning, implying that it's to be marked on time.
+                if (e.target.value.indexOf('Mark') === 0) {
+                    route_name = e.target.value.split(' ')[1];
+                    st = 'o';
+                    console.log('a', bus);
+                } else {
+                    route_name = e.target.value;
+                    st = 'a';
+                    console.log('b', bus);
+                }
+                console.log(bus);
+                let route = this.model.findWhere({route_name: route_name}).attributes;
+                route.status = st;
                 bus.sendUpdate(route);
             }
 
@@ -138,6 +191,9 @@ $(function() {
                 case 'unassign':
                     this.unassignBus();
                     break;
+                case 'arrive':
+                    this.arriveBus();
+                    break;
                 default:
                     break;
             }
@@ -160,6 +216,10 @@ $(function() {
             route.space = '';
             bus.sendUpdate(route);
         },
+        arriveBus: function () {
+            this.clicked = true;
+            this.render();
+        },
         handleEmptySpace: function (space) {
             if (!isAdmin) {
                 return;
@@ -181,9 +241,15 @@ $(function() {
             this.render();
         },
         handleDeselectSpace: function () {
-            this.icon = 'fa-search';
-            this.text = 'search for bus';
-            this.action = 'search';
+            if (!window.isAdmin) {
+                this.icon = 'fa-search';
+                this.text = 'search for bus';
+                this.action = 'search';
+            } else {
+                this.icon = 'fa-check-square';
+                this.text = 'mark bus arrived';
+                this.action = 'arrive';
+            }
             this.render();
         }
     });

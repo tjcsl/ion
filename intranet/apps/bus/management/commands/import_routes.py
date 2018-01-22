@@ -11,6 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         reader = csv.reader(open("routes.csv", "r"))
+        Route.objects.all().delete()
         for row in reader:
             name, = row
             Route.objects.create(route_name=name, status="o")
