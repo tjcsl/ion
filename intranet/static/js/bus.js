@@ -156,11 +156,9 @@ $(function() {
                 if (e.target.value.indexOf('Mark') === 0) {
                     route_name = e.target.value.split(' ')[1];
                     st = 'o';
-                    console.log('a', bus);
                 } else {
                     route_name = e.target.value;
                     st = 'a';
-                    console.log('b', bus);
                 }
                 console.log(bus);
                 let route = this.model.findWhere({route_name: route_name}).attributes;
@@ -258,6 +256,7 @@ $(function() {
         initialize: function () {
             _.bindAll(this, 'render');
             this.template = _.template($('#map-view').html());
+            this.userRoute = null;
             this.model = [];
             this.hlRouteNames = [];
             this.selected = null;
@@ -275,6 +274,7 @@ $(function() {
             var container = this.$el,
                 renderedContent = this.template({}),
                 hlRouteNames = this.hlRouteNames,
+                userRoute = this.userRoute,
                 collection = this.model;
             container.html(renderedContent);
             var draw = SVG.adopt(container.find('svg')[0]);
@@ -293,6 +293,11 @@ $(function() {
 
                         if (hlRouteNames.includes(route.attributes.route_name)) {
                             space.style.fill = '#0048ab';
+                            text.fill('white');
+                        }
+
+                        if (route.attributes.route_name === userRoute && hlRouteNames.length === 0) {
+                            space.style.fill = '#e00000';
                             text.fill('white');
                         }
                     }
@@ -334,11 +339,17 @@ $(function() {
             this.selected = space;
         },
 
-        deselectSpace: function (e) {
+        deselectSpace: function () {
             if (this.selected) {
                 this.selected.style.stroke = 'none';
                 this.selected = null;
                 Backbone.trigger('deselectSpace');
+            }
+        },
+
+        highlightUserBus: function (bus) {
+            if (!this.userRoute) {
+                this.userRoute = bus.route_name;
             }
         }
     });
@@ -446,6 +457,7 @@ $(function() {
             this.user_bus = this.user_bus ? this.user_bus : new bus.Route();
             this.personalStatusView.model = this.user_bus;
 
+            this.mapView.highlightUserBus(this.user_bus.attributes);
 
             // FIXME: hacky solution to reset action button.
             Backbone.trigger('deselectSpace');
