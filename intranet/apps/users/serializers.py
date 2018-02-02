@@ -93,11 +93,13 @@ class UserSerializer(serializers.ModelSerializer):
     websites = serializers.StringRelatedField(many=True)
     picture = HyperlinkedImageField(view_name="api_user_profile_picture_default", format="jpg")
 
+    absences = serializers.IntegerField(source="absence_count")
+
     class Meta:
         model = User
         fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name',
                   'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'phones', 'websites', 'counselor', 'address',
-                  'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student')
+                  'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'absences')
 
 
 class ClassSerializer(serializers.Serializer):
