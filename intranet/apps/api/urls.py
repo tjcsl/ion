@@ -4,6 +4,7 @@ from django.conf.urls import url
 
 from .views import api_root
 from ..announcements import api as announcements_api
+from ..bus import api as bus_api
 from ..eighth.views import api as eighth_api
 from ..emerg import api as emerg_api
 from ..schedule import api as schedule_api
@@ -35,4 +36,6 @@ urlpatterns = [
     url(r"^/schedule$", schedule_api.DayList.as_view(), name="api_schedule_day_list"),
     url(r"^/schedule/(?P<date>.*)$", schedule_api.DayDetail.as_view(), name="api_schedule_day_detail"),
     url(r"^/emerg$", emerg_api.emerg_status, name="api_emerg_status"),
+    url(r"^/bus$", bus_api.RouteList.as_view(), name="api_bus_list"),
+    url(r"^/bus/(?P<pk>[0-9]+)$", bus_api.RouteDetail.as_view(), name="api_bus_detail"),
 ]
