@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+cd /home/ubuntu
+
 function devconfig() {
     python3 -c "
 import json

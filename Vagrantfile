@@ -67,7 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.network :private_network, ip: '192.168.50.50'
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/vagrant-nfs", type: :nfs
+  config.vm.synced_folder ".", "/vagrant-nfs", type: :nfs, nfs_udp: false
   config.bindfs.default_options = {
     force_user:   'ubuntu',
     force_group:  'ubuntu',
