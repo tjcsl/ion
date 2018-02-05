@@ -34,6 +34,9 @@ NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
 ENABLE_WAITLIST = True
 ENABLE_BUS_APP = True
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+REDIS_PASSWORD = ""
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
@@ -41,7 +44,7 @@ ENABLE_BUS_APP = True
 # In production, Nginx filters requests that are not in this list. If this is
 # not done, an email failure notification gets sent whenever someone messes with
 # the HTTP Host header.
-ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["ion-balancer.tjhsst.edu", "ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 
@@ -369,10 +372,6 @@ if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
     for key in CACHE_AGE:
         CACHE_AGE[key] = 60
 
-# Cacheops configuration
-# may be removed in the future
-CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
-
 # CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
 CACHEOPS = {
@@ -387,11 +386,6 @@ CACHEOPS = {
 if not TESTING:
     # Settings for django-redis-sessions
     SESSION_ENGINE = "redis_sessions.session"
-
-    SESSION_REDIS_HOST = "127.0.0.1"
-    SESSION_REDIS_PORT = 6379
-    SESSION_REDIS_DB = 0
-    SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
 
     SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
@@ -408,16 +402,6 @@ CACHES = {
 if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     CACHES["default"] = {"BACKEND": "intranet.utils.cache.DummyCache"}
     # extension of django.core.cache.backends.dummy.DummyCache
-else:
-    CACHES["default"] = {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {
-            "PARSER_CLASS": "redis.connection.HiredisParser",
-            "PICKLE_VERSION": 4,
-        },
-        "KEY_PREFIX": VIRTUAL_ENV
-    }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 AD_REALM = "LOCAL.TJHSST.EDU"
@@ -776,3 +760,15 @@ elif PRODUCTION or SECRET_DATABASE_URL is not None:
 else:
     # Default testing db config.
     DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
+
+if not TESTING:
+    CACHES["default"] = {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": REDIS_HOST + ":" + str(REDIS_PORT),
+        "OPTIONS": {
+            "PASSWORD": REDIS_PASSWORD,
+            "PARSER_CLASS": "redis.connection.HiredisParser",
+            "PICKLE_VERSION": 4,
+        },
+        "KEY_PREFIX": VIRTUAL_ENV
+    }
