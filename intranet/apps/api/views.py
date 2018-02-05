@@ -87,5 +87,9 @@ def api_root(request, format=None):
             "Get eighth signups for a specific scheduled activity",
             perma_reverse(request, "api_eighth_scheduled_activity_signup_list", kwargs={"scheduled_activity_id": 889})
         ]
-    })))
+        }), ("Bus", {
+            "/bus": ["Get bus list", perma_reverse(request, "api_bus_list")],
+            "/bus/<pk>": ["Get detail about specific route", perma_reverse(request, "api_bus_detail", kwargs={"pk": 3})],
+        })
+    ))
     return Response(views)
