@@ -74,8 +74,8 @@ def list_sponsor_view(request):
                     "\n".join([x.full_title for x in row[1]]),
                     "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
                     row[0].contracted_eighth,
-                    "\n".join([x.members.count() for x in row[1]]),
-                    "\n".join([x.get_true_capacity() for x in row[1]])
+                    "\n".join([str(x.members.count()) for x in row[1]]),
+                    "\n".join([str(x.get_true_capacity()) for x in row[1]])
                 ])
             return response
 
