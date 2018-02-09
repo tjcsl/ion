@@ -9,10 +9,10 @@ from .serializers import RouteSerializer
 
 class RouteList(generics.ListAPIView):
     """API endpoint that retrieves information about buses.
-    
+
     /api/bus: retrieve a list of all buses\n
     /api/bus/num: retrieve information about bus number num
-    
+
     """
 
     serializer_class = RouteSerializer
