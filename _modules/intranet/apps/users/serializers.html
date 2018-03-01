@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.serializers &#8212; TJ Intranet v3 (Build #4260) documentation</title>
+    <title>intranet.apps.users.serializers &#8212; TJ Intranet v3 (Build #4262) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4260)',
+        VERSION:     'v3 (Build #4262)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -232,11 +232,13 @@
     <span class="n">websites</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">StringRelatedField</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">picture</span> <span class="o">=</span> <span class="n">HyperlinkedImageField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_user_profile_picture_default&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;jpg&quot;</span><span class="p">)</span>
 
+    <span class="n">absences</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;absence_count&quot;</span><span class="p">)</span>
+
 <div class="viewcode-block" id="UserSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;ion_username&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;display_name&#39;</span><span class="p">,</span> <span class="s1">&#39;full_name&#39;</span><span class="p">,</span> <span class="s1">&#39;short_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;middle_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="s1">&#39;tj_email&#39;</span><span class="p">,</span> <span class="s1">&#39;emails&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span> <span class="s1">&#39;graduation_year&#39;</span><span class="p">,</span> <span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;user_type&#39;</span><span class="p">,</span> <span class="s1">&#39;phones&#39;</span><span class="p">,</span> <span class="s1">&#39;websites&#39;</span><span class="p">,</span> <span class="s1">&#39;counselor&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;picture&#39;</span><span class="p">,</span> <span class="s1">&#39;is_eighth_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_announcements_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_teacher&#39;</span><span class="p">,</span> <span class="s1">&#39;is_student&#39;</span><span class="p">)</span></div></div>
+                  <span class="s1">&#39;picture&#39;</span><span class="p">,</span> <span class="s1">&#39;is_eighth_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_announcements_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_teacher&#39;</span><span class="p">,</span> <span class="s1">&#39;is_student&#39;</span><span class="p">,</span> <span class="s1">&#39;absences&#39;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ClassSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.ClassSerializer">[docs]</a><span class="k">class</span> <span class="nc">ClassSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
