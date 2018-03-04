@@ -6,7 +6,7 @@ from .models import Sign
 
 
 class SignAdmin(admin.ModelAdmin):
-    list_display = ('name', 'display', 'status')
+    list_display = ('name', 'display')
 
 
 admin.site.register(Sign, SignAdmin)
