@@ -11,4 +11,5 @@ urlpatterns = [
     url(r"^/add$", views.add_poll_view, name="add_poll"),
     url(r"^/modify/(?P<poll_id>\d+)$", views.modify_poll_view, name="modify_poll"),
     url(r"^/delete/(?P<poll_id>\d+)$", views.delete_poll_view, name="delete_poll"),
+    url(r"^/download/(?P<poll_id>\d+)$", views.csv_results, name="poll_csv_results")
 ]

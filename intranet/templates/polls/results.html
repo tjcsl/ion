@@ -50,12 +50,13 @@
         <a href="{% url 'polls' %}" class="button print-hide">
             <i class="fa fa-arrow-left"></i> Polls
         </a> {% if show_answers %}
-            &nbsp; <a href="#" class="button small-button print-hide" id="user-sels">Show User Selections</a><br />
+            &nbsp; <a href="#" class="button small-button print-hide" id="user-sels">Show User Selections</a>
         {% else %}
-            &nbsp; <a href="?show_answers=1" class="button small-button print-hide">Show answers</a><br />
+            &nbsp; <a href="?show_answers=1" class="button small-button print-hide">Show answers</a>
         {% endif %}
+        &nbsp; <a href="{% url 'poll_csv_results' poll.id %}" class="button small-button print-hide">Download as CSV</a><br />
         <h2>Results: {{ poll }}</h2>
-        
+
         <ol class="questions">
             {% for q in questions %}
                 <li id="question-{{ q.question.num }}"><b>{{ q.question.question|safe }}</b>

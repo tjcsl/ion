@@ -2,6 +2,8 @@
 
 import logging
 import json
+import csv
+from collections import OrderedDict
 
 from django import http
 from django.conf import settings
@@ -39,6 +41,46 @@ def polls_view(request):
 
     context = {"polls": polls.order_by("-end_time"), "is_polls_admin": is_polls_admin}
     return render(request, "polls/home.html", context)
+
+
+@login_required
+@deny_restricted
+def csv_results(request, poll_id):
+    """TODO: Docstring for csv_results.
+
+    :request: TODO
+    :returns: TODO
+
+    """
+    is_polls_admin = request.user.has_admin_permission("polls")
+    if not is_polls_admin:
+        return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
+
+    dict_list = list()
+    p = Poll.objects.get(id=poll_id)
+    for u in p.get_users_voted():
+        answers = Answer.objects.filter(question__poll=p, user=u)
+        answer_dict = OrderedDict()
+        answer_dict['Username'] = u.username
+        answer_dict['First'] = u.first_name
+        answer_dict['Last'] = u.last_name
+        for answer in answers:
+            question = answer.question.question
+            if answer.choice:
+                answer_dict[question] = answer.choice
+            elif answer.answer:
+                answer_dict[question] = answer.answer
+            elif answer.clear_vote:
+                answer_dict[question] = 'Cleared'
+            else:
+                answer_dict[question] = 'None'
+        dict_list.append(answer_dict)
+
+    response = http.HttpResponse(content_type="text/csv")
+    w = csv.DictWriter(response, dict_list[0].keys())
+    w.writeheader()
+    w.writerows(dict_list)
+    return response
 
 
 @login_required
