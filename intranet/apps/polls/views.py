@@ -46,12 +46,6 @@ def polls_view(request):
 @login_required
 @deny_restricted
 def csv_results(request, poll_id):
-    """TODO: Docstring for csv_results.
-
-    :request: TODO
-    :returns: TODO
-
-    """
     is_polls_admin = request.user.has_admin_permission("polls")
     if not is_polls_admin:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
