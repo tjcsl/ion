@@ -88,4 +88,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     destination: ".ssh/#{devconfig['ssh_key']}.pub"
 
   config.vm.provision "shell", path: "config/provision_vagrant.sh"
+
+  if ARGV[0] == "ssh"
+      config.ssh.username = "ubuntu"
+  end
 end

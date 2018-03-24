@@ -8,6 +8,10 @@ with open('/home/ubuntu/intranet/config/devconfig.json', 'r') as f:
     print(json.load(f)['$1'])"
 }
 
+sudo su - ubuntu
+cd /home/ubuntu
+sudo cp -pr /home/vagrant/.ssh /home/ubuntu
+sudo chown -R ubuntu: /home/ubuntu/.ssh
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
