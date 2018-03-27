@@ -4,30 +4,53 @@ from django.db import models
 
 
 class Page(models.Model):
+    """
+        iframe: True if page is just an iframe
+        url: url for iframe (if iframe is True)
+        sandbox: whether the iframe should be sandboxed
+                 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
+
+        template: the path to the template (for server side rendering)
+        button: True if there should be a nav button
+        order: index at which button should be placed
+
+        signs: set of signs which display this Page
+    """
     iframe = models.BooleanField(default=False)
-    template = models.CharField(max_length=50, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+    sandbox = models.BooleanField(default=True)
+
+    template = models.CharField(max_length=50, null=True, blank=True)
     button = models.CharField(max_length=30, null=True, blank=True)
     order = models.IntegerField(default=0)
 
+    def __str__(self):
+        if self.iframe:
+            url = self.url[:10]
+            url = url + "..." if len(self.url) > 10 else url
+            return "iframe ({})".format(url)
+
 
 class Sign(models.Model):
-    """ name
-            A friendly name for the display
-        display
-            An internal code sent from the display
-        status
-            One of auto, eighth, schedule, status, url
-        eighth_block_increment
-            The block_increment if the status is eighth
-        url
-            The url if the status is url.
+    """
+        name: friendly display name [required]
+        display: unique name (should match hostname of pi/compute stick) [required]
+
+        eighth_block_increment: ...
+        landscape: if display is in landscape orientation
+        map_location: location of display on map
+
+        lock_page: if set, the signage will only display this page
+        default_page: if set, the signage will revert to this page after a set
+                      amount of time
+        pages: a list of pages
     """
     name = models.CharField(max_length=1000)
     display = models.CharField(max_length=100, unique=True)
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     landscape = models.BooleanField(default=False)
     map_location = models.CharField(max_length=20, null=True, blank=True)
+    img_path = models.CharField(max_length=100, default="https://c1.staticflickr.com/5/4331/36927945575_c2c09e44db_k.jpg")
 
     lock_page = models.ForeignKey(Page,
                                   on_delete=models.SET_NULL,
@@ -39,7 +62,7 @@ class Sign(models.Model):
                                      null=True,
                                      blank=True,
                                      related_name="_unused_2")
-    pages = models.ManyToManyField(Page)
+    pages = models.ManyToManyField(Page, related_name="signs")
 
     def __str__(self):
         return "{} ({})".format(self.name, self.display)
