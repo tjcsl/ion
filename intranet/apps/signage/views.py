@@ -5,8 +5,9 @@ import logging
 from django import http
 from django.conf import settings
 from django.shortcuts import render
-from django.views.decorators.clickjacking import xframe_options_exempt
+# from django.views.decorators.clickjacking import xframe_options_exempt
 
+from .models import Sign
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..users.models import User
@@ -30,14 +31,18 @@ def check_internal_ip(request):
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
 
-@xframe_options_exempt
-def signage_display(request, display_id=None):
+def signage_display(request, display_id):
     check_ip = check_internal_ip(request)
     if check_ip:
         return check_ip
+    sign = Sign.objects.get(display=display_id)
+    context = {
+        "sign": sign
+    }
+    return render(request, "signage/base.html", context)
 
 
-@xframe_options_exempt
+# @xframe_options_exempt
 def eighth_signage(request, block_id=None, block_increment=0):
     internal_ip = check_internal_ip(request)
     if internal_ip:

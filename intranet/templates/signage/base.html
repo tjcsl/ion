@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Ion Signage</title>
+    </head>
+    <body class="{% if sign.landscape %}landscape{% else %}portrait{% endif %}">
+        {% for page in sign.pages.all %}
+        <section class="{% if page.iframe %}iframe{% endif %}">
+            {% if page.iframe %}
+            <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}/>
+            {% else %}
+            Pass
+            {% endif %}
+        </section>
+        {% endfor %}
+    </body>
+</html>
