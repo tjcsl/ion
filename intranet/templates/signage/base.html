@@ -1,4 +1,5 @@
 {% load static %}
+{% load signage %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,9 +11,10 @@
         {% for page in sign.pages.all %}
         <section class="{% if page.iframe %}iframe{% endif %}">
             {% if page.iframe %}
-            <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}/>
+            <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
+            </iframe>
             {% else %}
-            Pass
+            {{ page | render_page }}
             {% endif %}
         </section>
         {% endfor %}
