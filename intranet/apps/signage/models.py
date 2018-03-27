@@ -16,11 +16,14 @@ class Page(models.Model):
 
         signs: set of signs which display this Page
     """
+    name = models.CharField(max_length=50)
+
     iframe = models.BooleanField(default=False)
     url = models.URLField(null=True, blank=True)
     sandbox = models.BooleanField(default=True)
 
     template = models.CharField(max_length=50, null=True, blank=True)
+    function = models.CharField(max_length=50, null=True, blank=True)
     button = models.CharField(max_length=30, null=True, blank=True)
     order = models.IntegerField(default=0)
 
@@ -28,7 +31,9 @@ class Page(models.Model):
         if self.iframe:
             url = self.url[:10]
             url = url + "..." if len(self.url) > 10 else url
-            return "iframe ({})".format(url)
+            return "{} ({})".format(self.name, url)
+        else:
+            return "{}".format(self.name)
 
 
 class Sign(models.Model):
