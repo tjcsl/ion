@@ -7,7 +7,7 @@ register = template.Library()
 
 
 @register.filter(name="render_page")
-def render_page(page):
+def render_page(page, sign):
     """ Renders the template at page.template
     """
     template_name = page.template if page.template else page.name
@@ -16,5 +16,5 @@ def render_page(page):
         context_method = getattr(pages, page.function)
     else:
         context_method = getattr(pages, page.name)
-    context = context_method()
+    context = context_method(page, sign)
     return render_to_string(template, context)

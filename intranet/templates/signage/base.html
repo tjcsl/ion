@@ -6,17 +6,26 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Ion Signage</title>
+        <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+        <script type="text/javascript">
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/signage/serviceworker.js');
+            }
+        </script>
+        <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
     </head>
     <body class="{% if sign.landscape %}landscape{% else %}portrait{% endif %}">
-        {% for page in sign.pages.all %}
-        <section class="{% if page.iframe %}iframe{% endif %}">
-            {% if page.iframe %}
-            <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
-            </iframe>
-            {% else %}
-            {{ page | render_page }}
-            {% endif %}
-        </section>
-        {% endfor %}
+        <div class="signage-container">
+            {% for page in sign.pages.all %}
+            <section class="page {% if page.iframe %}iframe{% endif %}">
+                {% if page.iframe %}
+                <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
+                </iframe>
+                {% else %}
+                {{ page | render_page:sign }}
+                {% endif %}
+            </section>
+            {% endfor %}
+        </div>
     </body>
 </html>
