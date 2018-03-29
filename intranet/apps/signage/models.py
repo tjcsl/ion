@@ -24,7 +24,7 @@ class Page(models.Model):
 
     template = models.CharField(max_length=50, null=True, blank=True)
     function = models.CharField(max_length=50, null=True, blank=True)
-    button = models.CharField(max_length=30, null=True, blank=True)
+    button = models.CharField(max_length=140, null=True, blank=True)
     order = models.IntegerField(default=0)
 
     def __str__(self):
