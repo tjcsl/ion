@@ -2,6 +2,7 @@
 
 /* Some notes:
  *      - I hacked together a routing thing and never ended up using backbone
+ *      - Right now, the cache seems to cache a new copy of the file every reload
  * */
 
 var networkDataReceived = false;
@@ -9,15 +10,15 @@ var offline = false; // This isn't used for anything useful
 var active = null;
 
 var setActive = function (id) {
-    $('.active').removeClass('active');
+    $('.signage-section.active').removeClass('active');
     page = document.getElementById(id);
     if (page) {
         $(page).addClass('active');
-        $('.signage-nav').addClass('show-back');
+        // $('.signage-nav').addClass('show-back');
         active = id;
         window.location.hash = `#page-${id}`;
     } else {
-        $('.signage-nav').removeClass('show-back');
+        // $('.signage-nav').removeClass('show-back');
         active = 'home';
         window.location.hash = '#page-home';
     }
@@ -28,6 +29,13 @@ var resetPage = function () {
     if (window.location.hash) {
         pageid = window.location.hash.split('-')[1];
         setActive(pageid);
+    }
+    if (window.lockPage) {
+        $('.signage-nav').addClass('lock');
+        setActive(window.lockPage);
+        console.log(window.lockPage);
+    } else {
+        $('.signage-nav').removeClass('lock');
     }
 };
 
@@ -42,7 +50,7 @@ updatePage = function (data) {
 
     if (!navigator.onLine) {
         console.log('offline :(');
-        $('.message').addClass('offline');
+        $('.signage-message').addClass('offline');
         offline = true;
     }
 };
@@ -82,6 +90,7 @@ reloadPage = function () {
 
 window.addEventListener('online', function () {
     console.log('online!');
+    $('.signage-message').removeClass('offline');
     reloadPage();
     if (active) {
         console.log('setting active');
@@ -91,7 +100,7 @@ window.addEventListener('online', function () {
 
 window.addEventListener('offline', function () {
     console.log('offline :(');
-    $('.message').addClass('offline');
+    $('.signage-message').addClass('offline');
     offline = true;
 });
 
@@ -124,6 +133,6 @@ window.onload = function () {
         if (min < 10) {
             min = '0' + min;
         }
-        $('.time').html(hr + ':' + min + ' ' + ampm);
+        $('.signage-home .time').html(hr + ':' + min + ' ' + ampm);
     }, 1000);
 };
