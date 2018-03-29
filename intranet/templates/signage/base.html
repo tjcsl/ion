@@ -9,6 +9,9 @@
         <meta name="viewport" content="width=device-width" />
         <title>Ion Signage</title>
 
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
+
         {% stylesheet 'base' %}
         {% stylesheet 'page_base' %}
         {% stylesheet 'dashboard' %}
@@ -23,6 +26,7 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/signage/serviceworker.js');
             }
+            window.lockedPage = '{{ sign.lock_page.pk }}';
         </script>
         <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
@@ -47,7 +51,7 @@
                 </div>
             </section>
             {% for page in sign.pages.all %}
-            <section class="page{% if page.iframe %} iframe{% endif %}" id="{{ page.pk }}">
+            <section class="page{% if page.iframe %} iframe{% else %} server{% endif %}" id="{{ page.pk }}">
                 {% if page.iframe %}
                 <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
                 </iframe>
@@ -56,6 +60,17 @@
                 {% endif %}
             </section>
             {% endfor %}
+        </div>
+        <nav class="signage-nav">
+                <a href="#page-home" data-page="home" class="signage-home-button"><i class="fa fa-2x fa-arrow-left"></i></a>
+            {% for page in sign.pages.all %}
+                {% if page.button %}
+                <a href="#page-{{ page.pk }}" data-page="{{ page.pk }}"><i class="fa fa-2x {{ page.button }}"></i></a>
+                {% endif %}
+            {% endfor %}
+        </nav>
+        <div class="message">
+            This sign is currently offline. Some features might not work.
         </div>
     </body>
 </html>

@@ -11,7 +11,7 @@ class Page(models.Model):
                  https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
 
         template: the path to the template (for server side rendering)
-        button: True if there should be a nav button
+        button: the name of the fontawesome icon (ex: "fa-chrome")
         order: index at which button should be placed
 
         signs: set of signs which display this Page
