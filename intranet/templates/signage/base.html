@@ -26,14 +26,14 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/signage/serviceworker.js');
             }
-            window.lockedPage = '{{ sign.lock_page.pk }}';
+            window.lockPage = '{{ sign.lock_page.pk }}';
         </script>
         <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
     </head>
-    <body class="{% if sign.landscape %}landscape{% else %}portrait{% endif %}">
+    <body class="signage {% if sign.landscape %}landscape{% else %}portrait{% endif %}">
         <div class="signage-container">
-            <section class="home" style="background-image: url('{{ sign.img_path }}')">
+            <section class="signage-section signage-home home" style="background-image: url('{{ sign.img_path }}')">
                 <div class="wrapper">
                     <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
                     <br />
@@ -51,9 +51,9 @@
                 </div>
             </section>
             {% for page in sign.pages.all %}
-            <section class="page{% if page.iframe %} iframe{% else %} server{% endif %}" id="{{ page.pk }}">
+            <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %}" id="{{ page.pk }}">
                 {% if page.iframe %}
-                <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
+                <iframe class="signage-iframe" src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
                 </iframe>
                 {% else %}
                 {{ page | render_page:page_args }}
@@ -61,8 +61,8 @@
             </section>
             {% endfor %}
         </div>
-        <nav class="signage-nav">
-                <a href="#page-home" data-page="home" class="signage-home-button"><i class="fa fa-2x fa-arrow-left"></i></a>
+        <nav class="signage-nav show-back">
+                <a href="#page-home" data-page="home" class="signage-home-button"><i class="fa fa-2x fa-home"></i></a>
             {% for page in sign.pages.all %}
                 {% if page.button %}
                 {# TODO: less hacky way of detecting button type #}
@@ -74,7 +74,7 @@
                 {% endif %}
             {% endfor %}
         </nav>
-        <div class="message">
+        <div class="signage-message">
             This sign is currently offline. Some features might not work.
         </div>
     </body>
