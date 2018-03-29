@@ -22,6 +22,12 @@ section {
 
     background-color: #f2f2f4;
 
+    &.server {
+        color: black;
+        font-size: 20px;
+        text-align: center;
+    }
+
     &.active {
         transform: translateX(0);
     }
@@ -78,6 +84,53 @@ section.home {
                 width: 50%;
             }
         }
+    }
+}
+
+.message {
+    position: fixed;
+    width: 100vw;
+    display: none;
+
+    &.offline {
+        background-color: red;
+        display: block;
+        margin: 0;
+        padding: 5px 0;
+        color: white;
+        bottom: 0;
+    }
+}
+
+.signage-nav {
+    position: fixed;
+    right: 0;
+    width: 5vw;
+    height: calc(100vh - 20px);
+
+    background-color: #f2f2f4;
+    opacity: 0.8;
+
+    padding: 10px 0;
+    overflow-y: scroll;
+
+    a {
+        color: #484848;
+        padding: 20px 0;
+        display: block;
+
+        i {
+           // otherwise, clicking on buttons sometimes registers as a click on the icon.
+           pointer-events: none;
+        }
+    }
+
+    .signage-home-button {
+        display: none;
+    }
+
+    &.show-back .signage-home-button {
+        display: block;
     }
 }
 

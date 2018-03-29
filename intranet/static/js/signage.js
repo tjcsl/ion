@@ -1,8 +1,35 @@
 /* global $ */
 
+/* Some notes:
+ *      - I hacked together a routing thing and never ended up using backbone
+ * */
+
 var networkDataReceived = false;
-var offline = false;
+var offline = false; // This isn't used for anything useful
 var active = null;
+
+var setActive = function (id) {
+    $('.active').removeClass('active');
+    page = document.getElementById(id);
+    if (page) {
+        $(page).addClass('active');
+        $('.signage-nav').addClass('show-back');
+        active = id;
+        window.location.hash = `#page-${id}`;
+    } else {
+        $('.signage-nav').removeClass('show-back');
+        active = 'home';
+        window.location.hash = '#page-home';
+    }
+};
+
+var resetPage = function () {
+    console.log('Resetting Page');
+    if (window.location.hash) {
+        pageid = window.location.hash.split('-')[1];
+        setActive(pageid);
+    }
+};
 
 updatePage = function (data) {
     console.log('Writing new page');
@@ -10,7 +37,14 @@ updatePage = function (data) {
     let html = parser.parseFromString(data, 'text/html');
     $('body').empty();
     $('body').append($(html).find('body').children());
-    console.log($(html));
+
+    resetPage();
+
+    if (!navigator.onLine) {
+        console.log('offline :(');
+        $('.message').addClass('offline');
+        offline = true;
+    }
 };
 
 networkUpdate = function () {
@@ -45,12 +79,6 @@ reloadPage = function () {
     fetchFromCache();
 };
 
-var setActive = function (id) {
-    $('.active').removeClass('active');
-    page = document.getElementById(id);
-    $(page).addClass('active');
-    active = id;
-};
 
 window.addEventListener('online', function () {
     console.log('online!');
@@ -63,13 +91,23 @@ window.addEventListener('online', function () {
 
 window.addEventListener('offline', function () {
     console.log('offline :(');
+    $('.message').addClass('offline');
     offline = true;
 });
 
 window.onload = function () {
+    $('.signage-nav').on('click', 'a', function (e) {
+        page = $(e.target).data('page');
+        console.log(e);
+        console.log(page);
+        setActive(page);
+    });
+
     window.setTimeout(function () {
         reloadPage();
     }, 20 * 60 * 1000);
+
+    resetPage();
 
     setInterval(function() {
         var now = new Date();
