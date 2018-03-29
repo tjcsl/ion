@@ -65,7 +65,12 @@
                 <a href="#page-home" data-page="home" class="signage-home-button"><i class="fa fa-2x fa-arrow-left"></i></a>
             {% for page in sign.pages.all %}
                 {% if page.button %}
+                {# TODO: less hacky way of detecting button type #}
+                {% if "<" in page.button %}
+                <a href="#page-{{ page.pk }}" data-page="{{ page.pk }}">{{ page.button|safe }}</a>
+                {% else %}
                 <a href="#page-{{ page.pk }}" data-page="{{ page.pk }}"><i class="fa fa-2x {{ page.button }}"></i></a>
+                {% endif %}
                 {% endif %}
             {% endfor %}
         </nav>
