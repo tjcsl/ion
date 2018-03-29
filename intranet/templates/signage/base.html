@@ -1,23 +1,53 @@
 {% load static %}
 {% load signage %}
+{% load pipeline %}
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Ion Signage</title>
-        <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+
+        {% stylesheet 'base' %}
+        {% stylesheet 'page_base' %}
+        {% stylesheet 'dashboard' %}
+        {% stylesheet 'theme.blue' %}
+        {% stylesheet 'schedule' %}
+        {% stylesheet 'login' %}
+
+        {% stylesheet 'signage.base' %}
+        {% stylesheet 'signage.touch' %}
+
         <script type="text/javascript">
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/signage/serviceworker.js');
             }
         </script>
+        <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
     </head>
     <body class="{% if sign.landscape %}landscape{% else %}portrait{% endif %}">
         <div class="signage-container">
+            <section class="home" style="background-image: url('{{ sign.img_path }}')">
+                <div class="wrapper">
+                    <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+                    <br />
+                    <h1 class="name">{{ sign.name }}</h1>
+                    <br />
+                    <div class="time">&nbsp;</div>
+                    {% comment %}
+                    {% include "signage/ap_week_schedule.html" %}
+                    {% endcomment %}
+                    <div class="schedule-outer">
+                        {% with hide_arrows=1 hide_date=1 %}
+                        {% include "schedule/view.html" %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </section>
             {% for page in sign.pages.all %}
-            <section class="page {% if page.iframe %}iframe{% endif %}">
+            <section class="page{% if page.iframe %} iframe{% endif %}" id="{{ page.pk }}">
                 {% if page.iframe %}
                 <iframe src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
                 </iframe>

@@ -10,6 +10,7 @@ from django.shortcuts import render
 from .models import Sign
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
+from ..schedule.views import schedule_context
 from ..users.models import User
 from ...utils.serialization import safe_json
 
@@ -36,9 +37,8 @@ def signage_display(request, display_id):
     if check_ip:
         return check_ip
     sign = Sign.objects.get(display=display_id)
-    context = {
-        "sign": sign
-    }
+    context = schedule_context(request)
+    context["sign"] = sign
     return render(request, "signage/base.html", context)
 
 
