@@ -39,6 +39,7 @@ def signage_display(request, display_id):
     sign = Sign.objects.get(display=display_id)
     context = schedule_context(request)
     context["sign"] = sign
+    context["page_args"] = (sign, request)
     return render(request, "signage/base.html", context)
 
 
