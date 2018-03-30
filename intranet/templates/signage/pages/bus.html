@@ -1,0 +1,123 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load svg %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'polls' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.firstname = "{{ request.user.first_name }}";
+        window.isAdmin = {{ admin | yesno:"true,false" }};
+        window.isSignage = {{ signage | yesno:"true,false" }};
+        window.websocketHost = "{{ ws_host }}";
+        window.websocketProtocol = "{{ ws_protocol }}";
+        window.endHour = "{{ school_end_hour }}";
+        window.endMinute = "{{ school_end_time }}";
+        window.label_status_strings = {
+            "a": {
+                empty_text: "No buses have arrived yet.",
+                name: "Arrived",
+                personal: "already here!"
+            },
+            "o": {
+                empty_text: "All buses have arrived or are delayed.",
+                name: "On Time",
+                personal: "on time."
+            },
+            "d": {
+                empty_text: "No delays.",
+                name: "Delayed",
+                personal: "delayed. 😢"
+            },
+        };
+    </script>
+    <script type="text/javascript" src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/svg.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bus.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/pages/bus.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
+
+    <style type="text/css" media="screen">
+    svg {
+        width: 50%;
+        height: 90vh;
+        margin-top: 5vh;
+    }
+
+    .text {
+        position: absolute;
+        right: calc(5vw + 20px);
+        width: calc(50% - 5vw - 20px);
+        font-size: 36px;
+        background-color: white;
+        padding: 20px;
+        top: 200px;
+        display: inline-block;
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid #d8d8d8;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        margin-right: 6px;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% verbatim %}
+    <script type="text/template" id="personal-status"></script>
+    <script type="text/template" id="route-view">
+        <span class="route-name"><%= route_name %></span>
+        <br>
+        <% if (bus_number) { %>
+            <span class="bus-number"> #<%= bus_number %> </span>
+        <% } else { %>
+            <span class="bus-number"> No bus number recorded. </span>
+        <% } %>
+        <% if (isAdmin) { %>
+            <select name="status" id="<%= id %>">
+                <% for (var key in label_status_strings) { %>
+                    <option value="<%= key %>" <% if (key === status) print("selected") %>> <%= label_status_strings[key].name %> </option>
+                <% } %>
+            </select>
+        <% } %>
+    </script>
+    <script type="text/template" id="status-group-view">
+        <% console.log(name, empty_text, collection)%>
+        <h2 class="status"> <%= name %> </h2>
+        <% if (collection.length === 0) { %>
+            <h3 class="empty"> <%= empty_text %> </h3>
+        <% } %>
+    </script>
+    <script type="text/template" id="action-button-view">
+    </script>
+    <script type="text/template" id="search-widget-view">
+        <div class="search-widget">
+            <i class="back-button fa fa-arrow-left"></i><select name="buses" id="buses"></select>
+        </div>
+    </script>
+    {% endverbatim %}
+    <script type="text/template" id="map-view">
+        {% svg 'optimized_bus_map_v2' %}
+    </script>
+    <div class="primary-content">
+        <div class="info"> </div>
+        <div class="text">
+            <i class="fa fa-bus"></i> Bus Board
+        </div>
+    </div>
+{% endblock %}

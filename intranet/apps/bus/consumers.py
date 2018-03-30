@@ -1,6 +1,14 @@
 from channels.generic.websockets import JsonWebsocketConsumer
+from channels.handler import AsgiRequest
+from django.conf import settings
 
 from .models import Route
+
+
+def check_internal_ip(request):
+    """ request is an AsgiRequest """
+    remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
+    return remote_addr in settings.INTERNAL_IPS
 
 
 class BusConsumer(JsonWebsocketConsumer):
@@ -16,7 +24,7 @@ class BusConsumer(JsonWebsocketConsumer):
     def connect(self, message):
         print("connected")
         print(message.user)
-        if not message.user.is_authenticated:
+        if not (message.user.is_authenticated or check_internal_ip(AsgiRequest(message))):
             self.close()
             return
         data = self._serialize(user=message.user)
