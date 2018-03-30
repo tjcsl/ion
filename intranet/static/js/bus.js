@@ -466,7 +466,12 @@ $(function() {
     });
 
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
-    let socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
+    let socket;
+    if (base_url !== '') {
+        socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
+    } else {
+        socket = new ReconnectingWebSocket(`${websocketProtocol}://${websocketHost}/bus/`);
+    }
     let disconnected = false;
     window.appView = new bus.AppView();
     console.log('Connected');
