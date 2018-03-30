@@ -48,6 +48,13 @@ updatePage = function (data) {
 
     resetPage();
 
+    $('.signage-nav').on('click', 'a', function (e) {
+        page = $(e.target).data('page');
+        console.log(e);
+        console.log(page);
+        setActive(page);
+    });
+
     if (!navigator.onLine) {
         console.log('offline :(');
         $('.signage-message').addClass('offline');
