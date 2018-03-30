@@ -56,7 +56,9 @@
                 <iframe class="signage-iframe" src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
                 </iframe>
                 {% else %}
-                {{ page | render_page:page_args }}
+                 <iframe class="signage-iframe" srcdoc="{{ page | render_page:page_args | force_escape }}">
+                {#{{ page | render_page:page_args }}#}
+                </iframe>
                 {% endif %}
             </section>
             {% endfor %}

@@ -1,10 +1,24 @@
 {# Announcements module for signage #}
+{% extends "page_base.html" %}
+
+{% load pipeline %}
 {% load dates %}
 
+{% block css %}
+
+{{ block.super }}
+{% stylesheet 'signage.page' %}
+{% stylesheet 'dashboard' %}
+{% stylesheet 'theme.blue' %}
+
+{% endblock %}
+
+{% block body %}
 <div class="page-announcements">
     <style>
     .page-announcements h2 {
         font-size: 30px;
+        text-align: center;
     }
     .page-announcements {
         font-size: 16px;
@@ -49,3 +63,4 @@
         {% endfor %}
     </div>
 </div>
+{% endblock body %}
