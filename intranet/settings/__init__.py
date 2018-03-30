@@ -34,6 +34,7 @@ NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
 ENABLE_WAITLIST = True
 ENABLE_BUS_APP = True
+ENABLE_BUS_DRIVER = True
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts

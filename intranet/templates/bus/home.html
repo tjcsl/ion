@@ -20,6 +20,7 @@
     <script type="text/javascript">
         window.firstname = "{{ request.user.first_name }}";
         window.isAdmin = {{ admin | yesno:"true,false" }};
+        window.enableBusDriver = {{ enable_bus_driver | yesno:"true,false" }}
         window.label_status_strings = {
             "a": {
                 empty_text: "No buses have arrived yet.",
@@ -40,6 +41,10 @@
     </script>
     <script type="text/javascript" src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/svg.min.js' %}"></script>
+    {% if enable_bus_driver %}
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    {% endif %}
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bus.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
@@ -92,6 +97,9 @@
     </script>
     {% endverbatim %}
     <script type="text/template" id="map-view">
+        {% if enable_bus_driver %}
+        <div id='map' class='busdriver-map'></div>
+        {% endif %}
         {% svg 'optimized_bus_map_v2' %}
     </script>
     <div class="primary-content">

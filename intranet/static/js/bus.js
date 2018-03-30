@@ -5,7 +5,7 @@ $(function() {
     let base_url = window.location.host;
 
     bus.sendUpdate = function (data) {
-        console.log('Sending data:', data)
+        console.log('Sending data:', data);
         socket.send(JSON.stringify(data));
     };
 
@@ -192,6 +192,11 @@ $(function() {
                 case 'arrive':
                     this.arriveBus();
                     break;
+                case 'vroom':
+                    if (enableBusDriver) {
+                        this.vroom();
+                        break;
+                    }
                 default:
                     break;
             }
@@ -218,18 +223,33 @@ $(function() {
             this.clicked = true;
             this.render();
         },
+        vroom: function () {
+            Backbone.trigger('vroom-vroom', this.selected);
+        },
         handleEmptySpace: function (space) {
-            if (!isAdmin) {
+            if (!isAdmin && enableBusDriver) {
+                this.icon = 'fa-bus';
+                this.text = 'skrt skrt';
+                this.action = 'vroom';
+                this.selected = space;
+                return this.render();
+            } else {
                 return;
             }
             this.icon = 'fa-plus-square';
             this.text = 'assign bus';
             this.action = 'assign';
             this.selected = space;
-            this.render();
+            return this.render();
         },
         handleFilledSpace: function (space) {
-            if (!isAdmin) {
+            if (!isAdmin && enableBusDriver) {
+                this.icon = 'fa-bus';
+                this.text = 'skrt skrt';
+                this.action = 'vroom';
+                this.selected = space;
+                return this.render();
+            } else {
                 return;
             }
             this.icon = 'fa-minus-square';
@@ -261,8 +281,15 @@ $(function() {
             this.hlRouteNames = [];
             this.selected = null;
 
+            // vroom vroom
+            this.busDriver = false;
+            this.mapbox = null;
+
             Backbone.on('searchForBus', this.selectBus, this);
             Backbone.on('deselectBus', this.deselectBus, this);
+            if (enableBusDriver) {
+                Backbone.on('vroom-vroom', this.vroom, this);
+            }
         },
 
         events: {
@@ -271,6 +298,10 @@ $(function() {
         },
 
         render: function () {
+            if (enableBusDriver && this.busDriver) {
+
+                return this;
+            }
             var container = this.$el,
                 renderedContent = this.template({}),
                 hlRouteNames = this.hlRouteNames,
@@ -350,6 +381,22 @@ $(function() {
         highlightUserBus: function (bus) {
             if (!this.userRoute) {
                 this.userRoute = bus.route_name;
+            }
+        },
+
+        vroom: function () {
+            console.log('Hi');
+            if (enableBusDriver) {
+                this.busDriver = true;
+                mapboxgl.accessToken = 'pk.eyJ1IjoibmFpdGlhbnoiLCJhIjoiY2pmY3p0cWQwMzZncjJ5bXpidDAybGw2aCJ9.-cGh2TszqtE9hxum3qM9Dw';
+                this.mapbox = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/satellite-v9',
+                    zoom: 19,
+                    bearing: -49,
+                    center: [-77.168763, 38.818662]
+                });
+                // this.render();
             }
         }
     });
@@ -467,9 +514,12 @@ $(function() {
 
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
     let socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
+    if (enableBusDriver) {
+        console.log('Bus Driver Enabled');
+    }
+    console.log('Connected');
     let disconnected = false;
     window.appView = new bus.AppView();
-    console.log('Connected');
 
     socket.onopen = () => {
         if (disconnected) {
@@ -497,4 +547,3 @@ $(function() {
 
     // window.personalStatusView = new bus.personalStatusView();
 });
-
