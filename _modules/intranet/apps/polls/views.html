@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4269) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4296) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4269)',
+        VERSION:     'v3 (Build #4296)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -141,6 +141,8 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
@@ -178,6 +180,40 @@
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="n">polls</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-end_time&quot;</span><span class="p">),</span> <span class="s2">&quot;is_polls_admin&quot;</span><span class="p">:</span> <span class="n">is_polls_admin</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;polls/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">csv_results</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">poll_id</span><span class="p">):</span>
+    <span class="n">is_polls_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_polls_admin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">dict_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">poll_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">get_users_voted</span><span class="p">():</span>
+        <span class="n">answers</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__poll</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">answer_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">answer_dict</span><span class="p">[</span><span class="s1">&#39;Username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">answer_dict</span><span class="p">[</span><span class="s1">&#39;First&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span>
+        <span class="n">answer_dict</span><span class="p">[</span><span class="s1">&#39;Last&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">last_name</span>
+        <span class="k">for</span> <span class="n">answer</span> <span class="ow">in</span> <span class="n">answers</span><span class="p">:</span>
+            <span class="n">question</span> <span class="o">=</span> <span class="n">answer</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">question</span>
+            <span class="k">if</span> <span class="n">answer</span><span class="o">.</span><span class="n">choice</span><span class="p">:</span>
+                <span class="n">answer_dict</span><span class="p">[</span><span class="n">question</span><span class="p">]</span> <span class="o">=</span> <span class="n">answer</span><span class="o">.</span><span class="n">choice</span>
+            <span class="k">elif</span> <span class="n">answer</span><span class="o">.</span><span class="n">answer</span><span class="p">:</span>
+                <span class="n">answer_dict</span><span class="p">[</span><span class="n">question</span><span class="p">]</span> <span class="o">=</span> <span class="n">answer</span><span class="o">.</span><span class="n">answer</span>
+            <span class="k">elif</span> <span class="n">answer</span><span class="o">.</span><span class="n">clear_vote</span><span class="p">:</span>
+                <span class="n">answer_dict</span><span class="p">[</span><span class="n">question</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cleared&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">answer_dict</span><span class="p">[</span><span class="n">question</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+        <span class="n">dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer_dict</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">dict_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">dict_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
 
 
 <span class="nd">@login_required</span>
