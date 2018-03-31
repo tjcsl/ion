@@ -23,6 +23,7 @@ setup(
     name="Ion",
     description="The next-generation Intranet platform for TJHSST",
     long_description=long_description,
+    long_description_content_type='text/x-rst; charset=UTF-8',
     author="The TJHSST Computer Systems Lab",
     author_email="intranet@tjhsst.edu",
     url="https://github.com/tjcsl/ion",
