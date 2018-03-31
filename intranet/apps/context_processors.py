@@ -120,6 +120,8 @@ def show_bus_button(request):
     now = datetime.datetime.now()
     window = datetime.timedelta(hours=1)
     today = Day.objects.today()
+    if settings.ENABLE_BUS_DRIVER:
+        return {'show_bus_nav': True}
     try:
         if today is None or today.day_type.no_school:
             return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}

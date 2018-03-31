@@ -44,6 +44,7 @@ $(function() {
             this.buttonTemplate = _.template($('#action-button-view').html());
             this.searchTemplate = _.template($('#search-widget-view').html());
             this.model = [];
+            this.busDriver = false;
             if (!window.isAdmin) {
                 console.log('Not admin');
             } else {
@@ -136,6 +137,9 @@ $(function() {
             if (this.clicked === false) {
                 return;
             }
+            if (this.busDriver) {
+                return;
+            }
             if (this.action === 'search') {
                 Backbone.trigger('searchForBus', e.target.value);
                 this.hlBus = e.target.value;
@@ -224,6 +228,7 @@ $(function() {
             this.render();
         },
         vroom: function () {
+            this.busDriver = true;
             Backbone.trigger('vroom-vroom', this.selected);
         },
         handleEmptySpace: function (space) {
@@ -283,10 +288,12 @@ $(function() {
 
             // vroom vroom
             this.busDriver = false;
+            this.busDriverBus = null;
             this.mapbox = null;
 
             Backbone.on('searchForBus', this.selectBus, this);
             Backbone.on('deselectBus', this.deselectBus, this);
+            Backbone.on('driveBus', this.driveBus, this);
             if (enableBusDriver) {
                 Backbone.on('vroom-vroom', this.vroom, this);
             }
@@ -294,7 +301,7 @@ $(function() {
 
         events: {
             'click path': 'selectSpace',
-            'click': 'deselectSpace'
+            'click': 'deselectSpace',
         },
 
         render: function () {
@@ -385,18 +392,117 @@ $(function() {
         },
 
         vroom: function () {
+            // Initializes busdriver
             console.log('Hi');
             if (enableBusDriver) {
                 this.busDriver = true;
+                $('svg').hide();
                 mapboxgl.accessToken = 'pk.eyJ1IjoibmFpdGlhbnoiLCJhIjoiY2pmY3p0cWQwMzZncjJ5bXpidDAybGw2aCJ9.-cGh2TszqtE9hxum3qM9Dw';
                 this.mapbox = new mapboxgl.Map({
                     container: 'map',
                     style: 'mapbox://styles/mapbox/satellite-v9',
                     zoom: 19,
                     bearing: -49,
-                    center: [-77.168763, 38.818662]
+                    center: [-77.16780704566747, 38.81931241913742]
                 });
+                this.mapbox.keyboard.disable();
+                this.mapbox.dragPan.disable();
+                this.mapbox.scrollZoom.disable();
+                this.mapbox.on('load', function () {
+                    // Callback hell, my old friend.
+                    this.mapbox.loadImage('/static/img/bus_top.png', function (err, img) {
+                        if (err) {
+                            throw err;
+                        }
+                        this.mapbox.addImage('bus', img);
+                        this.busDriverBus = {
+                            'speed': 0, // km/hr
+                            'direction': 0, // radians
+                            'acceleration': 0,
+                            'point': {
+                                'type': 'Point',
+                                'coordinates': [-77.16780704566747, 38.81931241913742]
+                            },
+                            'lastFrame': null
+                        };
+                        this.mapbox.addSource('bus-src', {
+                            type: 'geojson',
+                            data: this.busDriverBus.point
+                        });
+                        this.mapbox.addLayer({
+                            'id': 'bus',
+                            'type': 'symbol',
+                            'source': 'bus-src',
+                            'layout': {
+                                'icon-image': 'bus',
+                                'icon-rotation-alignment': 'map',
+                                'icon-size': 0.5
+                            }
+                        });
+                        requestAnimationFrame(this.animateBus.bind(this));
+                    }.bind(this));
+                }.bind(this));
                 // this.render();
+            }
+        },
+
+        driveBus: function (e) {
+            console.log(this.busDriverBus);
+            if (e.keyCode === 37 || e.keyCode === 65) {
+                this.busDriverBus.direction -= 0.1;
+            }
+            if (e.keyCode === 39 || e.keyCode === 68) {
+                this.busDriverBus.direction += 0.1;
+            }
+            if (e.keyCode === 38 || e.keyCode === 87){
+                this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
+            }
+            if (e.keyCode === 40 || e.keyCode === 83){
+                this.busDriverBus.speed = Math.max(this.busDriverBus.speed - 1, 0);
+            }
+        },
+
+        animateBus: function (time) {
+            if (enableBusDriver) {
+                if (!this.busDriverBus.lastFrame) {
+                    this.busDriverBus.lastFrame = time;
+                }
+                let t = (time - this.busDriverBus.lastFrame) / 1000; // Hack...
+                let speed = this.busDriverBus.speed;
+                let direction = this.busDriverBus.direction;
+                let point = this.busDriverBus.point;
+
+                let x = speed * t * Math.sin(direction) / (60 * 60 * 1000);
+                let y = speed * t * Math.cos(direction) / (60 * 60 * 1000);
+                let rad_lat = point.coordinates[1] * Math.PI / 180;
+                let old_lat = point.coordinates[1];
+                let old_lng = point.coordinates[0];
+                point.coordinates[0] += 111.320 * Math.cos(rad_lat) * x;
+                point.coordinates[1] += 110.574 * y;
+                if (Math.abs(x) !== 0 && Math.abs(y) !== 0) {
+                    console.log('------------------------------------');
+                    console.log('∆x', x);
+                    console.log('∆y', y);
+                    console.log('∆t', t);
+                    console.log('∆lng', 111.320 * Math.cos(rad_lat) * x);
+                    console.log('∆lat', 110.574 * y);
+                    console.log('oldlat', old_lat);
+                    console.log('oldlng', old_lng);
+                    console.log('newlat', point.coordinates[1]);
+                    console.log('newlng', point.coordinates[0]);
+                    console.log('bdb', this.busDriverBus);
+                }
+                this.mapbox.getSource('bus-src').setData(point);
+
+                this.mapbox.setLayoutProperty(
+                    'bus',
+                    'icon-rotate',
+                    direction * (180 / Math.PI)
+                );
+                this.mapbox.setCenter(this.busDriverBus.point.coordinates);
+
+                this.busDriverBus.lastFrame = time;
+                window.requestAnimationFrame(this.animateBus.bind(this));
             }
         }
     });
@@ -488,6 +594,9 @@ $(function() {
                 Messenger().error(data.error);
                 return;
             }
+            if (this.mapView.busDriver) {
+                return;
+            }
             this.routeList.reset(data.allRoutes);
             this.actionButtonView.model = this.routeList;
             this.mapView.model = this.routeList;
@@ -511,6 +620,13 @@ $(function() {
             this.render();
         }
     });
+
+    if (enableBusDriver) {
+        $('body').on('keydown', function (e) {
+            console.log('imPRESSive');
+            Backbone.trigger('driveBus', e);
+        });
+    }
 
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
     let socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
