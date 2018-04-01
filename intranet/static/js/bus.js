@@ -232,7 +232,7 @@ $(function() {
         vroom: function () {
             this.busDriver = true;
             this.icon = 'fa-arrow-left';
-            this.text = 'ran out of gas?';
+            this.text = 'run out of gas?';
             this.action = 'stop-bus';
             Messenger().post('Use the arrow keys or WASD to drive!');
             this.render();
