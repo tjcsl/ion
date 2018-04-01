@@ -1,6 +1,13 @@
 intranet\.apps\.signage package
 ===============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    intranet.apps.signage.templatetags
+
 Submodules
 ----------
 
@@ -16,6 +23,14 @@ intranet\.apps\.signage\.models module
 --------------------------------------
 
 .. automodule:: intranet.apps.signage.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet\.apps\.signage\.pages module
+-------------------------------------
+
+.. automodule:: intranet.apps.signage.pages
     :members:
     :undoc-members:
     :show-inheritance:

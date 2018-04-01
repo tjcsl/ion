@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #4323) documentation</title>
+    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #4326) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4323)',
+        VERSION:     'v3 (Build #4326)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -138,8 +138,16 @@
       
   <h1>Source code for intranet.apps.bus.consumers</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">channels.generic.websockets</span> <span class="k">import</span> <span class="n">JsonWebsocketConsumer</span>
+<span class="kn">from</span> <span class="nn">channels.handler</span> <span class="k">import</span> <span class="n">AsgiRequest</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Route</span>
+
+
+<div class="viewcode-block" id="check_internal_ip"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.check_internal_ip">[docs]</a><span class="k">def</span> <span class="nf">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; request is an AsgiRequest &quot;&quot;&quot;</span>
+    <span class="n">remote_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s2">&quot;HTTP_X_FORWARDED_FOR&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;HTTP_X_FORWARDED_FOR&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">remote_addr</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">INTERNAL_IPS</span></div>
 
 
 <div class="viewcode-block" id="BusConsumer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer">[docs]</a><span class="k">class</span> <span class="nc">BusConsumer</span><span class="p">(</span><span class="n">JsonWebsocketConsumer</span><span class="p">):</span>
@@ -155,7 +163,7 @@
 <div class="viewcode-block" id="BusConsumer.connect"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;connected&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">or</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">AsgiRequest</span><span class="p">(</span><span class="n">message</span><span class="p">))):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">return</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>

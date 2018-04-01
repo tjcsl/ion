@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #4323) documentation</title>
+    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #4326) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4323)',
+        VERSION:     'v3 (Build #4326)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -139,17 +139,14 @@
   <h1>Source code for intranet.apps.signage.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="k">import</span> <span class="n">xframe_options_exempt</span>
+<span class="c1"># from django.views.decorators.clickjacking import xframe_options_exempt</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Sign</span>
-<span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="k">import</span> <span class="n">Announcement</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..eighth.serializers</span> <span class="k">import</span> <span class="n">EighthBlockDetailSerializer</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="k">import</span> <span class="n">schedule_context</span>
@@ -174,174 +171,19 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.signage_display">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">signage_display</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">display_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">sign</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="n">display_id</span><span class="p">)</span>
-        <span class="n">sign_status</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">status</span>
-    <span class="k">except</span> <span class="n">Sign</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">sign</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">sign_status</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
-
-    <span class="k">if</span> <span class="s2">&quot;status&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">sign_status</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
-
-    <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;id=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">display_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;mac&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot;&amp;mac=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">])</span>
-
-    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;eighth&quot;</span><span class="p">:</span>
-        <span class="c1"># return eighth_signage(request, None, sign.block_increment)</span>
-        <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span><span class="p">:</span>
-            <span class="n">iframe</span> <span class="o">=</span> <span class="s2">&quot;/signage/eighth?no_reload&amp;block_increment=</span><span class="si">{}</span><span class="s2">&amp;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">iframe</span> <span class="o">=</span> <span class="s2">&quot;/signage/eighth?no_reload&amp;&quot;</span>
-        <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">use_frameset</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">frameset_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">iframe</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">iframe</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;schedule&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">schedule_signage</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;touch&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">touch_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;url&quot;</span> <span class="ow">or</span> <span class="s2">&quot;url&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sign</span><span class="o">.</span><span class="n">url</span> <span class="k">if</span> <span class="n">sign</span> <span class="k">else</span> <span class="s2">&quot;about:blank&quot;</span><span class="p">)</span>
-        <span class="n">use_header</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;use_header&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="ow">or</span> <span class="n">sign</span><span class="o">.</span><span class="n">use_header</span> <span class="ow">or</span> <span class="kc">True</span>
-        <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">use_frameset</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">frameset_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">use_header</span><span class="o">=</span><span class="n">use_header</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">check_show_eighth</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span><span class="p">:</span>
-                <span class="n">iframe</span> <span class="o">=</span> <span class="s2">&quot;/signage/eighth?block_increment=</span><span class="si">{}</span><span class="s2">&amp;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">iframe</span> <span class="o">=</span> <span class="s2">&quot;/signage/eighth?no_reload&amp;&quot;</span>
-            <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">use_frameset</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">frameset_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">iframe</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">iframe</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s2">&quot;autourl&quot;</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sign</span><span class="o">.</span><span class="n">url</span> <span class="k">if</span> <span class="n">sign</span> <span class="k">else</span> <span class="s2">&quot;about:blank&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">use_frameset</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">frameset_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="touch_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.touch_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">touch_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">sign</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">landscape</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="n">block_increment</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span><span class="p">:</span>
-        <span class="n">block_increment</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span>
-
-    <span class="n">zoom</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;zoom&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">zoom</span><span class="p">:</span>
-        <span class="n">zoom</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">zoom</span>
-
-    <span class="n">landscape</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;landscape&quot;</span><span class="p">,</span> <span class="n">landscape</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">landscape</span><span class="p">:</span>
-        <span class="n">landscape</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="n">default_page</span> <span class="o">=</span> <span class="s2">&quot;clock&quot;</span>
-    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">check_show_eighth</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
-        <span class="n">default_page</span> <span class="o">=</span> <span class="s2">&quot;eighth&quot;</span>
-
-    <span class="n">map_location</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sign</span> <span class="ow">and</span> <span class="n">sign</span><span class="o">.</span><span class="n">map_location</span><span class="p">:</span>
-        <span class="n">map_location</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">map_location</span>
-
+<div class="viewcode-block" id="signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.signage_display">[docs]</a><span class="k">def</span> <span class="nf">signage_display</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">display_id</span><span class="p">):</span>
+    <span class="n">check_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">check_ip</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_ip</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="n">display_id</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;senior_graduation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zoom</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;eighth_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;/signage/eighth?no_reload&amp;touch=1&amp;detail=1&amp;block_increment=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_increment</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;calendar_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://postman.tjhsst.edu/&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;map_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SIGNAGE_MAP_URL</span><span class="p">,</span> <span class="n">map_location</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;map_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;default_page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_page</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;public_announcements&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;landscape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landscape</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/touch.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sign&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;page_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/base.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="schedule_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.schedule_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">schedule_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;hide_arrows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/embed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="status_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.status_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/status.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="iframe_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.iframe_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">use_header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;use_header&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_header</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/iframe.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="frameset_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.frameset_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">frameset_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;&amp;&quot;</span> <span class="k">if</span> <span class="s2">&quot;?&quot;</span> <span class="ow">in</span> <span class="n">url</span> <span class="k">else</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;zoom=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;framezoom&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/frameset.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="frameset_signage_header"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.frameset_signage_header">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">frameset_signage_header</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">internal_ip</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/frameset-header.html&quot;</span><span class="p">,</span> <span class="p">{})</span></div>
-
-
-<div class="viewcode-block" id="eighth_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.eighth_signage">[docs]</a><span class="nd">@xframe_options_exempt</span>
-<span class="k">def</span> <span class="nf">eighth_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block_increment</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="c1"># @xframe_options_exempt</span>
+<div class="viewcode-block" id="eighth_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.eighth_signage">[docs]</a><span class="k">def</span> <span class="nf">eighth_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block_increment</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">internal_ip</span>
@@ -404,25 +246,25 @@
             <span class="n">prev_block</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-        <span class="s2">&quot;real_user&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
-        <span class="s2">&quot;block_info&quot;</span><span class="p">:</span> <span class="n">block_info</span><span class="p">,</span>
-        <span class="s2">&quot;activities_list&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">block_info</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]),</span>
-        <span class="s2">&quot;active_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span>
-        <span class="s2">&quot;active_block_current_signup&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;no_title&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_title&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
-        <span class="s2">&quot;no_detail&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;detail&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
-        <span class="s2">&quot;no_rooms&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_rooms&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
-        <span class="s2">&quot;use_scroll&quot;</span><span class="p">:</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">touch_signage</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;no_scroll&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
-        <span class="s2">&quot;do_reload&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_reload&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
-        <span class="s2">&quot;preload_background&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;reload_mins&quot;</span><span class="p">:</span> <span class="n">reload_mins</span><span class="p">,</span>
-        <span class="s2">&quot;no_user_display&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;no_fav&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;touch_signage&quot;</span><span class="p">:</span> <span class="n">touch_signage</span><span class="p">,</span>
-        <span class="s2">&quot;next_block&quot;</span><span class="p">:</span> <span class="n">next_block</span><span class="p">,</span>
-        <span class="s2">&quot;prev_block&quot;</span><span class="p">:</span> <span class="n">prev_block</span>
-    <span class="p">}</span>
+            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+            <span class="s2">&quot;real_user&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+            <span class="s2">&quot;block_info&quot;</span><span class="p">:</span> <span class="n">block_info</span><span class="p">,</span>
+            <span class="s2">&quot;activities_list&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">block_info</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;active_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span>
+            <span class="s2">&quot;active_block_current_signup&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;no_title&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_title&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+            <span class="s2">&quot;no_detail&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;detail&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+            <span class="s2">&quot;no_rooms&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_rooms&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+            <span class="s2">&quot;use_scroll&quot;</span><span class="p">:</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">touch_signage</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;no_scroll&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+            <span class="s2">&quot;do_reload&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;no_reload&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+            <span class="s2">&quot;preload_background&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;reload_mins&quot;</span><span class="p">:</span> <span class="n">reload_mins</span><span class="p">,</span>
+            <span class="s2">&quot;no_user_display&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;no_fav&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;touch_signage&quot;</span><span class="p">:</span> <span class="n">touch_signage</span><span class="p">,</span>
+            <span class="s2">&quot;next_block&quot;</span><span class="p">:</span> <span class="n">next_block</span><span class="p">,</span>
+            <span class="s2">&quot;prev_block&quot;</span><span class="p">:</span> <span class="n">prev_block</span>
+            <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/display.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>

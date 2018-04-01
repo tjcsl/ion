@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.itemreg.apps &#8212; TJ Intranet v3 (Build #4326) documentation</title>
+    <title>intranet.apps.signage.pages &#8212; TJ Intranet v3 (Build #4326) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
@@ -136,13 +136,38 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.itemreg.apps</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.apps</span> <span class="k">import</span> <span class="n">AppConfig</span>
+  <h1>Source code for intranet.apps.signage.pages</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file contains logic for server-side rendered pages</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="k">import</span> <span class="n">Announcement</span>
+<span class="kn">from</span> <span class="nn">..schedule.models</span> <span class="k">import</span> <span class="n">Day</span>
 
 
-<div class="viewcode-block" id="ItemregConfig"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.apps.ItemregConfig">[docs]</a><span class="k">class</span> <span class="nc">ItemregConfig</span><span class="p">(</span><span class="n">AppConfig</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;itemreg&#39;</span></div>
+<div class="viewcode-block" id="hello_world"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.pages.hello_world">[docs]</a><span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> from </span><span class="si">{}</span><span class="s2"> says Hello&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sign</span><span class="o">.</span><span class="n">name</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="announcements"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.pages.announcements">[docs]</a><span class="k">def</span> <span class="nf">announcements</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;public_announcements&quot;</span><span class="p">:</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())}</span></div>
+
+
+<div class="viewcode-block" id="bus"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.pages.bus">[docs]</a><span class="k">def</span> <span class="nf">bus</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;signage&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;ws_protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;ws&#39;</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span> <span class="k">else</span> <span class="s1">&#39;wss&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ws_host&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">(),</span>
+            <span class="c1"># We add one because Python datetimes are zero-indexed, JS is not</span>
+            <span class="s1">&#39;school_end_hour&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;school_end_time&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">minute</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">}</span></div>
 </pre></div>
 
     </div>
