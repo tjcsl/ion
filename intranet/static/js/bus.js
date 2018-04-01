@@ -234,6 +234,7 @@ $(function() {
             this.icon = 'fa-arrow-left';
             this.text = 'ran out of gas?';
             this.action = 'stop-bus';
+            Messenger().post('Use the arrow keys or WASD to drive!');
             this.render();
             Backbone.trigger('vroom-vroom', this.selected);
         },
@@ -462,7 +463,7 @@ $(function() {
         },
 
         animateBus: function (time) {
-            if (document.hidden) {
+            if (document.hidden || time - this.busDriver.lastFrame > 2000) {
                 console.log('hidden');
                 this.busDriverBus.lastFrame = time;
                 return;
