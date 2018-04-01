@@ -393,7 +393,7 @@ $(function() {
 
         vroom: function () {
             // Initializes busdriver
-            console.log('Hi');
+            //console.log('Hi');
             if (enableBusDriver) {
                 this.busDriver = true;
                 $('svg').hide();
@@ -403,7 +403,7 @@ $(function() {
                     style: 'mapbox://styles/mapbox/satellite-v9',
                     zoom: 19,
                     bearing: -49,
-                    center: [-77.16780704566747, 38.81931241913742]
+                    center: [-77.16772, 38.81932]
                 });
                 this.mapbox.keyboard.disable();
                 this.mapbox.dragPan.disable();
@@ -417,11 +417,11 @@ $(function() {
                         this.mapbox.addImage('bus', img);
                         this.busDriverBus = {
                             'speed': 0, // km/hr
-                            'direction': 0, // radians
+                            'direction': -1 * Math.PI / 20, // radians
                             'acceleration': 0,
                             'point': {
                                 'type': 'Point',
-                                'coordinates': [-77.16780704566747, 38.81931241913742]
+                                'coordinates': [-77.16772, 38.81932]
                             },
                             'lastFrame': null
                         };
@@ -623,7 +623,7 @@ $(function() {
 
     if (enableBusDriver) {
         $('body').on('keydown', function (e) {
-            console.log('imPRESSive');
+            //console.log('imPRESSive');
             Backbone.trigger('driveBus', e);
         });
     }
