@@ -402,7 +402,7 @@ $(function() {
                     container: 'map',
                     style: 'mapbox://styles/mapbox/satellite-v9',
                     zoom: 19,
-                    bearing: -49,
+                    // bearing: -49,
                     center: [-77.16780704566747, 38.81931241913742]
                 });
                 this.mapbox.keyboard.disable();
@@ -449,10 +449,10 @@ $(function() {
         driveBus: function (e) {
             console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= 0.1;
+                this.busDriverBus.direction -= 5 * Math.PI / 180;
             }
             if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += 0.1;
+                this.busDriverBus.direction += 5 * Math.PI / 180;
             }
             if (e.keyCode === 38 || e.keyCode === 87){
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
@@ -467,18 +467,29 @@ $(function() {
                 if (!this.busDriverBus.lastFrame) {
                     this.busDriverBus.lastFrame = time;
                 }
+                // t should be ms
                 let t = (time - this.busDriverBus.lastFrame) / 1000; // Hack...
                 let speed = this.busDriverBus.speed;
                 let direction = this.busDriverBus.direction;
                 let point = this.busDriverBus.point;
 
+                // km/hr * hr/60min * min/60s * s/1000ms = km/ms
+                // mapbox does angles where pointing up is 0˚ and it increases clockwise
+                // equatorial radius of Earth = 6,378.1370 km
+                // polar radius of Earth = 6,356.7523 km
+
+                 // length of 1 deg equatorial longitude
+                let deg_lng_eq = 6378.1370 * 2 * Math.PI / 360;
+                // length of 1 deg equatorial latitude
+                let deg_lat_eq = 6356.7523 * 2 * Math.PI / 360;
+
                 let x = speed * t * Math.sin(direction) / (60 * 60 * 1000);
                 let y = speed * t * Math.cos(direction) / (60 * 60 * 1000);
-                let rad_lat = point.coordinates[1] * Math.PI / 180;
                 let old_lat = point.coordinates[1];
                 let old_lng = point.coordinates[0];
-                point.coordinates[0] += 111.320 * Math.cos(rad_lat) * x;
-                point.coordinates[1] += 110.574 * y;
+                let rad_lat = old_lat * Math.PI / 180;
+                point.coordinates[0] += deg_lng_eq * Math.cos(rad_lat) * x; // longitude
+                point.coordinates[1] += deg_lat_eq * y; // latitude
                 if (Math.abs(x) !== 0 && Math.abs(y) !== 0) {
                     console.log('------------------------------------');
                     console.log('∆x', x);
