@@ -655,7 +655,6 @@ $(function() {
     }
 
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
-    if (enableBusDriver) {
         console.log('Bus Driver Enabled');
     }
     let socket;
