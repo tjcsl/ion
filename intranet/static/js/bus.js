@@ -137,7 +137,7 @@ $(function() {
             if (this.clicked === false) {
                 return;
             }
-            if (this.busDriver) {
+            if (!isAdmin && this.busDriver) {
                 return;
             }
             if (this.action === 'search') {
@@ -245,8 +245,6 @@ $(function() {
                 this.action = 'vroom';
                 this.selected = space;
                 return this.render();
-            } else {
-                return;
             }
             this.icon = 'fa-plus-square';
             this.text = 'assign bus';
@@ -261,8 +259,6 @@ $(function() {
                 this.action = 'vroom';
                 this.selected = space;
                 return this.render();
-            } else {
-                return;
             }
             this.icon = 'fa-minus-square';
             this.text = 'unassign bus';
