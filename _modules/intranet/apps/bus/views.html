@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.bus.views &#8212; TJ Intranet v3 (Build #4296) documentation</title>
+    <title>intranet.apps.bus.views &#8212; TJ Intranet v3 (Build #4323) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4296)',
+        VERSION:     'v3 (Build #4323)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -148,7 +148,10 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">Http404</span><span class="p">(</span><span class="s2">&quot;Bus app not enabled.&quot;</span><span class="p">)</span>
     <span class="n">is_bus_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">)</span>
-    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="n">is_bus_admin</span><span class="p">}</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="n">is_bus_admin</span><span class="p">,</span>
+            <span class="s1">&#39;enable_bus_driver&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_DRIVER</span>
+          <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;bus/home.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span></div>
 </pre></div>
 
