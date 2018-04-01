@@ -423,7 +423,8 @@ $(function() {
                                 'type': 'Point',
                                 'coordinates': [-77.16772, 38.81932]
                             },
-                            'lastFrame': null
+                            'lastFrame': null,
+                            'startTime': new Date()
                         };
                         this.mapbox.addSource('bus-src', {
                             type: 'geojson',
@@ -452,10 +453,10 @@ $(function() {
             }
             console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction -= 3 * this.busDriverBus.speed / 2 * Math.PI / 180;
             }
             if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction += 3 * this.busDriverBus.speed / 2 * Math.PI / 180;
             }
             if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
@@ -466,7 +467,9 @@ $(function() {
         },
 
         animateBus: function (time) {
-            if (!document.hasFocus()) {
+            if (document.hidden) {
+                console.log('hidden');
+                this.busDriverBus.lastFrame = time;
                 return;
             }
             if (enableBusDriver) {
