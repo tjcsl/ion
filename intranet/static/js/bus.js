@@ -307,6 +307,7 @@ $(function() {
             Backbone.on('searchForBus', this.selectBus, this);
             Backbone.on('deselectBus', this.deselectBus, this);
             Backbone.on('driveBus', this.driveBus, this);
+            Backbone.on('slowBus', this.slowBus, this);
             if (enableBusDriver) {
                 Backbone.on('vroom-vroom', this.vroom, this);
             }
@@ -432,7 +433,8 @@ $(function() {
                             'coordinates': [-77.16772, 38.81932]
                         },
                         'lastFrame': null,
-                        'elapsedTime': 0
+                        'elapsedTime': 0,
+                        'pressed': false
                     };
                     this.busDriverEl = $('.busdriver-bus#bd-bus');
                     this.busDriverEl.addClass('vroom');
@@ -446,18 +448,30 @@ $(function() {
             if (!this.busDriverBus) {
                 return;
             }
-            //console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
                 this.busDriverBus.direction -= this.busDriverBus.speed * Math.PI / 180;
+                this.busDriverBus.pressed = true;
             }
             if (e.keyCode === 39 || e.keyCode === 68) {
                 this.busDriverBus.direction += this.busDriverBus.speed * Math.PI / 180;
+                this.busDriverBus.pressed = true;
             }
             if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
+                this.busDriverBus.pressed = true;
             }
             if (e.keyCode === 40 || e.keyCode === 83) {
                 this.busDriverBus.speed = Math.max(this.busDriverBus.speed - 1, 0);
+                this.busDriverBus.pressed = true;
+            }
+        },
+
+        slowBus: function (e) {
+            if (!this.busDriverBus) {
+                return;
+            }
+            if (e.keyCode === 38 || e.keyCode === 87) {
+	        this.busDriverBus.pressed = false;
             }
         },
 
@@ -473,7 +487,9 @@ $(function() {
                 }
                 // t should be ms
                 let t = (time - this.busDriverBus.lastFrame) / 1000; // Hack...
-                this.busDriverBus.speed *= 0.993;
+                if (!this.busDriverBus.pressed) {
+                    this.busDriverBus.speed *= 0.993;
+                }
                 let speed = this.busDriverBus.speed;
                 let direction = this.busDriverBus.direction;
                 let point = this.busDriverBus.point;
@@ -636,6 +652,9 @@ $(function() {
     if (enableBusDriver) {
         $('body').on('keydown', function (e) {
             Backbone.trigger('driveBus', e);
+        });
+        $('body').on('keyup', function (e) {
+            Backbone.trigger('slowBus', e);
         });
     }
 
