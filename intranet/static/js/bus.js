@@ -401,7 +401,7 @@ $(function() {
                 this.mapbox = new mapboxgl.Map({
                     container: 'map',
                     style: 'mapbox://styles/mapbox/satellite-v9',
-                    zoom: 19,
+                    zoom: 18.5,
                     bearing: -49,
                     center: [-77.16772, 38.81932]
                 });
@@ -448,16 +448,18 @@ $(function() {
 
         driveBus: function (e) {
             console.log(this.busDriverBus);
-            if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= 5 * Math.PI / 180;
+	    if (this.busDriverBus.speed > 0) {
+                if (e.keyCode === 37 || e.keyCode === 65) {
+                    this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
+                }
+		if (e.keyCode === 39 || e.keyCode === 68) {
+		    this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
+                }
             }
-            if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += 5 * Math.PI / 180;
-            }
-            if (e.keyCode === 38 || e.keyCode === 87){
+            if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
             }
-            if (e.keyCode === 40 || e.keyCode === 83){
+            if (e.keyCode === 40 || e.keyCode === 83) {
                 this.busDriverBus.speed = Math.max(this.busDriverBus.speed - 1, 0);
             }
         },
