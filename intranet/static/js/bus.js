@@ -451,13 +451,11 @@ $(function() {
                 return;
             }
             console.log(this.busDriverBus);
-            if (this.busDriverBus.speed > 0) {
-                if (e.keyCode === 37 || e.keyCode === 65) {
-                    this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
-                }
+            if (e.keyCode === 37 || e.keyCode === 65) {
+                this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
+            }
             if (e.keyCode === 39 || e.keyCode === 68) {
-                    this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
-                }
+                this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
             }
             if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
