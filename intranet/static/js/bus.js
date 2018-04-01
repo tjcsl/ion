@@ -415,7 +415,7 @@ $(function() {
                     container: 'map',
                     style: 'mapbox://styles/mapbox/satellite-v9',
                     zoom: 18.5,
-                    // bearing: -49,
+                    bearing: -49,
                     center: [-77.16772, 38.81932]
                 });
                 this.mapbox.keyboard.disable();
@@ -508,8 +508,8 @@ $(function() {
                     console.log('bdb', this.busDriverBus);
                 }
 
-                // let degrees = (direction) * (180 / Math.PI) - 49 + 90;
-                let degrees = (direction) * (180 / Math.PI);
+                let degrees = (direction) * (180 / Math.PI) - 49 + 90;
+                // let degrees = (direction) * (180 / Math.PI);
                 this.busDriverEl.css({'transform' : 'rotate('+ degrees +'deg)'});
 
                 this.mapbox.setCenter(this.busDriverBus.point.coordinates);
