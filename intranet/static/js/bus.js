@@ -412,7 +412,7 @@ $(function() {
                     // Callback hell, my old friend.
                     this.busDriverBus = {
                         'speed': 0, // km/hr
-                        'direction': -1 * Math.PI / 20, // radians
+                        'direction': Math.PI / 16, // radians
                         'acceleration': 0,
                         'point': {
                             'type': 'Point',
