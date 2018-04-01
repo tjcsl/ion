@@ -410,38 +410,20 @@ $(function() {
                 this.mapbox.scrollZoom.disable();
                 this.mapbox.on('load', function () {
                     // Callback hell, my old friend.
-                    this.mapbox.loadImage('/static/img/bus_top.png', function (err, img) {
-                        if (err) {
-                            throw err;
-                        }
-                        this.mapbox.addImage('bus', img);
-                        this.busDriverBus = {
-                            'speed': 0, // km/hr
-                            'direction': -1 * Math.PI / 20, // radians
-                            'acceleration': 0,
-                            'point': {
-                                'type': 'Point',
-                                'coordinates': [-77.16772, 38.81932]
-                            },
-                            'lastFrame': null,
-                            'startTime': new Date()
-                        };
-                        this.mapbox.addSource('bus-src', {
-                            type: 'geojson',
-                            data: this.busDriverBus.point
-                        });
-                        this.mapbox.addLayer({
-                            'id': 'bus',
-                            'type': 'symbol',
-                            'source': 'bus-src',
-                            'layout': {
-                                'icon-image': 'bus',
-                                'icon-rotation-alignment': 'map',
-                                'icon-size': 0.5
-                            }
-                        });
-                        requestAnimationFrame(this.animateBus.bind(this));
-                    }.bind(this));
+                    this.busDriverBus = {
+                        'speed': 0, // km/hr
+                        'direction': -1 * Math.PI / 20, // radians
+                        'acceleration': 0,
+                        'point': {
+                            'type': 'Point',
+                            'coordinates': [-77.16772, 38.81932]
+                        },
+                        'lastFrame': null,
+                        'startTime': new Date()
+                    };
+                    this.busDriverEl = $('.busdriver-bus#bd-bus');
+                    this.busDriverEl.addClass('vroom');
+                    requestAnimationFrame(this.animateBus.bind(this));
                 }.bind(this));
                 // this.render();
             }
@@ -453,10 +435,10 @@ $(function() {
             }
             console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= 3 * this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
             }
             if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += 3 * this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
             }
             if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
@@ -512,13 +494,10 @@ $(function() {
                     console.log('newlng', point.coordinates[0]);
                     console.log('bdb', this.busDriverBus);
                 }
-                this.mapbox.getSource('bus-src').setData(point);
 
-                this.mapbox.setLayoutProperty(
-                    'bus',
-                    'icon-rotate',
-                    direction * (180 / Math.PI)
-                );
+                let degrees = (direction) * (180 / Math.PI) - 49 + 90;
+                this.busDriverEl.css({'transform' : 'rotate('+ degrees +'deg)'});
+
                 this.mapbox.setCenter(this.busDriverBus.point.coordinates);
 
                 this.busDriverBus.lastFrame = time;
