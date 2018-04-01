@@ -447,6 +447,9 @@ $(function() {
         },
 
         driveBus: function (e) {
+            if (!this.busDriverBus) {
+                return;
+            }
             console.log(this.busDriverBus);
             if (this.busDriverBus.speed > 0) {
                 if (e.keyCode === 37 || e.keyCode === 65) {
@@ -465,6 +468,9 @@ $(function() {
         },
 
         animateBus: function (time) {
+            if (!document.hasFocus()) {
+                return;
+            }
             if (enableBusDriver) {
                 if (!this.busDriverBus.lastFrame) {
                     this.busDriverBus.lastFrame = time;
