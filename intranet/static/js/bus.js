@@ -5,7 +5,7 @@ $(function() {
     let base_url = window.location.host;
 
     bus.sendUpdate = function (data) {
-        console.log('Sending data:', data);
+        //console.log('Sending data:', data);
         socket.send(JSON.stringify(data));
     };
 
@@ -446,7 +446,7 @@ $(function() {
             if (!this.busDriverBus) {
                 return;
             }
-            console.log(this.busDriverBus);
+            //console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
                 this.busDriverBus.direction -= this.busDriverBus.speed * Math.PI / 180;
             }
@@ -473,6 +473,7 @@ $(function() {
                 }
                 // t should be ms
                 let t = (time - this.busDriverBus.lastFrame) / 1000; // Hack...
+                this.busDriverBus.speed *= 0.993;
                 let speed = this.busDriverBus.speed;
                 let direction = this.busDriverBus.direction;
                 let point = this.busDriverBus.point;
@@ -494,7 +495,7 @@ $(function() {
                 let rad_lat = old_lat * Math.PI / 180;
                 point.coordinates[0] += deg_lng_eq * Math.cos(rad_lat) * x; // longitude
                 point.coordinates[1] += deg_lat_eq * y; // latitude
-                if (Math.abs(x) !== 0 && Math.abs(y) !== 0) {
+                /*if (Math.abs(x) !== 0 && Math.abs(y) !== 0) {
                     console.log('------------------------------------');
                     console.log('∆x', x);
                     console.log('∆y', y);
@@ -506,12 +507,10 @@ $(function() {
                     console.log('newlat', point.coordinates[1]);
                     console.log('newlng', point.coordinates[0]);
                     console.log('bdb', this.busDriverBus);
-                }
-
+                }*/
                 let degrees = (direction) * (180 / Math.PI) - 49 + 90;
                 // let degrees = (direction) * (180 / Math.PI);
                 this.busDriverEl.css({'transform' : 'rotate('+ degrees +'deg)'});
-
                 this.mapbox.setCenter(this.busDriverBus.point.coordinates);
 
                 this.busDriverBus.lastFrame = time;
@@ -622,7 +621,6 @@ $(function() {
                     return route.id === this.user_bus.id;
                 }
             });
-
 
             this.user_bus = this.user_bus ? this.user_bus : new bus.Route();
             this.personalStatusView.model = this.user_bus;
