@@ -201,6 +201,8 @@ $(function() {
                         this.vroom();
                         break;
                     }
+                case 'stop-bus':
+                    window.location = window.location;
                 default:
                     break;
             }
@@ -229,6 +231,10 @@ $(function() {
         },
         vroom: function () {
             this.busDriver = true;
+            this.icon = 'fa-arrow-left';
+            this.text = 'ran out of gas?';
+            this.action = 'stop-bus';
+            this.render();
             Backbone.trigger('vroom-vroom', this.selected);
         },
         handleEmptySpace: function (space) {
@@ -264,6 +270,13 @@ $(function() {
             this.render();
         },
         handleDeselectSpace: function () {
+            if (this.busDriver) {
+                this.icon = 'fa-arrow-left';
+                this.text = 'ran out of gas?';
+                this.action = 'stop-bus';
+                this.render();
+                return;
+            }
             if (!window.isAdmin) {
                 this.icon = 'fa-search';
                 this.text = 'search for bus';
@@ -419,7 +432,7 @@ $(function() {
                             'coordinates': [-77.16772, 38.81932]
                         },
                         'lastFrame': null,
-                        'startTime': new Date()
+                        'elapsedTime': 0
                     };
                     this.busDriverEl = $('.busdriver-bus#bd-bus');
                     this.busDriverEl.addClass('vroom');
@@ -435,10 +448,10 @@ $(function() {
             }
             console.log(this.busDriverBus);
             if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction -= this.busDriverBus.speed * Math.PI / 180;
             }
             if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += this.busDriverBus.speed / 2 * Math.PI / 180;
+                this.busDriverBus.direction += this.busDriverBus.speed * Math.PI / 180;
             }
             if (e.keyCode === 38 || e.keyCode === 87) {
                 this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
@@ -496,11 +509,13 @@ $(function() {
                 }
 
                 let degrees = (direction) * (180 / Math.PI) - 49 + 90;
+                // let degrees = (direction) * (180 / Math.PI);
                 this.busDriverEl.css({'transform' : 'rotate('+ degrees +'deg)'});
 
                 this.mapbox.setCenter(this.busDriverBus.point.coordinates);
 
                 this.busDriverBus.lastFrame = time;
+                this.busDriverBus.elapsedTime += t;
                 window.requestAnimationFrame(this.animateBus.bind(this));
             }
         }
@@ -622,7 +637,6 @@ $(function() {
 
     if (enableBusDriver) {
         $('body').on('keydown', function (e) {
-            //console.log('imPRESSive');
             Backbone.trigger('driveBus', e);
         });
     }
@@ -660,5 +674,12 @@ $(function() {
         disconnected = msg;
     };
 
-    // window.personalStatusView = new bus.personalStatusView();
+    if (enableBusDriver) {
+        $(window).unload(function () {
+            alert('hello');
+            alert(`You drove ${window.appView.mapView.busDriverBus.elapsedTime} milliseconds!`);
+            Backbone.trigger('recordScore', e);
+        });
+    }
+// window.personalStatusView = new bus.personalStatusView();
 });
