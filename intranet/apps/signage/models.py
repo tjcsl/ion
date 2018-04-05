@@ -27,6 +27,20 @@ class Page(models.Model):
     button = models.CharField(max_length=140, null=True, blank=True)
     order = models.IntegerField(default=0)
 
+    def deploy_to(self, displays=None, exclude=[]):
+        """
+        Deploys page to listed display (specify with display). If display is None,
+        deploy to all display. Can specify exclude for which display to exclude.
+        This overwrites the first argument.
+        """
+        if displays is None:
+            signs = Sign.objects.all()
+        else:
+            signs = Sign.objects.filter(display__in=displays)
+        for sign in signs.exclude(display__in=exclude):
+            sign.pages.add(self)
+            sign.save()
+
     def __str__(self):
         if self.iframe:
             url = self.url[:10]
