@@ -3,14 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #4330) documentation</title>
+    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #4333) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4330)',
+        VERSION:     'v3 (Build #4333)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -165,6 +165,20 @@
     <span class="n">function</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">button</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Page.deploy_to"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Page.deploy_to">[docs]</a>    <span class="k">def</span> <span class="nf">deploy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">displays</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deploys page to listed display (specify with display). If display is None,</span>
+<span class="sd">        deploy to all display. Can specify exclude for which display to exclude.</span>
+<span class="sd">        This overwrites the first argument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">displays</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">signs</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">signs</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">display__in</span><span class="o">=</span><span class="n">displays</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sign</span> <span class="ow">in</span> <span class="n">signs</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">display__in</span><span class="o">=</span><span class="n">exclude</span><span class="p">):</span>
+            <span class="n">sign</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">sign</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iframe</span><span class="p">:</span>
