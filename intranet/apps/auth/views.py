@@ -23,6 +23,7 @@ from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
 from ..events.models import Event
 from ..users.models import User
+from ..eighth.models import EighthBlock
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -179,6 +180,13 @@ class LoginView(View):
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
             default_next_page = "/"
+
+            # Checks if there is an EighthBlock today
+            todays_date = timezone.now().date()
+            is_eighth_today = EighthBlock.objects.filter(date=todays_date).exists()
+            # Checks other conditions, and redirects user to eighth_signup page
+            if is_eighth_today and datetime.now().hour == 12 and 20 <= datetime.now().minute <= 40 and request.user.is_student:
+                default_next_page = "eighth_signup"
 
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
