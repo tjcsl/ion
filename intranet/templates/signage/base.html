@@ -50,7 +50,7 @@
                 </div>
             </section>
             {% for page in sign.pages.all %}
-            <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %}" id="{{ page.pk }}">
+            <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %} {{ page.strip_links | yesno:"strip-links," }}" id="{{ page.pk }}">
                 {% if page.iframe %}
                 <iframe class="signage-iframe" src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
                 </iframe>

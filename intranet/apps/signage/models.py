@@ -14,6 +14,8 @@ class Page(models.Model):
         button: the name of the fontawesome icon (ex: "fa-chrome")
         order: index at which button should be placed
 
+        strip_links: whether we strip the links in the iframe (to prevent navigation away)
+
         signs: set of signs which display this Page
     """
     name = models.CharField(max_length=50)
@@ -26,6 +28,8 @@ class Page(models.Model):
     function = models.CharField(max_length=50, null=True, blank=True)
     button = models.CharField(max_length=140, null=True, blank=True)
     order = models.IntegerField(default=0)
+
+    strip_links = models.BooleanField(default=True)
 
     def deploy_to(self, displays=None, exclude=[]):
         """

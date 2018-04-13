@@ -37,6 +37,14 @@ var resetPage = function () {
     } else {
         $('.signage-nav').removeClass('lock');
     }
+
+    $('.signage-container').find('.strip-links iframe').each(function () {
+        $(this).contents().find('a').each(function() {
+            $(this).click(function (e) {
+                e.preventDefault();
+            });
+        });
+    });
 };
 
 updatePage = function (data) {
