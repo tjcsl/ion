@@ -31,7 +31,7 @@ class Page(models.Model):
 
     strip_links = models.BooleanField(default=True)
 
-    def deploy_to(self, displays=None, exclude=[]):
+    def deploy_to(self, displays=None, exclude=[], lock=[]):
         """
         Deploys page to listed display (specify with display). If display is None,
         deploy to all display. Can specify exclude for which display to exclude.
@@ -73,7 +73,7 @@ class Sign(models.Model):
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     landscape = models.BooleanField(default=False)
     map_location = models.CharField(max_length=20, null=True, blank=True)
-    img_path = models.CharField(max_length=100, default="https://c1.staticflickr.com/5/4331/36927945575_c2c09e44db_k.jpg")
+    img_path = models.CharField(max_length=250, default="https://c1.staticflickr.com/5/4331/36927945575_c2c09e44db_k.jpg")
 
     lock_page = models.ForeignKey(Page,
                                   on_delete=models.SET_NULL,
