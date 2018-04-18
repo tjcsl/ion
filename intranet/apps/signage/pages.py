@@ -25,7 +25,6 @@ def bus(page, sign, request):
             'signage': True,
             'ws_protocol': 'ws' if request.scheme == 'http' else 'wss',
             'ws_host': request.get_host(),
-            # We add one because Python datetimes are zero-indexed, JS is not
-            'school_end_hour': end_of_day.hour + 1,
-            'school_end_time': end_of_day.minute + 1
+            'school_end_hour': end_of_day.hour,
+            'school_end_time': end_of_day.minute
             }
