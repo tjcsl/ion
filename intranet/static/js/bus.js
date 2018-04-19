@@ -593,24 +593,13 @@ $(function() {
 
         render: function () {
             var container = this.$el;
-            // renderedContent = this.template();
             container.children().detach();
-            container.append(this.personalStatusView.render().el);
+            if (!window.isAdmin || window.isStudent) {
+                container.append(this.personalStatusView.render().el);
+            }
             container.append(this.actionButtonView.render().el);
             container.append(this.mapView.render().el);
 
-            // let statusGroups = this.routeList.groupBy('status');
-
-            // _.each(this.categories, function (cat) {
-            //     let statusGroup = new bus.StatusGroupModel({
-            //         name: window.label_status_strings[cat].name,
-            //         empty_text: window.label_status_strings[cat].empty_text,
-            //         collection: statusGroups[cat] || []
-            //     });
-            //     container.append(new bus.StatusGroupView({model: statusGroup }).render().el);
-            // });
-
-            // container.append(renderedContent);
             return this;
         },
 
