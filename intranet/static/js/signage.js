@@ -137,12 +137,12 @@ window.onload = function () {
         var now = new Date();
         var hr = now.getHours();
         var ampm = 'AM';
-        if (hr === 0) {
-            hr = 12;
-        }
-        if (hr > 12) {
+        if (hr >= 12) {
             hr -= 12;
             ampm = 'PM';
+        }
+        if (hr === 0) {
+            hr = 12;
         }
         var min = now.getMinutes();
         if (min < 10) {
