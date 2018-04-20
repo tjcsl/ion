@@ -1,7 +1,7 @@
 let checkDisplayWarning = function () {
     let now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
+    let hours = parseInt(now.getHours());
+    let minutes = parseInt(now.getMinutes());
     let departTime = endMinute + 10; // minutes after end of school until buses depart
     let txt = document.querySelector('.text');
     if (hours === endHour && minutes < departTime) {
