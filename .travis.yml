@@ -1,8 +1,8 @@
 dist: trusty
 language: python
 python:
-- '3.4'
 - '3.5'
+- '3.6'
 rvm:
 - 2.0
 sudo: false
@@ -21,8 +21,8 @@ env:
   - secure: KmWCQvt6IJh5VAAVuIongjTyLSnsc2QlEOQgmSCAigFjo+qwkeatisho05vCD9nhnqRtEOKFnnPwr/es4uKNUMAVKEqs2N0a2ytBL0jVr4obTTUdUQiaGUxOST5HdaiZY9urDECtwBgXogGImTTG6XdFzi9ah3mmmw5lfMIu+3Y=
 install:
 - gem install sass
-- pip install -U pip setuptools
-- pip install -U coveralls flake8 codacy-coverage -r requirements.txt
+- pip install -U pip
+- pip install -U pipenv coveralls flake8 codacy-coverage -r requirements.txt
 before_script:
 - cp intranet/settings/travis_secret.py intranet/settings/secret.py
 - psql -U postgres -c 'create database ion'

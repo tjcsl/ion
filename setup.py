@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import subprocess
+
 from setuptools import find_packages, setup
 
 with open('README.rst', 'r') as f:
@@ -7,10 +9,13 @@ with open('README.rst', 'r') as f:
 
 
 def get_requirements():
-    with open('requirements.txt') as req, open('docs/rtd-requirements.txt', 'w') as rtd_file:
-        for dep in req:
-            print(dep.strip(), file=rtd_file)
-            yield dep.strip()
+    proc = subprocess.run(['pipenv', 'lock', '-r'], stdout=subprocess.PIPE, check=True, universal_newlines=True)
+    deps = [dep.strip() for dep in proc.stdout.splitlines()]
+    with open('requirements.txt', 'w') as req, open('docs/rtd-requirements.txt', 'w') as rtd_file:
+        for dep in deps:
+            print(dep, file=req)
+            print(dep, file=rtd_file)
+    return deps
 
 
 setup(
@@ -24,14 +29,13 @@ setup(
     license="GPL",
     test_suite='intranet.test.test_suite.run_tests',
     setup_requires=['pip>=6.0', 'setuptools_git'],  # session param
-    install_requires=[str(dep) for dep in get_requirements()],
+    install_requires=get_requirements(),
     packages=find_packages(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
-        'Framework :: Django :: 1.9',
-    ],
-)
+        'Programming Language :: Python :: 3.6',
+        'Framework :: Django :: 2.0',
+    ])

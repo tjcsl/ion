@@ -4,6 +4,10 @@ import os
 import re
 import sys
 
+# Necessary to force the async reactor for daphne before raven has a chance to pull in the classic one.
+from twisted.internet import asyncioreactor
+asyncioreactor.install()
+
 from typing import Any, Tuple  # noqa
 
 if sys.version_info < (3, 3):
