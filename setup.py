@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pip.download import PipSession
-from pip.req import parse_requirements
-
 from setuptools import find_packages, setup
 
 with open('README.rst', 'r') as f:
@@ -10,13 +7,10 @@ with open('README.rst', 'r') as f:
 
 
 def get_requirements():
-    rtd_file = open('docs/rtd-requirements.txt', 'w')
-    for dep in parse_requirements('requirements.txt', session=PipSession()):
-        # FIXME: there should really be a better way to handle this...
-        if dep.req.name not in ['gssapi', 'python-ldap-test']:
-            print(dep.req, file=rtd_file)
-        yield dep.req
-    rtd_file.close()
+    with open('requirements.txt') as req, open('docs/rtd-requirements.txt', 'w') as rtd_file:
+        for dep in req:
+            print(dep.strip(), file=rtd_file)
+            yield dep.strip()
 
 
 setup(
