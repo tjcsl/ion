@@ -1,75 +1,75 @@
-intranet\.utils package
-=======================
+intranet.utils package
+======================
 
 Submodules
 ----------
 
-intranet\.utils\.admin\_helpers module
---------------------------------------
+intranet.utils.admin\_helpers module
+------------------------------------
 
 .. automodule:: intranet.utils.admin_helpers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.cache module
------------------------------
+intranet.utils.cache module
+---------------------------
 
 .. automodule:: intranet.utils.cache
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.date module
-----------------------------
+intranet.utils.date module
+--------------------------
 
 .. automodule:: intranet.utils.date
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.deletion module
---------------------------------
+intranet.utils.deletion module
+------------------------------
 
 .. automodule:: intranet.utils.deletion
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.helpers module
--------------------------------
+intranet.utils.helpers module
+-----------------------------
 
 .. automodule:: intranet.utils.helpers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.html module
-----------------------------
+intranet.utils.html module
+--------------------------
 
 .. automodule:: intranet.utils.html
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.ical module
-----------------------------
+intranet.utils.ical module
+--------------------------
 
 .. automodule:: intranet.utils.ical
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.serialization module
--------------------------------------
+intranet.utils.serialization module
+-----------------------------------
 
 .. automodule:: intranet.utils.serialization
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.utils\.urls module
-----------------------------
+intranet.utils.urls module
+--------------------------
 
 .. automodule:: intranet.utils.urls
     :members:

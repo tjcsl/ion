@@ -1,11 +1,11 @@
-intranet\.apps\.auth\.management\.commands package
-==================================================
+intranet.apps.auth.management.commands package
+==============================================
 
 Submodules
 ----------
 
-intranet\.apps\.auth\.management\.commands\.grant\_admin module
----------------------------------------------------------------
+intranet.apps.auth.management.commands.grant\_admin module
+----------------------------------------------------------
 
 .. automodule:: intranet.apps.auth.management.commands.grant_admin
     :members:

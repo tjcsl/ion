@@ -1,5 +1,5 @@
-intranet\.apps\.eighth\.forms package
-=====================================
+intranet.apps.eighth.forms package
+==================================
 
 Subpackages
 -----------

@@ -1,5 +1,5 @@
-intranet\.apps package
-======================
+intranet.apps package
+=====================
 
 Subpackages
 -----------
@@ -40,8 +40,8 @@ Subpackages
 Submodules
 ----------
 
-intranet\.apps\.context\_processors module
-------------------------------------------
+intranet.apps.context\_processors module
+----------------------------------------
 
 .. automodule:: intranet.apps.context_processors
     :members:

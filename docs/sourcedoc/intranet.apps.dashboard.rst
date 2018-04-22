@@ -1,11 +1,11 @@
-intranet\.apps\.dashboard package
-=================================
+intranet.apps.dashboard package
+===============================
 
 Submodules
 ----------
 
-intranet\.apps\.dashboard\.views module
----------------------------------------
+intranet.apps.dashboard.views module
+------------------------------------
 
 .. automodule:: intranet.apps.dashboard.views
     :members:

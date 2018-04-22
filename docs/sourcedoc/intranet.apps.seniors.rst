@@ -1,5 +1,5 @@
-intranet\.apps\.seniors package
-===============================
+intranet.apps.seniors package
+=============================
 
 Subpackages
 -----------
@@ -11,40 +11,40 @@ Subpackages
 Submodules
 ----------
 
-intranet\.apps\.seniors\.admin module
--------------------------------------
+intranet.apps.seniors.admin module
+----------------------------------
 
 .. automodule:: intranet.apps.seniors.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.seniors\.forms module
--------------------------------------
+intranet.apps.seniors.forms module
+----------------------------------
 
 .. automodule:: intranet.apps.seniors.forms
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.seniors\.models module
---------------------------------------
+intranet.apps.seniors.models module
+-----------------------------------
 
 .. automodule:: intranet.apps.seniors.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.seniors\.urls module
-------------------------------------
+intranet.apps.seniors.urls module
+---------------------------------
 
 .. automodule:: intranet.apps.seniors.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.seniors\.views module
--------------------------------------
+intranet.apps.seniors.views module
+----------------------------------
 
 .. automodule:: intranet.apps.seniors.views
     :members:
