@@ -13,21 +13,26 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='restricted',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='sticky',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='administrative',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='restricted',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='sticky',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

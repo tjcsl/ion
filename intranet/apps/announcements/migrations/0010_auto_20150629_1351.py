@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='announcement',
         name='author',
-        field=models.CharField(max_length=63, blank=True),)]
+        field=models.CharField(max_length=63, blank=True),
+    )]

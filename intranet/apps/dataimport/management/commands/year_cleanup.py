@@ -50,7 +50,6 @@ class Command(BaseCommand):
         if not self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year),
                         settings.SENIOR_GRADUATION_YEAR == new_senior_year):
             return
-
         """
         EIGHTH:
             EighthBlock: filtered

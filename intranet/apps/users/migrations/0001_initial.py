@@ -19,13 +19,16 @@ class Migration(migrations.Migration):
                  models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.',
                                      verbose_name='superuser status')),
                 ('username', models.CharField(unique=True, max_length=30)),
-                ('groups', models.ManyToManyField(
-                    related_query_name='user', related_name='user_set', to='auth.Group', blank=True,
-                    help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.',
-                    verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True,
-                                                            help_text='Specific permissions for this user.', verbose_name='user permissions')),
+                ('groups',
+                 models.ManyToManyField(
+                     related_query_name='user', related_name='user_set', to='auth.Group', blank=True,
+                     help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.',
+                     verbose_name='groups')),
+                ('user_permissions',
+                 models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True,
+                                        help_text='Specific permissions for this user.', verbose_name='user permissions')),
             ],
             options={'abstract': False},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
     ]

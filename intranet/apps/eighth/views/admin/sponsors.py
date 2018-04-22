@@ -70,12 +70,9 @@ def list_sponsor_view(request):
             writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted", "Signups", "Capacity"])
             for row in context["sponsor_list"]:
                 writer.writerow([
-                    row[0].name,
-                    "\n".join([x.full_title for x in row[1]]),
-                    "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
-                    row[0].contracted_eighth,
-                    "\n".join([str(x.members.count()) for x in row[1]]),
-                    "\n".join([str(x.get_true_capacity()) for x in row[1]])
+                    row[0].name, "\n".join([x.full_title for x in row[1]]),
+                    "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]), row[0].contracted_eighth, "\n".join(
+                        [str(x.members.count()) for x in row[1]]), "\n".join([str(x.get_true_capacity()) for x in row[1]])
                 ])
             return response
 
@@ -118,9 +115,12 @@ def delete_sponsor_view(request, sponsor_id):
         return redirect("eighth_admin_dashboard")
     else:
         context = {
-            "admin_page_title": "Delete Sponsor",
-            "item_name": str(sponsor),
-            "help_text": "Deleting this sponsor will remove all records "
+            "admin_page_title":
+            "Delete Sponsor",
+            "item_name":
+            str(sponsor),
+            "help_text":
+            "Deleting this sponsor will remove all records "
             "of this user related to eighth period, but will "
             "not remove the user account associated with it (if "
             "there is one)."
@@ -139,8 +139,8 @@ def sponsor_schedule_view(request, sponsor_id):
     start_date = get_start_date(request)
 
     # for_sponsor() excludes cancelled activities
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True).filter(block__date__gte=start_date).order_by("block__date",
-                                                                                                                          "block__block_letter"))
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True).filter(block__date__gte=start_date).order_by(
+        "block__date", "block__block_letter"))
 
     # Find list of all activities before the list is filtered to only show one activity
     activities = set()

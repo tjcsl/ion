@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='senior',
             name='college',
-            field=models.ForeignKey(blank=True, to='seniors.College', null=True, on_delete=models.CASCADE),)
+            field=models.ForeignKey(blank=True, to='seniors.College', null=True, on_delete=models.CASCADE),
+        )
     ]

@@ -11,9 +11,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='notificationconfig',
             name='chrome_gcm_time',
-            field=models.DateTimeField(null=True, blank=True),),
+            field=models.DateTimeField(null=True, blank=True),
+        ),
         migrations.AddField(
             model_name='notificationconfig',
             name='chrome_gcm_token',
-            field=models.CharField(max_length=250, null=True, blank=True),),
+            field=models.CharField(max_length=250, null=True, blank=True),
+        ),
     ]

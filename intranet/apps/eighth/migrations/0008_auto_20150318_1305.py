@@ -12,5 +12,6 @@ class Migration(migrations.Migration):
             model_name='eighthscheduledactivity',
             name='comments',
             field=models.CharField(max_length=1000, blank=True),
-            preserve_default=True,)
+            preserve_default=True,
+        )
     ]

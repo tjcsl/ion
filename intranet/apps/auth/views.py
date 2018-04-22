@@ -39,8 +39,8 @@ def log_auth(request, success):
 
     username = request.POST.get("username", "unknown")
 
-    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success,
-                                                               datetime.now(), request.get_full_path(), request.META.get("HTTP_USER_AGENT", ""))
+    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, datetime.now(), request.get_full_path(),
+                                                               request.META.get("HTTP_USER_AGENT", ""))
 
     auth_logger.info(log_line)
 
@@ -250,9 +250,7 @@ def reauthentication_view(request):
 
 
 def reset_password_view(request):
-    context = {"password_match": True,
-               "unable_to_set": False,
-               "password_expired": request.GET.get("expired", "false").lower() == "true"}
+    context = {"password_match": True, "unable_to_set": False, "password_expired": request.GET.get("expired", "false").lower() == "true"}
     if request.method == "POST":
         form_data = {
             "username": request.POST.get("username", request.user.username if request.user.is_authenticated else "unknown"),

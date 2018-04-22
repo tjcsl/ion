@@ -22,22 +22,13 @@ class ApiTest(IonTestCase):
 
     def setUp(self):
         self.user = User.objects.get_or_create(username="awilliam", graduation_year=(settings.SENIOR_GRADUATION_YEAR + 1))[0]
-        self.application = Application(
-            name="Test Application",
-            redirect_uris="http://localhost http://example.com http://example.it",
-            user=self.user,
-            client_type=Application.CLIENT_CONFIDENTIAL,
-            authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE
-        )
+        self.application = Application(name="Test Application", redirect_uris="http://localhost http://example.com http://example.it", user=self.user,
+                                       client_type=Application.CLIENT_CONFIDENTIAL, authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE)
         self.application.save()
 
         self.client_credentials_application = Application(
-            name="Test Client Credentials Application",
-            redirect_uris="http://localhost http://example.com http://example.it",
-            user=self.user,
-            client_type=Application.CLIENT_CONFIDENTIAL,
-            authorization_grant_type=Application.GRANT_CLIENT_CREDENTIALS
-        )
+            name="Test Client Credentials Application", redirect_uris="http://localhost http://example.com http://example.it", user=self.user,
+            client_type=Application.CLIENT_CONFIDENTIAL, authorization_grant_type=Application.GRANT_CLIENT_CREDENTIALS)
         self.client_credentials_application.save()
 
         oauth2_settings._SCOPES = ['read', 'write']
@@ -61,11 +52,8 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_oauth_read(self):
-        tok = AccessToken.objects.create(
-            user=self.user, token='1234567890',
-            application=self.application, scope='read write',
-            expires=timezone.now() + datetime.timedelta(days=1)
-        )
+        tok = AccessToken.objects.create(user=self.user, token='1234567890', application=self.application, scope='read write',
+                                         expires=timezone.now() + datetime.timedelta(days=1))
         auth = "Bearer {}".format(tok.token)
         response = self.client.get(reverse('api_announcements_list_create'), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
@@ -79,11 +67,8 @@ class ApiTest(IonTestCase):
     def test_oauth_write(self):
         self.make_admin()
 
-        tok = AccessToken.objects.create(
-            user=self.user, token='1234567890',
-            application=self.application, scope='read write',
-            expires=timezone.now() + datetime.timedelta(days=1)
-        )
+        tok = AccessToken.objects.create(user=self.user, token='1234567890', application=self.application, scope='read write',
+                                         expires=timezone.now() + datetime.timedelta(days=1))
 
         block = EighthBlock.objects.create(date=datetime.datetime(2015, 1, 1), block_letter='A')
         room = EighthRoom.objects.create(name="room1", capacity=1)
@@ -93,22 +78,18 @@ class ApiTest(IonTestCase):
         schact1 = EighthScheduledActivity.objects.create(activity=act, block=block)
 
         auth = "Bearer {}".format(tok.token)
-        response = self.client.post(reverse('api_eighth_user_signup_list_myid'), {
-            "scheduled_activity": schact1.id,
-            "use_scheduled_activity": True
-        }, HTTP_AUTHORIZATION=auth)
+        response = self.client.post(
+            reverse('api_eighth_user_signup_list_myid'), {
+                "scheduled_activity": schact1.id,
+                "use_scheduled_activity": True
+            }, HTTP_AUTHORIZATION=auth)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(schact1.members.count(), 1)
 
     def test_oauth_client_credentials_read(self):
-        tok = AccessToken.objects.create(
-            user=None,
-            token='1234567890',
-            application=self.client_credentials_application,
-            scope='read write',
-            expires=timezone.now() + datetime.timedelta(days=1)
-        )
+        tok = AccessToken.objects.create(user=None, token='1234567890', application=self.client_credentials_application, scope='read write',
+                                         expires=timezone.now() + datetime.timedelta(days=1))
         auth = "Bearer {}".format(tok.token)
 
         # List announcements

@@ -17,5 +17,6 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
             options={},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
     ]

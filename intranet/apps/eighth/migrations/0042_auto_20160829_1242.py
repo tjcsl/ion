@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthsignup',
             name='archived_was_absent',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='historicaleighthsignup',
             name='archived_was_absent',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

@@ -203,8 +203,8 @@ def print_job(obj, do_print=True):
             raise Exception("You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
                 range_count, settings.PRINTING_PAGES_LIMIT))
     elif num_pages > settings.PRINTING_PAGES_LIMIT:
-        raise Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages,
-                                                                                                                 settings.PRINTING_PAGES_LIMIT))
+        raise Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(
+            num_pages, settings.PRINTING_PAGES_LIMIT))
 
     if do_print:
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]

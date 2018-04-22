@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='notificationconfig',
             name='android_gcm_token',
-            field=models.CharField(max_length=250, null=True, blank=True),)
+            field=models.CharField(max_length=250, null=True, blank=True),
+        )
     ]

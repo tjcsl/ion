@@ -16,5 +16,6 @@ class Migration(migrations.Migration):
             model_name='event',
             name='open_to',
             field=models.CharField(choices=[('everyone', 'Everyone'), ('students', 'Students'), ('parents', 'Parents')], default='everyone',
-                                   max_length=8),),
+                                   max_length=8),
+        ),
     ]

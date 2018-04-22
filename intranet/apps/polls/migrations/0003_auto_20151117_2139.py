@@ -10,19 +10,23 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='question',
-            options={'ordering': ['num']},),
+            options={'ordering': ['num']},
+        ),
         migrations.AddField(
             model_name='answer',
             name='clear_vote',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AlterField(
             model_name='answer',
             name='choice',
-            field=models.ForeignKey(to='polls.Choice', null=True, on_delete=models.CASCADE),),
+            field=models.ForeignKey(to='polls.Choice', null=True, on_delete=models.CASCADE),
+        ),
         migrations.AlterField(
             model_name='question',
             name='type',
             field=models.CharField(default='STD', max_length=3,
                                    choices=[('STD', 'Standard'), ('ELC', 'Election'), ('APP', 'Approval'), ('SAP', 'Split approval'),
-                                            ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),),
+                                            ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),
+        ),
     ]

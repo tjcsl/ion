@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='block',
-        options={'ordering': ('name', 'start', 'end')},)]
+        options={'ordering': ('name', 'start', 'end')},
+    )]

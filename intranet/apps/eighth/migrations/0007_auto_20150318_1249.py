@@ -12,5 +12,6 @@ class Migration(migrations.Migration):
             model_name='eighthactivity',
             name='description',
             field=models.CharField(max_length=2000, blank=True),
-            preserve_default=True,)
+            preserve_default=True,
+        )
     ]

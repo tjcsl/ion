@@ -13,5 +13,6 @@ class Migration(migrations.Migration):
             model_name='eighthsponsor',
             name='user',
             field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
-            preserve_default=True,)
+            preserve_default=True,
+        )
     ]

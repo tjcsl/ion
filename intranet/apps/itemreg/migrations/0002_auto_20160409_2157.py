@@ -14,15 +14,18 @@ class Migration(migrations.Migration):
             model_name='calculatorregistration',
             name='added',
             field=models.DateTimeField(auto_now_add=True, default=None),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
         migrations.AddField(
             model_name='computerregistration',
             name='added',
             field=models.DateTimeField(auto_now_add=True, default=None),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
         migrations.AddField(
             model_name='phoneregistration',
             name='added',
             field=models.DateTimeField(auto_now_add=True, default=None),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
     ]

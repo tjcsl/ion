@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='event',
         name='show_on_dashboard',
-        field=models.BooleanField(default=True),)]
+        field=models.BooleanField(default=True),
+    )]

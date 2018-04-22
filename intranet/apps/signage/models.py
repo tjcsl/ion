@@ -75,16 +75,8 @@ class Sign(models.Model):
     map_location = models.CharField(max_length=20, null=True, blank=True)
     img_path = models.CharField(max_length=250, default="https://c1.staticflickr.com/5/4331/36927945575_c2c09e44db_k.jpg")
 
-    lock_page = models.ForeignKey(Page,
-                                  on_delete=models.SET_NULL,
-                                  null=True,
-                                  blank=True,
-                                  related_name="_unused_1")
-    default_page = models.ForeignKey(Page,
-                                     on_delete=models.SET_NULL,
-                                     null=True,
-                                     blank=True,
-                                     related_name="_unused_2")
+    lock_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_1")
+    default_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_2")
     pages = models.ManyToManyField(Page, related_name="signs")
 
     def __str__(self):

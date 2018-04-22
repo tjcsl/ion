@@ -44,7 +44,8 @@ class Migration(migrations.Migration):
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth activity',
-            },),
+            },
+        ),
         migrations.CreateModel(
             name='HistoricalEighthBlock',
             fields=[
@@ -65,7 +66,8 @@ class Migration(migrations.Migration):
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth block',
-            },),
+            },
+        ),
         migrations.CreateModel(
             name='HistoricalEighthRoom',
             fields=[
@@ -83,7 +85,8 @@ class Migration(migrations.Migration):
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth room',
-            },),
+            },
+        ),
         migrations.CreateModel(
             name='HistoricalEighthScheduledActivity',
             fields=[
@@ -99,17 +102,20 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('activity', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
-                                               to='eighth.EighthActivity', null=True)),
-                ('block', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
-                                            to='eighth.EighthBlock', null=True)),
+                ('activity',
+                 models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
+                                   to='eighth.EighthActivity', null=True)),
+                ('block',
+                 models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthBlock',
+                                   null=True)),
                 ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth scheduled activity',
-            },),
+            },
+        ),
         migrations.CreateModel(
             name='HistoricalEighthSignup',
             fields=[
@@ -127,16 +133,19 @@ class Migration(migrations.Migration):
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
                 ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
-                ('scheduled_activity', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
-                                                         to='eighth.EighthScheduledActivity', null=True)),
-                ('user', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
-                                           to=settings.AUTH_USER_MODEL, null=True)),
+                ('scheduled_activity',
+                 models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
+                                   to='eighth.EighthScheduledActivity', null=True)),
+                ('user',
+                 models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
+                                   to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth signup',
-            },),
+            },
+        ),
         migrations.CreateModel(
             name='HistoricalEighthSponsor',
             fields=[
@@ -151,12 +160,14 @@ class Migration(migrations.Migration):
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
                 ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
-                                           to=settings.AUTH_USER_MODEL, null=True)),
+                ('user',
+                 models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True,
+                                   to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
                 'get_latest_by': 'history_date',
                 'verbose_name': 'historical eighth sponsor',
-            },),
+            },
+        ),
     ]

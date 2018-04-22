@@ -26,23 +26,28 @@ class Migration(migrations.Migration):
                 ('location', models.CharField(max_length=100)),
                 ('announcement', models.ForeignKey(to='announcements.Announcement', null=True, on_delete=models.CASCADE)),
                 ('groups', models.ManyToManyField(to='auth.Group', blank=True)),
-            ],),
+            ],
+        ),
         migrations.CreateModel(
             name='Link',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('url', models.URLField(max_length=2000)),
-            ],),
+            ],
+        ),
         migrations.AddField(
             model_name='event',
             name='links',
-            field=models.ManyToManyField(to='events.Link'),),
+            field=models.ManyToManyField(to='events.Link'),
+        ),
         migrations.AddField(
             model_name='event',
             name='scheduled_activity',
-            field=models.ForeignKey(to='eighth.EighthScheduledActivity', null=True, on_delete=models.CASCADE),),
+            field=models.ForeignKey(to='eighth.EighthScheduledActivity', null=True, on_delete=models.CASCADE),
+        ),
         migrations.AddField(
             model_name='event',
             name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
+        ),
     ]

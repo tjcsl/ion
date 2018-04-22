@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthblock',
             name='override_blocks',
-            field=models.ManyToManyField(to='eighth.EighthBlock', blank=True),)
+            field=models.ManyToManyField(to='eighth.EighthBlock', blank=True),
+        )
     ]

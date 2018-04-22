@@ -16,10 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print(EighthActivitySimilarity.objects.all().delete())
         start = time.time()
-        acts = EighthActivity.objects.all().exclude(
-            restricted=True).exclude(
-            special=True).exclude(
-            administrative=True).exclude(
+        acts = EighthActivity.objects.all().exclude(restricted=True).exclude(special=True).exclude(administrative=True).exclude(
             deleted=True).order_by('name')
         for act in acts:
             start_act = time.time()
@@ -29,12 +26,8 @@ class Command(BaseCommand):
                 for act_info in User.objects.get(id=u_id).frequent_signups.exclude(scheduled_activity__activity=act):
                     act_id = act_info['scheduled_activity__activity']
                     act2 = EighthActivity.undeleted_objects.get(id=act_id)
-                    if EighthActivitySimilarity.objects.filter(
-                            activity_set__id=act.id).filter(
-                            activity_set__id=act2.id).exists():
-                        sim = EighthActivitySimilarity.objects.filter(
-                            activity_set__id=act.id).filter(
-                            activity_set__id=act2.id).first()
+                    if EighthActivitySimilarity.objects.filter(activity_set__id=act.id).filter(activity_set__id=act2.id).exists():
+                        sim = EighthActivitySimilarity.objects.filter(activity_set__id=act.id).filter(activity_set__id=act2.id).first()
                         sim.count += 1
                     else:
                         sim = EighthActivitySimilarity.objects.create(count=0, weighted=0)

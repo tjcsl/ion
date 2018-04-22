@@ -181,17 +181,17 @@ class ProfileMiddleware(object):
                 maxs[field] = max(stats[field], maxs[field])
                 values[field].append(stats[field])
             # display line
-            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple([count, time.ctime(start_time)] +
-                                                                                             [stats[field] for field in time_fields])
+            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
+                [count, time.ctime(start_time)] + [stats[field] for field in time_fields])
 
         # display summary statistics
         stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Minimum'] + [mins[field] for field in time_fields])
-        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Mean'] +
-                                                                                         [sums[field] / count for field in time_fields])
+        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
+            ['', 'Mean'] + [sums[field] / count for field in time_fields])
         stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Maximum'] + [maxs[field] for field in time_fields])
         if count > 1:
-            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Standard deviation'] +
-                                                                                             [stdev(values[field]) for field in time_fields])
+            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
+                ['', 'Standard deviation'] + [stdev(values[field]) for field in time_fields])
 
         if response and response.content and stats_str:
             response.content = "<pre>%s\n\noptions: &reset (clear all stats)\n\n%s</pre>" % (request.build_absolute_uri(), stats_str)

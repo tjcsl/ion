@@ -9,8 +9,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
@@ -19,7 +18,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('route_name', models.CharField(max_length=30)),
                 ('bus_number', models.CharField(blank=True, max_length=5)),
-                ('status', models.CharField(choices=[('a', 'Arrived (In the lot)'), ('d', 'Delayed'), ('o', 'On Time (Expected)')], max_length=1, verbose_name='arrival status')),
+                ('status',
+                 models.CharField(choices=[('a', 'Arrived (In the lot)'), ('d', 'Delayed'), ('o', 'On Time (Expected)')], max_length=1,
+                                  verbose_name='arrival status')),
             ],
         ),
     ]

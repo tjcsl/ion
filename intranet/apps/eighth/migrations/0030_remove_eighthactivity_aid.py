@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.RemoveField(
         model_name='eighthactivity',
-        name='aid',)]
+        name='aid',
+    )]

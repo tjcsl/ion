@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthsponsor',
         name='show_full_name',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

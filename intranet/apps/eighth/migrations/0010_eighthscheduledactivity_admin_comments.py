@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='admin_comments',
-            field=models.CharField(max_length=1000, blank=True),)
+            field=models.CharField(max_length=1000, blank=True),
+        )
     ]

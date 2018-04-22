@@ -12,10 +12,12 @@ class Migration(migrations.Migration):
             model_name='eighthactivity',
             name='description',
             field=models.CharField(max_length=500, blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AlterField(
             model_name='eighthscheduledactivity',
             name='comments',
             field=models.CharField(max_length=500, blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
     ]

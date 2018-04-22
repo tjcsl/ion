@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthblock',
         name='time',
-        field=models.TimeField(default=datetime.time(12, 30)),)]
+        field=models.TimeField(default=datetime.time(12, 30)),
+    )]

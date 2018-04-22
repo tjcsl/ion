@@ -12,5 +12,4 @@ class Migration(migrations.Migration):
         ('users', '0015_user_bus_route'),
     ]
 
-    operations = [
-    ]
+    operations = []

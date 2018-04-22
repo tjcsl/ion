@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 @login_required
 @deny_restricted
 def seniors_home_view(request):
-    seniors = Senior.objects.exclude(college=None, major=None).filter(
-        user__graduation_year=SENIOR_GRADUATION_YEAR).order_by('user__last_name', 'user__first_name')
+    seniors = Senior.objects.exclude(college=None, major=None).filter(user__graduation_year=SENIOR_GRADUATION_YEAR).order_by(
+        'user__last_name', 'user__first_name')
     try:
         own_senior = Senior.objects.get(user=request.user)
     except Senior.DoesNotExist:

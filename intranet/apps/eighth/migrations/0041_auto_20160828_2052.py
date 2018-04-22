@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='archived_member_count',
-            field=models.SmallIntegerField(blank=True, null=True),),
+            field=models.SmallIntegerField(blank=True, null=True),
+        ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='archived_member_count',
-            field=models.SmallIntegerField(blank=True, null=True),),
+            field=models.SmallIntegerField(blank=True, null=True),
+        ),
     ]

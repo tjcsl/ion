@@ -12,5 +12,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='attending',
-            field=models.ManyToManyField(related_name='attending', to=settings.AUTH_USER_MODEL, blank=True),)
+            field=models.ManyToManyField(related_name='attending', to=settings.AUTH_USER_MODEL, blank=True),
+        )
     ]

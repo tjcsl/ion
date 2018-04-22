@@ -18,5 +18,6 @@ class Migration(migrations.Migration):
                 ('windows', models.BooleanField(default=False)),
                 ('linux', models.BooleanField(default=False)),
                 ('groups_visible', models.ManyToManyField(to='auth.Group', blank=True)),
-            ],),
+            ],
+        ),
     ]

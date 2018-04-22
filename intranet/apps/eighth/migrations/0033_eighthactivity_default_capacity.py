@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthactivity',
         name='default_capacity',
-        field=models.SmallIntegerField(null=True, blank=True),)]
+        field=models.SmallIntegerField(null=True, blank=True),
+    )]

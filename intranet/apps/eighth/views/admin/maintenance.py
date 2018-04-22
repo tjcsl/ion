@@ -61,16 +61,12 @@ class ImportThread(threading.Thread):
         props = u.properties
         if props._address:
             props._address.delete()
-        props._address = Address.objects.create(
-            street=row[index_dict["Address"]].strip(),
-            city=row[index_dict["City"]].strip(),
-            state=row[index_dict["State"]].strip(),
-            postal_code=row[index_dict["Zipcode"]].strip())
+        props._address = Address.objects.create(street=row[index_dict["Address"]].strip(), city=row[index_dict["City"]].strip(),
+                                                state=row[index_dict["State"]].strip(), postal_code=row[index_dict["Zipcode"]].strip())
         birthday_values = row[index_dict["Birth Date"]].strip().split("/")
         props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
         course, created = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
-                                                       defaults={
-                                                       'name': row[index_dict["Course Title"]].strip()})
+                                                       defaults={'name': row[index_dict["Course Title"]].strip()})
         teacher_name = row[index_dict["Teacher"]].strip().lower().split(",")
         no_teacher = False
         if len(teacher_name) == 1:
@@ -79,22 +75,19 @@ class ImportThread(threading.Thread):
         if not no_teacher:
             fname = teacher_name[1].split()[0].strip()
             lname = teacher_name[0].strip()
-            teacher = User.objects.filter(user_type='teacher',
-                                          last_name__iexact=lname,
-                                          first_name__iexact=fname)
+            teacher = User.objects.filter(user_type='teacher', last_name__iexact=lname, first_name__iexact=fname)
         if not no_teacher and (not teacher.count() == 1):
-            content.write("Unable to determine teacher for {}; {} options: {}".format(
-                row[index_dict["Section ID"]].strip(),
-                teacher.count(),
-                ', '.join([t.full_name for t in teacher])
-            ))
+            content.write("Unable to determine teacher for {}; {} options: {}".format(row[index_dict["Section ID"]].strip(), teacher.count(),
+                                                                                      ', '.join([t.full_name for t in teacher])))
             no_teacher = True
-        section, created = Section.objects.get_or_create(section_id=row[index_dict["Section ID"]].strip(),
-                                                         defaults={'teacher': teacher.first() if not no_teacher else None,
-                                                                   'period': int(row[index_dict["Per"]].strip()),
-                                                                   'room': row[index_dict["Room"]].strip(),
-                                                                   'sem': row[index_dict["Term Code"]].strip(),
-                                                                   'course': course})
+        section, created = Section.objects.get_or_create(
+            section_id=row[index_dict["Section ID"]].strip(), defaults={
+                'teacher': teacher.first() if not no_teacher else None,
+                'period': int(row[index_dict["Per"]].strip()),
+                'room': row[index_dict["Room"]].strip(),
+                'sem': row[index_dict["Term Code"]].strip(),
+                'course': course
+            })
         section._students.add(props)
         props.save()
         u.save()

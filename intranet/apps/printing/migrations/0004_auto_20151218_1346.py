@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='printjob',
         name='file',
-        field=models.FileField(upload_to='uploads/'),)]
+        field=models.FileField(upload_to='uploads/'),
+    )]

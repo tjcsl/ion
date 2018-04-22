@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='event',
         name='description',
-        field=models.TextField(max_length=10000),)]
+        field=models.TextField(max_length=10000),
+    )]

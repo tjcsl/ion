@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='eighthroom',
-        options={'ordering': ('name',)},)]
+        options={'ordering': ('name',)},
+    )]

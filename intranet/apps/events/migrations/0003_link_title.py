@@ -11,4 +11,5 @@ class Migration(migrations.Migration):
         model_name='link',
         name='title',
         field=models.CharField(default='', max_length=100),
-        preserve_default=False,)]
+        preserve_default=False,
+    )]

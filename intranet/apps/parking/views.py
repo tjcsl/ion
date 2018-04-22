@@ -23,11 +23,7 @@ def parking_intro_view(request):
         messages.error(request, "You can't request a parking space.")
         return redirect("/")
 
-    context = {
-        "user": request.user,
-        "absences": request.user.absence_count(),
-        "max_absences": settings.PARKING_MAX_ABSENCES
-    }
+    context = {"user": request.user, "absences": request.user.absence_count(), "max_absences": settings.PARKING_MAX_ABSENCES}
 
     return render(request, "parking/intro.html", context)
 

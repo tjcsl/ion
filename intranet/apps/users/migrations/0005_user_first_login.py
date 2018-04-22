@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='user',
         name='first_login',
-        field=models.DateTimeField(null=True),)]
+        field=models.DateTimeField(null=True),
+    )]

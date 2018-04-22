@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='day',
         name='comment',
-        field=models.CharField(max_length=1000, blank=True),)]
+        field=models.CharField(max_length=1000, blank=True),
+    )]

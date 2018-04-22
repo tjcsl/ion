@@ -285,8 +285,8 @@ def take_attendance_view(request, scheduled_activity_id):
 
         if not scheduled_activity.block.locked and not request.user.is_eighth_admin:
             return render(request, "error/403.html",
-                          {"reason":
-                           "You do not have permission to take attendance for this activity. The block has not been locked yet."}, status=403)
+                          {"reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."},
+                          status=403)
 
         if not scheduled_activity.block.locked and request.user.is_eighth_admin:
             messages.success(request, "Note: Taking attendance on an unlocked block.")
@@ -553,9 +553,8 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         members = []
         for member in sact.members.all():
-            members.append((member.last_name + ", " + member.first_name, (member.student_id
-                                                                          if member.student_id else "User {}".format(member.id)), int(member.grade)
-                            if member.grade else "?"))
+            members.append((member.last_name + ", " + member.first_name, (member.student_id if member.student_id else "User {}".format(member.id)),
+                            int(member.grade) if member.grade else "?"))
         members = sorted(members)
 
         for member_name, member_id, member_grade in members:

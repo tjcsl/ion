@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='both_blocks',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='both_blocks',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

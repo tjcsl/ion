@@ -15,5 +15,6 @@ class Migration(migrations.Migration):
             model_name='event',
             name='time',
             field=models.DateTimeField(default=timezone.make_aware(datetime.datetime(2015, 6, 23, 16, 12, 26, 729553)), auto_now=True),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
     ]

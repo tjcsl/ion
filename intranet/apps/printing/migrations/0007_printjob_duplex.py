@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='printjob',
         name='duplex',
-        field=models.BooleanField(default=True),)]
+        field=models.BooleanField(default=True),
+    )]

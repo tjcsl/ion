@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='announcementrequest',
         name='notes',
-        field=models.TextField(blank=True),)]
+        field=models.TextField(blank=True),
+    )]

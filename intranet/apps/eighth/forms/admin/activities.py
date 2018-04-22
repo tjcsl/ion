@@ -136,9 +136,13 @@ class ActivityForm(forms.ModelForm):
             "sophomores_allowed", "juniors_allowed", "seniors_allowed", "wed_a", "wed_b", "fri_a", "fri_b", "admin_comments"
         ]
         widgets = {
-            "description": forms.Textarea(attrs={"rows": 5,
-                                                 "cols": 46}),
+            "description": forms.Textarea(attrs={
+                "rows": 5,
+                "cols": 46
+            }),
             "name": forms.TextInput(attrs={"style": "width: 292px"}),
-            "admin_comments": forms.Textarea(attrs={"rows": 5,
-                                                    "cols": 46})
+            "admin_comments": forms.Textarea(attrs={
+                "rows": 5,
+                "cols": 46
+            })
         }

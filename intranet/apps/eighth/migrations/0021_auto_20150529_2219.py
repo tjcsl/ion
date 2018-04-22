@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='eighthblock',
         name='block_letter',
-        field=models.CharField(max_length=10),)]
+        field=models.CharField(max_length=10),
+    )]

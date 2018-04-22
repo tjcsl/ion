@@ -11,9 +11,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='receive_eighth_emails',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='user',
             name='receive_news_emails',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

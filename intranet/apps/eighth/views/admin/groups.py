@@ -290,13 +290,14 @@ def upload_group_members_view(request, group_id):
                 invalidate_obj(group)
                 messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
                 return redirect("eighth_admin_edit_group", group.id)
-            return render(request, "eighth/admin/upload_group.html", {
-                "admin_page_title": "Import Group Members: {}".format(group),
-                "stage": "import_confirm",
-                "group": group,
-                "import_group": import_group,
-                "num_users": num_users
-            })
+            return render(
+                request, "eighth/admin/upload_group.html", {
+                    "admin_page_title": "Import Group Members: {}".format(group),
+                    "stage": "import_confirm",
+                    "group": group,
+                    "import_group": import_group,
+                    "num_users": num_users
+                })
 
     else:
         form = UploadGroupForm()
@@ -433,11 +434,12 @@ def eighth_admin_signup_group_action(request, group_id, schact_id):
         messages.success(request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
 
-    return render(request, "eighth/admin/sign_up_group.html",
-                  {"admin_page_title": "Confirm Group Signup",
-                   "scheduled_activity": scheduled_activity,
-                   "group": group,
-                   "users_num": users.count()})
+    return render(request, "eighth/admin/sign_up_group.html", {
+        "admin_page_title": "Confirm Group Signup",
+        "scheduled_activity": scheduled_activity,
+        "group": group,
+        "users_num": users.count()
+    })
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):

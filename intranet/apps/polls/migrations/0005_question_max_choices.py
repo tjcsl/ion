@@ -11,4 +11,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='question',
         name='max_choices',
-        field=models.IntegerField(default=1),)]
+        field=models.IntegerField(default=1),
+    )]

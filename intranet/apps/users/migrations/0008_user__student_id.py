@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='user',
         name='_student_id',
-        field=models.PositiveIntegerField(null=True),)]
+        field=models.PositiveIntegerField(null=True),
+    )]

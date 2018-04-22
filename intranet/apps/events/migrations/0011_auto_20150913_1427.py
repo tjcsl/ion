@@ -12,13 +12,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='approved',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='event',
             name='approved_by',
-            field=models.ForeignKey(related_name='approved_by', to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),),
+            field=models.ForeignKey(related_name='approved_by', to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
+        ),
         migrations.AddField(
             model_name='event',
             name='rejected',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

@@ -21,15 +21,8 @@ from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
 
-
 # TODO: this is disgusting
-GRADE_NUMBERS = (
-    (9, 'freshman'),
-    (10, 'sophomore'),
-    (11, 'junior'),
-    (12, 'senior'),
-    (13, 'staff')
-)
+GRADE_NUMBERS = ((9, 'freshman'), (10, 'sophomore'), (11, 'junior'), (12, 'senior'), (13, 'staff'))
 
 
 class UserManager(DjangoUserManager):
@@ -68,9 +61,7 @@ class UserManager(DjangoUserManager):
         if sn and not given_name:
             results = User.objects.filter(last_name=sn)
         elif given_name:
-            query = {
-                'first_name': given_name
-            }
+            query = {'first_name': given_name}
             if sn:
                 query['last_name'] = sn
             results = User.objects.filter(**query)
@@ -143,12 +134,7 @@ class UserManager(DjangoUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass
     """
-    TITLES = (
-        ('Mr.', 'Mr.'),
-        ('Ms.', 'Ms.'),
-        ('Mrs.', 'Mrs.'),
-        ('Dr.', 'Dr.')
-    )
+    TITLES = (('Mr.', 'Mr.'), ('Ms.', 'Ms.'), ('Mrs.', 'Mrs.'), ('Dr.', 'Dr.'))
 
     USER_TYPES = (
         ('student', 'Student'),
@@ -161,12 +147,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('service', 'Service Account'),
     )
 
-    TITLES = (
-        ('mr', 'Mr.'),
-        ('ms', 'Ms.'),
-        ('mrs', 'Mrs.'),
-        ('dr', 'Dr.')
-    )
+    TITLES = (('mr', 'Mr.'), ('ms', 'Ms.'), ('mrs', 'Mrs.'), ('dr', 'Dr.'))
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
 
@@ -186,12 +167,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     receive_schedule_notifications = models.BooleanField(default=False)
 
-    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH,
-                                  unique=True,
-                                  null=True)
-    user_type = models.CharField(max_length=30,
-                                 choices=USER_TYPES,
-                                 default='student')
+    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH, unique=True, null=True)
+    user_type = models.CharField(max_length=30, choices=USER_TYPES, default='student')
     admin_comments = models.TextField(blank=True, null=True)
     counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
     graduation_year = models.IntegerField(null=True)
@@ -370,10 +347,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         # in some way. Creating a dict would be another place we have to define
         # the permission, so I'm not a huge fan, but it would definitely be the
         # easier option.
-        permissions_dict = {
-            "self": {},
-            "parent": {}
-        }
+        permissions_dict = {"self": {}, "parent": {}}
 
         for field in self.properties._meta.get_fields():
             split_field = field.name.split('_', 1)
@@ -684,14 +658,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
         if cached:
             return cached
-        freq_signups = self.eighthsignup_set.exclude(
-            scheduled_activity__activity__administrative=True).exclude(
-            scheduled_activity__activity__special=True).exclude(
-            scheduled_activity__activity__restricted=True).exclude(
-            scheduled_activity__activity__deleted=True).values(
-            'scheduled_activity__activity').annotate(
-            count=Count('scheduled_activity__activity')).filter(
-            count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        freq_signups = self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True).exclude(
+            scheduled_activity__activity__special=True).exclude(scheduled_activity__activity__restricted=True).exclude(
+                scheduled_activity__activity__deleted=True).values('scheduled_activity__activity').annotate(
+                    count=Count('scheduled_activity__activity')).filter(count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
         cache.set(key, freq_signups, timeout=60 * 60 * 24 * 7)
         return freq_signups
 
@@ -702,12 +672,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached:
             return cached
         acts = set()
-        for signup in self.eighthsignup_set.exclude(
-                scheduled_activity__activity__administrative=True).exclude(
-                scheduled_activity__activity__special=True).exclude(
-                scheduled_activity__activity__restricted=True).exclude(
-                scheduled_activity__activity__deleted=True).exclude(
-                scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
+        for signup in self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True).exclude(
+                scheduled_activity__activity__special=True).exclude(scheduled_activity__activity__restricted=True).exclude(
+                    scheduled_activity__activity__deleted=True).exclude(
+                        scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
             acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
@@ -808,7 +776,6 @@ class UserProperties(models.Model):
     _address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
     _birthday = models.DateField(null=True)
     _schedule = models.ManyToManyField('Section', related_name='_students')
-
     """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
         The permission attribute should be the part after "self_" or "parent_"
@@ -956,11 +923,7 @@ class Email(models.Model):
 
 class Phone(models.Model):
     """Represents a phone number"""
-    PURPOSES = (
-        ('h', 'Home Phone'),
-        ('m', 'Mobile Phone'),
-        ('o', 'Other Phone')
-    )
+    PURPOSES = (('h', 'Home Phone'), ('m', 'Mobile Phone'), ('o', 'Other Phone'))
 
     purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
     user = models.ForeignKey(User, related_name='phones', on_delete=models.CASCADE)

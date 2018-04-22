@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthactivity',
             name='admin_comments',
-            field=models.CharField(blank=True, max_length=1000),),
+            field=models.CharField(blank=True, max_length=1000),
+        ),
         migrations.AddField(
             model_name='historicaleighthactivity',
             name='admin_comments',
-            field=models.CharField(blank=True, max_length=1000),),
+            field=models.CharField(blank=True, max_length=1000),
+        ),
     ]

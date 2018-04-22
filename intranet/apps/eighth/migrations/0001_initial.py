@@ -29,7 +29,8 @@ class Migration(migrations.Migration):
                 ('groups_allowed', models.ManyToManyField(related_name='restricted_activity_set', to='auth.Group', blank=True)),
             ],
             options={'verbose_name_plural': 'eighth activities'},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='EighthBlock',
             fields=[
@@ -39,7 +40,8 @@ class Migration(migrations.Migration):
                 ('locked', models.BooleanField(default=False)),
             ],
             options={'ordering': ('date', 'block_letter')},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='EighthRoom',
             fields=[
@@ -48,7 +50,8 @@ class Migration(migrations.Migration):
                 ('capacity', models.SmallIntegerField(default=-1)),
             ],
             options={},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='EighthScheduledActivity',
             fields=[
@@ -61,7 +64,8 @@ class Migration(migrations.Migration):
                 ('block', models.ForeignKey(to='eighth.EighthBlock', on_delete=models.CASCADE)),
             ],
             options={'verbose_name_plural': 'eighth scheduled activities'},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='EighthSignup',
             fields=[
@@ -72,12 +76,13 @@ class Migration(migrations.Migration):
                 ('previous_activity_sponsors', models.CharField(max_length=100, blank=True)),
                 ('pass_accepted', models.BooleanField(default=False)),
                 ('was_absent', models.BooleanField(default=False)),
-                ('scheduled_activity', models.ForeignKey(related_name='eighthsignup_set', to='eighth.EighthScheduledActivity',
-                                                         on_delete=models.CASCADE)),
+                ('scheduled_activity',
+                 models.ForeignKey(related_name='eighthsignup_set', to='eighth.EighthScheduledActivity', on_delete=models.CASCADE)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.CreateModel(
             name='EighthSponsor',
             fields=[
@@ -88,52 +93,64 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={},
-            bases=(models.Model,),),
+            bases=(models.Model,),
+        ),
         migrations.AlterUniqueTogether(
             name='eighthsponsor',
-            unique_together={('first_name', 'last_name', 'user', 'online_attendance')},),
+            unique_together={('first_name', 'last_name', 'user', 'online_attendance')},
+        ),
         migrations.AlterUniqueTogether(
             name='eighthsignup',
-            unique_together={('user', 'scheduled_activity')},),
+            unique_together={('user', 'scheduled_activity')},
+        ),
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='members',
             field=models.ManyToManyField(related_name='eighthscheduledactivity_set', through='eighth.EighthSignup', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='rooms',
             field=models.ManyToManyField(to='eighth.EighthRoom', blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='sponsors',
             field=models.ManyToManyField(to='eighth.EighthSponsor', blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AlterUniqueTogether(
             name='eighthscheduledactivity',
-            unique_together={('block', 'activity')},),
+            unique_together={('block', 'activity')},
+        ),
         migrations.AddField(
             model_name='eighthblock',
             name='activities',
             field=models.ManyToManyField(to='eighth.EighthActivity', through='eighth.EighthScheduledActivity', blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AlterUniqueTogether(
             name='eighthblock',
-            unique_together={('date', 'block_letter')},),
+            unique_together={('date', 'block_letter')},
+        ),
         migrations.AddField(
             model_name='eighthactivity',
             name='rooms',
             field=models.ManyToManyField(to='eighth.EighthRoom', blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AddField(
             model_name='eighthactivity',
             name='sponsors',
             field=models.ManyToManyField(to='eighth.EighthSponsor', blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
         migrations.AddField(
             model_name='eighthactivity',
             name='users_allowed',
             field=models.ManyToManyField(related_name='restricted_activity_set', to=settings.AUTH_USER_MODEL, blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
     ]

@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthblock',
         name='comments',
-        field=models.CharField(max_length=100, blank=True),)]
+        field=models.CharField(max_length=100, blank=True),
+    )]

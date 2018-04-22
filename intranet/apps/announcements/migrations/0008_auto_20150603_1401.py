@@ -12,5 +12,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcementrequest',
             name='teachers_requested',
-            field=models.ManyToManyField(related_name='teachers_requested', to=settings.AUTH_USER_MODEL),)
+            field=models.ManyToManyField(related_name='teachers_requested', to=settings.AUTH_USER_MODEL),
+        )
     ]
