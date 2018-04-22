@@ -15,20 +15,24 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcement',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+        ),
         migrations.AlterField(
             model_name='announcementrequest',
             name='posted_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='posted_by',
-                                    to=settings.AUTH_USER_MODEL),),
+                                    to=settings.AUTH_USER_MODEL),
+        ),
         migrations.AlterField(
             model_name='announcementrequest',
             name='rejected_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='rejected_by',
-                                    to=settings.AUTH_USER_MODEL),),
+                                    to=settings.AUTH_USER_MODEL),
+        ),
         migrations.AlterField(
             model_name='announcementrequest',
             name='user',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user',
-                                    to=settings.AUTH_USER_MODEL),),
+                                    to=settings.AUTH_USER_MODEL),
+        ),
     ]

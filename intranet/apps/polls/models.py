@@ -153,8 +153,15 @@ class Question(models.Model):
     FREE_RESP = 'FRE'
     SHORT_RESP = 'SRE'
     STD_OTHER = 'STO'
-    TYPE = ((STD, 'Standard'), (ELECTION, 'Election'), (APP, 'Approval'), (SPLIT_APP, 'Split approval'), (FREE_RESP, 'Free response'),
-            (SHORT_RESP, 'Short response'), (STD_OTHER, 'Standard other'),)
+    TYPE = (
+        (STD, 'Standard'),
+        (ELECTION, 'Election'),
+        (APP, 'Approval'),
+        (SPLIT_APP, 'Split approval'),
+        (FREE_RESP, 'Free response'),
+        (SHORT_RESP, 'Short response'),
+        (STD_OTHER, 'Standard other'),
+    )
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
     max_choices = models.IntegerField(default=1)
 

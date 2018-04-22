@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='printjob',
         name='num_pages',
-        field=models.IntegerField(default=0),)]
+        field=models.IntegerField(default=0),
+    )]

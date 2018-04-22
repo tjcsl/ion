@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthscheduledactivity',
         name='administrative',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

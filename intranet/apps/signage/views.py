@@ -107,24 +107,24 @@ def eighth_signage(request, block_id=None, block_increment=0):
             prev_block = None
 
     context = {
-            "user": user,
-            "real_user": request.user,
-            "block_info": block_info,
-            "activities_list": safe_json(block_info["activities"]),
-            "active_block": block,
-            "active_block_current_signup": None,
-            "no_title": ("no_title" in request.GET),
-            "no_detail": not ("detail" in request.GET),
-            "no_rooms": ("no_rooms" in request.GET),
-            "use_scroll": False if touch_signage else ("no_scroll" not in request.GET),
-            "do_reload": ("no_reload" not in request.GET),
-            "preload_background": True,
-            "reload_mins": reload_mins,
-            "no_user_display": True,
-            "no_fav": True,
-            "touch_signage": touch_signage,
-            "next_block": next_block,
-            "prev_block": prev_block
-            }
+        "user": user,
+        "real_user": request.user,
+        "block_info": block_info,
+        "activities_list": safe_json(block_info["activities"]),
+        "active_block": block,
+        "active_block_current_signup": None,
+        "no_title": ("no_title" in request.GET),
+        "no_detail": not ("detail" in request.GET),
+        "no_rooms": ("no_rooms" in request.GET),
+        "use_scroll": False if touch_signage else ("no_scroll" not in request.GET),
+        "do_reload": ("no_reload" not in request.GET),
+        "preload_background": True,
+        "reload_mins": reload_mins,
+        "no_user_display": True,
+        "no_fav": True,
+        "touch_signage": touch_signage,
+        "next_block": next_block,
+        "prev_block": prev_block
+    }
 
     return render(request, "eighth/display.html", context)

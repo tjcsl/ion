@@ -11,11 +11,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='day',
             name='date',
-            field=models.DateField(unique=True),),
+            field=models.DateField(unique=True),
+        ),
         migrations.AlterUniqueTogether(
             name='block',
-            unique_together={('name', 'start', 'end')},),
+            unique_together={('name', 'start', 'end')},
+        ),
         migrations.AlterUniqueTogether(
             name='time',
-            unique_together={('hour', 'min')},),
+            unique_together={('hour', 'min')},
+        ),
     ]

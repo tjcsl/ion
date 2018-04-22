@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='sign',
         name='zoom',
-        field=models.IntegerField(default=3),)]
+        field=models.IntegerField(default=3),
+    )]

@@ -13,17 +13,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='computerregistration',
             name='description',
-            field=models.TextField(max_length=1000),),
+            field=models.TextField(max_length=1000),
+        ),
         migrations.AlterField(
             model_name='founditem',
             name='description',
-            field=models.TextField(max_length=1000),),
+            field=models.TextField(max_length=1000),
+        ),
         migrations.AlterField(
             model_name='lostitem',
             name='description',
-            field=models.TextField(max_length=1000),),
+            field=models.TextField(max_length=1000),
+        ),
         migrations.AlterField(
             model_name='phoneregistration',
             name='description',
-            field=models.TextField(max_length=1000),),
+            field=models.TextField(max_length=1000),
+        ),
     ]

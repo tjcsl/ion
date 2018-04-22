@@ -161,18 +161,14 @@ def picture_view(request, user_id, year=None):
 @login_required
 @deny_restricted
 def all_courses_view(request):
-    context = {
-        "courses": Course.objects.all().order_by('name', 'course_id').distinct()
-    }
+    context = {"courses": Course.objects.all().order_by('name', 'course_id').distinct()}
     return render(request, "users/all_courses.html", context)
 
 
 @login_required
 @deny_restricted
 def courses_by_period_view(request, period_number):
-    context = {
-        "courses": Course.objects.filter(sections__period=period_number).order_by('name', 'course_id').distinct()
-    }
+    context = {"courses": Course.objects.filter(sections__period=period_number).order_by('name', 'course_id').distinct()}
     return render(request, "users/all_courses.html", context)
 
 
@@ -180,9 +176,7 @@ def courses_by_period_view(request, period_number):
 @deny_restricted
 def course_info_view(request, course_id):
     course = get_object_or_404(Course, course_id=course_id)
-    context = {
-        "course": course
-    }
+    context = {"course": course}
     return render(request, "users/all_classes.html", context)
 
 
@@ -192,10 +186,7 @@ def sections_by_room_view(request, room_number):
     sections = Section.objects.filter(room=room_number).order_by('period')
     if not sections.exists():
         raise Http404
-    context = {
-        "room_number": room_number,
-        "classes": sections
-    }
+    context = {"room_number": room_number, "classes": sections}
     return render(request, "users/class_room.html", context)
 
 
@@ -203,7 +194,5 @@ def sections_by_room_view(request, room_number):
 @deny_restricted
 def course_section_view(request, section_id):
     section = get_object_or_404(Section, section_id=section_id)
-    context = {
-        "class": section
-    }
+    context = {"class": section}
     return render(request, "users/class.html", context)

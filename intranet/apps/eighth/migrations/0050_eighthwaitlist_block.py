@@ -17,5 +17,6 @@ class Migration(migrations.Migration):
             model_name='eighthwaitlist',
             name='block',
             field=models.ForeignKey(default=3155, on_delete=django.db.models.deletion.CASCADE, to='eighth.EighthBlock'),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
     ]

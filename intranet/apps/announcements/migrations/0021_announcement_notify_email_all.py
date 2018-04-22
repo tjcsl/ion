@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='announcement',
         name='notify_email_all',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

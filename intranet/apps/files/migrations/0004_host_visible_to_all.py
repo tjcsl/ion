@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='host',
         name='visible_to_all',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

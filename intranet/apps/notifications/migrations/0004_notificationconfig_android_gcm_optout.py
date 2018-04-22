@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='notificationconfig',
         name='android_gcm_optout',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

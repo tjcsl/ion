@@ -18,7 +18,6 @@ from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 from ...utils.deletion import set_historical_user
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -66,7 +65,10 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance"),)
-        ordering = ("last_name", "first_name",)
+        ordering = (
+            "last_name",
+            "first_name",
+        )
 
     @property
     def name(self):
@@ -350,13 +352,9 @@ class EighthActivity(AbstractBaseEighthModel):
         cached = cache.get(key)
         if cached:
             return cached
-        freq_users = self.eighthscheduledactivity_set.exclude(
-            eighthsignup_set__user=None).exclude(
-            administrative=True).exclude(
-            special=True).exclude(
-            restricted=True).values('eighthsignup_set__user').annotate(
-            count=Count('eighthsignup_set__user')).filter(
-            count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        freq_users = self.eighthscheduledactivity_set.exclude(eighthsignup_set__user=None).exclude(administrative=True).exclude(special=True).exclude(
+            restricted=True).values('eighthsignup_set__user').annotate(count=Count('eighthsignup_set__user')).filter(
+                count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
         cache.set(key, freq_users, timeout=60 * 60 * 24 * 7)
         return freq_users
 
@@ -973,8 +971,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def notify_waitlist(self, waitlists, activity):
         data = {"activity": activity}
         for waitlist in waitlists:
-            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data,
-                       "Open Spot Notification", [waitlist.user.primary_email])
+            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data, "Open Spot Notification", [waitlist.user.primary_email])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
@@ -1150,8 +1147,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     else:
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
-                        existing_blocks = [existing_signup.scheduled_activity.block,
-                                           existing_signup.scheduled_activity.get_both_blocks_sibling().block]
+                        existing_blocks = [
+                            existing_signup.scheduled_activity.block,
+                            existing_signup.scheduled_activity.get_both_blocks_sibling().block
+                        ]
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()

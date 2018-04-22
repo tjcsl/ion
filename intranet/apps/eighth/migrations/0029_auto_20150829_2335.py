@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eighthactivity',
             name='groups_allowed',
-            field=models.ManyToManyField(related_name='restricted_activity_set', to='auth.Group', blank=True),)
+            field=models.ManyToManyField(related_name='restricted_activity_set', to='auth.Group', blank=True),
+        )
     ]

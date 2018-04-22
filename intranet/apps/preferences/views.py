@@ -89,8 +89,8 @@ def save_preferred_pic(request, user):
                 if old_preferred_pic == new_preferred_pic:
                     logger.debug("{}: same ({})".format("preferred_photo", new_preferred_pic))
                 else:
-                    logger.debug("{}: new: {} from: {}".format("preferred_photo",
-                                                               new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None))
+                    logger.debug("{}: new: {} from: {}".format("preferred_photo", new_preferred_pic, old_preferred_pic
+                                                               if "preferred_photo" in preferred_pic else None))
                     try:
                         if new_preferred_pic == 'AUTO':
                             user.preferred_photo = None
@@ -101,8 +101,8 @@ def save_preferred_pic(request, user):
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                         logger.debug("Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                     else:
-                        messages.success(request, "Set field {} to {}".format("preferred_pic",
-                                                                              new_preferred_pic if not isinstance(new_preferred_pic, list) else
+                        messages.success(request, "Set field {} to {}".format("preferred_pic", new_preferred_pic
+                                                                              if not isinstance(new_preferred_pic, list) else
                                                                               ", ".join(new_preferred_pic)))
     return preferred_pic_form
 
@@ -226,8 +226,7 @@ def save_bus_route(request, user):
                 if field in bus_route and bus_route[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field]
-                                                               if field in bus_route else None))
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field] if field in bus_route else None))
                     try:
                         print(fields[field])
                         route = Route.objects.get(route_name=fields[field])

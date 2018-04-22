@@ -15,14 +15,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='user_type',
-            field=models.CharField(choices=[('student', 'Student'),
-                                            ('teacher', 'Teacher'),
-                                            ('counselor', 'Counselor'),
-                                            ('user', 'Attendance-Only User'),
-                                            ('simple_user', 'Simple User'),
-                                            ('tjstar_presenter', 'tjStar Presenter'),
-                                            ('alum', 'Alumnus'),
-                                            ('service', 'Service Account')],
+            field=models.CharField(choices=[('student', 'Student'), ('teacher', 'Teacher'), ('counselor', 'Counselor'),
+                                            ('user', 'Attendance-Only User'), ('simple_user', 'Simple User'),
+                                            ('tjstar_presenter', 'tjStar Presenter'), ('alum', 'Alumnus'), ('service', 'Service Account')],
                                    default='student', max_length=30),
         ),
     ]

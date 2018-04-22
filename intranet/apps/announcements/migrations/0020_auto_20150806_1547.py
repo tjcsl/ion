@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='announcement',
-        options={'ordering': ['-pinned', '-added']},)]
+        options={'ordering': ['-pinned', '-added']},
+    )]

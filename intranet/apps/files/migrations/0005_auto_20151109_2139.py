@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.RenameField(
         model_name='host',
         old_name='visible_to_all',
-        new_name='available_to_all',)]
+        new_name='available_to_all',
+    )]

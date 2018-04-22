@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='eighthroom',
         name='capacity',
-        field=models.SmallIntegerField(default=28),)]
+        field=models.SmallIntegerField(default=28),
+    )]

@@ -11,5 +11,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcementusermap',
             name='announcement',
-            field=models.OneToOneField(related_name='_user_map', to='announcements.Announcement', on_delete=models.CASCADE),)
+            field=models.OneToOneField(related_name='_user_map', to='announcements.Announcement', on_delete=models.CASCADE),
+        )
     ]

@@ -14,7 +14,10 @@ class PollAdmin(admin.ModelAdmin):
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('poll', 'num', 'question', 'type')
     list_filter = ('poll',)
-    ordering = ('poll', 'num',)
+    ordering = (
+        'poll',
+        'num',
+    )
     raw_id_fields = ('poll',)
 
 
@@ -26,24 +29,50 @@ class ChoiceAdmin(admin.ModelAdmin):
     get_poll.short_description = 'Poll'  # type: ignore
     get_poll.admin_order_field = 'question__poll'  # type: ignore
 
-    list_display = ('info', 'get_poll', 'question', 'num',)
+    list_display = (
+        'info',
+        'get_poll',
+        'question',
+        'num',
+    )
     list_filter = ('question',)
-    ordering = ('question', 'num',)
+    ordering = (
+        'question',
+        'num',
+    )
     raw_id_fields = ('question',)
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('question', 'user', 'choice', 'clear_vote', 'weight',)
+    list_display = (
+        'question',
+        'user',
+        'choice',
+        'clear_vote',
+        'weight',
+    )
     list_filter = ('question',)
-    ordering = ('question', 'user',)
-    raw_id_fields = ('question', 'user',)
+    ordering = (
+        'question',
+        'user',
+    )
+    raw_id_fields = (
+        'question',
+        'user',
+    )
 
 
 class AnswerVoteAdmin(admin.ModelAdmin):
-    list_display = ('question', 'choice',)
+    list_display = (
+        'question',
+        'choice',
+    )
     list_filter = ('question',)
     ordering = ('question',)
-    raw_id_fields = ('question', 'users',)
+    raw_id_fields = (
+        'question',
+        'users',
+    )
 
 
 admin.site.register(Poll, PollAdmin)

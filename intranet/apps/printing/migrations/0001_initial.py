@@ -17,5 +17,6 @@ class Migration(migrations.Migration):
                 ('file', models.FileField(upload_to=b'')),
                 ('time', models.DateTimeField(auto_now_add=True)),
                 ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
-            ],),
+            ],
+        ),
     ]

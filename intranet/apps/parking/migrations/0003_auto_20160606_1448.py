@@ -16,20 +16,24 @@ class Migration(migrations.Migration):
             model_name='carapplication',
             name='added',
             field=models.DateTimeField(auto_now=True, default=datetime.datetime(2016, 6, 6, 18, 47, 49, 818264, tzinfo=utc)),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
         migrations.AddField(
             model_name='carapplication',
             name='updated',
             field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2016, 6, 6, 18, 47, 52, 898429, tzinfo=utc)),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
         migrations.AddField(
             model_name='parkingapplication',
             name='added',
             field=models.DateTimeField(auto_now=True, default=datetime.datetime(2016, 6, 6, 18, 47, 57, 841492, tzinfo=utc)),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
         migrations.AddField(
             model_name='parkingapplication',
             name='updated',
             field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2016, 6, 6, 18, 48, 0, 922245, tzinfo=utc)),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
     ]

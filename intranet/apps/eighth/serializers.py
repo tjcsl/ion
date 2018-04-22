@@ -83,20 +83,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     block_letter = serializers.CharField(max_length=10)
     comments = serializers.CharField(max_length=100)
 
-    def process_scheduled_activity(self,
-                                   scheduled_activity,
-                                   request=None,
-                                   user=None,
-                                   favorited_activities=None,
-                                   recommended_activities=None,
+    def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None,
                                    available_restricted_acts=None):
         activity = scheduled_activity.activity
         if user:
             is_non_student_admin = user.is_eighth_admin and not user.is_student
         else:
             is_non_student_admin = False
-        restricted_for_user = (scheduled_activity.get_restricted() and not is_non_student_admin and
-                               (activity.id not in available_restricted_acts))
+        restricted_for_user = (scheduled_activity.get_restricted() and not is_non_student_admin and (activity.id not in available_restricted_acts))
         prefix = "Special: " if activity.special else ""
         prefix += activity.name
         if scheduled_activity.title:
@@ -156,11 +150,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
-        return self.process_scheduled_activity(scheduled_activity,
-                                               self.context["request"],
-                                               user,
-                                               favorited_activities,
-                                               recommended_activities,
+        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities,
                                                available_restricted_acts)
 
     def get_scheduled_activity(self, scheduled_activity_id):
@@ -180,11 +170,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
-        activity_list = FallbackDict(functools.partial(self.get_activity,
-                                                       user,
-                                                       favorited_activities,
-                                                       recommended_activities,
-                                                       available_restricted_acts))
+        activity_list = FallbackDict(
+            functools.partial(self.get_activity, user, favorited_activities, recommended_activities, available_restricted_acts))
         scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to
@@ -219,8 +206,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "eighthactivity", "eighthsponsor"))
 
         scheduled_activity_ids = scheduled_activities.values_list("id", flat=True)
-        overidden_sponsorships = (EighthScheduledActivity.sponsors.through.objects.filter(
-            eighthscheduledactivity_id__in=scheduled_activity_ids).values("eighthscheduledactivity", "eighthsponsor"))
+        overidden_sponsorships = (
+            EighthScheduledActivity.sponsors.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).values(
+                "eighthscheduledactivity", "eighthsponsor"))
 
         for sponsorship in sponsorships:
             activity_id = int(sponsorship["eighthactivity"])
@@ -265,8 +253,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 activity_list[activity_id]["sponsors"].append(name)
 
         roomings = (EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity"))
-        overidden_roomings = (EighthScheduledActivity.rooms.through.objects.filter(
-            eighthscheduledactivity_id__in=scheduled_activity_ids).select_related("eighthroom", "eighthscheduledactivity"))
+        overidden_roomings = (
+            EighthScheduledActivity.rooms.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).select_related(
+                "eighthroom", "eighthscheduledactivity"))
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id

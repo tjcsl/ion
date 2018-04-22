@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='host',
-        options={'ordering': ['-linux', 'name']},)]
+        options={'ordering': ['-linux', 'name']},
+    )]

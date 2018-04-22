@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='block',
         name='order',
-        field=models.IntegerField(default=0),)]
+        field=models.IntegerField(default=0),
+    )]

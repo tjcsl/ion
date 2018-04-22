@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='user',
         name='receive_schedule_notifications',
-        field=models.BooleanField(default=False),)]
+        field=models.BooleanField(default=False),
+    )]

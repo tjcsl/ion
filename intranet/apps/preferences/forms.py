@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class BusRouteForm(forms.Form):
+
     def __init__(self, user, *args, **kwargs):
         super(BusRouteForm, self).__init__(*args, **kwargs)
         self.BUS_ROUTE_CHOICES = [(None, "Set bus route...")]
@@ -34,9 +35,7 @@ class PreferredPictureForm(forms.Form):
             except Exception:
                 pass
 
-        self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
-                                                           widget=forms.RadioSelect(),
-                                                           required=True)
+        self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES, widget=forms.RadioSelect(), required=True)
 
 
 class PrivacyOptionsForm(forms.Form):
@@ -94,12 +93,11 @@ class NotificationOptionsForm(forms.Form):
         label = "Primary Email"
         if user.emails.all().count() == 0:
             label = "You can set a primary email after adding emails below."
-        self.fields["primary_email"] = forms.ModelChoiceField(queryset=Email.objects.filter(
-            user=user), required=False, label=label, disabled=(user.emails.all().count() == 0))
+        self.fields["primary_email"] = forms.ModelChoiceField(
+            queryset=Email.objects.filter(user=user), required=False, label=label, disabled=(user.emails.all().count() == 0))
 
 
 class PhoneForm(forms.ModelForm):
-
     """Represents a phone number (number + purpose)"""
     _number = forms.CharField(max_length=14)
 

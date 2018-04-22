@@ -13,5 +13,6 @@ class Migration(migrations.Migration):
             model_name='eighthactivity',
             name='users_blacklisted',
             field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, blank=True),
-            preserve_default=True,),
+            preserve_default=True,
+        ),
     ]

@@ -105,8 +105,8 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
             Paragraph("<b>Unique students:</b> {}, <b>Capacity:</b> {}".format(act_stats["students"], act_stats["capacity"]), styles["Normal"]))
 
         elements.append(
-            Table([[lelements, relements]], style=[('LEFTPADDING', (0, 0), (-1, -1), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 0), ('VALIGN', (0, 0), (
-                -1, -1), 'TOP')]))
+            Table([[lelements, relements]], style=[('LEFTPADDING', (0, 0), (-1, -1), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 0), ('VALIGN', (0, 0),
+                                                                                                                                 (-1, -1), 'TOP')]))
 
         parsed_members = [[x.username, y] for x, y in act_stats["members"]]
         parsed_members = list(chunks(parsed_members, 30))[:3]
@@ -126,8 +126,8 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
                 Paragraph("<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]),
                           styles["Normal"]))
         elements.append(
-            Paragraph("<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(act_stats["old_blocks"], year - 1,
-                                                                                                              year), styles["Normal"]))
+            Paragraph("<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(
+                act_stats["old_blocks"], year - 1, year), styles["Normal"]))
 
         elements.append(PageBreak())
 
@@ -258,23 +258,16 @@ def stats_global_view(request):
             response = HttpResponse(content_type="text/csv")
             response["Content-Disposition"] = 'attachment; filename="eighth.csv"'
             writer = csv.writer(response)
-            writer.writerow(["Activity", "Default Sponsors", "Default Rooms", "Capacity", "Unique Students", "Total Blocks", "Scheduled Blocks",
-                             "Cancelled Blocks", "Empty Blocks", "Total Signups", "Average Signups per Block", "Average Signups per Student"])
+            writer.writerow([
+                "Activity", "Default Sponsors", "Default Rooms", "Capacity", "Unique Students", "Total Blocks", "Scheduled Blocks",
+                "Cancelled Blocks", "Empty Blocks", "Total Signups", "Average Signups per Block", "Average Signups per Student"
+            ])
             for act in EighthActivity.objects.all().order_by("name").prefetch_related("rooms").prefetch_related("sponsors"):
                 stats = calculate_statistics(act, year=year)
                 writer.writerow([
-                    act.name,
-                    ", ".join([x.name for x in act.sponsors.all()]),
-                    ", ".join([str(x) for x in act.rooms.all()]),
-                    stats["capacity"],
-                    stats["students"],
-                    stats["total_blocks"],
-                    stats["scheduled_blocks"],
-                    stats["cancelled_blocks"],
-                    stats["empty_blocks"],
-                    stats["total_signups"],
-                    stats["average_signups"],
-                    stats["average_user_signups"]
+                    act.name, ", ".join([x.name for x in act.sponsors.all()]), ", ".join([str(x) for x in act.rooms.all()]), stats["capacity"],
+                    stats["students"], stats["total_blocks"], stats["scheduled_blocks"], stats["cancelled_blocks"], stats["empty_blocks"],
+                    stats["total_signups"], stats["average_signups"], stats["average_user_signups"]
                 ])
         else:
             response = HttpResponse(content_type="application/pdf")

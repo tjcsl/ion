@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AlterField(
         model_name='event',
         name='show_attending',
-        field=models.BooleanField(default=True),)]
+        field=models.BooleanField(default=True),
+    )]

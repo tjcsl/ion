@@ -26,8 +26,8 @@ class PrintJobForm(forms.ModelForm):
     def validate_size(self):
         filesize = self.file.__sizeof__()
         if filesize > settings.FILES_MAX_UPLOAD_SIZE:
-            raise forms.ValidationError("The file uploaded is above the maximum upload size ({}MB). ".format(settings.FILES_MAX_UPLOAD_SIZE / 1024 /
-                                                                                                             1024))
+            raise forms.ValidationError("The file uploaded is above the maximum upload size ({}MB). ".format(
+                settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024))
 
     file = forms.FileField(validators=[validate_size])
     printer = forms.ChoiceField()

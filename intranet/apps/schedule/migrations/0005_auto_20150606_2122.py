@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.RenameField(
         model_name='day',
         old_name='type',
-        new_name='day_type',)]
+        new_name='day_type',
+    )]

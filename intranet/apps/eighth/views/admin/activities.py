@@ -80,8 +80,8 @@ def edit_activity_view(request, activity_id):
                                     for sponsor in old_sponsors:
                                         sa.sponsors.add(sponsor)
                                     sa.save()
-                                messages.success(request,
-                                                 "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count()))
+                                messages.success(request, "Overrode {} scheduled activities to old sponsor default".format(
+                                    sched_acts_default.count()))
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default sponsors globally")

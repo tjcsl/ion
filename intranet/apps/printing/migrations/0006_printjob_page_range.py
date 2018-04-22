@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='printjob',
         name='page_range',
-        field=models.CharField(max_length=100, blank=True),)]
+        field=models.CharField(max_length=100, blank=True),
+    )]

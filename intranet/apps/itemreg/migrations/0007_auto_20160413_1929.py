@@ -12,10 +12,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='founditem',
-            name='user',),
+            name='user',
+        ),
         migrations.RemoveField(
             model_name='lostitem',
-            name='user',),
+            name='user',
+        ),
         migrations.DeleteModel(name='FoundItem',),
         migrations.DeleteModel(name='LostItem',),
     ]

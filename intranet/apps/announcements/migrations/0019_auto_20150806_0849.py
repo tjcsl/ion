@@ -10,9 +10,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='announcement',
-            options={'ordering': ['-added', '-pinned']},),
+            options={'ordering': ['-added', '-pinned']},
+        ),
         migrations.AddField(
             model_name='announcement',
             name='pinned',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

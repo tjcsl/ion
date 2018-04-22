@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='day',
-            options={'ordering': ('date',)},), migrations.AlterModelOptions(
-                name='daytype',
-                options={'ordering': ('name',)},)
+            options={'ordering': ('date',)},
+        ),
+        migrations.AlterModelOptions(
+            name='daytype',
+            options={'ordering': ('name',)},
+        )
     ]

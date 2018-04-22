@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='time',
-        options={'ordering': ('hour', 'min')},)]
+        options={'ordering': ('hour', 'min')},
+    )]

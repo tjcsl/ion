@@ -11,15 +11,19 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='notificationconfig',
             old_name='android_gcm_time',
-            new_name='gcm_time',),
+            new_name='gcm_time',
+        ),
         migrations.RenameField(
             model_name='notificationconfig',
             old_name='android_gcm_token',
-            new_name='gcm_token',),
+            new_name='gcm_token',
+        ),
         migrations.RemoveField(
             model_name='notificationconfig',
-            name='chrome_gcm_time',),
+            name='chrome_gcm_time',
+        ),
         migrations.RemoveField(
             model_name='notificationconfig',
-            name='chrome_gcm_token',),
+            name='chrome_gcm_token',
+        ),
     ]

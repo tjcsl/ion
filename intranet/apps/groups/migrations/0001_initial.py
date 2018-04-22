@@ -16,15 +16,18 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('student_visible', models.BooleanField(default=False)),
-            ],),
+            ],
+        ),
         migrations.CreateModel(
             name='Group',
             fields=[],
             options={'proxy': True},
             bases=('auth.group',),
-            managers=[('objects', intranet.apps.groups.models.GroupManager())],),
+            managers=[('objects', intranet.apps.groups.models.GroupManager())],
+        ),
         migrations.AddField(
             model_name='groupproperties',
             name='group',
-            field=models.OneToOneField(to='groups.Group', on_delete=models.CASCADE),),
+            field=models.OneToOneField(to='groups.Group', on_delete=models.CASCADE),
+        ),
     ]

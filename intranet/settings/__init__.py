@@ -116,7 +116,6 @@ if ADMINS is None:
 
 DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
 
-
 MANAGERS = ADMINS
 
 # Address to send feedback messages to
@@ -259,7 +258,8 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
-    "oauth2_provider.backends.OAuth2Backend",)
+    "oauth2_provider.backends.OAuth2Backend",
+)
 # Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -292,9 +292,9 @@ TEMPLATES = [
                 "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
                 "intranet.apps.context_processors.show_homecoming",  # Sitewide custom themes (special events, etc)
                 "intranet.apps.context_processors.global_custom_theme",  # Sitewide custom themes (special events, etc)
-                "intranet.apps.context_processors.show_bus_button"
-            ),
-            "debug": True,  # Only enabled if DEBUG is true as well
+                "intranet.apps.context_processors.show_bus_button"),
+            "debug":
+            True,  # Only enabled if DEBUG is true as well
             'loaders': ('django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'),
             'libraries': {
                 'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
@@ -363,7 +363,6 @@ CACHE_AGE = {
     "emerg": int(datetime.timedelta(minutes=5).total_seconds())
 }
 
-
 if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
     # Make the cache age last just long enough to reload the page to
     # check if caching worked
@@ -429,18 +428,24 @@ FCPS_STUDENT_ID_LENGTH = 7
 # Django REST framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),  # require authentication
-    "USE_ABSOLUTE_URLS": True,
+    "USE_ABSOLUTE_URLS":
+    True,
 
     # Return native `Date` and `Time` objects in `serializer.data`
-    "DATETIME_FORMAT": None,
-    "DATE_FORMAT": None,
-    "TIME_FORMAT": None,
-    "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 50,
+    "DATETIME_FORMAT":
+    None,
+    "DATE_FORMAT":
+    None,
+    "TIME_FORMAT":
+    None,
+    "EXCEPTION_HANDLER":
+    "intranet.apps.api.utils.custom_exception_handler",
+    "DEFAULT_PAGINATION_CLASS":
+    "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE":
+    50,
     "DEFAULT_AUTHENTICATION_CLASSES":
-    ("intranet.apps.api.authentication.ApiBasicAuthentication",
-     "intranet.apps.api.authentication.CsrfExemptSessionAuthentication",
+    ("intranet.apps.api.authentication.ApiBasicAuthentication", "intranet.apps.api.authentication.CsrfExemptSessionAuthentication",
      "oauth2_provider.contrib.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
 }
@@ -510,12 +515,7 @@ INSTALLED_APPS = [
 ]
 
 # Django Channels Configuration (we use this for websockets)
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
-        "ROUTING": "intranet.routing.channel_routing"
-    }
-}
+CHANNEL_LAYERS = {"default": {"BACKEND": "asgi_redis.RedisChannelLayer", "ROUTING": "intranet.routing.channel_routing"}}
 
 if PRODUCTION:
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]

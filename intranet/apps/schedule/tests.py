@@ -19,8 +19,7 @@ class ScheduleTest(IonTestCase):
         self.assertEqual(out.getvalue().splitlines(), output)
 
     def test_day(self):
-        snow_daytype = DayType.objects.get_or_create(name="No School -- Snow Day",
-                                                     special=True)[0]
+        snow_daytype = DayType.objects.get_or_create(name="No School -- Snow Day", special=True)[0]
 
         day = Day.objects.get_or_create(date=timezone.now().date(), day_type=snow_daytype)[0]
 

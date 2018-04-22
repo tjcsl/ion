@@ -6,7 +6,6 @@ from django.utils.encoding import force_text
 
 
 class PhoneField(models.Field):
-
     """Model field for a phone number"""
 
     def __init__(self, *args, **kwargs):

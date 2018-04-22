@@ -325,8 +325,8 @@ def migrate_outstanding_passes_view(request):
 
         pass_not_received, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
 
-        EighthSignup.objects.filter(scheduled_activity__block=block, after_deadline=True, pass_accepted=False).update(
-            scheduled_activity=pass_not_received)
+        EighthSignup.objects.filter(scheduled_activity__block=block, after_deadline=True,
+                                    pass_accepted=False).update(scheduled_activity=pass_not_received)
 
         messages.success(request, "Successfully migrated outstanding passes.")
 
@@ -358,8 +358,8 @@ def out_of_building_schedules_view(request, block_id=None):
         rooms = EighthRoom.objects.filter(name__icontains="out of building")
 
         if len(rooms) > 0:
-            rooms_filter = Q(
-                scheduled_activity__rooms__in=rooms) | (Q(scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms))
+            rooms_filter = Q(scheduled_activity__rooms__in=rooms) | (
+                Q(scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms))
             signups = (EighthSignup.objects.filter(scheduled_activity__block=block).filter(rooms_filter)
                        .distinct().order_by("scheduled_activity__activity"))
             context["signups"] = signups

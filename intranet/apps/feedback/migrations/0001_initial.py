@@ -16,5 +16,6 @@ class Migration(migrations.Migration):
                 ('comments', models.CharField(max_length=50000)),
                 ('date', models.DateTimeField(auto_now=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
-            ],),
+            ],
+        ),
     ]

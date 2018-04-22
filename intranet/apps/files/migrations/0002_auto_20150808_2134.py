@@ -11,10 +11,12 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='host',
             old_name='root_directory',
-            new_name='directory',),
+            new_name='directory',
+        ),
         migrations.AddField(
             model_name='host',
             name='code',
             field=models.CharField(default='', max_length=32),
-            preserve_default=False,),
+            preserve_default=False,
+        ),
     ]

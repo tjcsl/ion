@@ -44,8 +44,10 @@ def edit_profile_view(request, user_id=None):
         else:
             messages.error(request, "An error occurred updating the student profile.")
     else:
-        user_form = ProfileEditForm(initial={'counselor_id': '' if not user.counselor else user.counselor.id,
-                                             'birthday': user.properties.birthday}, instance=user)
+        user_form = ProfileEditForm(initial={
+            'counselor_id': '' if not user.counselor else user.counselor.id,
+            'birthday': user.properties.birthday
+        }, instance=user)
         address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}

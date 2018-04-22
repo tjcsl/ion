@@ -12,9 +12,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcement',
             name='groups',
-            field=models.ManyToManyField(to='auth.Group', blank=True),),
+            field=models.ManyToManyField(to='auth.Group', blank=True),
+        ),
         migrations.AlterField(
             model_name='announcement',
             name='user',
-            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),),
+            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
+        ),
     ]

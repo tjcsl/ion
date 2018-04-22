@@ -11,9 +11,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eighthsignup',
             name='previous_activity_name',
-            field=models.CharField(max_length=200, blank=True),),
+            field=models.CharField(max_length=200, blank=True),
+        ),
         migrations.AlterField(
             model_name='eighthsignup',
             name='previous_activity_sponsors',
-            field=models.CharField(max_length=10000, blank=True),),
+            field=models.CharField(max_length=10000, blank=True),
+        ),
     ]

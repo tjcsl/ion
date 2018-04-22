@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='eighthactivity',
         name='aid',
-        field=models.CharField(max_length=10, blank=True),)]
+        field=models.CharField(max_length=10, blank=True),
+    )]

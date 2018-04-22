@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='event',
             old_name='created_time',
-            new_name='added',),
+            new_name='added',
+        ),
         migrations.RenameField(
             model_name='event',
             old_name='last_modified_time',
-            new_name='updated',),
+            new_name='updated',
+        ),
     ]

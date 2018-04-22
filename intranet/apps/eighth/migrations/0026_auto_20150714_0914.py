@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.RenameField(
         model_name='eighthblock',
         old_name='time',
-        new_name='signup_time',)]
+        new_name='signup_time',
+    )]

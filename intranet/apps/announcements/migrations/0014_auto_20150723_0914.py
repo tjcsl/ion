@@ -12,9 +12,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='announcement',
             name='users_hidden',
-            field=models.ManyToManyField(related_name='announcement_hidden', to=settings.AUTH_USER_MODEL, blank=True),),
+            field=models.ManyToManyField(related_name='announcement_hidden', to=settings.AUTH_USER_MODEL, blank=True),
+        ),
         migrations.AddField(
             model_name='announcement',
             name='users_seen',
-            field=models.ManyToManyField(related_name='announcement_seen', to=settings.AUTH_USER_MODEL, blank=True),),
+            field=models.ManyToManyField(related_name='announcement_seen', to=settings.AUTH_USER_MODEL, blank=True),
+        ),
     ]

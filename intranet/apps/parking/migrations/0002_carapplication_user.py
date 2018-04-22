@@ -19,5 +19,6 @@ class Migration(migrations.Migration):
             model_name='carapplication',
             name='user',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='carapplication',
-                                    to=settings.AUTH_USER_MODEL),),
+                                    to=settings.AUTH_USER_MODEL),
+        ),
     ]

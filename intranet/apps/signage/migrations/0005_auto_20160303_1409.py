@@ -13,11 +13,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sign',
             name='use_header',
-            field=models.BooleanField(default=True),),
+            field=models.BooleanField(default=True),
+        ),
         migrations.AlterField(
             model_name='sign',
             name='status',
             field=models.CharField(choices=[('auto', 'Auto - Schedule/Eighth'), ('autourl', 'Auto - URL/Eighth'), ('eighth', 'Eighth Period'),
                                             ('schedule', 'Bell Schedule'), ('status', 'Schedule/Clock'), ('touch', 'Touch Signage'),
-                                            ('url', 'Custom URL')], default='auto', max_length=10),),
+                                            ('url', 'Custom URL')], default='auto', max_length=10),
+        ),
     ]

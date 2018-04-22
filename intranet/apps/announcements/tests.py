@@ -9,6 +9,7 @@ from ...test.ion_test import IonTestCase
 
 class AnnouncementTest(IonTestCase):
     """Tests for the announcements module."""
+
     def setUp(self):
         self.user = User.objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)[0]
 

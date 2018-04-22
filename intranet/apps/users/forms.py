@@ -17,6 +17,7 @@ class ProfileEditForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=GENDERS, label="Sex (M or F)")
     counselor_id = forms.IntegerField(label="Counselor ID")
     birthday = forms.DateField(label="Birth Date")
+
     # # locker = forms.CharField(label="Locker")
 
     # FIELDS = []
@@ -24,9 +25,7 @@ class ProfileEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = [
-            "admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender"
-        ]
+        fields = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender"]
 
 
 class UserChoiceField(forms.ModelChoiceField):

@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='route',
             name='status',
-            field=models.CharField(choices=[('a', 'Arrived (In the lot)'), ('d', 'Delayed'), ('o', 'On Time (Expected)')], default='o', max_length=1, verbose_name='arrival status'),
+            field=models.CharField(choices=[('a', 'Arrived (In the lot)'), ('d', 'Delayed'), ('o', 'On Time (Expected)')], default='o', max_length=1,
+                                   verbose_name='arrival status'),
         ),
     ]

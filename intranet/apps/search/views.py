@@ -36,10 +36,12 @@ def query(q, admin=False):
         map_attrs = {
             "firstname": (
                 "first_name",
-                "nickname",),
+                "nickname",
+            ),
             "first": (
                 "first_name",
-                "nickname",),
+                "nickname",
+            ),
             "lastname": ("last_name",),
             "last": ("last_name",),
             "nick": ("nickname",),
@@ -48,7 +50,8 @@ def query(q, admin=False):
                 "last_name",
                 "middle_name",
                 "first_name",
-                "nickname",),
+                "nickname",
+            ),
             "city": ("address__city",),
             "town": ("address__city",),
             "middlename": ("middle_name",),

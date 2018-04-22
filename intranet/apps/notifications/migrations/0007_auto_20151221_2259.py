@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.RenameField(
         model_name='notificationconfig',
         old_name='android_gcm_optout',
-        new_name='gcm_optout',)]
+        new_name='gcm_optout',
+    )]

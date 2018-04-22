@@ -9,4 +9,5 @@ class Migration(migrations.Migration):
 
     operations = [migrations.AlterModelOptions(
         name='feedback',
-        options={'ordering': ['-date']},)]
+        options={'ordering': ['-date']},
+    )]

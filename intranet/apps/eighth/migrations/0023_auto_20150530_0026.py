@@ -11,9 +11,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='comments',
-            field=models.CharField(max_length=1000, blank=True),),
+            field=models.CharField(max_length=1000, blank=True),
+        ),
         migrations.AlterField(
             model_name='eighthscheduledactivity',
             name='title',
-            field=models.CharField(max_length=1000, blank=True),),
+            field=models.CharField(max_length=1000, blank=True),
+        ),
     ]

@@ -214,7 +214,6 @@ def room_utilization_action(request, start_id, end_id):
         "show_used_rooms": show_used_rooms,
         "show_all_rooms": show_all_rooms,
         "show_available_for_eighth": show_available_for_eighth
-
     }
     get_csv = request.resolver_match.url_name == "eighth_admin_room_utilization_csv"
     if show_listing or get_csv:

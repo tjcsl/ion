@@ -13,9 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='founditem',
             name='retrieved',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
         migrations.AddField(
             model_name='lostitem',
             name='found',
-            field=models.BooleanField(default=False),),
+            field=models.BooleanField(default=False),
+        ),
     ]

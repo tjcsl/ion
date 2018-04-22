@@ -10,4 +10,5 @@ class Migration(migrations.Migration):
     operations = [migrations.AddField(
         model_name='announcement',
         name='groups',
-        field=models.ManyToManyField(to='auth.Group'),)]
+        field=models.ManyToManyField(to='auth.Group'),
+    )]

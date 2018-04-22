@@ -21,8 +21,10 @@ class OnePagePagination(PageNumberPagination):
 
 
 class DayList(generics.ListAPIView):
+
     def get_queryset(self):
         return Day.objects.get_future_days()
+
     serializer_class = DaySerializer
     permission_classes = (AllowAny,)
     pagination_class = OnePagePagination
