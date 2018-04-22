@@ -1,5 +1,5 @@
-intranet\.apps\.eighth\.views package
-=====================================
+intranet.apps.eighth.views package
+==================================
 
 Subpackages
 -----------
@@ -11,48 +11,48 @@ Subpackages
 Submodules
 ----------
 
-intranet\.apps\.eighth\.views\.activities module
-------------------------------------------------
+intranet.apps.eighth.views.activities module
+--------------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.activities
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.eighth\.views\.api module
------------------------------------------
+intranet.apps.eighth.views.api module
+-------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.api
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.eighth\.views\.attendance module
-------------------------------------------------
+intranet.apps.eighth.views.attendance module
+--------------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.attendance
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.eighth\.views\.profile module
----------------------------------------------
+intranet.apps.eighth.views.profile module
+-----------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.profile
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.eighth\.views\.routers module
----------------------------------------------
+intranet.apps.eighth.views.routers module
+-----------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.routers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.eighth\.views\.signup module
---------------------------------------------
+intranet.apps.eighth.views.signup module
+----------------------------------------
 
 .. automodule:: intranet.apps.eighth.views.signup
     :members:

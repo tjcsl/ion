@@ -15,24 +15,24 @@ Subpackages
 Submodules
 ----------
 
-intranet\.asgi module
----------------------
+intranet.asgi module
+--------------------
 
 .. automodule:: intranet.asgi
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.routing module
-------------------------
+intranet.routing module
+-----------------------
 
 .. automodule:: intranet.routing
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.wsgi module
----------------------
+intranet.wsgi module
+--------------------
 
 .. automodule:: intranet.wsgi
     :members:

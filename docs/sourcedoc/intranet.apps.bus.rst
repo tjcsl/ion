@@ -1,43 +1,51 @@
-intranet\.apps\.bus package
-===========================
+intranet.apps.bus package
+=========================
 
 Submodules
 ----------
 
-intranet\.apps\.bus\.admin module
----------------------------------
+intranet.apps.bus.admin module
+------------------------------
 
 .. automodule:: intranet.apps.bus.admin
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.bus\.consumers module
--------------------------------------
+intranet.apps.bus.consumers module
+----------------------------------
 
 .. automodule:: intranet.apps.bus.consumers
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.bus\.models module
-----------------------------------
+intranet.apps.bus.models module
+-------------------------------
 
 .. automodule:: intranet.apps.bus.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.bus\.urls module
---------------------------------
+intranet.apps.bus.tests module
+------------------------------
+
+.. automodule:: intranet.apps.bus.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.bus.urls module
+-----------------------------
 
 .. automodule:: intranet.apps.bus.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.bus\.views module
----------------------------------
+intranet.apps.bus.views module
+------------------------------
 
 .. automodule:: intranet.apps.bus.views
     :members:

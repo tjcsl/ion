@@ -1,5 +1,5 @@
-intranet\.apps\.dataimport\.management package
-==============================================
+intranet.apps.dataimport.management package
+===========================================
 
 Subpackages
 -----------

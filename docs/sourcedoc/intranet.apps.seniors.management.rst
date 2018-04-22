@@ -1,5 +1,5 @@
-intranet\.apps\.seniors\.management package
-===========================================
+intranet.apps.seniors.management package
+========================================
 
 Subpackages
 -----------
