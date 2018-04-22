@@ -109,7 +109,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
 
 
 def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None, given_date=None):
-    """Return a list of :class:`EighthScheduledActivity`\s in which the
+    r"""Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
     Returns:

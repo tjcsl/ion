@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 
-def handle_404_view(request):
+def handle_404_view(request, exception):
     return render(request, "error/404.html", status=404)
 
 

@@ -16,7 +16,7 @@ def perma_reverse(request, view, *args, **kwargs):
 @api_view(("GET",))
 @permission_classes((AllowAny,))
 def api_root(request, format=None):
-    """Welcome to the Ion API!
+    r"""Welcome to the Ion API!
 
     Documentation is below. <pk\> refers to the unique id of a certain object - this is shown as "id" in most lists and references.
 

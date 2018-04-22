@@ -129,7 +129,7 @@ class KerberosAuthenticationBackend(object):
             return None
 
         # remove all non-alphanumerics
-        username = re.sub('\W', '', username)
+        username = re.sub(r'\W', '', username)
 
         krb_ticket = self.get_kerberos_ticket(username, password)
 

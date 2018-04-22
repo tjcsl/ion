@@ -3,16 +3,10 @@
 import os
 import sys
 import warnings
-from django.utils.deprecation import RemovedInDjango20Warning, RemovedInDjango21Warning
 
 warnings.simplefilter('default')
-warnings.filterwarnings('ignore', category=DeprecationWarning, module='cacheops')
-warnings.filterwarnings('ignore', category=PendingDeprecationWarning, module='distutils')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='distutils')
 warnings.filterwarnings('ignore', category=ImportWarning, module='importlib')
-
-# FIXME: remove when upstream supports django 1.10+ properly
-warnings.filterwarnings('ignore', category=RemovedInDjango20Warning, module='simple_history')
-warnings.filterwarnings('ignore', category=RemovedInDjango21Warning, module='simple_history')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
