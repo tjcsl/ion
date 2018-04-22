@@ -15,7 +15,7 @@ from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .forms import AuthenticateForm
 from .helpers import change_password

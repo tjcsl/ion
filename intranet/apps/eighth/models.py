@@ -449,7 +449,7 @@ class EighthBlockManager(models.Manager):
 
 
 class EighthBlock(AbstractBaseEighthModel):
-    """Represents an eighth period block.
+    r"""Represents an eighth period block.
 
     Attributes:
         date
@@ -639,7 +639,7 @@ class EighthScheduledActivityManager(Manager):
 
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
-    """Represents the relationship between an activity and a block in which it has been scheduled.
+    r"""Represents the relationship between an activity and a block in which it has been scheduled.
 
     Attributes:
         block : :class:`EighthBlock`
