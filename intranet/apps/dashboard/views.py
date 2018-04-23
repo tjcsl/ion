@@ -221,8 +221,7 @@ def find_birthdays(request):
             data = {
                 "custom": custom,
                 "today": {
-                    "date":
-                    today,
+                    "date": today,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -232,12 +231,10 @@ def find_birthdays(request):
                         "age": (u.age + yr_inc) if u.age is not None else -1,
                         "public": u.properties.attribute_is_public("show_birthday")
                     } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
-                    "inc":
-                    0
+                    "inc": 0,
                 },
                 "tomorrow": {
-                    "date":
-                    tomorrow,
+                    "date": tomorrow,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -247,10 +244,9 @@ def find_birthdays(request):
                         "age": (u.age - 1) if u.age is not None else -1,
                         "public": u.properties.attribute_is_public("show_birthday")
                     } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
-                    "inc":
-                    1
-                }
-            }
+                    "inc": 1,
+                },
+            }  # yapf: disable
         except AttributeError:
             return None
         else:
