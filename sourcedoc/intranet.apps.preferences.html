@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.preferences package &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.preferences package &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -34,8 +26,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -148,7 +139,30 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">intranet.apps.preferences package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.fields">intranet.apps.preferences.fields module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.forms">intranet.apps.preferences.forms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.tests">intranet.apps.preferences.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.urls">intranet.apps.preferences.urls module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.views">intranet.apps.preferences.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="intranet-apps-preferences-package">
 <h1>intranet.apps.preferences package<a class="headerlink" href="#intranet-apps-preferences-package" title="Permalink to this headline">¶</a></h1>
@@ -160,17 +174,45 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.fields.PhoneField">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.fields.</code><code class="descname">PhoneField</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/fields.html#PhoneField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.fields.Field</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.fields.Field</span></code></p>
 <p>Model field for a phone number</p>
 <dl class="method">
 <dt id="intranet.apps.preferences.fields.PhoneField.deconstruct">
 <code class="descname">deconstruct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/fields.html#PhoneField.deconstruct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneField.deconstruct" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns enough information to recreate the field as a 4-tuple:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The name of the field on the model, if contribute_to_class has been run</li>
+<li>The import path of the field, including the class: django.db.models.IntegerField
+This should be the most portable version, so less specific may be better.</li>
+<li>A list of positional arguments</li>
+<li>A dict of keyword arguments</li>
+</ul>
+</div></blockquote>
+<p>Note that the positional or keyword arguments must contain values of the
+following types (including inner values of collection types):</p>
+<blockquote>
+<div><ul class="simple">
+<li>None, bool, str, unicode, int, long, float, complex, set, frozenset, list, tuple, dict</li>
+<li>UUID</li>
+<li>datetime.datetime (naive), datetime.date</li>
+<li>top-level classes, top-level functions - will be referenced by their full import path</li>
+<li>Storage instances - these have their own deconstruct() method</li>
+</ul>
+</div></blockquote>
+<p>This is because the values here must be serialized into a text format
+(possibly new Python code, possibly JSON) and these are the only types
+with encoding handlers defined.</p>
+<p>There’s no need to return the exact way the field was instantiated this time,
+just ensure that the resulting field is the same - prefer keyword arguments
+over positional ones, and omit parameters with their default values.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.preferences.fields.PhoneField.formfield">
 <code class="descname">formfield</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/fields.html#PhoneField.formfield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneField.formfield" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a django.forms.Field instance for this database Field.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.preferences.fields.PhoneField.get_internal_type">
@@ -182,10 +224,10 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.fields.PhoneFormField">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.fields.</code><code class="descname">PhoneFormField</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/fields.html#PhoneFormField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneFormField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.fields.Field</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.fields.Field</span></code></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.fields.PhoneFormField.default_error_messages">
-<code class="descname">default_error_messages</code><em class="property"> = {'invalid': 'Please enter a valid phone number.', 'incomplete': 'Please enter a phone number.'}</em><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneFormField.default_error_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_error_messages</code><em class="property"> = {'incomplete': 'Please enter a phone number.', 'invalid': 'Please enter a valid phone number.'}</em><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneFormField.default_error_messages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -202,13 +244,16 @@
 <dl class="attribute">
 <dt id="intranet.apps.preferences.fields.PhoneFormField.widget">
 <code class="descname">widget</code><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneFormField.widget" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">TextInput</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.widgets.TextInput</span></code></p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="intranet.apps.preferences.fields.PhoneFormField.widget_attrs">
 <em class="property">static </em><code class="descname">widget_attrs</code><span class="sig-paren">(</span><em>_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/fields.html#PhoneFormField.widget_attrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.fields.PhoneFormField.widget_attrs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Given a Widget instance (<em>not</em> a Widget class), returns a dictionary of
+any HTML attributes that should be added to the Widget, based on this
+Field.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -218,10 +263,10 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.BusRouteForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">BusRouteForm</code><span class="sig-paren">(</span><em>user</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#BusRouteForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.BusRouteForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.forms.Form</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.BusRouteForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.BusRouteForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.BusRouteForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -229,11 +274,11 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.EmailForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">EmailForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#EmailForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.EmailForm.Meta">
 <em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#EmailForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.EmailForm.Meta.fields">
 <code class="descname">fields</code><em class="property"> = ['address']</em><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
@@ -242,14 +287,14 @@
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.EmailForm.Meta.model">
 <code class="descname">model</code><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Email</span></code></p>
+<dd><p>alias of <a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.Email" title="intranet.apps.users.models.Email"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.users.models.Email</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.EmailForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.EmailForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -257,10 +302,10 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.NotificationOptionsForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">NotificationOptionsForm</code><span class="sig-paren">(</span><em>user</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#NotificationOptionsForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.NotificationOptionsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.forms.Form</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.NotificationOptionsForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.NotificationOptionsForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.NotificationOptionsForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -268,12 +313,12 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.PhoneForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">PhoneForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#PhoneForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <p>Represents a phone number (number + purpose)</p>
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.PhoneForm.Meta">
 <em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#PhoneForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.PhoneForm.Meta.fields">
 <code class="descname">fields</code><em class="property"> = ['purpose', '_number']</em><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
@@ -282,14 +327,14 @@
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.PhoneForm.Meta.model">
 <code class="descname">model</code><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Phone</span></code></p>
+<dd><p>alias of <a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.Phone" title="intranet.apps.users.models.Phone"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.users.models.Phone</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.PhoneForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('_number', &lt;django.forms.fields.CharField object&gt;)])</em><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {'_number': &lt;django.forms.fields.CharField object at 0x7f11ffb6b0f0&gt;}</em><a class="headerlink" href="#intranet.apps.preferences.forms.PhoneForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -297,10 +342,10 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.PreferredPictureForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">PreferredPictureForm</code><span class="sig-paren">(</span><em>user</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#PreferredPictureForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.PreferredPictureForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.forms.Form</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.PreferredPictureForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.PreferredPictureForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.PreferredPictureForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -308,10 +353,10 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.PrivacyOptionsForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">PrivacyOptionsForm</code><span class="sig-paren">(</span><em>user</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#PrivacyOptionsForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.PrivacyOptionsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.forms.Form</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.PrivacyOptionsForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.PrivacyOptionsForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.PrivacyOptionsForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -319,11 +364,11 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.WebsiteForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.forms.</code><code class="descname">WebsiteForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#WebsiteForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.preferences.forms.WebsiteForm.Meta">
 <em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/preferences/forms.html#WebsiteForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.WebsiteForm.Meta.fields">
 <code class="descname">fields</code><em class="property"> = ['url']</em><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
@@ -332,14 +377,14 @@
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.WebsiteForm.Meta.model">
 <code class="descname">model</code><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Website</span></code></p>
+<dd><p>alias of <a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.Website" title="intranet.apps.users.models.Website"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.users.models.Website</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.preferences.forms.WebsiteForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = {}</em><a class="headerlink" href="#intranet.apps.preferences.forms.WebsiteForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -350,11 +395,12 @@
 <dl class="class">
 <dt id="intranet.apps.preferences.tests.PreferencesTest">
 <em class="property">class </em><code class="descclassname">intranet.apps.preferences.tests.</code><code class="descname">PreferencesTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/tests.html#PreferencesTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.tests.PreferencesTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="intranet.test.html#intranet.test.ion_test.IonTestCase" title="intranet.test.ion_test.IonTestCase"><code class="xref py py-class docutils literal"><span class="pre">intranet.test.ion_test.IonTestCase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="intranet.test.html#intranet.test.ion_test.IonTestCase" title="intranet.test.ion_test.IonTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.test.ion_test.IonTestCase</span></code></a></p>
 <dl class="method">
 <dt id="intranet.apps.preferences.tests.PreferencesTest.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/preferences/tests.html#PreferencesTest.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.preferences.tests.PreferencesTest.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences">

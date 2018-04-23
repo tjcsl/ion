@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.apps.polls.models</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -292,8 +294,15 @@
     <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s1">&#39;FRE&#39;</span>
     <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s1">&#39;SRE&#39;</span>
     <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s1">&#39;STO&#39;</span>
-    <span class="n">TYPE</span> <span class="o">=</span> <span class="p">((</span><span class="n">STD</span><span class="p">,</span> <span class="s1">&#39;Standard&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s1">&#39;Election&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;Approval&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s1">&#39;Split approval&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s1">&#39;Free response&#39;</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s1">&#39;Short response&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s1">&#39;Standard other&#39;</span><span class="p">),)</span>
+    <span class="n">TYPE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s1">&#39;Standard&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s1">&#39;Election&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;Approval&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s1">&#39;Split approval&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s1">&#39;Free response&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s1">&#39;Short response&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s1">&#39;Standard other&#39;</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STD</span><span class="p">)</span>
     <span class="n">max_choices</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 

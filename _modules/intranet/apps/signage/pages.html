@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.signage.pages &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.signage.pages &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.apps.signage.pages</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This file contains logic for server-side rendered pages</span>
@@ -160,14 +162,13 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;signage&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;ws_protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;ws&#39;</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span> <span class="k">else</span> <span class="s1">&#39;wss&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;ws_host&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">(),</span>
-            <span class="c1"># We add one because Python datetimes are zero-indexed, JS is not</span>
-            <span class="s1">&#39;school_end_hour&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;school_end_time&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">minute</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="p">}</span></div>
+        <span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;signage&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;ws_protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;ws&#39;</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span> <span class="k">else</span> <span class="s1">&#39;wss&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ws_host&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">(),</span>
+        <span class="s1">&#39;school_end_hour&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+        <span class="s1">&#39;school_end_time&#39;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">minute</span>
+    <span class="p">}</span></div>
 </pre></div>
 
     </div>

@@ -1,19 +1,19 @@
-intranet\.apps\.schedule\.management\.commands package
-======================================================
+intranet.apps.schedule.management.commands package
+==================================================
 
 Submodules
 ----------
 
-intranet\.apps\.schedule\.management\.commands\.ical module
------------------------------------------------------------
+intranet.apps.schedule.management.commands.ical module
+------------------------------------------------------
 
 .. automodule:: intranet.apps.schedule.management.commands.ical
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.schedule\.management\.commands\.schedule\_notify module
------------------------------------------------------------------------
+intranet.apps.schedule.management.commands.schedule\_notify module
+------------------------------------------------------------------
 
 .. automodule:: intranet.apps.schedule.management.commands.schedule_notify
     :members:

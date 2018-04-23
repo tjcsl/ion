@@ -1,11 +1,11 @@
-intranet\.apps\.signage\.templatetags package
-=============================================
+intranet.apps.signage.templatetags package
+==========================================
 
 Submodules
 ----------
 
-intranet\.apps\.signage\.templatetags\.signage module
------------------------------------------------------
+intranet.apps.signage.templatetags.signage module
+-------------------------------------------------
 
 .. automodule:: intranet.apps.signage.templatetags.signage
     :members:

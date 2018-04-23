@@ -1,5 +1,5 @@
-intranet\.apps\.auth\.management package
-========================================
+intranet.apps.auth.management package
+=====================================
 
 Subpackages
 -----------

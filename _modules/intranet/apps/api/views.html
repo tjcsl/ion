@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.api.views &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.api.views &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.apps.api.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -155,7 +157,7 @@
 <div class="viewcode-block" id="api_root"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.views.api_root">[docs]</a><span class="nd">@api_view</span><span class="p">((</span><span class="s2">&quot;GET&quot;</span><span class="p">,))</span>
 <span class="nd">@permission_classes</span><span class="p">((</span><span class="n">AllowAny</span><span class="p">,))</span>
 <span class="k">def</span> <span class="nf">api_root</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Welcome to the Ion API!</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Welcome to the Ion API!</span>
 
 <span class="sd">    Documentation is below. &lt;pk\&gt; refers to the unique id of a certain object - this is shown as &quot;id&quot; in most lists and references.</span>
 
@@ -170,21 +172,25 @@
         <span class="s2">&quot;/schedule?page_size=&lt;num&gt;&quot;</span><span class="p">:</span>
         <span class="p">[</span><span class="s2">&quot;Get the schedule for the next &lt;num&gt; days&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?page_size=7&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_schedule_day_list&quot;</span><span class="p">))],</span>
         <span class="s2">&quot;/schedule/&lt;date&gt;&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;Get the schedule for a specific day, in YYYY-MM-DD format&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_schedule_day_detail&quot;</span><span class="p">,</span>
-                                                                                       <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-04-04&quot;</span><span class="p">})</span>
+            <span class="s2">&quot;Get the schedule for a specific day, in YYYY-MM-DD format&quot;</span><span class="p">,</span>
+            <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_schedule_day_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-04-04&quot;</span><span class="p">})</span>
         <span class="p">],</span>
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Announcements&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/announcements&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get announcement list&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_announcements_list_create&quot;</span><span class="p">)],</span>
-        <span class="s2">&quot;/announcements/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get announcement details&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_announcements_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">2999</span><span class="p">})],</span>
+        <span class="s2">&quot;/announcements/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get announcement details&quot;</span><span class="p">,</span>
+                                <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_announcements_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">2999</span><span class="p">})],</span>
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Emergency Announcements&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/emerg&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get FCPS emergency announcements&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_emerg_status&quot;</span><span class="p">)]</span>
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/profile&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get current user profile&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_myprofile_detail&quot;</span><span class="p">)],</span>
-        <span class="s2">&quot;/profile/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get specific user profile&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">489</span><span class="p">})],</span>
+        <span class="s2">&quot;/profile/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get specific user profile&quot;</span><span class="p">,</span>
+                          <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">489</span><span class="p">})],</span>
         <span class="s2">&quot;/profile/&lt;username&gt;&quot;</span><span class="p">:</span>
-        <span class="p">[</span><span class="s2">&quot;Get specific user profile by username&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_detail_by_username&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;2017ewang&quot;</span><span class="p">})],</span>
+        <span class="p">[</span><span class="s2">&quot;Get specific user profile by username&quot;</span><span class="p">,</span>
+         <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_detail_by_username&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;2017ewang&quot;</span><span class="p">})],</span>
         <span class="s2">&quot;/profile/&lt;pk&gt;/picture&quot;</span><span class="p">:</span>
-        <span class="p">[</span><span class="s2">&quot;Get a specific user&#39;s profile picture&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_picture_default&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">489</span><span class="p">})],</span>
+        <span class="p">[</span><span class="s2">&quot;Get a specific user&#39;s profile picture&quot;</span><span class="p">,</span>
+         <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_picture_default&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">489</span><span class="p">})],</span>
         <span class="s2">&quot;/profile/&lt;username&gt;/picture&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;Get a specific user&#39;s profile picture by username&quot;</span><span class="p">,</span>
             <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_user_profile_picture_default_by_username&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;2017ewang&quot;</span><span class="p">})</span>
@@ -194,29 +200,33 @@
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Blocks&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get block list&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_list&quot;</span><span class="p">)],</span>
         <span class="s2">&quot;/blocks?start_date=&lt;start_date&gt;&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;Get a block list starting on the specified date (in YYYY-MM-DD format).&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?start_date=2015-11-18&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_list&quot;</span><span class="p">))</span>
+            <span class="s2">&quot;Get a block list starting on the specified date (in YYYY-MM-DD format).&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?start_date=2015-11-18&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_list&quot;</span><span class="p">))</span>
         <span class="p">],</span>
         <span class="s2">&quot;/blocks?date=&lt;date&gt;&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;Get a list of blocks only on the specified date (in YYYY-MM-DD format).&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?date=2015-11-18&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_list&quot;</span><span class="p">))</span>
+            <span class="s2">&quot;Get a list of blocks only on the specified date (in YYYY-MM-DD format).&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?date=2015-11-18&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_list&quot;</span><span class="p">))</span>
         <span class="p">],</span>
-        <span class="s2">&quot;/blocks/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get a list of activities on a block&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">3030</span><span class="p">})],</span>
+        <span class="s2">&quot;/blocks/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get a list of activities on a block&quot;</span><span class="p">,</span>
+                         <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">3030</span><span class="p">})],</span>
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Activities&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/activities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get eighth activity list&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_activity_list&quot;</span><span class="p">)],</span>
-        <span class="s2">&quot;/activities/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get eighth activity details&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">115</span><span class="p">})]</span>
+        <span class="s2">&quot;/activities/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Get eighth activity details&quot;</span><span class="p">,</span>
+                             <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">115</span><span class="p">})]</span>
     <span class="p">}),</span> <span class="p">(</span><span class="s2">&quot;Signups&quot;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">&quot;/signups/user&quot;</span><span class="p">:</span>
-        <span class="p">[</span><span class="s2">&quot;Get eighth signups for current user, or sign up a user for activity&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_user_signup_list_myid&quot;</span><span class="p">)],</span>
+        <span class="p">[</span><span class="s2">&quot;Get eighth signups for current user, or sign up a user for activity&quot;</span><span class="p">,</span>
+         <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_user_signup_list_myid&quot;</span><span class="p">)],</span>
         <span class="s2">&quot;/signups/user/&lt;user_id&gt;&quot;</span><span class="p">:</span>
-        <span class="p">[</span><span class="s2">&quot;Get eighth signups for specific user&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_user_signup_list&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">8889</span><span class="p">})],</span>
+        <span class="p">[</span><span class="s2">&quot;Get eighth signups for specific user&quot;</span><span class="p">,</span>
+         <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_user_signup_list&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">8889</span><span class="p">})],</span>
         <span class="s2">&quot;/signups/user/favorites&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;Get favorited eighth activities for current user, or toggle whether an activity is favorited&quot;</span><span class="p">,</span>
             <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_user_favorites_list_myid&quot;</span><span class="p">)</span>
         <span class="p">],</span>
         <span class="s2">&quot;/signups/scheduled_activity/&lt;scheduled_activity_id&gt;&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;Get eighth signups for a specific scheduled activity&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
-                                                                                  <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;scheduled_activity_id&quot;</span><span class="p">:</span> <span class="mi">889</span><span class="p">})</span>
+            <span class="s2">&quot;Get eighth signups for a specific scheduled activity&quot;</span><span class="p">,</span>
+            <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;scheduled_activity_id&quot;</span><span class="p">:</span> <span class="mi">889</span><span class="p">})</span>
         <span class="p">]</span>
     <span class="p">})))</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">views</span><span class="p">)</span></div>

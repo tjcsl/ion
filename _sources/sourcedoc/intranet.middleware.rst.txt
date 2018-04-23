@@ -1,67 +1,67 @@
-intranet\.middleware package
-============================
+intranet.middleware package
+===========================
 
 Submodules
 ----------
 
-intranet\.middleware\.access\_log module
-----------------------------------------
+intranet.middleware.access\_log module
+--------------------------------------
 
 .. automodule:: intranet.middleware.access_log
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.ajax module
----------------------------------
+intranet.middleware.ajax module
+-------------------------------
 
 .. automodule:: intranet.middleware.ajax
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.email\_handler module
--------------------------------------------
+intranet.middleware.email\_handler module
+-----------------------------------------
 
 .. automodule:: intranet.middleware.email_handler
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.profiler module
--------------------------------------
+intranet.middleware.profiler module
+-----------------------------------
 
 .. automodule:: intranet.middleware.profiler
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.templates module
---------------------------------------
+intranet.middleware.templates module
+------------------------------------
 
 .. automodule:: intranet.middleware.templates
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.threadlocals module
------------------------------------------
+intranet.middleware.threadlocals module
+---------------------------------------
 
 .. automodule:: intranet.middleware.threadlocals
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.traceback module
---------------------------------------
+intranet.middleware.traceback module
+------------------------------------
 
 .. automodule:: intranet.middleware.traceback
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.middleware\.url\_slashes module
------------------------------------------
+intranet.middleware.url\_slashes module
+---------------------------------------
 
 .. automodule:: intranet.middleware.url_slashes
     :members:

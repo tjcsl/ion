@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Test Writing Guide &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>Test Writing Guide &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -34,8 +26,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -146,7 +137,28 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Test Writing Guide</a><ul>
+<li><a class="reference internal" href="#coverage">Coverage</a></li>
+<li><a class="reference internal" href="#location">Location</a></li>
+<li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+<li><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="test-writing-guide">
 <h1>Test Writing Guide<a class="headerlink" href="#test-writing-guide" title="Permalink to this headline">¶</a></h1>
@@ -157,16 +169,16 @@ This is useful for finding files with insufficient coverage, so you can focus yo
 </div>
 <div class="section" id="location">
 <h2>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h2>
-<p>You will want to write your tests for each module in <code class="docutils literal"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>
-Testing functionality that is useful for multiple tests can be found in <code class="docutils literal"><span class="pre">intranet/test</span></code></p>
+<p>You will want to write your tests for each module in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>
+Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code></p>
 </div>
 <div class="section" id="writing-tests">
 <h2>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
 <p>Looking at pre-existing tests can give you a good idea how to structure your tests.
-The <code class="docutils literal"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class.
+The <code class="docutils literal notranslate"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class.
 It handles some ion-specific logic, such as mocking out ldap queries.
 Here is an bare-bones example of the basic layout for a test:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 
 <span class="k">class</span> <span class="nc">ModuleTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
   <span class="k">def</span> <span class="nf">test_module_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -178,11 +190,11 @@ Here is an bare-bones example of the basic layout for a test:</p>
 <div class="section" id="running-tests">
 <h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
 <p>If this is your first time running tests, you need to give the ion user permission to create the test db.
-Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">postgres</span> <span class="pre">psql</span> <span class="pre">-c</span> <span class="pre">'alter</span> <span class="pre">role</span> <span class="pre">ion</span> <span class="pre">createdb'</span></code> to grant the necessary perms.
-To actually execute tests, run <code class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">test</span></code>
+Run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">postgres</span> <span class="pre">psql</span> <span class="pre">-c</span> <span class="pre">'alter</span> <span class="pre">role</span> <span class="pre">ion</span> <span class="pre">createdb'</span></code> to grant the necessary perms.
+To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">./manage.py</span> <span class="pre">test</span></code>
 Note that this deletes and re-creates the db from scratch each time,
-so you most likely want to pass the <code class="docutils literal"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
-<p>Is your test working locally but not on Travis CI? Try running <code class="docutils literal"><span class="pre">./setup.py</span> <span class="pre">test</span></code> instead to execute tests.</p>
+so you most likely want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
+<p>Is your test working locally but not on Travis CI? Try running <code class="docutils literal notranslate"><span class="pre">./setup.py</span> <span class="pre">test</span></code> instead to execute tests.</p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>

@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.apps.eighth.serializers</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -222,20 +224,14 @@
     <span class="n">block_letter</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EighthBlockDetailSerializer.process_scheduled_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.process_scheduled_activity">[docs]</a>    <span class="k">def</span> <span class="nf">process_scheduled_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                   <span class="n">scheduled_activity</span><span class="p">,</span>
-                                   <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">favorited_activities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">recommended_activities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="EighthBlockDetailSerializer.process_scheduled_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.process_scheduled_activity">[docs]</a>    <span class="k">def</span> <span class="nf">process_scheduled_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">available_restricted_acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">activity</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span>
         <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
             <span class="n">is_non_student_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">is_non_student_admin</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">restricted_for_user</span> <span class="o">=</span> <span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_restricted</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_non_student_admin</span> <span class="ow">and</span>
-                               <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_restricted_acts</span><span class="p">))</span>
+        <span class="n">restricted_for_user</span> <span class="o">=</span> <span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_restricted</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_non_student_admin</span> <span class="ow">and</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_restricted_acts</span><span class="p">))</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;Special: &quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">special</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">prefix</span> <span class="o">+=</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">:</span>
@@ -295,11 +291,7 @@
 <div class="viewcode-block" id="EighthBlockDetailSerializer.get_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity">[docs]</a>    <span class="k">def</span> <span class="nf">get_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">scheduled_activity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_scheduled_activity</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span>
-                                               <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span>
-                                               <span class="n">user</span><span class="p">,</span>
-                                               <span class="n">favorited_activities</span><span class="p">,</span>
-                                               <span class="n">recommended_activities</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_scheduled_activity</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span> <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span>
                                                <span class="n">available_restricted_acts</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthBlockDetailSerializer.get_scheduled_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_scheduled_activity">[docs]</a>    <span class="k">def</span> <span class="nf">get_scheduled_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
@@ -319,11 +311,8 @@
 
         <span class="n">available_restricted_acts</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">restricted_activities_available_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
-        <span class="n">activity_list</span> <span class="o">=</span> <span class="n">FallbackDict</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_activity</span><span class="p">,</span>
-                                                       <span class="n">user</span><span class="p">,</span>
-                                                       <span class="n">favorited_activities</span><span class="p">,</span>
-                                                       <span class="n">recommended_activities</span><span class="p">,</span>
-                                                       <span class="n">available_restricted_acts</span><span class="p">))</span>
+        <span class="n">activity_list</span> <span class="o">=</span> <span class="n">FallbackDict</span><span class="p">(</span>
+            <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_activity</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">))</span>
         <span class="n">scheduled_activity_to_activity_map</span> <span class="o">=</span> <span class="n">FallbackDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scheduled_activity</span><span class="p">)</span>
 
         <span class="c1"># Find all scheduled activities that don&#39;t correspond to</span>
@@ -358,8 +347,9 @@
             <span class="s2">&quot;eighthactivity&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthsponsor&quot;</span><span class="p">))</span>
 
         <span class="n">scheduled_activity_ids</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">overidden_sponsorships</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthsponsor&quot;</span><span class="p">))</span>
+        <span class="n">overidden_sponsorships</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span>
+                <span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthsponsor&quot;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">sponsorship</span> <span class="ow">in</span> <span class="n">sponsorships</span><span class="p">:</span>
             <span class="n">activity_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sponsorship</span><span class="p">[</span><span class="s2">&quot;eighthactivity&quot;</span><span class="p">])</span>
@@ -404,8 +394,9 @@
                 <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">roomings</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthactivity_id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthactivity&quot;</span><span class="p">))</span>
-        <span class="n">overidden_roomings</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">))</span>
+        <span class="n">overidden_roomings</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
+                <span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">rooming</span> <span class="ow">in</span> <span class="n">roomings</span><span class="p">:</span>
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthactivity</span><span class="o">.</span><span class="n">id</span>

@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.settings</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -254,7 +256,6 @@
 <span class="c1"># Use PostgreSQL database</span>
 
 <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span> <span class="s1">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
-
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
@@ -398,7 +399,8 @@
     <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth.backends.MasterPasswordAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,)</span>
+    <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="c1"># Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage</span>
 <span class="n">PASSWORD_HASHERS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;django.contrib.auth.hashers.Argon2PasswordHasher&#39;</span><span class="p">,</span>
@@ -431,9 +433,9 @@
                 <span class="s2">&quot;intranet.apps.context_processors.is_tj_ip&quot;</span><span class="p">,</span>  <span class="c1"># Whether on the internal TJ or FCPS network</span>
                 <span class="s2">&quot;intranet.apps.context_processors.show_homecoming&quot;</span><span class="p">,</span>  <span class="c1"># Sitewide custom themes (special events, etc)</span>
                 <span class="s2">&quot;intranet.apps.context_processors.global_custom_theme&quot;</span><span class="p">,</span>  <span class="c1"># Sitewide custom themes (special events, etc)</span>
-                <span class="s2">&quot;intranet.apps.context_processors.show_bus_button&quot;</span>
-            <span class="p">),</span>
-            <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Only enabled if DEBUG is true as well</span>
+                <span class="s2">&quot;intranet.apps.context_processors.show_bus_button&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+            <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Only enabled if DEBUG is true as well</span>
             <span class="s1">&#39;loaders&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;django.template.loaders.filesystem.Loader&#39;</span><span class="p">,</span> <span class="s1">&#39;django.template.loaders.app_directories.Loader&#39;</span><span class="p">),</span>
             <span class="s1">&#39;libraries&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;staticfiles&#39;</span><span class="p">:</span> <span class="s1">&#39;django.contrib.staticfiles.templatetags.staticfiles&#39;</span><span class="p">,</span>
@@ -502,7 +504,6 @@
     <span class="s2">&quot;emerg&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
 <span class="p">}</span>
 
-
 <span class="k">if</span> <span class="ow">not</span> <span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SHORT_CACHE&quot;</span><span class="p">,</span> <span class="s2">&quot;NO&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span><span class="p">:</span>
     <span class="c1"># Make the cache age last just long enough to reload the page to</span>
     <span class="c1"># check if caching worked</span>
@@ -568,18 +569,24 @@
 <span class="c1"># Django REST framework configuration</span>
 <span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,),</span>  <span class="c1"># require authentication</span>
-    <span class="s2">&quot;USE_ABSOLUTE_URLS&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;USE_ABSOLUTE_URLS&quot;</span><span class="p">:</span>
+    <span class="kc">True</span><span class="p">,</span>
 
     <span class="c1"># Return native `Date` and `Time` objects in `serializer.data`</span>
-    <span class="s2">&quot;DATETIME_FORMAT&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;DATE_FORMAT&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;TIME_FORMAT&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;EXCEPTION_HANDLER&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.apps.api.utils.custom_exception_handler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DEFAULT_PAGINATION_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;rest_framework.pagination.PageNumberPagination&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PAGE_SIZE&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;DATETIME_FORMAT&quot;</span><span class="p">:</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;DATE_FORMAT&quot;</span><span class="p">:</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;TIME_FORMAT&quot;</span><span class="p">:</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;EXCEPTION_HANDLER&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;intranet.apps.api.utils.custom_exception_handler&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DEFAULT_PAGINATION_CLASS&quot;</span><span class="p">:</span>
+    <span class="s2">&quot;rest_framework.pagination.PageNumberPagination&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PAGE_SIZE&quot;</span><span class="p">:</span>
+    <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span>
-    <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span>
-     <span class="s2">&quot;intranet.apps.api.authentication.CsrfExemptSessionAuthentication&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span> <span class="s2">&quot;intranet.apps.api.authentication.CsrfExemptSessionAuthentication&quot;</span><span class="p">,</span>
      <span class="s2">&quot;oauth2_provider.contrib.rest_framework.OAuth2Authentication&quot;</span><span class="p">),</span>
     <span class="s2">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,)</span>
 <span class="p">}</span>
@@ -649,12 +656,7 @@
 <span class="p">]</span>
 
 <span class="c1"># Django Channels Configuration (we use this for websockets)</span>
-<span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;asgi_redis.RedisChannelLayer&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ROUTING&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.routing.channel_routing&quot;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;asgi_redis.RedisChannelLayer&quot;</span><span class="p">,</span> <span class="s2">&quot;ROUTING&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.routing.channel_routing&quot;</span><span class="p">}}</span>
 
 <span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
     <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;raven.contrib.django.raven_compat&quot;</span><span class="p">]</span>
@@ -837,7 +839,7 @@
 
 <span class="c1"># Allow *.tjhsst.edu sites to access API, signage, and other resources</span>
 <span class="n">CORS_ORIGIN_ALLOW_ALL</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">CORS_ORIGIN_REGEX_WHITELIST</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;^(https?://)?(\w+\.)?tjhsst\.edu$&#39;</span><span class="p">)</span>
+<span class="n">CORS_ORIGIN_REGEX_WHITELIST</span> <span class="o">=</span> <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(https?://)?(\w+\.)?tjhsst\.edu$&#39;</span><span class="p">)</span>
 
 <span class="c1"># Uncomment to only allow XHR on API resources from TJ domains</span>
 <span class="c1"># CORS_URLS_REGEX = r&#39;^/api/.*$&#39;</span>

@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.admin &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>intranet.apps.polls.admin &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -32,8 +24,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -134,7 +125,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for intranet.apps.polls.admin</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -153,7 +155,10 @@
 <div class="viewcode-block" id="QuestionAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.admin.QuestionAdmin">[docs]</a><span class="k">class</span> <span class="nc">QuestionAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;poll&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">)</span>
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;poll&#39;</span><span class="p">,)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;poll&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">,)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;poll&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;num&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;poll&#39;</span><span class="p">,)</span></div>
 
 
@@ -165,24 +170,50 @@
     <span class="n">get_poll</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s1">&#39;Poll&#39;</span>  <span class="c1"># type: ignore</span>
     <span class="n">get_poll</span><span class="o">.</span><span class="n">admin_order_field</span> <span class="o">=</span> <span class="s1">&#39;question__poll&#39;</span>  <span class="c1"># type: ignore</span>
 
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="s1">&#39;get_poll&#39;</span><span class="p">,</span> <span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">,)</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;info&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;get_poll&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;num&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">,)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;num&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="AnswerAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.admin.AnswerAdmin">[docs]</a><span class="k">class</span> <span class="nc">AnswerAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;choice&#39;</span><span class="p">,</span> <span class="s1">&#39;clear_vote&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,)</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;choice&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;clear_vote&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;weight&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,)</span></div>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AnswerVoteAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.admin.AnswerVoteAdmin">[docs]</a><span class="k">class</span> <span class="nc">AnswerVoteAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;choice&#39;</span><span class="p">,)</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;choice&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,)</span>
     <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,)</span></div>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;question&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;users&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Poll</span><span class="p">,</span> <span class="n">PollAdmin</span><span class="p">)</span>

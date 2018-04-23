@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Setting up Your Sandbox Manually &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>Setting up Your Sandbox Manually &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -34,8 +26,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -143,7 +134,25 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Setting up Your Sandbox Manually</a><ul>
+<li><a class="reference internal" href="#virtualenv">Virtualenv</a></li>
+<li><a class="reference internal" href="#codebase">Codebase</a></li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="setting-up-your-sandbox-manually">
 <h1>Setting up Your Sandbox Manually<a class="headerlink" href="#setting-up-your-sandbox-manually" title="Permalink to this headline">¶</a></h1>
@@ -151,17 +160,17 @@
 <div class="section" id="virtualenv">
 <h2>Virtualenv<a class="headerlink" href="#virtualenv" title="Permalink to this headline">¶</a></h2>
 <p>SSH into Ion. You will need a CSL principal and to be added to the ion group.</p>
-<p>Navigate to <code class="docutils literal"><span class="pre">/usr/local/virtualenvs</span></code>:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /usr/local/virtualenvs
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">/usr/local/virtualenvs</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /usr/local/virtualenvs
 </pre></div>
 </div>
-<p>As root, create your Virtualenv with a name following the format <code class="docutils literal"><span class="pre">&lt;initials&gt;-ion</span></code> (e.g. <code class="docutils literal"><span class="pre">aw-ion</span></code> for Angela William):</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ksu
+<p>As root, create your Virtualenv with a name following the format <code class="docutils literal notranslate"><span class="pre">&lt;initials&gt;-ion</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">aw-ion</span></code> for Angela William):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ksu
 $ virtualenv --distribute --no-site-packages &lt;initials&gt;-ion
 </pre></div>
 </div>
 <p>Return to an unprivileged user, navigate to your home directory, and activate your virtualenv.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">exit</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">exit</span>
 $ <span class="nb">cd</span> ~
 $ workon &lt;initials&gt;-ion
 </pre></div>
@@ -170,15 +179,15 @@ $ workon &lt;initials&gt;-ion
 <div class="section" id="codebase">
 <h2>Codebase<a class="headerlink" href="#codebase" title="Permalink to this headline">¶</a></h2>
 <p>While still in your home directory, clone the Git repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git clone https://github.com/&lt;Github username&gt;/ion.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/&lt;Github username&gt;/ion.git
 </pre></div>
 </div>
-<p>Checkout a local copy of the <code class="docutils literal"><span class="pre">dev</span></code> branch.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git checkout -b dev origin/dev
+<p>Checkout a local copy of the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git checkout -b dev origin/dev
 </pre></div>
 </div>
 <p>Install the requirements for a testing version of Intranet.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install -r requirements/local.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install -r requirements/local.txt
 </pre></div>
 </div>
 </div>

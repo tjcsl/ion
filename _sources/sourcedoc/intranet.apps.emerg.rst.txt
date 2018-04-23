@@ -1,19 +1,19 @@
-intranet\.apps\.emerg package
-=============================
+intranet.apps.emerg package
+===========================
 
 Submodules
 ----------
 
-intranet\.apps\.emerg\.api module
----------------------------------
+intranet.apps.emerg.api module
+------------------------------
 
 .. automodule:: intranet.apps.emerg.api
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.apps\.emerg\.views module
------------------------------------
+intranet.apps.emerg.views module
+--------------------------------
 
 .. automodule:: intranet.apps.emerg.views
     :members:

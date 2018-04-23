@@ -2,21 +2,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #4336) documentation</title>
+    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #4374) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     'v3 (Build #4336)',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -34,8 +26,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -146,18 +137,39 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Post-Install Steps</a><ul>
+<li><a class="reference internal" href="#setting-up-groups">Setting Up Groups</a></li>
+<li><a class="reference internal" href="#connecting-and-disconnecting-from-the-vm">Connecting and Disconnecting from the VM</a></li>
+<li><a class="reference internal" href="#updating-block-dates">Updating Block Dates</a></li>
+<li><a class="reference internal" href="#setting-up-files">Setting up Files</a></li>
+<li><a class="reference internal" href="#increasing-ram">Increasing RAM</a></li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="post-install-steps">
 <h1>Post-Install Steps<a class="headerlink" href="#post-install-steps" title="Permalink to this headline">¶</a></h1>
 <p>After successfully <a class="reference internal" href="vagrant.html"><span class="doc">setting up the Vagrant environment</span></a>, you will want to actually access your sandbox.</p>
-<p>Start by connecting to the Vagrant box using <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">ssh</span></code>. (Consider running all of the following in a <code class="docutils literal"><span class="pre">screen</span></code> or <code class="docutils literal"><span class="pre">tmux</span></code> session.) Make sure you’re in the <code class="docutils literal"><span class="pre">intranet</span></code> directory, and run <code class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">migrate</span></code>. This will set up the Postgres database.</p>
-<p>You can then start the built-in Django web server with <code class="docutils literal"><span class="pre">fab</span> <span class="pre">runserver</span></code>. Now that you are running the development server, open a browser to <a class="reference external" href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> and log in. If it fails, check the output of <code class="docutils literal"><span class="pre">manage.py</span> <span class="pre">runserver</span></code>.</p>
+<p>Start by connecting to the Vagrant box using <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">ssh</span></code>. (Consider running all of the following in a <code class="docutils literal notranslate"><span class="pre">screen</span></code> or <code class="docutils literal notranslate"><span class="pre">tmux</span></code> session.) Make sure you’re in the <code class="docutils literal notranslate"><span class="pre">intranet</span></code> directory, and run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">migrate</span></code>. This will set up the Postgres database.</p>
+<p>You can then start the built-in Django web server with <code class="docutils literal notranslate"><span class="pre">fab</span> <span class="pre">runserver</span></code>. Now that you are running the development server, open a browser to <a class="reference external" href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> and log in. If it fails, check the output of <code class="docutils literal notranslate"><span class="pre">manage.py</span> <span class="pre">runserver</span></code>.</p>
 <div class="section" id="setting-up-groups">
 <h2>Setting Up Groups<a class="headerlink" href="#setting-up-groups" title="Permalink to this headline">¶</a></h2>
-<p>Currently, there are no default groups set up when you first install Ion. In order to grant yourself administrative privileges, you must be a member of the <code class="docutils literal"><span class="pre">admin_all</span></code> group.</p>
+<p>Currently, there are no default groups set up when you first install Ion. In order to grant yourself administrative privileges, you must be a member of the <code class="docutils literal notranslate"><span class="pre">admin_all</span></code> group.</p>
 <p>To create and add yourself to the global administrator group, run the following commands:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
 Python <span class="m">2</span>.7.6 <span class="o">(</span>default, Mar <span class="m">22</span> <span class="m">2014</span>, <span class="m">22</span>:59:56<span class="o">)</span>
 <span class="o">(</span>InteractiveConsole<span class="o">)</span>
 &gt;&gt;&gt; <span class="nv">user</span> <span class="o">=</span> User.get_user<span class="o">(</span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;YOURUSERNAME&quot;</span><span class="o">)</span>
@@ -170,12 +182,12 @@ Python <span class="m">2</span>.7.6 <span class="o">(</span>default, Mar <span c
 </div>
 <div class="section" id="connecting-and-disconnecting-from-the-vm">
 <h2>Connecting and Disconnecting from the VM<a class="headerlink" href="#connecting-and-disconnecting-from-the-vm" title="Permalink to this headline">¶</a></h2>
-<p>When you want to close the VM environment, make sure you have exited out of the ssh session and then run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">suspend</span></code>. To resume the session, run <code class="docutils literal"><span class="pre">vagrant</span> <span class="pre">resume</span></code>. Suspending and resuming is significantly faster than halting and starting, and also dumps the contents of the machine’s RAM to disk.</p>
+<p>When you want to close the VM environment, make sure you have exited out of the ssh session and then run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">suspend</span></code>. To resume the session, run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">resume</span></code>. Suspending and resuming is significantly faster than halting and starting, and also dumps the contents of the machine’s RAM to disk.</p>
 </div>
 <div class="section" id="updating-block-dates">
 <h2>Updating Block Dates<a class="headerlink" href="#updating-block-dates" title="Permalink to this headline">¶</a></h2>
 <p>Currently, the fixtures containing test data include Iodine data from the 2014-2015 school year. If you would like to modify this data so that all of the eighth period blocks occur in the future, run the following:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
 Python <span class="m">2</span>.7.6 <span class="o">(</span>default, Jun <span class="m">22</span> <span class="m">2015</span>, <span class="m">17</span>:58:13<span class="o">)</span>
 <span class="o">(</span>InteractiveConsole<span class="o">)</span>
 &gt;&gt;&gt; from dateutil.relativedelta import relativedelta
@@ -187,8 +199,8 @@ Python <span class="m">2</span>.7.6 <span class="o">(</span>default, Jun <span c
 </div>
 <div class="section" id="setting-up-files">
 <h2>Setting up Files<a class="headerlink" href="#setting-up-files" title="Permalink to this headline">¶</a></h2>
-<p>You can find a list of file systems at <code class="docutils literal"><span class="pre">intranet/apps/files/models.py</span></code>. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
+<p>You can find a list of file systems at <code class="docutils literal notranslate"><span class="pre">intranet/apps/files/models.py</span></code>. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
 Python <span class="m">3</span>.4.3 <span class="o">(</span>default, Oct <span class="m">14</span> <span class="m">2015</span>, <span class="m">20</span>:28:29<span class="o">)</span>
 <span class="o">(</span>InteractiveConsole<span class="o">)</span>
 &gt;&gt;&gt; Host.objects.create<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Computer Systems Lab&quot;</span>, <span class="nv">code</span><span class="o">=</span><span class="s2">&quot;csl&quot;</span>, <span class="nv">address</span><span class="o">=</span><span class="s2">&quot;remote.tjhsst.edu&quot;</span>, <span class="nv">linux</span><span class="o">=</span>True<span class="o">)</span>

@@ -1,19 +1,19 @@
-intranet\.test package
-======================
+intranet.test package
+=====================
 
 Submodules
 ----------
 
-intranet\.test\.ion\_test module
---------------------------------
+intranet.test.ion\_test module
+------------------------------
 
 .. automodule:: intranet.test.ion_test
     :members:
     :undoc-members:
     :show-inheritance:
 
-intranet\.test\.test\_suite module
-----------------------------------
+intranet.test.test\_suite module
+--------------------------------
 
 .. automodule:: intranet.test.test_suite
     :members:
