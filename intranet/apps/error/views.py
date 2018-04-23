@@ -4,6 +4,8 @@ from django.conf import settings
 
 
 def handle_404_view(request, exception):
+    # TODO: Actually render the exception?
+    del exception
     return render(request, "error/404.html", status=404)
 
 
