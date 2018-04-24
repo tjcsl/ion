@@ -375,6 +375,7 @@ CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 
 
 # CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
+
 CACHEOPS = {
     "eighth.*": {
         "timeout": int(datetime.timedelta(hours=24).total_seconds())
