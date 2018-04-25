@@ -750,14 +750,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         for s in signups:
             s.archive_user_deleted()
 
-    def get_past_signups(self, block):
-        from ..eighth.models import HistoricalEighthSignup
-
-        if not self.is_student:
-            return None
-
-        return HistoricalEighthSignup.objects.filter(user=self, scheduled_activity__block=block)
-
     def __getattr__(self, name):
         if name == "properties":
             return UserProperties.objects.get_or_create(user=self)[0]

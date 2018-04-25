@@ -151,32 +151,6 @@ def profile_view(request, user_id=None):
 
 @login_required
 @deny_restricted
-def signup_history_view(request, user_id=None, block_id=None):
-    if user_id:
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            raise http.Http404
-    else:
-        user = request.user
-
-    if user != request.user and not request.user.is_eighth_admin:
-        return render(request, "error/403.html", {"reason": "You may only view your own eighth signup history"}, status=403)
-
-    if block_id is None:
-        return redirect(request, "eighth_profile", user_id)
-
-    context = {
-        "profile_user": user,
-        "real_user": request.user,
-        "history": EighthSignup.history.filter(user=user, scheduled_activity__block=block_id),
-        "eighth_block": EighthBlock.objects.get(id=block_id)
-    }
-    return render(request, "eighth/profile_signup_history.html", context)
-
-
-@login_required
-@deny_restricted
 def profile_history_view(request, user_id=None):
     if user_id:
         try:
