@@ -8,9 +8,9 @@ let checkDisplayWarning = function () {
         let remaining = departTime - minutes;
         txt.innerText = `${remaining} minutes left until buses depart. Have a great day!`;
     } else if (hours < endHour) {
-        txt.innerText = 'School has yet to end.';
+        txt.innerText = 'School has not ended yet.';
     } else {
-        txt.innerText = 'School buses have already departed';
+        txt.innerText = 'School buses have already departed.';
     }
 };
 
