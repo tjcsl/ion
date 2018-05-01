@@ -137,6 +137,8 @@ def poll_vote_view(request, poll_id):
                             Answer.objects.filter(user=user, question=question_obj).delete()
                             Answer.objects.create(user=user, question=question_obj, clear_vote=True)
                             messages.success(request, "Clear Vote for {}".format(question_obj))
+                        elif "CLEAR" in total_choices:
+                            messages.error(request, "Cannot select other options with Clear Vote.")
                         else:
                             current_choices = Answer.objects.filter(user=user, question=question_obj)
                             logger.debug("current choices: {}".format(current_choices))
