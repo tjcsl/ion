@@ -21,7 +21,7 @@ timedatectl set-timezone America/New_York
 
 # Kerberos
 cp intranet/config/krb5.conf /etc/krb5.conf
-apt-get -y install heimdal-clients
+apt-get -y install krb5-user
 
 # Python
 apt-get -y install python3-pip
