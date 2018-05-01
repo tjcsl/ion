@@ -51,7 +51,10 @@ def csv_results(request, poll_id):
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
     dict_list = list()
-    p = Poll.objects.get(id=poll_id)
+    p = get_object_or_404(Poll, id=poll_id)
+    if p.in_time_range():
+        messages.error(request, "Poll results cannot be viewed while the poll is running.")
+        return redirect("polls")
     for u in p.get_users_voted():
         answers = Answer.objects.filter(question__poll=p, user=u)
         answer_dict = OrderedDict()
@@ -344,13 +347,13 @@ def handle_choice(q, do_gender=True, show_answers=False):
 def poll_results_view(request, poll_id):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
+    poll = get_object_or_404(Poll, id=poll_id)
+    if poll.in_time_range():
+        messages.error(request, "Poll results cannot be viewed while the poll is running.")
+        return redirect("polls")
 
     do_gender = False if "no_gender" in request.GET else True
     show_answers = request.GET.get("show_answers", False)
-    try:
-        poll = Poll.objects.get(id=poll_id)
-    except Poll.DoesNotExist:
-        raise http.Http404
 
     questions = []
     for q in poll.question_set.all():
