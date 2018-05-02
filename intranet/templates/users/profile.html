@@ -257,11 +257,13 @@
                             </th>
                             <td>
                                 {% for phone in profile_user.phones.all %}
+                                    {% if phone.number %}
                                     <a href="tel:{{ phone.number }}">
                                         {{ phone.number|dashes }}
                                     </a>
                                     <span>({{ phone.get_purpose_display }})</span>
                                     <br />
+                                    {% endif %}
                                 {% endfor %}
                             </td>
                         </tr>
