@@ -1,9 +1,5 @@
 <style type="text/css" scoped>
 
-body.has-login-warning .login-warning {
-    overflow: hidden;
-}
-
 .ap-schedule-container {
     width: 1500px;
     overflow: hidden;
@@ -23,6 +19,10 @@ body.has-login-warning .login-warning {
     vertical-align: middle;
 }
 
+.login-warning {
+    overflow-x: hidden;
+}
+
 .aps {
     text-align: left;
 }
@@ -30,6 +30,11 @@ body.has-login-warning .login-warning {
 .aps em {
     padding-left: 30px;
     font-style: normal;
+}
+
+.aps ul {
+    font-style: italic;
+    list-style: none;
 }
 
 .ap-schedule-day {
@@ -42,7 +47,7 @@ body.has-login-warning .login-warning {
     /*right: -1px;*/
     left: 289px;
     width: 10px;
-    height: 116px;
+    height: calc(100% - 14px);
     top: -3px;
     z-index: 1000000000000;
     border-radius: 0 3px 3px 0;    
@@ -130,18 +135,19 @@ $(function() {
         apDate($(".schedule-outer .schedule").attr("data-date"));
         oscheduleBind();
     }
-    {% if date %} 
+    {% if date %}
     apDate("{{ date|escape }}");
     {% endif %}
-    $(".ap-right-arrow").click(function() {
+    $(".ap-right-arrow").click(function(e) {
+        e.stopPropagation();
         var l = $(this).hasClass("left");
         if(l) {
-            $(".ap-schedule-container").animate({'margin-left':0}, 500);
-            $(this).animate({'left': '289px'}, 500);
+            $(".ap-schedule-container").animate({'margin-left':0}, 200);
+            $(this).animate({'left': '289px'}, 200);
             $(this).removeClass("left");
         } else {
-            $(".ap-schedule-container").animate({'margin-left':'-240px'}, 500);
-            $(this).animate({'left': '0'}, 500);
+            $(".ap-schedule-container").animate({'margin-left':'-240px'}, 200);
+            $(this).animate({'left': '0'}, 200);
             $(this).addClass("left");
         }
     })
@@ -157,11 +163,21 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> Chemistry - TBA</span>
+        <span><b>8:40 AM:</b> Chemistry</span>
         <br />
-        <span><b>8:40 AM:</b> Spanish Literature and Culture - TBA</span>
+        <ul>
+            <li>Gym 2 (A - S)</li>
+            <li>Lecture Hall (T - Z)</li>
+        </ul>
+        <span><b>8:40 AM:</b> Spanish Literature and Culture</span>
         <br />
-        <span><b>1:10 PM:</b> Psychology - TBA</span>
+        <ul>
+            <li>Room 118</li>
+        </ul>
+        <span><b>1:15 PM:</b> Psychology</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -201,13 +217,22 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> Seminar - TBA</span>
+        <span><b>8:40 AM:</b> Spanish Lang</span>
+        <ul>
+            <li>Lecture Hall (A - Go)</li>
+            <li>Library (Gr - Mar)</li>
+            <li>Black Box (Mat - Z)</li>
+        </ul>
         <br />
-        <span><b>8:40 AM:</b> Spanish Lang - TBA</span>
+        <span><b>12:30 PM:</b> Art History</span>
+        <ul>
+            <li>Room 118</li>
+        </ul>
         <br />
-        <span><b>1:10 PM:</b> Art History - TBA</span>
-        <br />
-        <span><b>1:10 PM:</b> Physics I - TBA</span>
+        <span><b>12:30 PM:</b> Physics I</span>
+        <ul>
+            <li>Room 12</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -245,11 +270,15 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> English Lit - TBA</span>
+        <span><b>8:40 AM:</b> English Lit</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
         <br />
-        <span><b>1:10 PM:</b> Physics II - TBA</span>
-        <br />
-        <span><b>1:10 PM:</b> Japanese Lang - TBA</span>
+        <span><b>1:00 PM:</b> Japanese Lang</span>
+        <ul>
+            <li>Library</li>
+        </ul>
         <br />
     </td>
     <td>
@@ -290,10 +319,29 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> U.S. Gov - TBA</span>
+        <span><b>8:40 AM:</b> U.S. Gov</span>
+        <ul>
+            <li>Gym 2 (A - Kh)</li>
+            <li>Lecture Hall (Ki - Mar)</li>
+            <li>Room 57 (Mat - N)</li>
+            <li>Room 59 (O - Raj)</li>
+            <li>Room 214 (Ram - Sa)</li>
+            <li>Room 215 (Sc - St)</li>
+            <li>Room 12 (Su - Wang, J)</li>
+            <li>Cafeteria (Wang, L - Z)</li>
+        </ul>
         <br />
-        <span><b>12:40 PM:</b> Chinese - TBA</span>
+        <span><b>12:30 PM:</b> Chinese</span>
+        <ul>
+            <li>Library</li>
+            <li>Room 118</li>
+            <li>Black Box</li>
+        </ul>
         <br />
+        <span><b>12:30 PM</b> Env Sci</span>
+        <ul>
+            <li>Room 12</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -337,20 +385,34 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> US History - TBA</span>
+        <span><b>8:40 AM:</b> US History</span>
+        <ul>
+            <li>Gym 2 (A - Krie)</li>
+            <li>Lecture Hall (Kris - Pan)</li>
+            <li>Room 57 (Pap - Reg)</li>
+            <li>Room 59 (Rej - Tran, D)</li>
+            <li>Room 214 (Tran, V - Wis)</li>
+            <li>Room 215 (Wo - Z)</li>
+        </ul>
         <br />
-        <span><b>8:40 AM:</b> German - TBA</span>
+        <span><b>8:40 AM:</b> German</span>
+        <ul>
+            <li>Black Box</li>
+        </ul>
         <br />
-        <span><b>1:10 PM:</b> CS Principles - TBA</span>
+        <span><b>1:15 PM:</b> CS Principles</span>
+        <ul>
+            <li>Room 118</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
             <tbody><tr class="schedule-block" data-block-name="Period 1" data-block-start="8:40" data-block-end="10:30" data-block-order="1">
-            <th class="block" style="color: red;font-weight:bold">Period 1:</th>
+            <th class="block">Period 1:</th>
             <td class="times">8:40 - 10:30</td>
             </tr>
             <tr class="schedule-block" data-block-name="Period 2" data-block-start="10:40" data-block-end="12:30" data-block-order="2">
-            <th class="block" style="color: red;font-weight:bold">Period 2:</th>
+            <th class="block">Period 2:</th>
             <td class="times">10:40 - 12:30</td>
             </tr>
             <tr class="schedule-block" data-block-name="Lunch" data-block-start="12:30" data-block-end="1:10" data-block-order="3">
@@ -358,11 +420,11 @@ $(function() {
             <td class="times">12:30 - 1:10</td>
             </tr>
             <tr class="schedule-block" data-block-name="Period 3" data-block-start="1:10" data-block-end="2:30" data-block-order="4">
-            <th class="block" style="color: red;font-weight:bold">Period 3:</th>
+            <th class="block">Period 3:</th>
             <td class="times">1:10 - 2:30</td>
             </tr>
             <tr class="schedule-block" data-block-name="Period 4" data-block-start="2:40" data-block-end="4:00" data-block-order="5">
-            <th class="block" style="color: red;font-weight:bold">Period 4:</th>
+            <th class="block">Period 4:</th>
             <td class="times">2:40 - 4:00</td>
             </tr>
             </tbody>
@@ -382,13 +444,24 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> Biology - TBA</span>
+        <span><b>8:40 AM:</b> Biology</span>
+        <ul>
+            <li>Room 57 (A - De)</li>
+            <li>Room 59 (Dh - Joi)</li>
+            <li>Room 214 (Jos - Mun)</li>
+            <li>Room 215 (Mut - Sr)</li>
+            <li>Room 12 (St - Z)</li>
+        </ul>
         <br />
-        <span><b>8:40 AM:</b> Music Theory - TBA</span>
+        <span><b>8:40 AM:</b> Music Theory</span>
+        <ul>
+            <li>Black Box</li>
+        </ul>
         <br />
-        <span><b>12:20 PM:</b> Physics C: Mech - TBA</span>
-        <br />
-        <span><b>2:00 PM:</b> Physics C: E&amp;M - TBA</span>
+        <span><b>12:30 PM:</b> Physics C</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -429,13 +502,39 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> Calculus AB - TBA</span>
+        <span><b>8:40 AM:</b> Calculus AB</span>
+        <ul>
+            <li>Gym 2 (A - Va)</li>
+            <li>Room 12 (Ve - Z)</li>
+        </ul>
         <br />
-        <span><b>8:40 AM:</b> Calculus BC - TBA</span>
+        <span><b>8:40 AM:</b> Calculus BC</span>
+        <ul>
+            <li>Cafeteria (A - G)</li>
+            <li>Lecture Hall (H - Ling)</li>
+            <li>Library (Lingam - Mah)</li>
+            <li>Room 57 (Maj - Old)</li>
+            <li>Room 59 (Ong - Qa)</li>
+            <li>Room 214 (Qi - Set)</li>
+            <li>Room 215 (Sh - Tian)</li>
+            <li>Room 10 (To - Wu)</li>
+            <li>Room 118 (Xu - Z)</li>
+        </ul>
         <br />
-        <span><b>1:10 PM:</b> French - TBA</span>
+        <span><b>12:30:</b> French</span>
+        <ul>
+            <li>Library (A - G)</li>
+            <li>Room 118 (H - Ma)</li>
+            <li>Black Box (Mo - Z)</li>
+        </ul>
         <br />
-        <span><b>1:10 PM:</b> Computer Science A - TBA</span>
+        <span><b>12:30:</b> Computer Science A</span>
+        <ul>
+            <li>Gym 2 (A - Man)</li>
+            <li>Lecture Hall (Mar - Su)</li>
+            <li>Room 215 (Sub - Wi)</li>
+            <li>Room 214 (Wo - Z)</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -476,8 +575,24 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> English Lang - TBA<br />
-        <span><b>1:10 PM:</b> Macroeconomics - TBA</span>
+        <span><b>8:40 AM:</b> English Lang</span>
+        <ul>
+            <li>Gym 2 (A - M)</li>
+            <li>Lecture Hall (N - Sara)</li>
+            <li>Room 57 (Sard - Wad)</li>
+            <li>Room 59 (Wan - Z)</li>
+        </ul>
+        <br />
+        <span><b>1:15 PM:</b> Macroeconomics</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
+        <br />
+        <span><b>12:15 PM</b> Italian</span>
+        <ul>
+            <li>Office</li>
+        </ul>
+        <br />
     </td>
     <td>
         <table class="bellschedule-table">
@@ -518,9 +633,15 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> World History - TBA</span>
+        <span><b>8:40 AM:</b> World History</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
         <br />
-        <span><b>12:40 PM:</b> Statistics - TBA</span>
+        <span><b>12:30 PM:</b> Statistics</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
@@ -561,13 +682,25 @@ $(function() {
 </tr>
 <tr>
     <td class="aps">
-        <span><b>8:40 AM:</b> Microeconomics - TBA</span>
+        <span><b>8:40 AM:</b> Microeconomics</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
         <br />
-        <span><b>8:40 AM:</b> Human Geography - TBA</span>
+        <span><b>8:40 AM:</b> Human Geography</span>
+        <ul>
+            <li>Black Box</li>
+        </ul>
         <br />
-        <span><b>12:40 PM:</b> Latin - TBA</span>
+        <span><b>12:30 PM:</b> Latin-Vergil</span>
+        <ul>
+            <li>Gym 2</li>
+        </ul>
         <br />
-        <span><b>12:40 PM:</b> European - TBA</span>
+        <span><b>12:30 PM:</b> European History</span>
+        <ul>
+            <li>Black Box</li>
+        </ul>
     </td>
     <td>
         <table class="bellschedule-table">
