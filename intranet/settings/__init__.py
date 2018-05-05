@@ -457,7 +457,9 @@ OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope'
-    }
+    },
+    # OAuth refresh tokens expire in 30 days
+    'REFRESH_TOKEN_EXPIRE_SECONDS' : 2592000,
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 
