@@ -1,5 +1,5 @@
 #!/bin/bash
-# run at 10pm every day (0 20 * * *)
+# run at 10pm every day (0 22 * * *)
 
 timestamp=$(date +"%Y-%m-%d-%H%M")
 cd /usr/local/www/intranet3
