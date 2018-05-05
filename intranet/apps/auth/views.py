@@ -96,6 +96,9 @@ def get_ap_week_warning(request):
     if 12 <= day <= 13:
         day = 14
 
+    if 5 <= day <= 6:
+        day = 7
+
     data = {"day": day, "date": request.GET.get("date", None)}
     if today.month == 5 and 5 <= day <= 18:
         return get_template("auth/ap_week_schedule.html").render(data)
