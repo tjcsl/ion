@@ -512,9 +512,14 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     except Exception:
         dash_warning = None
 
+    # TODO: resolve circular dependency
+    from ..auth.views import get_ap_week_warning
     fcps_emerg = get_fcps_emerg(request)
+    ap_week = get_ap_week_warning(request)
     if fcps_emerg:
         dash_warning = fcps_emerg
+    elif ap_week:
+        dash_warning = ap_week
 
     context.update({
         "dash_warning": dash_warning,
