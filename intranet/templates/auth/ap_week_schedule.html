@@ -2,6 +2,7 @@
 
 .ap-schedule-container {
     width: 1500px;
+    transition: margin-left 0.2s ease-in-out;
     overflow: hidden;
 }
 
@@ -9,6 +10,7 @@
     width: 450px;
     margin-left: 75px;
     float: left;
+    display: none;
 }
 
 .ap-schedule-day .dbl {
@@ -37,20 +39,17 @@
     list-style: none;
 }
 
-.ap-schedule-day {
-    display: none;
-}
-
 .ap-right-arrow.button {
     display: none;
     position: absolute;
     /*right: -1px;*/
-    left: 289px;
+    left: calc(100% - 32px);
     width: 10px;
     height: calc(100% - 14px);
     top: -3px;
     z-index: 1000000000000;
-    border-radius: 0 3px 3px 0;    
+    border-radius: 0 3px 3px 0;
+    transition: left 0.2s ease-in-out;
 }
 
 .ap-right-arrow span {
@@ -67,7 +66,7 @@
 }
 
 .ap-right-arrow.left {
-    left: 239px;
+    left: 0;
 
 }
 
@@ -116,7 +115,7 @@
 }
 
 .ap-schedule-day.day-{{ day }} {
-    display: block;
+    display: table;
 }
 
 </style>
@@ -142,12 +141,10 @@ $(function() {
         e.stopPropagation();
         var l = $(this).hasClass("left");
         if(l) {
-            $(".ap-schedule-container").animate({'margin-left':0}, 200);
-            $(this).animate({'left': '289px'}, 200);
+            $(".ap-schedule-container").css('margin-left', 0);
             $(this).removeClass("left");
         } else {
-            $(".ap-schedule-container").animate({'margin-left':'-240px'}, 200);
-            $(this).animate({'left': '0'}, 200);
+            $(".ap-schedule-container").css('margin-left', '-240px');
             $(this).addClass("left");
         }
     })
