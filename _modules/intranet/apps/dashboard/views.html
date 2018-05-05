@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4411) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4415) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
@@ -653,9 +653,14 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">dash_warning</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="c1"># TODO: resolve circular dependency</span>
+    <span class="kn">from</span> <span class="nn">..auth.views</span> <span class="k">import</span> <span class="n">get_ap_week_warning</span>
     <span class="n">fcps_emerg</span> <span class="o">=</span> <span class="n">get_fcps_emerg</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">ap_week</span> <span class="o">=</span> <span class="n">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fcps_emerg</span><span class="p">:</span>
         <span class="n">dash_warning</span> <span class="o">=</span> <span class="n">fcps_emerg</span>
+    <span class="k">elif</span> <span class="n">ap_week</span><span class="p">:</span>
+        <span class="n">dash_warning</span> <span class="o">=</span> <span class="n">ap_week</span>
 
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="s2">&quot;dash_warning&quot;</span><span class="p">:</span> <span class="n">dash_warning</span><span class="p">,</span>
