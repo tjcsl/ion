@@ -45,6 +45,7 @@
                 <li><a href="{% url 'eighth_admin_unsignup_students' %}"><i class="fa-li fa fa-user-times"></i><b>Clear</b> student signups</a></li>
                 <li><a href="{% url 'eighth_admin_distribute_unsigned' %}"><i class="fa-li fa fa-book"></i><b>Distribute students</b> with no signup</a></li>
                 <li><a href="{% url 'eighth_statistics_global' %}"><i class="fa-li fa fa-globe"></i>Generate <b>global statistics</b></a></li>
+                <li><a href="{% url 'eighth_admin_remove_duplicates' %}"><i class="fa-li fa fa-users"></i><b>Remove</b> duplicate signups</a></li>
             </ul>
 
         </td>
@@ -62,7 +63,7 @@
             </ul>
         </td>
 
-        
+
     </tr>
     <tr>
         <td class="admin-section">
@@ -157,7 +158,7 @@
                 </table>
             </form>
         </td>
-        
+
     </tr>
     <tr>
 
@@ -215,19 +216,19 @@
                         {% if blk.locked %}
                             <a href="{% url 'eighth_admin_edit_block' blk.id %}">
                                 <i class="fa-li fa fa-lock"></i>
-                                <b>{{ blk.block_letter }} Block:</b></a> 
+                                <b>{{ blk.block_letter }} Block:</b></a>
                             Locked
                         {% elif blk.signup_time_future %}
                             <a href="{% url 'eighth_admin_edit_block' blk.id %}">
                                 <i class="fa-li fa fa-unlock"></i>
-                                <b>{{ blk.block_letter }} Block:</b></a> 
+                                <b>{{ blk.block_letter }} Block:</b></a>
                             Close time set to {{ blk.signup_time }}
                         {% else %}
                             <a href="{% url 'eighth_admin_edit_block' blk.id %}">
                                 <i class="fa-li fa fa-exclamation-triangle"></i>
-                                <b>{{ blk.block_letter }} Block:</b></a> 
+                                <b>{{ blk.block_letter }} Block:</b></a>
                             <b>Unlocked; close time set to {{ blk.signup_time }}</b>
-                        {% endif %} &mdash; 
+                        {% endif %} &mdash;
                         <a href="{% url 'eighth_admin_no_signups_roster' blk.id %}">
                             <b>{{ blk.num_signups }}</b>/{{ signup_users_count }} signup{{ blk.num_signups|pluralize }}, {{ blk.num_no_signups }} not signed up
                         </a>
@@ -242,10 +243,10 @@
             {% endif %}
 
         </td>
-        
+
     </tr>
     <tr>
-        
+
         <td class="admin-section" colspan="2">
             <br />
             <br />

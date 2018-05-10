@@ -81,6 +81,7 @@ eighth_admin_patterns = [
     url(r"^scheduling/transfer_students_action$", scheduling.transfer_students_action, name="eighth_admin_transfer_students_action"),
     url(r"^scheduling/distribute_students$", scheduling.distribute_students_view, name="eighth_admin_distribute_students"),
     url(r"^scheduling/unsignup_students$", scheduling.unsignup_students_view, name="eighth_admin_unsignup_students"),
+    url(r"^scheduling/remove_duplicates$", scheduling.remove_duplicates_view, name="eighth_admin_remove_duplicates"),
 
     # Attendance
     url(r"^attendance$", attendance.admin_choose_scheduled_activity_view, name="eighth_admin_attendance_choose_scheduled_activity"),

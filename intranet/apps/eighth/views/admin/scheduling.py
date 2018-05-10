@@ -5,6 +5,8 @@ import logging
 from cacheops import invalidate_obj
 
 from django.contrib import messages
+from django.core.management import call_command
+from django.db.models import Count
 from django.db.models.manager import Manager
 from django.forms.formsets import formset_factory
 from django.http import Http404
@@ -15,7 +17,7 @@ from formtools.wizard.views import SessionWizardView
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor)
+from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthSignup)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from .....utils.serialization import safe_json
@@ -403,3 +405,19 @@ def transfer_students_action(request):
         return redirect("eighth_admin_dashboard")
     else:
         return render(request, "eighth/admin/transfer_students.html", context)
+
+
+@eighth_admin_required
+def remove_duplicates_view(request):
+    duplicates = EighthSignup.objects.all().annotate(Count('user'),
+                                                     Count('scheduled_activity__block')).order_by().filter(scheduled_activity__block__count__gt=1)
+    if request.method == "POST":
+        try:
+            call_command("delete_duplicate_signups")
+            messages.success(request, "Successfully removed {} duplicate signups.".format(duplicates.count()))
+        except Exception as e:
+            messages.error(request, e)
+        return redirect("eighth_admin_dashboard")
+    else:
+        context = {"admin_page_title": "Remove Duplicate Signups", "duplicates": duplicates}
+        return render(request, "eighth/admin/remove_duplicates.html", context)
