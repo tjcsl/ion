@@ -35,7 +35,8 @@ def setup_host
 end
 
 # Make sure the host computer is set up every time a vagrant command is run
-setup_host
+# Comment this back in if you need Kerberos authentication
+# setup_host
 
 
 VAGRANTFILE_API_VERSION = "2"
@@ -44,10 +45,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/xenial64"
   config.vm.box_version = "20171110.0.0"
   config.vm.boot_timeout = 1000
-  config.vm.network "public_network", bridge: devconfig["network_interface"]
+  # Comment this in as well if you need Kerberos
+  # config.vm.network "public_network", bridge: devconfig["network_interface"]
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
   config.ssh.forward_agent = true
+  config.ssh.username = "ubuntu"
 
   config.vm.hostname = "ionvm"
 
@@ -66,18 +69,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
   config.vm.network :private_network, ip: '192.168.50.50'
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/vagrant-nfs", type: :nfs, nfs_udp: false
+
+  if devconfig['use_nfs']
+      config.vm.synced_folder ".", "/vagrant", type: :nfs, nfs_udp: false
+  else
+      config.vm.synced_folder ".", "/vagrant"
+  end
+  
   config.bindfs.default_options = {
     force_user:   'ubuntu',
     force_group:  'ubuntu',
     perms:        'u=rwX:g=rD:o=rD'
   }
-  config.bindfs.bind_folder "/vagrant-nfs", "/home/ubuntu/intranet",
+  config.bindfs.bind_folder "/vagrant", "/home/ubuntu/intranet",
       force_user: 'ubuntu',
       force_group: 'ubuntu'
-  config.nfs.map_uid = Process.uid
-  config.nfs.map_gid = Process.gid
+  #config.nfs.map_uid = Process.uid
+  #config.nfs.map_gid = Process.gid
 
   config.vm.provision "file",
     source: "~/.ssh/#{devconfig['ssh_key']}",
