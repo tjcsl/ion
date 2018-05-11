@@ -12,6 +12,14 @@ intranet.apps.bus.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.bus.api module
+----------------------------
+
+.. automodule:: intranet.apps.bus.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.bus.consumers module
 ----------------------------------
 
@@ -24,6 +32,14 @@ intranet.apps.bus.models module
 -------------------------------
 
 .. automodule:: intranet.apps.bus.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.bus.serializers module
+------------------------------------
+
+.. automodule:: intranet.apps.bus.serializers
     :members:
     :undoc-members:
     :show-inheritance:
