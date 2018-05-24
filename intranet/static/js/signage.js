@@ -34,6 +34,8 @@ var resetPage = function () {
         $('.signage-nav').addClass('lock');
         setActive(window.lockPage);
         console.log(window.lockPage);
+    } else if (window.defaultPage) {
+        setActive(window.defaultPage);
     } else {
         $('.signage-nav').removeClass('lock');
     }
