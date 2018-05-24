@@ -128,7 +128,7 @@ def lostitem_view(request, item_id):
 
     """
     lostitem = get_object_or_404(LostItem, id=item_id)
-    return render(request, "lostfound/item_view.html", {"item": lostitem, "type": "lost"})
+    return render(request, "itemreg/item_view.html", {"item": lostitem, "type": "lost"})
 
 
 @login_required
@@ -218,4 +218,4 @@ def founditem_view(request, item_id):
 
     """
     founditem = get_object_or_404(FoundItem, id=item_id)
-    return render(request, "lostfound/item_view.html", {"item": founditem, "type": "found"})
+    return render(request, "itemreg/item_view.html", {"item": founditem, "type": "found"})

@@ -4,7 +4,7 @@ from ..users.models import User
 
 
 class CalculatorRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     calc_serial = models.CharField(max_length=10)
     calc_id = models.CharField(max_length=14)
     CALC_CHOICES = (("ti83", "TI-83"), ("ti83p", "TI-83+"), ("ti84p", "TI-84+"), ("ti84pse", "TI-84+ Silver Edition"),
@@ -22,7 +22,7 @@ class CalculatorRegistration(models.Model):
 
 
 class ComputerRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     MANUF_CHOICES = (("acer", "Acer"), ("apple", "Apple"), ("asus", "Asus"), ("dell", "Dell"), ("hp", "HP"), ("lenovo", "Lenovo"),
                      ("toshiba", "Toshiba"), ("ibm", "IBM"), ("compaq", "Compaq"), ("fujitsu", "Fujitsu"), ("vizio", "Vizio"), ("other", "Other"))
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
@@ -45,7 +45,7 @@ class ComputerRegistration(models.Model):
 
 
 class PhoneRegistration(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     MANUF_CHOICES = (("samsung", "Samsung"), ("apple", "Apple"), ("motorola", "Motorola"), ("huawei", "Huawei"), ("lg", "LG"), ("xiaomi", "Xiaomi"),
                      ("zte", "ZTE"), ("nokia", "Nokia"), ("other", "Other"))
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
