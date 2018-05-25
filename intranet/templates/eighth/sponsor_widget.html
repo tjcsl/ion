@@ -35,8 +35,11 @@
                 {% if schact.activity %}
 
                     {% if schact.has_open_passes %}
+                        
                         <span class="block-sponsorship open-passes" title="You have open student passes.">
-                            {{ schact.full_title }}
+                            <a href="{% url 'eighth_statistics' schact.activity.id %}">
+                                {{ schact.full_title }}
+                            </a>
                         </span>
 
                         <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link" title="You have open student passes.">
@@ -45,7 +48,9 @@
                         </a>
                     {% elif schact.attendance_taken %}
                         <span class="block-sponsorship attendance-taken" title="You have taken attendance.">
-                            {{ schact.full_title }}
+                            <a href="{% url 'eighth_statistics' schact.activity.id %}">
+                                {{ schact.full_title }}
+                            </a>
                         </span>
 
                         <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link" title="You have taken attendance.">
@@ -54,7 +59,9 @@
                         </a>
                     {% elif schact.block.locked %}
                         <span class="block-sponsorship locked" title="You can take attendance now.">
-                            {{ schact.full_title }}
+                            <a href="{% url 'eighth_statistics' schact.activity.id %}">
+                                {{ schact.full_title }}
+                            </a>
                         </span>
 
                         <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link" title="You can take attendance now.">
@@ -63,7 +70,9 @@
                         </a>
                     {% elif schact.block.attendance_locked %}
                         <span class="block-sponsorship unlocked" title="Click to view the roster for this activity.">
-                            {{ schact.full_title }}
+                            <a href="{% url 'eighth_statistics' schact.activity.id %}">
+                                {{ schact.full_title }}
+                            </a>
                         </span>
 
                         <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link" title="Click to view the roster for this activity.">
@@ -72,7 +81,9 @@
                         </a>
                     {% else %}
                         <span class="block-sponsorship unlocked" title="Click to view the roster for this activity.">
-                            {{ schact.full_title }}
+                            <a href="{% url 'eighth_statistics' schact.activity.id %}">
+                                {{ schact.full_title }}
+                            </a>
                         </span>
 
                         <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link" title="Click to view the roster for this activity.">
