@@ -96,7 +96,7 @@ class Search(generics.RetrieveAPIView):
         for unserialized_user in results:
             user_ids.append(unserialized_user.id)
 
-        queryset = User.objects.filter(pk__in=user_ids)
+        queryset = User.objects.filter(pk__in=user_ids).order_by('pk')
         users = self.paginate_queryset(queryset)
 
         response = []
