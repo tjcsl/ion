@@ -23,6 +23,8 @@ def check_emerg():
     """
     status = True
     message = None
+    if settings.EMERGENCY_MESSAGE:
+        return True, settings.EMERGENCY_MESSAGE
     if not settings.FCPS_EMERGENCY_PAGE:
         return None, None
 
