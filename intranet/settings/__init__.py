@@ -36,7 +36,7 @@ ENABLE_WAITLIST = True
 ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
 
-EMERGENCY_MESSAGE = "Braddock Road near TJ is now closed in both directions due to a utility pole being down. Only entrance is on access road, Minor Lane, off Little River Turnpike. All students should report to their normal first period class, not a testing location. We most likely will need to reschedule SOLs and senior exams that are taking place at least at the beginning of the day. We have power in one portion of the building and know how to accommodate classes in those areas. More updates to follow."
+EMERGENCY_MESSAGE = None  # type: str
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
