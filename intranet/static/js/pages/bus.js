@@ -14,4 +14,4 @@ let checkDisplayWarning = function () {
     }
 };
 
-window.setTimeout(checkDisplayWarning, 30 * 1000);
+window.setInterval(checkDisplayWarning, 30 * 1000);
