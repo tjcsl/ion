@@ -78,6 +78,8 @@ def files_auth(request):
         iv = Random.new().read(16)
         obj = AES.new(key, AES.MODE_CFB, iv)
         message = request.POST.get("password")
+        if isinstance(message, str):
+            message = message.encode("utf-8")
         ciphertext = obj.encrypt(message)
         request.session["files_iv"] = base64.b64encode(iv).decode()
         request.session["files_text"] = base64.b64encode(ciphertext).decode()
