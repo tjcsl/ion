@@ -377,7 +377,6 @@ CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 
 
 # CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
-
 CACHEOPS = {
     "eighth.*": {
         "timeout": int(datetime.timedelta(hours=24).total_seconds())
@@ -461,7 +460,7 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope'
     },
     # OAuth refresh tokens expire in 30 days
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 60*60*24*30,
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 60 * 60 * 24 * 30,
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 
