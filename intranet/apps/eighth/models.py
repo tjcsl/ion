@@ -53,10 +53,18 @@ class EighthSponsor(AbstractBaseEighthModel):
             (e.x. because there are two teachers named Lewis)
 
     """
+    DEPARTMENTS = (("general", "General"),
+                   ("math_cs", "Math/CS"),
+                   ("english", "English"),
+                   ("social_studies", "Social Studies"),
+                   ("fine_arts", "Fine Arts"),
+                   ("health_pe", "Health/PE"),
+                   ("scitech", "Science/Technology"))
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=set_historical_user)
+    department = models.CharField(max_length=20, choices=DEPARTMENTS, default="general")
     full_time = models.BooleanField(default=True)
     online_attendance = models.BooleanField(default=True)
     contracted_eighth = models.BooleanField(default=True)
@@ -65,7 +73,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     class Meta:
-        unique_together = (("first_name", "last_name", "user", "online_attendance", "full_time"),)
+        unique_together = (("first_name", "last_name", "user",
+                            "online_attendance", "full_time", "department"),)
         ordering = (
             "last_name",
             "first_name",
