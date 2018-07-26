@@ -57,6 +57,7 @@ class EighthSponsor(AbstractBaseEighthModel):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=set_historical_user)
+    full_time = models.BooleanField(default=True)
     online_attendance = models.BooleanField(default=True)
     contracted_eighth = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
@@ -64,7 +65,7 @@ class EighthSponsor(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     class Meta:
-        unique_together = (("first_name", "last_name", "user", "online_attendance"),)
+        unique_together = (("first_name", "last_name", "user", "online_attendance", "full_time"),)
         ordering = (
             "last_name",
             "first_name",
