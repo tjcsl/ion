@@ -32,4 +32,4 @@ class SponsorForm(forms.ModelForm):
 
     class Meta:
         model = EighthSponsor
-        fields = ["first_name", "last_name", "user", "full_time", "online_attendance", "contracted_eighth", "show_full_name"]
+        fields = ["first_name", "last_name", "user", "department", "full_time", "online_attendance", "contracted_eighth", "show_full_name"]
