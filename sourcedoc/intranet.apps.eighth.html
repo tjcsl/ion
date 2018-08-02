@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #4463) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #4466) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/_static/custom.css" type="text/css" />
@@ -3028,6 +3028,11 @@ linked to the sponsor.</dd>
 </dl>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthSponsor.DEPARTMENTS">
+<code class="descname">DEPARTMENTS</code><em class="property"> = (('general', 'General'), ('math_cs', 'Math/CS'), ('english', 'English'), ('social_studies', 'Social Studies'), ('fine_arts', 'Fine Arts'), ('health_pe', 'Health/PE'), ('scitech', 'Science/Technology'))</em><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.DEPARTMENTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="exception">
 <dt id="intranet.apps.eighth.models.EighthSponsor.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -3043,6 +3048,13 @@ linked to the sponsor.</dd>
 <dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthSponsor.contracted_eighth">
 <code class="descname">contracted_eighth</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.contracted_eighth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthSponsor.department">
+<code class="descname">department</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.department" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -3085,6 +3097,18 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.models.EighthSponsor.full_time">
+<code class="descname">full_time</code><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.full_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.models.EighthSponsor.get_department_display">
+<code class="descname">get_department_display</code><span class="sig-paren">(</span><em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.models.EighthSponsor.get_department_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthSponsor.history">
@@ -4783,7 +4807,7 @@ object the first time, the query is executed.</p>
 
 <dl class="class">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor">
-<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthSponsor</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>first_name</em>, <em>last_name</em>, <em>online_attendance</em>, <em>contracted_eighth</em>, <em>show_full_name</em>, <em>user</em>, <em>history_id</em>, <em>history_date</em>, <em>history_change_reason</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.</code><code class="descname">HistoricalEighthSponsor</code><span class="sig-paren">(</span><em>id</em>, <em>created_time</em>, <em>last_modified_time</em>, <em>first_name</em>, <em>last_name</em>, <em>department</em>, <em>full_time</em>, <em>online_attendance</em>, <em>contracted_eighth</em>, <em>show_full_name</em>, <em>user</em>, <em>history_id</em>, <em>history_date</em>, <em>history_change_reason</em>, <em>history_user</em>, <em>history_type</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor.DoesNotExist">
@@ -4812,11 +4836,30 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthSponsor.department">
+<code class="descname">department</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.department" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor.first_name">
 <code class="descname">first_name</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.first_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.HistoricalEighthSponsor.full_time">
+<code class="descname">full_time</code><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.full_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.HistoricalEighthSponsor.get_department_display">
+<code class="descname">get_department_display</code><span class="sig-paren">(</span><em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.HistoricalEighthSponsor.get_department_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.eighth.HistoricalEighthSponsor.get_history_type_display">

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4463) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4466) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
@@ -194,10 +194,19 @@
 <span class="sd">            (e.x. because there are two teachers named Lewis)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEPARTMENTS</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;general&quot;</span><span class="p">,</span> <span class="s2">&quot;General&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;math_cs&quot;</span><span class="p">,</span> <span class="s2">&quot;Math/CS&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;social_studies&quot;</span><span class="p">,</span> <span class="s2">&quot;Social Studies&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;fine_arts&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine Arts&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;health_pe&quot;</span><span class="p">,</span> <span class="s2">&quot;Health/PE&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s2">&quot;scitech&quot;</span><span class="p">,</span> <span class="s2">&quot;Science/Technology&quot;</span><span class="p">))</span>
 
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
     <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">DEPARTMENTS</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;general&quot;</span><span class="p">)</span>
+    <span class="n">full_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">online_attendance</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">contracted_eighth</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">show_full_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -205,7 +214,8 @@
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;online_attendance&quot;</span><span class="p">),)</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;online_attendance&quot;</span><span class="p">,</span> <span class="s2">&quot;full_time&quot;</span><span class="p">,</span> <span class="s2">&quot;department&quot;</span><span class="p">),)</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;last_name&quot;</span><span class="p">,</span>
             <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
