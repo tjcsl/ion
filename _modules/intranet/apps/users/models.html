@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4469) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4471) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
@@ -150,7 +150,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">AnonymousUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">,</span> <span class="n">UserManager</span> <span class="k">as</span> <span class="n">DjangoUserManager</span>
 <span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Count</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">F</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
 
@@ -826,6 +826,12 @@
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">close_acts</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">close_acts</span>
 
+<div class="viewcode-block" id="User.archive_admin_comments"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.archive_admin_comments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_admin_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">current_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">previous_year</span> <span class="o">=</span> <span class="n">current_year</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admin_comments</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== </span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2"> comments ===</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">previous_year</span><span class="p">,</span> <span class="n">current_year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is</span>
 <span class="sd">        associated with.</span>
@@ -886,10 +892,9 @@
 
 <div class="viewcode-block" id="User.handle_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handle a graduated user being deleted.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
-        <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
-            <span class="n">s</span><span class="o">.</span><span class="n">archive_user_deleted</span><span class="p">()</span></div>
+        <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthScheduledActivity</span>
+        <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthsignup_set__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">archived_member_count</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;archived_member_count&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span>

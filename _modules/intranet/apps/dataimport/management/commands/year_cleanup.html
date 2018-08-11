@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #4469) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #4471) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/_static/custom.css" type="text/css" />
@@ -214,7 +214,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Deleting graduated users&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">do_run</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">handle_delete</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_delete</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Archiving admin comments&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">do_run</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">archive_admin_comments</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Command.clear_absences"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.clear_absences">[docs]</a>    <span class="k">def</span> <span class="nf">clear_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">absents</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -225,6 +229,10 @@
 
 <div class="viewcode-block" id="Command.update_welcome"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.update_welcome">[docs]</a>    <span class="k">def</span> <span class="nf">update_welcome</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seen_welcome</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Command.archive_admin_comments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.archive_admin_comments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_admin_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">usr</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">graduation_year__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">):</span>
+            <span class="n">usr</span><span class="o">.</span><span class="n">archive_admin_comments</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Command.handle_delete"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">usr</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year__lt</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;alum&quot;</span><span class="p">):</span>
