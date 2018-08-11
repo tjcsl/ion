@@ -75,6 +75,10 @@ class Command(BaseCommand):
         if do_run:
             self.handle_delete()
 
+        self.stdout.write("Archiving admin comments")
+        if do_run:
+            self.archive_admin_comments()
+
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
         self.stdout.write("{} absent eighth signups".format(absents.count()))
@@ -84,6 +88,10 @@ class Command(BaseCommand):
 
     def update_welcome(self):
         User.objects.all().update(seen_welcome=False)
+
+    def archive_admin_comments(self):
+        for usr in User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR):
+            usr.archive_admin_comments()
 
     def handle_delete(self):
         for usr in User.objects.filter(graduation_year__lt=settings.SENIOR_GRADUATION_YEAR).exclude(user_type="alum"):

@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.core.cache import cache
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, F
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -685,6 +685,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         cache.set(key, close_acts, timeout=60 * 60 * 24 * 7)
         return close_acts
 
+    def archive_admin_comments(self):
+        current_year = datetime.now().year
+        previous_year = current_year - 1
+        self.admin_comments = "\n=== {}-{} comments ===\n{}".format(previous_year, current_year, self.admin_comments)
+        self.save()
+
     def get_eighth_sponsor(self):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
         associated with.
@@ -745,10 +751,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def handle_delete(self):
         """Handle a graduated user being deleted."""
-        from intranet.apps.eighth.models import EighthSignup
-        signups = EighthSignup.objects.filter(user=self)
-        for s in signups:
-            s.archive_user_deleted()
+        from intranet.apps.eighth.models import EighthScheduledActivity
+        EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(
+                archived_member_count=F('archived_member_count')+1)
 
     def __getattr__(self, name):
         if name == "properties":

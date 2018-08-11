@@ -1413,14 +1413,6 @@ class EighthSignup(AbstractBaseEighthModel):
         """Is the block for this signup in the clear absence period?"""
         return self.scheduled_activity.block.in_clear_absence_period()
 
-    def archive_user_deleted(self):
-        sa = self.scheduled_activity
-        if sa.archived_member_count:
-            sa.archived_member_count += 1
-        else:
-            sa.archived_member_count = 1
-        sa.save()
-
     def archive_remove_absence(self):
         if self.was_absent:
             self.was_absent = False

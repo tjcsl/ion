@@ -21,6 +21,7 @@ class YearCleanupTest(IonTestCase):
         output = [
             "In pretend mode.", "Turnover date set to: {}".format(turnover_date.strftime("%c")),
             "OK: SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(year + 1), "Resolving absences", "Updating welcome state",
-            "Deleting graduated users"
+            "Deleting graduated users",
+            "Archiving admin comments"
         ]
         self.assertEqual(out.getvalue().splitlines(), output)
