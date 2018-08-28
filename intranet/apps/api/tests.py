@@ -138,5 +138,5 @@ class ApiTest(IonTestCase):
 
     def test_api_root(self):
         # Should be able to read API root without authentication
-        response = self.client.get(reverse())
+        response = self.client.get(reverse('api_root'))
         self.assertEqual(response.status_code, 200)

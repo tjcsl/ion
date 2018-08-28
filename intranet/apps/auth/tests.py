@@ -48,12 +48,3 @@ class LoginViewTest(IonTestCase):
             })
 
         self.assertEqual(response.status_code, 200)
-
-    def test_get_user(self):
-        user = User.objects.get_or_create(username="awilliam")[0]
-        self.assertEqual(KerberosAuthenticationBackend.get_user(user.id),
-                         user)
-        self.assertIsNone(KerberosAuthenticationBackend.get_user(1000))
-        self.assertEqual(MasterPasswordAuthenticationBackend.get_user(user.id),
-                         user)
-        self.assertIsNone(MasterPasswordAuthenticationBackend.get_user(1000))
