@@ -135,3 +135,8 @@ class ApiTest(IonTestCase):
         # Block list should only be available to logged in users
         response = self.client.get(reverse('api_eighth_block_list'))
         self.assertEqual(response.status_code, 401)
+
+    def test_api_root(self):
+        # Should be able to read API root without authentication
+        response = self.client.get(reverse())
+        self.assertEqual(response.status_code, 200)
