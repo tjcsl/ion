@@ -12,14 +12,8 @@ $(document).ready(function() {
         scroll();
     });
 
-    $(".continue-step-1-reset").click(function() {
-        $("#step-1").slideUp(tm);
-        $("#reset-password").slideDown(tm);
-        scroll();
-    });
-
     $(".continue-step-1-mail").click(function() {
-        $("#reset-password").slideUp(tm);
+        $("#step-1").slideUp(tm);
         $("#mail-forwarding").slideDown(tm);
         scroll();
     });
