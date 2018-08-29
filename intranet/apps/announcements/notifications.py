@@ -81,6 +81,10 @@ def announcement_approved_email(request, obj, req):
     req: the AnnouncementRequest object
 
     """
+
+    if not settings.PRODUCTION:
+        logger.debug("Not in production. Ignoring email for approved announcement.")
+        return
     subject = "Announcement Approved: {}".format(obj.title)
     """ Email to teachers who approved. """
     teachers = req.teachers_approved.all()
