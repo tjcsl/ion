@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4472) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4479) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/_static/custom.css" type="text/css" />
@@ -208,6 +208,8 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting KRB5CCNAME to &#39;FILE:</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cache</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;FILE:&quot;</span> <span class="o">+</span> <span class="n">cache</span>
 
+        <span class="n">authenticated_through_AD</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CSL_REALM</span>
             <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
@@ -216,7 +218,7 @@
             <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2"> expired, needs reset&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
-                <span class="k">return</span> <span class="s2">&quot;reset&quot;</span>
+                <span class="k">return</span> <span class="s2">&quot;reset&quot;</span><span class="p">,</span> <span class="n">authenticated_through_AD</span>
             <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">exitstatus</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span>
         <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
@@ -224,6 +226,7 @@
             <span class="n">exitstatus</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">authenticated_through_AD</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">AD_REALM</span>
                 <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
@@ -231,7 +234,7 @@
                 <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
                 <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">False</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">authenticated_through_AD</span>
                 <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="n">exitstatus</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span>
             <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
@@ -244,10 +247,10 @@
 
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos authorized </span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">authenticated_through_AD</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">authenticated_through_AD</span></div>
 
     <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
 <div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -272,7 +275,7 @@
         <span class="c1"># remove all non-alphanumerics</span>
         <span class="n">username</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
 
-        <span class="n">krb_ticket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">krb_ticket</span><span class="p">,</span> <span class="n">ad_auth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">krb_ticket</span> <span class="o">==</span> <span class="s2">&quot;reset&quot;</span><span class="p">:</span>
             <span class="n">user</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;RESET_PASSWORD&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
@@ -285,6 +288,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;student&quot;</span> <span class="ow">and</span> <span class="n">ad_auth</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="n">user</span></div>
 
