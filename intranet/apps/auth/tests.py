@@ -7,7 +7,6 @@ from django.core.management import call_command
 
 from ..users.models import User
 from ...test.ion_test import IonTestCase
-from .backends import KerberosAuthenticationBackend, MasterPasswordAuthenticationBackend
 
 
 class GrantAdminTest(IonTestCase):
@@ -30,17 +29,6 @@ class LoginViewTest(IonTestCase):
 
     def test_authentication(self):
         User.objects.get_or_create(username="awilliam")
-        with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
-            response = self.client.post(reverse("index"), data={
-                "username": "awilliam",
-                "password": "dankmemes"
-            })
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_authentication_first_time(self):
-        user = User.objects.get_or_create(username="awilliam")[0]
-        user.first_login = False
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             response = self.client.post(reverse("index"), data={
                 "username": "awilliam",
