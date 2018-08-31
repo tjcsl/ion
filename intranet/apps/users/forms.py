@@ -15,8 +15,8 @@ class ProfileEditForm(forms.ModelForm):
     nickname = forms.CharField(label="Nickname", required=False)
     graduation_year = forms.IntegerField(label="Graduation Year")
     gender = forms.ChoiceField(choices=GENDERS, label="Sex (M or F)")
-    counselor_id = forms.IntegerField(label="Counselor ID")
-    birthday = forms.DateField(label="Birth Date")
+    counselor_id = forms.IntegerField(label="Counselor ID", required=False)
+    birthday = forms.DateField(label="Birth Date", required=False)
 
     # # locker = forms.CharField(label="Locker")
 

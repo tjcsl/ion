@@ -12,7 +12,7 @@ from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, Eighth
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required, deny_restricted
-from ...users.forms import ProfileEditForm, AddressForm
+from ...users.forms import ProfileEditForm  # , AddressForm
 from ...users.models import User
 from ....utils.serialization import safe_json
 
@@ -27,18 +27,21 @@ def date_fmt(date):
 @deny_restricted
 def edit_profile_view(request, user_id=None):
     user = get_object_or_404(User, id=user_id)
+    # Disable address form temporarily -- okulkarni, 08/30/2018
+    address_form = None
     if request.method == "POST":
         logger.debug("Saving")
         user_form = ProfileEditForm(request.POST, instance=user)
-        address_form = AddressForm(request.POST, instance=user.properties.address)
+        # address_form = AddressForm(request.POST, instance=user.properties.address)
         if user_form.is_valid():
             user = user_form.save()
             counselor_id = user_form.cleaned_data['counselor_id']
-            counselor = User.objects.get(id=counselor_id)
-            user.properties.birthday = user_form.cleaned_data['birthday']
-            user.properties.address = address_form.save()
-            user.properties.save()
-            user.counselor = counselor
+            if counselor_id:
+                counselor = User.objects.get(id=counselor_id)
+                user.properties.birthday = user_form.cleaned_data['birthday']
+                user.counselor = counselor
+            # user.properties.address = address_form.save()
+            # user.properties.save()
             user.save()
             messages.success(request, "Successfully updated student profile.")
         else:
@@ -48,7 +51,7 @@ def edit_profile_view(request, user_id=None):
             'counselor_id': '' if not user.counselor else user.counselor.id,
             'birthday': user.properties.birthday
         }, instance=user)
-        address_form = AddressForm(instance=user.properties.address)
+        # address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}
     return render(request, "eighth/edit_profile.html", context)
