@@ -26,7 +26,7 @@ class AuthenticateForm(AuthenticationForm):
         "required": "Invalid username",
         "inactive": "Access disallowed."
     })
-    password = forms.CharField(required=True, widget=widgets.PasswordInput(attrs={
+    password = forms.CharField(required=True, strip=False, widget=widgets.PasswordInput(attrs={
         "placeholder": "Password",
         "aria-label": "Enter Password"
     }), error_messages={
