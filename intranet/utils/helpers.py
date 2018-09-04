@@ -40,12 +40,12 @@ def debug_toolbar_callback(request):
 
 
 def get_current_commit_short_hash(workdir):
-    cmd = ["git", "--work-tree", workdir, "rev-parse", "--short", "HEAD"]
+    cmd = ["git", "-C", workdir, "rev-parse", "--short", "HEAD"]
     return subprocess.check_output(cmd, universal_newlines=True).strip()
 
 
 def get_current_commit_long_hash(workdir):
-    cmd = ["git", "--work-tree", workdir, "rev-parse", "HEAD"]
+    cmd = ["git", "-C", workdir, "rev-parse", "HEAD"]
     return subprocess.check_output(cmd, universal_newlines=True).strip()
 
 
