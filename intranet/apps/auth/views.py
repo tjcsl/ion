@@ -211,17 +211,7 @@ class LoginView(View):
         else:
             log_auth(request, "failed")
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
-            local_warning = """<h3>Having trouble logging into Ion? Try taking the following steps:</h3>
-                <ul>
-                    <li>Use [Student ID][First Three Letters of Birth Month] as your current password.
-                    Make sure to capitalize your birth month. An example password would be 1234567Jan.</li>
-                    <li>You will be taken to a reset page.
-                    Use the SAME password as to fill out the current password field and create your new password.</li>
-                    <li>If that STILL doesn't work, email sysadmins@tjhsst.edu to have your password reset to the Student ID version.</li>
-                <ul>"""
-            return index_view(request, auth_form=form, added_context={
-                "login_warning": local_warning
-                })
+            return index_view(request, auth_form=form)
 
     @method_decorator(sensitive_post_parameters("password"))
     def get(self, request):

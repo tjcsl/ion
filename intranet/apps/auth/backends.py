@@ -67,8 +67,6 @@ class KerberosAuthenticationBackend(object):
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
-        authenticated_through_AD = False
-
         try:
             realm = settings.CSL_REALM
             kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
@@ -77,7 +75,7 @@ class KerberosAuthenticationBackend(object):
             returned = kinit.expect([pexpect.EOF, "password:"])
             if returned == 1:
                 logger.debug("Password for {}@{} expired, needs reset".format(username, realm))
-                return "reset", authenticated_through_AD
+                return "reset"
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
@@ -85,7 +83,6 @@ class KerberosAuthenticationBackend(object):
             exitstatus = 1
 
         if exitstatus != 0:
-            authenticated_through_AD = True
             try:
                 realm = settings.AD_REALM
                 kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
@@ -93,7 +90,7 @@ class KerberosAuthenticationBackend(object):
                 kinit.sendline(password)
                 returned = kinit.expect([pexpect.EOF, "password:"])
                 if returned == 1:
-                    return False, authenticated_through_AD
+                    return False
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
@@ -106,10 +103,10 @@ class KerberosAuthenticationBackend(object):
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
-            return True, authenticated_through_AD
+            return True
         else:
             logger.debug("Kerberos failed to authorize {}".format(username))
-            return False, authenticated_through_AD
+            return False
 
     # @method_decorator(sensitive_variables("password"))
     def authenticate(self, request, username=None, password=None):
@@ -134,7 +131,7 @@ class KerberosAuthenticationBackend(object):
         # remove all non-alphanumerics
         username = re.sub(r'\W', '', username)
 
-        krb_ticket, ad_auth = self.get_kerberos_ticket(username, password)
+        krb_ticket = self.get_kerberos_ticket(username, password)
 
         if krb_ticket == "reset":
             user, status = User.objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
@@ -147,8 +144,6 @@ class KerberosAuthenticationBackend(object):
             try:
                 user = User.objects.get(username__iexact=username)
             except User.DoesNotExist:
-                return None
-            if user.user_type == "student" and ad_auth:
                 return None
             return user
 
