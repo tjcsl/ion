@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.template import Template, Context
 from django.utils.safestring import mark_safe
 from ...utils.admin_helpers import export_csv_action
 from .models import ParkingApplication, CarApplication
@@ -44,7 +45,8 @@ class ParkingAdmin(admin.ModelAdmin):
     get_absences.short_description = "Absences"  # type: ignore
 
     def get_cars(self, obj):
-        return mark_safe("<br />".join([str(c) for c in obj.cars.all()]))
+        template = Template("{% for car in cars %}{{ car }}{% if not forloop.last %}<br />{% endif %}{% endfor %}")
+        return template.render(Context({"cars": obj.cars.all()}))
 
     get_cars.short_description = "Cars"  # type: ignore
     list_display = ('get_user', 'get_joint_user', 'get_absences', 'mentorship', 'email', 'get_cars')
