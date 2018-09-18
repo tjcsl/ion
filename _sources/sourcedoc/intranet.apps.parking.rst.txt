@@ -36,6 +36,14 @@ intranet.apps.parking.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.parking.tests module
+----------------------------------
+
+.. automodule:: intranet.apps.parking.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.parking.urls module
 ---------------------------------
 
