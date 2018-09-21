@@ -10,7 +10,7 @@ from rest_framework.authentication import SessionAuthentication
 class ApiBasicAuthentication(authentication.BasicAuthentication):
 
     @sensitive_variables('password')
-    def authenticate_credentials(self, userid, password):
+    def authenticate_credentials(self, userid, password, request=None):
         """Authenticate the userid and password."""
 
         user = auth.authenticate(username=userid, password=password)
