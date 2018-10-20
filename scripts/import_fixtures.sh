@@ -21,7 +21,7 @@ done
 
 if [ "$(whoami)" != "postgres" ]; then
     echo "Not running as postgres user, switching user..."
-    sudo -u postgres $0
+    sudo -u postgres bash $0
     exit
 fi
 
