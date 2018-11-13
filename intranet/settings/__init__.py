@@ -116,7 +116,7 @@ if ADMINS is None:
 
 # Use PostgreSQL database
 
-DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
+DATABASES = {'default': {'ENGINE': 'django_prometheus.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
 
 MANAGERS = ADMINS
 
@@ -314,6 +314,7 @@ if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
 
 MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
+    "django_prometheus.middleware.PrometheusBeforeMiddleware", # Django Prometheus initial
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
@@ -332,6 +333,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "simple_history.middleware.HistoryRequestMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware", # Django Prometheus after
 ]
 
 if PRODUCTION:
@@ -476,6 +478,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Django plugins
     "django_extensions",
+    'django_prometheus',
     "django_requestlogging",
     "sslserver",
     "rest_framework",
