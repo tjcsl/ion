@@ -314,7 +314,7 @@ if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
 
 MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
-    "django_prometheus.middleware.PrometheusBeforeMiddleware", # Django Prometheus initial
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",  # Django Prometheus initial
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
@@ -333,7 +333,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "simple_history.middleware.HistoryRequestMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware", # Django Prometheus after
+    "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
 ]
 
 if PRODUCTION:
@@ -478,7 +478,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Django plugins
     "django_extensions",
-    'django_prometheus',
+    # "django_prometheus",
     "django_requestlogging",
     "sslserver",
     "rest_framework",
@@ -775,6 +775,7 @@ except ImportError:
 # In-memory sqlite3 databases significantly speed up running tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+    DATABASES["default"]["NAME"] = ":memory:"
     # Horrible hack to suppress all migrations to speed up the tests.
     MIGRATION_MODULES = helpers.MigrationMock()
     # FIXME: we really shouldn't have to do this.

@@ -302,7 +302,7 @@ def get_log_file_path(log_file_path, called_time):
 
 
 def stdev(x):
-    """Calculate standard deviation of data x[]:
+    r"""Calculate standard deviation of data x[]:
         std = sqrt(\sum_i (x_i - mean)^2 \over n-1)
         https://wiki.python.org/moin/NumericAndScientificRecipes
     """

@@ -160,7 +160,7 @@ cur.execute("SELECT * FROM eighth_rooms;")
 rows = cur.fetchall()
 
 for row in rows:
-    obj = {"pk": row[0], "model": "eighth.EighthRoom", "fields": {"name": re.sub(" \(.*\)$", "", row[1]), "capacity": row[2]}}
+    obj = {"pk": row[0], "model": "eighth.EighthRoom", "fields": {"name": re.sub(r" \(.*\)$", "", row[1]), "capacity": row[2]}}
     eighth_objects.append(obj)
     room_pks.append(row[0])
 

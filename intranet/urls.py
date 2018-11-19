@@ -48,6 +48,7 @@ urlpatterns = [
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
     url(r"^nominations", include("intranet.apps.nomination.urls")),
     url(r"^courses", include("intranet.apps.users.class_urls")),
+    url(r"^prometheus/", include('django_prometheus.urls')),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
