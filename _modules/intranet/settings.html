@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4516) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4539) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -247,7 +247,7 @@
 
 <span class="c1"># Use PostgreSQL database</span>
 
-<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span> <span class="s1">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django_prometheus.db.backends.postgresql&#39;</span><span class="p">,</span> <span class="s1">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
@@ -445,6 +445,7 @@
 
 <span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>  <span class="c1"># Remove slashes in URLs</span>
+    <span class="s2">&quot;django_prometheus.middleware.PrometheusBeforeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Prometheus initial</span>
     <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django default</span>
     <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django sessions</span>
     <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django CSRF</span>
@@ -463,6 +464,7 @@
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
     <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_prometheus.middleware.PrometheusAfterMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Prometheus after</span>
 <span class="p">]</span>
 
 <span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
@@ -607,6 +609,7 @@
     <span class="s2">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
     <span class="c1"># Django plugins</span>
     <span class="s2">&quot;django_extensions&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;django_prometheus&quot;,</span>
     <span class="s2">&quot;django_requestlogging&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sslserver&quot;</span><span class="p">,</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
@@ -903,6 +906,7 @@
 <span class="c1"># In-memory sqlite3 databases significantly speed up running tests.</span>
 <span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:memory:&quot;</span>
     <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
     <span class="n">MIGRATION_MODULES</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">MigrationMock</span><span class="p">()</span>
     <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
