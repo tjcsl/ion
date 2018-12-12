@@ -180,6 +180,9 @@ runEgg = function(q) {
                 else eggTdfw();
             }, 100);
             break;
+        case "tenartni":
+            $("body").css({transition: "transform 2s ease", transform: "scaleX(-1)"});
+            break;
         default:
             return false;
     }
