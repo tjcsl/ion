@@ -181,7 +181,7 @@ class LoginView(View):
 
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
-            default_next_page = "/"
+            default_next_page = "index"
 
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
@@ -238,7 +238,7 @@ def logout_view(request):
     if app and app in app_redirects:
         return redirect(app_redirects[app])
 
-    return redirect("/")
+    return redirect("index")
 
 
 def reauthentication_view(request):
@@ -265,7 +265,7 @@ def reset_password_view(request):
         if ret is True:
             do_logout(request)
             messages.success(request, "Successfully changed password.")
-            return redirect("/")
+            return redirect("index")
         else:
             try:
                 if ret['error']:

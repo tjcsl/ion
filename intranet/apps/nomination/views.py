@@ -36,5 +36,5 @@ def vote_for_user(request, username, position):
             messages.error(request, "You can only vote for users in your grade")
     except (NominationPosition.DoesNotExist, User.DoesNotExist) as e:
         messages.error(request, e)
-        return redirect("/")
-    return redirect(reverse("user_profile", args=(nominated_user.id,)))
+        return redirect("index")
+    return redirect("user_profile", nominated_user.id)
