@@ -21,7 +21,7 @@ def parking_intro_view(request):
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
-        return redirect("/")
+        return redirect('index')
 
     context = {"user": request.user, "absences": request.user.absence_count(), "max_absences": settings.PARKING_MAX_ABSENCES}
 
