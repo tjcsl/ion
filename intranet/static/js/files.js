@@ -58,6 +58,7 @@ $(function() {
                                         if ($("#directory-list").length) {
                                             var dirList = $("#directory-list", $(data)).html();
                                             $("#directory-list").html(dirList);
+                                            $("time").timeago();
                                         }
                                     }
                                 },
