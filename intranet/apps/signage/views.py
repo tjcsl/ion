@@ -4,7 +4,7 @@ import logging
 
 from django import http
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 # from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
@@ -17,15 +17,6 @@ from ...utils.serialization import safe_json
 logger = logging.getLogger(__name__)
 
 
-def check_show_eighth(now):
-    next_block = EighthBlock.objects.get_first_upcoming_block()
-    if next_block:
-        if next_block.date != now.date():
-            return False
-
-    return (8 < now.time().hour < 16)
-
-
 def check_internal_ip(request):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated and remote_addr not in settings.INTERNAL_IPS:
@@ -36,7 +27,7 @@ def signage_display(request, display_id):
     check_ip = check_internal_ip(request)
     if check_ip:
         return check_ip
-    sign = Sign.objects.get(display=display_id)
+    sign = get_object_or_404(Sign, display=display_id)
     context = schedule_context(request)
     context["sign"] = sign
     context["page_args"] = (sign, request)
