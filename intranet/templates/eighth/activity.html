@@ -125,6 +125,7 @@
             <th>Sponsors</th>
             <th>Rooms</th>
             <th></th>
+            <th>Signed up this block?</th>
         </tr>
         </thead>
         <tbody>
@@ -168,10 +169,19 @@
                         </a>
                     {% endif %}
                 </td>
+                {% if request.user.is_student %}
+                    {% if request.user in sch.members.all %}
+                          <td>
+                              Yes
+                          </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endif %}
             </tr>
         {% empty %}
             <tr>
-            <td colspan="4">
+            <td colspan="5">
                 There were no instances of this activity found within the next two months.
             </td>
             </tr>
