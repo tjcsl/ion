@@ -42,7 +42,6 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
-  config.vm.box_version = "20171110.0.0"
   config.vm.boot_timeout = 1000
   if devconfig["use_vpn"]
       config.vm.network "public_network", bridge: devconfig["network_interface"]
