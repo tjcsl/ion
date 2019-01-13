@@ -78,11 +78,17 @@ $(function() {
         var curDate = formatDate($sch.attr("data-date"));
 
         return blocks.map(function() {
+            var date = curDate;
+            var tbl = $(this).closest("table.bellschedule-table");
+            if(tbl.attr("data-date") != null) {
+                date = formatDate(tbl.attr("data-date"));
+            }
+
             var start = $(this).attr("data-block-start");
-            var startDate = formatTime(start, curDate);
+            var startDate = formatTime(start, date);
 
             var end = $(this).attr("data-block-end");
-            var endDate = formatTime(end, curDate);
+            var endDate = formatTime(end, date);
 
             return {
                 "name": $(this).attr("data-block-name"),
@@ -100,7 +106,17 @@ $(function() {
     }
 
     getPeriodElem = function(period) {
-        return $(".schedule-block[data-block-order='" + period.order + "']");
+        var elems = $(".schedule-block[data-block-order='" + period.order + "']");
+        if(elems.length > 1) {
+            //We're probably on the calendar view; try and find today's block specifically
+            for(var i = 0; i < elems.length; i++) {
+                var elem = $(elems.get(i));
+                if(elem.closest("table.bellschedule-table").closest("td").hasClass("today")) {
+                    return elem;
+                }
+            }
+        }
+        return elems;
     }
 
     withinPeriod = function(period, now) {
@@ -130,7 +146,8 @@ $(function() {
                     "status": "in",
                     "period": period
                 };
-            } else if (i + 1 < periods.length && betweenPeriod(period, periods[i + 1], now)) {
+            } else if (i + 1 < periods.length && betweenPeriod(period, periods[i + 1], now)
+                       && period.end.date.toDateString() == periods[i + 1].start.date.toDateString()) {
                 return {
                     "status": "between",
                     "prev": period,
@@ -151,6 +168,14 @@ $(function() {
         window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove()
+
+        // If the date has changed -- the <td> with the 'today' class is not actually today -- update the classes
+        var today_td = $sch.find("td.today");
+        var dateString = new Date().toISOString().slice(0, 10);;
+        if(today_td.find("table.bellschedule-table").attr("data-date") != dateString) {
+            today_td.removeClass("today");
+            $("table.bellschedule-table[data-date='" + dateString + "']").closest("td").addClass("today");
+        }
 
         if (current) {
             if (current.status === "in") {
