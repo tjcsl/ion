@@ -1,7 +1,7 @@
 @import "colors";
-$font-stack: "Open Sans",
-"Helvetica Neue",
-sans-serif;
+
+$font-stack: "Open Sans", "Helvetica Neue", sans-serif;
+
 .widgets {
     display: block;
     position: absolute;
@@ -20,7 +20,8 @@ sans-serif;
     overflow: hidden;
     background-color: #f2f2f2;
     margin-bottom: 10px;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
     .info {
         font-size: 12px;
         color: rgb(144, 144, 144);
@@ -47,8 +48,9 @@ sans-serif;
     -webkit-border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
     position: relative;
+
     h2 {
         font-size: 14px;
         float: left;
@@ -106,12 +108,15 @@ sans-serif;
     height: 30px;
     line-height: 30px;
     padding: 0 8px;
+
     .info {
         display: none;
     }
+
     a {
         float: right;
     }
+
     .no-touch &:hover .info {
         display: inline;
     }
@@ -119,18 +124,22 @@ sans-serif;
 
 .eighth-block {
     &.clickable {
-        margin-botton: 2px;
+        margin-bottom: 2px;
         cursor: pointer;
+
         &:hover .block-header a {
             text-decoration: underline;
         }
     }
+
     &.open .info {
         display: inline;
     }
+
     &.warning a {
         color: rgb(255, 72, 72);
     }
+
     &.cancelled .block-signup {
         color: rgb(255, 72, 72);
         font-weight: bold;
@@ -142,6 +151,7 @@ sans-serif;
     background-color: rgb(231, 231, 233);
     height: 0;
     overflow: hidden;
+
     .eighth-block.open & {
         max-height: 90px;
         height: auto;
@@ -155,10 +165,12 @@ sans-serif;
 
 .block-header {
     position: relative;
+
     .block-letter {
         width: auto;
         padding: 0 4px;
     }
+
     .block-letter-date {
         max-width: 106px;
         overflow: hidden;
@@ -169,7 +181,7 @@ sans-serif;
     }
 }
 
-.eighth-widget> .widget-title {
+.eighth-widget > .widget-title {
     margin-bottom: 2px;
 }
 
@@ -177,7 +189,6 @@ sans-serif;
 .block-sponsorship {
     position: absolute;
     left: 114px;
-    width: 100%;
     /* "Modify" text */
     width: calc(100% - 167px);
     overflow: hidden;
@@ -194,13 +205,11 @@ sans-serif;
     left: 114px;
     top: 13px;
     font-size: 10px;
-    width: 100%;
     width: calc(100% - 167px);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
 
 /* Attendance Locked/Signup Unlocked */
 
@@ -211,6 +220,7 @@ sans-serif;
         color: rgb(0, 132, 62);
         /* green */
     }
+
     &.no-attendance-lock .block-letter {
         background-color: rgb(0, 132, 62);
         color: rgb(242, 242, 242);
@@ -225,21 +235,23 @@ sans-serif;
             /* 13x13px not 8x13px */
             left: 112px;
         }
+
         > i {
             padding-right: 1px;
         }
     }
+
     /* Open Passes */
     &.open-passes {
         .eighth-block & {
             left: 113px;
         }
+
         > i {
             padding-right: 2px;
         }
     }
 }
-
 
 /* No Act Selected */
 
@@ -249,7 +261,6 @@ sans-serif;
     /* color: rgb(255, 72, 72); red */
 }
 
-
 /* make sure "Not sponsoring an activity" always shows;
    there is no button on the right so it can take 100% */
 
@@ -257,9 +268,7 @@ div.eighth-block .block-sponsorship.no-activity-selected {
     width: 100%;
 }
 
-
 /* No Sponsorship Today */
-
 
 /* red on white block letter icon */
 
@@ -270,25 +279,26 @@ div.eighth-block .block-sponsorship.no-activity-selected {
         /* red */
         color: rgb(242, 242, 242);
     }
+
     &.no-attendance.today.no-attendance-lock {
-        .block-sponsorship, .btn-link {
+        .block-sponsorship,
+        .btn-link {
             color: rgb(255, 72, 72); //red
         }
     }
 }
 
-
 /* Open Passes */
-
 
 /* needs to override */
 
-div.eighth-block.open-passes> div.block-header {
+div.eighth-block.open-passes > div.block-header {
     > .block-sponsorship,
     > .btn-link {
         color: rgb(255, 107, 0);
         /* orange */
     }
+
     /* orange on white block letter icon */
     > .block-letter {
         background-color: rgb(255, 107, 0);
@@ -303,9 +313,11 @@ div.eighth-block.open-passes> div.block-header {
     white-space: nowrap;
     margin-top: -4px;
     margin-bottom: -4px;
+
     &.with-timeleft {
         margin-bottom: 4px;
     }
+
     .eighth-block:last-child & {
         margin-bottom: 4px;
     }
@@ -330,9 +342,11 @@ div.eighth-block.open-passes> div.block-header {
     white-space: nowrap;
     text-align: center;
     margin-right: 1px;
-    .chevron> i {
+
+    .chevron > i {
         text-align: left;
     }
+
     @media (max-width: 960px) {
         width: calc(100% - 148px);
     }
@@ -346,12 +360,12 @@ a#eighth-sponsor {
         float: left;
         width: 10px;
     }
+
     &-right {
         float: right;
         width: 10px;
     }
 }
-
 
 /* Extra widgets */
 
@@ -365,6 +379,7 @@ a#eighth-sponsor {
             }
         }
     }
+
     &.extra-widgets-show {
         display: none;
         width: 100%;
@@ -391,7 +406,7 @@ a#eighth-sponsor {
     /*0 -4px;*/
     font-size: 9px;
     font-weight: bold;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, .9);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
     white-space: nowrap;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -401,11 +416,10 @@ a#eighth-sponsor {
     background: -moz-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
     background: -webkit-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
     background: linear-gradient(to bottom, #f7f7f4 0%, #eaeaea 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f4', endColorstr='#eaeaea', GradientType=0);
     border: 1px solid rgb(221, 221, 221);
     border-bottom-color: rgb(197, 197, 197);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
-    -pie-box-shadow: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     vertical-align: middle;
     cursor: pointer;
     -webkit-user-select: none;
@@ -417,7 +431,7 @@ a#eighth-sponsor {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
 }
 
 a.btn-link {
@@ -427,11 +441,14 @@ a.btn-link {
     &:active {
         color: $grey;
     }
+
     .block-header & {
         text-align: center;
+
         .eighth-widget & {
             width: 37px;
         }
+
         .sponsor-widget & {
             width: 66px;
         }
@@ -443,45 +460,54 @@ a.btn-link {
         /* make arrow take less space */
         margin: 0 -2px 0 0;
     }
+
     &.fa-check {
         /* make check take less space */
         margin: 0 -3px 0 -2px;
     }
 }
 
-
 /* BIRTHDAYS */
 
 .birthdays-widget {
     .widget-content {
         padding: 5px 15px;
+
         table {
             width: 100%;
         }
-        b, strong {
+
+        b,
+        strong {
             font-weight: bold;
         }
-        i, em {
+
+        i,
+        em {
             font-style: italic;
         }
     }
+
     .widget-title form {
         display: inline;
         float: right;
     }
+
     .birthday-field {
         font-family: $font-stack;
         background: transparent;
         border: 1px solid rgb(216, 216, 216);
-        padding: 0px 4px;
+        padding: 0 4px;
         height: 18px;
         width: 16px;
         text-align: center;
     }
+
     .slash {
         color: black;
         font-weight: normal;
     }
+
     input {
         &[name="birthday_month"] {
             margin-right: -3px;
@@ -489,21 +515,23 @@ a.btn-link {
             padding-right: 5px;
             text-align: right;
         }
+
         &[name="birthday_day"] {
             margin-left: -2px;
             border-left: 0;
             text-align: left;
         }
+
         &[name="birthday_day"]:focus,
         &[name="birthday_month"]:focus {
             outline: 0;
         }
+
         &[type="submit"] {
             margin-top: -3px;
         }
     }
 }
-
 
 /* LINKS */
 
@@ -511,17 +539,19 @@ a.btn-link {
     .widget-content {
         padding: 5px 10px;
     }
+
     table {
         width: 100%;
     }
+
     .link-heading {
         font-weight: bold;
     }
+
     a {
         margin-left: 5px;
     }
 }
-
 
 /* SENIORS */
 
@@ -529,6 +559,7 @@ a.btn-link {
     .widget-content {
         padding: 5px;
     }
+
     .seniors-clock .clock {
         font-size: 16px;
         padding-right: 2px;

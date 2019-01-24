@@ -1,13 +1,16 @@
 @import "colors";
+
 .announcements {
     padding-right: 432px;
     min-width: 290px;
     /* for 320x480 screens */
     max-width: 1000px;
     margin-bottom: 100px;
+
     &.no-widgets {
         padding-right: 0;
     }
+
     h2 {
         padding-left: 10px;
         line-height: 38px;
@@ -29,34 +32,45 @@
     padding: 6px 10px;
     margin-bottom: 6px;
     overflow-x: auto;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
     h3 {
         cursor: pointer;
+
         > a.announcement-link {
             cursor: pointer;
             color: $grey !important;
         }
     }
+
     &.announcement-meta h3 {
         cursor: initial;
     }
+
     &.pinned h3 {
         color: rgb(181, 0, 0);
     }
+
     .announcement-content {
-        b, strong {
+        b,
+        strong {
             font-weight: bold;
         }
-        i, em {
+
+        i,
+        em {
             font-style: italic;
         }
+
         u {
             text-decoration: underline;
         }
+
         ol {
             list-style-type: decimal;
             list-style-position: inside;
         }
+
         p {
             margin-bottom: 5px;
         }
@@ -77,13 +91,16 @@
 .announcement-icon-wrapper {
     float: right;
     display: none;
+
     .announcement:hover & {
         display: block;
     }
+
     > a {
         color: $grey;
         text-decoration: none !important;
         padding-left: 2px;
+
         &:hover {
             color: rgb(32, 66, 224);
         }
@@ -97,13 +114,16 @@
         .announcement-icon-wrapper:hover .announcement-toggle:hover {
             color: rgb(32, 66, 224);
         }
+
         .announcement-icon-wrapper:hover .announcement-toggle {
             color: $grey;
         }
     }
+
     &-icon {
         cursor: pointer;
     }
+
     &.hidden .announcement-toggle-content {
         display: none;
     }
@@ -128,7 +148,6 @@
         margin-bottom: 100%;
     }
 }
-
 
 /*
  * between 800px and 662px, show a two column widget view
@@ -156,13 +175,6 @@
 */
 
 @media print {
-    * {
-        transition: initial !important;
-        -webkit-transition: initial !important;
-        -moz-transition: initial !important;
-        -ms-transition: initial !important;
-        -o-transition: initial !important;
-    }
     div.main div.announcements.primary-content {
         position: absolute;
         top: 0;
@@ -177,6 +189,7 @@
         &-icon-wrapper {
             visibility: hidden !important;
         }
+
         &.announcement-meta {
             display: none;
         }
@@ -200,7 +213,7 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     margin-bottom: 10px;
     position: relative;
     max-height: 100vh;
-    transition: max-height .2s ease-in-out;
+    transition: max-height 0.2s ease-in-out;
 
     &:hover {
         cursor: pointer;
@@ -209,6 +222,7 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     &.collapsed {
         max-height: 50px;
         overflow: hidden;
+
         &::after {
             content: "";
             position: absolute;
@@ -216,7 +230,11 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
             bottom: 0;
             left: 0;
             pointer-events: none;
-            background-image: linear-gradient(to bottom, rgba(255,255,255, 0), yellow 90%);
+            background-image: linear-gradient(
+                            to bottom,
+                            rgba(255, 255, 255, 0),
+                            yellow 90%
+            );
             width: 100%;
             height: 4em;
         }
@@ -236,6 +254,7 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     width: 27px;
     text-align: center;
     cursor: pointer;
+
     &:hover,
     .announcement h3:hover &,
     .event h3:hover & {

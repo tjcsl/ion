@@ -1,4 +1,5 @@
 @import "colors";
+
 b {
     font-weight: bold;
 }
@@ -43,6 +44,7 @@ h1 {
         -webkit-user-select: none;
         user-select: none;
     }
+
     .logo {
         background-image: url("/static/img/logos/Header-Logo.svg");
         background-size: auto 25px;
@@ -53,11 +55,13 @@ h1 {
         margin-left: 7px;
         float: left;
         z-index: 1043;
+
         .no-svg & {
             background-image: url("/static/img/logos/Header-Logo@2x.png");
             background-size: 30px 30px;
         }
     }
+
     .search {
         position: absolute;
         display: inline-block;
@@ -69,8 +73,9 @@ h1 {
         -moz-border-radius: 3px;
         border-radius: 3px;
         line-height: 20px;
-        behavior: url("/static/js/PIE/PIE.htc");
+        behavior: url("/static/js/vendor/PIE/PIE.htc");
         z-index: 1042;
+
         input[type="text"] {
             -moz-appearance: none;
             background-color: transparent;
@@ -87,13 +92,15 @@ h1 {
             box-shadow: none;
             float: left;
             z-index: 1042;
+
             &:focus {
                 outline: none;
             }
         }
     }
+
     .search-button {
-        font-family: "FontAwesome";
+        font-family: "FontAwesome", sans-serif;
         font-size: 13px;
         padding: 0 8px;
         float: right;
@@ -106,6 +113,7 @@ h1 {
         height: 24px;
         color: white;
         background: rgba(255, 255, 255, .1);
+
         &:hover,
         &:active,
         &:focus {
@@ -113,11 +121,13 @@ h1 {
             background: rgba(255, 255, 255, .3);
         }
     }
+
     .badged-item {
         display: inline-block;
         position: relative;
         padding: 0 10px;
         line-height: normal;
+
         .absence-icon {
             position: relative;
             display: inline-block;
@@ -127,11 +137,13 @@ h1 {
             text-align: center;
             width: 16px;
         }
+
         .dropdown-menu .absence-notification-icon {
             float: left;
             margin: 5px 20px 50px 5px;
         }
     }
+
     .badge-wrapper {
         display: inline-block;
         line-height: normal;
@@ -155,8 +167,8 @@ h1 {
     /* Non-flat UI */
     //text-shadow: 0 1px 0 rgb(173, 2, 11);
     //box-shadow: 0 1px 0 rgb(4, 33, 71);
-    behavior: url("/static/js/PIE/PIE.htc");
-    $colors: ( ('red', rgb(255, 72, 72)), ('darkred', rgb(181, 0, 0)), ('purple', rgb(175, 0, 175)), ('green', rgb(55, 179, 113)), ('yellow', rgb(234, 234, 13)), ('orange', rgb(255, 194, 81)), ('blue', rgb(66, 66, 206)), ('lightblue', rgb(0, 149, 255)));
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+    $colors: (('red', rgb(255, 72, 72)), ('darkred', rgb(181, 0, 0)), ('purple', rgb(175, 0, 175)), ('green', rgb(55, 179, 113)), ('yellow', rgb(234, 234, 13)), ('orange', rgb(255, 194, 81)), ('blue', rgb(66, 66, 206)), ('lightblue', rgb(0, 149, 255)));
     @each $color in $colors {
         $name: nth($color, 1);
         &.#{$name} {
@@ -168,15 +180,15 @@ h1 {
                 background: none;
                 @if $name=='yellow' {
                     color: black;
-                }
-                @else {
+                } @else {
                     color: nth($color, 1);
                 }
                 border: 1px solid nth($color,
-                1);
+                        1);
             }
         }
     }
+
     &.cancelled-badge {
         font-size: 15px;
         padding: 4px;
@@ -189,6 +201,7 @@ h1 {
     position: relative;
     padding: 0 10px 0 0;
     line-height: normal;
+
     .fa-user {
         margin-right: 1px;
         font-size: 17px;
@@ -216,23 +229,29 @@ h1 {
     list-style: none;
     z-index: 999;
     min-width: 140px;
+
     li {
         white-space: nowrap;
     }
+
     a {
         color: $grey;
         display: block;
+
         &:hover {
             text-decoration: none;
             color: rgb(150, 150, 150);
         }
+
         &.feedback {
             color: green;
+
             &:hover {
                 color: rgb(0, 200, 0);
             }
         }
     }
+
     /*
     i {
         font-size: 16px;
@@ -269,6 +288,7 @@ ul.dropdown-menu.absence-notification {
     height: 65px;
     margin-top: 20px;
     background-color: yellow;
+
     .arrow {
         border-bottom-color: yellow;
         right: 30px;
@@ -320,6 +340,7 @@ ul.dropdown-menu.absence-notification {
 .header .dropdown-menu a {
     line-height: 2em;
     padding: 0 10px;
+
     > i.fa-user {
         margin-right: 0;
     }
@@ -344,7 +365,8 @@ ul.dropdown-menu.absence-notification {
     float: left;
     padding: 1px 0;
     margin-bottom: 16px;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
     a {
         display: block;
         padding: 9px 0;
@@ -353,17 +375,20 @@ ul.dropdown-menu.absence-notification {
         left: 0;
         width: 100%;
         cursor: pointer;
+
         &,
         &:active,
         &:visited {
             text-decoration: none;
             color: rgb(169, 169, 169);
         }
+
         &:hover {
             text-decoration: none;
             color: $grey;
         }
     }
+
     li {
         border: 1px solid rgb(220, 220, 220);
         //border: rgb(216, 216, 216);
@@ -371,15 +396,19 @@ ul.dropdown-menu.absence-notification {
         position: relative;
         height: 64px;
         list-style: none;
+
         &:first-child {
             margin-top: -2px;
         }
+
         &:last-child {
             margin-bottom: -2px;
         }
     }
+
     .selected {
         background-color: rgb(252, 252, 252);
+
         a {
             color: $grey;
         }
@@ -397,7 +426,6 @@ a i {
     display: block;
     width: 28px;
     height: 28px;
-    background-image: url("/static/img/icons.png");
     background-image: url("/static/img/icons.svg");
     background-size: 308px 84px; // retinafy w/ this
     margin-left: auto;
@@ -408,6 +436,7 @@ a i {
     display: block;
     min-width: 28px;
     text-align: center;
+
     ul.nav li a:hover & {
         color: rgb(0, 85, 164);
     }
@@ -419,9 +448,11 @@ a i {
     right: 20px;
     color: #f00;
     font-size: 16px;
+
     ul.nav li.selected a & {
         color: #f99;
     }
+
     ul.nav li:not(.selected) a:hover & {
         color: #c00;
     }
@@ -445,9 +476,11 @@ a i {
 
 .dashboard-icon {
     background-position: 0 0;
+
     .nav .selected & {
         background-position: 0 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: 0 56px;
     }
@@ -455,9 +488,11 @@ a i {
 
 .eighth-icon {
     background-position: -28px 0;
+
     .nav .selected & {
         background-position: -28px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -28px 56px;
     }
@@ -465,9 +500,11 @@ a i {
 
 .events-icon {
     background-position: -56px 0;
+
     .nav .selected & {
         background-position: -56px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -56px 56px;
     }
@@ -475,9 +512,11 @@ a i {
 
 .groups-icon {
     background-position: -84px 0;
+
     .nav .selected & {
         background-position: -84px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -84px 56px;
     }
@@ -485,9 +524,11 @@ a i {
 
 .polls-icon {
     background-position: -112px 0;
+
     .nav .selected & {
         background-position: -112px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -112px 56px;
     }
@@ -495,9 +536,11 @@ a i {
 
 .files-icon {
     background-position: -140px 0;
+
     .nav .selected & {
         background-position: -140px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -140px 56px;
     }
@@ -505,9 +548,11 @@ a i {
 
 .help-icon {
     background-position: -168px 0;
+
     .nav .selected & {
         background-position: -168px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -168px 56px;
     }
@@ -515,9 +560,11 @@ a i {
 
 .print-icon {
     background-position: -196px 0;
+
     .nav .selected & {
         background-position: -196px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -196px 56px;
     }
@@ -525,9 +572,11 @@ a i {
 
 .info-icon {
     background-position: -224px 0;
+
     .nav .selected & {
         background-position: -224px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -224px 56px;
     }
@@ -535,9 +584,11 @@ a i {
 
 .bell-icon {
     background-position: -252px 0;
+
     .nav .selected & {
         background-position: -252px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -252px 56px;
     }
@@ -545,9 +596,11 @@ a i {
 
 .bus-icon {
     background-position: -280px 0;
+
     .nav .selected & {
         background-position: -280px 28px;
     }
+
     .nav li:not(.selected) a:hover & {
         background-position: -280px 56px;
     }
@@ -576,7 +629,7 @@ a i {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
 }
 
 .messenger button {
@@ -585,7 +638,7 @@ a i {
 }
 
 ul.messenger.messenger-fixed.messenger-on-top {
-    top: 50px!important;
+    top: 50px !important;
 }
 
 .selectize-control.single .selectize-input,
@@ -601,6 +654,7 @@ ul.messenger.messenger-fixed.messenger-on-top {
         box-shadow: 0 1px 0 rgba(0, 0, 0, .05), inset 0 1px 0 rgba(255, 255, 255, .8);
         // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100;Button
     }
+
     &.multi .selectize-input {
         /* Fixes weird space at bottom*/
         overflow: inherit;
