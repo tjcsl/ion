@@ -315,11 +315,11 @@ class EighthTest(IonTestCase):
         # Make sure user not in database is not created
         self.make_admin()
         params = {"first_name": "Test",
-                "last_name": "User",
-                "user": 9001,
-                "department": "general",
-                "online_attendance": "on",
-                "contracted_eighth": "on"}
+                  "last_name": "User",
+                  "user": 9001,
+                  "department": "general",
+                  "online_attendance": "on",
+                  "contracted_eighth": "on"}
 
         response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -331,11 +331,11 @@ class EighthTest(IonTestCase):
 
         user = self.create_sponsor()
         params = {"first_name": user.first_name,
-                "last_name": user.last_name,
-                "user": user.pk,
-                "department": "general",
-                "online_attendance": "on",
-                "full_time": "on"}
+                  "last_name": user.last_name,
+                  "user": user.pk,
+                  "department": "general",
+                  "online_attendance": "on",
+                  "full_time": "on"}
 
         response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
         self.assertEqual(response.status_code, 200)
