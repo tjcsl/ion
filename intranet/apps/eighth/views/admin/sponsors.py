@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pickle
 import csv
 import re
 
@@ -27,9 +26,10 @@ def add_sponsor_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding sponsor.")
-            request.session["add_sponsor_form"] = pickle.dumps(form)
+    else:
+        form = SponsorForm()
 
-    context = {"admin_page_title": "Add Sponsor", "form": SponsorForm}
+    context = {"admin_page_title": "Add Sponsor", "form": form}
     return render(request, "eighth/admin/add_sponsor.html", context)
 
 

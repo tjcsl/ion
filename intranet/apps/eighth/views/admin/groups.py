@@ -2,7 +2,6 @@
 
 import csv
 import logging
-import pickle
 import re
 
 from cacheops import invalidate_model, invalidate_obj
@@ -39,11 +38,6 @@ def add_group_view(request):
             return redirect("eighth_admin_edit_group", group_id=group.id)
         else:
             messages.error(request, "Error adding group.")
-            try:
-                request.session["add_group_form"] = pickle.dumps(form)
-            except (pickle.PicklingError, TypeError):
-                """Prevent pickle errors."""
-                pass
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")

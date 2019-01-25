@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import pickle
-
 from datetime import datetime, timedelta
 from urllib.parse import unquote
 
@@ -66,8 +64,6 @@ def eighth_admin_dashboard_view(request, **kwargs):
             context[form_name] = kwargs.get(form_name)
             context["scroll_to_id"] = form_css_id
         elif form_name in request.session:
-            pickled_form = request.session.pop(form_name)
-            context[form_name] = pickle.loads(str(pickled_form))
             context["scroll_to_id"] = form_css_id
         else:
             context[form_name] = form_class()
