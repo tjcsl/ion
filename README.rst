@@ -35,4 +35,4 @@ Ensure that your code follows those guidelines by running this in the root of th
 * Security-related or TJ CSL-specific issues should be emailed to `intranet@tjhsst.edu <mailto:intranet@tjhsst.edu>`_.
 
 
-Current Intranet maintainer: `Naitian Zhou <https://github.com/naitian>`_ (TJ 2018)
+Current Intranet maintainer: `Omkar Kulkarni <https://github.com/ovkulkarni>`_ (TJ 2019)
