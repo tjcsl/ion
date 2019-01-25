@@ -12,12 +12,6 @@ from ...test.ion_test import IonTestCase
 class ScheduleTest(IonTestCase):
     """Tests schedules."""
 
-    def test_ical(self):
-        out = StringIO()
-        call_command('ical', stdout=out)
-        output = ["{}"]
-        self.assertEqual(out.getvalue().splitlines(), output)
-
     def test_day(self):
         snow_daytype = DayType.objects.get_or_create(name="No School -- Snow Day", special=True)[0]
 
