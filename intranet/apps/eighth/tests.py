@@ -316,7 +316,7 @@ class EighthTest(IonTestCase):
         self.make_admin()
         params = {"first_name": "Test",
                 "last_name": "User",
-                "user": 1,
+                "user": 9001,
                 "department": "general",
                 "online_attendance": "on",
                 "contracted_eighth": "on"}
