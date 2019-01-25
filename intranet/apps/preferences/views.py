@@ -228,7 +228,6 @@ def save_bus_route(request, user):
                 else:
                     logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field] if field in bus_route else None))
                     try:
-                        print(fields[field])
                         route = Route.objects.get(route_name=fields[field])
                         setattr(user, field, route)
                         user.save()

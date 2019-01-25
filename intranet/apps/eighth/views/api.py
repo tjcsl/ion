@@ -147,7 +147,6 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         activity = serializer.validated_data['activity']
-        print(activity)
         favorites = user.favorited_activity_set
         if activity in favorites.all():
             favorites.remove(activity)
