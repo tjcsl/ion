@@ -5,17 +5,9 @@ Intranet 3
     :target: https://travis-ci.org/tjcsl/ion
     :alt: Travis CI
 
-.. image:: https://codeclimate.com/github/tjcsl/ion/badges/gpa.svg
-   :target: https://codeclimate.com/github/tjcsl/ion
-   :alt: Code Climate
-
 .. image:: https://coveralls.io/repos/tjcsl/ion/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/tjcsl/ion?branch=master
     :alt: Coverage
-
-.. image:: https://api.codacy.com/project/badge/grade/24f9f397f4624c548782b5f78bcc1d51
-    :target: https://www.codacy.com/app/pefoley2/ion
-    :alt: Codacy
 
 .. image:: https://readthedocs.org/projects/ion/badge/?version=latest
     :target: http://ion.readthedocs.io
