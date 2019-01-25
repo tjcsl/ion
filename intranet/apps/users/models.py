@@ -82,10 +82,8 @@ class UserManager(DjangoUserManager):
 
         users = User.objects.filter(properties___birthday__month=month, properties___birthday__day=day)
         results = []
-        print('=============================')
         for user in users:
             # TODO: permissions system
-            print(user.first_name)
             results.append(user)
 
         return results
