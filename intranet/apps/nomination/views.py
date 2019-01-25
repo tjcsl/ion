@@ -7,7 +7,6 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from .models import NominationPosition, Nomination
-# from .forms import CreateNominationPositionForm
 from ..users.models import User
 from ..auth.decorators import deny_restricted
 
