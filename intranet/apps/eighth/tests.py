@@ -10,12 +10,12 @@ from ..groups.models import Group
 from ..users.models import User, Email
 from ...test.ion_test import IonTestCase
 from .notifications import signup_status_email, absence_email
-"""
-Tests for the eighth module.
-"""
 
 
 class EighthTest(IonTestCase):
+    """
+    Tests for the eighth module.
+    """
 
     def setUp(self):
         self.user = User.objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
@@ -26,6 +26,10 @@ class EighthTest(IonTestCase):
         user = User.objects.get_or_create(username='awilliam')[0]
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
+        return user
+
+    def create_sponsor(self):
+        user = User.objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
         return user
 
     def test_sponsor(self):
@@ -306,3 +310,35 @@ class EighthTest(IonTestCase):
 
         # Make sure student has correct number of absences.
         self.assertEqual(User.objects.get(id=user1.id).absence_count(), 1)
+
+    def test_add_sponsor_form(self):
+        # Make sure user not in database is not created
+        self.make_admin()
+        params = {"first_name": "Test",
+                "last_name": "User",
+                "user": 1,
+                "department": "general",
+                "online_attendance": "on",
+                "contracted_eighth": "on"}
+
+        response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Test that error is raised and redirects
+        self.assertTemplateUsed(response, "eighth/admin/add_sponsor.html")
+
+        self.assertFormError(response, "form", "user", "Select a valid choice. {} is not one of the available choices.".format(params["user"]))
+
+        user = self.create_sponsor()
+        params = {"first_name": user.first_name,
+                "last_name": user.last_name,
+                "user": user.pk,
+                "department": "general",
+                "online_attendance": "on",
+                "full_time": "on"}
+
+        response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Make sure that new EighthSponsor is created
+        self.assertTrue(EighthSponsor.objects.filter(user=user).exists())
