@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from io import StringIO
 from django.utils import timezone
-
-from django.core.management import call_command
 
 from .models import Day, DayType
 from ...test.ion_test import IonTestCase
