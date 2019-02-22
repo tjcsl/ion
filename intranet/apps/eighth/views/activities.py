@@ -36,7 +36,7 @@ def activity_view(request, activity_id=None):
         two_months = datetime.now().date() + timedelta(weeks=8)
         scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date, block__date__lte=two_months)
 
-    scheduled_activities = scheduled_activities.order_by("block__date")
+    scheduled_activities = scheduled_activities.order_by("block__date", "block__block_letter")
 
     context = {"activity": activity, "scheduled_activities": scheduled_activities}
 
