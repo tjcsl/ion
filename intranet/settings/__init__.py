@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-from typing import Any, Tuple  # noqa
+from typing import Any, Tuple, Dict, List  # noqa
 
 if sys.version_info < (3, 3):
     # dependency on ipaddress module

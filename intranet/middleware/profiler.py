@@ -12,7 +12,7 @@ import tempfile
 import time
 from collections import defaultdict
 from io import StringIO
-from typing import Any  # noqa
+from typing import Any, Set, Dict  # noqa
 
 import cProfile
 

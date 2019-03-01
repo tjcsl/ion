@@ -9,6 +9,8 @@ import time
 from django.core.management.base import BaseCommand
 from intranet.apps.users.models import User
 
+from typing import Dict, List # noqa
+
 
 class Command(BaseCommand):
     help = "Import data from SIS."

@@ -6,6 +6,8 @@ from urllib import parse
 
 from django.conf import settings
 
+from typing import Set # noqa
+
 logger = logging.getLogger('intranet.settings')
 
 

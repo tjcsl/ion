@@ -6,6 +6,8 @@ from .models import Poll
 
 from ...utils.html import safe_html
 
+from typing imoprt List # noqa
+
 
 class PollForm(forms.ModelForm):
 
