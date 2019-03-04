@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: this is disgusting
 GRADE_NUMBERS = ((9, 'freshman'), (10, 'sophomore'), (11, 'junior'), (12, 'senior'), (13, 'staff'))
+EXTRA = [9996, 8888, 7011]
 
 
 class UserManager(DjangoUserManager):
@@ -94,13 +95,15 @@ class UserManager(DjangoUserManager):
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
-        return User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
+        users = User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
+        users = users.exclude(id__in=EXTRA)
+
+        return users
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
-        extra = [9996, 8888, 7011]
-        users = users.exclude(id__in=extra)
+        users = users.exclude(id__in=EXTRA)
         # Add possible exceptions handling here
         users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
 
@@ -751,7 +754,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Handle a graduated user being deleted."""
         from intranet.apps.eighth.models import EighthScheduledActivity
         EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(
-                archived_member_count=F('archived_member_count')+1)
+            archived_member_count=F('archived_member_count')+1)
 
     def __getattr__(self, name):
         if name == "properties":
