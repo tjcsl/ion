@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: this is disgusting
 GRADE_NUMBERS = ((9, 'freshman'), (10, 'sophomore'), (11, 'junior'), (12, 'senior'), (13, 'staff'))
+# Eighth Office/Demo Student user IDs that should be excluded from teacher/student lists
 EXTRA = [9996, 8888, 7011]
 
 
