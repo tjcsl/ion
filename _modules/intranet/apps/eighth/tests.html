@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #4571) documentation</title>
+    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #4594) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -141,12 +141,12 @@
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Email</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 <span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="n">signup_status_email</span><span class="p">,</span> <span class="n">absence_email</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tests for the eighth module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="EighthTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest">[docs]</a><span class="k">class</span> <span class="nc">EighthTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests for the eighth module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;awilliam&#39;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">8889</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
@@ -157,6 +157,10 @@
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;awilliam&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="EighthTest.create_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.create_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">create_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;ateacher&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;Teacher&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">user</span></div>
 
 <div class="viewcode-block" id="EighthTest.test_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">test_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -436,7 +440,39 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user1</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span>
 
         <span class="c1"># Make sure student has correct number of absences.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">absence_count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">absence_count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthTest.test_add_sponsor_form"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_add_sponsor_form">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_sponsor_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Make sure user not in database is not created</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="mi">9001</span><span class="p">,</span>
+                  <span class="s2">&quot;department&quot;</span><span class="p">:</span> <span class="s2">&quot;general&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;online_attendance&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;contracted_eighth&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_add_sponsor&quot;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="c1"># Test that error is raised and redirects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/add_sponsor.html&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFormError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;Select a valid choice. </span><span class="si">{}</span><span class="s2"> is not one of the available choices.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]))</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sponsor</span><span class="p">()</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                  <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
+                  <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span>
+                  <span class="s2">&quot;department&quot;</span><span class="p">:</span> <span class="s2">&quot;general&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;online_attendance&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;full_time&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_add_sponsor&quot;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="c1"># Make sure that new EighthSponsor is created</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span></div></div>
 </pre></div>
 
     </div>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.views.admin.general &#8212; TJ Intranet v3 (Build #4571) documentation</title>
+    <title>intranet.apps.eighth.views.admin.general &#8212; TJ Intranet v3 (Build #4594) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -130,8 +130,6 @@
       
   <h1>Source code for intranet.apps.eighth.views.admin.general</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">unquote</span>
 
@@ -197,8 +195,6 @@
             <span class="n">context</span><span class="p">[</span><span class="n">form_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">form_name</span><span class="p">)</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scroll_to_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">form_css_id</span>
         <span class="k">elif</span> <span class="n">form_name</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-            <span class="n">pickled_form</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">form_name</span><span class="p">)</span>
-            <span class="n">context</span><span class="p">[</span><span class="n">form_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pickled_form</span><span class="p">))</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scroll_to_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">form_css_id</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="n">form_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">form_class</span><span class="p">()</span>

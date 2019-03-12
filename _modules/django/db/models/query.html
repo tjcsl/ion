@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #4571) documentation</title>
+    <title>django.db.models.query &#8212; TJ Intranet v3 (Build #4594) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -610,7 +610,9 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">)</span>
             <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_from_params</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                <span class="c1"># Lock the row so that a concurrent update is blocked until</span>
+                <span class="c1"># after update_or_create() has performed its save.</span>
+                <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_from_params</span><span class="p">(</span><span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">lock</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">created</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="n">created</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">defaults</span><span class="p">):</span>
@@ -618,7 +620,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span><span class="p">,</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">_create_object_from_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_object_from_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">lock</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tries to create an object using passed params.</span>
 <span class="sd">        Used by get_or_create and update_or_create</span>
@@ -631,7 +633,8 @@
         <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
             <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="kc">False</span>
+                <span class="n">qs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span> <span class="k">if</span> <span class="n">lock</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">lookup</span><span class="p">),</span> <span class="kc">False</span>
             <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">pass</span>
             <span class="n">six</span><span class="o">.</span><span class="n">reraise</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">)</span>

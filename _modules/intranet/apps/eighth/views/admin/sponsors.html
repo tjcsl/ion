@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.views.admin.sponsors &#8212; TJ Intranet v3 (Build #4571) documentation</title>
+    <title>intranet.apps.eighth.views.admin.sponsors &#8212; TJ Intranet v3 (Build #4594) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -131,7 +131,6 @@
   <h1>Source code for intranet.apps.eighth.views.admin.sponsors</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -158,9 +157,10 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding sponsor.&quot;</span><span class="p">)</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;add_sponsor_form&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">SponsorForm</span><span class="p">()</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">SponsorForm</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/add_sponsor.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
