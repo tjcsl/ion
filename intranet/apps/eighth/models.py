@@ -976,7 +976,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if inst.block.block_letter in ["A", "B"]:
                 return inst
 
-        return False
+        return None
 
     def notify_waitlist(self, waitlists, activity):
         data = {"activity": activity}
@@ -1157,10 +1157,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     else:
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
+                        sibling = existing_signup.scheduled_activity.get_both_blocks_sibling()
                         existing_blocks = [
-                            existing_signup.scheduled_activity.block,
-                            existing_signup.scheduled_activity.get_both_blocks_sibling().block
+                            existing_signup.scheduled_activity.block
                         ]
+                        if sibling:
+                            existing_blocks.append(sibling.block)
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()
