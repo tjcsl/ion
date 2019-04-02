@@ -31,6 +31,15 @@
     <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_login' %}
+        {% stylesheet 'dark_schedule' %}
+        {% stylesheet 'dark_events' %}
+    {% endif %}
+{% endblock %}
+
 {% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}

@@ -8,6 +8,7 @@ from django.conf import settings
 
 from intranet.apps.notifications.models import NotificationConfig
 from .schedule.models import Day
+from ..utils.helpers import dark_mode_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -129,3 +130,7 @@ def show_bus_button(request):
 
     except AttributeError:
         return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}
+
+def enable_dark_mode(request):
+    return {"dark_mode_enabled": dark_mode_enabled(request)}
+

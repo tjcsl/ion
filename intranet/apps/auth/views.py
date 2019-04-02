@@ -23,6 +23,8 @@ from ..events.models import Event
 from ..eighth.models import EighthBlock, EighthSignup
 from ...utils.helpers import get_ap_week_warning
 
+from ...utils.helpers import dark_mode_enabled
+
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
 
@@ -44,7 +46,7 @@ def log_auth(request, success):
     auth_logger.info(log_line)
 
 
-def get_bg_pattern():
+def get_bg_pattern(request):
     """Choose a background pattern image.
 
     One will be selected at random.
@@ -67,7 +69,7 @@ def get_bg_pattern():
         "squairy_light.png",
         # "squared_metal.png"
     ]
-    file_path = "img/patterns/"
+    file_path = ("img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns")
 
     return static(file_path + random.choice(files))
 
@@ -117,7 +119,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             "auth_form": auth_form,
             "request": request,
             "git_info": settings.GIT,
-            "bg_pattern": get_bg_pattern(),
+            "bg_pattern": get_bg_pattern(request),
             "theme": get_login_theme(),
             "login_warning": login_warning,
             "senior_graduation": settings.SENIOR_GRADUATION,

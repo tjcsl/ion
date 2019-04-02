@@ -232,6 +232,7 @@ PIPELINE = {
 }  # type: Dict[str,Any]
 
 LIST_OF_INDEPENDENT_CSS = [
+<<<<<<< HEAD
     "about",
     "api",
     "login",
@@ -269,6 +270,14 @@ LIST_OF_INDEPENDENT_CSS = [
     "bus",
     "signage.page",
     "courses",
+    "dark_base",
+    "dark_login", 
+    "dark_schedule",
+    "dark_events",
+    "dark_dashboard",
+    "dark_dashboard.widgets",
+    "dark_schedule.widgets",
+    "dark_nav"
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
@@ -313,6 +322,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.show_homecoming",  # Sitewide custom themes (special events, etc)
                 "intranet.apps.context_processors.global_custom_theme",  # Sitewide custom themes (special events, etc)
                 "intranet.apps.context_processors.show_bus_button",
+                "intranet.apps.context_processors.enable_dark_mode",
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
