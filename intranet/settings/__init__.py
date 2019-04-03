@@ -232,7 +232,6 @@ PIPELINE = {
 }  # type: Dict[str,Any]
 
 LIST_OF_INDEPENDENT_CSS = [
-<<<<<<< HEAD
     "about",
     "api",
     "login",
@@ -278,6 +277,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark_dashboard.widgets",
     "dark_schedule.widgets",
     "dark_nav"
+    "dark_cke",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
