@@ -278,6 +278,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark_schedule.widgets",
     "dark_nav"
     "dark_cke",
+    "dark_polls",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
