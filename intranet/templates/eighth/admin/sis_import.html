@@ -1,5 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
+{% load pipeline %}
 
 {% block js %}
     {{ block.super }}
@@ -8,6 +9,13 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.maintenance.css' %}">
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block admin_main %}
