@@ -285,6 +285,8 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark_preferences",
     "dark_about",
     "dark_lostfound",
+    "dark_eighth.signup",
+    "dark_eighth.attendance",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
