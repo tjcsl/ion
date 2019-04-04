@@ -287,6 +287,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/lostfound",
     "dark/eighth.signup",
     "dark/eighth.attendance",
+    "dark/select",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
