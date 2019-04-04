@@ -18,6 +18,14 @@
     <script type="text/javascript" src="{% static 'js/about.js' %}"></script>
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_login' %}
+        {% stylesheet 'dark_about' %}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 {% if request.user.is_authenticated %}
     <ul class="nav dashboard-link">
