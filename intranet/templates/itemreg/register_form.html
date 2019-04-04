@@ -49,6 +49,24 @@
     </style>
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_nav' %}
+        {% if type == "calculator" %}
+            <style>
+                table.dark-border-table {
+                    background-color: rgb(50, 50, 50) !important;
+                    color: white !important;
+                }
+                table.dark-border-table tr[bgcolor="#CCC"] {
+                    background-color: #444;
+                }
+            </style>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
 {% block main %}
 <div class="lostitem primary-content">
     <a href="{% url 'itemreg' %}" class="button">

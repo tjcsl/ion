@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - GCM Notifications
@@ -11,6 +12,13 @@
 
 {% block js %}
     {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block main %}

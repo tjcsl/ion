@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - GCM Notifications
@@ -23,6 +24,13 @@
             $("select[name=nc_users]").selectize();
         });
     </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block main %}

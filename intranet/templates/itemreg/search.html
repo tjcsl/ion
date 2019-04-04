@@ -40,6 +40,19 @@
     </style>
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark_base' %}
+        {% stylesheet 'dark_nav' %}
+        <style>
+            select {
+                background-color: black;
+                color: white;
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
 <div class="lostfound primary-content">
     <a href="{% url 'itemreg' %}" class="button">
