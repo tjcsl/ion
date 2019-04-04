@@ -280,6 +280,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark_cke",
     "dark_polls",
     "dark_bus",
+    "dark_files",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
