@@ -282,6 +282,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark_bus",
     "dark_files",
     "dark_welcome",
+    "dark_preferences",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
