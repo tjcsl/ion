@@ -1,4 +1,5 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
 
 {% block css %}
     {{ block.super }}
@@ -7,6 +8,13 @@
         width: 83px;
     }
     </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block admin_main %}

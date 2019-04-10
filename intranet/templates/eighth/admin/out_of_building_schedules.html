@@ -1,6 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
-
+{% load pipeline %}
 
 {% block js %}
     <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
@@ -15,6 +15,13 @@
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block admin_main %}

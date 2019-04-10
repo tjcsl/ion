@@ -69,6 +69,14 @@
     {% stylesheet 'eighth.schedule' %}
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/eighth.schedule' %}
+    {% endif %}
+{% endblock %}
+
 {% block bodyclass %}{{ block.super }} schedule-activity-page{% if activity %} floating{% endif %}{% endblock %}
 
 {% block admin_main %}

@@ -288,6 +288,8 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/eighth.signup",
     "dark/eighth.attendance",
     "dark/select",
+    "dark/eighth.schedule",
+    "dark/oauth",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:

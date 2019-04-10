@@ -2,6 +2,7 @@
 {% load dates %}
 {% load static %}
 {% load cacheops %}
+{% load pipeline %}
 
 {% block js %}
     <script type="text/javascript">
@@ -13,6 +14,13 @@
             $("#{{ scroll_to_id }}").parent("td").each(function(){this.scrollIntoView()});
         });
     </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block admin_main %}

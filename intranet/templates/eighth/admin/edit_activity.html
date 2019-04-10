@@ -1,5 +1,6 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
-{% load  static %}
+{% load static %}
+{% load pipeline %}
 
 {% block js %}
     {{ block.super }}
@@ -100,6 +101,13 @@ textarea {
 }
 
     </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
 {% endblock %}
 
 {% block admin_main %}

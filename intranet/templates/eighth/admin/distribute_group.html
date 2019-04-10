@@ -30,6 +30,14 @@
 {% endif %}
 {% endblock %}
 
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/eighth.schedule' %}
+    {% endif %}
+{% endblock %}
+
 {% block admin_main %}
     {% if show_selection %}
         <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
