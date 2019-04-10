@@ -2,9 +2,10 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, reverse
 
 from ..announcements.models import Announcement
 from ..eighth.models import EighthActivity
@@ -286,6 +287,11 @@ def search_view(request):
             u = get_user_model().objects.user_with_student_id(q)
             if u is not None:
                 return profile_view(request, user_id=u.id)
+        elif q == "night owl":
+            request.user.dark_mode_properties._dark_mode_unlocked = True
+            request.user.dark_mode_properties.save()
+            messages.success(request, "You have unlocked dark mode! Visit the 'Preferences' page to turn it on!")
+            return redirect(reverse("index"))
 
         query_error, users = get_search_results(q, request.user.is_eighthoffice)
         if query_error:

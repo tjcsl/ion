@@ -160,4 +160,7 @@ def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
+    if request.user.dark_mode_properties.dark_mode_unlocked:
+        return request.user.dark_mode_properties.dark_mode_enabled
+
     return False

@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import (BusRouteForm, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
+from .forms import (BusRouteForm, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, DarkModeForm, PhoneFormset, EmailFormset, WebsiteFormset)
 from ..users.models import Email
 from ..bus.models import Route
 
@@ -265,6 +265,17 @@ def save_gcm_options(request, user):
                 messages.success(request, "Disabled push notifications")
 
 
+def save_dark_mode_settings(request, user):
+    dark_mode_form = DarkModeForm(user, data = request.POST, initial = {"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+    if dark_mode_form.is_valid():
+        if dark_mode_form.has_changed():
+            user.dark_mode_properties.dark_mode_enabled = dark_mode_form.cleaned_data["dark_mode_enabled"]
+            user.dark_mode_properties.save()
+            messages.success(request, ("Dark mode dnabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
+
+    return dark_mode_form
+
+
 @login_required
 def preferences_view(request):
     """View and process updates to the preferences page."""
@@ -281,6 +292,10 @@ def preferences_view(request):
             bus_route_form = None
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
+
+        dark_mode_form = None
+        if user.dark_mode_properties.dark_mode_unlocked:
+            dark_mode_form = save_dark_mode_settings(request, user)
 
         for error in errors:
             messages.error(request, error)
@@ -316,6 +331,10 @@ def preferences_view(request):
         logger.debug(notification_options)
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
 
+        dark_mode_form = None
+        if user.dark_mode_properties.dark_mode_unlocked:
+            dark_mode_form = DarkModeForm(user, initial = {"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+
     context = {
         "phone_formset": phone_formset,
         "email_formset": email_formset,
@@ -323,7 +342,8 @@ def preferences_view(request):
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
-        "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None
+        "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None,
+        "dark_mode_form": dark_mode_form,
     }
     return render(request, "preferences/preferences.html", context)
 

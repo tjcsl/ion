@@ -750,6 +750,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __getattr__(self, name):
         if name == "properties":
             return UserProperties.objects.get_or_create(user=self)[0]
+        elif name == "dark_mode_properties":
+            return UserDarkModeProperties.objects.get_or_create(user=self)[0]
         raise AttributeError
 
     def __str__(self):
@@ -904,6 +906,22 @@ class UserProperties(models.Model):
 PERMISSIONS_NAMES = {
     prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
 }
+
+
+class UserDarkModeProperties(models.Model):
+    """
+    Contains user properties relating to dark mode
+    """
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="dark_mode_properties", on_delete=models.CASCADE)
+    _dark_mode_unlocked = models.BooleanField(default=False)
+    dark_mode_enabled = models.BooleanField(default=False)
+
+    @property
+    def dark_mode_unlocked(self):
+        return self._dark_mode_unlocked
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Email(models.Model):
