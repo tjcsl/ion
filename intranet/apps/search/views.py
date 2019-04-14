@@ -291,7 +291,7 @@ def search_view(request):
             request.user.dark_mode_properties._dark_mode_unlocked = True
             request.user.dark_mode_properties.save()
             messages.success(request, "You have unlocked dark mode! Visit the 'Preferences' page to turn it on!")
-            return redirect(reverse("index"))
+            return redirect("index")
 
         query_error, users = get_search_results(q, request.user.is_eighthoffice)
         if query_error:
