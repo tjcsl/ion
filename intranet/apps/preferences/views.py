@@ -271,7 +271,7 @@ def save_dark_mode_settings(request, user):
         if dark_mode_form.has_changed():
             user.dark_mode_properties.dark_mode_enabled = dark_mode_form.cleaned_data["dark_mode_enabled"]
             user.dark_mode_properties.save()
-            messages.success(request, ("Dark mode dnabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
+            messages.success(request, ("Dark mode enabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
 
     return dark_mode_form
 
