@@ -17,7 +17,7 @@ class BusRouteForm(forms.Form):
         routes = Route.objects.all()
         for route in routes:
             self.BUS_ROUTE_CHOICES += [(route.route_name, route.route_name)]
-        self.fields['bus_route'] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select)
+        self.fields['bus_route'] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select, required=False)
 
 
 class PreferredPictureForm(forms.Form):

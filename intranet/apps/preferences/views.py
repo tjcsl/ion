@@ -228,15 +228,22 @@ def save_bus_route(request, user):
                 else:
                     logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field] if field in bus_route else None))
                     try:
-                        route = Route.objects.get(route_name=fields[field])
+                        if fields[field]:
+                            route = Route.objects.get(route_name=fields[field])
+                        else:
+                            route = None
                         setattr(user, field, route)
                         user.save()
                     except Exception as e:
                         # TODO: replace with better error handling
                         logger.error("Error processing Bus Route Form: {}".format(e))
                     try:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field]
-                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                        if fields[field]:
+                            messages.success(request, "Set field {} to {}".format(field, fields[field]
+                                                                                  if not isinstance(fields[field], list)
+                                                                                  else ", ".join(fields[field])))
+                        else:
+                            messages.success(request, "Cleared field {}".format(field))
                     except TypeError:
                         pass
     return bus_route_form
