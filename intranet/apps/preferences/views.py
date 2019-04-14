@@ -266,7 +266,7 @@ def save_gcm_options(request, user):
 
 
 def save_dark_mode_settings(request, user):
-    dark_mode_form = DarkModeForm(user, data = request.POST, initial = {"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+    dark_mode_form = DarkModeForm(user, data=request.POST, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
     if dark_mode_form.is_valid():
         if dark_mode_form.has_changed():
             user.dark_mode_properties.dark_mode_enabled = dark_mode_form.cleaned_data["dark_mode_enabled"]
@@ -333,7 +333,7 @@ def preferences_view(request):
 
         dark_mode_form = None
         if user.dark_mode_properties.dark_mode_unlocked:
-            dark_mode_form = DarkModeForm(user, initial = {"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+            dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
 
     context = {
         "phone_formset": phone_formset,
