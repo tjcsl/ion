@@ -20,14 +20,13 @@ Intranet3 (Ion) is the next-generation Intranet platform for `TJHSST
 
 Documentation (in RestructuredText format) is available inside the "docs" folder or at https://ion.readthedocs.io publicly on the web.
 
-**What does the TJ Intranet do?** Ion allows students, teachers, and staff at TJHSST to access student information, manage activity signups, and view information on news and events. `Read more about how Ion is used at Thomas Jefferson <https://ion.tjhsst.edu/about>`_.
+**What does the TJ Intranet do?** Ion allows students, teachers, and staff at TJHSST to access student information, manage activity signups for TJ's Eighth Period program, and view information on news and events. `Read more about how Ion is used at Thomas Jefferson <https://ion.tjhsst.edu/about>`_.
 
 **Ion now requires Python 3.5+** Python 3.5 is currently used in both production and testing environments.
 
-**How can I create a testing environment?** Read the section on `Setting up Vagrant <https://ion.readthedocs.io/en/latest/setup/vagrant.html>`_ in the documentation. Ask a TJ Sysadmin for VPN access and tokens needed to connect to our servers.
+**How can I create a testing environment?** Read the section on `Setting up Vagrant <https://ion.readthedocs.io/en/latest/setup/vagrant.html>`_ in the documentation.
 
-**Why is my build failing?** A PEP 8 syntax checker is run during the CI build. You can add a pre-commit hook to warn you about issues in your code by running ``flake8 --install-hook``.
-Ensure that your code follows those guidelines by running this in the root of the repository: ``./scripts/format.sh``
+**Why is my build failing?** A PEP 8 syntax checker, test suite, and docs build are run during the CI build. You can run ``./deploy`` to run a partial replica of the CI build on your location.
 
 **Where can I report a bug?**
 
