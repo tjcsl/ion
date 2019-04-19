@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.urls import reverse
+from django.test.client import RequestFactory
 
+from .views import save_bus_route
 from ..users.models import User
 from ..bus.models import Route
 from ...test.ion_test import IonTestCase
@@ -10,8 +12,12 @@ from ...test.ion_test import IonTestCase
 class PreferencesTest(IonTestCase):
 
     def setUp(self):
-        User.objects.get_or_create(username="awilliam", id="99999", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
-        Route.objects.get_or_create(route_name="AB-123", space="", bus_number="")
+        self.user = User.objects.get_or_create(username="awilliam", id="99999", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)[0]
+        route_names = ["JT-002", "JT-001"]
+        for route_name in route_names:
+            Route.objects.get_or_create(route_name=route_name, space="", bus_number="")
+        self.route_names = sorted(route_names)
+        self.factory = RequestFactory()
 
     def test_get_preferences(self):
         self.login()
@@ -47,7 +53,7 @@ class PreferencesTest(IonTestCase):
             'wf-0-user': ['99999'],
             'pf-MAX_NUM_FORMS': ['1000'],
             'show_pictures': ['on'],
-            'bus_route': ['AB-123'],
+            'bus_route': ['JT-001'],
         }
         response = self.client.post(reverse('preferences'), settings_dict)
         self.assertEqual(response.status_code, 302)
@@ -103,3 +109,15 @@ class PreferencesTest(IonTestCase):
         for line in logger.output:
             self.assertFalse("Error processing Bus Route Form" in line)
         self.assertEqual(response.status_code, 302)
+    
+    def test_save_bus_route(self):
+        # Test that save_bus_route() works
+        
+        # Test that choices are in order
+        request = self.factory.get(reverse("preferences"))
+        form = save_bus_route(request, self.user)
+        choices = form.fields["bus_route"].choices[1:]
+        self.assertEqual(len(choices), len(self.route_names))
+        for index, route_name in enumerate(self.route_names):
+            self.assertEqual(route_name, choices[index][0])
+            self.assertEqual(choices[index][1], choices[index][0])

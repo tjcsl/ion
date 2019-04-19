@@ -24,3 +24,9 @@ class BusTest(IonTestCase):
 
         self.assertEqual(route.status, "o")
         self.assertEqual(route.space, "")
+
+    def test_route_representation(self):
+        route = Route.objects.get_or_create(route_name="JT-101", bus_number="JT-101")[0]
+        route_str = str(route)
+
+        self.assertEqual(route.route_name, route_str)
