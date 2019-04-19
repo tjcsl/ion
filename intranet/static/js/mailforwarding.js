@@ -5,7 +5,7 @@ $(document).ready(function() {
         $.post("https://mailforwarding.tjhsst.edu", $("#mail-forwarding-form").serialize(), function(data) {
             if (data.error) {
                 Messenger().post({
-                    message: "Unable to set up forwarding.",
+                    message: "Unable to set up forwarding. " + data.message,
                     type: "error"
                 });
             }
