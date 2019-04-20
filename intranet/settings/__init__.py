@@ -675,7 +675,6 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
     ]
 
     # Only show debug toolbar when requested if in production.
@@ -692,7 +691,7 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
     ])
 
-    INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]
+    INSTALLED_APPS += ["debug_toolbar"]
 
 # Maintenance mode
 # This should be adjusted in secrets.py or by running:
