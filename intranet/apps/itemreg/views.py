@@ -121,9 +121,8 @@ def search_view(request):
 
     quser = request.GET.get("user", None)
     if quser:
-        try:
-            _st, search = get_search_results(quser)
-        except Exception:
+        query_error, search = get_search_results(quser)
+        if query_error:
             search = []
 
         logger.debug(search)

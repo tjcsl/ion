@@ -235,7 +235,7 @@ def get_search_results(q, admin=False):
         try:
             users += query(qu, admin)
         except ValueError:
-            raise Exception("Invalid query")
+            return "Invalid query", None
 
     return False, users
 
@@ -289,10 +289,8 @@ def search_view(request):
             if u is not None:
                 return profile_view(request, user_id=u.id)
 
-        try:
-            query_error, users = get_search_results(q, request.user.is_eighthoffice)
-        except Exception as e:
-            query_error = "{}".format(e)
+        query_error, users = get_search_results(q, request.user.is_eighthoffice)
+        if query_error:
             users = []
 
         if is_admin:

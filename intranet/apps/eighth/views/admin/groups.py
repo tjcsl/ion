@@ -651,6 +651,9 @@ def add_member_to_group_view(request, group_id):
         return redirect(next_url + "?added=" + str(from_sid.id))
 
     errors, results = get_search_results(query)
+    if errors:
+        messages.error(request, "Could not process search query.")
+        return redirect(next_url + "?error=n")
     logger.debug(results)
     if len(results) == 0:
         return redirect(next_url + "?error=n")

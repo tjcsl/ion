@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from datetime import datetime
 
 from django.http import Http404
 
@@ -12,6 +13,7 @@ from rest_framework.response import Response
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
 from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
                            EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer, EighthToggleFavoriteSerializer)
+from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,13 @@ class EighthBlockList(generics.ListAPIView):
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
     permission_classes = (IsAuthenticatedOrClientCredentials,)
+    
+    def is_valid_date(self, date_text):
+        try:
+            datetime.strptime(date_text, '%Y-%m-%d')
+        except ValueError:
+            return False
+        return True
 
     def get_queryset(self):
         # get_current_blocks() actually returns a list, which you
@@ -54,10 +63,17 @@ class EighthBlockList(generics.ListAPIView):
         blk_ids = [b.id for b in queryset]
 
         if "start_date" in self.request.GET:
-            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date")).order_by('id')
+            date = self.request.GET.get("start_date")
+            if not self.is_valid_date(date):
+                raise ValidationError("Invalid format for start_date.")
+
+            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=date).order_by('id')
 
         if "date" in self.request.GET:
-            return EighthBlock.objects.filter(id__in=blk_ids, date=self.request.GET.get("date")).order_by('id')
+            date = self.request.GET.get("date")
+            if not self.is_valid_date(date):
+                raise ValidationError("Invalid format for start_date.")
+            return EighthBlock.objects.filter(id__in=blk_ids, date=date).order_by('id')
 
         return queryset
 

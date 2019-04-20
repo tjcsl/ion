@@ -140,3 +140,21 @@ class ApiTest(IonTestCase):
         # Should be able to read API root without authentication
         response = self.client.get(reverse('api_root'))
         self.assertEqual(response.status_code, 200)
+
+    def test_api_eighth_block_list(self):
+        tok = AccessToken.objects.create(user=self.user, token='1234567890', application=self.application, scope='read write',
+                                         expires=timezone.now() + datetime.timedelta(days=1))
+        auth = "Bearer {}".format(tok.token)
+
+        response = self.client.get(reverse('api_eighth_block_list'), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # Test a good date
+        response = self.client.get(reverse('api_eighth_block_list')+"?start_date=2019-04-18", HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # Test a bad date
+        response = self.client.get(reverse('api_eighth_block_list')+"?start_date=2019-04-18bad", HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 400)
+        print(response.content)
+        self.assertEqual(response.content, "detail")
