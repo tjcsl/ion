@@ -87,6 +87,7 @@ def get_login_theme():
 
 
 def get_ap_week_warning(request):
+    """
     now = datetime.now()
     today = now.date()
     day = today.day
@@ -102,6 +103,7 @@ def get_ap_week_warning(request):
     data = {"day": day, "date": request.GET.get("date", None)}
     if today.month == 5 and 5 <= day <= 18:
         return get_template("auth/ap_week_schedule.html").render(data)
+    """
 
     return False
 
