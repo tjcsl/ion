@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
-from django.template.loader import get_template
+# from django.template.loader import get_template
 from django.templatetags.static import static
 from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
