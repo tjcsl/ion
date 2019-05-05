@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
-# from django.template.loader import get_template
+from django.template.loader import get_template
 from django.templatetags.static import static
 from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
@@ -87,23 +87,21 @@ def get_login_theme():
 
 
 def get_ap_week_warning(request):
-    """
     now = datetime.now()
     today = now.date()
     day = today.day
     if now.hour > 16:
         day += 1
 
-    if 12 <= day <= 13:
-        day = 14
+    if 11 <= day <= 12:
+        day = 13
 
-    if 5 <= day <= 6:
-        day = 7
+    if 4 <= day <= 5:
+        day = 6
 
     data = {"day": day, "date": request.GET.get("date", None)}
-    if today.month == 5 and 5 <= day <= 18:
+    if today.month == 5 and 4 <= day <= 17:
         return get_template("auth/ap_week_schedule.html").render(data)
-    """
 
     return False
 
