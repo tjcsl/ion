@@ -121,10 +121,10 @@ DATABASES = {'default': {'ENGINE': 'django_prometheus.db.backends.postgresql', '
 MANAGERS = ADMINS
 
 # Address to send feedback messages to
-FEEDBACK_EMAIL = "intranet@lists.tjhsst.edu"
+FEEDBACK_EMAIL = "intranet@tjhsst.edu"
 
 # Address to send approval messages to
-APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
+APPROVAL_EMAIL = "intranet-approval@tjhsst.edu"
 
 FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler", "django.core.files.uploadhandler.TemporaryFileUploadHandler"]
 
@@ -551,7 +551,10 @@ LOGGING = {
         },
         "access": {
             "format": "%(message)s"
-        }
+        },
+        "error": {
+            "format": "%(asctime)s: \n%(message)s"
+        },
     },
     "filters": {
         "require_debug_false": {
@@ -612,8 +615,9 @@ LOGGING = {
             "level": "ERROR",
             "filters": ["require_debug_false", "request"],
             "class": "logging.FileHandler",
-            "delay": True,
-            "filename": "/var/log/ion/app_error.log"
+            "formatter": "error",
+            "filename": "/var/log/ion/app_error.log",
+            "delay": True
         },
     },
     "loggers": {
@@ -749,7 +753,6 @@ CLEAR_ABSENCE_DAYS = 14
 
 # The address for FCPS' Emergency Announcement page
 FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
-# "http://www.fcps.edu/content/emergencyContent.html"
 
 # The timeout for the request to FCPS' emergency page (in seconds)
 FCPS_EMERGENCY_TIMEOUT = 5
