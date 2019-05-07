@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #4618) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #4621) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -140,7 +140,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">login</span><span class="p">,</span> <span class="n">logout</span><span class="p">,</span> <span class="n">authenticate</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="c1"># from django.template.loader import get_template</span>
+<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="k">import</span> <span class="n">get_template</span>
 <span class="kn">from</span> <span class="nn">django.templatetags.static</span> <span class="k">import</span> <span class="n">static</span>
 <span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="k">import</span> <span class="n">make_aware</span>
 <span class="kn">from</span> <span class="nn">django.utils.decorators</span> <span class="k">import</span> <span class="n">method_decorator</span>
@@ -218,23 +218,21 @@
 
 
 <div class="viewcode-block" id="get_ap_week_warning"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.get_ap_week_warning">[docs]</a><span class="k">def</span> <span class="nf">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    now = datetime.now()</span>
-<span class="sd">    today = now.date()</span>
-<span class="sd">    day = today.day</span>
-<span class="sd">    if now.hour &gt; 16:</span>
-<span class="sd">        day += 1</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span>
+    <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+        <span class="n">day</span> <span class="o">+=</span> <span class="mi">1</span>
 
-<span class="sd">    if 12 &lt;= day &lt;= 13:</span>
-<span class="sd">        day = 14</span>
+    <span class="k">if</span> <span class="mi">11</span> <span class="o">&lt;=</span> <span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
+        <span class="n">day</span> <span class="o">=</span> <span class="mi">13</span>
 
-<span class="sd">    if 5 &lt;= day &lt;= 6:</span>
-<span class="sd">        day = 7</span>
+    <span class="k">if</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">day</span> <span class="o">=</span> <span class="mi">6</span>
 
-<span class="sd">    data = {&quot;day&quot;: day, &quot;date&quot;: request.GET.get(&quot;date&quot;, None)}</span>
-<span class="sd">    if today.month == 5 and 5 &lt;= day &lt;= 18:</span>
-<span class="sd">        return get_template(&quot;auth/ap_week_schedule.html&quot;).render(data)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="n">day</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">17</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;auth/ap_week_schedule.html&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">False</span></div>
 
