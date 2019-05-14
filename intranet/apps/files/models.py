@@ -26,17 +26,6 @@ from django.db.models import Manager, Q
                             directory="{win}",
                             windows=True)
 
-        Host.objects.create(name="Resources Drive (R)",
-                            code="tj03_r",
-                            address="tj03.local.tjhsst.edu",
-                            directory="/R/",
-                            windows=True)
-
-        Host.objects.create(name="Windows Root",
-                            code="win",
-                            address="tj03.local.tjhsst.edu",
-                            windows=True)
-
 """
 
 
