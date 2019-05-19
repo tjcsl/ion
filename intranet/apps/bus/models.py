@@ -16,3 +16,6 @@ class Route(models.Model):
         self.status = 'o'
         self.space = ''
         self.save()
+
+    def __str__(self):
+        return self.route_name
