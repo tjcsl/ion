@@ -156,5 +156,3 @@ class ApiTest(IonTestCase):
         # Test a bad date
         response = self.client.get(reverse('api_eighth_block_list')+"?start_date=2019-04-18bad", HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 400)
-        print(response.content)
-        self.assertEqual(response.content, "detail")
