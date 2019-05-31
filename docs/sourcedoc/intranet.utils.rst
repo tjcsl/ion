@@ -60,14 +60,6 @@ intranet.utils.serialization module
     :undoc-members:
     :show-inheritance:
 
-intranet.utils.urls module
---------------------------
-
-.. automodule:: intranet.utils.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------
