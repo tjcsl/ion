@@ -20,14 +20,6 @@ intranet.middleware.ajax module
     :undoc-members:
     :show-inheritance:
 
-intranet.middleware.email\_handler module
------------------------------------------
-
-.. automodule:: intranet.middleware.email_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.middleware.profiler module
 -----------------------------------
 
