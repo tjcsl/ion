@@ -48,7 +48,7 @@ class EighthBlockList(generics.ListAPIView):
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
     permission_classes = (IsAuthenticatedOrClientCredentials,)
-    
+
     def is_valid_date(self, date_text):
         try:
             datetime.strptime(date_text, '%Y-%m-%d')

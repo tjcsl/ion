@@ -8,7 +8,7 @@ from django.db.models import Q
 from ...models import EighthActivity, EighthScheduledActivity
 from ....users.models import User
 
-from typing import List # noqa
+from typing import List  # noqa
 
 logger = logging.getLogger(__name__)
 
