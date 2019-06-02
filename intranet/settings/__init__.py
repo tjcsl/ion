@@ -701,7 +701,6 @@ MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_REGEX_WHITELIST = (r'^(https?://)?(\w+\.)?tjhsst\.edu$')
 
 # Uncomment to only allow XHR on API resources from TJ domains
 # CORS_URLS_REGEX = r'^/api/.*$'
