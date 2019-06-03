@@ -28,6 +28,14 @@ intranet.middleware.profiler module
     :undoc-members:
     :show-inheritance:
 
+intranet.middleware.same\_origin module
+---------------------------------------
+
+.. automodule:: intranet.middleware.same_origin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.templates module
 ------------------------------------
 
