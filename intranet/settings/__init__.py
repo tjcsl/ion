@@ -314,6 +314,7 @@ if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
 
 MIDDLEWARE = [
     "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
+    "intranet.middleware.same_origin.SameOriginMiddleware",  # 401s requests with an "Origin" header that doesn't match the "Host" header
     "django_prometheus.middleware.PrometheusBeforeMiddleware",  # Django Prometheus initial
     "django.middleware.common.CommonMiddleware",  # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
