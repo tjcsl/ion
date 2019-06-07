@@ -2,7 +2,7 @@
 
 import logging
 import random
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
@@ -11,6 +11,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.templatetags.static import static
+from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
@@ -23,6 +24,7 @@ from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
 from ..events.models import Event
 from ..users.models import User
+from ..eighth.models import EighthBlock, EighthSignup
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -182,6 +184,20 @@ class LoginView(View):
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
             default_next_page = "index"
+
+            if request.user.is_student and settings.ENABLE_PRE_EIGHTH_REDIRECT:
+                # Redirect to eighth signup page if the user isn't signed up for eighth period activities
+                now = timezone.localtime(timezone.now())
+
+                today_blocks = EighthBlock.objects.filter(date=now.date())
+                if today_blocks.exists():
+                    for block in today_blocks:
+                        block_start = timezone.make_aware(datetime.combine(now.date(), block.signup_time), now.tzinfo)
+                        time_difference = block_start - now
+                        if timedelta(0) <= time_difference <= timedelta(minutes=20):
+                            if not EighthSignup.objects.filter(user=request.user, scheduled_activity__block=block).exists():
+                                default_next_page = "eighth_signup"
+                                break
 
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
