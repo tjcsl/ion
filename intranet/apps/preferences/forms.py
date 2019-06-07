@@ -100,7 +100,11 @@ class NotificationOptionsForm(forms.Form):
 class DarkModeForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(DarkModeForm, self).__init__(*args, **kwargs)
-        self.fields["dark_mode_enabled"] = forms.BooleanField(initial=user.dark_mode_properties.dark_mode_enabled, label="Enable dark mode?", required=False)
+        self.fields["dark_mode_enabled"] = forms.BooleanField(
+            initial=user.dark_mode_properties.dark_mode_enabled,
+            label="Enable dark mode?",
+            required=False,
+        )
 
 
 class PhoneForm(forms.ModelForm):

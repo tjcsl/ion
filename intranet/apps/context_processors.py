@@ -131,6 +131,6 @@ def show_bus_button(request):
     except AttributeError:
         return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}
 
+
 def enable_dark_mode(request):
     return {"dark_mode_enabled": dark_mode_enabled(request)}
-
