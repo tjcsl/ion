@@ -126,7 +126,7 @@ def query(q, admin=False):
                     # implied wildcard at beginning and end of the search
                     # string
                     for cat in default_categories:
-                        query |= Q(**{"{}__icontains".fomrat(cat): p})
+                        query |= Q(**{"{}__icontains".format(cat): p})
                 search_query &= query
 
                 continue  # skip rest of processing
