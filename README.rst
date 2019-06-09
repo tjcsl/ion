@@ -26,7 +26,7 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 **How can I create a testing environment?** Read the section on `Setting up Vagrant <https://ion.readthedocs.io/en/latest/setup/vagrant.html>`_ in the documentation.
 
-**Why is my build failing?** A PEP 8 syntax checker, test suite, and docs build are run during the CI build. You can run ``./deploy`` to run a partial replica of the CI build on your location.
+**Why is my build failing?** A PEP 8 syntax checker, test suite, and docs build are run during the CI build. You can run ``./deploy`` to run a partial replica of the CI build on your machine.
 
 **Where can I report a bug?**
 
@@ -34,4 +34,4 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 * Security-related or TJ CSL-specific issues should be emailed to `intranet@tjhsst.edu <mailto:intranet@tjhsst.edu>`_.
 
 
-Current Intranet maintainer: `Omkar Kulkarni <https://github.com/ovkulkarni>`_ (TJ 2019)
+Current Intranet maintainer: `Theo Ouzhinski <https://github.com/theo-o>`_ (TJ 2020)
