@@ -821,7 +821,7 @@ class UserProperties(models.Model):
         if name == "birthday":
             if self.attribute_is_visible("show_birthday"):
                 self._birthday = value
-        super(UserProperties, self).__setattr__(name, value)
+        super(UserProperties, self).__setattr__(name, value) # pylint: disable=E1101; Pylint is wrong
 
     def __str__(self):
         return self.user.__str__()
@@ -934,7 +934,7 @@ class Phone(models.Model):
                 self._number = value
                 self.save()
         else:
-            super(Phone, self).__setattr__(name, value)
+            super(Phone, self).__setattr__(name, value) # pylint: disable=E1101; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "number":
@@ -998,7 +998,7 @@ class Photo(models.Model):
                 self._binary = value
                 self.save()
         else:
-            super(Photo, self).__setattr__(name, value)
+            super(Photo, self).__setattr__(name, value) # pylint: disable=E1101; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "binary":

@@ -150,7 +150,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             return response
 
         if hasattr(self, "default_activity"):
-            activity = self.default_activity
+            activity = self.default_activity # pylint: disable=E1101; We just checked if the attribute exists
         else:
             activity = form_list[1].cleaned_data["activity"]
 
