@@ -119,7 +119,7 @@ class Announcement(models.Model):
     @property
     def user_map(self):
         try:
-            return self._user_map # pylint: disable=E1101; Defined via a related_name in AnnouncementUserMap
+            return self._user_map  # pylint: disable=E1101; Defined via a related_name in AnnouncementUserMap
         except AnnouncementUserMap.DoesNotExist:
             return AnnouncementUserMap.objects.create(announcement=self)
 

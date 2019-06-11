@@ -202,7 +202,7 @@ class Event(models.Model):
     @property
     def user_map(self):
         try:
-            return self._user_map # pylint: disable=E1101; Defined via a related_name in EventUserMap
+            return self._user_map  # pylint: disable=E1101; Defined via a related_name in EventUserMap
         except EventUserMap.DoesNotExist:
             return EventUserMap.objects.create(event=self)
 
