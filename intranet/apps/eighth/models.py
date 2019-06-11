@@ -149,7 +149,7 @@ class EighthRoom(AbstractBaseEighthModel):
 class EighthActivityExcludeDeletedManager(models.Manager):
 
     def get_queryset(self):
-        return (super(EighthActivityExcludeDeletedManager, self).get_queryset().exclude(deleted=True))
+        return super(EighthActivityExcludeDeletedManager, self).get_queryset().exclude(deleted=True)
 
 
 class EighthActivity(AbstractBaseEighthModel):
@@ -546,7 +546,7 @@ class EighthBlock(AbstractBaseEighthModel):
     def signup_time_future(self):
         """Is the signup time in the future?"""
         now = datetime.datetime.now()
-        return (now.date() < self.date or (self.date == now.date() and self.signup_time > now.time()))
+        return now.date() < self.date or (self.date == now.date() and self.signup_time > now.time())
 
     def date_in_past(self):
         """Is the block's date in the past?
@@ -555,7 +555,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
         """
         now = datetime.datetime.now()
-        return (now.date() > self.date)
+        return now.date() > self.date
 
     def in_clear_absence_period(self):
         """Is the current date in the block's clear absence period?
@@ -606,7 +606,7 @@ class EighthBlock(AbstractBaseEighthModel):
         """Display the date and block letter (mm/dd B, for example: '9/1 B')
 
         """
-        return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
+        return "{} {}".format(self.date.strftime("%m/%d"), self.block_letter)
 
     @property
     def is_this_year(self):
@@ -869,7 +869,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # Presign activities can only be signed up for 2 days in advance.
         presign_period = datetime.timedelta(days=2)
 
-        return (now < (activity_date - presign_period))
+        return now < (activity_date - presign_period)
 
     def has_open_passes(self):
         """Return whether there are passes that have not been acknowledged."""
@@ -1292,7 +1292,7 @@ class EighthSignupManager(Manager):
         self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
 
     def get_absences(self):
-        return (EighthSignup.objects.filter(was_absent=True, scheduled_activity__attendance_taken=True))
+        return EighthSignup.objects.filter(was_absent=True, scheduled_activity__attendance_taken=True)
 
 
 class EighthSignup(AbstractBaseEighthModel):

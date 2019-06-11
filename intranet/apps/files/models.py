@@ -59,7 +59,7 @@ class Host(models.Model):
     def visible_to(self, user):
         if self.groups_visible.count() == 0:
             return True
-        return (self in Host.objects.visible_to_user(user))
+        return self in Host.objects.visible_to_user(user)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.code)
