@@ -12,7 +12,7 @@ from typing import List  # noqa
 class PollForm(forms.ModelForm):
 
     def __init__(self, all_groups=False, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(PollForm, self).__init__(*args, **kwargs)
         self.fields["description"].widget = forms.Textarea()
 
     def clean_description(self):
