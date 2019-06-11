@@ -85,13 +85,13 @@ class Command(BaseCommand):
             else:
                 users = self.load_gen_users()
                 self.stdout.write("Faking teachers...")
-                for i in range(len(users)):
-                    for classid in users[i]["classes"]:
-                        classobj = users[i]["classes"][classid]
+                for user in users:
+                    for classid in user["classes"]:
+                        classobj = user["classes"][classid]
                         classobj["Room"] = "Dome"
                         classobj["TeacherStaffName"] = "Glazer, E."
                         classobj["Teacher"] = "Glazer, Evan"
-                        users[i]["classes"][classid] = classobj
+                        user["classes"][classid] = classobj
 
                 open("users_faked.json", "w").write(json.dumps(users))
         else:
@@ -100,16 +100,14 @@ class Command(BaseCommand):
         if os.path.isfile("users_uids.json"):
             self.stdout.write("Loading user existence/UIDnumbers info...")
             self.uidmap = json.loads(open("users_uids.json", "r").read())
-            for i in range(len(users)):
-                user = users[i]
+            for user in users:
                 tjuser = user["user"]["TJUsername"].lower()
                 user["uidNumber"] = self.uidmap[tjuser]["uidNumber"]
                 user["ldapExists"] = self.uidmap[tjuser]["ldapExists"]
             self.stdout.write("Loaded")
         else:
             self.stdout.write("Check for user existence/generate iodineUidNumbers")
-            for i in range(len(users)):
-                user = users[i]
+            for user in users:
                 tjuser = user["user"]["TJUsername"].lower()
                 try:
                     ionuser = User.objects.get(username__iexact=tjuser)
@@ -127,8 +125,7 @@ class Command(BaseCommand):
             open("users_uids.json", "w").write(json.dumps(self.uidmap))
 
         self.stdout.write("Either add or modify accounts in LDAP")
-        for i in range(len(users)):
-            user = users[i]
+        for user in users:
             if user["ldapExists"]:
                 self.stdout.write("%s MODIFY %s" % (user["user"]["TJUsername"], user["uidNumber"]))
                 self.update_ldap_user(user)
@@ -143,8 +140,8 @@ class Command(BaseCommand):
         else:
             self.stdout.write("Handle schedules")
             self.schedules = {}
-            for i in range(len(users)):
-                classes = users[i]["classes"]
+            for user in users:
+                classes = user["classes"]
                 for sid in classes:
                     if sid not in self.schedules:
                         self.schedules[sid] = classes[sid]
