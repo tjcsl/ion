@@ -56,13 +56,13 @@ def add_block_view(request):
             logger.debug(letters)
             logger.debug(current_letters)
             for l in letters:
-                if len(l) == 0:
+                if not l:
                     continue
                 if l not in current_letters:
                     EighthBlock.objects.create(date=fmtdate, block_letter=l)
                     messages.success(request, "Successfully added {} Block on {}".format(l, fmtdate))
             for l in current_letters:
-                if len(l) == 0:
+                if not l:
                     continue
                 if l not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()

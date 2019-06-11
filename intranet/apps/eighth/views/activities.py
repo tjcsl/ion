@@ -224,7 +224,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
     else:
         average_signups = 0
 
-    if len(signups) > 0:
+    if signups:
         average_user_signups = round(total_signups / len(signups), 2)
     else:
         average_user_signups = 0

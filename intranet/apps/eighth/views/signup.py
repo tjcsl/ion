@@ -139,7 +139,7 @@ def eighth_signup_view(request, block_id=None):
                 "locked": b.locked
             }
 
-            if len(schedule) and schedule[-1]["date"] == b.date:
+            if schedule and schedule[-1]["date"] == b.date:
                 schedule[-1]["blocks"].append(info)
             else:
                 day = {}
@@ -225,7 +225,7 @@ def eighth_display_view(request, block_id=None):
             "locked": b.locked
         }
 
-        if len(schedule) and schedule[-1]["date"] == b.date:
+        if schedule and schedule[-1]["date"] == b.date:
             schedule[-1]["blocks"].append(info)
         else:
             day = {}

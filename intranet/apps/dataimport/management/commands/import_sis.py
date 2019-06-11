@@ -411,7 +411,7 @@ replace: enrolledclass
         return {"M": "Mr.", "F": "Ms."}[gender]
 
     def format_display_name(self, data):
-        if len(data["user"]["MiddleName"] or "") > 0:
+        if data["user"]["MiddleName"]:
             return "{} {} {}".format(data["user"]["FirstName"], data["user"]["MiddleName"], data["user"]["LastName"])
 
         return "{} {}".format(data["user"]["FirstName"], data["user"]["LastName"])

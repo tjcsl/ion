@@ -98,7 +98,7 @@ def announcement_approved_email(request, obj, req):
     base_url = request.build_absolute_uri(reverse('index'))
     url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
 
-    if len(teacher_emails) > 0:
+    if teacher_emails:
         data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "approved"}
         email_send("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, teacher_emails)
         messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
@@ -131,7 +131,7 @@ def announcement_posted_email(request, obj, send_all=False):
         emails = []
         users_send = []
         for u in users:
-            if len(send_groups) == 0:
+            if not send_groups:
                 # no groups, public.
                 em = u.emails.first() if u.emails.count() >= 1 else u.tj_email
                 if em:

@@ -749,7 +749,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         overrides."""
 
         sponsors = self.sponsors.all()
-        if len(sponsors) > 0:
+        if sponsors:
             return sponsors
         else:
             return self.activity.sponsors.all()
@@ -774,7 +774,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         overrides."""
 
         rooms = self.rooms.all()
-        if len(rooms) > 0:
+        if rooms:
             return rooms
         else:
             return self.activity.rooms.all()
@@ -1389,7 +1389,7 @@ class EighthSignup(AbstractBaseEighthModel):
         if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky:
             exception.Sticky = True
 
-        if len(exception.messages()) > 0 and not force:
+        if exception.messages() and not force:
             raise exception
         else:
             block = self.scheduled_activity.block

@@ -193,7 +193,7 @@ def room_utilization_action(request, start_id, end_id):
     show_opts = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors", "admin_comments"]
     show_opts_defaults = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors"]
     show_opts_hidden = ["admin_comments"]
-    if len(show_vals) == 0:
+    if not show_vals:
         show = {name: True for name in show_opts_defaults}
         show.update({name: False for name in show_opts_hidden})
     else:
@@ -240,7 +240,7 @@ def room_utilization_action(request, start_id, end_id):
             all_sched_acts = sched_acts
             sched_acts = []
             for sched_act in all_sched_acts:
-                if len(set(rooms).intersection(set(sched_act.get_true_rooms()))) > 0:
+                if set(rooms).intersection(set(sched_act.get_true_rooms())):
                     sched_acts.append(sched_act)
         else:
             rooms = all_rooms
