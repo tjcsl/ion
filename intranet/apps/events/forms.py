@@ -10,7 +10,7 @@ from ..groups.models import Group
 class EventForm(forms.ModelForm):
 
     def __init__(self, all_groups=False, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(EventForm, self).__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
 
@@ -31,7 +31,7 @@ class EventForm(forms.ModelForm):
 class AdminEventForm(forms.ModelForm):
 
     def __init__(self, all_groups=False, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(AdminEventForm, self).__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
         self.fields["scheduled_activity"].widget = forms.NumberInput()
