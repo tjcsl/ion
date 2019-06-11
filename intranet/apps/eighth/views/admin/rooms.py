@@ -76,7 +76,7 @@ def delete_room_view(request, room_id):
             "admin_page_title": "Delete Room",
             "item_name": str(room),
             "help_text": "Deleting this room will remove all records "
-            "of it related to eighth period."
+                         "of it related to eighth period."
         }
 
         return render(request, "eighth/admin/delete_form.html", context)

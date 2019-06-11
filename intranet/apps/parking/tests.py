@@ -41,8 +41,7 @@ class ParkingTest(IonTestCase):
             "make": "Lamborghini",
             "model": "Veneno",
             "year": 2018
-        }
-        )
+        })
 
         self.assertEqual(response.status_code, 302)
 
@@ -75,8 +74,7 @@ class ParkingTest(IonTestCase):
             "make": "Lamborghini",
             "model": "Veneno",
             "year": "2018"
-        }
-        )
+        })
 
         # Check that car application is not created
         self.assertEqual(response.status_code, 302)
