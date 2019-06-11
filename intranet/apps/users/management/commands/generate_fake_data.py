@@ -1,7 +1,8 @@
 import datetime
 
-from faker import Faker
 from django.conf import settings
+
+from faker import Faker
 
 from ...models import User
 fake = Faker()

@@ -6,10 +6,11 @@ import json
 import csv
 import re
 import time
-from django.core.management.base import BaseCommand
-from intranet.apps.users.models import User
-
 from typing import Dict, List  # noqa
+
+from django.core.management.base import BaseCommand
+
+from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):

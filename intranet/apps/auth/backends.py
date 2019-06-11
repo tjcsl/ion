@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import uuid
+import subprocess
 
 from django.conf import settings
 # from django.utils.decorators import method_decorator
@@ -11,7 +12,6 @@ from django.contrib.auth.hashers import check_password
 # from django.views.decorators.debug import sensitive_variables
 
 import pexpect
-import subprocess
 
 from ..users.models import User
 

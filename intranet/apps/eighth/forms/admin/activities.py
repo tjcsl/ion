@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from typing import List  # noqa
 
 from django import forms
 from django.db.models import Q
 
 from ...models import EighthActivity, EighthScheduledActivity
 from ....users.models import User
-
-from typing import List  # noqa
 
 logger = logging.getLogger(__name__)
 

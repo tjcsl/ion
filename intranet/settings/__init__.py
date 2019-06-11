@@ -10,7 +10,8 @@ if sys.version_info < (3, 3):
     # dependency on ipaddress module
     raise Exception("Python 3.3 or higher is required.")
 
-from ..utils import helpers  # noqa
+# noqa
+from ..utils import helpers  # pylint: disable=C0413
 """ !! In production, add a file called secret.py to the settings package that
 defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
 

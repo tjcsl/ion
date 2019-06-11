@@ -7,10 +7,10 @@ from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from simple_history.models import HistoricalRecords
 from django.db import models, transaction
 from django.db.models import Manager, Q, Count
 from django.utils import formats
+from simple_history.models import HistoricalRecords
 
 from . import exceptions as eighth_exceptions
 from ..notifications.emails import email_send

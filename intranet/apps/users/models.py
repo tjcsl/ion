@@ -2,8 +2,8 @@
 
 import logging
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from base64 import b64encode
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager

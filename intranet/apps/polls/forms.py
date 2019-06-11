@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from typing import List  # noqa
 
 from django import forms
 
 from .models import Poll
 
 from ...utils.html import safe_html
-
-from typing import List  # noqa
 
 
 class PollForm(forms.ModelForm):
