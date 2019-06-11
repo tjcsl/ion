@@ -97,11 +97,11 @@ def get_profile_context(request, user_id=None, date=None):
     blocks_all = EighthBlock.objects.order_by("date", "block_letter").filter(date__gte=date)
     blocks = blocks_all.filter(date__lt=date_end)
 
-    if len(blocks) == 0:
+    if not blocks:
         blocks = list(blocks_all)[:6]
         skipped_ahead = True
         logger.debug(blocks)
-        if len(blocks) > 0:
+        if blocks:
             date_next = list(blocks)[-1].date + timedelta(days=1)
 
     for block in blocks:

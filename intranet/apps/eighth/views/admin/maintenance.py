@@ -149,7 +149,7 @@ def sis_import(request):
         if context["already_importing"]:
             messages.error(request, "An upload is currently in progress!")
             return redirect(reverse("eighth_admin_maintenance_sis_import"))
-        if len(request.FILES) == 0:
+        if not request.FILES:
             messages.error(request, "You need to upload a file!")
             return redirect(reverse("eighth_admin_maintenance_sis_import"))
         data = request.FILES["data"]

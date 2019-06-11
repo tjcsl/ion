@@ -32,7 +32,7 @@ def check_emerg():
 
     r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
     res = r.text
-    if not res or len(res) < 1:
+    if not res:
         status = False
 
     # Keep this list up to date with whatever wording FCPS decides to use each time...

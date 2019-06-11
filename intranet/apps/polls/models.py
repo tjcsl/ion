@@ -86,7 +86,7 @@ class Poll(models.Model):
     def get_users_voted(self):
         users = []
         for q in self.question_set.all():
-            if len(users) > 0:
+            if users:
                 users = list(set(q.get_users_voted()) | set(users))
             else:
                 users = list(q.get_users_voted())

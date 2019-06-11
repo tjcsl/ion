@@ -190,7 +190,7 @@ def poll_vote_view(request, poll_id):
             "is_writing": q.is_writing(),
             "max_choices": q.max_choices,
             "current_votes": current_votes,
-            "current_vote": current_votes[0] if len(current_votes) > 0 else None,
+            "current_vote": current_votes[0] if current_votes else None,
             "current_choices": [v.choice for v in current_votes],
             "current_vote_none": (len(current_votes) < 1),
             "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote)

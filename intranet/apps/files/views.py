@@ -333,11 +333,11 @@ def files_type(request, fstype=None):
 
     current_dir = normpath(sftp.pwd)  # current directory
     dir_list = current_dir.split("/")
-    if len(dir_list) > 1 and len(dir_list[-1]) == 0:
+    if len(dir_list) > 1 and not dir_list[-1]:
         dir_list.pop()
     parent_dir = "/".join(dir_list[:-1])
 
-    if len(parent_dir) == 0:
+    if not parent_dir:
         parent_dir = "/"
 
     files = sorted(files, key=lambda f: (not f["folder"], f["name"]))

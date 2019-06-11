@@ -106,7 +106,7 @@ def query(q, admin=False):
                     exact = True
                     p = p[1:-1]
 
-                if len(p) == 0:
+                if not p:
                     continue
 
                 default_categories = ["first_name", "last_name", "nickname"]

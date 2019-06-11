@@ -58,7 +58,7 @@ def edit_activity_view(request, activity_id):
                 old_sponsor_ids = old_sponsors.values_list("id", flat=True)
                 new_sponsor_ids = [s.id for s in form.cleaned_data["sponsors"]]
 
-                if set(old_sponsor_ids) != set(new_sponsor_ids) and len(old_sponsor_ids) > 0:
+                if set(old_sponsor_ids) != set(new_sponsor_ids) and old_sponsor_ids:
                     start_date = get_start_date(request)
                     sched_acts_default = EighthScheduledActivity.objects.filter(activity=activity, sponsors=None, block__date__lt=start_date)
 
@@ -106,7 +106,7 @@ def edit_activity_view(request, activity_id):
                 old_room_ids = old_rooms.values_list("id", flat=True)
                 new_room_ids = [r.id for r in form.cleaned_data["rooms"]]
 
-                if set(old_room_ids) != set(new_room_ids) and len(old_room_ids) > 0:
+                if set(old_room_ids) != set(new_room_ids) and old_room_ids:
                     start_date = get_start_date(request)
                     sched_acts_default = EighthScheduledActivity.objects.filter(activity=activity, rooms=None, block__date__lt=start_date)
 

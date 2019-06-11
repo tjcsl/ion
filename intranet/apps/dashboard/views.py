@@ -51,7 +51,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     if surrounding_blocks is None:
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
-    if len(surrounding_blocks) == 0:
+    if not surrounding_blocks:
         return None, False
 
     # Use select_related to reduce query count

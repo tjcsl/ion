@@ -655,7 +655,7 @@ def add_member_to_group_view(request, group_id):
         messages.error(request, "Could not process search query.")
         return redirect(next_url + "?error=n")
     logger.debug(results)
-    if len(results) == 0:
+    if not results:
         return redirect(next_url + "?error=n")
     else:
         users = results

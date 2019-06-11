@@ -68,7 +68,7 @@ class UserManager(DjangoUserManager):
                 query['last_name'] = sn
             results = User.objects.filter(**query)
 
-            if len(results) == 0:
+            if not results:
                 # Try their first name as a nickname
                 del query['first_name']
                 query['nickname'] = given_name
@@ -353,7 +353,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         for field in self.properties._meta.get_fields():
             split_field = field.name.split('_', 1)
-            if len(split_field) <= 0 or split_field[0] not in ['self', 'parent']:
+            if not split_field or split_field[0] not in ['self', 'parent']:
                 continue
             permissions_dict[split_field[0]][split_field[1]] = getattr(self.properties, field.name)
 
