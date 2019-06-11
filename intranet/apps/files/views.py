@@ -5,10 +5,10 @@ import base64
 import datetime
 import logging
 import os
+from os.path import normpath
 import stat
 import tempfile
 import zipfile
-from os.path import normpath
 from wsgiref.util import FileWrapper
 
 from Crypto import Random

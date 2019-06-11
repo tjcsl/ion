@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.conf import settings
 from django.utils import timezone
-
-import datetime
 
 
 def is_current_year(date):

@@ -16,10 +16,10 @@ from typing import Any, Set, Dict  # noqa
 
 import cProfile
 
+import pstats
+
 from django.conf import settings
 from django.db import connections
-
-import pstats
 
 # FIXME change log base to something appropriate for the particular installation
 PROFILE_LOG_BASE = '/var/tmp/django'

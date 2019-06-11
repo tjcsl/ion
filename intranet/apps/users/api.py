@@ -5,11 +5,11 @@ import os
 
 from django.conf import settings
 
-from intranet.apps.search.views import get_search_results
-
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from intranet.apps.search.views import get_search_results
 
 from .models import Grade, User
 from .renderers import JPEGRenderer

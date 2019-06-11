@@ -18,11 +18,11 @@ import os.path
 import re
 import sys
 
-import MySQLdb as mdb
-
 import ldap3
 
 import pexpect
+
+import MySQLdb as mdb
 
 # Run this on iodine.tjhsst.edu
 start_date = "2015-09-01"

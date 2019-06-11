@@ -4,9 +4,9 @@ import logging
 import subprocess
 from urllib import parse
 
-from django.conf import settings
-
 from typing import Set # noqa
+
+from django.conf import settings
 
 logger = logging.getLogger('intranet.settings')
 
