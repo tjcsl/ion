@@ -42,7 +42,7 @@ class EventManager(Manager):
 
         """
 
-        return (Event.objects.filter(approved=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(user=user)))
+        return Event.objects.filter(approved=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(user=user))
 
     def hidden_events(self, user):
         """Get a list of events marked as hidden for a given user (usually request.user).

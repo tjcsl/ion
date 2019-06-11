@@ -903,7 +903,7 @@ class UserProperties(models.Model):
         try:
             parent = getattr(self, "parent_{}".format(permission))
             student = getattr(self, "self_{}".format(permission))
-            return (parent and student)
+            return parent and student
         except Exception:
             logger.error("Could not retrieve permissions for {}".format(permission))
 

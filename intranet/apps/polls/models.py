@@ -93,7 +93,7 @@ class Poll(models.Model):
         return users
 
     def has_user_voted(self, user):
-        return (Answer.objects.filter(question__in=self.question_set.all(), user=user).count() == self.question_set.count())
+        return Answer.objects.filter(question__in=self.question_set.all(), user=user).count() == self.question_set.count()
 
     def can_vote(self, user):
         if user.has_admin_permission("polls"):
