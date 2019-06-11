@@ -103,8 +103,8 @@ class ImportThread(threading.Thread):
                 reader = csv.reader(f)
                 headers = next(reader)
                 index_dict = {}
-                for i in range(len(headers)):
-                    index_dict[headers[i].strip()] = i
+                for i, header in enumerate(headers):
+                    index_dict[header.strip()] = i
                 for row in reader:
                     try:
                         u = User.objects.get(student_id=row[index_dict["Student ID"]].strip())
