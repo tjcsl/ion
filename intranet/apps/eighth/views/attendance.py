@@ -127,7 +127,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
             if sponsor and not self.request.user.is_eighthoffice:
                 context.update({"sponsor_block": block})
-                logger.debug("sponsor block: {}".format(block))
+                logger.debug("sponsor block: %s", block)
 
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
                 sponsored_activities = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).order_by("activity__name"))
@@ -427,10 +427,10 @@ def accept_pass_view(request, signup_id):
     logger.debug(status)
 
     if status == "accept":
-        logger.debug("ACCEPT {}".format(signup_id))
+        logger.debug("ACCEPT %d", signup_id)
         signup.accept_pass()
     elif status == "reject":
-        logger.debug("REJECT {}".format(signup_id))
+        logger.debug("REJECT %d", signup_id)
         signup.reject_pass()
 
     signup.save()

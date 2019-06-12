@@ -372,7 +372,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return False
             can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
         except (AttributeError, KeyError) as e:
-            logger.error("Could not check teacher/eighth override: {}".format(e))
+            logger.error("Could not check teacher/eighth override: %s", e)
             can_view_anyway = False
         return can_view_anyway
 
@@ -844,7 +844,7 @@ class UserProperties(models.Model):
             self.save()
             return True
         except Exception as e:
-            logger.error("Error occurred setting permission {} to {}: {}".format(permission, value, e))
+            logger.error("Error occurred setting permission %s to %s: %s", permission, value, e)
             return False
 
     def _current_user_override(self):
@@ -860,7 +860,7 @@ class UserProperties(models.Model):
                 return False
             can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
         except (AttributeError, KeyError) as e:
-            logger.error("Could not check teacher/eighth override: {}".format(e))
+            logger.error("Could not check teacher/eighth override: %s", e)
             can_view_anyway = False
         return can_view_anyway
 
@@ -882,7 +882,7 @@ class UserProperties(models.Model):
                 requesting_user_id = request.user.id
                 return str(requesting_user_id) == str(self.user.id)
         except (AttributeError, KeyError) as e:
-            logger.error("Could not check request sender: {}".format(e))
+            logger.error("Could not check request sender: %s", e)
             return False
 
         return False
@@ -895,7 +895,7 @@ class UserProperties(models.Model):
             student = getattr(self, "self_{}".format(permission))
             return (parent and student) or (self.is_http_request_sender() or self._current_user_override())
         except Exception:
-            logger.error("Could not retrieve permissions for {}".format(permission))
+            logger.error("Could not retrieve permissions for %s", permission)
 
     def attribute_is_public(self, permission):
         """ Checks if attribute is visible to public (regardless of admins status)
@@ -905,7 +905,7 @@ class UserProperties(models.Model):
             student = getattr(self, "self_{}".format(permission))
             return (parent and student)
         except Exception:
-            logger.error("Could not retrieve permissions for {}".format(permission))
+            logger.error("Could not retrieve permissions for %s", permission)
 
 
 class Email(models.Model):

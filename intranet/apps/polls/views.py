@@ -132,7 +132,7 @@ def poll_vote_view(request, poll_id):
                                 messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
                     elif question_obj.is_many_choice():
                         total_choices = request.POST.getlist(name)
-                        logger.debug("total choices: {}".format(total_choices))
+                        logger.debug("total choices: %s", total_choices)
                         if len(total_choices) == 1 and total_choices[0] == "CLEAR":
                             Answer.objects.filter(user=user, question=question_obj).delete()
                             Answer.objects.create(user=user, question=question_obj, clear_vote=True)
@@ -141,13 +141,13 @@ def poll_vote_view(request, poll_id):
                             messages.error(request, "Cannot select other options with Clear Vote.")
                         else:
                             current_choices = Answer.objects.filter(user=user, question=question_obj)
-                            logger.debug("current choices: {}".format(current_choices))
+                            logger.debug("current choices: %s", current_choices)
                             current_choices_nums = [c.choice.num if c.choice else None for c in current_choices]
                             # delete entries that weren't checked but in db
                             for c in current_choices_nums:
                                 if c and c not in total_choices:
                                     ch = choices.get(num=c)
-                                    logger.info("Deleting choice for {}".format(ch))
+                                    logger.info("Deleting choice for %s", ch)
                                     Answer.objects.filter(user=user, question=question_obj, choice=ch).delete()
                             for c in total_choices:
                                 # gets re-checked on each loop

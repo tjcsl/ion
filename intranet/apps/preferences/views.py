@@ -87,10 +87,10 @@ def save_preferred_pic(request, user):
                 new_preferred_pic = fields["preferred_photo"]
                 old_preferred_pic = preferred_pic["preferred_photo"] if preferred_pic else None
                 if old_preferred_pic == new_preferred_pic:
-                    logger.debug("{}: same ({})".format("preferred_photo", new_preferred_pic))
+                    logger.debug("preferred photo: same (%s)", new_preferred_pic)
                 else:
-                    logger.debug("{}: new: {} from: {}".format("preferred_photo", new_preferred_pic, old_preferred_pic
-                                                               if "preferred_photo" in preferred_pic else None))
+                    logger.debug("preferred_photo: new: %s from: %s", new_preferred_pic,
+                                 old_preferred_pic if "preferred_photo" in preferred_pic else None)
                     try:
                         if new_preferred_pic == 'AUTO':
                             user.preferred_photo = None
@@ -99,7 +99,7 @@ def save_preferred_pic(request, user):
                         user.save()
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
-                        logger.debug("Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
+                        logger.debug("Unable to set field preferred_pic with value %s: %s", new_preferred_pic, e)
                     else:
                         messages.success(request, "Set field {} to {}".format("preferred_pic", new_preferred_pic
                                                                               if not isinstance(new_preferred_pic, list) else
@@ -134,9 +134,9 @@ def save_privacy_options(request, user):
             logger.debug(fields)
             for field in fields:
                 if field in privacy_options and privacy_options[field] == fields[field]:
-                    logger.debug("{}: same ({})".format(field, fields[field]))
+                    logger.debug("%s: same (%s)", field, fields[field])
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], privacy_options[field] if field in privacy_options else None))
+                    logger.debug("%s: new: %s from: %s", field, fields[field], privacy_options[field] if field in privacy_options else None)
                     try:
                         if field.endswith("-self"):
                             field_name = field.split("-self")[0]
@@ -157,7 +157,7 @@ def save_privacy_options(request, user):
                             raise Exception("You cannot override the parent field.")
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
-                        logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                        logger.debug("Unable to set field %s with value %s: %s", field, fields[field], e)
                     else:
                         messages.success(request, "Set field {} to {}".format(field, fields[field]
                                                                               if not isinstance(fields[field], list) else ", ".join(fields[field])))
@@ -189,13 +189,13 @@ def save_notification_options(request, user):
         logger.debug("Notification options form: valid")
         if notification_options_form.has_changed():
             fields = notification_options_form.cleaned_data
-            logger.debug("Fields: {}".format(fields))
+            logger.debug("Fields: %s", fields)
             for field in fields:
                 if field in notification_options and notification_options[field] == fields[field]:
-                    logger.debug("{}: same ({})".format(field, fields[field]))
+                    logger.debug("%s: same (%s)", field, fields[field])
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], notification_options[field]
-                                                               if field in notification_options else None))
+                    logger.debug("%s: new: %s from: %s", field, fields[field], notification_options[field]
+                                 if field in notification_options else None)
                     setattr(user, field, fields[field])
                     user.save()
                     try:
@@ -224,9 +224,9 @@ def save_bus_route(request, user):
             logger.debug(fields)
             for field in fields:
                 if field in bus_route and bus_route[field] == fields[field]:
-                    logger.debug("{}: same ({})".format(field, fields[field]))
+                    logger.debug("%s: same (%s)", field, fields[field])
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field, fields[field], bus_route[field] if field in bus_route else None))
+                    logger.debug("%s: new: %s from: %s", field, fields[field], bus_route[field] if field in bus_route else None)
                     try:
                         if fields[field]:
                             route = Route.objects.get(route_name=fields[field])
@@ -236,7 +236,7 @@ def save_bus_route(request, user):
                         user.save()
                     except Exception as e:
                         # TODO: replace with better error handling
-                        logger.error("Error processing Bus Route Form: {}".format(e))
+                        logger.error("Error processing Bus Route Form: %s", e)
                     try:
                         if fields[field]:
                             messages.success(request, "Set field {} to {}".format(field, fields[field]

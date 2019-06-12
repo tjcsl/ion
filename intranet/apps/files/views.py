@@ -264,14 +264,14 @@ def files_type(request, fstype=None):
                 try:
                     remotelist = sftp.listdir(rd)
                 except PermissionError as e:
-                    logger.debug("Exception %s on %s" % (e, rd))
+                    logger.debug("Exception %s on %s", e, rd)
                     continue
                 for item in remotelist:
                     itempath = os.path.join(rd, item)
                     try:
                         fstat = sftp.stat(itempath)
                     except exceptions as e:
-                        logger.debug("Could not read %s: %s" % (item, e))
+                        logger.debug("Could not read %s: %s", item, e)
                         continue
 
                     if stat.S_ISDIR(fstat.st_mode):
@@ -290,7 +290,7 @@ def files_type(request, fstype=None):
                         with open(os.path.join(localpath, item), "wb") as fh:
                             sftp.getfo(itempath, fh)
                     except exceptions as e:
-                        logger.debug("Exception %s on %s" % (e, item))
+                        logger.debug("Exception %s on %s", e, item)
                         continue
 
             with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:

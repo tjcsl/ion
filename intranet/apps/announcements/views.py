@@ -59,7 +59,7 @@ def announcement_posted_hook(request, obj):
             else:
                 announcement_posted_email(request, obj)
         except Exception as e:
-            logger.error("Exception when emailing announcement: {}".format(e))
+            logger.error("Exception when emailing announcement: %s", e)
             messages.error(request, "Exception when emailing announcement: {}".format(e))
             raise e
     else:
@@ -398,7 +398,7 @@ def hide_announcement_view(request):
                 announcement.user_map.users_hidden.add(request.user)
                 announcement.user_map.save()
             except IntegrityError:
-                logger.warning("Duplicate value when hiding announcement {} for {}.".format(announcement_id, request.user.username))
+                logger.warning("Duplicate value when hiding announcement %d for %s.", announcement_id, request.user.username)
             return http.HttpResponse("Hidden")
         raise http.Http404
     else:

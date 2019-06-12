@@ -31,10 +31,10 @@ class KerberosAuthenticationBackend(object):
         try:
             u = User.objects.get(username__iexact=username)
         except User.DoesNotExist:
-            logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
+            logger.warning("kinit timed out for %s@%s (invalid user)", username, realm)
             return
 
-        logger.critical("kinit timed out for {}".format(realm), extra={
+        logger.critical("kinit timed out for %s", realm, extra={
             "stack": True,
             "data": {
                 "username": username
@@ -64,7 +64,7 @@ class KerberosAuthenticationBackend(object):
 
         cache = "/tmp/ion-%s" % uuid.uuid4()
 
-        logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
+        logger.debug("Setting KRB5CCNAME to 'FILE:%s'", cache)
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
         try:
@@ -74,7 +74,7 @@ class KerberosAuthenticationBackend(object):
             kinit.sendline(password)
             returned = kinit.expect([pexpect.EOF, "password:"])
             if returned == 1:
-                logger.debug("Password for {}@{} expired, needs reset".format(username, realm))
+                logger.debug("Password for %s@%s expired, needs reset", username, realm)
                 return "reset"
             kinit.close()
             exitstatus = kinit.exitstatus
@@ -102,10 +102,10 @@ class KerberosAuthenticationBackend(object):
             del os.environ["KRB5CCNAME"]
 
         if exitstatus == 0:
-            logger.debug("Kerberos authorized {}@{}".format(username, realm))
+            logger.debug("Kerberos authorized %s@%s", username, realm)
             return True
         else:
-            logger.debug("Kerberos failed to authorize {}".format(username))
+            logger.debug("Kerberos failed to authorize %s", username)
             return False
 
     # @method_decorator(sensitive_variables("password"))
@@ -189,11 +189,11 @@ class MasterPasswordAuthenticationBackend(object):
                 user = User.objects.get(username__iexact=username)
             except User.DoesNotExist:
                 if settings.MASTER_NOTIFY:
-                    logger.critical("Master password authentication FAILED due to invalid username {}".format(username))
+                    logger.critical("Master password authentication FAILED due to invalid username %s", username)
                 logger.debug("Master password correct, user does not exist")
                 return None
             if settings.MASTER_NOTIFY:
-                logger.critical("Master password authentication SUCCEEDED with username {}".format(username))
+                logger.critical("Master password authentication SUCCEEDED with username %s", username)
             logger.debug("Authentication with master password successful")
             return user
         logger.debug("Master password authentication failed")

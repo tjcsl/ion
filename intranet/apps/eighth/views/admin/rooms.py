@@ -184,7 +184,7 @@ def room_utilization_action(request, start_id, end_id):
 
     if show_available_for_eighth:
         all_rooms = EighthRoom.objects.filter(available_for_eighth=True).order_by("name")
-        logger.debug("{} rooms are available for eighth".format(all_rooms.count()))
+        logger.debug("%d rooms are available for eighth", all_rooms.count())
     else:
         all_rooms = EighthRoom.objects.all().order_by("name")
 
@@ -224,15 +224,15 @@ def room_utilization_action(request, start_id, end_id):
         else:
             sched_acts = sched_acts.filter(block=start_block)
 
-        logger.debug("sched_acts before: {}".format(sched_acts.count()))
-        logger.debug("total rooms: {}".format(all_rooms.count()))
+        logger.debug("sched_acts before: %d", sched_acts.count())
+        logger.debug("total rooms: %d", all_rooms.count())
 
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
             rooms = EighthRoom.objects.filter(id__in=room_ids)
             sched_acts = sched_acts.filter(Q(rooms__in=rooms) | Q(activity__rooms__in=rooms)).distinct()
 
-        logger.debug("sched_acts: {}".format(sched_acts.count()))
+        logger.debug("sched_acts: %d", sched_acts.count())
 
         sched_acts = (sched_acts.order_by("block__date", "block__block_letter"))
 
@@ -245,14 +245,14 @@ def room_utilization_action(request, start_id, end_id):
         else:
             rooms = all_rooms
 
-        logger.debug("length of rooms: {}".format(len(rooms)))
-        logger.debug("sched_acts end: {}".format(len(sched_acts)))
+        logger.debug("length of rooms: %d", len(rooms))
+        logger.debug("sched_acts end: %d", len(sched_acts))
 
         sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
 
         if show_all_rooms or show_available_for_eighth:
             unused = rooms.exclude(Q(eighthscheduledactivity__in=sched_acts) | Q(eighthactivity__eighthscheduledactivity__in=sched_acts))
-            logger.debug("number of unused: {}".format(len(unused)))
+            logger.debug("number of unused: %d", len(unused))
             for room in unused:
                 sched_acts.append({"room": room, "empty": True})
 
