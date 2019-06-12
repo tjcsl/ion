@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def set_historical_user(collector, field, sub_objs, using):
     from intranet.apps.eighth.models import EighthSignup, EighthSponsor
-    teststaff, created = User.objects.get_or_create(id=7011)
+    teststaff, _ = User.objects.get_or_create(id=7011)
     for obj in sub_objs:
         if isinstance(obj, EighthSignup):
             scheduled_activity = obj.scheduled_activity
@@ -35,7 +35,7 @@ def set_historical_user(collector, field, sub_objs, using):
 
 
 def handle_eighth_sponsor_deletion(in_obj, eighth_sponsor):
-    teststaff, created = User.objects.get_or_create(id=7011)
+    teststaff, _ = User.objects.get_or_create(id=7011)
     c = Collector(using="default")
     c.collect([in_obj])
     objects = c.instances_with_model()

@@ -425,9 +425,9 @@ def admin_daytype_view(request, daytype_id=None):
             model.blocks.all().delete()
             for blk in blocks:
                 logger.debug(blk)
-                start, scr = Time.objects.get_or_create(hour=blk[2][0], minute=blk[2][1])
-                end, ecr = Time.objects.get_or_create(hour=blk[3][0], minute=blk[3][1])
-                bobj, bcr = Block.objects.get_or_create(order=blk[0], name=blk[1], start=start, end=end)
+                start, _ = Time.objects.get_or_create(hour=blk[2][0], minute=blk[2][1])
+                end, _ = Time.objects.get_or_create(hour=blk[3][0], minute=blk[3][1])
+                bobj, _ = Block.objects.get_or_create(order=blk[0], name=blk[1], start=start, end=end)
                 model.blocks.add(bobj)
             model.save()
 

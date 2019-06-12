@@ -16,7 +16,7 @@ class Command(BaseCommand):
         with open('groups_name.csv', 'r') as namesopen:
             names = csv.reader(namesopen)
             for row in names:
-                gid, gname, gdesc = row
+                gid, gname, _ = row
                 gname = gname.replace("eighth_", "")
                 gexist = Group.objects.filter(name=gname)
                 if gexist.count() == 1:

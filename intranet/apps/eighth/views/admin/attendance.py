@@ -312,7 +312,7 @@ def migrate_outstanding_passes_view(request):
         except EighthBlock.DoesNotExist:
             raise http.Http404
 
-        activity, created = (EighthActivity.objects.get_or_create(name="Z - 8th Period Pass Not Received", deleted=False))
+        activity, _ = (EighthActivity.objects.get_or_create(name="Z - 8th Period Pass Not Received", deleted=False))
         activity.restricted = True
         activity.sticky = True
         activity.administrative = True
@@ -323,7 +323,7 @@ def migrate_outstanding_passes_view(request):
         activity.save()
         invalidate_obj(activity)
 
-        pass_not_received, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
+        pass_not_received, _ = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
 
         EighthSignup.objects.filter(scheduled_activity__block=block, after_deadline=True,
                                     pass_accepted=False).update(scheduled_activity=pass_not_received)
