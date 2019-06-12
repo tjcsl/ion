@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from io import BytesIO
 
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
@@ -27,13 +28,17 @@ logger = logging.getLogger(__name__)
 @login_required
 def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
-    first_block = EighthBlock.objects.get_first_upcoming_block()
     scheduled_activities = EighthScheduledActivity.objects.filter(activity=activity)
 
     show_all = ("show_all" in request.GET)
-    if first_block and not show_all:
-        two_months = datetime.now().date() + timedelta(weeks=8)
-        scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date, block__date__lte=two_months)
+    if not show_all:
+        first_date = timezone.now().date()
+        first_block = EighthBlock.objects.get_first_upcoming_block()
+        if first_block:
+            first_date = first_block.date
+
+        two_months = timezone.now().date() + timedelta(weeks=8)
+        scheduled_activities = scheduled_activities.filter(block__date__gte=first_date, block__date__lte=two_months)
 
     scheduled_activities = scheduled_activities.order_by("block__date", "block__block_letter")
 
