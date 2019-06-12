@@ -377,14 +377,14 @@ def admin_comment_view(request):
 
 @schedule_admin_required
 @deny_restricted
-def admin_daytype_view(request, id=None):
+def admin_daytype_view(request, daytype_id=None):
     if request.method == "POST":
         delete_cache()
         if "id" in request.POST:
-            id = request.POST["id"]
+            daytype_id = request.POST["id"]
 
             if "make_copy" in request.POST:
-                daytype = get_object_or_404(DayType, id=id)
+                daytype = get_object_or_404(DayType, id=daytype_id)
                 blocks = daytype.blocks.all()
                 daytype.pk = None
                 daytype.name += " (Copy)"
@@ -399,14 +399,14 @@ def admin_daytype_view(request, id=None):
                 return redirect("schedule_daytype", daytype.id)
 
             if "delete" in request.POST:
-                daytype = get_object_or_404(DayType, id=id)
+                daytype = get_object_or_404(DayType, id=daytype_id)
                 name = "{}".format(daytype)
                 daytype.delete()
                 messages.success(request, "Deleted {}".format(name))
                 return redirect("schedule_admin")
 
-        if id:
-            daytype = get_object_or_404(DayType, id=id)
+        if daytype_id:
+            daytype = get_object_or_404(DayType, id=daytype_id)
             logger.debug("instance: %s", daytype)
             form = DayTypeForm(request.POST, instance=daytype)
         else:
@@ -442,12 +442,12 @@ def admin_daytype_view(request, id=None):
                     dayobj.save()
                 messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
 
-            messages.success(request, "Successfully {} Day Type.".format("modified" if id else "added"))
+            messages.success(request, "Successfully {} Day Type.".format("modified" if daytype_id else "added"))
             return redirect("schedule_daytype", model.id)
         else:
             messages.error(request, "Error adding Day Type")
-    elif id:
-        daytype = get_object_or_404(DayType, id=id)
+    elif daytype_id:
+        daytype = get_object_or_404(DayType, id=daytype_id)
         form = DayTypeForm(instance=daytype)
     else:
         daytype = None

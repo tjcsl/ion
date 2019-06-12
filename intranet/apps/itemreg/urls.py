@@ -9,5 +9,5 @@ urlpatterns = [
     url(r"^/register/calculator$", views.register_calculator_view, name="itemreg_calculator"),
     url(r"^/register/computer$", views.register_computer_view, name="itemreg_computer"),
     url(r"^/register/phone$", views.register_phone_view, name="itemreg_phone"),
-    url(r"^/delete/(?P<type>\w+)/(?P<id>\d+)?$", views.register_delete_view, name="itemreg_delete"),
+    url(r"^/delete/(?P<item_type>\w+)/(?P<item_id>\d+)?$", views.register_delete_view, name="itemreg_delete"),
 ]

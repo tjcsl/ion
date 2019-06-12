@@ -210,13 +210,13 @@ def register_phone_view(request):
 
 @login_required
 @deny_restricted
-def register_delete_view(request, item_type, id):
+def register_delete_view(request, item_type, item_id):
     if item_type == "calculator":
-        obj = CalculatorRegistration.objects.get(id=id)
+        obj = CalculatorRegistration.objects.get(id=item_id)
     elif item_type == "computer":
-        obj = ComputerRegistration.objects.get(id=id)
+        obj = ComputerRegistration.objects.get(id=item_id)
     elif item_type == "phone":
-        obj = PhoneRegistration.objects.get(id=id)
+        obj = PhoneRegistration.objects.get(id=item_id)
     else:
         raise http.Http404
 
@@ -226,4 +226,4 @@ def register_delete_view(request, item_type, id):
             messages.success(request, "Deleted {}".format(item_type))
             return redirect("itemreg")
 
-    return render(request, "itemreg/register_delete.html", {"type": item_type, "id": id, "obj": obj})
+    return render(request, "itemreg/register_delete.html", {"type": item_type, "id": item_id, "obj": obj})
