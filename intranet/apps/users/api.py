@@ -92,7 +92,7 @@ class Search(generics.RetrieveAPIView):
         query = kwargs['query']
         user_ids = []
         query = query.replace("+", " ")
-        query_error, results = get_search_results(query)
+        _, results = get_search_results(query)
         for unserialized_user in results:
             user_ids.append(unserialized_user.id)
 

@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def do_notify(self, pd_data):
         users = get_gcm_schedule_uids()
         user = User.objects.get(id=9999)
-        post, reqtext = gcm_post(users, pd_data, user=user)
+        _, _ = gcm_post(users, pd_data, user=user)
 
     def handle(self, *args, **options):
 

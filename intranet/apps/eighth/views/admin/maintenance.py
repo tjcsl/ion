@@ -65,8 +65,8 @@ class ImportThread(threading.Thread):
                                                 state=row[index_dict["State"]].strip(), postal_code=row[index_dict["Zipcode"]].strip())
         birthday_values = row[index_dict["Birth Date"]].strip().split("/")
         props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
-        course, created = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
-                                                       defaults={'name': row[index_dict["Course Title"]].strip()})
+        course, _ = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
+                                                 defaults={'name': row[index_dict["Course Title"]].strip()})
         teacher_name = row[index_dict["Teacher"]].strip().lower().split(",")
         no_teacher = False
         if len(teacher_name) == 1:
@@ -80,7 +80,7 @@ class ImportThread(threading.Thread):
             content.write("Unable to determine teacher for {}; {} options: {}".format(row[index_dict["Section ID"]].strip(), teacher.count(),
                                                                                       ', '.join([t.full_name for t in teacher])))
             no_teacher = True
-        section, created = Section.objects.get_or_create(
+        section, _ = Section.objects.get_or_create(
             section_id=row[index_dict["Section ID"]].strip(), defaults={
                 'teacher': teacher.first() if not no_teacher else None,
                 'period': int(row[index_dict["Per"]].strip()),

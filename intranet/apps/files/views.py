@@ -294,7 +294,7 @@ def files_type(request, fstype=None):
                         continue
 
             with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:
-                for root, dirs, files in os.walk(tmpdir):
+                for root, _, files in os.walk(tmpdir):
                     for f in files:
                         zf.write(os.path.join(root, f), os.path.join(os.path.relpath(root, tmpdir), f))
 

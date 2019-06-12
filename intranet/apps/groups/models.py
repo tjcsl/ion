@@ -48,7 +48,7 @@ class Group(auth_models.Group):
         try:
             props = self.groupproperties
         except GroupProperties.DoesNotExist:
-            props, created = GroupProperties.objects.get_or_create(group=self)
+            props, _ = GroupProperties.objects.get_or_create(group=self)
 
         return props
 

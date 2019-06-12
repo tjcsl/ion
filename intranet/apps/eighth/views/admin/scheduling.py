@@ -43,7 +43,7 @@ def schedule_activity_view(request):
 
                 instance = None
                 if form["scheduled"].value() or cancelled:
-                    instance, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
+                    instance, _ = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
                     invalidate_obj(instance)
                     invalidate_obj(block)
                     invalidate_obj(activity)
