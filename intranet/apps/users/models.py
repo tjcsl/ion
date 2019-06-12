@@ -1019,7 +1019,7 @@ class Photo(models.Model):
         return None
 
 
-class Grade(object):
+class Grade:
     """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior"]
 
