@@ -218,7 +218,6 @@ def schedule_activity_view(request):
             except KeyError:
                 all_signups[block.id] = 0
                 all_default_capacities[block.id] = activity.capacity()
-                pass
             initial_formset_data.append(initial_form_data)
 
         if request.method != "POST":
