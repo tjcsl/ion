@@ -12,7 +12,7 @@ class AutoCreateUserField(forms.ChoiceField):
 
     def clean(self, value):
         if value in self.empty_values:
-            return
+            return None
 
         try:
             id_value = int(value)

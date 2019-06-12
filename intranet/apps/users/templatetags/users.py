@@ -24,3 +24,5 @@ def argument_request_user(obj, func_name):
     request = threadlocals.request()
     if request:
         return func(request.user)
+
+    return None

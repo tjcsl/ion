@@ -167,6 +167,7 @@ class Command(BaseCommand):
             return u
         # If you got to here without a match... they probably aren't in LDAP.
         # change "STA" to "IGNORE" in the csv
+        return None
 
     def calc_grade_offset(self, grade):
         if grade == "STA":
@@ -193,6 +194,8 @@ class Command(BaseCommand):
                 return gmap[str(grade)]
             elif grade == "STA":
                 return gmap[str(grade)]
+
+        return None
 
     def teacher_photo_name(self, index):
         if index == 0:

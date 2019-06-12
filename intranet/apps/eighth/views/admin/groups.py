@@ -178,6 +178,8 @@ def get_user_info(key, val):
                         return [u]
         return []
 
+    return None
+
 
 def handle_group_input(filetext):
     logger.debug(filetext)

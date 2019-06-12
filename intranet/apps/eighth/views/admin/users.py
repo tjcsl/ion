@@ -20,7 +20,7 @@ def list_user_view(request):
 def delete_user_view(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        pass
+        return None
     else:
         return render(request, 'eighth/admin/delete_user.html', {'user': user})
 
