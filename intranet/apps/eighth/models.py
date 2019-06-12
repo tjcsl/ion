@@ -338,7 +338,6 @@ class EighthActivity(AbstractBaseEighthModel):
 
         """
         # EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
-        pass
 
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity since the beginning of the year."""

@@ -37,7 +37,6 @@ def change_password(form_data):
         exitstatus = kinit.exitstatus
     except pexpect.TIMEOUT:
         return {"unable_to_set": True, "errors": errors}
-        exitstatus = 1
     if exitstatus == 0:
         return True
     return {"unable_to_set": True}
