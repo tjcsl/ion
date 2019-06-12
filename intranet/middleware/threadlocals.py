@@ -24,10 +24,10 @@ class ThreadLocalsMiddleware(object):
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request):
-        return self.get_response(request)
+    def __call__(self, req):
+        return self.get_response(req)
 
     @staticmethod
-    def process_view(request, *_):
+    def process_view(req, *_):
         """Adds the request to thread locals."""
-        _thread_locals.request = request
+        _thread_locals.request = req

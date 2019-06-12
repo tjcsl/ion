@@ -534,10 +534,10 @@ class EighthBlock(AbstractBaseEighthModel):
 
         """
 
-        next = self.next_blocks()
-        prev = self.previous_blocks()
+        next_blocks = self.next_blocks()
+        prev_blocks = self.previous_blocks()
 
-        surrounding_blocks = list(chain(prev, [self], next))
+        surrounding_blocks = list(chain(prev_blocks, [self], next_blocks))
         return surrounding_blocks
 
     def is_today(self):

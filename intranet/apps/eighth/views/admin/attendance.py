@@ -369,8 +369,8 @@ def out_of_building_schedules_view(request, block_id=None):
         return render(request, "eighth/admin/out_of_building_schedules.html", context)
     else:
         response = http.HttpResponse(content_type="text/csv")
-        date = datetime.strftime(block.date, "%m_%d_%Y")
-        filename = "\"out_of_building_schedules_{}.csv\"".format(date)
+        block_date_str = datetime.strftime(block.date, "%m_%d_%Y")
+        filename = "\"out_of_building_schedules_{}.csv\"".format(block_date_str)
         response["Content-Disposition"] = "attachment; filename=" + filename
 
         writer = csv.writer(response)

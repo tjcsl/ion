@@ -12,11 +12,11 @@ def render_page(page, page_args):
     """
     print(page_args)
     template_name = page.template if page.template else page.name
-    template = "signage/pages/{}.html".format(template_name)
+    template_fname = "signage/pages/{}.html".format(template_name)
     if page.function:
         context_method = getattr(pages, page.function)
     else:
         context_method = getattr(pages, page.name)
     sign, request = page_args
     context = context_method(page, sign, request)
-    return render_to_string(template, context)
+    return render_to_string(template_fname, context)

@@ -115,19 +115,19 @@ def query(q, admin=False):
                 if admin:
                     default_categories.append("middle_name")
 
-                query = Q(pk=-1)
+                sub_query = Q(pk=-1)
                 if exact:
                     # No implied wildcard
                     for cat in default_categories:
-                        query |= Q(**{"{}__iexact".format(cat): p})
+                        sub_query |= Q(**{"{}__iexact".format(cat): p})
 
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
                     # implied wildcard at beginning and end of the search
                     # string
                     for cat in default_categories:
-                        query |= Q(**{"{}__icontains".format(cat): p})
-                search_query &= query
+                        sub_query |= Q(**{"{}__icontains".format(cat): p})
+                search_query &= sub_query
 
                 continue  # skip rest of processing
 
@@ -166,10 +166,10 @@ def query(q, admin=False):
             attrs = map_attrs[cat]
 
             # for each of the possible LDAP fields, add to the search query
-            query = Q(pk=-1)
+            sub_query = Q(pk=-1)
             for attr in attrs:
-                query |= Q(**{"{}{}".format(attr, sep): val})
-            search_query &= query
+                sub_query |= Q(**{"{}{}".format(attr, sep): val})
+            search_query &= sub_query
 
         try:
             results = User.objects.filter(search_query)
@@ -195,12 +195,12 @@ def query(q, admin=False):
                 default_categories += ["student_id", "id"]
             if admin:
                 default_categories.append("middle_name")
-            query = Q(pk=-1)
+            sub_query = Q(pk=-1)
             if exact:
                 logger.debug("Simple exact: {}".format(p))
                 # No implied wildcard
                 for cat in default_categories:
-                    query |= Q(**{"{}__iexact".format(cat): p})
+                    sub_query |= Q(**{"{}__iexact".format(cat): p})
             else:
                 logger.debug("Simple wildcard: {}".format(p))
                 if p.endswith("*"):
@@ -210,8 +210,8 @@ def query(q, admin=False):
                 # Search for first, last, middle, nickname uid, with implied
                 # wildcard at beginning and end
                 for cat in default_categories:
-                    query |= Q(**{"{}__icontains".format(cat): p})
-            search_query &= query
+                    sub_query |= Q(**{"{}__icontains".format(cat): p})
+            search_query &= sub_query
 
             logger.debug("Running query: {}".format(search_query))
 

@@ -266,18 +266,18 @@ class ProfileMiddleware(object):
         for s in stats_str:
             fields = words_re.split(s)
             if len(fields) == 7:
-                time = float(fields[2])
-                ttl += time
+                time_amt = float(fields[2])
+                ttl += time_amt
                 file_name = fields[6].split(":", 1)[0]
 
                 if file_name not in mystats:
                     mystats[file_name] = 0
-                mystats[file_name] += time
+                mystats[file_name] += time_amt
 
                 group = self._get_group(file_name)
                 if group not in mygroups:
                     mygroups[group] = 0
-                mygroups[group] += time
+                mygroups[group] += time_amt
 
         return "<pre>" +\
                " ---- By file ----\n\n" + self._get_summary(mystats, ttl) + "\n" +\
