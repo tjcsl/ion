@@ -35,14 +35,14 @@ def search_view(request):
     if not request.user.has_admin_permission("itemreg") and not request.user.is_teacher:
         raise http.Http404
 
-    type = request.GET.get("type", "")
+    item_type = request.GET.get("type", "")
     context = {
-        "calc_form": CalculatorRegistrationForm(request.GET) if type == "calculator" else CalculatorRegistrationForm(),
-        "comp_form": ComputerRegistrationForm(request.GET) if type == "computer" else ComputerRegistrationForm(),
-        "phone_form": PhoneRegistrationForm(request.GET) if type == "phone" else PhoneRegistrationForm()
+        "calc_form": CalculatorRegistrationForm(request.GET) if item_type == "calculator" else CalculatorRegistrationForm(),
+        "comp_form": ComputerRegistrationForm(request.GET) if item_type == "computer" else ComputerRegistrationForm(),
+        "phone_form": PhoneRegistrationForm(request.GET) if item_type == "phone" else PhoneRegistrationForm()
     }
     results = {"calculator": None, "computer": None, "phone": None}
-    if type == "calculator":
+    if item_type == "calculator":
         cresults = CalculatorRegistration.objects.all()
         logger.debug(cresults)
 
@@ -64,7 +64,7 @@ def search_view(request):
 
         logger.debug(cresults)
         results["calculator"] = cresults
-    elif type == "computer":
+    elif item_type == "computer":
         cresults = ComputerRegistration.objects.all()
         logger.debug(cresults)
 
@@ -92,7 +92,7 @@ def search_view(request):
 
         logger.debug(cresults)
         results["computer"] = cresults
-    elif type == "phone":
+    elif item_type == "phone":
         cresults = PhoneRegistration.objects.all()
         logger.debug(cresults)
 
@@ -114,7 +114,7 @@ def search_view(request):
 
         logger.debug(cresults)
         results["phone"] = cresults
-    elif type == "all":
+    elif item_type == "all":
         results["calculator"] = CalculatorRegistration.objects.all()
         results["computer"] = ComputerRegistration.objects.all()
         results["phone"] = PhoneRegistration.objects.all()
@@ -139,7 +139,7 @@ def search_view(request):
     getargs = NoneDict(dict(request.GET))
 
     context.update({
-        "type": type,
+        "type": item_type,
         "results": results,
         "no_results": sum([len(results[i]) if results[i] else 0 for i in results]) < 1,
         "getargs": getargs
@@ -210,12 +210,12 @@ def register_phone_view(request):
 
 @login_required
 @deny_restricted
-def register_delete_view(request, type, id):
-    if type == "calculator":
+def register_delete_view(request, item_type, id):
+    if item_type == "calculator":
         obj = CalculatorRegistration.objects.get(id=id)
-    elif type == "computer":
+    elif item_type == "computer":
         obj = ComputerRegistration.objects.get(id=id)
-    elif type == "phone":
+    elif item_type == "phone":
         obj = PhoneRegistration.objects.get(id=id)
     else:
         raise http.Http404
@@ -223,7 +223,7 @@ def register_delete_view(request, type, id):
     if request.method == "POST" and "confirm" in request.POST:
         if obj.user == request.user:
             obj.delete()
-            messages.success(request, "Deleted {}".format(type))
+            messages.success(request, "Deleted {}".format(item_type))
             return redirect("itemreg")
 
-    return render(request, "itemreg/register_delete.html", {"type": type, "id": id, "obj": obj})
+    return render(request, "itemreg/register_delete.html", {"type": item_type, "id": id, "obj": obj})

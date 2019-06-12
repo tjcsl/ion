@@ -18,9 +18,9 @@ def ion_base_url(request):
 
 def global_warning(request):
     """Display a global warning on all pages throughout the application."""
-    global_warning = settings.GLOBAL_WARNING if hasattr(settings, 'GLOBAL_WARNING') else None
+    warning = settings.GLOBAL_WARNING if hasattr(settings, 'GLOBAL_WARNING') else None
 
-    return {"global_warning": global_warning}
+    return {"global_warning": warning}
 
 
 def nav_categorizer(request):
@@ -59,7 +59,6 @@ def mobile_app(request):
                 import binascii
                 import os
                 from intranet.apps.notifications.models import NotificationConfig
-                from datetime import datetime
 
                 ncfg, _ = NotificationConfig.objects.get_or_create(user=request.user)
                 if not ncfg.android_gcm_rand:
@@ -67,7 +66,7 @@ def mobile_app(request):
                     ncfg.android_gcm_rand = rand
                 else:
                     rand = ncfg.android_gcm_rand
-                ncfg.android_gcm_time = datetime.now()
+                ncfg.android_gcm_time = datetime.datetime.now()
 
                 logger.debug("GCM random token generated: %s", rand)
                 ncfg.save()

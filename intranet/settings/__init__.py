@@ -452,7 +452,6 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES":
     ("intranet.apps.api.authentication.ApiBasicAuthentication",
      "oauth2_provider.contrib.rest_framework.OAuth2Authentication"),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
 }
 
 # Django Oauth Toolkit configuration
@@ -539,7 +538,7 @@ if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
     LOG_LEVEL = os.environ["LOG_LEVEL"]
 
 
-def get_log(name):
+def get_log(name):  # pylint: disable=W0621; 'name' is used as the target of a for loop, so we can safely override it
     return [name] if (PRODUCTION and not TRAVIS) else []
 
 
