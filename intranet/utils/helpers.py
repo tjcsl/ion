@@ -73,7 +73,7 @@ class InvalidString(str):
         return ""
 
 
-class MigrationMock(object):
+class MigrationMock:
     seen = set()  # type: Set[str]
 
     def __contains__(self, mod):

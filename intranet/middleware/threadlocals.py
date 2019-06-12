@@ -17,7 +17,7 @@ def request():
     return getattr(_thread_locals, "request", None)
 
 
-class ThreadLocalsMiddleware(object):
+class ThreadLocalsMiddleware:
     """Stores the current authorized User object in thread locals for access in models (and
     elsewhere) without passing the user around as an argument."""
 

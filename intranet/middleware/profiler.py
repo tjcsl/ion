@@ -58,7 +58,7 @@ _prof = None
 _profile_layer = False
 
 
-class ProfileMiddleware(object):
+class ProfileMiddleware:
     """Displays timing or profiling for any view.
     http://yoursite.com/yourview/?time or http://yoursite.com/yourview/?prof
 

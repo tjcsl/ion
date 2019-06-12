@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class UserTracebackMiddleware(object):
+class UserTracebackMiddleware:
     """
     Adds the currently logged-in user to the request context, so that they
     show up in error emails.
