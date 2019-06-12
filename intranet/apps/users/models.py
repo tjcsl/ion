@@ -329,6 +329,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if data:
                     return data
 
+        return None
+
     @property
     def grade(self):
         """Returns the grade of a user.

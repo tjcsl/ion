@@ -108,6 +108,8 @@ class ProfileMiddleware:
         if settings.DEBUG and ('prof' in request.GET):
             return _prof.runcall(callback, request, *callback_args, **callback_kwargs)
 
+        return None
+
     def process_response(self, request, response):
         global _current_stats, _middleware_start_time, _log_file_path, _profile_layer, _prof
         if settings.DEBUG:
@@ -149,6 +151,8 @@ class ProfileMiddleware:
         m = self._reUri.match(uri)
         if m is not None:
             return m.group(1)
+
+        return None
 
     def _collect_time(self):
         # record stats from this request
@@ -243,6 +247,8 @@ class ProfileMiddleware:
             name = g.findall(file_name)
             if name:
                 return name[0]
+
+        return None
 
     def _get_summary(self, results_dict, total):
         items = [(item[1], item[0]) for item in results_dict.items()]

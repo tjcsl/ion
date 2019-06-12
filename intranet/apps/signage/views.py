@@ -22,6 +22,8 @@ def check_internal_ip(request):
     if not request.user.is_authenticated and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
+    return None
+
 
 def signage_display(request, display_id):
     check_ip = check_internal_ip(request)

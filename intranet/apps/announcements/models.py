@@ -144,6 +144,8 @@ class Announcement(models.Model):
             self._announcementrequest = ar
             return ar
 
+        return None
+
     def is_visible_requester(self, user):
         try:
             return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())

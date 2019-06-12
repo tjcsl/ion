@@ -502,6 +502,8 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         if data["TermCode"] == "S1" or data["TermCode"] == "S2":
             return 2
 
+        return None
+
     def format_quarters(self, data):
         if data["TermCode"] == "YR":
             return "\n".join(["quarterNumber: 1", "quarterNumber: 2", "quarterNumber: 3", "quarterNumber: 4"])
@@ -511,6 +513,8 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
         if data["TermCode"] == "S2":
             return "\n".join(["quarterNumber: 3", "quarterNumber: 4"])
+
+        return None
 
     def format_periods(self, data):
         if data["Period"] == data["EndPeriod"]:
