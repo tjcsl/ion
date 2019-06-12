@@ -2,6 +2,7 @@
 
 import logging
 
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 
 from ....auth.decorators import eighth_admin_required
@@ -20,7 +21,7 @@ def list_user_view(request):
 def delete_user_view(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        return None
+        raise Http404
     else:
         return render(request, 'eighth/admin/delete_user.html', {'user': user})
 
