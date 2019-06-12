@@ -68,7 +68,6 @@ Administration
 How to use Intranet
 
 
-
 Indices and tables
 ==================
 
