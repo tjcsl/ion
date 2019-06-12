@@ -287,27 +287,27 @@ def add_announcement_view(request):
 
 
 @login_required
-def view_announcement_view(request, id):
+def view_announcement_view(request, announcement_id):
     """View an announcement.
 
-    id: announcement id
+    announcement_id: announcement id
 
     """
-    announcement = get_object_or_404(Announcement, id=id)
+    announcement = get_object_or_404(Announcement, id=announcement_id)
 
     return render(request, "announcements/view.html", {"announcement": announcement})
 
 
 @announcements_admin_required
 @deny_restricted
-def modify_announcement_view(request, id=None):
+def modify_announcement_view(request, announcement_id=None):
     """Modify an announcement.
 
-    id: announcement id
+    announcement_id: announcement id
 
     """
     if request.method == "POST":
-        announcement = get_object_or_404(Announcement, id=id)
+        announcement = get_object_or_404(Announcement, id=announcement_id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
@@ -323,19 +323,19 @@ def modify_announcement_view(request, id=None):
         else:
             messages.error(request, "Error adding announcement")
     else:
-        announcement = get_object_or_404(Announcement, id=id)
+        announcement = get_object_or_404(Announcement, id=announcement_id)
         form = AnnouncementForm(instance=announcement)
 
-    context = {"form": form, "action": "modify", "id": id, "announcement": announcement}
+    context = {"form": form, "action": "modify", "id": announcement_id, "announcement": announcement}
     return render(request, "announcements/add_modify.html", context)
 
 
 @announcements_admin_required
 @deny_restricted
-def delete_announcement_view(request, id):
+def delete_announcement_view(request, announcement_id):
     """Delete an announcement.
 
-    id: announcement id
+    announcement_id: announcement id
 
     """
     if request.method == "POST":
@@ -358,7 +358,7 @@ def delete_announcement_view(request, id):
 
         return redirect("index")
     else:
-        announcement = get_object_or_404(Announcement, id=id)
+        announcement = get_object_or_404(Announcement, id=announcement_id)
         return render(request, "announcements/delete.html", {"announcement": announcement})
 
 

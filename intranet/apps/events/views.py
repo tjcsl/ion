@@ -91,15 +91,15 @@ def events_view(request):
 
 @login_required
 @deny_restricted
-def join_event_view(request, id):
+def join_event_view(request, event_id):
     """Join event page. If a POST request, actually add or remove the attendance of the current
     user. Otherwise, display a page with confirmation.
 
-    id: event id
+    event_id: event id
 
     """
 
-    event = get_object_or_404(Event, id=id)
+    event = get_object_or_404(Event, id=event_id)
 
     if request.method == "POST":
         if not event.show_attending:
@@ -121,16 +121,16 @@ def join_event_view(request, id):
 
 @login_required
 @deny_restricted
-def event_roster_view(request, id):
+def event_roster_view(request, event_id):
     """Show the event roster. Users with hidden eighth period permissions will not be displayed.
     Users will be able to view all other users, along with a count of the number of hidden users.
     (Same as 8th roster page.) Admins will see a full roster at the bottom.
 
-    id: event id
+    event_id: event id
 
     """
 
-    event = get_object_or_404(Event, id=id)
+    event = get_object_or_404(Event, id=event_id)
 
     full_roster = list(event.attending.all())
     viewable_roster = []
@@ -227,14 +227,14 @@ def request_event_view(request):
 
 @login_required
 @deny_restricted
-def modify_event_view(request, id=None):
+def modify_event_view(request, event_id=None):
     """Modify event page. You may only modify an event if you were the creator or you are an
     administrator.
 
-    id: event id
+    event_id: event id
 
     """
-    event = get_object_or_404(Event, id=id)
+    event = get_object_or_404(Event, id=event_id)
     is_events_admin = request.user.has_admin_permission('events')
 
     if not is_events_admin:
@@ -260,20 +260,20 @@ def modify_event_view(request, id=None):
             form = AdminEventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
         else:
             form = EventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
-    context = {"form": form, "action": "modify", "action_title": "Modify", "id": id, "is_events_admin": is_events_admin}
+    context = {"form": form, "action": "modify", "action_title": "Modify", "id": event_id, "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
 
 
 @login_required
 @deny_restricted
-def delete_event_view(request, id):
+def delete_event_view(request, event_id):
     """Delete event page. You may only delete an event if you were the creator or you are an
     administrator. Confirmation page if not POST.
 
-    id: event id
+    event_id: event id
 
     """
-    event = get_object_or_404(Event, id=id)
+    event = get_object_or_404(Event, id=event_id)
     if not request.user.has_admin_permission('events'):
         raise exceptions.PermissionDenied
 
