@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.http import urlencode
 
 from ..eighth.exceptions import SignupException
@@ -94,6 +96,45 @@ class EighthTest(IonTestCase):
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(user, schact.members.all())
+
+    def test_past_activities_listed_properly(self):
+        self.make_admin()
+        activity = self.add_activity(name="Test Activity 1")
+
+        cur_date = timezone.now().date()
+        one_day = datetime.timedelta(days=1)
+
+        past_date_str = (cur_date - one_day).strftime("%Y-%m-%d")
+        today_date_str = cur_date.strftime("%Y-%m-%d")
+        future_date_str = (cur_date + one_day).strftime("%Y-%m-%d")
+
+        block_past = self.add_block(date=past_date_str, block_letter='A')
+
+        schact_past = self.schedule_activity(block_past.id, activity.id)
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [])
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
+
+        block_today = self.add_block(date=today_date_str, block_letter='A')
+        block_future = self.add_block(date=future_date_str, block_letter='A')
+
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [])
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
+
+        schact_today = self.schedule_activity(block_today.id, activity.id)
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today)])
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today)])
+
+        schact_future = self.schedule_activity(block_future.id, activity.id)
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today), repr(schact_future)])
+        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today), repr(schact_future)])
 
     def verify_signup(self, user, schact):
         old_count = schact.eighthsignup_set.count()
