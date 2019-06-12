@@ -134,7 +134,7 @@ def get_profile_context(request, user_id=None, date=None):
             "block__date", "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
-        logger.debug("Eighth sponsor {}".format(sponsor))
+        logger.debug("Eighth sponsor %s", sponsor)
 
         context["eighth_sponsor_schedule"] = eighth_sponsor_schedule
 

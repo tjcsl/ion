@@ -62,7 +62,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
     key = "bell_schedule:{}".format(date_fmt)
     cached = cache.get(key)
     if cached and use_cache:
-        logger.debug("Returning schedule context for {} from cache.".format(date_fmt))
+        logger.debug("Returning schedule context for %s from cache.", date_fmt)
         return cached
     else:
         try:
@@ -94,7 +94,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
         if request and request.user.is_authenticated and request.user.is_eighth_admin:
             try:
                 schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
-                logger.debug("tomorrow: {}".format(schedule_tomorrow))
+                logger.debug("tomorrow: %s", schedule_tomorrow)
                 if not schedule_tomorrow.day_type:
                     schedule_tomorrow = False
             except Day.DoesNotExist:
@@ -116,7 +116,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
             }
         }
         cache.set(key, data, timeout=settings.CACHE_AGE['bell_schedule'])
-        logger.debug("Cached schedule context for {}".format(date_fmt))
+        logger.debug("Cached schedule context for %s", date_fmt)
         return data
 
 

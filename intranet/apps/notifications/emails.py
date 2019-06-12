@@ -29,7 +29,7 @@ def email_send(text_template, html_template, data, subject, emails, headers=None
     headers = {} if headers is None else headers
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
     msg.attach_alternative(html_content, "text/html")
-    logger.debug("Emailing {} to {}".format(subject, emails))
+    logger.debug("Emailing %s to %s", subject, emails)
     msg.send()
 
     return msg
@@ -55,7 +55,7 @@ def email_send_bcc(text_template, html_template, data, subject, emails, headers=
     headers = {} if headers is None else headers
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [settings.EMAIL_FROM], headers=headers, bcc=emails)
     msg.attach_alternative(html_content, "text/html")
-    logger.debug("Emailing {} to {}".format(subject, emails))
+    logger.debug("Emailing %s to %s", subject, emails)
     msg.send()
 
     return msg

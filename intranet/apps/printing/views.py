@@ -56,7 +56,7 @@ def convert_soffice(tmpfile_name):
         output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT,
                                          universal_newlines=True, timeout=60)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run soffice command (returned {}): {}".format(e.returncode, e.output))
+        logger.error("Could not run soffice command (returned %d): %s", e.returncode, e.output)
         return False
 
     if " -> " in output and " using " in output:  # pylint: disable=E1135; Pylint is wrong
@@ -72,7 +72,7 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     try:
         subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run {} command (returned {}): {}".format(cmdname, e.returncode, e.output))
+        logger.error("Could not run %s command (returned %d): %s", cmdname, e.returncode, e.output)
         return False
 
     if os.path.isfile(new_name):
@@ -85,7 +85,7 @@ def get_numpages(tmpfile_name):
     try:
         output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
-        logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
+        logger.error("Could not run pdfinfo command (returned %d): %s", e.returncode, e.output)
         return -1
 
     lines = output.splitlines()
@@ -221,7 +221,7 @@ def print_job(obj, do_print=True):
         except subprocess.CalledProcessError as e:
             if "is not accepting jobs" in e.output:
                 raise Exception(e.output.strip())
-            logger.error("Could not run lpr (returned {}): {}".format(e.returncode, e.output.strip()))
+            logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
             raise Exception("An error occured while printing your file: %s" % e.output.strip())
 
     obj.printed = True

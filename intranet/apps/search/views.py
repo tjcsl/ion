@@ -22,7 +22,7 @@ def query(q, admin=False):
     # If only a digit, search for student ID and user ID
     results = []
     if q.isdigit():
-        logger.debug("Digit search: {}".format(q))
+        logger.debug("Digit search: %s", q)
         sid_users = User.objects.filter(student_id=q)
         uid_users = User.objects.filter(id=q)
         for u in sid_users:
@@ -92,7 +92,7 @@ def query(q, admin=False):
                 cat, val = p.split(">")
                 sep = "__gte"
             else:
-                logger.debug("Advanced fallback: {}".format(p))
+                logger.debug("Advanced fallback: %s", p)
                 # Fall back on regular searching (there's no key)
 
                 # Wildcards are already implied at the start and end
@@ -131,7 +131,7 @@ def query(q, admin=False):
 
                 continue  # skip rest of processing
 
-            logger.debug("Advanced exact: {}".format(p))
+            logger.debug("Advanced exact: %s", p)
             if val.startswith('"') and val.endswith('"'):
                 # Already exact
                 val = val[1:-1]
@@ -196,12 +196,12 @@ def query(q, admin=False):
                 default_categories.append("middle_name")
             sub_query = Q(pk=-1)
             if exact:
-                logger.debug("Simple exact: {}".format(p))
+                logger.debug("Simple exact: %s", p)
                 # No implied wildcard
                 for cat in default_categories:
                     sub_query |= Q(**{"{}__iexact".format(cat): p})
             else:
-                logger.debug("Simple wildcard: {}".format(p))
+                logger.debug("Simple wildcard: %s", p)
                 if p.endswith("*"):
                     p = p[:-1]
                 if p.startswith("*"):
@@ -212,7 +212,7 @@ def query(q, admin=False):
                     sub_query |= Q(**{"{}__icontains".format(cat): p})
             search_query &= sub_query
 
-            logger.debug("Running query: {}".format(search_query))
+            logger.debug("Running query: %s", search_query)
 
             res = User.objects.filter(search_query)
             results = list(res)

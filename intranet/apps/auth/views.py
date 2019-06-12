@@ -176,8 +176,8 @@ class LoginView(View):
                 return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())
             # Initial load into session
-            logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
-            logger.info("request.user: {}".format(request.user))
+            logger.info("Login succeeded as %s", request.POST.get("username", "unknown"))
+            logger.info("request.user: %s", request.user)
 
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
@@ -210,7 +210,7 @@ class LoginView(View):
             return redirect(next_page)
         else:
             log_auth(request, "failed")
-            logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
+            logger.info("Login failed as %s", request.POST.get("username", "unknown"))
             return index_view(request, auth_form=form)
 
     @method_decorator(sensitive_post_parameters("password"))

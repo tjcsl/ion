@@ -69,7 +69,7 @@ class InvalidString(str):
     """An error for undefined context variables in templates."""
 
     def __mod__(self, other):
-        logger.warning('Undefined variable or unknown value for: "%s"' % other)
+        logger.warning('Undefined variable or unknown value for: "%s"', other)
         return ""
 
 
@@ -100,7 +100,7 @@ class GlobList(list):
         try:
             for item in self:
                 if ipaddress.ip_address(key) in ipaddress.ip_network(item) and key != "127.0.0.1":
-                    logger.info("Internal IP: {}".format(key))
+                    logger.info("Internal IP: %s", key)
                     return True
         except ValueError:
             pass

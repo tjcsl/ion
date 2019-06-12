@@ -63,7 +63,7 @@ def schedule_activity_view(request):
                     if schact:
                         if activity.both_blocks:
                             other_act = schact[0].get_both_blocks_sibling()
-                            logger.debug("other_act: {}".format(other_act))
+                            logger.debug("other_act: %s", other_act)
                             if other_act:
                                 other_act.cancelled = True
                                 other_act.save()
@@ -91,7 +91,7 @@ def schedule_activity_view(request):
 
                     for field_name in fields:
                         obj = form.cleaned_data[field_name]
-                        logger.debug("{} {}".format(field_name, obj))
+                        logger.debug("%s %s", field_name, obj)
                         # Properly handle ManyToMany relations in django 1.10+
                         if isinstance(getattr(instance, field_name), Manager):
                             getattr(instance, field_name).set(obj)
@@ -114,7 +114,7 @@ def schedule_activity_view(request):
                     if form["unschedule"].value() and instance.cancelled:
                         name = "{}".format(instance)
                         count = instance.eighthsignup_set.count()
-                        logger.debug("Unschedule {} - signups {}".format(name, count))
+                        logger.debug("Unschedule %s - signups %d", name, count)
                         bb_ok = True
                         sibling = False
                         if activity.both_blocks:

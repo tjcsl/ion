@@ -1224,10 +1224,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         # super(EighthScheduledActivity, self).save(*args, **kwargs)
 
-        logger.debug("Running cancel hooks: {}".format(self))
+        logger.debug("Running cancel hooks: %s", self)
 
         if not self.cancelled:
-            logger.debug("Cancelling {}".format(self))
+            logger.debug("Cancelling %s", self)
             self.cancelled = True
         self.save()
         # NOT USED. Was broken anyway.
@@ -1254,7 +1254,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
 
         if self.cancelled:
-            logger.debug("Uncancelling {}".format(self))
+            logger.debug("Uncancelling %s", self)
             self.cancelled = False
         self.save()
         # NOT USED. Was broken anyway.

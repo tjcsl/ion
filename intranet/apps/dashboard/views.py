@@ -211,11 +211,11 @@ def find_birthdays(request):
     cached = cache.get(key)
 
     if cached:
-        logger.debug("Birthdays on {} loaded " "from cache.".format(today))
+        logger.debug("Birthdays on %s loaded from cache.", today)
         logger.debug(cached)
         return cached
     else:
-        logger.debug("Loading and caching birthday info for {}".format(today))
+        logger.debug("Loading and caching birthday info for %s", today)
         tomorrow = today + timedelta(days=1)
         try:
             data = {
