@@ -23,7 +23,7 @@ class AccessLogMiddleWare:
         if "HTTP_X_FORWARDED_FOR" in request.META:
             ip = request.META["HTTP_X_FORWARDED_FOR"]
         else:
-            ip = request.META.get("REMOTE_ADDR", ""),
+            ip = (request.META.get("REMOTE_ADDR", ""),)
 
         if isinstance(ip, set):
             ip = ip[0]

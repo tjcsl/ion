@@ -21,7 +21,7 @@ def export_csv_action(description="Export selected objects as CSV file", fields=
 
         """
         opts = modeladmin.model._meta
-        field_names = set([field.name for field in opts.fields])
+        field_names = {field.name for field in opts.fields}
         if fields:
             fieldset = set(fields)
             field_names = field_names & fieldset

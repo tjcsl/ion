@@ -222,7 +222,7 @@ def handle_sap(q):
     choices = []
     for c in q.choice_set.all().order_by("num"):
         votes = question_votes.filter(choice=c)
-        vote_users = set([v.user for v in votes])
+        vote_users = {v.user for v in votes}
         choice = {
             "choice": c,
             "votes": {
@@ -247,7 +247,7 @@ def handle_sap(q):
         choices.append(choice)
     """ Clear vote """
     votes = question_votes.filter(clear_vote=True)
-    clr_users = set([v.user for v in votes])
+    clr_users = {v.user for v in votes}
     choice = {
         "choice": "Clear vote",
         "votes": {
@@ -354,7 +354,7 @@ def poll_results_view(request, poll_id):
         messages.error(request, "Poll results cannot be viewed while the poll is running.")
         return redirect("polls")
 
-    do_gender = False if "no_gender" in request.GET else True
+    do_gender = ("no_gender" not in request.GET)
     show_answers = request.GET.get("show_answers", False)
 
     questions = []
