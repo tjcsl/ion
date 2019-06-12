@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #4666) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #4677) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -137,10 +137,11 @@
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
-
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>  <span class="c1"># noqa</span>
+
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
+
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -215,13 +216,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gen_users</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Faking teachers...&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
-                    <span class="k">for</span> <span class="n">classid</span> <span class="ow">in</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">]:</span>
-                        <span class="n">classobj</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">classid</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">classid</span> <span class="ow">in</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">]:</span>
+                        <span class="n">classobj</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">classid</span><span class="p">]</span>
                         <span class="n">classobj</span><span class="p">[</span><span class="s2">&quot;Room&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Dome&quot;</span>
                         <span class="n">classobj</span><span class="p">[</span><span class="s2">&quot;TeacherStaffName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Glazer, E.&quot;</span>
                         <span class="n">classobj</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Glazer, Evan&quot;</span>
-                        <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">classid</span><span class="p">]</span> <span class="o">=</span> <span class="n">classobj</span>
+                        <span class="n">user</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">][</span><span class="n">classid</span><span class="p">]</span> <span class="o">=</span> <span class="n">classobj</span>
 
                 <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_faked.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -230,16 +231,14 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading user existence/UIDnumbers info...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
                 <span class="n">tjuser</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">][</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]</span>
                 <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">[</span><span class="n">tjuser</span><span class="p">][</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loaded&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Check for user existence/generate iodineUidNumbers&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
                 <span class="n">tjuser</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">ionuser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">tjuser</span><span class="p">)</span>
@@ -257,8 +256,7 @@
             <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_uids.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uidmap</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Either add or modify accounts in LDAP&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;ldapExists&quot;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> MODIFY </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;TJUsername&quot;</span><span class="p">],</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;uidNumber&quot;</span><span class="p">]))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_ldap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -273,8 +271,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Handle schedules&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)):</span>
-                <span class="n">classes</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;classes&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+                <span class="n">classes</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">sid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">[</span><span class="n">sid</span><span class="p">]</span> <span class="o">=</span> <span class="n">classes</span><span class="p">[</span><span class="n">sid</span><span class="p">]</span>
@@ -541,7 +539,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;Mr.&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="s2">&quot;Ms.&quot;</span><span class="p">}[</span><span class="n">gender</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Command.format_display_name"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_display_name">[docs]</a>    <span class="k">def</span> <span class="nf">format_display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;MiddleName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;FirstName&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;LastName&quot;</span><span class="p">])</span></div>
@@ -633,7 +631,9 @@
             <span class="k">return</span> <span class="mi">4</span>
 
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;TermCode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;S1&quot;</span> <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;TermCode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;S2&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">2</span></div>
+            <span class="k">return</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Command.format_quarters"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_quarters">[docs]</a>    <span class="k">def</span> <span class="nf">format_quarters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;TermCode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;YR&quot;</span><span class="p">:</span>
@@ -643,7 +643,9 @@
             <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;quarterNumber: 1&quot;</span><span class="p">,</span> <span class="s2">&quot;quarterNumber: 2&quot;</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;TermCode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;S2&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;quarterNumber: 3&quot;</span><span class="p">,</span> <span class="s2">&quot;quarterNumber: 4&quot;</span><span class="p">])</span></div>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;quarterNumber: 3&quot;</span><span class="p">,</span> <span class="s2">&quot;quarterNumber: 4&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Command.format_periods"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_periods">[docs]</a>    <span class="k">def</span> <span class="nf">format_periods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EndPeriod&quot;</span><span class="p">]:</span>

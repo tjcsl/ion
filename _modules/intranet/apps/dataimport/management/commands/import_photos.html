@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.management.commands.import_photos &#8212; TJ Intranet v3 (Build #4666) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_photos &#8212; TJ Intranet v3 (Build #4677) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -295,9 +295,10 @@
         <span class="c1"># kathleen =&gt; kathy</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;hleen&#39;</span><span class="p">,</span> <span class="s1">&#39;hy&#39;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span></div>
+            <span class="k">return</span> <span class="n">u</span>
         <span class="c1"># If you got to here without a match... they probably aren&#39;t in LDAP.</span>
         <span class="c1"># change &quot;STA&quot; to &quot;IGNORE&quot; in the csv</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Command.calc_grade_offset"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.calc_grade_offset">[docs]</a>    <span class="k">def</span> <span class="nf">calc_grade_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
@@ -323,7 +324,9 @@
             <span class="k">if</span> <span class="n">grade</span> <span class="o">!=</span> <span class="s2">&quot;STA&quot;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">9</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">gmap</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)]</span>
             <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">gmap</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)]</span></div>
+                <span class="k">return</span> <span class="n">gmap</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Command.teacher_photo_name"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.teacher_photo_name">[docs]</a>    <span class="k">def</span> <span class="nf">teacher_photo_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

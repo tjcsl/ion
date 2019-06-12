@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4666) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4677) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -141,7 +141,7 @@
     <span class="c1"># dependency on ipaddress module</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Python 3.3 or higher is required.&quot;</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">helpers</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">helpers</span>  <span class="c1"># pylint: disable=C0413 # noqa</span>
 <span class="sd">&quot;&quot;&quot; !! In production, add a file called secret.py to the settings package that</span>
 <span class="sd">defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!</span>
 
@@ -445,6 +445,7 @@
 
 <span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>  <span class="c1"># Remove slashes in URLs</span>
+    <span class="s2">&quot;intranet.middleware.same_origin.SameOriginMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># 401s requests with an &quot;Origin&quot; header that doesn&#39;t match the &quot;Host&quot; header</span>
     <span class="s2">&quot;django_prometheus.middleware.PrometheusBeforeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Prometheus initial</span>
     <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django default</span>
     <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django sessions</span>
@@ -582,7 +583,6 @@
     <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span>
     <span class="p">(</span><span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span>
      <span class="s2">&quot;oauth2_provider.contrib.rest_framework.OAuth2Authentication&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,)</span>
 <span class="p">}</span>
 
 <span class="c1"># Django Oauth Toolkit configuration</span>
@@ -669,7 +669,7 @@
     <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="get_log"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.get_log">[docs]</a><span class="k">def</span> <span class="nf">get_log</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="get_log"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.get_log">[docs]</a><span class="k">def</span> <span class="nf">get_log</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>  <span class="c1"># pylint: disable=W0621; &#39;name&#39; is used as the target of a for loop, so we can safely override it</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span></div>
 
 
