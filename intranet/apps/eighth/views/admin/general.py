@@ -132,10 +132,10 @@ def not_implemented_view(request, *args, **kwargs):
 def history_view(request):
     history_timeframe = datetime.now() - timedelta(minutes=15)
     history = {
-        "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),
-        "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),
-        "EighthActivity": EighthActivity.history.filter(history_date__gt=history_timeframe),
-        "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe)
+        "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
+        "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
+        "EighthActivity": EighthActivity.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
+        "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe)  # pylint: disable=no-member
     }
     context = {"history": history, "admin_page_title": "Event History"}
     return render(request, "eighth/admin/history.html", context)

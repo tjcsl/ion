@@ -46,7 +46,7 @@ class Group(auth_models.Group):
     @property
     def properties(self):
         try:
-            props = self.groupproperties
+            props = self.groupproperties  # pylint: disable=no-member
         except GroupProperties.DoesNotExist:
             props, _ = GroupProperties.objects.get_or_create(group=self)
 

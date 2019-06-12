@@ -153,8 +153,8 @@ def edit_activity_view(request, activity_id):
                 error = str(error)
                 messages.error(request, error)
             else:
-                if (activity.restricted or activity.one_a_day or activity.presign or activity.both_blocks or activity.sticky or
-                        activity.administrative):
+                if (activity.restricted or activity.one_a_day or activity.presign or  # pylint: disable=too-many-boolean-expressions
+                        activity.both_blocks or activity.sticky or activity.administrative):
                     all_sched_acts = EighthScheduledActivity.objects.filter(activity=activity)
                     for sa in all_sched_acts:
                         EighthWaitlist.objects.filter(scheduled_activity=sa).delete()

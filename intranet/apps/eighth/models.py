@@ -1045,7 +1045,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if settings.ENABLE_WAITLIST and (add_to_waitlist or
+                if settings.ENABLE_WAITLIST and (add_to_waitlist or  # pylint: disable=too-many-boolean-expressions
                                                  (sched_act.is_full() and not self.is_both_blocks() and
                                                   (request is not None and not request.user.is_eighth_admin and request.user.is_student))):
                     if user.primary_email:
