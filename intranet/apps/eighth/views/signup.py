@@ -38,11 +38,7 @@ def eighth_signup_view(request, block_id=None):
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
             bid = request.POST.get("bid")
-            force = request.POST.get("force")
-            if force == "true":
-                force = True
-            else:
-                force = False
+            force = (request.POST.get("force") == "true")
 
             try:
                 user = User.objects.get(id=uid)
@@ -267,11 +263,7 @@ def eighth_multi_signup_view(request):
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
             bids_comma = request.POST.get("bid")
-            force = request.POST.get("force")
-            if force == "true":
-                force = True
-            else:
-                force = False
+            force = (request.POST.get("force") == "true")
 
             bids = bids_comma.split(",")
 

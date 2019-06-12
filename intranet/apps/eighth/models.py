@@ -327,7 +327,7 @@ class EighthActivity(AbstractBaseEighthModel):
         id_min = 1
         id_max = 3200
         nums = set(range(id_min, id_max))
-        used = set([row[0] for row in EighthActivity.objects.values_list("id")])
+        used = {row[0] for row in EighthActivity.objects.values_list("id")}
         avail = nums - used
         return list(avail)
 

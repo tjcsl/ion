@@ -155,9 +155,8 @@ def query(q, admin=False):
                 val = "student"
 
             # replace sex:male with sex:m and sex:female with sex:f
-            if cat == "sex" or cat == "gender":
-                val = val[:1]
-                val = True if val == 'm' else False
+            if cat in ("sex", "gender"):
+                val = (val[:1] == 'm')
 
             # if an invalid key, ignore
             if cat not in map_attrs:

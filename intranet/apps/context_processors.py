@@ -126,7 +126,7 @@ def show_bus_button(request):
             return {'show_bus_nav': is_bus_admin and settings.ENABLE_BUS_APP}
 
         end_of_day = Day.objects.today().end_time.date_obj(now.date())
-        is_valid_time = (now > end_of_day - window) and (now < end_of_day + window)
+        is_valid_time = end_of_day - window < now < end_of_day + window
         return {'show_bus_nav': (is_bus_admin or is_valid_time) and settings.ENABLE_BUS_APP}
 
     except AttributeError:
