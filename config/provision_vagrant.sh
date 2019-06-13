@@ -54,9 +54,20 @@ apt-get -y install htop
 apt-get -y install glances
 
 # CSS
-apt-get -y install rubygems || apt-get -y install rubygems-integration
-apt-get -y install ruby-dev
-gem install sass
+if [[ -x "$(which gem)" ]]; then
+    echo
+    echo "Uninstalling deprecated Ruby Sass (and Ruby)"
+    echo
+    gem uninstall sass
+    if dpkg -s rubygems; then
+        apt-get -y remove rubygems
+    else
+        apt-get -y remove rubygems-integration
+    fi
+    apt-get -y remove ruby-dev
+fi
+apt-get -y install npm nodejs-legacy
+npm -g install sass
 
 # PostsgreSQL
 apt-get -y install postgresql

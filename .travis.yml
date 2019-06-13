@@ -4,8 +4,8 @@ python:
 - '3.5'
 - '3.6'
 - '3.7'
-rvm:
-- 2.0
+node_js:
+- "7"
 sudo: false
 cache:
   directories:
@@ -17,11 +17,12 @@ env:
   matrix:
   - PRODUCTION=TRUE
   global:
+  - PATH=$TRAVIS_BUILD_DIR/node_modules/.bin:$PATH
   - secure: fQVrTJV4FyBcRihbrd+MSvWtYHVFLXeX1uTOINZx121k88k1yyH6Qnh2cYpouMfXdTFMc4negTr3ceNqtljVD1za8Q6jWKk0Ht6MWTuDMb/4mynTKn7qufGe0+scJDueofeBymXthEXbRzh1O+1qEmVkxZUwoKCYXIb6Uk2KSeU=
   - secure: BT+ndG5VAs3UxdrF7dTx7MK6SACHG8lf9ABfcAD1FgMi+gccT+R3b6FiQ6AcBn4P+1FqHnoxrOEL4PsxPBAUVLf+wjynOXBMI6Ee+bmUfqLvcP1WwCRK3WhSZpH5lSUr7TCxkGFX7ROOJLnqPScTgQhiWHbCzwV9RcAwHaKj1PM=
   - secure: KmWCQvt6IJh5VAAVuIongjTyLSnsc2QlEOQgmSCAigFjo+qwkeatisho05vCD9nhnqRtEOKFnnPwr/es4uKNUMAVKEqs2N0a2ytBL0jVr4obTTUdUQiaGUxOST5HdaiZY9urDECtwBgXogGImTTG6XdFzi9ah3mmmw5lfMIu+3Y=
 install:
-- gem install sass
+- npm install sass
 - pip install -U pip setuptools
 - pip install -U -r requirements.txt
 - pip install -U coveralls flake8 codacy-coverage
