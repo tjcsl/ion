@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4686) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4708) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -57,14 +57,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/postinstall.html">Post-Install Steps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../setup/vagrant.html">Setting up Vagrant</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../architecture/index.html">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#technologies">Technologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#resources">Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
@@ -342,11 +340,11 @@
     <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Birthdays on </span><span class="si">{}</span><span class="s2"> loaded &quot;</span> <span class="s2">&quot;from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">today</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Birthdays on </span><span class="si">%s</span><span class="s2"> loaded from cache.&quot;</span><span class="p">,</span> <span class="n">today</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cached</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cached</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading and caching birthday info for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">today</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading and caching birthday info for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">today</span><span class="p">)</span>
         <span class="n">tomorrow</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Fixtures &#8212; TJ Intranet v3 (Build #4686) documentation</title>
+    <title>Fixtures &#8212; TJ Intranet v3 (Build #4708) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/custom.css" />
@@ -59,14 +59,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Setup</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="postinstall.html">Post-Install Steps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html">Setting up the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vagrant.html">Setting up Vagrant</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
@@ -102,8 +100,6 @@
 <li><a class="reference internal" href="#">Fixtures</a><ul>
 <li><a class="reference internal" href="#creating-ion-fixtures">Creating Ion fixtures</a></li>
 <li><a class="reference internal" href="#importing-ion-fixtures">Importing Ion fixtures</a></li>
-<li><a class="reference internal" href="#creating-iodine-fixtures">Creating Iodine fixtures</a></li>
-<li><a class="reference internal" href="#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
 </ul>
 </li>
 </ul>
@@ -153,76 +149,6 @@
 <h2>Importing Ion fixtures<a class="headerlink" href="#importing-ion-fixtures" title="Permalink to this headline">¶</a></h2>
 <p>Place all of the fixture files in the fixtures folder and run the command below. You can use the <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag to clear your database before importing.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./scripts/import_fixtures.sh
-</pre></div>
-</div>
-</div>
-<div class="section" id="creating-iodine-fixtures">
-<h2>Creating Iodine fixtures<a class="headerlink" href="#creating-iodine-fixtures" title="Permalink to this headline">¶</a></h2>
-<p>Copy create_fixtures.py to Iodine</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python create_fixtures.py
-$ tar cvzf fixtures-20151014.tar.gz fixtures/
-$ scp fixtures-20151014.tar.gz ion:
-</pre></div>
-</div>
-</div>
-<div class="section" id="importing-iodine-fixtures">
-<h2>Importing Iodine fixtures<a class="headerlink" href="#importing-iodine-fixtures" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This process may take a lot of RAM and can unexpectedly quit. If this happens, run <code class="docutils literal notranslate"><span class="pre">./manage.py</span> <span class="pre">flush</span></code> to flush the database, exit the SSH session, run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">halt</span></code>, increase the VM’s allotted memory in VirtualBox, and run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">up</span></code> again.</p>
-</div>
-<p>Copy fixtures to Ion</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ksu
-$ <span class="nb">cd</span> /usr/local/www/intranet3
-$ cp /root/fixtures-20151014.tar.gz .
-$ tar xvzf fixtures-20151014.tar.gz
-</pre></div>
-</div>
-<p>Load the users fixtures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/users/users.json
-</pre></div>
-</div>
-<p>Load the sponsors fixtures.</p>
-<p>NOTE: manually fixed UID 503, which wasn’t present (Ms. Gravitte, AP) by removing “user_id” from EighthSponsor entry</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/sponsors.json
-</pre></div>
-</div>
-<p>Load the rooms fixtures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/rooms.json
-</pre></div>
-</div>
-<p>Load the blocks fixtures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/blocks.json
-</pre></div>
-</div>
-<p>Load the activities fixtures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/activities.json
-</pre></div>
-</div>
-<p>Load the scheduled activities fixtures.
-Note: this takes around 3 minutes to import, much longer than the previous fixtures.</p>
-<p>NOTE: For 20151014 fixtures, run the command <code class="docutils literal notranslate"><span class="pre">sed</span> <span class="pre">-i</span> <span class="pre">-e</span> <span class="pre">'s/\[1285,</span> <span class="pre">1042\]/[1042]/g'</span> <span class="pre">fixtures/eighth/scheduled_activities.json</span></code> to remove missing ids.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/scheduled_activities.json
-</pre></div>
-</div>
-<p>Load the signups fixtures.
-Note: this takes around 3 minutes to import, much longer than the previous fixtures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/eighth/signups.json
-</pre></div>
-</div>
-<p>Load the announcements fixtures (optional).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py loaddata fixtures/announcements/announcements.json
-</pre></div>
-</div>
-<p>Delete old blocks, and “Z-HAS NOT SELECTED AN ACTIVITY” activity. Make all “Z-” activities administrative.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
-Python <span class="m">2</span>.7.6 <span class="o">(</span>default, Jun <span class="m">22</span> <span class="m">2015</span>, <span class="m">17</span>:58:13<span class="o">)</span>
-<span class="o">[</span>GCC <span class="m">4</span>.8.2<span class="o">]</span> on linux2
-Type <span class="s2">&quot;help&quot;</span>, <span class="s2">&quot;copyright&quot;</span>, <span class="s2">&quot;credits&quot;</span> or <span class="s2">&quot;license&quot;</span> <span class="k">for</span> more information.
-<span class="o">(</span>InteractiveConsole<span class="o">)</span>
-&gt;&gt;&gt; EighthBlock.objects.filter<span class="o">(</span><span class="nv">date__lt</span><span class="o">=</span><span class="s2">&quot;2015-09-01&quot;</span><span class="o">)</span>.delete<span class="o">()</span>
-&gt;&gt;&gt; EighthActivity.objects.get<span class="o">(</span><span class="nv">id</span><span class="o">=</span><span class="m">999</span><span class="o">)</span>.delete<span class="o">()</span>
-&gt;&gt;&gt; EighthActivity.objects.filter<span class="o">(</span>Q<span class="o">(</span><span class="nv">name__istartswith</span><span class="o">=</span><span class="s2">&quot;z-&quot;</span><span class="o">)</span><span class="p">|</span>Q<span class="o">(</span><span class="nv">name__istartswith</span><span class="o">=</span><span class="s2">&quot;z -&quot;</span><span class="o">))</span>.update<span class="o">(</span><span class="nv">administrative</span><span class="o">=</span>True<span class="o">)</span>
 </pre></div>
 </div>
 </div>

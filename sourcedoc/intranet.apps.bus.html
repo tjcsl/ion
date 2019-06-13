@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.bus package &#8212; TJ Intranet v3 (Build #4686) documentation</title>
+    <title>intranet.apps.bus package &#8212; TJ Intranet v3 (Build #4708) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/custom.css" />
@@ -59,14 +59,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
@@ -102,8 +100,10 @@
 <li><a class="reference internal" href="#">intranet.apps.bus package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.admin">intranet.apps.bus.admin module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.api">intranet.apps.bus.api module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.consumers">intranet.apps.bus.consumers module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.models">intranet.apps.bus.models module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.serializers">intranet.apps.bus.serializers module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.tests">intranet.apps.bus.tests module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.urls">intranet.apps.bus.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.views">intranet.apps.bus.views module</a></li>
@@ -150,6 +150,76 @@
 </div>
 <div class="section" id="module-intranet.apps.bus.admin">
 <span id="intranet-apps-bus-admin-module"></span><h2>intranet.apps.bus.admin module<a class="headerlink" href="#module-intranet.apps.bus.admin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.bus.api">
+<span id="intranet-apps-bus-api-module"></span><h2>intranet.apps.bus.api module<a class="headerlink" href="#module-intranet.apps.bus.api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.bus.api.RouteDetail">
+<em class="property">class </em><code class="descclassname">intranet.apps.bus.api.</code><code class="descname">RouteDetail</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/bus/api.html#RouteDetail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.api.RouteDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
+<p>API endpoint that retrieves information about a specific bus route.</p>
+<p>/api/bus/&lt;num&gt;: retrieve information about bus number &lt;num&gt;</p>
+<dl class="method">
+<dt id="intranet.apps.bus.api.RouteDetail.get_queryset">
+<code class="descname">get_queryset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/bus/api.html#RouteDetail.get_queryset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.api.RouteDetail.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of items for this view.
+This must be an iterable, and may be a queryset.
+Defaults to using <cite>self.queryset</cite>.</p>
+<p>This method should always be used rather than accessing <cite>self.queryset</cite>
+directly, as <cite>self.queryset</cite> gets evaluated only once, and those results
+are cached for all subsequent requests.</p>
+<p>You may want to override this if you need to provide different
+querysets depending on the incoming request.</p>
+<p>(Eg. return a list of items that is specific to the user)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.bus.api.RouteDetail.permission_classes">
+<code class="descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAuthenticated'&gt;,)</em><a class="headerlink" href="#intranet.apps.bus.api.RouteDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.bus.api.RouteDetail.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#intranet.apps.bus.api.RouteDetail.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer" title="intranet.apps.bus.serializers.RouteSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.bus.serializers.RouteSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.bus.api.RouteList">
+<em class="property">class </em><code class="descclassname">intranet.apps.bus.api.</code><code class="descname">RouteList</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/bus/api.html#RouteList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.api.RouteList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>API endpoint that retrieves information about buses.</p>
+<p>/api/bus: retrieve a list of all buses</p>
+<p>/api/bus/num: retrieve information about bus number num</p>
+<dl class="method">
+<dt id="intranet.apps.bus.api.RouteList.get_queryset">
+<code class="descname">get_queryset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/bus/api.html#RouteList.get_queryset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.api.RouteList.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of items for this view.
+This must be an iterable, and may be a queryset.
+Defaults to using <cite>self.queryset</cite>.</p>
+<p>This method should always be used rather than accessing <cite>self.queryset</cite>
+directly, as <cite>self.queryset</cite> gets evaluated only once, and those results
+are cached for all subsequent requests.</p>
+<p>You may want to override this if you need to provide different
+querysets depending on the incoming request.</p>
+<p>(Eg. return a list of items that is specific to the user)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.bus.api.RouteList.permission_classes">
+<code class="descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAuthenticated'&gt;,)</em><a class="headerlink" href="#intranet.apps.bus.api.RouteList.permission_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.bus.api.RouteList.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#intranet.apps.bus.api.RouteList.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer" title="intranet.apps.bus.serializers.RouteSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.bus.serializers.RouteSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-intranet.apps.bus.consumers">
 <span id="intranet-apps-bus-consumers-module"></span><h2>intranet.apps.bus.consumers module<a class="headerlink" href="#module-intranet.apps.bus.consumers" title="Permalink to this headline">¶</a></h2>
@@ -278,6 +348,32 @@ many-to-one relation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.bus.serializers">
+<span id="intranet-apps-bus-serializers-module"></span><h2>intranet.apps.bus.serializers module<a class="headerlink" href="#module-intranet.apps.bus.serializers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.bus.serializers.RouteSerializer">
+<em class="property">class </em><code class="descclassname">intranet.apps.bus.serializers.</code><code class="descname">RouteSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class 'rest_framework.fields.empty'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/bus/serializers.html#RouteSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.serializers.RouteSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<dl class="class">
+<dt id="intranet.apps.bus.serializers.RouteSerializer.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/bus/serializers.html#RouteSerializer.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.bus.serializers.RouteSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="intranet.apps.bus.serializers.RouteSerializer.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('route_name', 'space', 'bus_number', 'status')</em><a class="headerlink" href="#intranet.apps.bus.serializers.RouteSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.bus.serializers.RouteSerializer.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#intranet.apps.bus.serializers.RouteSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#intranet.apps.bus.models.Route" title="intranet.apps.bus.models.Route"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.bus.models.Route</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 </dd></dl>

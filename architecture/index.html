@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Architecture &#8212; TJ Intranet v3 (Build #4686) documentation</title>
+    <title>Architecture &#8212; TJ Intranet v3 (Build #4708) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/custom.css" />
@@ -59,14 +59,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#technologies">Technologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
@@ -105,13 +103,7 @@
 <li><a class="reference internal" href="#rest-api">REST API</a></li>
 <li><a class="reference internal" href="#redis">Redis</a></li>
 <li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#resources">Resources</a><ul>
-<li><a class="reference internal" href="#id1">Django</a></li>
-<li><a class="reference internal" href="#id2">REST API</a></li>
-<li><a class="reference internal" href="#id3">Redis</a></li>
-<li><a class="reference internal" href="#id4">PostgreSQL</a></li>
+<li><a class="reference internal" href="#daphne">Daphne</a></li>
 </ul>
 </li>
 </ul>
@@ -151,44 +143,29 @@
       
   <div class="section" id="architecture">
 <h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
-<p>Talk about ion’s architecture</p>
+<p>Ion takes advantage of various technologies in order to provide the best, fastest, safest, and most reliable experience for our users.</p>
 <div class="section" id="technologies">
 <h2>Technologies<a class="headerlink" href="#technologies" title="Permalink to this headline">¶</a></h2>
-<p>TODO</p>
 <div class="section" id="django">
 <h3>Django<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
+<p>We use <a class="reference external" href="https://www.djangoproject.com/">Django</a> as our web framework (written in Python).  We chose it for its wealth of documentation, supportive community, stability, ease of development, and vast array of third-party libraries that meet our needs.
+Django has allowed us to deploy faster, onboard new web developers faster, and has served the Intranet team well.</p>
 </div>
 <div class="section" id="rest-api">
 <h3>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
+<p>We use <a class="reference external" href="https://www.django-rest-framework.org/">Django Rest Framework (DRF)</a> for our REST API. In particular, DRF provides the basic framework for quickly creating secure APIs with a decent web interface. It is also known as an industry standard.</p>
 </div>
 <div class="section" id="redis">
 <h3>Redis<a class="headerlink" href="#redis" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
+<p><a class="reference external" href="https://redis.io/">Redis</a> is an in-memory data store that we use currently use to cache session information and other information in memory. We use <a class="reference external" href="https://github.com/Suor/django-cacheops">django-cacheops</a> as an ORM cache for our models and <a class="reference external" href="https://github.com/martinrusev/django-redis-sessions">django-redis-sessions</a> as a in-memory session cache for user sessions.</p>
 </div>
 <div class="section" id="postgresql">
 <h3>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
+<p>We use <a class="reference external" href="https://www.postgresql.org/">PostgreSQL</a> for our production and development databases.  PostgreSQL is an open-source relational SQL database that has an array of tooling behind it and is strongly supported by Django and the wider web development community. In addition, PostgreSQL is known for its “reliability, feature robustness, and performance.”</p>
 </div>
-</div>
-<div class="section" id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Django<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
-</div>
-<div class="section" id="id2">
-<h3>REST API<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
-</div>
-<div class="section" id="id3">
-<h3>Redis<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
-</div>
-<div class="section" id="id4">
-<h3>PostgreSQL<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<p>TODO</p>
+<div class="section" id="daphne">
+<h3>Daphne<a class="headerlink" href="#daphne" title="Permalink to this headline">¶</a></h3>
+<p>We use <a class="reference external" href="https://github.com/django/daphne/">Daphne</a> for our production Django Channels HTTP/WebSocket server. We serve stuff over ASGI for WebSockets (bus) and Daphne allows us to run our application in production simply.</p>
 </div>
 </div>
 </div>
