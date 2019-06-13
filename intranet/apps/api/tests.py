@@ -11,6 +11,7 @@ from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
 from ..users.models import User
+from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom
 from ...test.ion_test import IonTestCase
 
@@ -199,3 +200,21 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_api_bus_list(self):
+        self.make_token()
+        route = Route.objects.create(route_name="JT-001", bus_number="JT-001")
+        response = self.client.get(reverse("api_bus_list"), HTTP_AUTHORIZATION=self.auth)
+
+        self.assertEqual(response.status_code, 200)
+        results = response.json()["results"]
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results, [{'status': 'o', 'route_name': route.route_name, 'bus_number': route.bus_number, 'space': ''}])
+
+    def test_api_bus_detail(self):
+        self.make_token()
+        route_1 = Route.objects.create(route_name="JT-001", bus_number="JT-001")
+        response = self.client.get(reverse("api_bus_detail", args=[route_1.pk]), HTTP_AUTHORIZATION=self.auth)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number,"status": "o"})
