@@ -217,4 +217,4 @@ class ApiTest(IonTestCase):
         response = self.client.get(reverse("api_bus_detail", args=[route_1.pk]), HTTP_AUTHORIZATION=self.auth)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number,"status": "o"})
+        self.assertEqual(response.json(), {"route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number, "status": "o"})
