@@ -19,7 +19,6 @@ class RouteList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        print("ListView used!")
         return Route.objects.all()
 
 
@@ -35,5 +34,4 @@ class RouteDetail(generics.RetrieveAPIView):
     # override get_queryset instead of using queryset=...
     # so that it always returns fresh data
     def get_queryset(self):
-        print("RetrieveUsed")
         return Route.objects.all()
