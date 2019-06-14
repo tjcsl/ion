@@ -101,7 +101,7 @@ class EighthTest(IonTestCase):
         self.make_admin()
         activity = self.add_activity(name="Test Activity 1")
 
-        cur_date = timezone.now().date()
+        cur_date = timezone.localtime(timezone.now()).date()
         one_day = datetime.timedelta(days=1)
 
         past_date_str = (cur_date - one_day).strftime("%Y-%m-%d")
