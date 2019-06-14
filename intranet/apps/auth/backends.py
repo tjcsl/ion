@@ -62,6 +62,10 @@ class KerberosAuthenticationBackend:
 
         """
 
+        # We should not try to authenticate with an empty password
+        if password == "":
+            return False
+
         cache = "/tmp/ion-%s" % uuid.uuid4()
 
         logger.debug("Setting KRB5CCNAME to 'FILE:%s'", cache)
