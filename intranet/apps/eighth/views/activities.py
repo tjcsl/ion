@@ -32,12 +32,12 @@ def activity_view(request, activity_id=None):
 
     show_all = ("show_all" in request.GET)
     if not show_all:
-        first_date = timezone.now().date()
+        first_date = timezone.localtime(timezone.now()).date()
         first_block = EighthBlock.objects.get_first_upcoming_block()
         if first_block:
             first_date = first_block.date
 
-        two_months = timezone.now().date() + timedelta(weeks=8)
+        two_months = timezone.localtime(timezone.now()).date() + timedelta(weeks=8)
         scheduled_activities = scheduled_activities.filter(block__date__gte=first_date, block__date__lte=two_months)
 
     scheduled_activities = scheduled_activities.order_by("block__date", "block__block_letter")
