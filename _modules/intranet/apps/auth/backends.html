@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4708) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #4715) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -190,6 +190,10 @@
 <span class="sd">            Boolean indicating success or failure of ticket creation</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># We should not try to authenticate with an empty password</span>
+        <span class="k">if</span> <span class="n">password</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">cache</span> <span class="o">=</span> <span class="s2">&quot;/tmp/ion-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
 
