@@ -21,7 +21,6 @@ setup(
     author_email="intranet@tjhsst.edu",
     url="https://github.com/tjcsl/ion",
     version="1.0",
-    license="GPL",
     test_suite="intranet.test.test_suite.run_tests",
     setup_requires=["pip>=6.0", "setuptools_git"],  # session param
     install_requires=[str(dep) for dep in get_requirements()],
