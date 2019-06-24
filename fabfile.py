@@ -77,7 +77,6 @@ def clean_production_pyc():
         clean_pyc()
 
 
-# TODO: rename from gunicorn
 def restart_production_gunicorn(skip=False):
     """Restart the production gunicorn instance as root."""
     _require_root()
@@ -139,32 +138,6 @@ def contributors():
     """Print a list of contributors through git."""
     with hide('running'):
         local("git --no-pager shortlog -ns")
-
-
-def linecount():
-    """Get a total line count of files with these types:"""
-    with hide("running"):
-        excludes = "intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations"
-        local("cloc --exclude-ext=json --exclude-dir=%s ." % excludes)
-
-
-def load_fixtures():
-    """Populate a database with data from fixtures."""
-
-    if local("pwd", capture=True) == PRODUCTION_DOCUMENT_ROOT:
-        abort("Refusing to automatically load fixtures into production database!")
-
-    if not confirm("Are you sure you want to load all fixtures? This could have unintended consequences if the database is not empty."):
-        abort("Aborted.")
-
-    files = [
-        "fixtures/users/users.json", "fixtures/eighth/sponsors.json", "fixtures/eighth/rooms.json", "fixtures/eighth/blocks.json",
-        "fixtures/eighth/activities.json", "fixtures/eighth/scheduled_activities.json", "fixtures/eighth/signups.json",
-        "fixtures/announcements/announcements.json"
-    ]
-
-    for f in files:
-        local("./manage.py loaddata " + f)
 
 
 def deploy():
