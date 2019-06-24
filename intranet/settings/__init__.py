@@ -11,6 +11,7 @@ if sys.version_info < (3, 5):
     raise Exception("Python 3.5 or higher is required.")
 
 from ..utils import helpers  # pylint: disable=C0413 # noqa
+
 """ !! In production, add a file called secret.py to the settings package that
 defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
 
@@ -57,7 +58,7 @@ HOCO_END_DATE = datetime.date(2017, 10, 14)
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
 TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
 # FIXME: figure out a less-hacky way to do this.
-TESTING = ('test' in sys.argv)
+TESTING = "test" in sys.argv
 LOGGING_VERBOSE = PRODUCTION
 
 MASTER_NOTIFY = False
@@ -77,7 +78,7 @@ if not PRODUCTION:
     # We don't care about session security when running a testing instance.
     SECRET_KEY = "_5kc##e7(!4=4)h4slxlgm010l+43zd_84g@82771ay6no-1&i"
     # Trust X-Forwarded-For when testing
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 
 # Internal IP ranges in production
 _internal_ip_list = ["198.38.16.0/20", "2001:468:cc0::/48"]
@@ -119,7 +120,7 @@ if ADMINS is None:
 
 # Use PostgreSQL database
 
-DATABASES = {'default': {'ENGINE': 'django_prometheus.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
+DATABASES = {"default": {"ENGINE": "django_prometheus.db.backends.postgresql", "CONN_MAX_AGE": 30}}  # type: Dict[str,Dict[str,Any]]
 
 MANAGERS = ADMINS
 
@@ -159,7 +160,7 @@ SILENCED_SYSTEM_CHECKS = [
     # W001 doesn't apply, as we use nginx to handle SecurityMiddleware's functions.
     "security.W001",
     # Suppress W019, as we use frames in the signage module.
-    "security.W019"
+    "security.W019",
 ]
 
 # Local time zone for this installation. Choices can be found here:
@@ -189,7 +190,7 @@ USE_TZ = True
 # Example: "/home/media/media.lawrence.com/media/"
 #
 # Not used.
-MEDIA_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'uploads')
+MEDIA_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "uploads")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -225,39 +226,62 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    'pipeline.finders.PipelineFinder',
+    "pipeline.finders.PipelineFinder",
 ]
 
 STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 
 PIPELINE = {
-    'CSS_COMPRESSOR': None,
-    'COMPILERS': ['pipeline.compilers.sass.SASSCompiler'],
-    'STYLESHEETS': {
-        'base': {
-            'source_filenames': ['css/base.scss', 'css/themes.scss', 'css/responsive.scss'],
-            'output_filename': 'css/base.css'
-        },
-        'eighth.admin': {
-            'source_filenames': ['css/eighth.common.scss', 'css/eighth.admin.scss'],
-            'output_filename': 'css/eighth.admin.css'
-        },
-        'eighth.signup': {
-            'source_filenames': ['css/eighth.common.scss', 'css/eighth.signup.scss'],
-            'output_filename': 'css/eighth.signup.css'
-        },
-    }
+    "CSS_COMPRESSOR": None,
+    "COMPILERS": ["pipeline.compilers.sass.SASSCompiler"],
+    "STYLESHEETS": {
+        "base": {"source_filenames": ["css/base.scss", "css/themes.scss", "css/responsive.scss"], "output_filename": "css/base.css"},
+        "eighth.admin": {"source_filenames": ["css/eighth.common.scss", "css/eighth.admin.scss"], "output_filename": "css/eighth.admin.css"},
+        "eighth.signup": {"source_filenames": ["css/eighth.common.scss", "css/eighth.signup.scss"], "output_filename": "css/eighth.signup.css"},
+    },
 }  # type: Dict[str,Any]
 
 LIST_OF_INDEPENDENT_CSS = [
-    'about', 'api', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search', 'dashboard', 'events',
-    'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board', 'announcements.form', 'polls.form', 'preferences', 'signage.base',
-    'signage.touch', 'signage.touch.landscape', 'eighth.common', 'eighth.attendance', 'eighth.profile', 'eighth.schedule', 'eighth.maintenance',
-    'lostfound', 'welcome', 'hoco_ribbon', 'hoco_scores', 'oauth', 'bus', 'signage.page'
+    "about",
+    "api",
+    "login",
+    "emerg",
+    "files",
+    "schedule",
+    "theme.blue",
+    "page_base",
+    "responsive.core",
+    "search",
+    "dashboard",
+    "events",
+    "schedule.widget",
+    "dashboard.widgets",
+    "profile",
+    "polls",
+    "groups",
+    "board",
+    "announcements.form",
+    "polls.form",
+    "preferences",
+    "signage.base",
+    "signage.touch",
+    "signage.touch.landscape",
+    "eighth.common",
+    "eighth.attendance",
+    "eighth.profile",
+    "eighth.schedule",
+    "eighth.maintenance",
+    "lostfound",
+    "welcome",
+    "hoco_ribbon",
+    "hoco_scores",
+    "oauth",
+    "bus",
+    "signage.page",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
-    PIPELINE['STYLESHEETS'].update(helpers.single_css_map(name))
+    PIPELINE["STYLESHEETS"].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -267,11 +291,11 @@ AUTHENTICATION_BACKENDS = (
 )
 # Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.BCryptPasswordHasher",
 ]
 
 # Use the custom User model defined in apps/users/models.py
@@ -297,20 +321,19 @@ TEMPLATES = [
                 "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
                 "intranet.apps.context_processors.show_homecoming",  # Sitewide custom themes (special events, etc)
                 "intranet.apps.context_processors.global_custom_theme",  # Sitewide custom themes (special events, etc)
-                "intranet.apps.context_processors.show_bus_button"),
-            "debug":
-            True,  # Only enabled if DEBUG is true as well
-            'loaders': ('django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'),
-            'libraries': {
-                'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
-            },
-        }
-    },
+                "intranet.apps.context_processors.show_bus_button",
+            ),
+            "debug": True,  # Only enabled if DEBUG is true as well
+            "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
+            "libraries": {"staticfiles": "django.contrib.staticfiles.templatetags.staticfiles"},
+        },
+    }
 ]  # type: List[Dict[str,Any]]
 
 if PRODUCTION:
-    TEMPLATES[0]["OPTIONS"]["loaders"] = [('django.template.loaders.cached.Loader',
-                                           ['django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader'])]
+    TEMPLATES[0]["OPTIONS"]["loaders"] = [
+        ("django.template.loaders.cached.Loader", ["django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"])
+    ]
 
 if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
@@ -368,7 +391,7 @@ CACHE_AGE = {
     "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
     "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
-    "emerg": int(datetime.timedelta(minutes=5).total_seconds())
+    "emerg": int(datetime.timedelta(minutes=5).total_seconds()),
 }
 
 if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
@@ -384,12 +407,8 @@ CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 
 # CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
 CACHEOPS = {
-    "eighth.*": {
-        "timeout": int(datetime.timedelta(hours=24).total_seconds())
-    },  # Only used for caching activity, block lists
-    "groups.*": {
-        "timeout": int(datetime.timedelta(hours=24).total_seconds())
-    }  # Only used for caching group list
+    "eighth.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching activity, block lists
+    "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
 }
 
 if not TESTING:
@@ -408,7 +427,9 @@ CACHES = {
     "default": {
         "OPTIONS": {
             # Avoid conflict between production and testing redis db
-            "DB": 1 if PRODUCTION else 2,
+            "DB": 1
+            if PRODUCTION
+            else 2
         }
     }
 }  # type: Dict[str,Dict[str,Any]]
@@ -420,11 +441,8 @@ else:
     CACHES["default"] = {
         "BACKEND": "redis_cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {
-            "PARSER_CLASS": "redis.connection.HiredisParser",
-            "PICKLE_VERSION": 4,
-        },
-        "KEY_PREFIX": VIRTUAL_ENV
+        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "KEY_PREFIX": VIRTUAL_ENV,
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
@@ -436,38 +454,28 @@ FCPS_STUDENT_ID_LENGTH = 7
 # Django REST framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),  # require authentication
-    "USE_ABSOLUTE_URLS":
-    True,
-
+    "USE_ABSOLUTE_URLS": True,
     # Return native `Date` and `Time` objects in `serializer.data`
-    "DATETIME_FORMAT":
-    None,
-    "DATE_FORMAT":
-    None,
-    "TIME_FORMAT":
-    None,
-    "EXCEPTION_HANDLER":
-    "intranet.apps.api.utils.custom_exception_handler",
-    "DEFAULT_PAGINATION_CLASS":
-    "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE":
-    50,
-    "DEFAULT_AUTHENTICATION_CLASSES":
-    ("intranet.apps.api.authentication.ApiBasicAuthentication",
-     "oauth2_provider.contrib.rest_framework.OAuth2Authentication"),
+    "DATETIME_FORMAT": None,
+    "DATE_FORMAT": None,
+    "TIME_FORMAT": None,
+    "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 50,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "intranet.apps.api.authentication.ApiBasicAuthentication",
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+    ),
 }
 
 # Django Oauth Toolkit configuration
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope'
-    },
+    "SCOPES": {"read": "Read scope", "write": "Write scope"},
     # OAuth refresh tokens expire in 30 days
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 60 * 60 * 24 * 30,
+    "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
 }
-OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
 INSTALLED_APPS = [
     # internal Django
@@ -521,7 +529,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "cacheops",
     "svg",
-    "simple_history"
+    "simple_history",
 ]
 
 # Django Channels Configuration (we use this for websockets)
@@ -549,45 +557,21 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
     "formatters": {
-        "simple": {
-            "format": "%(levelname)s: %(asctime)s - %(remote_addr)s - %(username)s - %(path_info)s\n\t%(message)s"
-        },
-        "access": {
-            "format": "%(message)s"
-        },
-        "error": {
-            "format": "%(asctime)s: \n%(message)s"
-        },
+        "simple": {"format": "%(levelname)s: %(asctime)s - %(remote_addr)s - %(username)s - %(path_info)s\n\t%(message)s"},
+        "access": {"format": "%(message)s"},
+        "error": {"format": "%(asctime)s: \n%(message)s"},
     },
     "filters": {
-        "require_debug_false": {
-            "()": "django.utils.log.RequireDebugFalse"
-        },
-        "request": {
-            "()": "django_requestlogging.logging_filters.RequestFilter"
-        }
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+        "request": {"()": "django_requestlogging.logging_filters.RequestFilter"},
     },
     "handlers": {
         # send to sentry
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            "filters": ["require_debug_false"],
-        },
+        "sentry": {"level": "ERROR", "class": "raven.contrib.django.raven_compat.handlers.SentryHandler", "filters": ["require_debug_false"]},
         # Log in console
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "filters": ["request"],
-            "formatter": "simple"
-        },
+        "console": {"level": "DEBUG", "class": "logging.StreamHandler", "filters": ["request"], "formatter": "simple"},
         # Log access in console
-        "console_access": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "filters": ["request"],
-            "formatter": "access"
-        },
+        "console_access": {"level": "DEBUG", "class": "logging.StreamHandler", "filters": ["request"], "formatter": "access"},
         # Log access to file (DEBUG=FALSE)
         "access_log": {
             "level": "DEBUG",
@@ -595,7 +579,7 @@ LOGGING = {
             "class": "logging.FileHandler",
             "formatter": "access",
             "filename": "/var/log/ion/app_access.log",
-            "delay": True
+            "delay": True,
         },
         # Log auth to file (DEBUG=FALSE)
         "auth_log": {
@@ -604,7 +588,7 @@ LOGGING = {
             "class": "logging.FileHandler",
             "formatter": "access",
             "filename": "/var/log/ion/app_auth.log",
-            "delay": True
+            "delay": True,
         },
         # Log error to file (DEBUG=FALSE)
         "error_log": {
@@ -613,45 +597,21 @@ LOGGING = {
             "class": "logging.FileHandler",
             "formatter": "error",
             "filename": "/var/log/ion/app_error.log",
-            "delay": True
+            "delay": True,
         },
     },
     "loggers": {
         # Django errors get sent to the error log
-        "django": {
-            "handlers": ["console", "sentry"] + get_log("error_log"),
-            "level": "ERROR",
-            "propagate": True,
-        },
+        "django": {"handlers": ["console", "sentry"] + get_log("error_log"), "level": "ERROR", "propagate": True},
         # Intranet errors email admins and errorlog
-        "intranet": {
-            "handlers": ["console", "sentry"] + get_log("error_log"),
-            "level": LOG_LEVEL,
-            "propagate": True,
-        },
+        "intranet": {"handlers": ["console", "sentry"] + get_log("error_log"), "level": LOG_LEVEL, "propagate": True},
         # Intranet access logs to accesslog
-        "intranet_access": {
-            "handlers": ["console_access"] + get_log("access_log"),
-            "level": "DEBUG",
-            "propagate": False
-        },
+        "intranet_access": {"handlers": ["console_access"] + get_log("access_log"), "level": "DEBUG", "propagate": False},
         # Intranet auth logs to authlog
-        "intranet_auth": {
-            "handlers": ["console_access"] + get_log("auth_log"),
-            "level": "DEBUG",
-            "propagate": False
-        },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    }
+        "intranet_auth": {"handlers": ["console_access"] + get_log("auth_log"), "level": "DEBUG", "propagate": False},
+        "raven": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+        "sentry.errors": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+    },
 }
 
 # The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
@@ -686,10 +646,12 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
     # Add middleware
-    MIDDLEWARE.extend([
-        "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
-        "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
-    ])
+    MIDDLEWARE.extend(
+        [
+            "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
+            "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
+        ]
+    )
 
     INSTALLED_APPS += ["debug_toolbar"]
 
@@ -709,7 +671,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 # CORS_URLS_REGEX = r'^/api/.*$'
 
 # Same origin frame options
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # X-XSS-Protection: 1; mode=block
 # Already set on nginx level
@@ -718,7 +680,7 @@ SECURE_BROWSER_XSS_FILTER = True
 # To accomodate for the fact that nginx "swallows" https connections
 # by forwarding to http://gunicorn
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Add git information for the login page
 GIT = {
@@ -726,14 +688,14 @@ GIT = {
     "commit_long_hash": helpers.get_current_commit_long_hash(PROJECT_ROOT),
     "commit_info": helpers.get_current_commit_info(),
     "commit_date": helpers.get_current_commit_date(),
-    "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT)
+    "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT),
 }
 
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2019
 
 # Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
+SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=18, hour=19).strftime("%B %d %Y %H:%M:%S")
 
 # Month (1-indexed) after which a new school year begins
 # July = 7
@@ -776,9 +738,9 @@ if TESTING:
     # Horrible hack to suppress all migrations to speed up the tests.
     MIGRATION_MODULES = helpers.MigrationMock()
     # FIXME: we really shouldn't have to do this.
-    LOGGING_VERBOSE = re.search('-v ?[2-3]|--verbosity [2-3]', ' '.join(sys.argv)) is not None
+    LOGGING_VERBOSE = re.search("-v ?[2-3]|--verbosity [2-3]", " ".join(sys.argv)) is not None
 elif PRODUCTION or SECRET_DATABASE_URL is not None:
-    DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
+    DATABASES["default"].update(helpers.parse_db_url(SECRET_DATABASE_URL))
 else:
     # Default testing db config.
     DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
