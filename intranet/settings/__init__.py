@@ -18,6 +18,7 @@ defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
 SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
+
 # Dummy values for development and testing.
 # Overridden by the import from secret.py below.
 SECRET_DATABASE_URL = None  # type: str
@@ -40,15 +41,16 @@ ENABLE_PRE_EIGHTH_REDIRECT = False
 EMERGENCY_MESSAGE = None  # type: str
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
+# See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 #
 # In production, Nginx filters requests that are not in this list. If this is
-# not done, an email failure notification gets sent whenever someone messes with
+# not done, a notification gets sent whenever someone messes with
 # the HTTP Host header.
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 
+# Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(2017, 10, 2)
 HOCO_END_DATE = datetime.date(2017, 10, 14)
 
