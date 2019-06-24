@@ -62,6 +62,3 @@ For example, if a commit adds a new feature to the ``emailfwd`` app, a good comm
     feat(emailfwd): add email confirmation functionality
 
     Fixes #1
-
-
-
