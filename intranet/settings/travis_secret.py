@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# secret.py file for Travis CI runs
 
 SECRET_KEY = "*t%yf&0+q!(a3@k(1#!hzr#u%1b*_ta-n-jf)aby5&2kbg6k&)"
 SECRET_DATABASE_URL = "postgres://postgres:@/ion"

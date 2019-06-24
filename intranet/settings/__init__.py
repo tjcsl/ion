@@ -6,9 +6,9 @@ import sys
 
 from typing import Any, Tuple, Dict, List  # noqa
 
-if sys.version_info < (3, 3):
-    # dependency on ipaddress module
-    raise Exception("Python 3.3 or higher is required.")
+if sys.version_info < (3, 5):
+    # Require Python 3.5+
+    raise Exception("Python 3.5 or higher is required.")
 
 from ..utils import helpers  # pylint: disable=C0413 # noqa
 """ !! In production, add a file called secret.py to the settings package that
