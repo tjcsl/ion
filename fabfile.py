@@ -36,8 +36,9 @@ def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
 
-def runserver(port=8080, debug_toolbar="yes", werkzeug="no", dummy_cache="no", short_cache="no", template_warnings="no", log_level="DEBUG",
-              insecure="no"):
+def runserver(
+    port=8080, debug_toolbar="yes", werkzeug="no", dummy_cache="no", short_cache="no", template_warnings="no", log_level="DEBUG", insecure="no"
+):
     """Clear compiled python files and start the Django dev server."""
     if not port or (not isinstance(port, int) and not port.isdigit()):
         abort("You must specify a port.")
@@ -52,10 +53,18 @@ def runserver(port=8080, debug_toolbar="yes", werkzeug="no", dummy_cache="no", s
     if log_level not in _log_levels:
         abort("Invalid log level.")
 
-    with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(), DUMMY_CACHE=dummy_cache.upper(), SHORT_CACHE=short_cache.upper(),
-                   WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(), LOG_LEVEL=log_level):
-        local("./manage.py runserver{} 0.0.0.0:{}{}".format("_plus" if werkzeug.lower() == "yes" else "", port, " --insecure"
-                                                            if insecure.lower() == "yes" else ""))
+    with shell_env(
+        SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(),
+        DUMMY_CACHE=dummy_cache.upper(),
+        SHORT_CACHE=short_cache.upper(),
+        WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(),
+        LOG_LEVEL=log_level,
+    ):
+        local(
+            "./manage.py runserver{} 0.0.0.0:{}{}".format(
+                "_plus" if werkzeug.lower() == "yes" else "", port, " --insecure" if insecure.lower() == "yes" else ""
+            )
+        )
 
 
 def killserver():
@@ -65,8 +74,8 @@ def killserver():
 
 def _require_root():
     """Check if running as root."""
-    with hide('running'):
-        if local('whoami', capture=True) != "root":
+    with hide("running"):
+        if local("whoami", capture=True) != "root":
             abort("You must be root.")
 
 
@@ -96,9 +105,7 @@ def clear_sessions(venv=None):
     if venv is not None:
         ve = venv
     else:
-        ve = prompt("Enter the name of the "
-                    "sandbox whose sessions you would like to delete, or "
-                    "\"ion\" to clear production sessions:", default=ve)
+        ve = prompt("Enter the name of the " "sandbox whose sessions you would like to delete, or " '"ion" to clear production sessions:', default=ve)
 
     c = "redis-cli -n {0} KEYS {1}:session:* | sed 's/\"^.*\")//g'"
     keys_command = c.format(REDIS_SESSION_DB, ve)
@@ -136,7 +143,7 @@ def clear_cache(input=None):
 
 def contributors():
     """Print a list of contributors through git."""
-    with hide('running'):
+    with hide("running"):
         local("git --no-pager shortlog -ns")
 
 
