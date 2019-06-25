@@ -9,6 +9,7 @@ from django.conf import settings
 
 logger = logging.getLogger('intranet.settings')
 
+
 def get_id(obj):
     if obj is None:
         return None
@@ -16,6 +17,7 @@ def get_id(obj):
         return int(obj)
     except ValueError:
         return None
+
 
 def parse_db_url(db_url):
     parse.uses_netloc.append("postgres")
