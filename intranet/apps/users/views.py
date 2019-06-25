@@ -10,8 +10,6 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
 
-from raven.contrib.django.raven_compat.models import client
-
 from .models import Grade, User, Section, Course
 from ..auth.decorators import deny_restricted
 from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
@@ -60,7 +58,7 @@ def profile_view(request, user_id=None):
         except EighthSignup.DoesNotExist:
             sch["signup"] = None
         except MultipleObjectsReturned:
-            client.captureException()
+            # TODO: Capture exception
             sch["signup"] = None
         eighth_schedule.append(sch)
 

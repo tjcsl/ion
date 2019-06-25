@@ -17,8 +17,6 @@ from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
 
-from raven.contrib.django.raven_compat.models import client
-
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
 from ....users.models import User, Address, Course, Section
@@ -174,7 +172,7 @@ def start_of_year_view(request):
             content.seek(0)
             context["output"] = content.read()
         except Exception as e:
-            client.captureException()
+            # TODO: capture exception
             context["output"] = "An error occured while running the start of year scripts!\n\n{}".format(e)
         context["completed"] = True
     return render(request, "eighth/admin/start_of_year.html", context)

@@ -3,6 +3,10 @@ import datetime
 import os
 import re
 import sys
+import logging
+import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 
 from typing import Any, Tuple, Dict, List  # noqa
 
@@ -349,9 +353,6 @@ MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
 ]
 
-if PRODUCTION:
-    MIDDLEWARE += ["raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware"]
-
 # URLconf at urls.py
 ROOT_URLCONF = "intranet.urls"
 
@@ -519,9 +520,6 @@ INSTALLED_APPS = [
 # Django Channels Configuration (we use this for websockets)
 CHANNEL_LAYERS = {"default": {"BACKEND": "asgi_redis.RedisChannelLayer", "ROUTING": "intranet.routing.channel_routing"}}
 
-if PRODUCTION:
-    INSTALLED_APPS += ["raven.contrib.django.raven_compat"]
-
 # Eighth period default block date format
 # Post Django 1.8.7, this can no longer be used in templates.
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
@@ -537,6 +535,7 @@ def get_log(name):  # pylint: disable=W0621; 'name' is used as the target of a f
     return [name] if (PRODUCTION and not TRAVIS) else []
 
 
+# https://docs.djangoproject.com/en/dev/topics/logging/
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
@@ -550,8 +549,6 @@ LOGGING = {
         "request": {"()": "django_requestlogging.logging_filters.RequestFilter"},
     },
     "handlers": {
-        # send to sentry
-        "sentry": {"level": "ERROR", "class": "raven.contrib.django.raven_compat.handlers.SentryHandler", "filters": ["require_debug_false"]},
         # Log in console
         "console": {"level": "DEBUG", "class": "logging.StreamHandler", "filters": ["request"], "formatter": "simple"},
         # Log access in console
@@ -585,18 +582,25 @@ LOGGING = {
         },
     },
     "loggers": {
-        # Django errors get sent to the error log
-        "django": {"handlers": ["console", "sentry"] + get_log("error_log"), "level": "ERROR", "propagate": True},
-        # Intranet errors email admins and errorlog
-        "intranet": {"handlers": ["console", "sentry"] + get_log("error_log"), "level": LOG_LEVEL, "propagate": True},
+        # Django errors get sent to console and error logfile
+        "django": {"handlers": ["console"] + get_log("error_log"), "level": "ERROR", "propagate": True},
+        # Intranet errors go to console and error logfile
+        "intranet": {"handlers": ["console"] + get_log("error_log"), "level": LOG_LEVEL, "propagate": True},
         # Intranet access logs to accesslog
         "intranet_access": {"handlers": ["console_access"] + get_log("access_log"), "level": "DEBUG", "propagate": False},
         # Intranet auth logs to authlog
         "intranet_auth": {"handlers": ["console_access"] + get_log("auth_log"), "level": "DEBUG", "propagate": False},
-        "raven": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+        # errors that relate to sentry
         "sentry.errors": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
     },
 }
+
+if PRODUCTION:
+    # This is implicitly set up
+    sentry_logging = LoggingIntegration(
+        level=logging.INFO, event_level=logging.ERROR  # Capture info and above as breadcrumbs  # Send errors as events
+    )
+    sentry_sdk.init(SENTRY_PUBLIC_DSN, integrations=[DjangoIntegration(), sentry_logging])
 
 # The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
