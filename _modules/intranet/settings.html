@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4723) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4727) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -131,6 +131,10 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sentry_sdk</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk.integrations.logging</span> <span class="k">import</span> <span class="n">LoggingIntegration</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk.integrations.django</span> <span class="k">import</span> <span class="n">DjangoIntegration</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>  <span class="c1"># noqa</span>
 
@@ -154,7 +158,6 @@
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: bool</span>
 <span class="n">TJSTAR_MAP</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: bool</span>
 <span class="n">TWITTER_KEYS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Dict[str,str]</span>
-<span class="n">ADMINS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: List[Tuple[str,str]]</span>
 <span class="n">SENTRY_PUBLIC_DSN</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
 <span class="n">USE_SASL</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">NO_CACHE</span> <span class="o">=</span> <span class="kc">False</span>
@@ -177,6 +180,7 @@
 <span class="c1"># the HTTP Host header.</span>
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
 
+<span class="c1"># When school is scheduled to start</span>
 <span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
 
 <span class="c1"># Dates when hoco starts and ends</span>
@@ -189,6 +193,7 @@
 <span class="n">TESTING</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
 <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
 
+<span class="c1"># Whether to report master password attempts</span>
 <span class="n">MASTER_NOTIFY</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># DEBUG defaults to off in PRODUCTION, on otherwise.</span>
@@ -217,20 +222,22 @@
 
 <span class="n">INTERNAL_IPS</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">GlobList</span><span class="p">(</span><span class="n">_internal_ip_list</span><span class="p">)</span>
 
-<span class="c1"># Used for Filecenter access; FCPS external/internal IP ranges</span>
+<span class="c1"># Used for Printing access; FCPS external/internal IP ranges</span>
 <span class="n">_tj_ip_list</span> <span class="o">=</span> <span class="n">_internal_ip_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;151.188.0.0/18&quot;</span><span class="p">,</span> <span class="s2">&quot;151.188.192.0/18&quot;</span><span class="p">,</span> <span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">]</span>
 
 <span class="n">TJ_IPS</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">GlobList</span><span class="p">(</span><span class="n">_tj_ip_list</span><span class="p">)</span>
 
 <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
 
+<span class="c1"># What login_required decorator redirects to</span>
+<span class="c1"># https://docs.djangoproject.com/en/dev/ref/settings/#login-url</span>
 <span class="n">LOGIN_URL</span> <span class="o">=</span> <span class="s2">&quot;/login&quot;</span>
 <span class="n">LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
 
+<span class="c1"># Whether to perform an HTTP redirect to append a slash</span>
 <span class="n">APPEND_SLASH</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="c1"># Email backend and mailserver configuration</span>
-
+<span class="c1"># Email notifications backend and mailserver configuration</span>
 <span class="n">EMAIL_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;django.core.mail.backends.smtp.EmailBackend&quot;</span>
 <span class="n">EMAIL_HOST</span> <span class="o">=</span> <span class="s2">&quot;mail.tjhsst.edu&quot;</span>
 <span class="n">EMAIL_PORT</span> <span class="o">=</span> <span class="mi">25</span>
@@ -238,19 +245,11 @@
 <span class="n">EMAIL_SUBJECT_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;[Ion] &quot;</span>
 <span class="n">EMAIL_ANNOUNCEMENTS</span> <span class="o">=</span> <span class="kc">True</span>
 
+<span class="c1"># Address to send messages from</span>
 <span class="n">EMAIL_FROM</span> <span class="o">=</span> <span class="s2">&quot;ion-noreply@tjhsst.edu&quot;</span>
 
-<span class="c1"># Address to send production error messages</span>
-<span class="c1"># define in secret.py</span>
-
-<span class="k">if</span> <span class="n">ADMINS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ADMINS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span> <span class="s2">&quot;root@localhost&quot;</span><span class="p">)]</span>
-
 <span class="c1"># Use PostgreSQL database</span>
-
 <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">:</span> <span class="s2">&quot;django_prometheus.db.backends.postgresql&quot;</span><span class="p">,</span> <span class="s2">&quot;CONN_MAX_AGE&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
-
-<span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
 <span class="c1"># Address to send feedback messages to</span>
 <span class="n">FEEDBACK_EMAIL</span> <span class="o">=</span> <span class="s2">&quot;intranet@tjhsst.edu&quot;</span>
@@ -277,14 +276,6 @@
 <span class="c1">############################################</span>
 
 <span class="n">SILENCED_SYSTEM_CHECKS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="c1"># Django 1.9 gives the warning that &quot;Your url pattern has a regex beginning with</span>
-    <span class="c1"># a &#39;/&#39;. Remove this slash as it is unnecessary.&quot; In our use case, the slash actually</span>
-    <span class="c1"># is important; in urls.py we include() a separate urls.py inside of each app, and the</span>
-    <span class="c1"># pattern for each does not end in a slash. This allows us to match the index page of</span>
-    <span class="c1"># the app without a slash, and then we add the slash manually in every other rule.</span>
-    <span class="c1"># Without this, we&#39;d have urls like /announcements/?show_all=true which is just ugly.</span>
-    <span class="c1"># Thus, we silence this system check. -- JW, 12/30/2015</span>
-    <span class="s2">&quot;urls.W002&quot;</span><span class="p">,</span>
     <span class="c1"># W001 doesn&#39;t apply, as we use nginx to handle SecurityMiddleware&#39;s functions.</span>
     <span class="s2">&quot;security.W001&quot;</span><span class="p">,</span>
     <span class="c1"># Suppress W019, as we use frames in the signage module.</span>
@@ -417,7 +408,7 @@
     <span class="s2">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="c1"># Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage</span>
+<span class="c1"># Default to Argon2, see https://docs.djangoproject.com/en/dev/topics/auth/passwords/#argon2-usage</span>
 <span class="n">PASSWORD_HASHERS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;django.contrib.auth.hashers.Argon2PasswordHasher&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django.contrib.auth.hashers.PBKDF2PasswordHasher&quot;</span><span class="p">,</span>
@@ -486,13 +477,9 @@
     <span class="s2">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># Access log</span>
     <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
-    <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
     <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django_prometheus.middleware.PrometheusAfterMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Prometheus after</span>
 <span class="p">]</span>
-
-<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
-    <span class="n">MIDDLEWARE</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware&quot;</span><span class="p">]</span>
 
 <span class="c1"># URLconf at urls.py</span>
 <span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;intranet.urls&quot;</span>
@@ -531,8 +518,6 @@
 <span class="c1"># Cacheops configuration</span>
 <span class="c1"># may be removed in the future</span>
 <span class="n">CACHEOPS_REDIS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> <span class="s2">&quot;db&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;socket_timeout&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-
-<span class="c1"># CACHEOPS_DEFAULTS = {&quot;ops&quot;: &quot;all&quot;, &quot;cache_on_save&quot;: True, &quot;timeout&quot;: int(datetime.timedelta(hours=24).total_seconds())}</span>
 
 <span class="n">CACHEOPS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;eighth.*&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())},</span>  <span class="c1"># Only used for caching activity, block lists</span>
@@ -596,7 +581,7 @@
     <span class="p">),</span>
 <span class="p">}</span>
 
-<span class="c1"># Django Oauth Toolkit configuration</span>
+<span class="c1"># Django OAuth Toolkit configuration</span>
 <span class="n">OAUTH2_PROVIDER</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># this is the list of available scopes</span>
     <span class="s2">&quot;SCOPES&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;read&quot;</span><span class="p">:</span> <span class="s2">&quot;Read scope&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">:</span> <span class="s2">&quot;Write scope&quot;</span><span class="p">},</span>
@@ -663,9 +648,6 @@
 <span class="c1"># Django Channels Configuration (we use this for websockets)</span>
 <span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;asgi_redis.RedisChannelLayer&quot;</span><span class="p">,</span> <span class="s2">&quot;ROUTING&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.routing.channel_routing&quot;</span><span class="p">}}</span>
 
-<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
-    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;raven.contrib.django.raven_compat&quot;</span><span class="p">]</span>
-
 <span class="c1"># Eighth period default block date format</span>
 <span class="c1"># Post Django 1.8.7, this can no longer be used in templates.</span>
 <span class="n">EIGHTH_BLOCK_DATE_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;D, N j, Y&quot;</span>
@@ -681,6 +663,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span></div>
 
 
+<span class="c1"># https://docs.djangoproject.com/en/dev/topics/logging/</span>
 <span class="n">LOGGING</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;disable_existing_loggers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -694,8 +677,6 @@
         <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;django_requestlogging.logging_filters.RequestFilter&quot;</span><span class="p">},</span>
     <span class="p">},</span>
     <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="c1"># send to sentry</span>
-        <span class="s2">&quot;sentry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;raven.contrib.django.raven_compat.handlers.SentryHandler&quot;</span><span class="p">,</span> <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;require_debug_false&quot;</span><span class="p">]},</span>
         <span class="c1"># Log in console</span>
         <span class="s2">&quot;console&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.StreamHandler&quot;</span><span class="p">,</span> <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span> <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span><span class="p">},</span>
         <span class="c1"># Log access in console</span>
@@ -729,18 +710,25 @@
         <span class="p">},</span>
     <span class="p">},</span>
     <span class="s2">&quot;loggers&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="c1"># Django errors get sent to the error log</span>
-        <span class="s2">&quot;django&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;sentry&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-        <span class="c1"># Intranet errors email admins and errorlog</span>
-        <span class="s2">&quot;intranet&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;sentry&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">LOG_LEVEL</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="c1"># Django errors get sent to console and error logfile</span>
+        <span class="s2">&quot;django&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="c1"># Intranet errors go to console and error logfile</span>
+        <span class="s2">&quot;intranet&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">LOG_LEVEL</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
         <span class="c1"># Intranet access logs to accesslog</span>
         <span class="s2">&quot;intranet_access&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;access_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
         <span class="c1"># Intranet auth logs to authlog</span>
         <span class="s2">&quot;intranet_auth&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;auth_log&quot;</span><span class="p">),</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-        <span class="s2">&quot;raven&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">],</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="c1"># errors that relate to sentry</span>
         <span class="s2">&quot;sentry.errors&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">],</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
     <span class="p">},</span>
 <span class="p">}</span>
+
+<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
+    <span class="c1"># This is implicitly set up</span>
+    <span class="n">sentry_logging</span> <span class="o">=</span> <span class="n">LoggingIntegration</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">event_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>  <span class="c1"># Capture info and above as breadcrumbs  # Send errors as events</span>
+    <span class="p">)</span>
+    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">SENTRY_PUBLIC_DSN</span><span class="p">,</span> <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">DjangoIntegration</span><span class="p">(),</span> <span class="n">sentry_logging</span><span class="p">])</span>
 
 <span class="c1"># The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR</span>
 <span class="n">SHOW_DEBUG_TOOLBAR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SHOW_DEBUG_TOOLBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;YES&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span>
