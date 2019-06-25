@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import ipaddress
 import logging
 import subprocess

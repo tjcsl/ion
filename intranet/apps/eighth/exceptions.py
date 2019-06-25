@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from collections import namedtuple
 
 from django import http

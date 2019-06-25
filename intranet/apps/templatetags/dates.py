@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 import logging
 from datetime import date as datetime_date

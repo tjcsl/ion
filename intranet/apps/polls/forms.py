@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from typing import List  # noqa
 
 from django import forms

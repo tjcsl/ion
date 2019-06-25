@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """Decorators that restrict views to certain types of users."""
 
 from django.contrib.auth.decorators import user_passes_test

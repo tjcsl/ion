@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 from django.conf import settings
 from .utils import get_start_date

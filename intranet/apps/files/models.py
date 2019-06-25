@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models

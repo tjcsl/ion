@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 # Original version taken from http://djangosnippets.org/snippets/186/
 # Original author: udfalkso
 # Modified version taken from http://djangosnippets.org/snippets/605/

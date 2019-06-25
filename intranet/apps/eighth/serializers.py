@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import collections
 import functools
 import logging

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import collections
 
 from django.core.management.base import BaseCommand

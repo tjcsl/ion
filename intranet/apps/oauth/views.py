@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from oauth2_provider.views.application import ApplicationUpdate
 
 

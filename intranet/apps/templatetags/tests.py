@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 import contextlib
 from io import StringIO

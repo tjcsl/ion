@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import time
 
 from django.core.management.base import BaseCommand
