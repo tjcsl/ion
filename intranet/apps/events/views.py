@@ -14,6 +14,7 @@ from .models import Event
 
 from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
+from ...utils.helpers import get_id
 
 logger = logging.getLogger(__name__)
 
@@ -297,9 +298,9 @@ def show_event_view(request):
         "users_hidden" in the EventUserMap model.
     """
     if request.method == "POST":
-        event_id = request.POST.get("event_id")
+        event_id = get_id(request.POST.get("event_id", None))
         if event_id:
-            event = Event.objects.get(id=event_id)
+            event = get_object_or_404(Event, id=event_id)
             event.user_map.users_hidden.remove(request.user)
             event.user_map.save()
             return http.HttpResponse("Unhidden")
@@ -317,9 +318,9 @@ def hide_event_view(request):
         "users_hidden" in the EventUserMap model.
     """
     if request.method == "POST":
-        event_id = request.POST.get("event_id")
+        event_id = get_id(request.POST.get("event_id", None))
         if event_id:
-            event = Event.objects.get(id=event_id)
+            event = get_object_or_404(Event, id=event_id)
             event.user_map.users_hidden.add(request.user)
             event.user_map.save()
             return http.HttpResponse("Hidden")
