@@ -3,11 +3,11 @@ import os
 import re
 import sys
 import logging
+from typing import Any, Tuple, Dict, List  # noqa
+
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
-
-from typing import Any, Tuple, Dict, List  # noqa
 
 if sys.version_info < (3, 5):
     # Require Python 3.5+
@@ -411,9 +411,7 @@ CACHES = {
     "default": {
         "OPTIONS": {
             # Avoid conflict between production and testing redis db
-            "DB": 1
-            if PRODUCTION
-            else 2
+            "DB": (1 if PRODUCTION else 2)
         }
     }
 }  # type: Dict[str,Dict[str,Any]]

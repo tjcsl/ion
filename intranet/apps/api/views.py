@@ -88,6 +88,5 @@ def api_root(request, format=None):  # pylint: disable=W0622; It doesn't appear 
     }), ("Bus", {
         "/bus": ["Get bus list", perma_reverse(request, "api_bus_list")],
         "/bus/<pk>": ["Get detail about specific route", perma_reverse(request, "api_bus_detail", kwargs={"pk": 3})],
-    })
-    ))
+    })))
     return Response(views)
