@@ -390,8 +390,6 @@ if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
 # may be removed in the future
 CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
 
-# CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
-
 CACHEOPS = {
     "eighth.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching activity, block lists
     "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
@@ -454,7 +452,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Django Oauth Toolkit configuration
+# Django OAuth Toolkit configuration
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     "SCOPES": {"read": "Read scope", "write": "Write scope"},
