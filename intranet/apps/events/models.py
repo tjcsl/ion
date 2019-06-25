@@ -35,7 +35,8 @@ class EventManager(Manager):
 
         These visible events will be those that either have no groups
         assigned to them (and are therefore public) or those in which
-        the user is a member.
+        the user is a member. It also includes all events created by
+        the user.
 
         """
 

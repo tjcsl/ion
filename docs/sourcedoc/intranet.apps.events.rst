@@ -36,6 +36,14 @@ intranet.apps.events.notifications module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.events.tests module
+---------------------------------
+
+.. automodule:: intranet.apps.events.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.events.urls module
 --------------------------------
 
