@@ -235,10 +235,7 @@ def modify_event_view(request, event_id=None):
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
-        if is_events_admin:
-            form = AdminEventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission("groups"))
-        else:
-            form = EventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission("groups"))
+        form = AdminEventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission("groups"))
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
@@ -250,10 +247,7 @@ def modify_event_view(request, event_id=None):
         else:
             messages.error(request, "Error modifying event.")
     else:
-        if is_events_admin:
-            form = AdminEventForm(instance=event, all_groups=request.user.has_admin_permission("groups"))
-        else:
-            form = EventForm(instance=event, all_groups=request.user.has_admin_permission("groups"))
+        form = AdminEventForm(instance=event, all_groups=request.user.has_admin_permission("groups"))
     context = {"form": form, "action": "modify", "action_title": "Modify", "id": event_id, "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
 
