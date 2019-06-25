@@ -146,14 +146,6 @@ CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 ############################################
 
 SILENCED_SYSTEM_CHECKS = [
-    # Django 1.9 gives the warning that "Your url pattern has a regex beginning with
-    # a '/'. Remove this slash as it is unnecessary." In our use case, the slash actually
-    # is important; in urls.py we include() a separate urls.py inside of each app, and the
-    # pattern for each does not end in a slash. This allows us to match the index page of
-    # the app without a slash, and then we add the slash manually in every other rule.
-    # Without this, we'd have urls like /announcements/?show_all=true which is just ugly.
-    # Thus, we silence this system check. -- JW, 12/30/2015
-    "urls.W002",
     # W001 doesn't apply, as we use nginx to handle SecurityMiddleware's functions.
     "security.W001",
     # Suppress W019, as we use frames in the signage module.
