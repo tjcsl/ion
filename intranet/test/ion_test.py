@@ -1,4 +1,3 @@
-
 from django.test import TestCase
 
 from ..apps.users.models import User
@@ -17,7 +16,7 @@ class IonTestCase(TestCase):
 
     def login(self):
         # We need to add the user to the db before trying to login as them.
-        User.objects.get_or_create(username='awilliam')
+        self.user = User.objects.get_or_create(username='awilliam')[0]
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             self.client.login(username='awilliam', password='dankmemes')
 
