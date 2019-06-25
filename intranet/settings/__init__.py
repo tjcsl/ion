@@ -26,7 +26,6 @@ SECRET_DATABASE_URL = None  # type: str
 MAINTENANCE_MODE = None  # type: bool
 TJSTAR_MAP = None  # type: bool
 TWITTER_KEYS = None  # type: Dict[str,str]
-ADMINS = None  # type: List[Tuple[str,str]]
 SENTRY_PUBLIC_DSN = None  # type: str
 USE_SASL = True
 NO_CACHE = False
@@ -49,6 +48,7 @@ EMERGENCY_MESSAGE = None  # type: str
 # the HTTP Host header.
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
 
+# When school is scheduled to start
 SCHOOL_START_DATE = datetime.date(2017, 8, 28)
 
 # Dates when hoco starts and ends
@@ -61,6 +61,7 @@ TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
 TESTING = "test" in sys.argv
 LOGGING_VERBOSE = PRODUCTION
 
+# Whether to report master password attempts
 MASTER_NOTIFY = False
 
 # DEBUG defaults to off in PRODUCTION, on otherwise.
@@ -89,20 +90,22 @@ if not PRODUCTION:
 
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
-# Used for Filecenter access; FCPS external/internal IP ranges
+# Used for Printing access; FCPS external/internal IP ranges
 _tj_ip_list = _internal_ip_list + ["151.188.0.0/18", "151.188.192.0/18", "10.0.0.0/8"]
 
 TJ_IPS = helpers.GlobList(_tj_ip_list)
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# What login_required decorator redirects to
+# https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
+# Whether to perform an HTTP redirect to append a slash
 APPEND_SLASH = False
 
-# Email backend and mailserver configuration
-
+# Email notifications backend and mailserver configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mail.tjhsst.edu"
 EMAIL_PORT = 25
@@ -115,14 +118,8 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 # Address to send production error messages
 # define in secret.py
 
-if ADMINS is None:
-    ADMINS = [("Dummy User", "root@localhost")]
-
 # Use PostgreSQL database
-
 DATABASES = {"default": {"ENGINE": "django_prometheus.db.backends.postgresql", "CONN_MAX_AGE": 30}}  # type: Dict[str,Dict[str,Any]]
-
-MANAGERS = ADMINS
 
 # Address to send feedback messages to
 FEEDBACK_EMAIL = "intranet@tjhsst.edu"
