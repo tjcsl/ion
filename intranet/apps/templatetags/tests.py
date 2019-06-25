@@ -1,5 +1,3 @@
-
-
 import contextlib
 from io import StringIO
 

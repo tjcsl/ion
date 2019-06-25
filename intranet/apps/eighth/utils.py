@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 
 DATE_FORMAT = "%m-%d-%Y"

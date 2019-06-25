@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 
 from django.contrib.auth.models import Group as DjangoGroup

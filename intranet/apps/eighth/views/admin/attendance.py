@@ -1,5 +1,3 @@
-
-
 import csv
 import logging
 from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta

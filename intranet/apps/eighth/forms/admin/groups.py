@@ -1,5 +1,3 @@
-
-
 from django import forms
 
 from ....groups.models import Group

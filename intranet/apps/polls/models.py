@@ -1,5 +1,3 @@
-
-
 from random import shuffle
 
 from django.contrib.auth.models import Group as DjangoGroup

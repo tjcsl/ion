@@ -1,4 +1,3 @@
-
 from django import forms
 from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 

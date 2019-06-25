@@ -1,4 +1,3 @@
-
 # pylint: disable=C0302; Allow more than 1000 lines
 import datetime
 import logging

@@ -1,5 +1,3 @@
-
-
 from django.utils import timezone
 
 from .models import Day, DayType

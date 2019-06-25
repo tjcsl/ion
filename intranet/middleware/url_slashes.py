@@ -1,6 +1,3 @@
-
-
-
 class FixSlashes:
 
     def __init__(self, get_response):

@@ -1,5 +1,3 @@
-
-
 import bleach
 
 ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'br', 'blockquote', 'code', 'em', 'hr', 'i', 'li', 'ol', 'strong', 'ul', 'iframe', 'img', 'div', 'p']

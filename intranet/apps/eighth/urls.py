@@ -1,5 +1,3 @@
-
-
 from django.conf.urls import include, url
 
 from .views import activities, attendance, profile, routers, signup

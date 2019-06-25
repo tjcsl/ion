@@ -1,5 +1,3 @@
-
-
 import logging
 from datetime import date as datetime_date
 from datetime import datetime

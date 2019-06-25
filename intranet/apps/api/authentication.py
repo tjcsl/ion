@@ -1,5 +1,3 @@
-
-
 from django.contrib import auth
 from django.views.decorators.debug import sensitive_variables
 

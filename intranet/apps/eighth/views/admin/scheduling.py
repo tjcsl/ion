@@ -1,5 +1,3 @@
-
-
 import logging
 
 from cacheops import invalidate_obj

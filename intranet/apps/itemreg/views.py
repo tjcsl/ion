@@ -1,5 +1,3 @@
-
-
 import logging
 from django import http
 from django.contrib import messages

@@ -1,4 +1,3 @@
-
 from oauth2_provider.views.application import ApplicationUpdate
 
 

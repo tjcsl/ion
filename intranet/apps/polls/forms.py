@@ -1,4 +1,3 @@
-
 from typing import List  # noqa
 
 from django import forms

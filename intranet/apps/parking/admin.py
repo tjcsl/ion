@@ -1,5 +1,3 @@
-
-
 from django.contrib import admin
 from django.template import Template, Context
 from django.utils.safestring import mark_safe

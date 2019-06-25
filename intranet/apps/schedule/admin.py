@@ -1,5 +1,3 @@
-
-
 from django.contrib import admin
 
 from .models import Block, CodeName, Day, DayType, Time

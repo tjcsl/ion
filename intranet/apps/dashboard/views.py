@@ -1,5 +1,3 @@
-
-
 import logging
 from datetime import date, time, datetime, timedelta
 from itertools import chain

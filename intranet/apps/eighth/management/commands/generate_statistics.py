@@ -1,5 +1,3 @@
-
-
 from django.core.management.base import BaseCommand
 
 from intranet.apps.eighth.models import EighthActivity
