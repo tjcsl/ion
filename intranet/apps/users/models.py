@@ -276,6 +276,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.first_name
 
+    def get_full_name(self):
+        """Return full name, e.g. Angela William."""
+        return self.full_name
+
     def get_short_name(self):
         """Get short (first) name of a user."""
         return self.short_name
