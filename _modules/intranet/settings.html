@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4727) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4729) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -723,12 +723,6 @@
     <span class="p">},</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
-    <span class="c1"># This is implicitly set up</span>
-    <span class="n">sentry_logging</span> <span class="o">=</span> <span class="n">LoggingIntegration</span><span class="p">(</span>
-        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">event_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>  <span class="c1"># Capture info and above as breadcrumbs  # Send errors as events</span>
-    <span class="p">)</span>
-    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">SENTRY_PUBLIC_DSN</span><span class="p">,</span> <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">DjangoIntegration</span><span class="p">(),</span> <span class="n">sentry_logging</span><span class="p">])</span>
 
 <span class="c1"># The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR</span>
 <span class="n">SHOW_DEBUG_TOOLBAR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SHOW_DEBUG_TOOLBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;YES&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span>
@@ -860,6 +854,14 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># Default testing db config.</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;USER&quot;</span><span class="p">:</span> <span class="s2">&quot;ion&quot;</span><span class="p">,</span> <span class="s2">&quot;PASSWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;pwd&quot;</span><span class="p">})</span>
+
+<span class="c1"># Set up sentry logging</span>
+<span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
+    <span class="c1"># This is implicitly set up but we do this just in case</span>
+    <span class="n">sentry_logging</span> <span class="o">=</span> <span class="n">LoggingIntegration</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">event_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>  <span class="c1"># Capture info and above as breadcrumbs  # Send errors as events</span>
+    <span class="p">)</span>
+    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">SENTRY_PUBLIC_DSN</span><span class="p">,</span> <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">DjangoIntegration</span><span class="p">(),</span> <span class="n">sentry_logging</span><span class="p">])</span>
 </pre></div>
 
     </div>
