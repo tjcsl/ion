@@ -266,7 +266,7 @@ def modify_event_view(request, event_id=None):
 @login_required
 @deny_restricted
 def delete_event_view(request, event_id):
-    """Delete event page. You may only delete an event if you were the creator or you are an
+    """Delete event page. You may only delete an event if you are an
     administrator. Confirmation page if not POST.
 
     event_id: event id
