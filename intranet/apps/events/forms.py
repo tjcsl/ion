@@ -6,7 +6,6 @@ from ..groups.models import Group
 
 
 class EventForm(forms.ModelForm):
-
     def __init__(self, all_groups=False, *args, **kwargs):
         super(EventForm, self).__init__(*args, **kwargs)
         if not all_groups:
@@ -21,13 +20,21 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         exclude = [
-            "added", "updated", "user", "scheduled_activity", "announcement", "attending", "links", "approved", "rejected", "approved_by",
-            "rejected_by"
+            "added",
+            "updated",
+            "user",
+            "scheduled_activity",
+            "announcement",
+            "attending",
+            "links",
+            "approved",
+            "rejected",
+            "approved_by",
+            "rejected_by",
         ]
 
 
 class AdminEventForm(forms.ModelForm):
-
     def __init__(self, all_groups=False, *args, **kwargs):
         super(AdminEventForm, self).__init__(*args, **kwargs)
         if not all_groups:

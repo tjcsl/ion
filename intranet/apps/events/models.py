@@ -14,12 +14,12 @@ from ...utils.deletion import set_historical_user
 
 class Link(models.Model):
     """A link about an item (Facebook event link, etc)."""
+
     url = models.URLField(max_length=2000)
     title = models.CharField(max_length=100)
 
 
 class EventQuerySet(models.query.QuerySet):
-
     def this_year(self):
         """ Get Events from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -27,7 +27,6 @@ class EventQuerySet(models.query.QuerySet):
 
 
 class EventManager(Manager):
-
     def get_queryset(self):
         return EventQuerySet(self.model, using=self._db)
 
@@ -71,6 +70,7 @@ class EventUserMap(models.Model):
             A many-to-many field of Users who have hidden this event
 
     """
+
     event = models.OneToOneField("Event", related_name="_user_map", on_delete=models.CASCADE)
     users_hidden = models.ManyToManyField(User, blank=True, related_name="events_hidden")
 
@@ -126,6 +126,7 @@ class Event(models.Model):
         Whether this event is open to parents, students, or both, shown on the login page.
 
     """
+
     objects = EventManager()
 
     title = models.CharField(max_length=100)
@@ -179,7 +180,7 @@ class Event(models.Model):
 
     def created_hook(self, request):
         """Run when an event is created."""
-        if not request.user.has_admin_permission('events'):
+        if not request.user.has_admin_permission("events"):
             # Send approval email
             event_approval_request(request, self)
 
