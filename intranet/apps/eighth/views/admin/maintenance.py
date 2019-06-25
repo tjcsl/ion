@@ -45,6 +45,7 @@ class ImportThread(threading.Thread):
         logger.debug(self.email)
 
     def handle_user(self, u, row, index_dict, content):
+        # pylint: disable=protected-access
         u.first_name = row[index_dict["First Name"]].strip()
         u.last_name = row[index_dict["Last Name"]].strip()
         u.middle_name = row[index_dict["Middle Name"]].strip()
