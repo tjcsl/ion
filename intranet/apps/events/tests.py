@@ -32,7 +32,7 @@ class EventsTest(IonTestCase):
         response = self.client.post(reverse("modify_event", args=[event.id]))
         self.assertEqual(response.status_code, 403)
 
-        user = self.make_admin()
+        self.make_admin()
 
         # Test nonexistent event ids
         response = self.client.get(reverse("modify_event", args=[9999]))
@@ -42,8 +42,7 @@ class EventsTest(IonTestCase):
 
         # Test GET of valid event id
         response = self.client.get(reverse("modify_event", args=[event.id]))
-        expected_context = {"action": "modify", "action_title": "Modify",
-                "id": str(event.id), "is_events_admin": True}
+        expected_context = {"action": "modify", "action_title": "Modify", "id": str(event.id), "is_events_admin": True}
         for key in expected_context:
             self.assertEqual(response.context[key], expected_context[key])
 
@@ -83,7 +82,7 @@ class EventsTest(IonTestCase):
         response = self.client.post(reverse("delete_event", args=[event.id]))
         self.assertEqual(response.status_code, 403)
 
-        user = self.make_admin()
+        self.make_admin()
 
         # Test GET for valid event
         response = self.client.get(reverse("delete_event", args=[event.id]))
