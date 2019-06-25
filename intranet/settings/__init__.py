@@ -595,12 +595,6 @@ LOGGING = {
     },
 }
 
-if PRODUCTION:
-    # This is implicitly set up
-    sentry_logging = LoggingIntegration(
-        level=logging.INFO, event_level=logging.ERROR  # Capture info and above as breadcrumbs  # Send errors as events
-    )
-    sentry_sdk.init(SENTRY_PUBLIC_DSN, integrations=[DjangoIntegration(), sentry_logging])
 
 # The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
@@ -732,3 +726,11 @@ elif PRODUCTION or SECRET_DATABASE_URL is not None:
 else:
     # Default testing db config.
     DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
+
+# Set up sentry logging
+if PRODUCTION:
+    # This is implicitly set up but we do this just in case
+    sentry_logging = LoggingIntegration(
+        level=logging.INFO, event_level=logging.ERROR  # Capture info and above as breadcrumbs  # Send errors as events
+    )
+    sentry_sdk.init(SENTRY_PUBLIC_DSN, integrations=[DjangoIntegration(), sentry_logging])
