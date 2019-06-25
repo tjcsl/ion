@@ -1,12 +1,12 @@
+"""
+Tests for the filecenter.
+"""
 from unittest.mock import MagicMock, patch
 
 from django.urls import reverse
 
 from .models import Host
 from ...test.ion_test import IonTestCase
-"""
-Tests for the filecenter.
-"""
 
 
 class FilesTest(IonTestCase):
