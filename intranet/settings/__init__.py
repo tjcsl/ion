@@ -113,10 +113,8 @@ EMAIL_USE_TLS = False  # FIXME: use tls
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 EMAIL_ANNOUNCEMENTS = True
 
+# Address to send messages from
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
-
-# Address to send production error messages
-# define in secret.py
 
 # Use PostgreSQL database
 DATABASES = {"default": {"ENGINE": "django_prometheus.db.backends.postgresql", "CONN_MAX_AGE": 30}}  # type: Dict[str,Dict[str,Any]]
@@ -278,7 +276,7 @@ AUTHENTICATION_BACKENDS = (
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
     "oauth2_provider.backends.OAuth2Backend",
 )
-# Default to Argon2, see https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#argon2-usage
+# Default to Argon2, see https://docs.djangoproject.com/en/dev/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
@@ -347,7 +345,6 @@ MIDDLEWARE = [
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
     "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
-    # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "simple_history.middleware.HistoryRequestMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
 ]
