@@ -45,7 +45,7 @@ class ProfileTest(IonTestCase):
         address = Address.objects.get_or_create(
             street="6560 Braddock Rd", city="Alexandria", state="VA", postal_code="22312"
         )[0]
-        self.user.properties._address = address
+        self.user.properties._address = address # pylint: disable=protected-access
         self.user.properties.save()
         self.user.save()
         self.application = Application(
@@ -66,7 +66,7 @@ class ProfileTest(IonTestCase):
         )
         self.client_credentials_application.save()
 
-        oauth2_settings._SCOPES = ["read", "write"]
+        oauth2_settings._SCOPES = ["read", "write"] # pylint: disable=protected-access
 
     def make_token(self):
         tok = AccessToken.objects.create(

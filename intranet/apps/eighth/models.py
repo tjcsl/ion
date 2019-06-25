@@ -739,7 +739,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Gets the title for the activity, appending the title of the scheduled activity to the
         activity's name and flags."""
         cancelled_str = " (Cancelled)" if self.cancelled else ""
-        name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str
+        name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str # pylint: disable=protected-access
         if self.special and not self.activity.special:
             name_with_flags = "Special: " + name_with_flags
         return name_with_flags
