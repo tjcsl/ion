@@ -82,7 +82,6 @@ def events_view(request):
         "events": events_categories,
         "num_events": sum([x["events"].count() for x in events_categories]),
         "is_events_admin": is_events_admin,
-        "events_admin": is_events_admin,
         "show_attend": True,
         "show_icon": True
     }
