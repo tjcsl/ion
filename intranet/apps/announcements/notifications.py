@@ -150,7 +150,6 @@ def announcement_posted_email(request, obj, send_all=False):
 
         if not settings.PRODUCTION and len(emails) > 3:
             raise exceptions.PermissionDenied("You're about to email a lot of people, and you aren't in production!")
-            return
 
         base_url = request.build_absolute_uri(reverse('index'))
         url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
