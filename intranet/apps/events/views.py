@@ -272,12 +272,8 @@ def delete_event_view(request, event_id):
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
-        try:
-            event.delete()
-            messages.success(request, "Successfully deleted event.")
-        except Event.DoesNotExist:
-            pass
-
+        event.delete()
+        messages.success(request, "Successfully deleted event.")
         return redirect("events")
     else:
         return render(request, "events/delete.html", {"event": event})
