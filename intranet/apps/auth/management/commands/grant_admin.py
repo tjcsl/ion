@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
-from ....eighth.models import User
 from ....groups.models import Group
 
 
@@ -13,5 +13,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         g = Group.objects.get_or_create(name="admin_%s" % options['admin_group'])[0]
-        User.objects.get_or_create(username=options['username'])[0].groups.add(g)
+        get_user_model().objects.get_or_create(username=options['username'])[0].groups.add(g)
         self.stdout.write('Added %s to %s' % (options['username'], options['admin_group']))

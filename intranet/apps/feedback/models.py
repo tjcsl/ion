@@ -1,10 +1,9 @@
+from django.conf import settings
 from django.db import models
-
-from ..users.models import User
 
 
 class Feedback(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     comments = models.CharField(max_length=50000)
     date = models.DateTimeField(auto_now=True)
 

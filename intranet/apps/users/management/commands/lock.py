@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
-
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 
 
 class Command(BaseCommand):
@@ -8,7 +7,7 @@ class Command(BaseCommand):
     args = "<u>"
 
     def handle(self, *args, **options):
-        u = User.objects.get(username=args[0])
+        u = get_user_model().objects.get(username=args[0])
         self.stdout.write("%s - %s - %s" % (u, u.user_locked, str(u.last_login)))
         u.user_locked = True
         u.save()

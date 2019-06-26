@@ -1,8 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-from ..users.models import User
-
 
 class College(models.Model):
     name = models.CharField(max_length=1000)
@@ -23,7 +21,7 @@ class SeniorManager(models.Manager):
 
 class Senior(models.Model):
     objects = SeniorManager()
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     college = models.ForeignKey(College, blank=True, null=True, on_delete=models.CASCADE)
     MAJORS = [
         "Computer Science", "Engineering", "Education", "Mathematics", "Physics", "Biology", "Chemistry", "Geology", "History", "Literature",

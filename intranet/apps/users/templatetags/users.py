@@ -1,9 +1,9 @@
 import logging
 
 from django import template
+from django.contrib.auth import get_user_model
 
 from intranet.middleware import threadlocals
-from ..models import User
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 @register.filter
 def user_attr(username, attribute):
     """Gets an attribute of the user with the given username."""
-    return getattr(User.objects.get(username=username), attribute)
+    return getattr(get_user_model().objects.get(username=username), attribute)
 
 
 @register.filter

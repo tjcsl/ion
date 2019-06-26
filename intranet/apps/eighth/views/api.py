@@ -2,13 +2,12 @@ import logging
 from datetime import datetime
 
 from django.http import Http404
+from django.contrib.auth import get_user_model
 
 from rest_framework import generics, status, views, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-
-from intranet.apps.users.models import User
 
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
 from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
@@ -98,7 +97,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
     def list(self, request, user_id=None):
         if not user_id:
             user_id = request.user.id
-        elif not User.objects.get(id=user_id).can_view_eighth:
+        elif not get_user_model().objects.get(id=user_id).can_view_eighth:
             serialized = EighthSignupSerializer([], context={"request": request}, many=True)
             return Response(serialized.data)
 
@@ -112,7 +111,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
     def create(self, request, user_id=None):
         if user_id:
-            user = User.objects.get(id=user_id)
+            user = get_user_model().objects.get(id=user_id)
         else:
             user = request.user
 
@@ -145,7 +144,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        user = User.objects.get(id=user_id)
+        user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
     def list(self, request):
@@ -154,7 +153,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
 
     def create(self, request, user_id=None):
         if user_id:
-            user = User.objects.get(id=user_id)
+            user = get_user_model().objects.get(id=user_id)
         else:
             user = request.user
 
@@ -180,12 +179,12 @@ class EighthUserFavoritesAdd(generics.CreateAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        user = User.objects.get(id=user_id)
+        user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
     def create(self, request, user_id=None):
         if user_id:
-            user = User.objects.get(id=user_id)
+            user = get_user_model().objects.get(id=user_id)
         else:
             user = request.user
         try:
@@ -205,7 +204,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        user = User.objects.get(id=user_id)
+        user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
     def list(self, request):
@@ -215,7 +214,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
 
     def create(self, request, user_id=None):
         if user_id:
-            user = User.objects.get(id=user_id)
+            user = get_user_model().objects.get(id=user_id)
         else:
             user = request.user
 

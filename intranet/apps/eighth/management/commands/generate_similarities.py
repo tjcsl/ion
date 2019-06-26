@@ -1,8 +1,8 @@
 import time
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
-from intranet.apps.users.models import User
 from intranet.apps.eighth.models import EighthActivity, EighthActivitySimilarity
 
 
@@ -22,7 +22,7 @@ class Command(BaseCommand):
             freq_users = act.frequent_users
             for u_info in freq_users:
                 u_id = u_info['eighthsignup_set__user']
-                for act_info in User.objects.get(id=u_id).frequent_signups.exclude(scheduled_activity__activity=act):
+                for act_info in get_user_model().objects.get(id=u_id).frequent_signups.exclude(scheduled_activity__activity=act):
                     act_id = act_info['scheduled_activity__activity']
                     act2 = EighthActivity.undeleted_objects.get(id=act_id)
                     if EighthActivitySimilarity.objects.filter(activity_set__id=act.id).filter(activity_set__id=act2.id).exists():

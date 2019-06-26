@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 from intranet.apps.groups.models import Group
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         students_grp.save()
 
         for gr in [settings.SENIOR_GRADUATION_YEAR + y for y in range(0, 4)]:
-            users = User.objects.users_in_year(gr)
+            users = get_user_model().objects.users_in_year(gr)
             grp, _ = Group.objects.get_or_create(name="Class of {}".format(gr))
             grp_prop = grp.properties
             grp_prop.student_visible = True

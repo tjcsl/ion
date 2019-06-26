@@ -2,10 +2,10 @@ import logging
 from typing import List  # noqa
 
 from django import forms
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from ...models import EighthActivity, EighthScheduledActivity
-from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -110,11 +110,11 @@ class ActivityForm(forms.ModelForm):
         # the consequences of error are not significant.
 
         # FIXME: TODO: What we would like to do here (from users.forms):
-        # self.fields["users_allowed"] = SortedUserMultipleChoiceField(queryset=User.objects.get_students())
+        # self.fields["users_allowed"] = SortedUserMultipleChoiceField(queryset=get_user_model().objects.get_students())
         # HOWEVER: this will result in LDAP information being queried for *all 1800 users.*
         # We need a better way to accomplish this. The solution below works because it only prints
         # the username field which doesn't require an LDAP query to access.
-        student_objects = User.objects.get_students()
+        student_objects = get_user_model().objects.get_students()
         self.fields["users_allowed"].queryset = student_objects
         self.fields["users_blacklisted"].queryset = student_objects
 

@@ -1,9 +1,9 @@
 import csv
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 from intranet.apps.eighth.models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -17,8 +17,8 @@ class Command(BaseCommand):
             for row in absences:
                 bid, uid = row
                 try:
-                    usr = User.objects.get(id=uid)
-                except User.DoesNotExist:
+                    usr = get_user_model().objects.get(id=uid)
+                except get_user_model().DoesNotExist:
                     self.stdout.write("User {} doesn't exist, bid {}".format(usr, bid))
                 else:
                     try:

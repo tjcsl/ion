@@ -4,11 +4,12 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
+from django.contrib.auth import get_user_model
 
 from ..eighth.exceptions import SignupException
 from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..groups.models import Group
-from ..users.models import User, Email
+from ..users.models import Email
 from ...test.ion_test import IonTestCase
 from .notifications import signup_status_email, absence_email
 
@@ -19,18 +20,18 @@ class EighthTest(IonTestCase):
     """
 
     def setUp(self):
-        self.user = User.objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
+        self.user = get_user_model().objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
 
     def make_admin(self):
         self.login()
         # Make user an eighth admin
-        user = User.objects.get_or_create(username='awilliam')[0]
+        user = get_user_model().objects.get_or_create(username='awilliam')[0]
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
         return user
 
     def create_sponsor(self):
-        user = User.objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
+        user = get_user_model().objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
         return user
 
     def test_sponsor(self):
@@ -145,7 +146,7 @@ class EighthTest(IonTestCase):
         """Do some sample signups."""
 
         self.make_admin()
-        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -159,7 +160,7 @@ class EighthTest(IonTestCase):
         """Make sure users cannot sign up for blacklisted activities."""
 
         self.make_admin()
-        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -222,7 +223,7 @@ class EighthTest(IonTestCase):
     def test_both_blocks(self):
         """Make sure that signing up for a both blocks activity works."""
         self.make_admin()
-        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
         block1 = self.add_block(date='2015-01-01', block_letter='A')
@@ -254,7 +255,7 @@ class EighthTest(IonTestCase):
 
     def test_signup_status_email(self):
         self.make_admin()
-        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
         block1 = self.add_block(date="2015-01-01", block_letter='A')
         block2 = self.add_block(date="2015-01-01", block_letter='B')
@@ -282,7 +283,7 @@ class EighthTest(IonTestCase):
 
     def test_absence_email(self):
         self.make_admin()
-        user1 = User.objects.create(username="user1")
+        user1 = get_user_model().objects.create(username="user1")
         Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
         block1 = self.add_block(date="2015-01-01", block_letter='A')
         act1 = self.add_activity(name='Test Activity 1')
@@ -321,7 +322,7 @@ class EighthTest(IonTestCase):
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
         self.make_admin()
-        user1 = User.objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         block1 = self.add_block(date='3000-11-11', block_letter='A')
 
         room1 = self.add_room(name="room1", capacity=1)
@@ -349,7 +350,7 @@ class EighthTest(IonTestCase):
         self.assertTrue(EighthSignup.objects.get(user=user1, scheduled_activity=schact1).was_absent)
 
         # Make sure student has correct number of absences.
-        self.assertEqual(User.objects.get(id=user1.id).absence_count(), 1)
+        self.assertEqual(get_user_model().objects.get(id=user1.id).absence_count(), 1)
 
     def test_add_sponsor_form(self):
         # Make sure user not in database is not created

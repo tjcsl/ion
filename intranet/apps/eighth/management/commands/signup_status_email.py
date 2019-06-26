@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 from intranet.apps.eighth.models import EighthBlock, EighthSignup
 from intranet.apps.eighth.notifications import signup_status_email
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -27,9 +27,9 @@ class Command(BaseCommand):
 
         log = not options["silent"]
         if options["everyone"]:
-            users = User.objects.get_students()
+            users = get_user_model().objects.get_students()
         else:
-            users = User.objects.filter(receive_eighth_emails=True)
+            users = get_user_model().objects.filter(receive_eighth_emails=True)
         next_blocks = EighthBlock.objects.get_next_upcoming_blocks()
 
         if next_blocks.count() < 1:

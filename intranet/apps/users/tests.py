@@ -3,13 +3,14 @@ import datetime
 
 from django.conf import settings
 from django.core.management import call_command
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
-from .models import User, Address
+from .models import Address
 from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
@@ -21,7 +22,7 @@ class DynamicGroupTest(IonTestCase):
     def test_dynamic_groups(self):
         out = StringIO()
         with self.settings(SENIOR_GRADUATION_YEAR=2016):
-            User.objects.get_or_create(
+            get_user_model().objects.get_or_create(
                 username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1
             )
             call_command("dynamic_groups", stdout=out)
@@ -41,7 +42,7 @@ class DynamicGroupTest(IonTestCase):
 
 class ProfileTest(IonTestCase):
     def setUp(self):
-        self.user = User.objects.get_or_create(username="awilliam")[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam")[0]
         address = Address.objects.get_or_create(
             street="6560 Braddock Rd", city="Alexandria", state="VA", postal_code="22312"
         )[0]

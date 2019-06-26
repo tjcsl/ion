@@ -1,5 +1,6 @@
 from django import forms
-from .models import User, Address
+from django.contrib.auth import get_user_model
+from .models import Address
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -23,7 +24,7 @@ class ProfileEditForm(forms.ModelForm):
     # ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender"]
 
 

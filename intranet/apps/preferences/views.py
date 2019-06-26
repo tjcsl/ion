@@ -2,11 +2,12 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import (BusRouteForm, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, PhoneFormset, EmailFormset, WebsiteFormset)
-from ..users.models import User, Email
+from ..users.models import Email
 from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
@@ -331,9 +332,9 @@ def preferences_view(request):
 def privacy_options_view(request):
     """View and edit privacy options for a user."""
     if "user" in request.GET:
-        user = User.objects.user_with_ion_id(request.GET.get("user"))
+        user = get_user_model().objects.user_with_ion_id(request.GET.get("user"))
     elif "student_id" in request.GET:
-        user = User.objects.user_with_student_id(request.GET.get("student_id"))
+        user = get_user_model().objects.user_with_student_id(request.GET.get("student_id"))
     else:
         user = request.user
 

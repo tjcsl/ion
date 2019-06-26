@@ -4,11 +4,11 @@ import datetime
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
-from ..users.models import User
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom
 from ...test.ion_test import IonTestCase
@@ -20,7 +20,7 @@ class ApiTest(IonTestCase):
     """Tests for the api module."""
 
     def setUp(self):
-        self.user = User.objects.get_or_create(
+        self.user = get_user_model().objects.get_or_create(
             username="awilliam", graduation_year=(settings.SENIOR_GRADUATION_YEAR + 1)
         )[0]
         self.application = Application(

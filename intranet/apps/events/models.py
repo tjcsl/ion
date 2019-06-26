@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
@@ -7,7 +8,6 @@ from django.db.models import Manager, Q
 from .notifications import event_approval_request
 from ..announcements.models import Announcement
 from ..eighth.models import EighthScheduledActivity
-from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 from ...utils.deletion import set_historical_user
 
@@ -73,7 +73,7 @@ class EventUserMap(models.Model):
     """
 
     event = models.OneToOneField("Event", related_name="_user_map", on_delete=models.CASCADE)
-    users_hidden = models.ManyToManyField(User, blank=True, related_name="events_hidden")
+    users_hidden = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="events_hidden")
 
     def __str__(self):
         return "UserMap: {}".format(self.event.title)
@@ -138,22 +138,22 @@ class Event(models.Model):
 
     time = models.DateTimeField()
     location = models.CharField(max_length=100)
-    user = models.ForeignKey(User, null=True, on_delete=set_historical_user)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=set_historical_user)
 
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True, on_delete=models.CASCADE)
     announcement = models.ForeignKey(Announcement, null=True, blank=True, related_name="event", on_delete=models.CASCADE)
 
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
-    attending = models.ManyToManyField(User, blank=True, related_name="attending")
+    attending = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="attending")
     show_attending = models.BooleanField(default=True)
 
     show_on_dashboard = models.BooleanField(default=True)
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
-    approved_by = models.ForeignKey(User, null=True, related_name="approved_event", on_delete=set_historical_user)
-    rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event", on_delete=set_historical_user)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name="approved_event", on_delete=set_historical_user)
+    rejected_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name="rejected_event", on_delete=set_historical_user)
 
     public = models.BooleanField(default=True, verbose_name="Show on Login Page")
 
@@ -217,5 +217,5 @@ class Event(models.Model):
 
 
 class TJStarUUIDMap(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     uuid = models.CharField(max_length=40)

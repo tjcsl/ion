@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from django import http
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -11,7 +12,6 @@ from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required, deny_restricted
 from ...users.forms import ProfileEditForm  # , AddressForm
-from ...users.models import User
 from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def date_fmt(date):
 @eighth_admin_required
 @deny_restricted
 def edit_profile_view(request, user_id=None):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(get_user_model(), id=user_id)
     # Disable address form temporarily -- okulkarni, 08/30/2018
     address_form = None
     if request.method == "POST":
@@ -35,7 +35,7 @@ def edit_profile_view(request, user_id=None):
             user = user_form.save()
             counselor_id = user_form.cleaned_data['counselor_id']
             if counselor_id:
-                counselor = User.objects.get(id=counselor_id)
+                counselor = get_user_model().objects.get(id=counselor_id)
                 user.properties.birthday = user_form.cleaned_data['birthday']
                 user.counselor = counselor
             # user.properties.address = address_form.save()
@@ -58,8 +58,8 @@ def edit_profile_view(request, user_id=None):
 def get_profile_context(request, user_id=None, date=None):
     if user_id:
         try:
-            profile_user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            profile_user = get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             raise http.Http404
     else:
         profile_user = request.user
@@ -155,8 +155,8 @@ def profile_view(request, user_id=None):
 def profile_history_view(request, user_id=None):
     if user_id:
         try:
-            profile_user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            profile_user = get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             raise http.Http404
     else:
         profile_user = request.user
@@ -195,8 +195,8 @@ def profile_history_view(request, user_id=None):
 def profile_often_view(request, user_id=None):
     if user_id:
         try:
-            profile_user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            profile_user = get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             raise http.Http404
     else:
         profile_user = request.user
@@ -230,8 +230,8 @@ def profile_often_view(request, user_id=None):
 def profile_signup_view(request, user_id=None, block_id=None):
     if user_id:
         try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            user = get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             raise http.Http404
     else:
         user = request.user

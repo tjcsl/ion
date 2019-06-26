@@ -4,12 +4,12 @@ import logging
 
 from django.db import transaction
 from django.db.models import Count
+from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from .models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist)
-from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -218,8 +218,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 name = sponsor["name"]
             elif sponsor["user_id"]:
                 try:
-                    name = User.objects.get(id=sponsor["user_id"]).last_name
-                except User.DoesNotExist:
+                    name = get_user_model().objects.get(id=sponsor["user_id"]).last_name
+                except get_user_model().DoesNotExist:
                     name = None
             else:
                 name = None
@@ -242,8 +242,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 name = sponsor["name"]
             elif sponsor["user_id"]:
                 try:
-                    name = User.objects.get(id=sponsor["user_id"]).last_name
-                except User.DoesNotExist:
+                    name = get_user_model().objects.get(id=sponsor["user_id"]).last_name
+                except get_user_model().DoesNotExist:
                     name = None
             else:
                 name = None
@@ -327,7 +327,7 @@ class UserSerializer(serializers.ModelSerializer):
         return reverse("api_user_profile_detail", args=[user.id], request=self.context["request"])
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ("id", "full_name", "username", "url")
 
 

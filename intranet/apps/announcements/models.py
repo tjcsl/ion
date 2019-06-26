@@ -1,12 +1,13 @@
 from datetime import datetime
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
 
 from ...utils.deletion import set_historical_user
-from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 
 
@@ -64,8 +65,8 @@ class AnnouncementUserMap(models.Model):
 
     """
     announcement = models.OneToOneField("Announcement", related_name="_user_map", on_delete=models.CASCADE)
-    users_hidden = models.ManyToManyField(User, blank=True, related_name="announcements_hidden")
-    users_seen = models.ManyToManyField(User, blank=True, related_name="announcements_seen")
+    users_hidden = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="announcements_hidden")
+    users_seen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="announcements_seen")
 
     def __str__(self):
         return "UserMap: {}".format(self.announcement.title)
@@ -96,7 +97,7 @@ class Announcement(models.Model):
     title = models.CharField(max_length=127)
     content = models.TextField()
     author = models.CharField(max_length=63, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=set_historical_user)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
@@ -147,13 +148,13 @@ class Announcement(models.Model):
     def is_visible_requester(self, user):
         try:
             return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             return False
 
     def is_visible_submitter(self, user):
         try:
             return (self.announcementrequest and user == self.announcementrequest.user) or self.user == user
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             return False
 
     @property
@@ -223,16 +224,16 @@ class AnnouncementRequest(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=True, blank=True, related_name="user", on_delete=set_historical_user)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="user", on_delete=set_historical_user)
 
-    teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
-    teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
+    teachers_requested = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=False, related_name="teachers_requested")
+    teachers_approved = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True, on_delete=models.CASCADE)
-    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by", on_delete=set_historical_user)
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="posted_by", on_delete=set_historical_user)
 
     rejected = models.BooleanField(default=False)
-    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by", on_delete=set_historical_user)
+    rejected_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="rejected_by", on_delete=set_historical_user)
 
     admin_email_sent = models.BooleanField(default=False)
 

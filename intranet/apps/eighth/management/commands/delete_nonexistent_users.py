@@ -2,8 +2,7 @@ import sys
 
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
-
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 
 
 class Command(BaseCommand):
@@ -25,7 +24,7 @@ class Command(BaseCommand):
                          "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
                          "===== WARNING! =====\n\n"
                          "Continue?")
-        for user in User.objects.all():
+        for user in get_user_model().objects.all():
             try:
                 user.first_name
             except ObjectDoesNotExist:

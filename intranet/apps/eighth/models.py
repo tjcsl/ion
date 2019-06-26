@@ -5,6 +5,7 @@ import logging
 from itertools import chain
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
@@ -15,7 +16,6 @@ from simple_history.models import HistoricalRecords
 
 from . import exceptions as eighth_exceptions
 from ..notifications.emails import email_send
-from ..users.models import User
 from ...utils.date import is_current_year, get_date_range_this_year
 from ...utils.deletion import set_historical_user
 
@@ -64,7 +64,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=set_historical_user)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user)
     department = models.CharField(max_length=20, choices=DEPARTMENTS, default="general")
     full_time = models.BooleanField(default=True)
     online_attendance = models.BooleanField(default=True)
@@ -236,10 +236,10 @@ class EighthActivity(AbstractBaseEighthModel):
 
     restricted = models.BooleanField(default=False)
 
-    users_allowed = models.ManyToManyField(User, related_name="restricted_activity_set", blank=True)
+    users_allowed = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="restricted_activity_set", blank=True)
     groups_allowed = models.ManyToManyField(DjangoGroup, related_name="restricted_activity_set", blank=True)
 
-    users_blacklisted = models.ManyToManyField(User, blank=True)
+    users_blacklisted = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
     freshmen_allowed = models.BooleanField(default=False)
     sophomores_allowed = models.BooleanField(default=False)
@@ -253,7 +253,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     admin_comments = models.CharField(max_length=1000, blank=True)
 
-    favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
+    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="favorited_activity_set", blank=True)
 
     similarities = models.ManyToManyField('EighthActivitySimilarity', related_name='activity_set', blank=True)
 
@@ -574,21 +574,21 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def num_signups(self):
         """How many people have signed up?"""
-        return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=User.objects.get_students()).count()
+        return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=get_user_model().objects.get_students()).count()
 
     def num_no_signups(self):
         """How many people have not signed up?"""
-        signup_users_count = User.objects.get_students().count()
+        signup_users_count = get_user_model().objects.get_students().count()
         return signup_users_count - self.num_signups()
 
     def get_unsigned_students(self):
         """Return a list of Users who haven't signed up for an activity."""
-        return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
+        return get_user_model().objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
 
     def get_hidden_signups(self):
         """ Return a list of Users who are *not* in the All Students list but have signed up for an activity.
             This is usually a list of signups for z-Withdrawn from TJ """
-        return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=User.objects.get_students())
+        return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=get_user_model().objects.get_students())
 
     @property
     def letter_width(self):
@@ -690,8 +690,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     block = models.ForeignKey(EighthBlock, on_delete=models.CASCADE)
     activity = models.ForeignKey(EighthActivity, on_delete=models.CASCADE)
-    members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
-    waitlist = models.ManyToManyField(User, through="EighthWaitlist", related_name="%(class)s_scheduledactivity_set")
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthSignup", related_name="eighthscheduledactivity_set")
+    waitlist = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthWaitlist", related_name="%(class)s_scheduledactivity_set")
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -923,7 +923,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if show:
                 ids.append(member.id)
 
-        return User.objects.filter(id__in=ids)
+        return get_user_model().objects.filter(id__in=ids)
 
     def get_hidden_members(self, user=None):
         """Get the members that you do not have permission to view.
@@ -1327,7 +1327,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     time = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, on_delete=set_historical_user)
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True,
                                            on_delete=models.CASCADE)
 
@@ -1447,7 +1447,7 @@ class EighthWaitlistManager(Manager):
 class EighthWaitlist(AbstractBaseEighthModel):
     objects = EighthWaitlistManager()
     time = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, null=False, on_delete=set_historical_user)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, on_delete=set_historical_user)
     block = models.ForeignKey(EighthBlock, null=False, on_delete=models.CASCADE)
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True,
                                            on_delete=models.CASCADE)

@@ -4,6 +4,7 @@ import re
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.core import exceptions
 from django.urls import reverse
 
@@ -12,7 +13,6 @@ import requests
 from requests_oauthlib import OAuth1
 
 from ..notifications.emails import email_send, email_send_bcc
-from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def request_announcement_email(request, form, obj):
     if not isinstance(teacher_ids, list):
         teacher_ids = [teacher_ids]
     logger.debug(teacher_ids)
-    teachers = User.objects.filter(id__in=teacher_ids)
+    teachers = get_user_model().objects.filter(id__in=teacher_ids)
     logger.debug(teachers)
 
     subject = "News Post Confirmation Request from {}".format(request.user.full_name)
@@ -121,9 +121,9 @@ def announcement_posted_email(request, obj, send_all=False):
     if settings.EMAIL_ANNOUNCEMENTS:
         subject = "Announcement: {}".format(obj.title)
         if send_all:
-            users = User.objects.all()
+            users = get_user_model().objects.all()
         else:
-            users = User.objects.filter(receive_news_emails=True)
+            users = get_user_model().objects.filter(receive_news_emails=True)
 
         send_groups = obj.groups.all()
         emails = []

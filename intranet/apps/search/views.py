@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import redirect, render
@@ -9,7 +10,7 @@ from ..announcements.models import Announcement
 from ..eighth.models import EighthActivity
 from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import Grade, User, Course
+from ..users.models import Grade, Course
 from ..users.views import profile_view
 from ..auth.decorators import deny_restricted
 
@@ -21,8 +22,8 @@ def query(q, admin=False):
     results = []
     if q.isdigit():
         logger.debug("Digit search: %s", q)
-        sid_users = User.objects.filter(student_id=q)
-        uid_users = User.objects.filter(id=q)
+        sid_users = get_user_model().objects.filter(student_id=q)
+        uid_users = get_user_model().objects.filter(id=q)
         for u in sid_users:
             results.append(u)
 
@@ -169,7 +170,7 @@ def query(q, admin=False):
             search_query &= sub_query
 
         try:
-            results = User.objects.filter(search_query)
+            results = get_user_model().objects.filter(search_query)
             for result in results:
                 results.append(result)
         except Exception:
@@ -212,7 +213,7 @@ def query(q, admin=False):
 
             logger.debug("Running query: %s", search_query)
 
-            res = User.objects.filter(search_query)
+            res = get_user_model().objects.filter(search_query)
             results = list(res)
 
     # loop through the DNs saved and get actual user objects
@@ -282,7 +283,7 @@ def search_view(request):
         """User search."""
         if q.isdigit() and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
             # Match exact student ID if the input looks like an ID
-            u = User.objects.user_with_student_id(q)
+            u = get_user_model().objects.user_with_student_id(q)
             if u is not None:
                 return profile_view(request, user_id=u.id)
 

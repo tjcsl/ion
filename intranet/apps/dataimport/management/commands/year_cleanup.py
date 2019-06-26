@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 from django.utils import timezone
 from django.core.management.base import BaseCommand
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 from intranet.apps.eighth.models import EighthSignup
 
 
@@ -85,14 +85,14 @@ class Command(BaseCommand):
         self.stdout.write("Archived absences")
 
     def update_welcome(self):
-        User.objects.all().update(seen_welcome=False)
+        get_user_model().objects.all().update(seen_welcome=False)
 
     def archive_admin_comments(self):
-        for usr in User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR):
+        for usr in get_user_model().objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR):
             usr.archive_admin_comments()
 
     def handle_delete(self):
-        for usr in User.objects.filter(graduation_year__lt=settings.SENIOR_GRADUATION_YEAR).exclude(user_type="alum"):
+        for usr in get_user_model().objects.filter(graduation_year__lt=settings.SENIOR_GRADUATION_YEAR).exclude(user_type="alum"):
             if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
                 self.stdout.write(str(usr.delete()))

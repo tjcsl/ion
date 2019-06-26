@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.templatetags.static import static
@@ -21,7 +21,6 @@ from .helpers import change_password
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
 from ..events.models import Event
-from ..users.models import User
 from ..eighth.models import EighthBlock, EighthSignup
 
 logger = logging.getLogger(__name__)
@@ -171,7 +170,7 @@ class LoginView(View):
             logger.warning("No cookie support detected! This could cause problems.")
 
         if form.is_valid():
-            reset_user, _ = User.objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
+            reset_user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             if form.get_user() == reset_user:
                 return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())
