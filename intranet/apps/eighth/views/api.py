@@ -55,25 +55,20 @@ class EighthBlockList(generics.ListAPIView):
         return True
 
     def get_queryset(self):
-        # get_current_blocks() actually returns a list, which you
-        # can't .filter() on
-        queryset = EighthBlock.objects.get_current_blocks()
-        blk_ids = [b.id for b in queryset]
-
         if "start_date" in self.request.GET:
-            date = self.request.GET.get("start_date")
-            if not self.is_valid_date(date):
+            start_date = self.request.GET.get("start_date")
+            if not self.is_valid_date(start_date):
                 raise ValidationError("Invalid format for start_date.")
 
-            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=date).order_by('id')
+            return EighthBlock.objects.filter(date__gte=start_date).order_by('id')
 
         if "date" in self.request.GET:
             date = self.request.GET.get("date")
             if not self.is_valid_date(date):
-                raise ValidationError("Invalid format for start_date.")
-            return EighthBlock.objects.filter(id__in=blk_ids, date=date).order_by('id')
+                raise ValidationError("Invalid format for date.")
+            return EighthBlock.objects.filter(date=date).order_by('id')
 
-        return queryset
+        return EighthBlock.objects.get_current_blocks()
 
 
 class EighthBlockDetail(views.APIView):
