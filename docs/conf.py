@@ -32,15 +32,7 @@ import sphinx_bootstrap_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
-    "sphinx.ext.coverage",
-    "sphinx.ext.ifconfig",
-    "sphinx.ext.viewcode",
-    "djangodocs",
-]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinx.ext.viewcode", "sphinx.ext.napoleon", "djangodocs"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -305,6 +297,20 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects"),
 }
+autodoc_inherit_docstrings = False
+
+
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
 
 # -- Django Setup -------------------------------------------------------------
 
@@ -319,22 +325,18 @@ sys.modules["ldap_test"] = mock.MagicMock()
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
 
+import django
+
+django.setup()
+
 
 def skip(app, what, name, obj, skip, options):
     """Methods to skip when generating documentation from docstrings."""
     if name in ("__weakref__", "__dict__", "base_fields", "media", "history_object"):
+
         return True
     return skip
 
 
 def setup(app):
-    """Setup autodoc."""
-    # Fix for documenting models.FileField
-    from django.db.models.fields.files import FileDescriptor
-
-    FileDescriptor.__get__ = lambda self, *args, **kwargs: self
-    import django
-
-    django.setup()
     app.connect("autodoc-skip-member", skip)
-    app.add_stylesheet("_static/custom.css")
