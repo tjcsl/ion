@@ -94,6 +94,13 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
     queryset = EighthSignup.objects.all().order_by('id')
 
+    def is_valid_date(self, date_text):
+        try:
+            datetime.strptime(date_text, '%Y-%m-%d')
+        except ValueError:
+            return False
+        return True
+
     def list(self, request, user_id=None):  # pylint: disable=arguments-differ
         if not user_id:
             user_id = request.user.id
@@ -101,9 +108,23 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
             serialized = EighthSignupSerializer([], context={"request": request}, many=True)
             return Response(serialized.data)
 
-        signups = EighthSignup.objects.filter(
-            user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity").order_by(
-                "scheduled_activity__block__date", "scheduled_activity__block__block_letter")
+        all_signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block")
+
+        if "date" in request.GET:
+            date = self.request.GET.get("date")
+            if not self.is_valid_date(date):
+                raise ValidationError("Invalid format for date.")
+            all_signups = all_signups.filter(scheduled_activity__block__date=date)
+        elif "start_date" in request.GET:
+            start_date = self.request.GET.get("start_date")
+            if not self.is_valid_date(start_date):
+                raise ValidationError("Invalid format for start_date.")
+            all_signups = all_signups.filter(scheduled_activity__block__date__gte=start_date)
+        else:
+            all_signups = all_signups.filter(scheduled_activity__block__in=EighthBlock.objects.get_blocks_this_year())
+
+        signups = all_signups.select_related("scheduled_activity__activity").order_by("scheduled_activity__block__date",
+                                                                                      "scheduled_activity__block__block_letter")
 
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
