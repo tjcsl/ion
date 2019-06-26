@@ -29,7 +29,7 @@ class Page(models.Model):
 
     strip_links = models.BooleanField(default=True)
 
-    def deploy_to(self, displays=None, exclude=[], lock=[]):
+    def deploy_to(self, displays=None, exclude=[]):
         """
         Deploys page to listed display (specify with display). If display is None,
         deploy to all display. Can specify exclude for which display to exclude.

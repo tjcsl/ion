@@ -214,7 +214,7 @@ def get_bus_route(user):
 def save_bus_route(request, user):
     bus_route = get_bus_route(user)
     logger.debug(bus_route)
-    bus_route_form = BusRouteForm(user, data=request.POST, initial=bus_route)
+    bus_route_form = BusRouteForm(data=request.POST, initial=bus_route)
     if bus_route_form.is_valid():
         logger.debug("Bus form: valid")
         if bus_route_form.has_changed():
@@ -301,7 +301,7 @@ def preferences_view(request):
             bus_route = get_bus_route(user)
             logger.debug(preferred_pic)
             preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
-            bus_route_form = BusRouteForm(user, initial=bus_route)
+            bus_route_form = BusRouteForm(initial=bus_route)
         else:
             bus_route_form = None
             preferred_pic = None

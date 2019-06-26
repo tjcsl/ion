@@ -206,7 +206,7 @@ def print_block_rosters_view(request, block_id):
         response["Content-Disposition"] = "inline; filename=\"block_{}_rosters.pdf\"".format(block_id)
         sched_act_ids = request.POST.getlist("schact_id")
 
-        pdf_buffer = generate_roster_pdf(sched_act_ids, True)
+        pdf_buffer = generate_roster_pdf(sched_act_ids)
         response.write(pdf_buffer.getvalue())
         pdf_buffer.close()
         return response

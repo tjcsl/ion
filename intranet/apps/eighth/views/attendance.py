@@ -469,7 +469,7 @@ def accept_all_passes_view(request, scheduled_activity_id):
     return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
 
-def generate_roster_pdf(sched_act_ids, include_instructions):
+def generate_roster_pdf(sched_act_ids):
     r"""Generates a PDF roster for one or more.
 
     :class:`EighthScheduledActivity`\s.
@@ -477,9 +477,6 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
     Args
         sched_act_ids
             The list of IDs of the scheduled activities to show in the PDF.
-        include_instructions
-            Whether instructions should be printed at the bottom of the
-            roster(s).
 
     Returns a BytesIO object for the PDF.
 
