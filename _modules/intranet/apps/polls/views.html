@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -134,6 +134,7 @@
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span>
 <span class="kn">from</span> <span class="nn">django.core.serializers</span> <span class="k">import</span> <span class="n">serialize</span>
@@ -141,7 +142,6 @@
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Question</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PollForm</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
 
@@ -215,8 +215,8 @@
     <span class="n">is_polls_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">is_polls_admin</span> <span class="ow">and</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-        <span class="k">except</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>

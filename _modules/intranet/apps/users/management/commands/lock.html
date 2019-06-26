@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.management.commands.lock &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.users.management.commands.lock &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -127,8 +127,7 @@
       
   <h1>Source code for intranet.apps.users.management.commands.lock</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
-
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.lock.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -136,7 +135,7 @@
     <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;&lt;u&gt;&quot;</span>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.lock.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">user_locked</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">last_login</span><span class="p">)))</span>
         <span class="n">u</span><span class="o">.</span><span class="n">user_locked</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>

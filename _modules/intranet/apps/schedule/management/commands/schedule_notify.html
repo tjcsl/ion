@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.schedule.management.commands.schedule_notify &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.schedule.management.commands.schedule_notify &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -129,10 +129,10 @@
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
 <span class="kn">from</span> <span class="nn">intranet.apps.notifications.views</span> <span class="k">import</span> <span class="n">gcm_post</span><span class="p">,</span> <span class="n">get_gcm_schedule_uids</span>
 <span class="kn">from</span> <span class="nn">intranet.apps.schedule.notifications</span> <span class="k">import</span> <span class="n">period_start_end_data</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -143,7 +143,7 @@
 
 <div class="viewcode-block" id="Command.do_notify"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command.do_notify">[docs]</a>    <span class="k">def</span> <span class="nf">do_notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_data</span><span class="p">):</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">get_gcm_schedule_uids</span><span class="p">()</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">9999</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">9999</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gcm_post</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">pd_data</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.emailfwd.tests &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.emailfwd.tests &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -128,8 +128,8 @@
   <h1>Source code for intranet.apps.emailfwd.tests</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
@@ -137,7 +137,7 @@
 
 <div class="viewcode-block" id="EmailFwdTest.test_email_fwd"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emailfwd.html#intranet.apps.emailfwd.tests.EmailFwdTest.test_email_fwd">[docs]</a>    <span class="k">def</span> <span class="nf">test_email_fwd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Email Forward sanity check.&quot;&quot;&quot;</span>
-        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;senior_emailfwd&#39;</span><span class="p">))</span>

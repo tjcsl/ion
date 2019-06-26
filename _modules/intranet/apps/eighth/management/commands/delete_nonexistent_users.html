@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.management.commands.delete_nonexistent_users &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.eighth.management.commands.delete_nonexistent_users &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
@@ -130,8 +130,7 @@
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="k">import</span> <span class="n">BaseCommand</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">ObjectDoesNotExist</span>
-
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.delete_nonexistent_users.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -153,7 +152,7 @@
                          <span class="s2">&quot;This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                          <span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                          <span class="s2">&quot;Continue?&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">first_name</span>
             <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>

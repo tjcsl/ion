@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.utils.deletion &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.utils.deletion &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/_static/custom.css" />
@@ -129,17 +129,17 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span>
 
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.db.models.deletion</span> <span class="k">import</span> <span class="n">Collector</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="set_historical_user"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.deletion.set_historical_user">[docs]</a><span class="k">def</span> <span class="nf">set_historical_user</span><span class="p">(</span><span class="n">collector</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">sub_objs</span><span class="p">,</span> <span class="n">using</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
-    <span class="n">teststaff</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">7011</span><span class="p">)</span>
+    <span class="n">teststaff</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">7011</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">sub_objs</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">):</span>
             <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">scheduled_activity</span>
@@ -162,7 +162,7 @@
 
 
 <div class="viewcode-block" id="handle_eighth_sponsor_deletion"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.deletion.handle_eighth_sponsor_deletion">[docs]</a><span class="k">def</span> <span class="nf">handle_eighth_sponsor_deletion</span><span class="p">(</span><span class="n">in_obj</span><span class="p">,</span> <span class="n">eighth_sponsor</span><span class="p">):</span>
-    <span class="n">teststaff</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">7011</span><span class="p">)</span>
+    <span class="n">teststaff</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">7011</span><span class="p">)</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">Collector</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">collect</span><span class="p">([</span><span class="n">in_obj</span><span class="p">])</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">instances_with_model</span><span class="p">()</span>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -145,6 +145,8 @@
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">..preferences.fields</span> <span class="k">import</span> <span class="n">PhoneField</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
+<span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Answer</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -403,6 +405,10 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
+
+<div class="viewcode-block" id="User.get_full_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_full_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span></div>
 
 <div class="viewcode-block" id="User.get_short_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_short_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get short (first) name of a user.&quot;&quot;&quot;</span>
@@ -772,9 +778,6 @@
 <span class="sd">        sponsoring information.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSponsor</span>
-
         <span class="k">return</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
     <span class="nd">@property</span>
@@ -826,10 +829,6 @@
         <span class="sd">&quot;&quot;&quot;Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is</span>
 <span class="sd">        associated with.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSponsor</span>
-
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -838,9 +837,6 @@
         <span class="k">return</span> <span class="n">sp</span></div>
 
 <div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Answer</span>
-
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">poll</span> <span class="ow">in</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__lt</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">end_time__gt</span><span class="o">=</span><span class="n">now</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__in</span><span class="o">=</span><span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -849,9 +845,6 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="User.signed_up_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.signed_up_today">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_today</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
@@ -868,16 +861,10 @@
 <span class="sd">        or is not a signup user, returns 0.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
-
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.absence_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_info">[docs]</a>    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return information about the user&#39;s absences.&quot;&quot;&quot;</span>
-        <span class="c1"># FIXME: remove recursive dep</span>
-        <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
-
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.handle_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -899,7 +886,7 @@
 
 
 <div class="viewcode-block" id="UserProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties">[docs]</a><span class="k">class</span> <span class="nc">UserProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="n">_address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
     <span class="n">_birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1040,7 +1027,7 @@
 <div class="viewcode-block" id="Email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Email">[docs]</a><span class="k">class</span> <span class="nc">Email</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents an email address&quot;&quot;&quot;</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;emails&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;emails&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span>
@@ -1054,7 +1041,7 @@
     <span class="n">PURPOSES</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;Home Phone&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;Mobile Phone&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;Other Phone&#39;</span><span class="p">))</span>
 
     <span class="n">purpose</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">PURPOSES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;phones&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;phones&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">_number</span> <span class="o">=</span> <span class="n">PhoneField</span><span class="p">()</span>  <span class="c1"># validators should be a list</span>
 
     <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -1080,7 +1067,7 @@
 <div class="viewcode-block" id="Website"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Website">[docs]</a><span class="k">class</span> <span class="nc">Website</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a user&#39;s website&quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;websites&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;websites&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
@@ -1119,7 +1106,7 @@
 
     <span class="n">grade_number</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">GRADE_NUMBERS</span><span class="p">)</span>
     <span class="n">_binary</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BinaryField</span><span class="p">()</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;photos&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;photos&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
@@ -1247,7 +1234,7 @@
     <span class="sd">&quot;&quot;&quot;Represents a section - a class with teacher, period, and room assignments&quot;&quot;&quot;</span>
 
     <span class="n">course</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Course</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sections&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-    <span class="n">teacher</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
+    <span class="n">teacher</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
     <span class="n">room</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
     <span class="n">period</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
     <span class="n">section_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

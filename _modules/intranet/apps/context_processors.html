@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/_static/custom.css" />
@@ -129,9 +129,12 @@
 <span></span><span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 
+<span class="kn">from</span> <span class="nn">intranet.apps.notifications.models</span> <span class="k">import</span> <span class="n">NotificationConfig</span>
 <span class="kn">from</span> <span class="nn">.schedule.models</span> <span class="k">import</span> <span class="n">Day</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -182,9 +185,6 @@
 
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
                 <span class="sd">&quot;&quot;&quot;Add/update NotificationConfig object.&quot;&quot;&quot;</span>
-                <span class="kn">import</span> <span class="nn">binascii</span>
-                <span class="kn">import</span> <span class="nn">os</span>
-                <span class="kn">from</span> <span class="nn">intranet.apps.notifications.models</span> <span class="k">import</span> <span class="n">NotificationConfig</span>
 
                 <span class="n">ncfg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_rand</span><span class="p">:</span>

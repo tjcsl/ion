@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.announcements.forms &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.announcements.forms &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -127,10 +127,10 @@
       
   <h1>Source code for intranet.apps.announcements.forms</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
 <span class="kn">from</span> <span class="nn">..users.forms</span> <span class="k">import</span> <span class="n">SortedTeacherMultipleChoiceField</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 
 
 <div class="viewcode-block" id="AnnouncementForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementForm">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
@@ -187,7 +187,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Any information about this announcement you wish to share with the Intranet &quot;</span>
                                           <span class="s2">&quot;administrators and teachers selected above. If you want to restrict this posting &quot;</span>
                                           <span class="s2">&quot;to a specific group of students, such as the Class of 2016, enter that request here.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SortedTeacherMultipleChoiceField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_teachers_sorted</span><span class="p">(),</span> <span class="n">show_username</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SortedTeacherMultipleChoiceField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_teachers_sorted</span><span class="p">(),</span>
+                                                                             <span class="n">show_username</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Sponsor&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The teacher(s) who will approve your announcement. They will be sent an email &quot;</span>
                                                        <span class="s2">&quot;with instructions on how to approve this post. Please do not select more than &quot;</span>

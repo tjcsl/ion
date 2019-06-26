@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -129,8 +129,6 @@
 <span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
-
 
 <div class="viewcode-block" id="College"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.College">[docs]</a><span class="k">class</span> <span class="nc">College</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
@@ -151,7 +149,7 @@
 
 <div class="viewcode-block" id="Senior"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.Senior">[docs]</a><span class="k">class</span> <span class="nc">Senior</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">SeniorManager</span><span class="p">()</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">college</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">College</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">MAJORS</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;Computer Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Education&quot;</span><span class="p">,</span> <span class="s2">&quot;Mathematics&quot;</span><span class="p">,</span> <span class="s2">&quot;Physics&quot;</span><span class="p">,</span> <span class="s2">&quot;Biology&quot;</span><span class="p">,</span> <span class="s2">&quot;Chemistry&quot;</span><span class="p">,</span> <span class="s2">&quot;Geology&quot;</span><span class="p">,</span> <span class="s2">&quot;History&quot;</span><span class="p">,</span> <span class="s2">&quot;Literature&quot;</span><span class="p">,</span>

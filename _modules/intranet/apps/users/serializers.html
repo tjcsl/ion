@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.serializers &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.users.serializers &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -126,9 +126,10 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.users.serializers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">serializers</span>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">serializers</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Address</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Address</span>
 
 
 <div class="viewcode-block" id="UserListSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserListSerializer">[docs]</a><span class="k">class</span> <span class="nc">UserListSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
@@ -174,7 +175,7 @@
     <span class="n">grade</span> <span class="o">=</span> <span class="n">GradeSerializer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="StudentSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.StudentSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;user_type&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;full_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">)</span></div></div>
 
 
@@ -186,7 +187,7 @@
     <span class="n">username</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CounselorTeacherSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.CounselorTeacherSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;user_type&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;full_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">)</span></div></div>
 
 
@@ -222,7 +223,7 @@
     <span class="n">absences</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;absence_count&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UserSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.UserSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;ion_username&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;display_name&#39;</span><span class="p">,</span> <span class="s1">&#39;full_name&#39;</span><span class="p">,</span> <span class="s1">&#39;short_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;middle_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="s1">&#39;tj_email&#39;</span><span class="p">,</span> <span class="s1">&#39;emails&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span> <span class="s1">&#39;graduation_year&#39;</span><span class="p">,</span> <span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;user_type&#39;</span><span class="p">,</span> <span class="s1">&#39;phones&#39;</span><span class="p">,</span> <span class="s1">&#39;websites&#39;</span><span class="p">,</span> <span class="s1">&#39;counselor&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;picture&#39;</span><span class="p">,</span> <span class="s1">&#39;is_eighth_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_announcements_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;is_teacher&#39;</span><span class="p">,</span> <span class="s1">&#39;is_student&#39;</span><span class="p">,</span> <span class="s1">&#39;absences&#39;</span><span class="p">)</span></div></div>

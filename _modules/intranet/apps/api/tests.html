@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.api.tests &#8212; TJ Intranet v3 (Build #4734) documentation</title>
+    <title>intranet.apps.api.tests &#8212; TJ Intranet v3 (Build #4753) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
@@ -132,11 +132,11 @@
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
 <span class="kn">from</span> <span class="nn">oauth2_provider.models</span> <span class="k">import</span> <span class="n">get_application_model</span><span class="p">,</span> <span class="n">AccessToken</span>
 <span class="kn">from</span> <span class="nn">oauth2_provider.settings</span> <span class="k">import</span> <span class="n">oauth2_settings</span>
 
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthRoom</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
@@ -148,7 +148,7 @@
     <span class="sd">&quot;&quot;&quot;Tests for the api module.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ApiTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
             <span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">(</span>
@@ -169,7 +169,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_credentials_application</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="n">oauth2_settings</span><span class="o">.</span><span class="n">_SCOPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">]</span></div>
+        <span class="n">oauth2_settings</span><span class="o">.</span><span class="n">_SCOPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=protected-access</span></div>
 
 <div class="viewcode-block" id="ApiTest.make_token"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.make_token">[docs]</a>    <span class="k">def</span> <span class="nf">make_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tok</span> <span class="o">=</span> <span class="n">AccessToken</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
