@@ -16,3 +16,9 @@ class ApiBasicAuthentication(authentication.BasicAuthentication):
             raise exceptions.AuthenticationFailed("Invalid username/password.")
 
         return (user, None)
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return
