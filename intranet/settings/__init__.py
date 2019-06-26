@@ -474,7 +474,6 @@ INSTALLED_APPS = [
     "django_extensions",
     # "django_prometheus",
     "django_requestlogging",
-    "sslserver",
     "rest_framework",
     "maintenance_mode",
     "pipeline",
