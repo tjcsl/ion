@@ -446,7 +446,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "intranet.apps.api.authentication.ApiBasicAuthentication",
-        "intranet.apps.api.authentication.CsrfExemptSessionAuthentication", # exempts CSRF checking on API
+        "intranet.apps.api.authentication.CsrfExemptSessionAuthentication",  # exempts CSRF checking on API
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
     ),
 }

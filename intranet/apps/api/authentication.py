@@ -18,7 +18,7 @@ class ApiBasicAuthentication(authentication.BasicAuthentication):
         return (user, None)
 
 
-class CsrfExemptSessionAuthentication(SessionAuthentication):
+class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
 
     def enforce_csrf(self, request):
         return
