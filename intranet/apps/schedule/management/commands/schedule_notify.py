@@ -1,10 +1,10 @@
 import json
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 from intranet.apps.notifications.views import gcm_post, get_gcm_schedule_uids
 from intranet.apps.schedule.notifications import period_start_end_data
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def do_notify(self, pd_data):
         users = get_gcm_schedule_uids()
-        user = User.objects.get(id=9999)
+        user = get_user_model().objects.get(id=9999)
         _, _ = gcm_post(users, pd_data, user=user)
 
     def handle(self, *args, **options):

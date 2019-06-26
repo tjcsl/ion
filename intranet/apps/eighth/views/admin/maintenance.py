@@ -14,10 +14,11 @@ from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
-from ....users.models import User, Address, Course, Section
+from ....users.models import Address, Course, Section
 
 from ....notifications.emails import email_send
 
@@ -52,7 +53,7 @@ class ImportThread(threading.Thread):
         u.nickname = row[index_dict["Nick Name"]].strip() if row[11].strip() != "" else None
         u.gender = row[index_dict["Gender"]].strip().upper() == "M"
         u.graduation_year = settings.SENIOR_GRADUATION_YEAR - int(row[index_dict["Grade"]].strip()) + 12
-        counselor = User.objects.filter(user_type="counselor", last_name__iexact=row[index_dict["Counselor Last Name"]].strip())
+        counselor = get_user_model().objects.filter(user_type="counselor", last_name__iexact=row[index_dict["Counselor Last Name"]].strip())
         if counselor.exists():
             u.counselor = counselor.first()
         props = u.properties
@@ -72,7 +73,7 @@ class ImportThread(threading.Thread):
         if not no_teacher:
             fname = teacher_name[1].split()[0].strip()
             lname = teacher_name[0].strip()
-            teacher = User.objects.filter(user_type='teacher', last_name__iexact=lname, first_name__iexact=fname)
+            teacher = get_user_model().objects.filter(user_type='teacher', last_name__iexact=lname, first_name__iexact=fname)
         if not no_teacher and (not teacher.count() == 1):
             content.write("Unable to determine teacher for {}; {} options: {}".format(row[index_dict["Section ID"]].strip(), teacher.count(),
                                                                                       ', '.join([t.full_name for t in teacher])))
@@ -104,15 +105,15 @@ class ImportThread(threading.Thread):
                     index_dict[header.strip()] = i
                 for row in reader:
                     try:
-                        u = User.objects.get(student_id=row[index_dict["Student ID"]].strip())
+                        u = get_user_model().objects.get(student_id=row[index_dict["Student ID"]].strip())
                         self.handle_user(u, row, index_dict, content)
                         content.write("Updated information for {}\n".format(u.username))
-                    except User.DoesNotExist:
+                    except get_user_model().DoesNotExist:
                         if row[index_dict["Other Name"]].strip() == "":
                             content.write("Skipping {}, no username available and user does not exist in database\n".format(row))
                             continue
-                        u = User.objects.create(username=row[index_dict["Other Name"]].strip().lower(),
-                                                student_id=row[index_dict["Student ID"]].strip())
+                        u = get_user_model().objects.create(username=row[index_dict["Other Name"]].strip().lower(),
+                                                            student_id=row[index_dict["Student ID"]].strip())
                         self.handle_user(u, row, index_dict, content)
                         content.write("User {} did not exist in database - created and updated information\n".format(u.username))
             content.write("\n\n==== Successfully completed SIS Import\n\n")

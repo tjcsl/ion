@@ -3,12 +3,13 @@ import logging
 import os
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
 
-from .models import Grade, User, Section, Course
+from .models import Grade, Section, Course
 from ..auth.decorators import deny_restricted
 from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..eighth.utils import get_start_date
@@ -31,11 +32,11 @@ def profile_view(request, user_id=None):
 
     if user_id is not None:
         try:
-            profile_user = User.objects.get(id=user_id)
+            profile_user = get_user_model().objects.get(id=user_id)
 
             if profile_user is None:
                 raise Http404
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             raise Http404
     else:
         profile_user = request.user
@@ -105,8 +106,8 @@ def picture_view(request, user_id, year=None):
 
     """
     try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
+        user = get_user_model().objects.get(id=user_id)
+    except get_user_model().DoesNotExist:
         raise Http404
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
 

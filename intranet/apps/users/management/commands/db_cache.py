@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
-
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 
 
 # TODO: UserCache
@@ -12,11 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         if options['action'][0] == "flush":
-            for user in User.objects.exclude(cache=None):
+            for user in get_user_model().objects.exclude(cache=None):
                 user.cache.delete()
             self.stdout.write("Done.")
         elif options['action'][0] == "set":
-            for user in User.objects.all():
+            for user in get_user_model().objects.all():
                 if not user.is_active:
                     continue
                 if not user.cache:

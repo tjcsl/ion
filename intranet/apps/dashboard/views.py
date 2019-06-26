@@ -3,6 +3,7 @@ from datetime import date, time, datetime, timedelta
 from itertools import chain
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.urls import reverse
@@ -15,7 +16,6 @@ from ..emerg.views import get_emerg
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
-from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -228,7 +228,7 @@ def find_birthdays(request):
                         },
                         "age": (u.age + yr_inc) if u.age is not None else -1,
                         "public": u.properties.attribute_is_public("show_birthday")
-                    } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
+                    } if u else {} for u in get_user_model().objects.users_with_birthday(today.month, today.day)],
                     "inc": 0,
                 },
                 "tomorrow": {
@@ -241,7 +241,7 @@ def find_birthdays(request):
                         },
                         "age": (u.age - 1) if u.age is not None else -1,
                         "public": u.properties.attribute_is_public("show_birthday")
-                    } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
+                    } for u in get_user_model().objects.users_with_birthday(tomorrow.month, tomorrow.day)],
                     "inc": 1,
                 },
             }  # yapf: disable

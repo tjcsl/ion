@@ -1,8 +1,8 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
 from .models import Announcement, AnnouncementRequest
 from ..users.forms import SortedTeacherMultipleChoiceField
-from ..users.models import User
 
 
 class AnnouncementForm(forms.ModelForm):
@@ -59,7 +59,8 @@ class AnnouncementRequestForm(forms.ModelForm):
         self.fields["notes"].help_text = ("Any information about this announcement you wish to share with the Intranet "
                                           "administrators and teachers selected above. If you want to restrict this posting "
                                           "to a specific group of students, such as the Class of 2016, enter that request here.")
-        self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(queryset=User.objects.get_teachers_sorted(), show_username=True)
+        self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(queryset=get_user_model().objects.get_teachers_sorted(),
+                                                                             show_username=True)
         self.fields["teachers_requested"].label = "Sponsor"
         self.fields["teachers_requested"].help_text = ("The teacher(s) who will approve your announcement. They will be sent an email "
                                                        "with instructions on how to approve this post. Please do not select more than "

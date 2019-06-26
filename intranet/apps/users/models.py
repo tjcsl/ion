@@ -17,6 +17,8 @@ from intranet.middleware import threadlocals
 from ..groups.models import Group
 from ..preferences.fields import PhoneField
 from ..bus.models import Route
+from ..polls.models import Poll, Answer
+from ..eighth.models import EighthSponsor, EighthBlock, EighthSignup
 
 logger = logging.getLogger(__name__)
 
@@ -648,9 +650,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         sponsoring information.
 
         """
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthSponsor
-
         return EighthSponsor.objects.filter(user=self).exists()
 
     @property
@@ -702,10 +701,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
         associated with.
         """
-
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthSponsor
-
         try:
             sp = EighthSponsor.objects.get(user=self)
         except EighthSponsor.DoesNotExist:
@@ -714,9 +709,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def has_unvoted_polls(self):
-        # FIXME: remove recursive dep
-        from ..polls.models import Poll, Answer
-
         now = timezone.now()
         for poll in Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now):
             if Answer.objects.filter(question__in=poll.question_set.all(), user=self).count() == 0:
@@ -725,9 +717,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return False
 
     def signed_up_today(self):
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthBlock, EighthSignup
-
         if not self.is_student:
             return True
 
@@ -744,16 +733,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         or is not a signup user, returns 0.
 
         """
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthSignup
-
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
     def absence_info(self):
         """Return information about the user's absences."""
-        # FIXME: remove recursive dep
-        from ..eighth.models import EighthSignup
-
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
     def handle_delete(self):
@@ -775,7 +758,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class UserProperties(models.Model):
-    user = models.OneToOneField('User', related_name="properties", on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="properties", on_delete=models.CASCADE)
 
     _address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
     _birthday = models.DateField(null=True)
@@ -916,7 +899,7 @@ class UserProperties(models.Model):
 class Email(models.Model):
     """Represents an email address"""
     address = models.EmailField()
-    user = models.ForeignKey(User, related_name='emails', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='emails', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.address
@@ -930,7 +913,7 @@ class Phone(models.Model):
     PURPOSES = (('h', 'Home Phone'), ('m', 'Mobile Phone'), ('o', 'Other Phone'))
 
     purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
-    user = models.ForeignKey(User, related_name='phones', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='phones', on_delete=models.CASCADE)
     _number = PhoneField()  # validators should be a list
 
     def __setattr__(self, name, value):
@@ -956,7 +939,7 @@ class Phone(models.Model):
 class Website(models.Model):
     """Represents a user's website"""
     url = models.URLField()
-    user = models.ForeignKey(User, related_name='websites', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='websites', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.url
@@ -995,7 +978,7 @@ class Photo(models.Model):
 
     grade_number = models.IntegerField(choices=GRADE_NUMBERS)
     _binary = models.BinaryField()
-    user = models.ForeignKey(User, related_name="photos", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="photos", on_delete=models.CASCADE)
 
     def __setattr__(self, name, value):
         if name == "binary":
@@ -1123,7 +1106,7 @@ class Section(models.Model):
     """Represents a section - a class with teacher, period, and room assignments"""
 
     course = models.ForeignKey(Course, related_name="sections", on_delete=models.CASCADE)
-    teacher = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    teacher = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     room = models.CharField(max_length=16)
     period = models.IntegerField()
     section_id = models.CharField(max_length=16, unique=True)

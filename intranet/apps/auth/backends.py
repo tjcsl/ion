@@ -6,12 +6,11 @@ import subprocess
 
 from django.conf import settings
 # from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 # from django.views.decorators.debug import sensitive_variables
 
 import pexpect
-
-from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -27,8 +26,8 @@ class KerberosAuthenticationBackend:
     def kinit_timeout_handle(username, realm):
         """Check if the user exists before we throw an error."""
         try:
-            u = User.objects.get(username__iexact=username)
-        except User.DoesNotExist:
+            u = get_user_model().objects.get(username__iexact=username)
+        except get_user_model().DoesNotExist:
             logger.warning("kinit timed out for %s@%s (invalid user)", username, realm)
             return
 
@@ -136,7 +135,7 @@ class KerberosAuthenticationBackend:
         krb_ticket = self.get_kerberos_ticket(username, password)
 
         if krb_ticket == "reset":
-            user, _ = User.objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
+            user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
 
         if not krb_ticket:
@@ -144,8 +143,8 @@ class KerberosAuthenticationBackend:
         else:
             logger.debug("Authentication successful")
             try:
-                user = User.objects.get(username__iexact=username)
-            except User.DoesNotExist:
+                user = get_user_model().objects.get(username__iexact=username)
+            except get_user_model().DoesNotExist:
                 return None
             return user
 
@@ -158,8 +157,8 @@ class KerberosAuthenticationBackend:
             User or None
         """
         try:
-            return User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            return get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             return None
 
 
@@ -188,8 +187,8 @@ class MasterPasswordAuthenticationBackend:
             return None
         if check_password(password, settings.MASTER_PASSWORD):
             try:
-                user = User.objects.get(username__iexact=username)
-            except User.DoesNotExist:
+                user = get_user_model().objects.get(username__iexact=username)
+            except get_user_model().DoesNotExist:
                 if settings.MASTER_NOTIFY:
                     logger.critical("Master password authentication FAILED due to invalid username %s", username)
                 logger.debug("Master password correct, user does not exist")
@@ -210,6 +209,6 @@ class MasterPasswordAuthenticationBackend:
             User or None
         """
         try:
-            return User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            return get_user_model().objects.get(id=user_id)
+        except get_user_model().DoesNotExist:
             return None

@@ -1,12 +1,13 @@
 from random import shuffle
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from ..users.models import User
 from ...utils.date import get_date_range_this_year
 
 
@@ -184,7 +185,7 @@ class Question(models.Model):
 
     def get_users_voted(self):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
-        return User.objects.filter(id__in=users)
+        return get_user_model().objects.filter(id__in=users)
 
     def __str__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
@@ -238,7 +239,7 @@ class Choice(models.Model):  # individual answer choices
 
 class Answer(models.Model):  # individual answer choices selected
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     choice = models.ForeignKey(Choice, null=True, on_delete=models.CASCADE)  # for multiple choice questions
     answer = models.CharField(max_length=10000, null=True)  # for free response
     clear_vote = models.BooleanField(default=False)
@@ -257,7 +258,7 @@ class Answer(models.Model):  # individual answer choices selected
 
 class AnswerVote(models.Model):  # record of total selection of a given answer choice
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
     is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers

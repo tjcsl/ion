@@ -1,17 +1,17 @@
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from .models import CarApplication, ParkingApplication
 from ...test.ion_test import IonTestCase
-from ..users.models import User
 
 
 class ParkingTest(IonTestCase):
     """Tests for the parking module."""
 
     def login_with_args(self, uname, grad_year):
-        user = User.objects.get_or_create(username=uname,
-                                          graduation_year=grad_year)[0]
+        user = get_user_model().objects.get_or_create(username=uname,
+                                                      graduation_year=grad_year)[0]
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             self.client.login(username=uname, password='dankmemes')
         return user

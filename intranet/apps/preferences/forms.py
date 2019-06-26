@@ -1,8 +1,9 @@
 import logging
 
 from django import forms
+from django.contrib.auth import get_user_model
 
-from ..users.models import User, Grade, Phone, Email, Website
+from ..users.models import Grade, Phone, Email, Website
 from ..bus.models import Route
 
 logger = logging.getLogger(__name__)
@@ -119,6 +120,6 @@ class WebsiteForm(forms.ModelForm):
         fields = ['url']
 
 
-PhoneFormset = forms.inlineformset_factory(User, Phone, form=PhoneForm, extra=1)
-EmailFormset = forms.inlineformset_factory(User, Email, form=EmailForm, extra=1)
-WebsiteFormset = forms.inlineformset_factory(User, Website, form=WebsiteForm, extra=1)
+PhoneFormset = forms.inlineformset_factory(get_user_model(), Phone, form=PhoneForm, extra=1)
+EmailFormset = forms.inlineformset_factory(get_user_model(), Email, form=EmailForm, extra=1)
+WebsiteFormset = forms.inlineformset_factory(get_user_model(), Website, form=WebsiteForm, extra=1)

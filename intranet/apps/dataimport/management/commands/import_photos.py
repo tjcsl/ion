@@ -3,7 +3,7 @@ import sys
 import json
 import csv
 from django.core.management.base import BaseCommand
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 
 
 class Command(BaseCommand):
@@ -119,48 +119,48 @@ class Command(BaseCommand):
         # fix duplicate student ID map in LDAP
         sid = int(sid)
         if sid == 1582058:
-            return User.objects.get(id=33494)
+            return get_user_model().objects.get(id=33494)
         if sid == 1163521:
-            return User.objects.get(id=32391)
-        return User.objects.user_with_student_id(sid)
+            return get_user_model().objects.get(id=32391)
+        return get_user_model().objects.user_with_student_id(sid)
 
     def get_staff_name(self, fname, lname):
         # ignore subnames in parens; wildcard for abbreviated names
         fname = fname.split('(')[0] + '*'
         lname = lname + '*'
-        u = User.objects.user_with_name(fname, lname)
+        u = get_user_model().objects.user_with_name(fname, lname)
         if u:
             return u
         # hyphenated vs spaced subnames
-        u = User.objects.user_with_name(fname, lname.replace(' ', '-'))
+        u = get_user_model().objects.user_with_name(fname, lname.replace(' ', '-'))
         if u:
             return u
         # non-spaced last name
-        u = User.objects.user_with_name(fname, lname.replace(' ', ''))
+        u = get_user_model().objects.user_with_name(fname, lname.replace(' ', ''))
         if u:
             return u
         # non-spaced first name
-        u = User.objects.user_with_name(fname.replace(' ', ''), lname)
+        u = get_user_model().objects.user_with_name(fname.replace(' ', ''), lname)
         if u:
             return u
         # middle name in first name
-        u = User.objects.user_with_name(fname.split(' ')[0], lname)
+        u = get_user_model().objects.user_with_name(fname.split(' ')[0], lname)
         if u:
             return u
         # cathie => catherine
-        u = User.objects.user_with_name(fname.lower().replace('ie', 'erine'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace('ie', 'erine'), lname)
         if u:
             return u
         # mike => michael
-        u = User.objects.user_with_name(fname.lower().replace('ke', 'chael'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace('ke', 'chael'), lname)
         if u:
             return u
         # katrina => katy
-        u = User.objects.user_with_name(fname.lower().replace('trina', 'ty'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace('trina', 'ty'), lname)
         if u:
             return u
         # kathleen => kathy
-        u = User.objects.user_with_name(fname.lower().replace('hleen', 'hy'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace('hleen', 'hy'), lname)
         if u:
             return u
         # If you got to here without a match... they probably aren't in LDAP.

@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import User, Address
+from .models import Address
 
 
 class UserListSerializer(serializers.Serializer):
@@ -46,7 +47,7 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
     grade = GradeSerializer()
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name', 'grade')
 
 
@@ -58,7 +59,7 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(max_length=100)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name')
 
 
@@ -94,7 +95,7 @@ class UserSerializer(serializers.ModelSerializer):
     absences = serializers.IntegerField(source="absence_count")
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name',
                   'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'phones', 'websites', 'counselor', 'address',
                   'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'absences')

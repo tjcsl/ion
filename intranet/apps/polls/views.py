@@ -6,6 +6,7 @@ from collections import OrderedDict
 from django import http
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.serializers import serialize
@@ -13,7 +14,6 @@ from django.utils import timezone
 
 from .models import Answer, Choice, Poll, Question
 from .forms import PollForm
-from ..users.models import User
 from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
 
@@ -87,8 +87,8 @@ def poll_vote_view(request, poll_id):
     is_polls_admin = user.has_admin_permission("polls")
     if is_polls_admin and "user" in request.GET:
         try:
-            user = User.objects.get(id=request.GET.get("user"))
-        except (User.DoesNotExist, ValueError):
+            user = get_user_model().objects.get(id=request.GET.get("user"))
+        except (get_user_model().DoesNotExist, ValueError):
             user = request.user
 
     if request.method == "POST":

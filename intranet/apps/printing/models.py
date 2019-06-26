@@ -1,10 +1,9 @@
+from django.conf import settings
 from django.db import models
-
-from ..users.models import User
 
 
 class PrintJob(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     printer = models.CharField(max_length=100)
     file = models.FileField(upload_to="printing/")
     page_range = models.CharField(blank=True, max_length=100)

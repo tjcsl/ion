@@ -1,11 +1,11 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 from .models import NominationPosition, Nomination
-from ..users.models import User
 from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 @deny_restricted
 def vote_for_user(request, username, position):
     try:
-        nominated_user = User.objects.get(username=username)
+        nominated_user = get_user_model().objects.get(username=username)
         if nominated_user.grade.number == request.user.grade.number and request.user.grade.number < 13:
             nominated_position = NominationPosition.objects.get(position_name=position)
             votes_for_position = request.user.nomination_votes.filter(position=nominated_position)
@@ -31,7 +31,7 @@ def vote_for_user(request, username, position):
                 messages.success(request, "Your nomination was created.")
         else:
             messages.error(request, "You can only vote for users in your grade")
-    except (NominationPosition.DoesNotExist, User.DoesNotExist) as e:
+    except (NominationPosition.DoesNotExist, get_user_model().DoesNotExist) as e:
         messages.error(request, e)
         return redirect("index")
     return redirect("user_profile", nominated_user.id)

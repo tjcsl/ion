@@ -6,13 +6,13 @@ from cacheops import invalidate_obj
 
 from django import http
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 
 from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
-from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -86,10 +86,10 @@ def delinquent_students_view(request):
                                   .annotate(absences=Count("user")).filter(absences__gte=1).values("user", "absences").order_by("user"))
 
             uids_with_absence = [row["user"] for row in users_with_absence]
-            all_students = User.objects.get_students().values_list("id")
+            all_students = get_user_model().objects.get_students().values_list("id")
             uids_all_students = [row[0] for row in all_students]
             uids_without_absence = set(uids_all_students) - set(uids_with_absence)
-            users_without_absence = User.objects.filter(id__in=uids_without_absence).order_by("id")
+            users_without_absence = get_user_model().objects.filter(id__in=uids_without_absence).order_by("id")
             non_delinquents = []
             for usr in users_without_absence:
                 non_delinquents.append({"absences": 0, "user": usr})
@@ -103,7 +103,7 @@ def delinquent_students_view(request):
                     absences__gte=lower_absence_limit_filter, absences__lte=upper_absence_limit_filter).values("user", "absences").order_by("user"))
 
             user_ids = [d["user"] for d in delinquents]
-            delinquent_users = User.objects.filter(id__in=user_ids).order_by("id")
+            delinquent_users = get_user_model().objects.filter(id__in=user_ids).order_by("id")
             for index, user in enumerate(delinquent_users):
                 delinquents[index]["user"] = user
             logger.debug(delinquents)

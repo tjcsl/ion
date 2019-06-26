@@ -1,10 +1,9 @@
 import datetime
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from faker import Faker
-
-from ...models import User
 fake = Faker()
 
 
@@ -46,7 +45,7 @@ def generate_fake(users, modify=False):
         ct = 1
         base_username = user.username
         while True:
-            if not User.objects.filter(username=user.username).exists():
+            if not get_user_model().objects.filter(username=user.username).exists():
                 break
             user.username = "{}{}".format(base_username, ct)
             ct += 1

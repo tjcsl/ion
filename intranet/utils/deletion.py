@@ -1,17 +1,17 @@
 import logging
 from datetime import date
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.deletion import Collector
 
-from intranet.apps.users.models import User
 
 logger = logging.getLogger(__name__)
 
 
 def set_historical_user(collector, field, sub_objs, using):
     from intranet.apps.eighth.models import EighthSignup, EighthSponsor
-    teststaff, _ = User.objects.get_or_create(id=7011)
+    teststaff, _ = get_user_model().objects.get_or_create(id=7011)
     for obj in sub_objs:
         if isinstance(obj, EighthSignup):
             scheduled_activity = obj.scheduled_activity
@@ -34,7 +34,7 @@ def set_historical_user(collector, field, sub_objs, using):
 
 
 def handle_eighth_sponsor_deletion(in_obj, eighth_sponsor):
-    teststaff, _ = User.objects.get_or_create(id=7011)
+    teststaff, _ = get_user_model().objects.get_or_create(id=7011)
     c = Collector(using="default")
     c.collect([in_obj])
     objects = c.instances_with_model()

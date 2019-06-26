@@ -6,6 +6,7 @@ from cacheops import invalidate_model, invalidate_obj
 
 from django import http
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -21,7 +22,6 @@ from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ....search.views import get_search_results
-from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ def edit_group_view(request, group_id):
 
     if "possible_student" in request.GET:
         student_ids = request.GET.getlist("possible_student")
-        possible_students = User.objects.get(id__in=student_ids)
+        possible_students = get_user_model().objects.get(id__in=student_ids)
         context["possible_students"] = possible_students
 
     return render(request, "eighth/admin/edit_group.html", context)
@@ -144,34 +144,34 @@ def get_file_string(fileobj):
 def get_user_info(key, val):
     if key in ["username", "id"]:
         try:
-            u = User.objects.filter(**{key: val})
+            u = get_user_model().objects.filter(**{key: val})
         except ValueError:
             return []
         return u
 
     if key == "student_id":
-        u = User.objects.user_with_student_id(val)
+        u = get_user_model().objects.user_with_student_id(val)
         return [u] if u else []
 
     if key == "name":
         if re.match("^[A-Za-z ]*$", val):
             vals = val.split(" ")
             if len(vals) == 2:
-                u = User.objects.user_with_name(vals[0], vals[1])
+                u = get_user_model().objects.user_with_name(vals[0], vals[1])
                 if u:
                     return [u]
             elif len(vals) == 3:
-                u = User.objects.user_with_name(vals[0], vals[2])
+                u = get_user_model().objects.user_with_name(vals[0], vals[2])
                 if u:
                     return [u]
             elif len(vals) == 1:
                 # Try last name
-                u = User.objects.user_with_name(None, vals[0])
+                u = get_user_model().objects.user_with_name(None, vals[0])
                 if u:
                     return [u]
                 else:
                     # Try first name
-                    u = User.objects.user_with_name(vals[0], None)
+                    u = get_user_model().objects.user_with_name(vals[0], None)
                     if u:
                         return [u]
         return []
@@ -199,7 +199,7 @@ def find_users_input(lines):
                 for part in parts:
                     if len(part) == 7:
                         # Try student ID
-                        u = User.objects.user_with_student_id(part)
+                        u = get_user_model().objects.user_with_student_id(part)
                         if u:
                             sure_users.append([line, u])
                             done = True
@@ -261,7 +261,7 @@ def upload_group_members_view(request, group_id):
             userids = request.POST.getlist("user_id")
             num_added = 0
             for uid in userids:
-                user = User.objects.get(id=uid)
+                user = get_user_model().objects.get(id=uid)
                 if user is None:
                     messages.error(request, "User with ID {} does not exist".format(uid))
                 else:
@@ -556,7 +556,7 @@ def eighth_admin_distribute_action(request):
         for schact, userids in activity_user_map.items():
             for uid in userids:
                 changes += 1
-                schact.add_user(User.objects.get(id=int(uid)), request=None, force=True, no_after_deadline=True)
+                schact.add_user(get_user_model().objects.get(id=int(uid)), request=None, force=True, no_after_deadline=True)
 
         messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
@@ -588,7 +588,7 @@ def eighth_admin_distribute_action(request):
             else:
                 raise http.Http404
 
-            unsigned = User.objects.get_students().exclude(eighthsignup__scheduled_activity__block__id=blockid)
+            unsigned = get_user_model().objects.get_students().exclude(eighthsignup__scheduled_activity__block__id=blockid)
 
             users = unsigned
             users_type = "unsigned"
@@ -628,7 +628,7 @@ def add_member_to_group_view(request, group_id):
 
     if "user_id" in request.POST:
         user_ids = request.POST.getlist("user_id")
-        user_objects = User.objects.filter(id__in=user_ids)
+        user_objects = get_user_model().objects.filter(id__in=user_ids)
         next_url += "?"
         for user in user_objects:
             user.groups.add(group)
@@ -643,7 +643,7 @@ def add_member_to_group_view(request, group_id):
         return redirect(next_url + "?error=s")
 
     query = request.POST["query"]
-    from_sid = User.objects.user_with_student_id(query)
+    from_sid = get_user_model().objects.user_with_student_id(query)
     if from_sid:
         from_sid.groups.add(group)
         from_sid.save()
@@ -681,8 +681,8 @@ def remove_member_from_group_view(request, group_id, user_id):
         next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
 
     try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
+        user = get_user_model().objects.get(id=user_id)
+    except get_user_model().DoesNotExist:
         messages.error(request, "There was an error removing this user.")
         return redirect(next_url, status=400)
 

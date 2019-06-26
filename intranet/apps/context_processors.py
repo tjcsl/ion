@@ -1,9 +1,12 @@
 import datetime
 import logging
 import re
+import binascii
+import os
 
 from django.conf import settings
 
+from intranet.apps.notifications.models import NotificationConfig
 from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
@@ -54,9 +57,6 @@ def mobile_app(request):
 
             if request.user and request.user.is_authenticated:
                 """Add/update NotificationConfig object."""
-                import binascii
-                import os
-                from intranet.apps.notifications.models import NotificationConfig
 
                 ncfg, _ = NotificationConfig.objects.get_or_create(user=request.user)
                 if not ncfg.android_gcm_rand:

@@ -1,8 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 
 from ...models import EighthSponsor
-from ....users.models import User
 
 
 class AutoCreateUserField(forms.ChoiceField):
@@ -18,8 +18,8 @@ class AutoCreateUserField(forms.ChoiceField):
             raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 
         try:
-            user = User.objects.get(id=id_value)
-        except User.DoesNotExist:
+            user = get_user_model().objects.get(id=id_value)
+        except get_user_model().DoesNotExist:
             raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 
         return user

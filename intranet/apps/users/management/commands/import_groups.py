@@ -1,9 +1,9 @@
 import csv
 
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 from intranet.apps.groups.models import Group
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -30,8 +30,8 @@ class Command(BaseCommand):
             for row in static:
                 uid, gid = row
                 try:
-                    usrobj = User.objects.get(id=uid)
-                except User.DoesNotExist:
+                    usrobj = get_user_model().objects.get(id=uid)
+                except get_user_model().DoesNotExist:
                     self.stdout.write("UID {} doesn't exist, for adding to group {}".format(uid, gid))
                 else:
                     grp = mappings[gid]

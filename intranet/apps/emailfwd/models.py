@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.db import models
-from ..users.models import User
 
 
 class SeniorEmailForward(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     email = models.EmailField()
 
     def __str__(self):

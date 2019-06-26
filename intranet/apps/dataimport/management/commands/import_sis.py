@@ -7,8 +7,7 @@ import time
 from typing import Dict, List  # noqa
 
 from django.core.management.base import BaseCommand
-
-from intranet.apps.users.models import User
+from django.contrib.auth import get_user_model
 
 
 class Command(BaseCommand):
@@ -55,8 +54,8 @@ class Command(BaseCommand):
         if self.load_users:
             for i in range(self.last_uid_number, self.last_uid_number + 500):
                 try:
-                    u = User.objects.get(id=i)
-                except User.DoesNotExist:
+                    u = get_user_model().objects.get(id=i)
+                except get_user_model().DoesNotExist:
                     self.stdout.write("UID %d None" % i)
                 else:
                     self.stdout.write("UID %d %s" % (i, u))
@@ -108,8 +107,8 @@ class Command(BaseCommand):
             for user in users:
                 tjuser = user["user"]["TJUsername"].lower()
                 try:
-                    ionuser = User.objects.get(username__iexact=tjuser)
-                except User.DoesNotExist:
+                    ionuser = get_user_model().objects.get(username__iexact=tjuser)
+                except get_user_model().DoesNotExist:
                     uid_number = self.last_uid_number + 1
                     self.last_uid_number += 1
                     user["uidNumber"] = uid_number
@@ -551,8 +550,8 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         self.teacher_mappings[data["Teacher"]] = username
 
         try:
-            User.objects.get(username__iexact=username)
-        except User.DoesNotExist:
+            get_user_model().objects.get(username__iexact=username)
+        except get_user_model().DoesNotExist:
             uid_number = self.last_uid_number + 1
             self.last_uid_number += 1
             self.new_teachers.append({

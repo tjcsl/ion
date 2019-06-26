@@ -7,6 +7,7 @@ from cacheops import invalidate_obj
 
 from django import http
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.db.models import Q
@@ -28,7 +29,6 @@ from ..utils import get_start_date
 from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
 from ...schedule.views import decode_date
-from ...users.models import User
 from ....utils.date import get_date_range_this_year
 
 logger = logging.getLogger(__name__)
@@ -591,9 +591,9 @@ def generate_roster_pdf(sched_act_ids):
 @login_required
 def eighth_absences_view(request, user_id=None):
     if user_id and request.user.is_eighth_admin:
-        user = get_object_or_404(User, id=user_id)
+        user = get_object_or_404(get_user_model(), id=user_id)
     elif "user" in request.GET and request.user.is_eighth_admin:
-        user = get_object_or_404(User, id=request.GET["user"])
+        user = get_object_or_404(get_user_model(), id=request.GET["user"])
     else:
         if request.user.is_student:
             user = request.user

@@ -1,11 +1,11 @@
 import logging
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import ParkingApplication, CarApplication
 from .forms import ParkingApplicationForm, CarApplicationForm
-from ..users.models import User
 from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
@@ -41,9 +41,9 @@ def parking_form_view(request):
     user = request.user
     if request.user.has_admin_permission('parking'):
         if "user" in request.GET:
-            user = get_object_or_404(User, id=request.GET["user"])
+            user = get_object_or_404(get_user_model(), id=request.GET["user"])
         elif "user" in request.POST:
-            user = get_object_or_404(User, id=request.POST["user"])
+            user = get_object_or_404(get_user_model(), id=request.POST["user"])
     try:
         app = ParkingApplication.objects.get(user=user)
     except ParkingApplication.DoesNotExist:
@@ -152,9 +152,9 @@ def parking_joint_view(request):
     user = request.user
     if request.user.has_admin_permission('parking'):
         if "user" in request.GET:
-            user = get_object_or_404(User, id=request.GET["user"])
+            user = get_object_or_404(get_user_model(), id=request.GET["user"])
         elif "user" in request.POST:
-            user = get_object_or_404(User, id=request.POST["user"])
+            user = get_object_or_404(get_user_model(), id=request.POST["user"])
     try:
         app = ParkingApplication.objects.get(user=user)
     except ParkingApplication.DoesNotExist:
@@ -179,8 +179,8 @@ def parking_joint_view(request):
         messages.success(request, "Removed joint application.")
     elif "joint" in request.POST:
         try:
-            app.joint_user = User.objects.get(username=request.POST["joint"])
-        except User.DoesNotExist:
+            app.joint_user = get_user_model().objects.get(username=request.POST["joint"])
+        except get_user_model().DoesNotExist:
             messages.error(request, "Invalid user. Try again")
         else:
             app.save()

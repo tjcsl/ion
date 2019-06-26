@@ -4,8 +4,8 @@ import datetime
 from django.urls import reverse
 from django.utils import timezone
 from django.core.management import call_command
+from django.contrib.auth import get_user_model
 
-from ..users.models import User
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ...test.ion_test import IonTestCase
 
@@ -29,7 +29,7 @@ class LoginViewTest(IonTestCase):
         self.assertEqual(self.client.get(reverse("login")).status_code, 200)
 
     def login_student(self):
-        user = User.objects.get_or_create(username="awilliam")[0]
+        user = get_user_model().objects.get_or_create(username="awilliam")[0]
         user.user_type = "student"
         user.first_login = timezone.now()
         user.seen_welcome = True
@@ -51,7 +51,7 @@ class LoginViewTest(IonTestCase):
         now = timezone.localtime(timezone.now())
 
         self.login_student()
-        user = User.objects.get(username="awilliam")
+        user = get_user_model().objects.get(username="awilliam")
 
         # Don't let blocks created in other tests contaminate these results
         EighthBlock.objects.all().delete()

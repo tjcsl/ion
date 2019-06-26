@@ -2,6 +2,7 @@ import logging
 
 from django import http
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,7 +12,6 @@ from ..exceptions import SignupException
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist)
 from ..serializers import EighthBlockDetailSerializer
 from ...auth.decorators import eighth_admin_required, deny_restricted
-from ...users.models import User
 from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
@@ -39,8 +39,8 @@ def eighth_signup_view(request, block_id=None):
             force = (request.POST.get("force") == "true")
 
             try:
-                user = User.objects.get(id=uid)
-            except User.DoesNotExist:
+                user = get_user_model().objects.get(id=uid)
+            except get_user_model().DoesNotExist:
                 return http.HttpResponseNotFound("Given user does not exist.")
 
             try:
@@ -63,8 +63,8 @@ def eighth_signup_view(request, block_id=None):
         aid = request.POST["aid"]
 
         try:
-            user = User.objects.get(id=uid)
-        except User.DoesNotExist:
+            user = get_user_model().objects.get(id=uid)
+        except get_user_model().DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
         try:
@@ -93,8 +93,8 @@ def eighth_signup_view(request, block_id=None):
 
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
-                user = User.objects.get(id=request.GET["user"])
-            except (User.DoesNotExist, ValueError):
+                user = get_user_model().objects.get(id=request.GET["user"])
+            except (get_user_model().DoesNotExist, ValueError):
                 raise http.Http404
         else:
             if request.user.is_student:
@@ -177,8 +177,8 @@ def eighth_display_view(request, block_id=None):
 
     if "user" in request.GET and request.user.is_eighth_admin:
         try:
-            user = User.objects.get(id=request.GET["user"])
-        except (User.DoesNotExist, ValueError):
+            user = get_user_model().objects.get(id=request.GET["user"])
+        except (get_user_model().DoesNotExist, ValueError):
             raise http.Http404
     else:
         if request.user.is_student:
@@ -266,8 +266,8 @@ def eighth_multi_signup_view(request):
             bids = bids_comma.split(",")
 
             try:
-                user = User.objects.get(id=uid)
-            except User.DoesNotExist:
+                user = get_user_model().objects.get(id=uid)
+            except get_user_model().DoesNotExist:
                 return http.HttpResponseNotFound("Given user does not exist.")
 
             display_messages = []
@@ -312,8 +312,8 @@ def eighth_multi_signup_view(request):
         bids = bids_comma.split(",")
 
         try:
-            user = User.objects.get(id=uid)
-        except User.DoesNotExist:
+            user = get_user_model().objects.get(id=uid)
+        except get_user_model().DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
         display_messages = []
@@ -344,8 +344,8 @@ def eighth_multi_signup_view(request):
     else:
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
-                user = User.objects.get(id=request.GET["user"])
-            except (User.DoesNotExist, ValueError):
+                user = get_user_model().objects.get(id=request.GET["user"])
+            except (get_user_model().DoesNotExist, ValueError):
                 raise http.Http404
         else:
             if request.user.is_student:
@@ -436,8 +436,8 @@ def leave_waitlist_view(request):
     bid = request.POST["bid"]
 
     try:
-        user = User.objects.get(id=uid)
-    except User.DoesNotExist:
+        user = get_user_model().objects.get(id=uid)
+    except get_user_model().DoesNotExist:
         return http.HttpResponseNotFound("Given user does not exist.")
     EighthWaitlist.objects.filter(user_id=user.id, block_id=bid).delete()
     return http.HttpResponse("Successfully left waitlist for this activity.")

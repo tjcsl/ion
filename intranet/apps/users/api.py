@@ -2,6 +2,7 @@ import io
 import os
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -9,7 +10,7 @@ from rest_framework.response import Response
 
 from intranet.apps.search.views import get_search_results
 
-from .models import Grade, User
+from .models import Grade
 from .renderers import JPEGRenderer
 from .serializers import (CounselorTeacherSerializer, StudentSerializer, UserSerializer)
 
@@ -27,9 +28,9 @@ class ProfileDetail(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         if 'pk' in kwargs:
-            user = User.objects.get(pk=kwargs['pk'])
+            user = get_user_model().objects.get(pk=kwargs['pk'])
         elif 'username' in kwargs:
-            user = User.objects.get(username__iexact=kwargs['username'])
+            user = get_user_model().objects.get(username__iexact=kwargs['username'])
         else:
             user = request.user
 
@@ -51,9 +52,9 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         if 'pk' in kwargs:
-            user = User.objects.get(pk=kwargs['pk'])
+            user = get_user_model().objects.get(pk=kwargs['pk'])
         elif 'username' in kwargs:
-            user = User.objects.get(username=kwargs['username'])
+            user = get_user_model().objects.get(username=kwargs['username'])
         else:
             user = request.user
 
@@ -84,7 +85,7 @@ class Search(generics.RetrieveAPIView):
     """
 
     permission_classes = (IsAuthenticated,)
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         query = kwargs['query']
@@ -94,7 +95,7 @@ class Search(generics.RetrieveAPIView):
         for unserialized_user in results:
             user_ids.append(unserialized_user.id)
 
-        queryset = User.objects.filter(pk__in=user_ids).order_by('pk')
+        queryset = get_user_model().objects.filter(pk__in=user_ids).order_by('pk')
         users = self.paginate_queryset(queryset)
 
         response = []
