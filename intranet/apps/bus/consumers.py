@@ -14,7 +14,7 @@ def check_internal_ip(request):
 class BusConsumer(JsonWebsocketConsumer):
     http_user = True
 
-    def connection_groups(self, **kwargs):
+    def connection_groups(self, **kwargs):  # pylint: disable=unused-argument
         """
         Called to return the list of groups to automatically add/remove
         this connection to/from.

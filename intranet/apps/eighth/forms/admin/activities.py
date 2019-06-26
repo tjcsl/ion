@@ -73,7 +73,7 @@ class QuickActivityForm(forms.ModelForm):
 class ActivityMultiSelectForm(forms.Form):
     activities = ActivityMultiDisplayField(queryset=None)
 
-    def __init__(self, label="Activities", *args, **kwargs):
+    def __init__(self, label="Activities", *args, **kwargs):  # pylint: disable=unused-argument
         super(ActivityMultiSelectForm, self).__init__(*args, **kwargs)
         self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
 
@@ -81,7 +81,7 @@ class ActivityMultiSelectForm(forms.Form):
 class ScheduledActivityMultiSelectForm(forms.Form):
     activities = ActivityMultiDisplayField(queryset=None)
 
-    def __init__(self, label="Activities", block=None, *args, **kwargs):
+    def __init__(self, label="Activities", block=None, *args, **kwargs):  # pylint: disable=unused-argument
         super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
         logger.debug(block)
         if block is not None:
