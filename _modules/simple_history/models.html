@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>simple_history.models &#8212; TJ Intranet v3 (Build #4753) documentation</title>
+    <title>simple_history.models &#8212; TJ Intranet v3 (Build #4756) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -130,43 +130,85 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">django.apps</span> <span class="k">import</span> <span class="n">apps</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">admin</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.core.serializers</span> <span class="k">import</span> <span class="n">serialize</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.db.models.fields.proxy</span> <span class="k">import</span> <span class="n">OrderWrt</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="k">import</span> <span class="n">python_2_unicode_compatible</span><span class="p">,</span> <span class="n">smart_text</span>
 <span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="k">import</span> <span class="n">format_lazy</span>
 <span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="k">import</span> <span class="n">now</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
 
+<span class="kn">from</span> <span class="nn">simple_history</span> <span class="k">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">.manager</span> <span class="k">import</span> <span class="n">HistoryDescriptor</span>
+<span class="kn">from</span> <span class="nn">.signals</span> <span class="k">import</span> <span class="n">post_create_historical_record</span><span class="p">,</span> <span class="n">pre_create_historical_record</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="n">registered_models</span> <span class="o">=</span> <span class="p">{}</span>
 
 
-<span class="k">def</span> <span class="nf">default_get_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_model_to_dict</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">model</span><span class="p">]))[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_default_get_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 
+<span class="k">def</span> <span class="nf">_history_user_getter</span><span class="p">(</span><span class="n">historical_instance</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">historical_instance</span><span class="o">.</span><span class="n">history_user_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">historical_instance</span><span class="o">.</span><span class="n">history_user_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_history_user_setter</span><span class="p">(</span><span class="n">historical_instance</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">historical_instance</span><span class="o">.</span><span class="n">history_user_id</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">pk</span>
+
+
 <span class="k">class</span> <span class="nc">HistoricalRecords</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bases</span><span class="o">=</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,),</span>
-                 <span class="n">user_related_name</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">excluded_fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">history_id_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">history_change_reason_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">user_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_user</span><span class="o">=</span><span class="n">default_get_user</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">verbose_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">bases</span><span class="o">=</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,),</span>
+        <span class="n">user_related_name</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">table_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">excluded_fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">history_id_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">history_change_reason_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">user_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">get_user</span><span class="o">=</span><span class="n">_default_get_user</span><span class="p">,</span>
+        <span class="n">cascade_delete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">custom_model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">history_user_id_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">history_user_getter</span><span class="o">=</span><span class="n">_history_user_getter</span><span class="p">,</span>
+        <span class="n">history_user_setter</span><span class="o">=</span><span class="n">_history_user_setter</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_base_model_db</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span> <span class="o">=</span> <span class="n">verbose_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span> <span class="o">=</span> <span class="n">user_related_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">table_name</span>
@@ -175,6 +217,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="n">history_change_reason_field</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_model</span> <span class="o">=</span> <span class="n">user_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span> <span class="o">=</span> <span class="n">get_user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cascade_delete_history</span> <span class="o">=</span> <span class="n">cascade_delete_history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span> <span class="o">=</span> <span class="n">custom_model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_id_field</span> <span class="o">=</span> <span class="n">history_user_id_field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_getter</span> <span class="o">=</span> <span class="n">history_user_getter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_setter</span> <span class="o">=</span> <span class="n">history_user_setter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">related_name</span> <span class="o">=</span> <span class="n">related_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_base_model_db</span> <span class="o">=</span> <span class="n">use_base_model_db</span>
+
         <span class="k">if</span> <span class="n">excluded_fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">excluded_fields</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">excluded_fields</span> <span class="o">=</span> <span class="n">excluded_fields</span>
@@ -192,6 +243,13 @@
         <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">class_prepared</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_methods</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">abstract</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inherit</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;HistoricalRecords added to abstract model (</span><span class="si">{}</span><span class="s2">) without &quot;</span>
+                <span class="s2">&quot;inherit=True&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">add_extra_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">save_without_historical_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
@@ -206,21 +264,19 @@
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_history_when_saving</span>
             <span class="k">return</span> <span class="n">ret</span>
 
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">&#39;save_without_historical_record&#39;</span><span class="p">,</span>
-                <span class="n">save_without_historical_record</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;save_without_historical_record&quot;</span><span class="p">,</span> <span class="n">save_without_historical_record</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">inherited</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sender</span><span class="p">:</span>  <span class="c1"># set in concrete</span>
-            <span class="n">inherited</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inherit</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls</span><span class="p">))</span>
+            <span class="n">inherited</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inherit</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">inherited</span><span class="p">:</span>
                 <span class="k">return</span>  <span class="c1"># set in abstract</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="p">,</span> <span class="s1">&#39;simple_history_manager_attribute&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="p">,</span> <span class="s2">&quot;simple_history_manager_attribute&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleRegistrationsError</span><span class="p">(</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> registered multiple times for history tracking.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
-                    <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2"> registered multiple times for history tracking.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="n">history_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_history_model</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">inherited</span><span class="p">)</span>
@@ -233,49 +289,71 @@
 
         <span class="c1"># The HistoricalRecords object will be discarded,</span>
         <span class="c1"># so the signal handlers can&#39;t use weak references.</span>
-        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-                                         <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-                                           <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">HistoryDescriptor</span><span class="p">(</span><span class="n">history_model</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span>
         <span class="n">sender</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">simple_history_manager_attribute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span>
+
+    <span class="k">def</span> <span class="nf">get_history_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Historical</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
+        <span class="c1"># Must be trying to use a custom history model name</span>
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#  simple string</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span>
+        <span class="c1"># Desired class name cannot be same as the model it is tracking</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">name</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The &#39;custom_model_name&#39; option &#39;</span><span class="si">{}</span><span class="s2">&#39; evaluates to a name that is the same &quot;</span>
+            <span class="s2">&quot;as the model it is tracking. This is not permitted.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">custom_model_name</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create_history_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">inherited</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a historical model to associate with the model provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">,</span>
-            <span class="s1">&#39;_history_excluded_fields&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">excluded_fields</span>
+            <span class="s2">&quot;__module__&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">,</span>
+            <span class="s2">&quot;_history_excluded_fields&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">excluded_fields</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="n">app_module</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.models&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span>
+        <span class="n">app_module</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.models&quot;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span>
 
         <span class="k">if</span> <span class="n">inherited</span><span class="p">:</span>
             <span class="c1"># inherited use models module</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="vm">__module__</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;__module__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="vm">__module__</span>
         <span class="k">elif</span> <span class="n">model</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
             <span class="c1"># registered under different app</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;__module__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span>
         <span class="k">elif</span> <span class="n">app_module</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
             <span class="c1"># Abuse an internal API because the app registry is loading.</span>
             <span class="n">app</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">app_configs</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">]</span>
             <span class="n">models_module</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;__module__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">models_module</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;__module__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">models_module</span>
 
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_fields</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
         <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_extra_fields</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">fields</span><span class="p">))</span>
         <span class="c1"># type in python2 wants str as a first argument</span>
-        <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Meta</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;Meta&#39;</span><span class="p">),</span> <span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_meta_options</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+        <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Meta</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;Meta&quot;</span><span class="p">),</span> <span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_meta_options</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Meta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">db_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Historical</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;Meta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">db_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span>
+
+        <span class="c1"># Set as the default then check for overrides</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_history_model_name</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
         <span class="n">registered_models</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="k">return</span> <span class="n">python_2_unicode_compatible</span><span class="p">(</span>
-            <span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">python_2_unicode_compatible</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">fields_included</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
@@ -298,30 +376,31 @@
                 <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">):</span>
                 <span class="n">old_field</span> <span class="o">=</span> <span class="n">field</span>
-                <span class="n">field_arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;db_constraint&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
-                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;one_to_one&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> \
-                   <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">):</span>
+                <span class="n">old_swappable</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">swappable</span>
+                <span class="n">old_field</span><span class="o">.</span><span class="n">swappable</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">_name</span><span class="p">,</span> <span class="n">_path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">field_args</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">deconstruct</span><span class="p">()</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="n">old_field</span><span class="o">.</span><span class="n">swappable</span> <span class="o">=</span> <span class="n">old_swappable</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s2">&quot;one_to_one&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">old_field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span>
+                <span class="p">):</span>
                     <span class="n">FieldType</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">FieldType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">old_field</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;to_fields&#39;</span><span class="p">,</span> <span class="p">[]):</span>
-                    <span class="n">field_arguments</span><span class="p">[</span><span class="s1">&#39;to_field&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">to_fields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_field</span><span class="p">,</span> <span class="s1">&#39;db_column&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-                    <span class="n">field_arguments</span><span class="p">[</span><span class="s1">&#39;db_column&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">db_column</span>
 
-                <span class="c1"># If old_field.remote_field.model is &#39;self&#39; then we have a</span>
-                <span class="c1"># case where object has a foreign key to itself. In this case</span>
-                <span class="c1"># we need to set the `model` value of the field to a model. We</span>
-                <span class="c1"># can use the old_field.model value.</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> \
-                   <span class="n">old_field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
-                    <span class="n">object_to</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">model</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">object_to</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span>
+                <span class="c1"># If field_args[&#39;to&#39;] is &#39;self&#39; then we have a case where the object</span>
+                <span class="c1"># has a foreign key to itself. If we pass the historical record&#39;s</span>
+                <span class="c1"># field to = &#39;self&#39;, the foreign key will point to an historical</span>
+                <span class="c1"># record rather than the base record. We can use old_field.model here.</span>
+                <span class="k">if</span> <span class="n">field_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
+                    <span class="n">field_args</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">model</span>
 
-                <span class="n">field</span> <span class="o">=</span> <span class="n">FieldType</span><span class="p">(</span>
-                    <span class="n">object_to</span><span class="p">,</span>
-                    <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span>
+                <span class="c1"># Override certain arguments passed when creating the field</span>
+                <span class="c1"># so that they work for the historical field.</span>
+                <span class="n">field_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">db_constraint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
                     <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">primary_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -329,47 +408,109 @@
                     <span class="n">serialize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">unique</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">field_arguments</span>
                 <span class="p">)</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="n">FieldType</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">field_args</span><span class="p">)</span>
                 <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">old_field</span><span class="o">.</span><span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">transform_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
             <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
         <span class="k">return</span> <span class="n">fields</span>
 
+    <span class="k">def</span> <span class="nf">_get_history_change_reason_field</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_change_reason_field</span><span class="p">:</span>
+            <span class="c1"># User specific field from init</span>
+            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_change_reason_field</span>
+        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SIMPLE_HISTORY_HISTORY_CHANGE_REASON_USE_TEXT_FIELD&quot;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="p">):</span>
+            <span class="c1"># Use text field with no max length, not enforced by DB anyways</span>
+            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Current default, with max length</span>
+            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">history_change_reason_field</span>
+
+    <span class="k">def</span> <span class="nf">_get_history_id_field</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id_field</span><span class="p">:</span>
+            <span class="n">history_id_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id_field</span>
+            <span class="n">history_id_field</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">history_id_field</span><span class="o">.</span><span class="n">editable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SIMPLE_HISTORY_HISTORY_ID_USE_UUID&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">history_id_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span>
+                <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">history_id_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">history_id_field</span>
+
+    <span class="k">def</span> <span class="nf">_get_history_user_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_id_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Tracking user using explicit id rather than Django ForeignKey</span>
+            <span class="n">history_user_fields</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;history_user&quot;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_getter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_setter</span><span class="p">),</span>
+                <span class="s2">&quot;history_user_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_id_field</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">user_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_model</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;AUTH_USER_MODEL&quot;</span><span class="p">,</span> <span class="s2">&quot;auth.User&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">history_user_fields</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;history_user&quot;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+                    <span class="n">user_model</span><span class="p">,</span>
+                    <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">related_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span><span class="p">,</span>
+                    <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">history_user_fields</span>
+
+    <span class="k">def</span> <span class="nf">_get_history_related_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">related_name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">related_name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">RelatedNameConflictError</span><span class="p">(</span>
+                    <span class="s2">&quot;The related name must not be called like the history manager.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;history_relation&quot;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+                    <span class="n">model</span><span class="p">,</span>
+                    <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span>
+                    <span class="n">related_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">related_name</span><span class="p">,</span>
+                    <span class="n">db_constraint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
     <span class="k">def</span> <span class="nf">get_extra_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return dict of extra fields added to the historical record model&quot;&quot;&quot;</span>
-
-        <span class="n">user_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_model</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
-            <span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;AUTH_USER_MODEL&#39;</span><span class="p">,</span> <span class="s1">&#39;auth.User&#39;</span>
-        <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">revert_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;URL for this change in the default admin site.&quot;&quot;&quot;</span>
             <span class="n">opts</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span>
             <span class="n">app_label</span><span class="p">,</span> <span class="n">model_name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">model_name</span>
             <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span>
-                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_simple_history&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="n">app_label</span><span class="p">,</span>
-                    <span class="n">model_name</span>
-                <span class="p">),</span>
-                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id</span><span class="p">]</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_simple_history&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">model_name</span><span class="p">),</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id</span><span class="p">],</span>
             <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_history_excluded_fields</span><span class="p">:</span>
                 <span class="n">excluded_attnames</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">attname</span>
                     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_history_excluded_fields</span>
                 <span class="p">]</span>
-                <span class="n">values</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                    <span class="n">pk</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">*</span><span class="n">excluded_attnames</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">))</span>
+                    <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">*</span><span class="n">excluded_attnames</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="p">)</span>
                 <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">attrs</span><span class="p">)</span>
 
@@ -377,68 +518,49 @@
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Get the next history record for the instance. `None` if last.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">Q</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">history_date</span><span class="p">)</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;history_date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">history</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_history_manager_for_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">history_date</span><span class="p">))</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;history_date&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_prev_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Get the previous history record for the instance. `None` if first.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">Q</span><span class="p">(</span><span class="n">history_date__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">history_date</span><span class="p">)</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;history_date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id_field</span><span class="p">:</span>
-            <span class="n">history_id_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_id_field</span>
-            <span class="n">history_id_field</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">history_id_field</span><span class="o">.</span><span class="n">editable</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;SIMPLE_HISTORY_HISTORY_ID_USE_UUID&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="n">history_id_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span>
-                <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">history_id_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_change_reason_field</span><span class="p">:</span>
-            <span class="c1"># User specific field from init</span>
-            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_change_reason_field</span>
-        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span>
-            <span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;SIMPLE_HISTORY_HISTORY_CHANGE_REASON_USE_TEXT_FIELD&#39;</span><span class="p">,</span>
-            <span class="kc">False</span>
-        <span class="p">):</span>
-            <span class="c1"># Use text field with no max length, not enforced by DB anyways</span>
-            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Current default, with max length</span>
-            <span class="n">history_change_reason_field</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
-                <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">history</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_history_manager_for_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">history_date__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">history_date</span><span class="p">))</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;history_date&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">last</span><span class="p">()</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;history_id&#39;</span><span class="p">:</span> <span class="n">history_id_field</span><span class="p">,</span>
-            <span class="s1">&#39;history_date&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(),</span>
-            <span class="s1">&#39;history_change_reason&#39;</span><span class="p">:</span> <span class="n">history_change_reason_field</span><span class="p">,</span>
-            <span class="s1">&#39;history_user&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
-                <span class="n">user_model</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_related_name</span><span class="p">,</span>
-                <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">),</span>
-            <span class="s1">&#39;history_type&#39;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span>
-                <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Created&#39;</span><span class="p">)),</span>
-                <span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Changed&#39;</span><span class="p">)),</span>
-                <span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Deleted&#39;</span><span class="p">)),</span>
-            <span class="p">)),</span>
-            <span class="s1">&#39;history_object&#39;</span><span class="p">:</span> <span class="n">HistoricalObjectDescriptor</span><span class="p">(</span>
-                <span class="n">model</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">extra_fields</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;history_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_history_id_field</span><span class="p">(),</span>
+            <span class="s2">&quot;history_date&quot;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(),</span>
+            <span class="s2">&quot;history_change_reason&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_history_change_reason_field</span><span class="p">(),</span>
+            <span class="s2">&quot;history_type&quot;</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+                <span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Created&quot;</span><span class="p">)),</span> <span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Changed&quot;</span><span class="p">)),</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Deleted&quot;</span><span class="p">))),</span>
             <span class="p">),</span>
-            <span class="s1">&#39;instance&#39;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_instance</span><span class="p">),</span>
-            <span class="s1">&#39;instance_type&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
-            <span class="s1">&#39;next_record&#39;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_next_record</span><span class="p">),</span>
-            <span class="s1">&#39;prev_record&#39;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_prev_record</span><span class="p">),</span>
-            <span class="s1">&#39;revert_url&#39;</span><span class="p">:</span> <span class="n">revert_url</span><span class="p">,</span>
-            <span class="s1">&#39;__str__&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> as of </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history_object</span><span class="p">,</span>
-                                                     <span class="bp">self</span><span class="o">.</span><span class="n">history_date</span><span class="p">)</span>
+            <span class="s2">&quot;history_object&quot;</span><span class="p">:</span> <span class="n">HistoricalObjectDescriptor</span><span class="p">(</span>
+                <span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;instance&quot;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_instance</span><span class="p">),</span>
+            <span class="s2">&quot;instance_type&quot;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
+            <span class="s2">&quot;next_record&quot;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_next_record</span><span class="p">),</span>
+            <span class="s2">&quot;prev_record&quot;</span><span class="p">:</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_prev_record</span><span class="p">),</span>
+            <span class="s2">&quot;revert_url&quot;</span><span class="p">:</span> <span class="n">revert_url</span><span class="p">,</span>
+            <span class="s2">&quot;__str__&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> as of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">history_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">history_date</span>
+            <span class="p">),</span>
         <span class="p">}</span>
+
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_history_related_field</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_history_user_fields</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">extra_fields</span>
 
     <span class="k">def</span> <span class="nf">get_meta_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -446,38 +568,75 @@
 <span class="sd">        the Meta inner class of the historical record model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">meta_fields</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;ordering&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;-history_date&#39;</span><span class="p">,</span> <span class="s1">&#39;-history_id&#39;</span><span class="p">),</span>
-            <span class="s1">&#39;get_latest_by&#39;</span><span class="p">:</span> <span class="s1">&#39;history_date&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;ordering&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;-history_date&quot;</span><span class="p">,</span> <span class="s2">&quot;-history_id&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;get_latest_by&quot;</span><span class="p">:</span> <span class="s2">&quot;history_date&quot;</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">format_lazy</span><span class="p">(</span><span class="s1">&#39;historical </span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">,</span>
-                               <span class="n">smart_text</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">))</span>
-        <span class="n">meta_fields</span><span class="p">[</span><span class="s1">&#39;verbose_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">format_lazy</span><span class="p">(</span><span class="s2">&quot;historical </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smart_text</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">))</span>
+        <span class="n">meta_fields</span><span class="p">[</span><span class="s2">&quot;verbose_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">:</span>
+            <span class="n">meta_fields</span><span class="p">[</span><span class="s2">&quot;app_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span>
         <span class="k">return</span> <span class="n">meta_fields</span>
 
-    <span class="k">def</span> <span class="nf">post_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">created</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;skip_history_when_saving&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">post_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">created</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;skip_history_when_saving&quot;</span><span class="p">):</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">create_historical_record</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">created</span> <span class="ow">and</span> <span class="s1">&#39;+&#39;</span> <span class="ow">or</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_historical_record</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">created</span> <span class="ow">and</span> <span class="s2">&quot;+&quot;</span> <span class="ow">or</span> <span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">post_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">create_historical_record</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cascade_delete_history</span><span class="p">:</span>
+            <span class="n">manager</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span><span class="p">)</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">using</span><span class="p">(</span><span class="n">using</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_historical_record</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">create_historical_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">history_type</span><span class="p">):</span>
-        <span class="n">history_date</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;_history_date&#39;</span><span class="p">,</span> <span class="n">now</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">create_historical_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">history_type</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">using</span> <span class="o">=</span> <span class="n">using</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_base_model_db</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">history_date</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_date&quot;</span><span class="p">,</span> <span class="n">now</span><span class="p">())</span>
         <span class="n">history_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_history_user</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-        <span class="n">history_change_reason</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;changeReason&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
+        <span class="n">history_change_reason</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;changeReason&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">manager</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_name</span><span class="p">)</span>
+
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
             <span class="n">attrs</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-        <span class="n">manager</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">history_date</span><span class="o">=</span><span class="n">history_date</span><span class="p">,</span> <span class="n">history_type</span><span class="o">=</span><span class="n">history_type</span><span class="p">,</span>
-                       <span class="n">history_user</span><span class="o">=</span><span class="n">history_user</span><span class="p">,</span>
-                       <span class="n">history_change_reason</span><span class="o">=</span><span class="n">history_change_reason</span><span class="p">,</span> <span class="o">**</span><span class="n">attrs</span><span class="p">)</span>
+
+        <span class="n">relation_field</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;history_relation&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relation_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;history_relation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+
+        <span class="n">history_instance</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+            <span class="n">history_date</span><span class="o">=</span><span class="n">history_date</span><span class="p">,</span>
+            <span class="n">history_type</span><span class="o">=</span><span class="n">history_type</span><span class="p">,</span>
+            <span class="n">history_user</span><span class="o">=</span><span class="n">history_user</span><span class="p">,</span>
+            <span class="n">history_change_reason</span><span class="o">=</span><span class="n">history_change_reason</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">attrs</span>
+        <span class="p">)</span>
+
+        <span class="n">pre_create_historical_record</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">history_date</span><span class="o">=</span><span class="n">history_date</span><span class="p">,</span>
+            <span class="n">history_user</span><span class="o">=</span><span class="n">history_user</span><span class="p">,</span>
+            <span class="n">history_change_reason</span><span class="o">=</span><span class="n">history_change_reason</span><span class="p">,</span>
+            <span class="n">history_instance</span><span class="o">=</span><span class="n">history_instance</span><span class="p">,</span>
+            <span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">history_instance</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">)</span>
+
+        <span class="n">post_create_historical_record</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">history_instance</span><span class="o">=</span><span class="n">history_instance</span><span class="p">,</span>
+            <span class="n">history_date</span><span class="o">=</span><span class="n">history_date</span><span class="p">,</span>
+            <span class="n">history_user</span><span class="o">=</span><span class="n">history_user</span><span class="p">,</span>
+            <span class="n">history_change_reason</span><span class="o">=</span><span class="n">history_change_reason</span><span class="p">,</span>
+            <span class="n">using</span><span class="o">=</span><span class="n">using</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_history_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the modifying user from instance or middleware.&quot;&quot;&quot;</span>
@@ -498,7 +657,7 @@
     <span class="sd">&quot;&quot;&quot;Customize field appropriately for use in historical model&quot;&quot;&quot;</span>
     <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">):</span>
-        <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">convert_auto_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">):</span>
         <span class="c1"># Don&#39;t copy file, just path.</span>
@@ -517,55 +676,38 @@
         <span class="n">field</span><span class="o">.</span><span class="n">serialize</span> <span class="o">=</span> <span class="kc">True</span>
 
 
-<span class="k">def</span> <span class="nf">convert_auto_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert AutoField to a non-incrementing type</span>
-
-<span class="sd">    The historical model gets its own AutoField, so any existing one</span>
-<span class="sd">    must be replaced with an IntegerField.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">connection</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DATABASES</span><span class="p">[</span><span class="n">connection</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">)</span> <span class="ow">in</span> \
-       <span class="p">(</span><span class="s1">&#39;django_mongodb_engine&#39;</span><span class="p">,):</span>
-        <span class="c1"># Check if AutoField is string for django-non-rel support</span>
-        <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span>
-    <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
-
-
 <span class="k">class</span> <span class="nc">HistoricalObjectDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">fields_included</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span> <span class="o">=</span> <span class="n">fields_included</span>
 
     <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
-                  <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">HistoricalChanges</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">diff_against</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_history</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_history</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">((</span><span class="s2">&quot;unsupported type(s) for diffing: &quot;</span>
-                             <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; and &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
-                            <span class="nb">type</span><span class="p">(</span><span class="n">old_history</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;unsupported type(s) for diffing: &quot;</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; and &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">old_history</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">changes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">changed_fields</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> \
-               <span class="nb">hasattr</span><span class="p">(</span><span class="n">old_history</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
-                <span class="n">old_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_history</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="n">new_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">old_values</span> <span class="o">=</span> <span class="n">_model_to_dict</span><span class="p">(</span><span class="n">old_history</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">current_values</span> <span class="o">=</span> <span class="n">_model_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">current_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">old_values</span><span class="p">:</span>
+                <span class="n">old_value</span> <span class="o">=</span> <span class="n">old_values</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">old_value</span> <span class="o">!=</span> <span class="n">new_value</span><span class="p">:</span>
-                    <span class="n">change</span> <span class="o">=</span> <span class="n">ModelChange</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+                    <span class="n">change</span> <span class="o">=</span> <span class="n">ModelChange</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
                     <span class="n">changes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">change</span><span class="p">)</span>
-                    <span class="n">changed_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">changed_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ModelDelta</span><span class="p">(</span><span class="n">changes</span><span class="p">,</span>
-                          <span class="n">changed_fields</span><span class="p">,</span>
-                          <span class="n">old_history</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ModelDelta</span><span class="p">(</span><span class="n">changes</span><span class="p">,</span> <span class="n">changed_fields</span><span class="p">,</span> <span class="n">old_history</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ModelChange</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>simple_history.manager &#8212; TJ Intranet v3 (Build #4753) documentation</title>
+    <title>simple_history.manager &#8212; TJ Intranet v3 (Build #4756) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/custom.css" />
@@ -167,10 +167,17 @@
 <span class="sd">        Returns the most recent copy of the instance available in the history.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use most_recent() without a </span><span class="si">%s</span><span class="s2"> instance.&quot;</span> <span class="o">%</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Can&#39;t use most_recent() without a </span><span class="si">{}</span><span class="s2"> instance.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">excluded_fields</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;_history_excluded_fields&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">excluded_fields</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">):</span>
                 <span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -179,8 +186,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="o">*</span><span class="n">fields</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no historical record.&quot;</span> <span class="o">%</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no historical record.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">as_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
@@ -197,24 +205,24 @@
             <span class="n">history_obj</span> <span class="o">=</span> <span class="n">queryset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> had not yet been created.&quot;</span> <span class="o">%</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">history_obj</span><span class="o">.</span><span class="n">history_type</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> had not yet been created.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">history_obj</span><span class="o">.</span><span class="n">history_type</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> had already been deleted.&quot;</span> <span class="o">%</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">)</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> had already been deleted.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">history_obj</span><span class="o">.</span><span class="n">instance</span>
 
     <span class="k">def</span> <span class="nf">_as_of_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>  <span class="c1"># a bit of a hack to get the model</span>
         <span class="n">pk_attr</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">name</span>
         <span class="n">queryset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__lte</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">original_pk</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span>
-                <span class="n">queryset</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="n">pk_attr</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">original_pk</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">queryset</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="n">pk_attr</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
             <span class="n">changes</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">pk_attr</span><span class="p">:</span> <span class="n">original_pk</span><span class="p">})</span>
-            <span class="n">last_change</span> <span class="o">=</span> <span class="n">changes</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s1">&#39;history_date&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">changes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date</span><span class="o">=</span><span class="n">last_change</span><span class="o">.</span><span class="n">history_date</span><span class="p">,</span>
-                              <span class="n">history_type</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">last_change</span> <span class="o">=</span> <span class="n">changes</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s2">&quot;history_date&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">changes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">history_date</span><span class="o">=</span><span class="n">last_change</span><span class="o">.</span><span class="n">history_date</span><span class="p">,</span> <span class="n">history_type</span><span class="o">=</span><span class="s2">&quot;-&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="k">continue</span>
             <span class="k">yield</span> <span class="n">last_change</span><span class="o">.</span><span class="n">instance</span>
 
@@ -223,17 +231,22 @@
 
         <span class="n">historical_instances</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
-                <span class="n">history_date</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;_history_date&#39;</span><span class="p">,</span> <span class="n">now</span><span class="p">()),</span>
-                <span class="n">history_user</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;_history_user&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">history_date</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_date&quot;</span><span class="p">,</span> <span class="n">now</span><span class="p">()),</span>
+                <span class="n">history_user</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_user&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">history_change_reason</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;changeReason&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="n">history_type</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
                 <span class="o">**</span><span class="p">{</span>
                     <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span>
                     <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_history_excluded_fields</span>
                 <span class="p">}</span>
-            <span class="p">)</span> <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">objs</span>
+        <span class="p">]</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">(</span><span class="n">historical_instances</span><span class="p">,</span>
-                                              <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">(</span>
+            <span class="n">historical_instances</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+        <span class="p">)</span>
 </pre></div>
 
     </div>
