@@ -41,7 +41,7 @@ class ApiTest(IonTestCase):
         )
         self.client_credentials_application.save()
 
-        oauth2_settings._SCOPES = ["read", "write"] # pylint: disable=protected-access
+        oauth2_settings._SCOPES = ["read", "write"]  # pylint: disable=protected-access
 
     def make_token(self):
         tok = AccessToken.objects.create(
