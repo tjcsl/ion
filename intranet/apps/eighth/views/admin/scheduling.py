@@ -303,7 +303,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         context.update({"admin_page_title": "Transfer Students"})
         return context
 
-    def done(self, form_list, **kwargs):
+    def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
@@ -348,7 +348,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         context.update({"admin_page_title": "Clear Student Signups for Activity"})
         return context
 
-    def done(self, form_list, **kwargs):
+    def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]

@@ -138,7 +138,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         return context
 
-    def done(self, form_list, **kwargs):
+    def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
         form_list = [f for f in form_list]
         logger.debug("debug called in attendance")
 

@@ -158,7 +158,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         context.update({"first_block": this_yr.first().id, "last_block": this_yr.last().id, "all_rooms": EighthRoom.objects.all()})
         return context
 
-    def done(self, form_list, **kwargs):
+    def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
         form_list = [f for f in form_list]
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
