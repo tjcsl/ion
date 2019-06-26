@@ -1,16 +1,10 @@
 import logging
 
-from django import http
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
-# from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
-from ..eighth.models import EighthBlock
-from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
-from ..users.models import User
-from ...utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
