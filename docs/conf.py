@@ -33,34 +33,39 @@ import sphinx_bootstrap_theme
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
-    "djangodocs"
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "djangodocs",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'TJ Intranet'
-copyright = '{}, TJ Intranet Development Team'.format(datetime.now().year)
+project = "TJ Intranet"
+copyright = "{}, TJ Intranet Development Team".format(datetime.now().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = 'v3'
+version = "v3"
 # The full version, including alpha/beta/rc tags.
-release = 'v3'
+release = "v3"
 
 if "TRAVIS_BUILD_NUMBER" in os.environ:
     release += " (Build #{})".format(os.environ["TRAVIS_BUILD_NUMBER"])
@@ -95,7 +100,7 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -107,7 +112,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'bootstrap'
+html_theme = "bootstrap"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -115,15 +120,12 @@ html_theme = 'bootstrap'
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
     # 'navbar_title': "",
-
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Topics",
-    'navbar_pagenav_name': "Section",
-
+    "navbar_site_name": "Topics",
+    "navbar_pagenav_name": "Section",
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 2,
-
+    "globaltoc_depth": 2,
     # Include hidden TOCs in Site navbar?
     #
     # Note: If this is "false", you cannot have mixed ``:hidden:`` and
@@ -131,28 +133,24 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "true",
-
+    "globaltoc_includehidden": "true",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
-    'navbar_class': "navbar",
-
+    "navbar_class": "navbar",
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "true",
-
+    "navbar_fixed_top": "true",
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "footer",
-
+    "source_link_position": "footer",
     # Bootswatch (http://bootswatch.com/) theme.
     #
     # Options are nothing with "" (default) or the name of a valid theme
     # such as "amelia" or "cosmo".
     #
     # Note that this is served off CDN, so won't be available offline.
-    'bootswatch_theme': "",
-    'bootstrap_version': "3"
+    "bootswatch_theme": "",
+    "bootstrap_version": "3",
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -177,7 +175,7 @@ html_favicon = "favicon.ico"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -226,17 +224,15 @@ html_show_sphinx = False
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'TJIntranetdoc'
+htmlhelp_basename = "TJIntranetdoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
 }
@@ -244,7 +240,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [('index', 'TJIntranet.tex', 'TJ Intranet Documentation', 'TJ Intranet Development Team', 'manual')]
+latex_documents = [("index", "TJIntranet.tex", "TJ Intranet Documentation", "TJ Intranet Development Team", "manual")]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
@@ -270,7 +266,7 @@ latex_documents = [('index', 'TJIntranet.tex', 'TJ Intranet Documentation', 'TJ 
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'tjintranet', 'TJ Intranet Documentation', ['TJ Intranet Development Team'], 1)]
+man_pages = [("index", "tjintranet", "TJ Intranet Documentation", ["TJ Intranet Development Team"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -280,8 +276,17 @@ man_pages = [('index', 'tjintranet', 'TJ Intranet Documentation', ['TJ Intranet 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [('index', 'TJIntranet', 'TJ Intranet Documentation', 'TJ Intranet Development Team', 'TJIntranet',
-                      'One line description of project.', 'Miscellaneous')]
+texinfo_documents = [
+    (
+        "index",
+        "TJIntranet",
+        "TJ Intranet Documentation",
+        "TJ Intranet Development Team",
+        "TJIntranet",
+        "One line description of project.",
+        "Miscellaneous",
+    )
+]
 
 # Documents to append as an appendix to all manuals.
 # texinfo_appendices = []
@@ -297,8 +302,8 @@ texinfo_documents = [('index', 'TJIntranet', 'TJ Intranet Documentation', 'TJ In
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'django': ('https://docs.djangoproject.com/en/dev', 'https://docs.djangoproject.com/en/dev/_objects')
+    "python": ("https://docs.python.org/3", None),
+    "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects"),
 }
 
 # -- Django Setup -------------------------------------------------------------
@@ -309,7 +314,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 
 # Don't spin up a ldap server when building docs.
-sys.modules['ldap_test'] = mock.MagicMock()
+sys.modules["ldap_test"] = mock.MagicMock()
 
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
@@ -326,8 +331,10 @@ def setup(app):
     """Setup autodoc."""
     # Fix for documenting models.FileField
     from django.db.models.fields.files import FileDescriptor
+
     FileDescriptor.__get__ = lambda self, *args, **kwargs: self
     import django
+
     django.setup()
-    app.connect('autodoc-skip-member', skip)
-    app.add_stylesheet('_static/custom.css')
+    app.connect("autodoc-skip-member", skip)
+    app.add_stylesheet("_static/custom.css")
