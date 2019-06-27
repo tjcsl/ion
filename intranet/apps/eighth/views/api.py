@@ -68,7 +68,7 @@ class EighthBlockList(generics.ListAPIView):
                 raise ValidationError("Invalid format for date.")
             return EighthBlock.objects.filter(date=date).order_by('id')
 
-        return EighthBlock.objects.get_current_blocks()
+        return EighthBlock.objects.get_blocks_this_year()
 
 
 class EighthBlockDetail(views.APIView):

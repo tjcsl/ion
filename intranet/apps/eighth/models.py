@@ -439,17 +439,6 @@ class EighthBlockManager(models.Manager):
         next_blocks = EighthBlock.objects.filter(date=next_block.date)
         return next_blocks
 
-    def get_current_blocks(self):
-        try:
-            first_upcoming_block = self.get_first_upcoming_block()
-            if first_upcoming_block is None:
-                raise EighthBlock.DoesNotExist()
-            block = (self.prefetch_related("eighthscheduledactivity_set").get(id=first_upcoming_block.id))
-        except EighthBlock.DoesNotExist:
-            return []
-
-        return block.get_surrounding_blocks()
-
     def get_blocks_this_year(self):
         """Get a list of blocks that occur this school year."""
 
