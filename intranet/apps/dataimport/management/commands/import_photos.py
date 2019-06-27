@@ -32,14 +32,14 @@ class Command(BaseCommand):
             sys.exit()
 
     def handle(self, *args, **options):
-        self.pretend = options["pretend"]
-        self.root_dir = options["root_dir"]
-        self.local_root_dir = options["local_root_dir"]
-        self.grade_offset = options["grade_offset"]
-        self.skip_staff = options["skip_staff"]
+        pretend = options["pretend"]  # pylint: disable=attribute-defined-outside-init
+        root_dir = options["root_dir"]  # pylint: disable=attribute-defined-outside-init
+        local_root_dir = options["local_root_dir"]  # pylint: disable=attribute-defined-outside-init
+        grade_offset = options["grade_offset"]  # pylint: disable=attribute-defined-outside-init
+        skip_staff = options["skip_staff"]  # pylint: disable=attribute-defined-outside-init
 
-        print("GRADE OFFSET: ", self.grade_offset)
-        print("\n".join(["{} => {}".format(i, self.calc_grade_offset(i)) for i in range(9, 13)]))
+        print("GRADE OFFSET: ", grade_offset)
+        print("\n".join(["{} => {}".format(i, self.calc_grade_offset(i, grade_offset)) for i in range(9, 13)]))
         teacher_photo_index = 0
 
         if os.path.isfile("user_sid_map.json"):
@@ -47,7 +47,7 @@ class Command(BaseCommand):
         else:
             users = {}
 
-            csv_path = "{}data.txt".format(self.local_root_dir)
+            csv_path = "{}data.txt".format(local_root_dir)
             with open(csv_path, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
                 next(csv_reader)  # skip header
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                         teacher_photo_index += 1
                         continue
 
-                    current_grade = self.calc_grade_offset(grade)
+                    current_grade = self.calc_grade_offset(grade, grade_offset)
                     if grade != 'STA' and (int(current_grade) > 12 or int(current_grade) < 9):
                         continue
                     # the CSV includes only "missing-Student ID", but we need the
@@ -79,14 +79,14 @@ class Command(BaseCommand):
 
                     if not user_obj:
                         print("INVALID USER OBJECT", entry)
-                        # if self.grade_offset != 0:
+                        # if grade_offset != 0:
                         #    continue
 
                     entry["username"] = user_obj.username
 
                     users[entry["username"]] = entry
 
-            if not self.pretend:
+            if not pretend:
                 open("user_sid_map.json", "w").write(json.dumps(users))
 
         print("Map loaded.")
@@ -95,14 +95,14 @@ class Command(BaseCommand):
 
         for uname in users:
             udata = users[uname]
-            if self.skip_staff and udata["grade"] == "STA":
+            if skip_staff and udata["grade"] == "STA":
                 continue
 
             photo_yr = self.photo_title_year(udata["grade"])
 
             if photo_yr:
                 print("OK", uname, udata["grade"], photo_yr, users[uname])
-                ldif = self.add_photo_ldif({"photo": photo_yr, "iodineUid": uname, "path": self.get_photo_path(udata["photo_name"])})
+                ldif = self.add_photo_ldif({"photo": photo_yr, "iodineUid": uname, "path": self.get_photo_path(root_dir, udata["photo_name"])})
 
                 ldifs.append(ldif)
 
@@ -112,7 +112,7 @@ class Command(BaseCommand):
             else:
                 print("SKIP", uname, udata["grade"], photo_yr)
 
-        if not self.pretend:
+        if not pretend:
             open("import_photos.ldif", "w").write("\n\n".join(ldifs))
 
     def get_from_sid(self, sid):
@@ -167,10 +167,10 @@ class Command(BaseCommand):
         # change "STA" to "IGNORE" in the csv
         return None
 
-    def calc_grade_offset(self, grade):
+    def calc_grade_offset(self, grade, grade_offset):
         if grade == "STA":
             return grade
-        return int(grade) - (self.grade_offset or 0)
+        return int(grade) - (grade_offset or 0)
 
     def fix_grade(self, grade):
         grade = str(grade)
@@ -200,8 +200,8 @@ class Command(BaseCommand):
             return "missing-Student ID"
         return "missing-Student ID-{}".format(index)
 
-    def get_photo_path(self, sid):
-        return "{}images/{}.jpg".format(self.root_dir, sid)
+    def get_photo_path(self, root_dir, sid):
+        return "{}images/{}.jpg".format(root_dir, sid)
 
     def delete_photo_ldif(self, data):
         ldif = """
