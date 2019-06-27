@@ -21,7 +21,7 @@ class BusConsumer(JsonWebsocketConsumer):
         """
         return ["bus"]
 
-    def connect(self, message):
+    def connect(self, message, **kwargs):
         print("connected")
         print(message.user)
         if not (message.user.is_authenticated or check_internal_ip(AsgiRequest(message))):
@@ -30,7 +30,7 @@ class BusConsumer(JsonWebsocketConsumer):
         data = self._serialize(user=message.user)
         self.send(data)
 
-    def receive(self, content):
+    def receive(self, content, **kwargs):
         print("received message")
         if not self.message.user.is_authenticated():
             self.send({'error': 'You are not logged in.'})

@@ -68,7 +68,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def get_form_kwargs(self, step):
+    def get_form_kwargs(self, step=None):
         kwargs = {}
         block = None
 

@@ -502,7 +502,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
         if letter and len(letter) >= 1:
@@ -1270,7 +1270,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         self.save()
         """
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         super(EighthScheduledActivity, self).save(*args, **kwargs)
 
     class Meta:
@@ -1343,7 +1343,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     archived_was_absent = models.BooleanField(default=False, blank=True)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         if self.has_conflict():
             raise ValidationError("EighthSignup already exists for this user on this block.")
         super(EighthSignup, self).save(*args, **kwargs)
@@ -1352,7 +1352,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def validate_unique(self, *args, **kwargs):
+    def validate_unique(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 

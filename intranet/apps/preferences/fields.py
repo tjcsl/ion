@@ -19,7 +19,7 @@ class PhoneField(models.Field):
     def get_internal_type(self):
         return 'CharField'
 
-    def formfield(self, **kwargs):
+    def formfield(self, **kwargs):  # pylint: disable=arguments-differ
         # This is a fairly standard way to set up some defaults
         # while letting the caller override them.
         defaults = {'form_class': PhoneFormField}

@@ -9,7 +9,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('action', action='store', nargs=1, metavar='action: [set, flush]', help="Action to perform [set, flush]")
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         if options['action'][0] == "flush":
             for user in get_user_model().objects.exclude(cache=None):
                 user.cache.delete()

@@ -10,7 +10,7 @@ from intranet.apps.groups.models import Group
 class Command(BaseCommand):
     help = "Transfer attendance data"
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """Exported "eighth_activity_permissions" table in CSV format."""
         perm_map = {}
         with open('eighth_activity_permissions.csv', 'r') as absperms:

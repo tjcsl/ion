@@ -371,7 +371,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def get_form_kwargs(self, step):
+    def get_form_kwargs(self, step=None):
         kwargs = {}
         if step == "block":
             kwargs.update({"exclude_before_date": get_start_date(self.request)})
@@ -460,7 +460,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
 
         return super(EighthAdminDistributeGroupWizard, self).dispatch(request, *args, **kwargs)
 
-    def get_form_kwargs(self, step):
+    def get_form_kwargs(self, step=None):
         kwargs = {}
 
         if step == "block":
