@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 from django import http
@@ -6,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import exceptions
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from .forms import AdminEventForm, EventForm
 from .models import Event
@@ -54,10 +54,10 @@ def events_view(request):
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
     # get date objects for week and month
-    today = datetime.date.today()
-    delta = today - datetime.timedelta(days=today.weekday())
-    this_week = (delta, delta + datetime.timedelta(days=7))
-    this_month = (this_week[1], this_week[1] + datetime.timedelta(days=31))
+    today = timezone.localtime().date()
+    delta = today - timezone.timedelta(days=today.weekday())
+    this_week = (delta, delta + timezone.timedelta(days=7))
+    this_month = (this_week[1], this_week[1] + timezone.timedelta(days=31))
 
     events_categories = [
         {"title": "This week", "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])},
