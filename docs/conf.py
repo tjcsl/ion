@@ -12,12 +12,14 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import django
 import os
+import sphinx_bootstrap_theme
 import sys
+
 from datetime import datetime
 from unittest import mock
 
-import sphinx_bootstrap_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -324,8 +326,6 @@ sys.modules["ldap_test"] = mock.MagicMock()
 
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
-
-import django
 
 django.setup()
 
