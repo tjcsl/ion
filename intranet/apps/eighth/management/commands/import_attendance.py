@@ -14,8 +14,7 @@ class Command(BaseCommand):
 
         with open('eighth_absentees.csv', 'r') as absopen:
             absences = csv.reader(absopen)
-            for row in absences:
-                bid, uid = row
+            for bid, uid in absences:
                 try:
                     usr = get_user_model().objects.get(id=uid)
                 except get_user_model().DoesNotExist:
