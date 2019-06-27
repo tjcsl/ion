@@ -29,12 +29,15 @@ class Page(models.Model):
 
     strip_links = models.BooleanField(default=True)
 
-    def deploy_to(self, displays=None, exclude=[]):
+    def deploy_to(self, displays=None, exclude=None):
         """
         Deploys page to listed display (specify with display). If display is None,
         deploy to all display. Can specify exclude for which display to exclude.
         This overwrites the first argument.
         """
+        if exclude is None:
+            exclude = []
+
         if displays is None:
             signs = Sign.objects.all()
         else:
