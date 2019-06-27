@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+from django.utils import timezone
 
 from .notifications import event_approval_request
 from ..announcements.models import Announcement
@@ -106,9 +105,9 @@ class Event(models.Model):
         title (str): The title for the event.
         description (str): A description about the event.
         links (LinksQuerySet): Links to be attached to the event. Not currently used.
-        added (datetime): Time created (automatically set).
-        updated (datetime): Time last modified (automatically set).
-        time (datetime): The date and time of the event.
+        added (datetime.datetime): Time created (automatically set).
+        updated (datetime.datetime): Time last modified (automatically set).
+        time (datetime.datetime): The date and time of the event.
         location (str): Where the event is located.
         user (User): The user who created the event.
         scheduled_activity (EighthScheduledActivity): An EighthScheduledActivity that should be linked with the event.
@@ -168,13 +167,13 @@ class Event(models.Model):
             Whether to display the fuzzy date.
 
         """
-        date = self.time.replace(tzinfo=None)
-        if date <= datetime.now():
-            diff = datetime.now() - date
+        date = self.time
+        if date <= timezone.now():
+            diff = timezone.now() - date
             if diff.days >= 14:
                 return False
         else:
-            diff = date - datetime.now()
+            diff = date - timezone.now()
             if diff.days >= 14:
                 return False
 

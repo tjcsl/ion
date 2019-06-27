@@ -8,8 +8,42 @@ from ...test.ion_test import IonTestCase
 class EventsTest(IonTestCase):
     """Tests for the events module."""
 
-    def create_random_event(self, user):
-        return Event.objects.create(title="Test Event", description="", time=timezone.now(), location="TJHSST", user=user)
+    def create_random_event(self, user, approved=False, time=timezone.now()):
+        event = Event.objects.create(title="Test Event", description="", time=time, location="TJHSST", user=user)
+        if approved:
+            event.approved = True
+        return event
+
+    def test_event_model(self):
+        self.login()
+        event = self.create_random_event(self.user)
+
+        # Check event properties
+        self.assertTrue(event.is_this_year)
+        self.assertEqual(event.dashboard_type, "event")
+        self.assertFalse(event.pinned)
+
+        # Test creating/fetching EventUserMap
+        self.assertFalse(EventUserMap.objects.exists())
+        user_map = event.user_map
+        # Test that EventUserMap was created
+        self.assertTrue(EventUserMap.objects.filter(event=event).count(), 1)
+        self.assertEqual(event.user_map, user_map)
+
+        self.assertEqual("UNAPPROVED - {} - {}".format(event.title, event.time), str(event))
+
+        event = self.create_random_event(self.user, approved=True)
+        self.assertEqual("{} - {}".format(event.title, event.time), str(event))
+
+        next_event = self.create_random_event(self.user, time=timezone.now() + timezone.timedelta(days=15))
+        prev_event = self.create_random_event(self.user, time=timezone.now() - timezone.timedelta(days=15))
+        self.assertEqual(next_event.show_fuzzy_date(), False)
+        self.assertEqual(prev_event.show_fuzzy_date(), False)
+
+        next_event = self.create_random_event(self.user, time=timezone.now() + timezone.timedelta(days=1))
+        prev_event = self.create_random_event(self.user, time=timezone.now() - timezone.timedelta(days=1))
+        self.assertEqual(next_event.show_fuzzy_date(), True)
+        self.assertEqual(prev_event.show_fuzzy_date(), True)
 
     def test_events_root_non_admin(self):
         self.login()
