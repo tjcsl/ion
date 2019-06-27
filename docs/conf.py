@@ -14,13 +14,11 @@
 
 import os
 import sys
-
-import django
-import sphinx_bootstrap_theme
-
 from datetime import datetime
 from unittest import mock
 
+import django
+import sphinx_bootstrap_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
