@@ -49,7 +49,7 @@ class EighthBlockList(generics.ListAPIView):
 
     def is_valid_date(self, date_text):
         try:
-            datetime.strptime(date_text, '%Y-%m-%d')
+            datetime.strptime(date_text, "%Y-%m-%d")
         except ValueError:
             return False
         return True
@@ -91,7 +91,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
     def is_valid_date(self, date_text):
         try:
-            datetime.strptime(date_text, '%Y-%m-%d')
+            datetime.strptime(date_text, "%Y-%m-%d")
         except ValueError:
             return False
         return True
