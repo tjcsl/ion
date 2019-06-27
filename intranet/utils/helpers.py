@@ -4,7 +4,7 @@ import logging
 import subprocess
 from urllib import parse
 
-from typing import Set # noqa
+from typing import Set  # noqa
 
 from django.conf import settings
 from django.template.loader import get_template
