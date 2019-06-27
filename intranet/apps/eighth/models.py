@@ -1402,7 +1402,6 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def accept_pass(self):
         self.was_absent = False
-        self.present = True
         self.pass_accepted = True
         self.save()
 
