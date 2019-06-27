@@ -1,3 +1,4 @@
+# pylint: disable=abstract-method
 from rest_framework import serializers
 
 from .models import Route

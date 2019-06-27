@@ -1,3 +1,4 @@
+# pylint: disable=abstract-method
 import collections
 import functools
 import logging
