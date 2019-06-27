@@ -449,12 +449,12 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         return [self.TEMPLATES[self.steps.current]]
 
     def dispatch(self, request, *args, **kwargs):
-        self.group_id = kwargs.get('group_id', None)
+        self.group_id = kwargs.get('group_id', None)  # pylint: disable=attribute-defined-outside-init
         try:
-            self.group = Group.objects.get(id=self.group_id)
+            self.group = Group.objects.get(id=self.group_id)  # pylint: disable=attribute-defined-outside-init
         except Group.DoesNotExist:
             if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
-                self.group = False
+                self.group = False  # pylint: disable=attribute-defined-outside-init
             else:
                 raise http.Http404
 
