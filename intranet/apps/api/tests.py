@@ -10,7 +10,7 @@ from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
 from ..bus.models import Route
-from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom
+from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom, EighthSignup
 from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
@@ -299,6 +299,211 @@ class ApiTest(IonTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["results"], [])
+
+    def test_api_eighth_signup_list(self):
+        self.make_token()
+
+        # Don't let blocks created in other tests contaminate these results
+        EighthBlock.objects.all().delete()
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act2 = EighthActivity.objects.create(name="Test Activity 2")
+
+        # Check the list
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Test a good date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=2019-04-18",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Test a bad date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=2019-04-18bad",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data[0].code, "invalid")
+
+        # Test a good start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=2019-04-18",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Test a bad start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=2019-04-18bad",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data[0].code, "invalid")
+
+        # Create some blocks
+        now = timezone.localtime(timezone.now())
+        block1 = EighthBlock.objects.create(date=(now - datetime.timedelta(days=370)).date(), block_letter="A")
+        schact1 = EighthScheduledActivity.objects.create(block=block1, activity=act1)
+        block2 = EighthBlock.objects.create(date=now.date(), block_letter="A")
+        schact2 = EighthScheduledActivity.objects.create(block=block2, activity=act2)
+
+        # Check the list
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Sign up
+        sgn1 = EighthSignup.objects.create(user=self.user, scheduled_activity=schact1)
+
+        # Check the list
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["id"], sgn1.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.data[0]["block"]["id"], block1.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+
+        # Date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["id"], sgn1.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.data[0]["block"]["id"], block1.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+
+        # Empty start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block1.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Empty date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block1.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Sign up again
+        sgn2 = EighthSignup.objects.create(user=self.user, scheduled_activity=schact2)
+
+        # Check the list
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["id"], sgn2.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.data[0]["block"]["id"], block2.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+
+        # Old date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["id"], sgn1.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.data[0]["block"]["id"], block1.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+
+        # New date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block2.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["id"], sgn2.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.data[0]["block"]["id"], block2.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+
+        # Old start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]["id"], sgn1.id)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.data[0]["block"]["id"], block1.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+        self.assertEqual(response.data[1]["id"], sgn2.id)
+        self.assertEqual(response.data[1]["user"], self.user.id)
+        self.assertEqual(response.data[1]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.data[1]["block"]["id"], block2.id)
+        self.assertEqual(response.data[1]["activity"]["id"], act2.id)
+
+        # New start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block2.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["user"], self.user.id)
+        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.data[0]["block"]["id"], block2.id)
+        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+
+        # Empty start date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + (block2.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
+        # Empty date
+        response = self.client.get(
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block2.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
 
     def test_api_bus_list(self):
         self.make_token()
