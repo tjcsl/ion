@@ -184,22 +184,121 @@ class ApiTest(IonTestCase):
     def test_api_eighth_block_list(self):
         self.make_token()
 
+        # Don't let blocks created in other tests contaminate these results
+        EighthBlock.objects.all().delete()
+
+        # List everything
         response = self.client.get(reverse("api_eighth_block_list"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"], [])
 
         # Test a good date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?date=2019-04-18",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"], [])
+
+        # Test a bad date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?date=2019-04-18bad",
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data[0].code, "invalid")
+
+        # Test a good start date
         response = self.client.get(
             reverse("api_eighth_block_list") + "?start_date=2019-04-18",
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"], [])
 
-        # Test a bad date
+        # Test a bad start date
         response = self.client.get(
             reverse("api_eighth_block_list") + "?start_date=2019-04-18bad",
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data[0].code, "invalid")
+
+        # Now let's add some data
+        now = timezone.localtime(timezone.now())
+        block_old = EighthBlock.objects.create(date=(now - datetime.timedelta(days=370)).date(), block_letter="A")
+        block_new = EighthBlock.objects.create(date=now.date(), block_letter="A")
+
+        # List everything
+        response = self.client.get(reverse("api_eighth_block_list"), HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["id"], block_new.id)
+        self.assertEqual(response.data["results"][0]["date"], block_new.date)
+        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+
+        # Test a date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?date=" + block_new.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["id"], block_new.id)
+        self.assertEqual(response.data["results"][0]["date"], block_new.date)
+        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+
+        # Test another date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?date=" + block_old.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["id"], block_old.id)
+        self.assertEqual(response.data["results"][0]["date"], block_old.date)
+        self.assertEqual(response.data["results"][0]["block_letter"], block_old.block_letter)
+
+        # Test an empty date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?date=" + (block_new.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"], [])
+
+        # Test a start date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?start_date=" + block_new.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["id"], block_new.id)
+        self.assertEqual(response.data["results"][0]["date"], block_new.date)
+        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+
+        # Test an earlier start date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?start_date=" + block_old.date.strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 2)
+        self.assertEqual(response.data["results"][0]["id"], block_old.id)
+        self.assertEqual(response.data["results"][0]["date"], block_old.date)
+        self.assertEqual(response.data["results"][0]["block_letter"], block_old.block_letter)
+        self.assertEqual(response.data["results"][1]["id"], block_new.id)
+        self.assertEqual(response.data["results"][1]["date"], block_new.date)
+        self.assertEqual(response.data["results"][1]["block_letter"], block_new.block_letter)
+
+        # Test a late start date
+        response = self.client.get(
+            reverse("api_eighth_block_list") + "?start_date=" + (block_new.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            HTTP_AUTHORIZATION=self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["results"], [])
 
     def test_api_bus_list(self):
         self.make_token()
