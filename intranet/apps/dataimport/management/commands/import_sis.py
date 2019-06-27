@@ -46,12 +46,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.csv_file = options["csv_file"]
         self.do_run = options["run"]
-        self.skip_confirm = options["confirm"]
-        self.fake_teachers = options["fake_teachers"]
-        self.load_users = options["load_users"]
-        self.teacher_file = options["teacher_file"]
+        skip_confirm = options["confirm"]
+        fake_teachers = options["fake_teachers"]
+        load_users = options["load_users"]
+        teacher_file = options["teacher_file"]
 
-        if self.load_users:
+        if load_users:
             for i in range(self.last_uid_number, self.last_uid_number + 500):
                 try:
                     u = get_user_model().objects.get(id=i)
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             return
 
         if self.do_run:
-            if self.skip_confirm:
+            if skip_confirm:
                 self.stdout.write("Skipping confirmation.")
             else:
                 self.ask("===== WARNING! =====\n\n"
@@ -74,7 +74,7 @@ class Command(BaseCommand):
 
         self.stdout.write("CSV file: %s" % self.csv_file)
 
-        if self.fake_teachers:
+        if fake_teachers:
             if os.path.isfile("users_faked.json"):
                 self.stdout.write("Loading faked teachers JSON")
                 users = json.loads(open("users_faked.json", "r").read())
@@ -148,7 +148,7 @@ class Command(BaseCommand):
 
         for sid in self.schedules:
             self.stdout.write("ADD SCHEDULE %s" % sid)
-            self.add_ldap_class(self.schedules[sid])
+            self.add_ldap_class(self.schedules[sid], teacher_file)
 
         self.stdout.write("Adding new teachers")
         for teacher in self.new_teachers:
@@ -519,7 +519,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
         return "\n".join(["classPeriod: {}".format(data["Period"]), "classPeriod: {}".format(data["EndPeriod"])])
 
-    def format_sponsor(self, data):
+    def format_sponsor(self, data, teacher_file):
         # TODO: Search existing LDAP/handle new teachers
         if data["Teacher"] in self.teacher_mappings:
             return self.teacher_mappings[data["Teacher"]]
@@ -534,7 +534,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
 
         try:
 
-            with open(self.teacher_file, 'r') as csv_file:
+            with open(teacher_file, 'r') as csv_file:
                 reader = csv.reader(csv_file)
                 next(reader)
                 for line in reader:
@@ -563,7 +563,7 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             })
         return username
 
-    def gen_class_fields(self, data):
+    def gen_class_fields(self, data, teacher_file):
         return {
             "sectionId": data["SectionID"],
             "classId": data["CourseID"],
@@ -572,11 +572,11 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             "periods": self.format_periods(data),
             "roomNumber": data["Room"] or 'DSS',
             "cn": data["CourseTitle"],
-            "sponsor": self.format_sponsor(data)
+            "sponsor": self.format_sponsor(data, teacher_file)
         }
 
-    def add_ldap_class(self, data):
-        fields = self.gen_class_fields(data)
+    def add_ldap_class(self, data, teacher_file):
+        fields = self.gen_class_fields(data, teacher_file)
         ldif = self.gen_class_ldif(fields)
         self.ldifs["schedules"].append(ldif)
         self.stdout.write(str(data))
