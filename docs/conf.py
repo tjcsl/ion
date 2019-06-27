@@ -12,10 +12,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import django
 import os
-import sphinx_bootstrap_theme
 import sys
+
+import django
+import sphinx_bootstrap_theme
 
 from datetime import datetime
 from unittest import mock
@@ -333,7 +334,6 @@ django.setup()
 def skip(app, what, name, obj, skip, options):
     """Methods to skip when generating documentation from docstrings."""
     if name in ("__weakref__", "__dict__", "base_fields", "media", "history_object"):
-
         return True
     return skip
 

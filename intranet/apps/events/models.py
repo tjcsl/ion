@@ -105,7 +105,7 @@ class Event(models.Model):
     Attributes:
         title (str): The title for the event.
         description (str): A description about the event.
-        links (LinksQuerySet): Links to be attached to the vent. Not currently used.
+        links (LinksQuerySet): Links to be attached to the event. Not currently used.
         added (datetime): Time created (automatically set).
         updated (datetime): Time last modified (automatically set).
         time (datetime): The date and time of the event.
@@ -119,7 +119,7 @@ class Event(models.Model):
         show_on_dashboard (bool): Whether the event will be shown on the dashboard.
         approved (bool): Whether the event has been approved and will be displayed.
         approved_by (User): The user who approved the event.
-        rejected (bool): hether the event was rejected and shouldn't be shown in the
+        rejected (bool): Whether the event was rejected and shouldn't be shown in the
             list of events that need to be approved.
         rejected_by (User): The user who rejected the event.
         public (bool): Whether the event is public and can be shown on the login page.
@@ -188,7 +188,7 @@ class Event(models.Model):
 
     @property
     def is_this_year(self):
-        """ Return whether the event was created after the start of the school year."""
+        """Return whether the event was created after the start of the school year."""
         return is_current_year(self.added)
 
     @property
