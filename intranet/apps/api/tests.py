@@ -190,7 +190,7 @@ class ApiTest(IonTestCase):
         # List everything
         response = self.client.get(reverse("api_eighth_block_list"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["results"], [])
+        self.assertEqual(response.json()["results"], [])
 
         # Test a good date
         response = self.client.get(
@@ -198,7 +198,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["results"], [])
+        self.assertEqual(response.json()["results"], [])
 
         # Test a bad date
         response = self.client.get(
@@ -206,7 +206,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data[0].code, "invalid")
+        self.assertEqual(response.json(), ["Invalid format for date."])
 
         # Test a good start date
         response = self.client.get(
@@ -214,7 +214,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["results"], [])
+        self.assertEqual(response.json()["results"], [])
 
         # Test a bad start date
         response = self.client.get(
@@ -222,83 +222,86 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data[0].code, "invalid")
+        self.assertEqual(response.json(), ["Invalid format for start_date."])
 
         # Now let's add some data
         now = timezone.localtime(timezone.now())
         block_old = EighthBlock.objects.create(date=(now - datetime.timedelta(days=370)).date(), block_letter="A")
         block_new = EighthBlock.objects.create(date=now.date(), block_letter="A")
+        block_old_date_str = block_old.date.strftime("%Y-%m-%d")
+        block_new_date_str = block_new.date.strftime("%Y-%m-%d")
+        future_date_str = (block_new.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         # List everything
         response = self.client.get(reverse("api_eighth_block_list"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 1)
-        self.assertEqual(response.data["results"][0]["id"], block_new.id)
-        self.assertEqual(response.data["results"][0]["date"], block_new.date)
-        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["id"], block_new.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_new_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block_new.block_letter)
 
-        # Test a date
+        # Test a date with a block scheduled
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?date=" + block_new.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?date=" + block_new_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 1)
-        self.assertEqual(response.data["results"][0]["id"], block_new.id)
-        self.assertEqual(response.data["results"][0]["date"], block_new.date)
-        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["id"], block_new.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_new_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block_new.block_letter)
 
-        # Test another date
+        # Test another date with a block scheduled
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?date=" + block_old.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?date=" + block_old_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 1)
-        self.assertEqual(response.data["results"][0]["id"], block_old.id)
-        self.assertEqual(response.data["results"][0]["date"], block_old.date)
-        self.assertEqual(response.data["results"][0]["block_letter"], block_old.block_letter)
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["id"], block_old.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_old_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block_old.block_letter)
 
-        # Test an empty date
+        # Test a date with no blocks scheduled
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?date=" + (block_new.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["results"], [])
+        self.assertEqual(response.json()["results"], [])
 
-        # Test a start date
+        # Test a start date with blocks scheduled
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?start_date=" + block_new.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?start_date=" + block_new_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 1)
-        self.assertEqual(response.data["results"][0]["id"], block_new.id)
-        self.assertEqual(response.data["results"][0]["date"], block_new.date)
-        self.assertEqual(response.data["results"][0]["block_letter"], block_new.block_letter)
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["id"], block_new.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_new_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block_new.block_letter)
 
         # Test an earlier start date
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?start_date=" + block_old.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?start_date=" + block_old_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 2)
-        self.assertEqual(response.data["results"][0]["id"], block_old.id)
-        self.assertEqual(response.data["results"][0]["date"], block_old.date)
-        self.assertEqual(response.data["results"][0]["block_letter"], block_old.block_letter)
-        self.assertEqual(response.data["results"][1]["id"], block_new.id)
-        self.assertEqual(response.data["results"][1]["date"], block_new.date)
-        self.assertEqual(response.data["results"][1]["block_letter"], block_new.block_letter)
+        self.assertEqual(len(response.json()["results"]), 2)
+        self.assertEqual(response.json()["results"][0]["id"], block_old.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_old_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block_old.block_letter)
+        self.assertEqual(response.json()["results"][1]["id"], block_new.id)
+        self.assertEqual(response.json()["results"][1]["date"], block_new_date_str)
+        self.assertEqual(response.json()["results"][1]["block_letter"], block_new.block_letter)
 
         # Test a late start date
         response = self.client.get(
-            reverse("api_eighth_block_list") + "?start_date=" + (block_new.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_block_list") + "?start_date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["results"], [])
+        self.assertEqual(response.json()["results"], [])
 
     def test_api_eighth_signup_list(self):
         self.make_token()
@@ -315,7 +318,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
         # Test a good date
         response = self.client.get(
@@ -323,7 +326,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
         # Test a bad date
         response = self.client.get(
@@ -331,7 +334,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data[0].code, "invalid")
+        self.assertEqual(response.json(), ["Invalid format for date."])
 
         # Test a good start date
         response = self.client.get(
@@ -339,7 +342,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
         # Test a bad start date
         response = self.client.get(
@@ -347,7 +350,7 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data[0].code, "invalid")
+        self.assertEqual(response.json(), ["Invalid format for start_date."])
 
         # Create some blocks
         now = timezone.localtime(timezone.now())
@@ -356,13 +359,17 @@ class ApiTest(IonTestCase):
         block2 = EighthBlock.objects.create(date=now.date(), block_letter="A")
         schact2 = EighthScheduledActivity.objects.create(block=block2, activity=act2)
 
+        block1_date_str = block1.date.strftime("%Y-%m-%d")
+        block2_date_str = block2.date.strftime("%Y-%m-%d")
+        future_date_str = (block2.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
         # Check the list
         response = self.client.get(
             reverse("api_eighth_user_signup_list_myid"),
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
         # Sign up
         sgn1 = EighthSignup.objects.create(user=self.user, scheduled_activity=schact1)
@@ -373,51 +380,51 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
-        # Start date
+        # Test a start date with an upcoming signup
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["id"], sgn1.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
-        self.assertEqual(response.data[0]["block"]["id"], block1.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], sgn1.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block1.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act1.id)
 
-        # Date
+        # Test a date with an upcoming signup
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["id"], sgn1.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
-        self.assertEqual(response.data[0]["block"]["id"], block1.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], sgn1.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block1.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act1.id)
 
-        # Empty start date
+        # Test a start date with no upcoming signups
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block1.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
-        # Empty date
+        # Test a date with no signups
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block1.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
-        # Sign up again
+        # Sign up for another block
         sgn2 = EighthSignup.objects.create(user=self.user, scheduled_activity=schact2)
 
         # Check the list
@@ -426,84 +433,84 @@ class ApiTest(IonTestCase):
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["id"], sgn2.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
-        self.assertEqual(response.data[0]["block"]["id"], block2.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], sgn2.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block2.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act2.id)
 
-        # Old date
+        # Test a date with a signup
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block1_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["id"], sgn1.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
-        self.assertEqual(response.data[0]["block"]["id"], block1.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], sgn1.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block1.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act1.id)
 
-        # New date
+        # Test another date with a signup
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + block2.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + block2_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["id"], sgn2.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
-        self.assertEqual(response.data[0]["block"]["id"], block2.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], sgn2.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block2.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act2.id)
 
-        # Old start date
+        # Test a start date with two upcoming signups
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block1_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
-        self.assertEqual(response.data[0]["id"], sgn1.id)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact1.id)
-        self.assertEqual(response.data[0]["block"]["id"], block1.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act1.id)
-        self.assertEqual(response.data[1]["id"], sgn2.id)
-        self.assertEqual(response.data[1]["user"], self.user.id)
-        self.assertEqual(response.data[1]["scheduled_activity"], schact2.id)
-        self.assertEqual(response.data[1]["block"]["id"], block2.id)
-        self.assertEqual(response.data[1]["activity"]["id"], act2.id)
+        self.assertEqual(len(response.json()), 2)
+        self.assertEqual(response.json()[0]["id"], sgn1.id)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact1.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block1.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act1.id)
+        self.assertEqual(response.json()[1]["id"], sgn2.id)
+        self.assertEqual(response.json()[1]["user"], self.user.id)
+        self.assertEqual(response.json()[1]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.json()[1]["block"]["id"], block2.id)
+        self.assertEqual(response.json()[1]["activity"]["id"], act2.id)
 
-        # New start date
+        # Test a start date with an upcoming signup
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block2.date.strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + block2_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["user"], self.user.id)
-        self.assertEqual(response.data[0]["scheduled_activity"], schact2.id)
-        self.assertEqual(response.data[0]["block"]["id"], block2.id)
-        self.assertEqual(response.data[0]["activity"]["id"], act2.id)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["user"], self.user.id)
+        self.assertEqual(response.json()[0]["scheduled_activity"], schact2.id)
+        self.assertEqual(response.json()[0]["block"]["id"], block2.id)
+        self.assertEqual(response.json()[0]["activity"]["id"], act2.id)
 
-        # Empty start date
+        # Test a start date with no upcoming signups
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + (block2.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?start_date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
-        # Empty date
+        # Test a date with no signups
         response = self.client.get(
-            reverse("api_eighth_user_signup_list_myid") + "?date=" + (block2.date + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            reverse("api_eighth_user_signup_list_myid") + "?date=" + future_date_str,
             HTTP_AUTHORIZATION=self.auth,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.json(), [])
 
     def test_api_bus_list(self):
         self.make_token()
