@@ -509,8 +509,8 @@ class EighthBlock(AbstractBaseEighthModel):
         blocks = (EighthBlock.objects.get_blocks_this_year().order_by(
             "-date", "-block_letter").filter(Q(date__lt=self.date) | (Q(date=self.date) & Q(block_letter__lt=self.block_letter))))
         if quantity == -1:
-            return reversed(blocks)
-        return reversed(blocks[:quantity])
+            return blocks.reverse()
+        return blocks[:quantity].reverse()
 
     def is_today(self):
         """Does the block occur today?"""
