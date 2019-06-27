@@ -94,7 +94,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
     queryset = EighthSignup.objects.all().order_by('id')
 
-    def list(self, request, user_id=None):
+    def list(self, request, user_id=None):  # pylint: disable=arguments-differ
         if not user_id:
             user_id = request.user.id
         elif not get_user_model().objects.get(id=user_id).can_view_eighth:
@@ -147,7 +147,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
         user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
-    def list(self, request):
+    def list(self, request):  # pylint: disable=arguments-differ
         serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
         return Response(serialized.data)
 
@@ -182,7 +182,7 @@ class EighthUserFavoritesAdd(generics.CreateAPIView):
         user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
-    def create(self, request, user_id=None):
+    def create(self, request, user_id=None):  # pylint: disable=arguments-differ
         if user_id:
             user = get_user_model().objects.get(id=user_id)
         else:
@@ -207,7 +207,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
         user = get_user_model().objects.get(id=user_id)
         return user.favorited_activity_set.all()
 
-    def list(self, request):
+    def list(self, request):  # pylint: disable=arguments-differ
         serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
 
         return Response(serialized.data)

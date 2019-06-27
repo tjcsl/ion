@@ -8,5 +8,5 @@ class JPEGRenderer(renderers.BaseRenderer):
     charset = None  # type: str
     render_style = 'binary'
 
-    def render(self, data, media_type=None, renderer_context=None):  # pylint: disable=unused-argument
+    def render(self, data, accepted_media_type=None, renderer_context=None):  # pylint: disable=unused-argument
         return data

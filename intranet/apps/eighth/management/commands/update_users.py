@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 class Command(BaseCommand):
     help = "Input users into the database who have not logged in already"
 
-    def handle(self, **options):
+    def handle(self, *app_labels, **options):  # pylint: disable=unused-argument
         # The range for Ion user IDs; adjust as needed
         ion_id_start = 31416
         ion_id_end = 33503

@@ -8,7 +8,7 @@ from intranet.apps.groups.models import Group
 class Command(BaseCommand):
     help = "Update dynamic groups, and ensure that all students have an entry in the database."
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """ Create "Class of 20[16-19]" groups """
 
         students_grp, _ = Group.objects.get_or_create(name="Students")
