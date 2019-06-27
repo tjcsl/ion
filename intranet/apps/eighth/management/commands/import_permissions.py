@@ -15,8 +15,7 @@ class Command(BaseCommand):
         perm_map = {}
         with open('eighth_activity_permissions.csv', 'r') as absperms:
             perms = csv.reader(absperms)
-            for row in perms:
-                aid, uid = row
+            for aid, uid in perms:
                 try:
                     usr = get_user_model().objects.get(id=uid)
                 except get_user_model().DoesNotExist:

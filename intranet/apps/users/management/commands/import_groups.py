@@ -13,8 +13,7 @@ class Command(BaseCommand):
         mappings = {}
         with open('groups_name.csv', 'r') as namesopen:
             names = csv.reader(namesopen)
-            for row in names:
-                gid, gname, _ = row
+            for gid, gname, _ in names:
                 gname = gname.replace("eighth_", "")
                 gexist = Group.objects.filter(name=gname)
                 if gexist.count() == 1:
@@ -27,8 +26,7 @@ class Command(BaseCommand):
         self.stdout.write("{}".format(mappings))
         with open('groups_static.csv', 'r') as staticopen:
             static = csv.reader(staticopen)
-            for row in static:
-                uid, gid = row
+            for uid, gid in static:
                 try:
                     usrobj = get_user_model().objects.get(id=uid)
                 except get_user_model().DoesNotExist:
