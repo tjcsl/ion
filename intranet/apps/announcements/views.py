@@ -101,16 +101,14 @@ def request_announcement_view(request):
                 ann = AnnouncementRequest.objects.get(id=obj.id)
                 logger.debug(teacher_objs)
                 approve_self = False
-                teacher = None
                 for teacher in teacher_objs:
                     ann.teachers_requested.add(teacher)
                     if teacher == request.user:
+                        ann.teachers_approved.add(teacher)
                         approve_self = True
                 ann.save()
 
                 if approve_self:
-                    ann.teachers_approved.add(teacher)
-                    ann.save()
                     if settings.SEND_ANNOUNCEMENT_APPROVAL:
                         admin_request_announcement_email(request, form, ann)
                     ann.admin_email_sent = True
