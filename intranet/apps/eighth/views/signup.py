@@ -112,7 +112,7 @@ def eighth_signup_view(request, block_id=None):
                 # The provided block_id is invalid
                 raise http.Http404
 
-        surrounding_blocks = block.get_surrounding_blocks()
+        surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
         schedule = []
 
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
@@ -196,7 +196,7 @@ def eighth_display_view(request, block_id=None):
             # The provided block_id is invalid
             raise http.Http404
 
-    surrounding_blocks = block.get_surrounding_blocks()
+    surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
     schedule = []
 
     signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
