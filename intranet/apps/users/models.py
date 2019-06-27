@@ -350,19 +350,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def permissions(self):
         """Dynamically generate dictionary of privacy options
         """
-        # TODO: optimize this, it's kind of a bad solution for listing a mostly
-        # static set of files.
-        # We could either add a permissions dict as an attribute or cache this
-        # in some way. Creating a dict would be another place we have to define
-        # the permission, so I'm not a huge fan, but it would definitely be the
-        # easier option.
-        permissions_dict = {"self": {}, "parent": {}}
+        permissions_dict = {}
 
-        for field in self.properties._meta.get_fields():
-            split_field = field.name.split('_', 1)
-            if not split_field or split_field[0] not in ['self', 'parent']:
-                continue
-            permissions_dict[split_field[0]][split_field[1]] = getattr(self.properties, field.name)
+        for prefix in PERMISSIONS_NAMES:
+            permissions_dict[prefix] = {}
+            for suffix in PERMISSIONS_NAMES[prefix]:
+                permissions_dict[prefix][suffix] = getattr(self.properties, prefix + "_" + suffix)
 
         return permissions_dict
 
@@ -894,6 +887,10 @@ class UserProperties(models.Model):
             return parent and student
         except Exception:
             logger.error("Could not retrieve permissions for %s", permission)
+
+
+PERMISSIONS_NAMES = {prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")]
+                     for prefix in ["self", "parent"]}
 
 
 class Email(models.Model):
