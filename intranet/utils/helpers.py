@@ -1,3 +1,4 @@
+from datetime import datetime
 import ipaddress
 import logging
 import subprocess
@@ -6,6 +7,9 @@ from urllib import parse
 from typing import Set # noqa
 
 from django.conf import settings
+from django.template.loader import get_template
+
+from ..apps.emerg.views import get_emerg
 
 logger = logging.getLogger('intranet.settings')
 
@@ -117,3 +121,38 @@ class GlobList(list):
 
 def single_css_map(name):
     return {name: {'source_filenames': ['css/%s.scss' % name], 'output_filename': 'css/%s.css' % name}}
+
+
+def get_fcps_emerg(request):
+    """Return FCPS emergency information."""
+    try:
+        emerg = get_emerg()
+    except Exception:
+        logger.info("Unable to fetch FCPS emergency info")
+        emerg = {"status": False}
+
+    if emerg["status"] or ("show_emerg" in request.GET):
+        msg = emerg["message"]
+        return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
+
+    return False
+
+
+def get_ap_week_warning(request):
+    now = datetime.now()
+    today = now.date()
+    day = today.day
+    if now.hour > 16:
+        day += 1
+
+    if 11 <= day <= 12:
+        day = 13
+
+    if 4 <= day <= 5:
+        day = 6
+
+    data = {"day": day, "date": request.GET.get("date", None)}
+    if today.month == 5 and 4 <= day <= 17:
+        return get_template("auth/ap_week_schedule.html").render(data)
+
+    return False

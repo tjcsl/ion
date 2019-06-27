@@ -12,27 +12,12 @@ from django.utils import timezone
 
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
-from ..emerg.views import get_emerg
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
+from ...utils.helpers import get_fcps_emerg, get_ap_week_warning
 
 logger = logging.getLogger(__name__)
-
-
-def get_fcps_emerg(request):
-    """Return FCPS emergency information."""
-    try:
-        emerg = get_emerg()
-    except Exception:
-        logger.info("Unable to fetch FCPS emergency info")
-        emerg = {"status": False}
-
-    if emerg["status"] or ("show_emerg" in request.GET):
-        msg = emerg["message"]
-        return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
-
-    return False
 
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
@@ -510,8 +495,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     except Exception:
         dash_warning = None
 
-    # TODO: resolve circular dependency
-    from ..auth.views import get_ap_week_warning
     fcps_emerg = get_fcps_emerg(request)
     ap_week = get_ap_week_warning(request)
     if fcps_emerg:

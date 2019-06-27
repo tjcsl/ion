@@ -7,7 +7,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.shortcuts import redirect, render
-from django.template.loader import get_template
 from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -22,6 +21,7 @@ from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
 from ..events.models import Event
 from ..eighth.models import EighthBlock, EighthSignup
+from ...utils.helpers import get_ap_week_warning
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -83,26 +83,6 @@ def get_login_theme():
         return {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"}
 
     return {}
-
-
-def get_ap_week_warning(request):
-    now = datetime.now()
-    today = now.date()
-    day = today.day
-    if now.hour > 16:
-        day += 1
-
-    if 11 <= day <= 12:
-        day = 13
-
-    if 4 <= day <= 5:
-        day = 6
-
-    data = {"day": day, "date": request.GET.get("date", None)}
-    if today.month == 5 and 4 <= day <= 17:
-        return get_template("auth/ap_week_schedule.html").render(data)
-
-    return False
 
 
 @sensitive_post_parameters("password")
