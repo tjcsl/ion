@@ -2,7 +2,6 @@
 # pylint: enable=pointless-string-statement
 import datetime
 import logging
-from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -512,19 +511,6 @@ class EighthBlock(AbstractBaseEighthModel):
         if quantity == -1:
             return reversed(blocks)
         return reversed(blocks[:quantity])
-
-    def get_surrounding_blocks(self):
-        """Get the blocks around the one given.
-
-        Returns: a list of all of those blocks.
-
-        """
-
-        next_blocks = self.next_blocks()
-        prev_blocks = self.previous_blocks()
-
-        surrounding_blocks = list(chain(prev_blocks, [self], next_blocks))
-        return surrounding_blocks
 
     def is_today(self):
         """Does the block occur today?"""
