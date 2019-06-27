@@ -4,10 +4,9 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #4756) documentation</title>
+    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #4781) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -537,18 +536,24 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Choice</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>A choice for a Question.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><dl class="first last docutils">
-<dt>question</dt>
-<dd>A ForeignKey to the question this choice is for.</dd>
-<dt>num</dt>
-<dd>An integer order in which the question should appear; the primary sort.</dd>
-<dt>info</dt>
-<dd>Textual information about this answer choice.</dd>
-</dl>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.question">
+<code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.question" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ForeignKey to the question this choice is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.num">
+<code class="descname">num</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.num" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer order in which the question should appear; the primary sort.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.info">
+<code class="descname">info</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Textual information about this answer choice.</p>
+</dd></dl>
+
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Choice.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -599,15 +604,15 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Choice.info">
-<code class="descname">info</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.info" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">info</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Choice.num">
-<code class="descname">num</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.num" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">num</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -618,8 +623,8 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Choice.question">
-<code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.question" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">question</code></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
@@ -649,25 +654,43 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Poll</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>A Poll, for the TJ community.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><dl class="first last docutils">
-<dt>title</dt>
-<dd>A title for the poll, that will be displayed to identify it uniquely.</dd>
-<dt>description</dt>
-<dd>A longer description, possibly explaining how to complete the poll.</dd>
-<dt>start_time</dt>
-<dd>A time that the poll should open.</dd>
-<dt>end_time</dt>
-<dd>A time that the poll should close.</dd>
-<dt>visible</dt>
-<dd>Whether the poll is visible to the users it is for.</dd>
-<dt>groups</dt>
-<dd>The Group’s that can view–and vote in–the poll. Like Announcements,
-if there are none set, then it is public to all.</dd>
-</dl>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.title">
+<code class="descname">title</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A title for the poll, that will be displayed to identify it uniquely.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.description">
+<code class="descname">description</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A longer description, possibly explaining how to complete the poll.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.start_time">
+<code class="descname">start_time</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A time that the poll should open.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.end_time">
+<code class="descname">end_time</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A time that the poll should close.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.visible">
+<code class="descname">visible</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the poll is visible to the users it is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.groups">
+<code class="descname">groups</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Group’s that can view–and vote in–the poll. Like Announcements,
+if there are none set, then it is public to all.</p>
+</dd></dl>
+
 <p>Access questions for the poll through poll.question_set.all()</p>
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Poll.DoesNotExist">
@@ -699,15 +722,15 @@ if there are none set, then it is public to all.</dd>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.description">
-<code class="descname">description</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.description" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">description</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.end_time">
-<code class="descname">end_time</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.end_time" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">end_time</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -738,8 +761,8 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.groups">
-<code class="descname">groups</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.groups" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">groups</code></dt>
 <dd><p>Accessor to the related objects manager on the forward and reverse sides of
 a many-to-many relation.</p>
 <p>In the example:</p>
@@ -792,22 +815,22 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.start_time">
-<code class="descname">start_time</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.start_time" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">start_time</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.title">
-<code class="descname">title</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.title" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">title</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.visible">
-<code class="descname">visible</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.visible" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">visible</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -821,9 +844,7 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.polls.models.PollManager.get_queryset">
 <code class="descname">get_queryset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#PollManager.get_queryset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.PollManager.get_queryset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a new QuerySet object.  Subclasses can override this method to
-easily customize the behavior of the Manager.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.polls.models.PollManager.visible_to_user">
@@ -853,18 +874,29 @@ the user is a member.</p>
 <em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Question</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>A question for a Poll.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><dl class="first docutils">
-<dt>poll</dt>
-<dd>A ForeignKey to the Poll object the question is for.</dd>
-<dt>question</dt>
-<dd>A text field for entering the question, of which there are choices
-the user can make.</dd>
-<dt>num</dt>
-<dd>An integer order in which the question should appear; the primary sort.</dd>
-<dt>type</dt>
-<dd><dl class="first last docutils">
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.poll">
+<code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Question.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ForeignKey to the Poll object the question is for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.question">
+<code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Question.question" title="Permalink to this definition">¶</a></dt>
+<dd><p>A text field for entering the question, of which there are choices
+the user can make.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.num">
+<code class="descname">num</code><a class="headerlink" href="#intranet.apps.polls.models.Question.num" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer order in which the question should appear; the primary sort.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.type">
+<code class="descname">type</code><a class="headerlink" href="#intranet.apps.polls.models.Question.type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
 <dt>One of:</dt>
 <dd>Question.STD: Standard
 Question.ELECTION: Election (randomized choice order)
@@ -873,13 +905,19 @@ Question.SPLIT_APP: Split approval
 Question.FREE_RESP: Free response
 Question.STD_OTHER: Standard Other field</dd>
 </dl>
-</dd>
-<dt>max_choices</dt>
-<dd>The maximum number of choices that can be selected. Only applies for approval questions.</dd>
-</dl>
-<p class="last">Access possible choices for this question through question.choice_set.all()</p>
-</dd>
-</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.max_choices">
+<code class="descname">max_choices</code><a class="headerlink" href="#intranet.apps.polls.models.Question.max_choices" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum number of choices that can be selected. Only applies for approval questions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">Access possible choices for this question through question.choice_set.all()</code></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="intranet.apps.polls.models.Question.APP">
 <code class="descname">APP</code><em class="property"> = 'APP'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.APP" title="Permalink to this definition">¶</a></dt>
@@ -1020,15 +1058,15 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.max_choices">
-<code class="descname">max_choices</code><a class="headerlink" href="#intranet.apps.polls.models.Question.max_choices" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">max_choices</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.num">
-<code class="descname">num</code><a class="headerlink" href="#intranet.apps.polls.models.Question.num" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">num</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1039,8 +1077,8 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.poll">
-<code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Question.poll" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">poll</code></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
@@ -1059,8 +1097,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.question">
-<code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Question.question" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">question</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1076,8 +1114,8 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.type">
-<code class="descname">type</code><a class="headerlink" href="#intranet.apps.polls.models.Question.type" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">type</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

@@ -4,10 +4,9 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4756) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #4781) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
@@ -140,27 +139,12 @@
 
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="k">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
-<span class="kn">from</span> <span class="nn">..emerg.views</span> <span class="k">import</span> <span class="n">get_emerg</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">TJStarUUIDMap</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="k">import</span> <span class="n">decode_date</span><span class="p">,</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">..seniors.models</span> <span class="k">import</span> <span class="n">Senior</span>
+<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="k">import</span> <span class="n">get_fcps_emerg</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="get_fcps_emerg"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_fcps_emerg">[docs]</a><span class="k">def</span> <span class="nf">get_fcps_emerg</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return FCPS emergency information.&quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">emerg</span> <span class="o">=</span> <span class="n">get_emerg</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Unable to fetch FCPS emergency info&quot;</span><span class="p">)</span>
-        <span class="n">emerg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
-
-    <span class="k">if</span> <span class="n">emerg</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;show_emerg&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">emerg</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &lt;span style=&#39;display: block;text-align: right&#39;&gt;&amp;mdash; FCPS&lt;/span&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="gen_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.gen_schedule">[docs]</a><span class="k">def</span> <span class="nf">gen_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">num_blocks</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -638,8 +622,6 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">dash_warning</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1"># TODO: resolve circular dependency</span>
-    <span class="kn">from</span> <span class="nn">..auth.views</span> <span class="k">import</span> <span class="n">get_ap_week_warning</span>
     <span class="n">fcps_emerg</span> <span class="o">=</span> <span class="n">get_fcps_emerg</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">ap_week</span> <span class="o">=</span> <span class="n">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fcps_emerg</span><span class="p">:</span>

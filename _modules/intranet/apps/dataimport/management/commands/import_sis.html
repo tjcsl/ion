@@ -4,10 +4,9 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #4756) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_sis &#8212; TJ Intranet v3 (Build #4781) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
@@ -174,12 +173,12 @@
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">csv_file</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;csv_file&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">do_run</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skip_confirm</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;confirm&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fake_teachers</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;fake_teachers&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_users</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;load_users&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">teacher_file</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;teacher_file&quot;</span><span class="p">]</span>
+        <span class="n">skip_confirm</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;confirm&quot;</span><span class="p">]</span>
+        <span class="n">fake_teachers</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;fake_teachers&quot;</span><span class="p">]</span>
+        <span class="n">load_users</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;load_users&quot;</span><span class="p">]</span>
+        <span class="n">teacher_file</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;teacher_file&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_users</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">load_users</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_uid_number</span> <span class="o">+</span> <span class="mi">500</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
@@ -190,7 +189,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_run</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_confirm</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">skip_confirm</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Skipping confirmation.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -202,7 +201,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;CSV file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_file</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_teachers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fake_teachers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;users_faked.json&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Loading faked teachers JSON&quot;</span><span class="p">)</span>
                 <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;users_faked.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
@@ -276,7 +275,7 @@
 
         <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ADD SCHEDULE </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sid</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_ldap_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">[</span><span class="n">sid</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_ldap_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schedules</span><span class="p">[</span><span class="n">sid</span><span class="p">],</span> <span class="n">teacher_file</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Adding new teachers&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_teachers</span><span class="p">:</span>
@@ -647,7 +646,7 @@
 
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;classPeriod: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Period&quot;</span><span class="p">]),</span> <span class="s2">&quot;classPeriod: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;EndPeriod&quot;</span><span class="p">])])</span></div>
 
-<div class="viewcode-block" id="Command.format_sponsor"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">format_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.format_sponsor"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.format_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">format_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">teacher_file</span><span class="p">):</span>
         <span class="c1"># TODO: Search existing LDAP/handle new teachers</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_mappings</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_mappings</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Teacher&quot;</span><span class="p">]]</span>
@@ -662,7 +661,7 @@
 
         <span class="k">try</span><span class="p">:</span>
 
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">teacher_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">teacher_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_file</span><span class="p">:</span>
                 <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
                 <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
@@ -691,7 +690,7 @@
             <span class="p">})</span>
         <span class="k">return</span> <span class="n">username</span></div>
 
-<div class="viewcode-block" id="Command.gen_class_fields"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.gen_class_fields">[docs]</a>    <span class="k">def</span> <span class="nf">gen_class_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.gen_class_fields"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.gen_class_fields">[docs]</a>    <span class="k">def</span> <span class="nf">gen_class_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">teacher_file</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;sectionId&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SectionID&quot;</span><span class="p">],</span>
             <span class="s2">&quot;classId&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;CourseID&quot;</span><span class="p">],</span>
@@ -700,11 +699,11 @@
             <span class="s2">&quot;periods&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_periods</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
             <span class="s2">&quot;roomNumber&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Room&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;DSS&#39;</span><span class="p">,</span>
             <span class="s2">&quot;cn&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;CourseTitle&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;sponsor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_sponsor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="s2">&quot;sponsor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_sponsor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">teacher_file</span><span class="p">)</span>
         <span class="p">}</span></div>
 
-<div class="viewcode-block" id="Command.add_ldap_class"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.add_ldap_class">[docs]</a>    <span class="k">def</span> <span class="nf">add_ldap_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_class_fields</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<div class="viewcode-block" id="Command.add_ldap_class"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_sis.Command.add_ldap_class">[docs]</a>    <span class="k">def</span> <span class="nf">add_ldap_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">teacher_file</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_class_fields</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">teacher_file</span><span class="p">)</span>
         <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_class_ldif</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ldifs</span><span class="p">[</span><span class="s2">&quot;schedules&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
