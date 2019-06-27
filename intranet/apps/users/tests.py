@@ -77,7 +77,7 @@ class ProfileTest(IonTestCase):
             scope="read write",
             expires=timezone.now() + datetime.timedelta(days=1),
         )
-        self.auth = "Bearer {}".format(tok.token)
+        self.auth = "Bearer {}".format(tok.token)  # pylint: disable=attribute-defined-outside-init
 
     def test_get_profile(self):
         self.make_admin()
