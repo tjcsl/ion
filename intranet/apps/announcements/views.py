@@ -101,6 +101,7 @@ def request_announcement_view(request):
                 ann = AnnouncementRequest.objects.get(id=obj.id)
                 logger.debug(teacher_objs)
                 approve_self = False
+                teacher = None
                 for teacher in teacher_objs:
                     ann.teachers_requested.add(teacher)
                     if teacher == request.user:

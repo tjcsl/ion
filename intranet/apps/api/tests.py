@@ -43,6 +43,8 @@ class ApiTest(IonTestCase):
 
         oauth2_settings._SCOPES = ["read", "write"]  # pylint: disable=protected-access
 
+        self.auth = None
+
     def make_token(self):
         tok = AccessToken.objects.create(
             user=self.user,
