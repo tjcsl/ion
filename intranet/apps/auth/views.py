@@ -275,7 +275,7 @@ def reset_password_view(request):
             "new_password_confirm": request.POST.get("new_password_confirm", None)
         }
         ret = change_password(form_data)
-        if ret is True:
+        if not ret["unable_to_set"]:
             do_logout(request)
             messages.success(request, "Successfully changed password.")
             return redirect("index")

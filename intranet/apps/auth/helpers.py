@@ -8,7 +8,7 @@ import pexpect
 logger = logging.getLogger(__name__)
 
 
-def change_password(form_data):
+def change_password(form_data):  # pylint: disable=too-many-return-statements
     if form_data:
         form_data["username"] = re.sub(r'\W', '', form_data["username"])
     if (form_data and form_data["username"] == "unknown" or form_data["old_password"] is None or form_data["new_password"] is None or
@@ -38,5 +38,5 @@ def change_password(form_data):
     except pexpect.TIMEOUT:
         return {"unable_to_set": True, "errors": errors}
     if exitstatus == 0:
-        return True
+        return {"unable_to_set": False}
     return {"unable_to_set": True}
