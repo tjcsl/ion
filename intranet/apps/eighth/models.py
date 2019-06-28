@@ -86,6 +86,12 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def name(self):
+        """If show_full_name is set, returns "last name, first name". Otherwise, returns last name only.
+
+        Returns:
+            str: The name to display for the sponsor, omitting the first name unless explicitly requested.
+
+        """
         if self.show_full_name and self.first_name:
             return self.last_name + ", " + self.first_name
         else:
@@ -93,6 +99,12 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def to_be_assigned(self):
+        """Returns True if the sponsor's name contains "to be assigned" or similar.
+
+        Returns:
+            bool: Whether the sponsor is a "to be assigned" sponsor.
+
+        """
         return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
     def __str__(self):
@@ -271,6 +283,12 @@ class EighthActivity(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     def capacity(self):
+        """Returns 'default_capacity' if it is set. Otherwise, returns the total capacity of all the activity's rooms.
+
+        Returns:
+            int: The activity's capacity.
+
+        """
         # Note that this is the default capacity if the
         # rooms/capacity are not overridden for a particular block.
         if self.default_capacity:
@@ -332,6 +350,12 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def available_ids(cls):
+        """Returns all available IDs not used by an EighthActivity.
+
+        Returns:
+            list: A list of the available activity IDs.
+
+        """
         id_min = 1
         id_max = 3200
         nums = set(range(id_min, id_max))
@@ -371,6 +395,12 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def is_popular(self):
+        """Returns True if this activity has more than `settings.SIMILAR_THRESHOLD * 2` frequent_users.
+
+        Returns:
+            bool: Whether this activity has more than `settings.SIMILAR_THRESHOLD * 2` frequent_users.
+
+        """
         return self.frequent_users.count() > (settings.SIMILAR_THRESHOLD * 2)
 
     class Meta:
@@ -499,7 +529,16 @@ class EighthBlock(AbstractBaseEighthModel):
         super(EighthBlock, self).save(*args, **kwargs)
 
     def next_blocks(self, quantity=-1):
-        """Get the next blocks in order."""
+        """Get the next blocks in order.
+
+        Args:
+            quantity (int, optional): The number of blocks to list after this block, or -1 for all following blocks.
+
+        Returns:
+            QuerySet: A QuerySet with the specified number of blocks after this block. If `quantity` is passed, then the QuerySet will not be
+            filter()-able.
+
+        """
         blocks = (
             EighthBlock.objects.get_blocks_this_year()
             .order_by("date", "block_letter")
@@ -510,7 +549,16 @@ class EighthBlock(AbstractBaseEighthModel):
         return blocks[:quantity]
 
     def previous_blocks(self, quantity=-1):
-        """Get the previous blocks in order."""
+        """Get the previous blocks in order.
+
+        Args:
+            quantity (int, optional): The number of blocks to list before this block, or -1 for all previous blocks.
+
+        Returns:
+            QuerySet: A QuerySet with the specified number of blocks before this block. If `quantity` is passed, then the QuerySet will not be
+            filter()-able.
+
+        """
         blocks = (
             EighthBlock.objects.get_blocks_this_year()
             .order_by("-date", "-block_letter")
@@ -589,6 +637,12 @@ class EighthBlock(AbstractBaseEighthModel):
 
     @property
     def formatted_date(self):
+        """Returns the block date, formatted according to settings.EIGHTH_BLOCK_DATE_FORMAT.
+
+        Returns:
+            str: The formatted block date.
+
+        """
         return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
 
     def __str__(self):
@@ -689,6 +743,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     def get_all_associated_rooms(self):
+        """Returns a QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
+
+        Returns:
+            QuerySet: A QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
+
+        """
         return (self.rooms.all() | self.activity.rooms.all()).distinct()
 
     @property
@@ -746,6 +806,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return EighthRoom.total_capacity_of_rooms(self.activity.rooms.all())
 
     def is_both_blocks(self):
+        """Gets whether this scheduled activity runs both blocks.
+
+        Returns:
+            bool: Whether this activity runs both blocks.
+
+        """
         return self.both_blocks or self.activity.both_blocks
 
     def get_restricted(self):
@@ -877,6 +943,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return None
 
     def notify_waitlist(self, waitlists, activity):
+        """Notifies all users on the given EighthWaitlist objects that the activity has an open spot.
+
+        Args:
+            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified.
+            activity (EighthScheduledActivity): The activity that has an open spot.
+
+        """
         data = {"activity": activity}
         for waitlist in waitlists:
             email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data, "Open Spot Notification",
@@ -1134,11 +1207,24 @@ class EighthSignupManager(Manager):
     """Model manager for EighthSignup."""
 
     def create_signup(self, user, scheduled_activity, **kwargs):
+        """Creates an EighthSignup for the given user in the given activity (after checking for duplicate signups).
+
+        Args:
+            user (User): The user to create the EighthSignup for.
+            scheduled_activity (EighthScheduledActivity): The EighthScheduledActivity to sign the user up for.
+
+        """
         if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
             raise ValidationError("EighthSignup already exists for this user on this block.")
         self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
 
     def get_absences(self):
+        """Returns all EighthSignups for which the student was marked as absent.
+
+        Returns:
+            QuerySet[EighthSignup]: A QuerySet of all the EighthSignups for which the student was marked as absent.
+
+        """
         return EighthSignup.objects.filter(was_absent=True, scheduled_activity__attendance_taken=True)
 
 
@@ -1209,6 +1295,12 @@ class EighthSignup(AbstractBaseEighthModel):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
     def has_conflict(self):
+        """Returns True if another EighthSignup object exists for the same user in the same block.
+
+        Returns:
+            bool: Whether there is another EighthSignup for the same user in the same block.
+
+        """
         return EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).exists()
 
     def remove_signup(self, user=None, force=False, dont_run_waitlist=False):
@@ -1248,11 +1340,13 @@ class EighthSignup(AbstractBaseEighthModel):
             return "Successfully removed signup for {}.".format(block)
 
     def accept_pass(self):
+        """Accepts an eighth period pass for the EighthSignup object."""
         self.was_absent = False
         self.pass_accepted = True
         self.save(update_fields=["was_absent", "pass_accepted"])
 
     def reject_pass(self):
+        """Rejects an eighth period pass for the EighthSignup object."""
         self.was_absent = True
         self.pass_accepted = True
         self.save(update_fields=["was_absent", "pass_accepted"])
@@ -1262,6 +1356,7 @@ class EighthSignup(AbstractBaseEighthModel):
         return self.scheduled_activity.block.in_clear_absence_period()
 
     def archive_remove_absence(self):
+        """If user was absent, archives the absence."""
         if self.was_absent:
             self.was_absent = False
             self.archived_was_absent = True
@@ -1278,12 +1373,44 @@ class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
     def get_next_waitlist(self, activity):
+        """Return a QuerySet of all the EighthWaitlist objects for the given activity, ordered
+        by signup time.
+
+        Args:
+            activity (EighthScheduledActivity): The activity to list the EighthWaitlist objects for.
+
+        Returns:
+            QuerySet[EighthWaitlist]: A QuerySet of all the EighthWaitlist objects for the given activity,
+            ordered by signup time.
+
+        """
         return self.filter(scheduled_activity_id=activity.id).order_by("time")
 
     def check_for_prescence(self, activity, user):
+        """Returns True if the given user is in a waitlist for the given activity.
+
+        Args:
+            activity (EighthScheduledActivity): The activity for which the waitlist should be queried.
+            user (User): The user who should be searched for in the activity's waitlist.
+
+        Returns:
+            bool: Whether the given user is in a waitlist for the given activity.
+
+        """
         return self.filter(scheduled_activity_id=activity.id, user=user).exists()
 
     def position_in_waitlist(self, aid, uid):
+        """Given an activity ID and a user ID, returns the user's position in the waitlist (starting at 1).
+        If the user is not in the waitlist, returns 0.
+
+        Args:
+            aid (int): The ID of the EighthScheduledActivity for which the waitlist should be queried.
+            uid (int): The ID of the user whose position in the waitlist should be found.
+
+        Returns:
+            int: The user's position in the waitlist, starting at 1, or 0 if the user is not in the waitlist.
+
+        """
         try:
             return self.filter(scheduled_activity_id=aid, time__lt=self.get(scheduled_activity_id=aid, user_id=uid).time).count() + 1
         except EighthWaitlist.DoesNotExist:
@@ -1315,6 +1442,7 @@ class EighthActivitySimilarity(AbstractBaseEighthModel):
         return self.count / cap
 
     def update_weighted(self):
+        """Recalculates the 'weighted' field based on changes to similar activities."""
         self.weighted = self._weighted
         self.save(update_fields=["weighted"])
 
