@@ -10,7 +10,7 @@ from django.utils import timezone
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
-from .models import Address
+from .models import PERMISSIONS_NAMES, Address
 from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
@@ -93,3 +93,14 @@ class ProfileTest(IonTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["address"]["postal_code"], "22312")
+
+    def test_privacy_options(self):
+        self.assertEqual(set(PERMISSIONS_NAMES.keys()), {"self", "parent"})
+        for k in ["self", "parent"]:
+            self.assertEqual(set(PERMISSIONS_NAMES[k]),
+                             {"show_pictures", "show_address", "show_telephone", "show_birthday", "show_eighth", "show_schedule"})
+
+        self.assertEqual(set(self.user.permissions.keys()), {"self", "parent"})
+        for k in ["self", "parent"]:
+            self.assertEqual(set(self.user.permissions[k].keys()),
+                             {"show_pictures", "show_address", "show_telephone", "show_birthday", "show_eighth", "show_schedule"})
