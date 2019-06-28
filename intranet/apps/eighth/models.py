@@ -1218,7 +1218,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.cancelled:
             logger.debug("Cancelling %s", self)
             self.cancelled = True
-        self.save()
+            self.save(update_fields=["cancelled"])
         # NOT USED. Was broken anyway.
         """
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
@@ -1245,7 +1245,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.cancelled:
             logger.debug("Uncancelling %s", self)
             self.cancelled = False
-        self.save()
+            self.save(update_fields=["cancelled"])
         # NOT USED. Was broken anyway.
         """
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
@@ -1392,12 +1392,12 @@ class EighthSignup(AbstractBaseEighthModel):
     def accept_pass(self):
         self.was_absent = False
         self.pass_accepted = True
-        self.save()
+        self.save(update_fields=["was_absent", "pass_accepted"])
 
     def reject_pass(self):
         self.was_absent = True
         self.pass_accepted = True
-        self.save()
+        self.save(update_fields=["was_absent", "pass_accepted"])
 
     def in_clear_absence_period(self):
         """Is the block for this signup in the clear absence period?"""
@@ -1407,7 +1407,7 @@ class EighthSignup(AbstractBaseEighthModel):
         if self.was_absent:
             self.was_absent = False
             self.archived_was_absent = True
-            self.save()
+            self.save(update_fields=["was_absent", "archived_was_absent"])
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)
@@ -1457,7 +1457,7 @@ class EighthActivitySimilarity(AbstractBaseEighthModel):
 
     def update_weighted(self):
         self.weighted = self._weighted
-        self.save()
+        self.save(update_fields=["weighted"])
 
     def __str__(self):
         act_set = self.activity_set.all()
