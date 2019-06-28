@@ -279,6 +279,17 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["results"], [])
 
+        # Test that past blocks are shown if there are no upcoming blocks
+        EighthBlock.objects.all().delete()
+        block = EighthBlock.objects.create(date=(now - datetime.timedelta(days=1)).date(), block_letter="A")
+        block_date_str = block.date.strftime("%Y-%m-%d")
+        response = self.get_api_eighth_block_list("?date=" + block_date_str)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["results"]), 1)
+        self.assertEqual(response.json()["results"][0]["id"], block.id)
+        self.assertEqual(response.json()["results"][0]["date"], block_date_str)
+        self.assertEqual(response.json()["results"][0]["block_letter"], block.block_letter)
+
     def test_api_eighth_signup_list(self):
         self.make_token()
 
