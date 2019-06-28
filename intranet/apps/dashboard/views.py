@@ -80,7 +80,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             "flags": flags,
             "is_today": blk_today,
             "signup_time": b.signup_time,
-            "signup_time_future": b.signup_time_future,
+            "signup_time_future": b.signup_time_future(),
             "rooms": rooms
         }
         schedule.append(info)
