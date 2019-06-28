@@ -215,8 +215,6 @@ class EighthTest(IonTestCase):
         self.assertEqual('Rm. %s' % room1.name, room1.formatted_name)
         room2 = self.add_room(name="Lab 999", capacity=1)
         self.assertEqual(room2.name, room2.formatted_name)
-        room3 = self.add_room(name="Weyanoke 999", capacity=1)
-        self.assertEqual('Wey. 999', room3.formatted_name)
         room4 = self.add_room(name="Room 999", capacity=1)
         self.assertEqual('Rm. 999', room4.formatted_name)
 

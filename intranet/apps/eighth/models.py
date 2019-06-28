@@ -131,8 +131,6 @@ class EighthRoom(AbstractBaseEighthModel):
             return "Rm. {}".format(self.name)
         if self.name.startswith('Room'):  # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
-        if self.name.startswith('Weyanoke'):
-            return "Wey. {}".format(self.name[9:])
         return self.name
 
     @property
