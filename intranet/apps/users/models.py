@@ -688,7 +688,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         current_year = datetime.now().year
         previous_year = current_year - 1
         self.admin_comments = "\n=== {}-{} comments ===\n{}".format(previous_year, current_year, self.admin_comments)
-        self.save()
+        self.save(update_fields=["admin_comments"])
 
     def get_eighth_sponsor(self):
         """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
@@ -818,11 +818,14 @@ class UserProperties(models.Model):
             level = 'parent' if parent else 'self'
             setattr(self, '{}_{}'.format(level, permission), value)
 
+            update_fields = ['{}_{}'.format(level, permission)]
+
             # Set student permission to false if parent sets permission to false.
             if parent and not value:
                 setattr(self, 'self_{}'.format(permission), False)
+                update_fields.append('self_{}'.format(permission))
 
-            self.save()
+            self.save(update_fields=update_fields)
             return True
         except Exception as e:
             logger.error("Error occurred setting permission %s to %s: %s", permission, value, e)
@@ -917,7 +920,7 @@ class Phone(models.Model):
         if name == "number":
             if self.user.properties.attribute_is_visible("show_telephone"):
                 self._number = value
-                self.save()
+                self.save(update_fields=["_number"])
         else:
             super(Phone, self).__setattr__(name, value)  # pylint: disable=E1101; Pylint is wrong
 
@@ -981,7 +984,7 @@ class Photo(models.Model):
         if name == "binary":
             if self.user.properties.attribute_is_visible("show_pictures"):
                 self._binary = value
-                self.save()
+                self.save(update_fields=["_binary"])
         else:
             super(Photo, self).__setattr__(name, value)  # pylint: disable=E1101; Pylint is wrong
 

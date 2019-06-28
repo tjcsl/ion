@@ -15,7 +15,7 @@ class Route(models.Model):
         """Reset status to (on time) """
         self.status = 'o'
         self.space = ''
-        self.save()
+        self.save(update_fields=["status", "space"])
 
     def __str__(self):
         return self.route_name
