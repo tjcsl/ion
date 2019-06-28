@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4781) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4792) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -477,19 +477,12 @@
     <span class="k">def</span> <span class="nf">permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Dynamically generate dictionary of privacy options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO: optimize this, it&#39;s kind of a bad solution for listing a mostly</span>
-        <span class="c1"># static set of files.</span>
-        <span class="c1"># We could either add a permissions dict as an attribute or cache this</span>
-        <span class="c1"># in some way. Creating a dict would be another place we have to define</span>
-        <span class="c1"># the permission, so I&#39;m not a huge fan, but it would definitely be the</span>
-        <span class="c1"># easier option.</span>
-        <span class="n">permissions_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="n">permissions_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_fields</span><span class="p">():</span>
-            <span class="n">split_field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">split_field</span> <span class="ow">or</span> <span class="n">split_field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">]:</span>
-                <span class="k">continue</span>
-            <span class="n">permissions_dict</span><span class="p">[</span><span class="n">split_field</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">split_field</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">PERMISSIONS_NAMES</span><span class="p">:</span>
+            <span class="n">permissions_dict</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">PERMISSIONS_NAMES</span><span class="p">[</span><span class="n">prefix</span><span class="p">]:</span>
+                <span class="n">permissions_dict</span><span class="p">[</span><span class="n">prefix</span><span class="p">][</span><span class="n">suffix</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">permissions_dict</span>
 
@@ -822,7 +815,7 @@
         <span class="n">current_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
         <span class="n">previous_year</span> <span class="o">=</span> <span class="n">current_year</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">admin_comments</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== </span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2"> comments ===</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">previous_year</span><span class="p">,</span> <span class="n">current_year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;admin_comments&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is</span>
@@ -952,11 +945,14 @@
             <span class="n">level</span> <span class="o">=</span> <span class="s1">&#39;parent&#39;</span> <span class="k">if</span> <span class="n">parent</span> <span class="k">else</span> <span class="s1">&#39;self&#39;</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">permission</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
 
+            <span class="n">update_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">permission</span><span class="p">)]</span>
+
             <span class="c1"># Set student permission to false if parent sets permission to false.</span>
             <span class="k">if</span> <span class="n">parent</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;self_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">update_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;self_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="n">update_fields</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error occurred setting permission </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
@@ -1023,6 +1019,10 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not retrieve permissions for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="p">)</span></div></div>
 
 
+<span class="n">PERMISSIONS_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="n">prefix</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">UserProperties</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)]</span>
+                     <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">]}</span>
+
+
 <div class="viewcode-block" id="Email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Email">[docs]</a><span class="k">class</span> <span class="nc">Email</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents an email address&quot;&quot;&quot;</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
@@ -1047,7 +1047,7 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_telephone&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">=</span> <span class="n">value</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_number&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Phone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1101; Pylint is wrong</span>
 
@@ -1111,7 +1111,7 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_pictures&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_binary</span> <span class="o">=</span> <span class="n">value</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_binary&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Photo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1101; Pylint is wrong</span>
 
