@@ -860,11 +860,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if member.can_view_eighth:
                 show = member.can_view_eighth
 
-            if not show and user and user.is_eighth_admin:
-                show = True
-            if not show and user and user.is_teacher:
-                show = True
-            if not show and member == user:
+            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
                 show = True
 
             if show:
@@ -886,11 +882,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if member.can_view_eighth:
                 show = member.can_view_eighth
 
-            if not show and user and user.is_eighth_admin:
-                show = True
-            if not show and user and user.is_teacher:
-                show = True
-            if not show and member == user:
+            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
                 show = True
 
             if show:
@@ -910,11 +902,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if member.can_view_eighth:
                 show = member.can_view_eighth
 
-            if not show and user and user.is_eighth_admin:
-                show = True
-            if not show and user and user.is_teacher:
-                show = True
-            if not show and member == user:
+            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
                 show = True
 
             if not show:
@@ -986,7 +974,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 all_blocks.append(sibling.block)
 
         waitlist = None
-        if not force:
+        if force:
+            EighthWaitlist.objects.filter(scheduled_activity_id=self.id, user_id=user.id, block_id=self.block.id).delete()
+        else:
             # Check if the user who sent the request has the permissions
             # to change the target user's signups
             if request is not None:
@@ -1051,9 +1041,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Check if user is blacklisted from activity
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
-
-        if force:
-            EighthWaitlist.objects.filter(scheduled_activity_id=self.id, user_id=user.id, block_id=self.block.id).delete()
 
         if self.get_sticky():
             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
