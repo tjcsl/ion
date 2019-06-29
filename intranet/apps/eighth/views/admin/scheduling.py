@@ -63,8 +63,7 @@ def schedule_activity_view(request):
                             other_act = schact[0].get_both_blocks_sibling()
                             logger.debug("other_act: %s", other_act)
                             if other_act:
-                                other_act.cancelled = True
-                                other_act.save()
+                                other_act.cancel()
                                 invalidate_obj(other_act)
                         else:
                             schact.update(cancelled=True)
@@ -103,7 +102,8 @@ def schedule_activity_view(request):
                 if form["scheduled"].value() or cancelled:
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
-                    instance.cancelled = not form["scheduled"].value()
+                    if form["scheduled"].value():
+                        instance.uncancel()
 
                     # If an activity has already been cancelled and the
                     # unschedule checkbox has been checked, delete the
