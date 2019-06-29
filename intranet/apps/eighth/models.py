@@ -788,7 +788,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def has_open_passes(self):
         """Return whether there are passes that have not been acknowledged."""
-        return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False)
+        return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
     def get_viewable_members(self, user=None):
         """Get the list of members that you have permissions to view.
