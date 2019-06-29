@@ -323,14 +323,6 @@ class EighthActivity(AbstractBaseEighthModel):
         avail = nums - used
         return list(avail)
 
-    def change_id_to(self, new_id):
-        """Changes the internal ID field.
-
-        Possible solution: https://djangosnippets.org/snippets/2691/
-
-        """
-        # EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
-
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity since the beginning of the year."""
         date_start, date_end = get_date_range_this_year()
