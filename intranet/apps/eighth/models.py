@@ -89,7 +89,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def to_be_assigned(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
+        return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
     def __str__(self):
         return self.name
@@ -113,15 +113,13 @@ class EighthRoom(AbstractBaseEighthModel):
 
     unique_together = (("name", "capacity"),)
 
-    @classmethod
-    def total_capacity_of_rooms(cls, rooms):
+    @staticmethod
+    def total_capacity_of_rooms(rooms):
         capacity = 0
         for r in rooms:
-            c = r.capacity
-            if c == -1:
+            if r.capacity == -1:
                 return -1
-            else:
-                capacity += c
+            capacity += r.capacity
         return capacity
 
     @property
@@ -134,18 +132,16 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @property
     def to_be_determined(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
+        return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
     def __str__(self):
         return "{} ({})".format(self.name, self.capacity)
-        # return "{}".format(self.name)
 
     class Meta:
         ordering = ("name",)
 
 
 class EighthActivityExcludeDeletedManager(models.Manager):
-
     def get_queryset(self):
         return super(EighthActivityExcludeDeletedManager, self).get_queryset().exclude(deleted=True)
 
@@ -264,8 +260,7 @@ class EighthActivity(AbstractBaseEighthModel):
         if self.default_capacity:
             return self.default_capacity
         else:
-            rooms = self.rooms.all()
-            return EighthRoom.total_capacity_of_rooms(rooms)
+            return EighthRoom.total_capacity_of_rooms(self.rooms.all())
 
     @property
     def aid(self):
@@ -290,8 +285,8 @@ class EighthActivity(AbstractBaseEighthModel):
         name += self.name
         if title:
             name += " - {}".format(title)
-        if include_restricted and self.restricted:
-            name += " (R)"
+
+        name += " (R)" if include_restricted and self.restricted else ""
         name += " (BB)" if self.both_blocks else ""
         name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
@@ -338,18 +333,15 @@ class EighthActivity(AbstractBaseEighthModel):
 
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity since the beginning of the year."""
-        blocks = EighthBlock.objects.get_blocks_this_year()
-        scheduled_activities = EighthScheduledActivity.objects.filter(activity=self)
-        scheduled_activities = scheduled_activities.filter(block__in=blocks)
+        date_start, date_end = get_date_range_this_year()
 
-        return scheduled_activities
+        return EighthScheduledActivity.objects.filter(activity=self, block__date__gte=date_start, block__date__lte=date_end)
 
     @property
     def is_active(self):
         """Return whether an activity is "active." An activity is considered to be active if it has
         been scheduled at all this year."""
-        scheduled_activities = self.get_active_schedulings()
-        return scheduled_activities and scheduled_activities.count() > 0
+        return self.get_active_schedulings().exists()
 
     @property
     def frequent_users(self):
@@ -359,9 +351,9 @@ class EighthActivity(AbstractBaseEighthModel):
         cached = cache.get(key)
         if cached:
             return cached
-        freq_users = self.eighthscheduledactivity_set.exclude(eighthsignup_set__user=None).exclude(administrative=True).exclude(special=True).exclude(
-            restricted=True).values('eighthsignup_set__user').annotate(count=Count('eighthsignup_set__user')).filter(
-                count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        freq_users = self.eighthscheduledactivity_set.exclude(
+            Q(eighthsignup_set__user=None) | Q(administrative=True) | Q(special=True) | Q(restricted=True)).values('eighthsignup_set__user').annotate(
+                count=Count('eighthsignup_set__user')).filter(count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
         cache.set(key, freq_users, timeout=60 * 60 * 24 * 7)
         return freq_users
 
@@ -377,7 +369,6 @@ class EighthActivity(AbstractBaseEighthModel):
 
 
 class EighthBlockQuerySet(models.query.QuerySet):
-
     def this_year(self):
         """ Get EighthBlocks from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -385,7 +376,6 @@ class EighthBlockQuerySet(models.query.QuerySet):
 
 
 class EighthBlockManager(models.Manager):
-
     def get_queryset(self):
         return EighthBlockQuerySet(self.model, using=self._db)
 
@@ -688,10 +678,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     def get_scheduled_rooms(self):
-        r = self.rooms.all()
-        if r:
-            return r
-        return self.activity.rooms.all()
+        return self.rooms.all() or self.activity.rooms.all()
 
     @property
     def all_associated_rooms(self):
@@ -720,72 +707,43 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_true_sponsors(self):
         """Get the sponsors for the scheduled activity, taking into account activity defaults and
         overrides."""
-
-        sponsors = self.sponsors.all()
-        if sponsors:
-            return sponsors
-        else:
-            return self.activity.sponsors.all()
+        return self.sponsors.all() or self.activity.sponsors.all()
 
     def user_is_sponsor(self, user):
         """Return whether the given user is a sponsor of the activity.
 
         Returns:
             Boolean
-
         """
-        sponsors = self.get_true_sponsors()
-        for sponsor in sponsors:
-            sp_user = sponsor.user
-            if sp_user == user:
-                return True
-
-        return False
+        return self.get_true_sponsors().filter(user=user).exists()
 
     def get_true_rooms(self):
         """Get the rooms for the scheduled activity, taking into account activity defaults and
         overrides."""
-
-        rooms = self.rooms.all()
-        if rooms:
-            return rooms
-        else:
-            return self.activity.rooms.all()
+        return self.rooms.all() or self.activity.rooms.all()
 
     def get_true_capacity(self):
         """Get the capacity for the scheduled activity, taking into account activity defaults and
         overrides."""
+        if self.capacity is not None:
+            return self.capacity
 
-        c = self.capacity
-        if c is not None:
-            return c
-        else:
-            if self.rooms.count() == 0 and self.activity.default_capacity:
-                # use activity-level override
-                return self.activity.default_capacity
+        if self.rooms.count() == 0 and self.activity.default_capacity:
+            # use activity-level override
+            return self.activity.default_capacity
 
-            rooms = self.get_true_rooms()
-            return EighthRoom.total_capacity_of_rooms(rooms)
+        return EighthRoom.total_capacity_of_rooms(self.get_true_rooms())
 
     def is_both_blocks(self):
-        if self.both_blocks:
-            return self.both_blocks
-        else:
-            return self.activity.both_blocks
+        return self.both_blocks or self.activity.both_blocks
 
     def get_restricted(self):
         """Get whether this scheduled activity is restricted."""
-        if self.restricted:
-            return self.restricted
-        else:
-            return self.activity.restricted
+        return self.restricted or self.activity.restricted
 
     def get_sticky(self):
         """Get whether this scheduled activity is sticky."""
-        if self.sticky:
-            return self.sticky
-        else:
-            return self.activity.sticky
+        return self.sticky or self.activity.sticky
 
     def get_finance(self):
         """Get whether this activity has an account with the finance office."""
@@ -793,44 +751,28 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def get_administrative(self):
         """Get whether this scheduled activity is administrative."""
-        if self.administrative:
-            return self.administrative
-        else:
-            return self.activity.administrative
+        return self.administrative or self.activity.administrative
 
     def get_special(self):
         """Get whether this scheduled activity is special, checking the
            activity-level special settings.
-
         """
-        if self.special:
-            return self.special
-        else:
-            return self.activity.special
+        return self.special or self.activity.special
 
     def is_full(self):
         """Return whether the activity is full."""
         capacity = self.get_true_capacity()
-        if capacity != -1:
-            num_signed_up = self.eighthsignup_set.count()
-            return num_signed_up >= capacity
-        return False
+        return capacity != -1 and self.eighthsignup_set.count() >= capacity
 
     def is_almost_full(self):
         """Return whether the activity is almost full (>90%)."""
         capacity = self.get_true_capacity()
-        if capacity != -1:
-            num_signed_up = self.eighthsignup_set.count()
-            return num_signed_up >= (0.9 * capacity)
-        return False
+        return capacity != -1 and self.eighthsignup_set.count() >= (0.9 * capacity)
 
     def is_overbooked(self):
         """Return whether the activity is overbooked."""
         capacity = self.get_true_capacity()
-        if capacity != -1:
-            num_signed_up = self.eighthsignup_set.count()
-            return num_signed_up > capacity
-        return False
+        return capacity != -1 and self.eighthsignup_set.count() > capacity
 
     def is_too_early_to_signup(self, now=None):
         """Return whether it is too early to sign up for the activity if it is a presign (48 hour
@@ -856,12 +798,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         members = []
         for member in self.members.all():
-            show = False
-            if member.can_view_eighth:
-                show = member.can_view_eighth
-
-            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
-                show = True
+            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
 
             if show:
                 members.append(member)
@@ -878,12 +815,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         ids = []
         user = request.user
         for member in self.members.all():
-            show = False
-            if member.can_view_eighth:
-                show = member.can_view_eighth
-
-            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
-                show = True
+            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
 
             if show:
                 ids.append(member.id)
@@ -898,12 +830,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         hidden_members = []
         for member in self.members.all():
-            show = False
-            if member.can_view_eighth:
-                show = member.can_view_eighth
-
-            if not show and user and (user.is_eighth_admin or user.is_teacher or member == user):
-                show = True
+            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
 
             if not show:
                 hidden_members.append(member)
@@ -924,20 +851,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.is_both_blocks():
             return None
 
-        if self.block.block_letter and self.block.block_letter.upper() not in ["A", "B"]:
+        if self.block.block_letter not in ["A", "B"]:
             # both_blocks is not currently implemented for blocks other than A and B
             return None
 
-        other_instances = (EighthScheduledActivity.objects.filter(activity=self.activity, block__date=self.block.date))
+        other_block_letter = ("A" if self.block.block_letter == "B" else "B")
 
-        for inst in other_instances:
-            if inst == self:
-                continue
-
-            if inst.block.block_letter in ["A", "B"]:
-                return inst
-
-        return None
+        try:
+            return EighthScheduledActivity.objects.exclude(pk=self.pk).get(activity=self.activity, block__date=self.block.date,
+                                                                           block__block_letter=other_block_letter)
+        except EighthScheduledActivity.DoesNotExist:
+            return None
 
     def notify_waitlist(self, waitlists, activity):
         data = {"activity": activity}
@@ -988,14 +912,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 exception.ActivityDeleted = True
 
             # Check if the user is already stickied into an activity
-            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
-                                                      scheduled_activity__block__in=all_blocks).exists())
-
-            if not in_stickie:
-                in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__sticky=True,
-                                                          scheduled_activity__block__in=all_blocks).exists())
-
-            if in_stickie:
+            if EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).filter(
+                    Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True)).exists():
                 exception.Sticky = True
 
             for sched_act in all_sched_act:
@@ -1098,7 +1016,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if not self.is_both_blocks():
                 try:
                     existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
-
+                except EighthSignup.DoesNotExist:
+                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
+                else:
                     previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
                     prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
                     previous_activity_sponsors = ", ".join(map(str, prev_sponsors))
@@ -1134,9 +1054,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         if not previous_activity.is_full():
                             waitlists = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             self.notify_waitlist(waitlists, previous_activity)
-
-                except EighthSignup.DoesNotExist:
-                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
             else:
                 existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
 
@@ -1247,7 +1164,7 @@ class EighthSignupManager(Manager):
     """Model manager for EighthSignup."""
 
     def create_signup(self, user, scheduled_activity, **kwargs):
-        if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).count() > 0:
+        if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
             raise ValidationError("EighthSignup already exists for this user on this block.")
         self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
 
