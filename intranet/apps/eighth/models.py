@@ -558,13 +558,6 @@ class EighthBlock(AbstractBaseEighthModel):
         return (len(self.block_letter) - 1) * 6 + 15
 
     @property
-    def letter_text(self):
-        if any(char.isdigit() for char in self.block_letter):
-            return "Block {}".format(self.block_letter)
-        else:
-            return "{} Block".format(self.block_letter)
-
-    @property
     def short_text(self):
         """Display the date and block letter (mm/dd B, for example: '9/1 B')
 
