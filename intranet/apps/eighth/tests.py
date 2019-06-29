@@ -381,3 +381,34 @@ class EighthTest(IonTestCase):
 
         # Make sure that new EighthSponsor is created
         self.assertTrue(EighthSponsor.objects.filter(user=user).exists())
+
+    def test_passes(self):
+        self.make_admin()
+        EighthBlock.objects.all().delete()
+        block = self.add_block(date="2015-01-01", block_letter='A')
+        act = self.add_activity(name="Test Activity 1")
+        schact = self.schedule_activity(act.id, block.id)
+
+        self.assertFalse(schact.has_open_passes())
+
+        schact.add_user(self.user)
+        signup1 = EighthSignup.objects.get(scheduled_activity=schact, user=self.user)
+        self.assertFalse(signup1.after_deadline)
+
+        self.assertFalse(schact.has_open_passes())
+
+        block.locked = True
+        block.save()
+        schact.block.refresh_from_db()
+
+        self.assertFalse(schact.has_open_passes())
+
+        schact.add_user(self.user, force=True)
+        signup2 = EighthSignup.objects.get(scheduled_activity=schact, user=self.user)
+        self.assertTrue(signup2.after_deadline)
+
+        self.assertTrue(schact.has_open_passes())
+
+        signup2.accept_pass()
+
+        self.assertFalse(schact.has_open_passes())
