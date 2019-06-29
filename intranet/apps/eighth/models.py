@@ -421,7 +421,7 @@ class EighthBlockManager(models.Manager):
         next_block = EighthBlock.objects.get_first_upcoming_block()
 
         if not next_block:
-            return []
+            return EighthBlock.objects.none()
 
         next_blocks = EighthBlock.objects.filter(date=next_block.date)
         return next_blocks
