@@ -32,7 +32,7 @@
 
 {% block admin_main %}
     {% if show_selection %}
-        <form action="{% url 'eighth_admin_distribute_action' %}" method="post" onsubmit="return confirm('Are you sure you want to sign these users up for these activities?')">
+        <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
             
             {% if users_type == "unsigned" %}
                 <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
@@ -43,8 +43,8 @@
             <button onclick="distribute(); return false">Evenly Distribute</button>
             <br />
             <br />
-            <input type="hidden" name="users" value="true" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
-            <input type="submit" value="Register Users" />
+            <input type="hidden" name="users" value="true" />
+            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false;" />
             {% csrf_token %}
             <br />
             Click on column titles to sort.
@@ -85,7 +85,7 @@
 
             <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
     {% else %}
-        <form method="post" name="wizard">{% csrf_token %}
+        <form method="post" name="wizard" onsubmit="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;} else return false;">{% csrf_token %}
             {{ wizard.management_form }}
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
             {% if group %}
@@ -103,7 +103,7 @@
             {% if wizard.steps.next %}
                 <!--input type="submit" value="Next"/-->
             {% else %}
-                <input type="submit" value="Distribute Group" onclick="showWaitScreen()" />
+                <input type="submit" value="Distribute Group" />
             {% endif %}
 
             {% if redirect_block_id %}
