@@ -20,12 +20,12 @@ class EighthTest(IonTestCase):
     """
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username='awilliam', graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
 
     def make_admin(self):
         self.login()
         # Make user an eighth admin
-        user = get_user_model().objects.get_or_create(username='awilliam')[0]
+        user = get_user_model().objects.get_or_create(username="awilliam")[0]
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
         return user
@@ -43,33 +43,33 @@ class EighthTest(IonTestCase):
 
     def add_block(self, **args):
         # Bypass the manual block creation form.
-        args.update({'custom_block': True})
-        response = self.client.post(reverse('eighth_admin_add_block'), args)
+        args.update({"custom_block": True})
+        response = self.client.post(reverse("eighth_admin_add_block"), args)
         self.assertEqual(response.status_code, 302)
-        return EighthBlock.objects.get(date=args['date'], block_letter=args['block_letter'])
+        return EighthBlock.objects.get(date=args["date"], block_letter=args["block_letter"])
 
     def add_room(self, **args):
-        response = self.client.post(reverse('eighth_admin_add_room'), args)
+        response = self.client.post(reverse("eighth_admin_add_room"), args)
         self.assertEqual(response.status_code, 302)
-        return EighthRoom.objects.get(name=args['name'])
+        return EighthRoom.objects.get(name=args["name"])
 
     def add_activity(self, **args):
-        response = self.client.post(reverse('eighth_admin_add_activity'), args)
+        response = self.client.post(reverse("eighth_admin_add_activity"), args)
         self.assertEqual(response.status_code, 302)
-        return EighthActivity.objects.get(name=args['name'])
+        return EighthActivity.objects.get(name=args["name"])
 
     def schedule_activity(self, block_id, activity_id):
         # FIXME: figure out a way to do this that involves less hard-coding.
         args = {
-            'form-TOTAL_FORMS': '1',
-            'form-INITIAL_FORMS': '0',
-            'form-MAX_NUM_FORMS': '',
-            'form-0-block': block_id,
-            'form-0-activity': activity_id,
-            'form-0-scheduled': True,
-            'form-0-capacity': 1
+            "form-TOTAL_FORMS": "1",
+            "form-INITIAL_FORMS": "0",
+            "form-MAX_NUM_FORMS": "",
+            "form-0-block": block_id,
+            "form-0-activity": activity_id,
+            "form-0-scheduled": True,
+            "form-0-capacity": 1,
         }
-        response = self.client.post(reverse('eighth_admin_schedule_activity'), args)
+        response = self.client.post(reverse("eighth_admin_schedule_activity"), args)
         self.assertEqual(response.status_code, 302)
         return EighthScheduledActivity.objects.get(block__id=block_id, activity__id=activity_id)
 
@@ -77,23 +77,23 @@ class EighthTest(IonTestCase):
         """Tests adding a user to a EighthScheduledActivity."""
         user = self.make_admin()
         # Ensure we can see the user's signed-up activities.
-        response = self.client.get(reverse('eighth_signup'))
+        response = self.client.get(reverse("eighth_signup"))
         self.assertEqual(response.status_code, 200)
 
         # Create a block
-        block = self.add_block(date='9001-4-20', block_letter='A')
-        self.assertEqual(block.formatted_date, 'Mon, April 20, 9001')
+        block = self.add_block(date="9001-4-20", block_letter="A")
+        self.assertEqual(block.formatted_date, "Mon, April 20, 9001")
 
         # Create an activity
-        activity = self.add_activity(name='Meme Club')
+        activity = self.add_activity(name="Meme Club")
 
         # Schedule an activity
         schact = self.schedule_activity(block.id, activity.id)
 
         # Signup for an activity
-        response = self.client.post(reverse('eighth_signup'), {'uid': 8889, 'bid': block.id, 'aid': activity.id})
+        response = self.client.post(reverse("eighth_signup"), {"uid": 8889, "bid": block.id, "aid": activity.id})
         self.assertEqual(response.status_code, 200)
-        response = self.client.get(reverse('eighth_signup'))
+        response = self.client.get(reverse("eighth_signup"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(user, schact.members.all())
 
@@ -108,32 +108,32 @@ class EighthTest(IonTestCase):
         today_date_str = cur_date.strftime("%Y-%m-%d")
         future_date_str = (cur_date + one_day).strftime("%Y-%m-%d")
 
-        block_past = self.add_block(date=past_date_str, block_letter='A')
+        block_past = self.add_block(date=past_date_str, block_letter="A")
 
         schact_past = self.schedule_activity(block_past.id, activity.id)
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [])
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
 
-        block_today = self.add_block(date=today_date_str, block_letter='A')
-        block_future = self.add_block(date=future_date_str, block_letter='A')
+        block_today = self.add_block(date=today_date_str, block_letter="A")
+        block_future = self.add_block(date=future_date_str, block_letter="A")
 
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [])
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
 
         schact_today = self.schedule_activity(block_today.id, activity.id)
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today)])
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today)])
 
         schact_future = self.schedule_activity(block_future.id, activity.id)
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]))
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today), repr(schact_future)])
-        response = self.client.get(reverse('eighth_activity', args=[activity.id]), {"show_all": 1})
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
         self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today), repr(schact_future)])
 
     def verify_signup(self, user, schact):
@@ -147,10 +147,10 @@ class EighthTest(IonTestCase):
 
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
-        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
 
@@ -161,10 +161,10 @@ class EighthTest(IonTestCase):
 
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR)
-        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         act1.users_blacklisted.add(user1)
         schact1 = self.schedule_activity(act1.id, block1.id)
@@ -176,11 +176,11 @@ class EighthTest(IonTestCase):
         """Make sure EighthScheduledActivities can return all associated rooms."""
 
         self.make_admin()
-        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
         room2 = self.add_room(name="room2", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.rooms.add(room2)
@@ -193,11 +193,11 @@ class EighthTest(IonTestCase):
         """Make sure EighthScheduledActivities return the correct room."""
 
         self.make_admin()
-        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
         room2 = self.add_room(name="room2", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
 
@@ -212,11 +212,11 @@ class EighthTest(IonTestCase):
         """Make sure a room name formatting is correct."""
         self.make_admin()
         room1 = self.add_room(name="999", capacity=1)
-        self.assertEqual('Rm. %s' % room1.name, room1.formatted_name)
+        self.assertEqual("Rm. %s" % room1.name, room1.formatted_name)
         room2 = self.add_room(name="Lab 999", capacity=1)
         self.assertEqual(room2.name, room2.formatted_name)
         room4 = self.add_room(name="Room 999", capacity=1)
-        self.assertEqual('Rm. 999', room4.formatted_name)
+        self.assertEqual("Rm. 999", room4.formatted_name)
 
     def test_both_blocks(self):
         """Make sure that signing up for a both blocks activity works."""
@@ -224,18 +224,18 @@ class EighthTest(IonTestCase):
         user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
-        block1 = self.add_block(date='2015-01-01', block_letter='A')
-        block2 = self.add_block(date='2015-01-01', block_letter='B')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
+        block2 = self.add_block(date="2015-01-01", block_letter="B")
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         act1.sticky = True
         act1.save()
 
         schact1 = self.schedule_activity(act1.id, block1.id)
 
-        act2 = self.add_activity(name='Test Activity 2')
+        act2 = self.add_activity(name="Test Activity 2")
         act2.rooms.add(room1)
         act2.both_blocks = True
         act2.save()
@@ -244,47 +244,47 @@ class EighthTest(IonTestCase):
 
         self.assertTrue(schact2.is_both_blocks())
 
-        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
+        response = self.client.post(reverse("eighth_admin_signup_group_action", args=[group1.id, schact1.id]), {"confirm": True})
         self.assertEqual(response.status_code, 302)
-        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact2.id]), {'confirm': True})
+        response = self.client.post(reverse("eighth_admin_signup_group_action", args=[group1.id, schact2.id]), {"confirm": True})
         self.assertEqual(response.status_code, 302)
-        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
+        response = self.client.post(reverse("eighth_admin_signup_group_action", args=[group1.id, schact1.id]), {"confirm": True})
         self.assertEqual(response.status_code, 302)
 
     def test_signup_status_email(self):
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
         Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
-        block1 = self.add_block(date="2015-01-01", block_letter='A')
-        block2 = self.add_block(date="2015-01-01", block_letter='B')
-        act1 = self.add_activity(name='Test Activity 1')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
+        block2 = self.add_block(date="2015-01-01", block_letter="B")
+        act1 = self.add_activity(name="Test Activity 1")
         room1 = self.add_room(name="room1", capacity=1)
         act1.rooms.add(room1)
 
         msg = signup_status_email(user1, [block1, block2])
-        self.assertIn('Jan. 1, 2015 (B): No activity selected', msg.body)
-        self.assertIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
+        self.assertIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
         sa1 = EighthScheduledActivity.objects.get_or_create(block=block1, activity=act1)[0]
         sa1.add_user(user1)
 
         msg = signup_status_email(user1, [block1, block2])
-        self.assertIn('Jan. 1, 2015 (B): No activity selected', msg.body)
-        self.assertNotIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
+        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
         sa2 = EighthScheduledActivity.objects.get_or_create(block=block2, activity=act1)[0]
         sa2.add_user(user1)
 
         msg = signup_status_email(user1, [block1, block2])
-        self.assertNotIn('Jan. 1, 2015 (B): No activity selected', msg.body)
-        self.assertNotIn('Jan. 1, 2015 (A): No activity selected', msg.body)
+        self.assertNotIn("Jan. 1, 2015 (B): No activity selected", msg.body)
+        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
     def test_absence_email(self):
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1")
         Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
-        block1 = self.add_block(date="2015-01-01", block_letter='A')
-        act1 = self.add_activity(name='Test Activity 1')
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
+        act1 = self.add_activity(name="Test Activity 1")
         room1 = self.add_room(name="room1", capacity=1)
         act1.rooms.add(room1)
 
@@ -298,20 +298,19 @@ class EighthTest(IonTestCase):
     def test_take_attendance_zero(self):
         """ Make sure all activities with zero students are marked as having attendance taken when button is pressed. """
         self.make_admin()
-        block1 = self.add_block(date='3000-11-11', block_letter='A')
+        block1 = self.add_block(date="3000-11-11", block_letter="A")
 
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.attendance_taken = False
         schact1.save()
 
         response = self.client.post(
-            reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({
-                "block": block1.id
-            }), {"take_attendance_zero": "1"})
+            reverse("eighth_admin_view_activities_without_attendance") + "?" + urlencode({"block": block1.id}), {"take_attendance_zero": "1"}
+        )
         self.assertEqual(response.status_code, 302)
 
         # Make sure activity is marked as attendance taken.
@@ -321,11 +320,11 @@ class EighthTest(IonTestCase):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
-        block1 = self.add_block(date='3000-11-11', block_letter='A')
+        block1 = self.add_block(date="3000-11-11", block_letter="A")
 
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = self.add_activity(name='Test Activity 1')
+        act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.attendance_taken = False
@@ -336,9 +335,8 @@ class EighthTest(IonTestCase):
         schact1.save()
 
         response = self.client.post(
-            reverse('eighth_admin_view_activities_without_attendance') + "?" + urlencode({
-                "block": block1.id
-            }), {"take_attendance_cancelled": "1"})
+            reverse("eighth_admin_view_activities_without_attendance") + "?" + urlencode({"block": block1.id}), {"take_attendance_cancelled": "1"}
+        )
         self.assertEqual(response.status_code, 302)
 
         # Make sure attendance has been marked as taken.
@@ -353,12 +351,14 @@ class EighthTest(IonTestCase):
     def test_add_sponsor_form(self):
         # Make sure user not in database is not created
         self.make_admin()
-        params = {"first_name": "Test",
-                  "last_name": "User",
-                  "user": 9001,
-                  "department": "general",
-                  "online_attendance": "on",
-                  "contracted_eighth": "on"}
+        params = {
+            "first_name": "Test",
+            "last_name": "User",
+            "user": 9001,
+            "department": "general",
+            "online_attendance": "on",
+            "contracted_eighth": "on",
+        }
 
         response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -369,12 +369,14 @@ class EighthTest(IonTestCase):
         self.assertFormError(response, "form", "user", "Select a valid choice. {} is not one of the available choices.".format(params["user"]))
 
         user = self.create_sponsor()
-        params = {"first_name": user.first_name,
-                  "last_name": user.last_name,
-                  "user": user.pk,
-                  "department": "general",
-                  "online_attendance": "on",
-                  "full_time": "on"}
+        params = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "user": user.pk,
+            "department": "general",
+            "online_attendance": "on",
+            "full_time": "on",
+        }
 
         response = self.client.post(reverse("eighth_admin_add_sponsor"), params, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -385,7 +387,7 @@ class EighthTest(IonTestCase):
     def test_passes(self):
         self.make_admin()
         EighthBlock.objects.all().delete()
-        block = self.add_block(date="2015-01-01", block_letter='A')
+        block = self.add_block(date="2015-01-01", block_letter="A")
         act = self.add_activity(name="Test Activity 1")
         schact = self.schedule_activity(act.id, block.id)
 
@@ -415,7 +417,7 @@ class EighthTest(IonTestCase):
 
     def test_true_capacity(self):
         self.make_admin()
-        block = self.add_block(date="2015-01-01", block_letter='A')
+        block = self.add_block(date="2015-01-01", block_letter="A")
         act = self.add_activity(name="Test Activity 1")
         schact = self.schedule_activity(act.id, block.id)
 
@@ -460,7 +462,7 @@ class EighthTest(IonTestCase):
 
     def test_cancel_uncancel(self):
         self.make_admin()
-        block = self.add_block(date="2015-01-01", block_letter='A')
+        block = self.add_block(date="2015-01-01", block_letter="A")
         act = self.add_activity(name="Test Activity 1")
         schact = self.schedule_activity(act.id, block.id)
 
@@ -480,9 +482,9 @@ class EighthTest(IonTestCase):
         act = self.add_activity(name="Test Activity 1")
 
         EighthBlock.objects.all().delete()
-        block_past = self.add_block(date=year_past, block_letter='A')
-        block_today = self.add_block(date=today, block_letter='A')
-        block_future = self.add_block(date=year_future, block_letter='A')
+        block_past = self.add_block(date=year_past, block_letter="A")
+        block_today = self.add_block(date=today, block_letter="A")
+        block_future = self.add_block(date=year_future, block_letter="A")
 
         self.assertQuerysetEqual(act.get_active_schedulings(), [])
         EighthScheduledActivity.objects.create(activity=act, block=block_past)
