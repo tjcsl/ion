@@ -412,3 +412,82 @@ class EighthTest(IonTestCase):
         signup2.accept_pass()
 
         self.assertFalse(schact.has_open_passes())
+
+    def test_true_capacity(self):
+        self.make_admin()
+        block = self.add_block(date="2015-01-01", block_letter='A')
+        act = self.add_activity(name="Test Activity 1")
+        schact = self.schedule_activity(act.id, block.id)
+
+        room1 = EighthRoom.objects.create(name="Test Room 1", capacity=1)
+        room5 = EighthRoom.objects.create(name="Test Room 5", capacity=5)
+        room10 = EighthRoom.objects.create(name="Test Room 10", capacity=10)
+
+        schact.capacity = 10
+        schact.activity.default_capacity = 0
+        self.assertEqual(schact.get_true_capacity(), 10)
+        schact.rooms.add(room1)
+        self.assertEqual(schact.get_true_capacity(), 10)
+        schact.capacity = None
+        self.assertEqual(schact.get_true_capacity(), 1)
+
+        schact.rooms.add(room10)
+        self.assertEqual(schact.get_true_capacity(), 11)
+        schact.rooms.add(room5)
+        self.assertEqual(schact.get_true_capacity(), 16)
+
+        schact.rooms.clear()
+        self.assertEqual(schact.get_true_capacity(), 0)
+        schact.activity.default_capacity = 13
+        self.assertEqual(schact.get_true_capacity(), 13)
+        schact.rooms.add(room10)
+        self.assertEqual(schact.get_true_capacity(), 10)
+
+    def test_total_capacity(self):
+        self.make_admin()
+
+        room1 = EighthRoom.objects.create(name="Test Room 1", capacity=1)
+        room10 = EighthRoom.objects.create(name="Test Room 10", capacity=10)
+        room_inf = EighthRoom.objects.create(name="Large Test Room", capacity=-1)
+
+        self.assertEqual(EighthRoom.total_capacity_of_rooms([]), 0)
+        for rm in [room1, room10, room_inf]:
+            self.assertEqual(EighthRoom.total_capacity_of_rooms([rm]), rm.capacity)
+
+        self.assertEqual(EighthRoom.total_capacity_of_rooms([room1, room10]), 11)
+        self.assertEqual(EighthRoom.total_capacity_of_rooms([room1, room_inf]), -1)
+        self.assertEqual(EighthRoom.total_capacity_of_rooms([room_inf, room10]), -1)
+
+    def test_cancel_uncancel(self):
+        self.make_admin()
+        block = self.add_block(date="2015-01-01", block_letter='A')
+        act = self.add_activity(name="Test Activity 1")
+        schact = self.schedule_activity(act.id, block.id)
+
+        self.assertFalse(schact.cancelled)
+        schact.cancel()
+        schact.refresh_from_db()
+        self.assertTrue(schact.cancelled)
+        schact.uncancel()
+        self.assertFalse(schact.cancelled)
+
+    def test_active_schedulings(self):
+        today = timezone.localtime().date()
+        year_past = today - datetime.timedelta(days=370)
+        year_future = today + datetime.timedelta(days=370)
+
+        self.make_admin()
+        act = self.add_activity(name="Test Activity 1")
+
+        EighthBlock.objects.all().delete()
+        block_past = self.add_block(date=year_past, block_letter='A')
+        block_today = self.add_block(date=today, block_letter='A')
+        block_future = self.add_block(date=year_future, block_letter='A')
+
+        self.assertQuerysetEqual(act.get_active_schedulings(), [])
+        EighthScheduledActivity.objects.create(activity=act, block=block_past)
+        self.assertQuerysetEqual(act.get_active_schedulings(), [])
+        schact_today = EighthScheduledActivity.objects.create(activity=act, block=block_today)
+        self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
+        EighthScheduledActivity.objects.create(activity=act, block=block_future)
+        self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
