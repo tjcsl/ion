@@ -46,13 +46,13 @@
                     </div>
                 <form {% if login_failed %}autocomplete="off"{% endif %} method="post">
                 {% if request.GET.next %}
-                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}" />
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}">
                 {% elif request.POST.next %}
-                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}" />
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}">
                 {% endif %}
                     {% csrf_token %}
                     <input type="password" name="password" class="{% if login_failed %}error{% endif %}" placeholder="{% if not login_failed %}Password{% else %}Invalid Password{% endif %}" aria-label="Enter Password">
-                    <input type="submit" value="Login" />
+                    <input type="submit" value="Login">
                     <div class='spinner-container'></div>
                 </form>
             </div>

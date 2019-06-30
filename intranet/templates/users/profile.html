@@ -11,7 +11,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {% stylesheet 'eighth.common' %}
     {% stylesheet 'profile' %}
     {% if profile_user.is_eighth_sponsor and profile_user.is_student %}
@@ -73,20 +73,20 @@
             <table>
                 <tr>
                     <td>
-                        <img class="freshman" data-src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture" />
-                        <br />Freshman
+                        <img class="freshman" data-src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture">
+                        <br>Freshman
                     </td>
                     <td>
-                        <img class="sophomore" data-src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture" />
-                        <br />Sophomore
+                        <img class="sophomore" data-src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture">
+                        <br>Sophomore
                     </td>
                     <td>
-                        <img class="junior" data-src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture" />
-                        <br />Junior
+                        <img class="junior" data-src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture">
+                        <br>Junior
                     </td>
                     <td>
-                        <img class="senior" data-src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture" />
-                        <br />Senior
+                        <img class="senior" data-src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture">
+                        <br>Senior
                     </td>
                 </tr>
             </table>
@@ -95,7 +95,7 @@
         {% endif %}
         </div>
         <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
-            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" />
+            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172">
             {% if profile_user.is_student %}
                 <span>
                     View all pictures
@@ -105,13 +105,13 @@
 
             {% if request.user.is_eighth_admin or request.user.is_teacher %}
                 <center>
-                    <br />
+                    <br>
                     <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
                     {% if request.user.is_eighth_admin %}
-                        <br />
+                        <br>
                         <a href="/profile/{{ profile_user.id }}?clear_cache=1&amp;full=1" class="button small-button" title="Clear cached information for this user.">Clear Cache</a> &nbsp;
                     {% endif %}
-                    <br />
+                    <br>
                 </center>
             {% endif %}
 
@@ -208,7 +208,7 @@
                                         {{ email }}
                                     </a>
                                 {% endif %}
-                                    {% if not forloop.last %}<br />{% endif %}
+                                    {% if not forloop.last %}<br>{% endif %}
                                 {% endfor %}
                             </td>
                         </tr>
@@ -223,7 +223,7 @@
                             <td>
                                 {% for url in profile_user.webpages %}
                                 <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
-                                {% if not forloop.last %}<br />{% endif %}
+                                {% if not forloop.last %}<br>{% endif %}
                                 {% endfor %}
                             </td>
                         </tr>
@@ -238,7 +238,7 @@
                                         <a href="skype:{{ profile_user.skype }}">
                                             {{ profile_user.skype }} (Skype)
                                         </a>
-                                        {% if profile_user.google_talk %}<br />{% endif %}
+                                        {% if profile_user.google_talk %}<br>{% endif %}
                                 {% endif %}
                                 {% if profile_user.google_talk %}
                                     <a href="gtalk:{{ profile_user.google_talk }}">
@@ -262,7 +262,7 @@
                                         {{ phone.number|dashes }}
                                     </a>
                                     <span>({{ phone.get_purpose_display }})</span>
-                                    <br />
+                                    <br>
                                     {% endif %}
                                 {% endfor %}
                             </td>
@@ -328,13 +328,13 @@
             {% if nominations_active %}
                 {% if request.user.is_student and profile_user.grade_number ==  request.user.grade_number %}
                 <section class="nomination">
-                    <br />
+                    <br>
                     {% if has_been_nominated %}
                         <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
                     {% else %}
                         <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
                     {% endif %}
-                    <br />
+                    <br>
                 </section>
                 {% endif %}
             {% endif %}
@@ -343,7 +343,7 @@
                 <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Signups{% endif %}</h3>
                 {% if eighth_restricted_msg %}
                     <b>This info is restricted to {% if request.user.is_student %} other{% endif %} students.</b> {% if request.user.is_teacher %}Please keep this in mind.{% endif %}
-                    <br /><br />
+                    <br><br>
                 {% endif %}
                 <table class="fancy-table">
                 <thead>
@@ -372,7 +372,7 @@
                 </tbody>
                 </table>
             </form>
-                <br />
+                <br>
                 {% if user == profile_user and profile_user.is_student %}
                     <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
                 {% else %}

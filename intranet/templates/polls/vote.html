@@ -40,7 +40,7 @@
         <h2>Vote: {{ poll }}</h2>
 
             <p>{{ poll.description|safe }}</p>
-        {% if user != request.user %}<b>Voting as: {{ user }}</b><br />{% endif %}
+        {% if user != request.user %}<b>Voting as: {{ user }}</b><br>{% endif %}
         {% if user in poll.get_users_voted %}
             <span class="voted-status voted">
                 <i class="fa fa-check"></i> You have voted in this poll.
@@ -53,7 +53,7 @@
 
         <form action="{% url 'poll_vote' poll.id %}{% if user != request.user %}?user={{ user.id }}{% endif %}" method="post">
             {% csrf_token %}
-            <hr />
+            <hr>
 
             <ol class="questions">
             {% for q in questions %}
@@ -68,7 +68,7 @@
                                        id="question-{{ q.num }}-{{ choice.num }}"
                                        name="question-{{ q.num }}"
                                        value="{{ choice.num }}"
-                                       {% if choice in q.current_choices %} checked {% endif %} />
+                                       {% if choice in q.current_choices %} checked {% endif %}>
 
                                 <label for="question-{{ q.num }}-{{ choice.num }}">
                                     {{ choice.info|safe }}
@@ -80,7 +80,7 @@
                                        id="question-{{ q.num }}-clear"
                                        name="question-{{ q.num }}"
                                        value="CLEAR"
-                                       {% if q.current_vote_clear %} checked {% endif %} />
+                                       {% if q.current_vote_clear %} checked {% endif %}>
 
                                 <label for="question-{{ q.num }}-clear" class="clear-vote">
                                     Clear Vote
@@ -93,7 +93,7 @@
                         {% else %}
                             You may select up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
                         {% endif %}
-                        <br />
+                        <br>
                         <ul class="answers">
                         {% for choice in q.choices %}
                             <li>
@@ -102,7 +102,7 @@
                                        name="question-{{ q.num }}"
                                        value="{{ choice.num }}"
                                        {% if choice in q.current_choices %} checked {% endif %}
-                                       {% if q.current_vote_clear %} disabled {% endif %} />
+                                       {% if q.current_vote_clear %} disabled {% endif %}>
 
                                 <label for="question-{{ q.num }}-{{ choice.num }}">
                                     {{ choice.info|safe }}
@@ -115,7 +115,7 @@
                                        class="question-clear-action"
                                        name="question-{{ q.num }}"
                                        value="CLEAR"
-                                       {% if q.current_vote_clear %} checked {% endif %} />
+                                       {% if q.current_vote_clear %} checked {% endif %}>
 
                                 <label for="question-{{ q.num }}-clear" class="clear-vote clear-vote">
                                     Clear Vote
@@ -135,18 +135,18 @@
                                       name="question-{{ q.num }}"
                                       class="question-writing short"
                                       placeholder="Answer here..."
-                                      value="{% if q.current_vote %}{{ q.current_vote.answer|escape }}{% endif %}" />
+                                      value="{% if q.current_vote %}{{ q.current_vote.answer|escape }}{% endif %}">
                         {% endif %}
                     {% else %}
                         Question type {{ q.type }} unsupported.
                     {% endif %}
                     </div>
-                    <br />
+                    <br>
                 </li>
             {% endfor %}
             </ol>
             {% if can_vote %}
-                <input type="submit" value="Vote!" />
+                <input type="submit" value="Vote!">
             {% else %}
                 You can't vote in this poll.
             {% endif %}

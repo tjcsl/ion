@@ -53,7 +53,7 @@
 
   {% if request.user.is_teacher or is_itemreg_admin %}
     <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
-    <br />
+    <br>
     <a href="{% url 'itemreg_search' %}" class="button">
       Search Database
     </a>
@@ -65,57 +65,57 @@
     {% for calc in calculators %}
       <li class="calc">
         <b>Calculator:</b> {{ calc.calc_name }}
-        <br />
+        <br>
         Serial: {{ calc.calc_serial }}
-        <br />
+        <br>
         ID: {{ calc.calc_id }}
-        <br />
+        <br>
         Added: {{ calc.added }}
-        <br />
+        <br>
         <a href="{% url 'itemreg_delete' 'calculator' calc.id %}">
           <i class="fa fa-trash-o"></i> Delete
         </a>
-        <br />
-        <br />
+        <br>
+        <br>
       </li>
     {% endfor %}
 
     {% for comp in computers %}
       <li class="comp">
         <b>Computer:</b> {{ comp.computer_name }}
-        <br />
+        <br>
         Serial: {{ comp.serial }}
-        <br />
+        <br>
         Added: {{ comp.added }}
-        <br />
+        <br>
         <a href="{% url 'itemreg_delete' 'computer' comp.id %}">
           <i class="fa fa-trash-o"></i> Delete
         </a>
-        <br />
-        <br />
+        <br>
+        <br>
       </li>
     {% endfor %}
 
     {% for phone in phones %}
       <li class="phone">
         <b>Phone:</b> {{ phone.manufacturer_name }} {{ phone.model }}
-        <br />
+        <br>
         Serial: {{ phone.serial }}
-        <br />
+        <br>
         Added: {{ phone.added }}
-        <br />
+        <br>
         <a href="{% url 'itemreg_delete' 'phone' phone.id %}">
           <i class="fa fa-trash-o"></i> Delete
         </a>
-        <br />
-        <br />
+        <br>
+        <br>
       </li>
     {% endfor %}
     </ul>
   {% else %}
     <p>You haven't registered any devices! Register a device using the buttons below.</p>
   {% endif %}
-  <br />
+  <br>
 
   <a href="{% url 'itemreg_calculator' %}" class="button">
     Register Calculator

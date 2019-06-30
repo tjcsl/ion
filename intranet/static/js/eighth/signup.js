@@ -228,9 +228,9 @@ $(function() {
                     if (!activity.attributes.both_blocks) {
                         $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                         $(".current-day .both-blocks").removeClass("both-blocks");
-                        $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                        $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea>').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
                     } else {
-                        $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                        $(".current-day .selected-activity").text("\n" + $('<textarea>').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
                         $(".current-day .block").addClass("both-blocks");
                     }
 
@@ -275,7 +275,7 @@ $(function() {
                     activity.attributes.roster.count += 1;
                     activity.attributes.waitlisted = false;
                     activity.attributes.selected = true;
-                    activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
+                    activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br>');
                 }
                 else {
                     var waitlistedActivity = activityModels.filter(function(a) {

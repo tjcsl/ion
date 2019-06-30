@@ -11,7 +11,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
     {% stylesheet 'preferences' %}
 {% endblock %}
 
@@ -60,7 +60,7 @@
     {% endif %}
     <h2>Privacy Options</h2>
 
-    <br />
+    <br>
 
     {% if request.user.is_eighth_admin %}
         <form action="" method="get">
@@ -70,16 +70,16 @@
                 Enter Student ID:
             </td>
             <td>
-                <input type="text" name="student_id" value="{{ request.GET.student_id|default:""|escape }}" />
+                <input type="text" name="student_id" value="{{ request.GET.student_id|default:""|escape }}">
             </td>
             <td>
-                <input type="submit" value="Edit" />
+                <input type="submit" value="Edit">
             </td>
             </tr>
         </table>
         </form>
 
-        <br />
+        <br>
 
         {% if profile_user %}
         <h3>Student: {{ profile_user.full_name }} ({{ profile_user.student_id|default:profile_user.id }})</h3>
@@ -94,8 +94,8 @@
             {% csrf_token %}
             <table class="privacy-options">
                 <thead>
-                    <th>Parent<br/>Permission</th>
-                    <th>Student<br/>Choice</th>
+                    <th>Parent<br>Permission</th>
+                    <th>Student<br>Choice</th>
                     <th></th>
                 </thead>
                 {% for field in privacy_options_form %}
@@ -119,14 +119,14 @@
             </table>
 
             {% if request.user.is_eighth_admin %}
-                <br />
+                <br>
                 <label>
-                    <input type="checkbox" id="select_all_checkbox" /> Select All Parent Permissions
+                    <input type="checkbox" id="select_all_checkbox"> Select All Parent Permissions
                 </label>
-                <br />
+                <br>
             {% endif %}
 
-            <br />
+            <br>
 
             <button type="submit">Save</button>
         </form>

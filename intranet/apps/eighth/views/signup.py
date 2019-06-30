@@ -340,7 +340,7 @@ def eighth_multi_signup_view(request):
                 else:
                     display_messages.append("{}: {}".format(btxt, success_message))
 
-        return http.HttpResponse("<br />".join(display_messages), status=status)
+        return http.HttpResponse("<br>".join(display_messages), status=status)
     else:
         if "user" in request.GET and request.user.is_eighth_admin:
             try:

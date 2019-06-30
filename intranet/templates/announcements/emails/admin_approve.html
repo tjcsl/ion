@@ -3,30 +3,30 @@
 {% endwith %}
 
 <p>The following news post was approved by a sponsor and is in the approval queue:</p>
-<b>Title:</b> {{ formdata.title }}<br />
-<b>Content:</b><br />
+<b>Title:</b> {{ formdata.title }}<br>
+<b>Content:</b><br>
 {% autoescape off %}
     {{ req.content }}
 {% endautoescape %}
-<br />
+<br>
 <b>Submitted by:</b> {{ req.user.full_name }} ({{ req.user.username }})
-<br />
+<br>
 <b>Teachers Requested for Approval:</b> {% for teacher in req.teachers_requested.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE
 {% endfor %}
-<br />
+<br>
 <b>Teachers Approved:</b> {% for teacher in req.teachers_approved.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE
 {% endfor %}
-<br />
-<b>Notes:</b><br />
+<br>
+<b>Notes:</b><br>
 {{ req.notes|linebreaks }}
-<br />
-<br />
+<br>
+<br>
 To approve or reject this posting, <a href="{{ info_link }}">click on this link</a>.
-<br />
+<br>
 {% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

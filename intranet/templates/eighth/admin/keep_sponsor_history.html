@@ -6,12 +6,12 @@
     $(function() {
         var form = document.forms["edit_form"];
         $("#change_yes").click(function() {
-            $("form#edit_form").append("<input type='hidden' name='change_sponsor_history' value='yes' />");
+            $("form#edit_form").append("<input type='hidden' name='change_sponsor_history' value='yes'>");
             form.submit();
         });
 
         $("#change_no").click(function() {
-            $("form#edit_form").append("<input type='hidden' name='change_sponsor_history' value='no' />");
+            $("form#edit_form").append("<input type='hidden' name='change_sponsor_history' value='no'>");
             form.submit();
         })
     });
@@ -25,9 +25,9 @@
 {% endblock %}
 
 {% block admin_main %}
-    <b>Old Sponsors:</b> {{ old_sponsors|join:", " }}<br />
-    <b>New Sponsors:</b> {{ new_sponsors|join:", " }}<br />
-    <br />
+    <b>Old Sponsors:</b> {{ old_sponsors|join:", " }}<br>
+    <b>New Sponsors:</b> {{ new_sponsors|join:", " }}<br>
+    <br>
     <p>You attempted to change the default sponsor(s) value for <b>{{ activity }}</b>, but this change would affect <b>{{ sched_acts_count }} activities</b> that have been scheduled before <b>{{ start_date|date:'D, N j, Y' }}</b>.</p>
 
     <p><b>Would you like the default sponsor change to only affect activities scheduled on or after this date?</b> This will change all of the activities scheduled before the date to have the old sponsor(s).</p>

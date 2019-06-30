@@ -23,9 +23,9 @@
             {% endif %}
             {% comment %}
                 {% if wizard.steps.next %}
-                    <input type="submit" value="Next"/>
+                    <input type="submit" value="Next">
                 {% else %}
-                    <input type="submit" value="Transfer Students"/>
+                    <input type="submit" value="Transfer Students">
                 {% endif %}
             {% endcomment %}
         </form>
@@ -33,25 +33,25 @@
         {% if dest_unsignup %}
             <p>Do you want to remove the signups for <b>{{ num }} students</b> from:</p>
             <p><b>{{ source_act }}</b></p>
-            <br />
+            <br>
         {% else %}
             <p>Do you want to transfer <b>{{ num }} students</b> from:</p>
             <p><b>{{ source_act }}</b></p>
-            to:<br /><br />
+            to:<br><br>
             <p><b>{{ dest_act }}</b></p>
-            <br />
+            <br>
         {% endif %}
         <form action="{% url 'eighth_admin_transfer_students_action' %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="source_act" value="{{ source_act.id }}" />
+            <input type="hidden" name="source_act" value="{{ source_act.id }}">
             {% if dest_unsignup %}
-                <input type="hidden" name="dest_unsignup" value="{{ dest_unsignup }}" />
+                <input type="hidden" name="dest_unsignup" value="{{ dest_unsignup }}">
             {% else %}
-                <input type="hidden" name="dest_act" value="{{ dest_act.id }}" />
+                <input type="hidden" name="dest_act" value="{{ dest_act.id }}">
             {% endif %}
-            <input type="hidden" name="confirm" value="true" />
+            <input type="hidden" name="confirm" value="true">
             <a href="{% url 'eighth_admin_dashboard' %}" class="button">Cancel</a>
-            <input type="submit" value="Transfer" />
+            <input type="submit" value="Transfer">
         </form>
     {% endif %}
 {% endblock %}

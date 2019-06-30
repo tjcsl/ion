@@ -56,7 +56,7 @@
                 {% if request.GET.next %}
                     <div class="message message-next">
                     {% if not user.is_anonymous %}
-                        You cannot access this page.<br />
+                        You cannot access this page.<br>
                     {% endif %}
                         Log in to access this page.
                     </div>
@@ -68,15 +68,15 @@
                 {% endif %}
                 <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login" method="post" name="auth_form">
                 {% if request.GET.next %}
-                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}" />
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}">
                 {% elif request.POST.next %}
-                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}" />
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}">
                 {% endif %}
                     {% csrf_token %}
                     {% for field in auth_form %}
-                        {{ field }}<br />
+                        {{ field }}<br>
                     {% endfor %}
-                    <input type="submit" value="Login" />
+                    <input type="submit" value="Login">
                     <div class='spinner-container'></div>
                 </form>
             </div>
@@ -118,7 +118,7 @@
     {% comment %}
     <div class="ssl-seal">
         <a href="https://seal.digicert.com/seals/popup/?tag=5VDyXkwz&amp;url=ion.tjhsst.edu&amp;lang=en_US" target="_blank">
-            <img src="{% static 'img/digicert-seal.png' %}" />
+            <img src="{% static 'img/digicert-seal.png' %}">
         </a>
     </div>
     {% endcomment %}
