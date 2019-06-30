@@ -105,38 +105,38 @@
         {% endfor %}
     </select>
     <label for=future>Future: </label>
-    <input type="checkbox" name="future" id="future"{% if future %} checked{% endif %}/>
+    <input type="checkbox" name="future" id="future"{% if future %} checked{% endif %}>
 
     <h3>Activity Information</h3>
     {% if activity.sponsors.count > 0 %}
         <b>Default Sponsors:</b>
         {% for sponsor in activity.sponsors.all %}
             {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}<br />
+        {% endfor %}<br>
     {% endif %}
 
     {% if activity.rooms.count > 0 %}
         <b>Default Rooms:</b>
         {% for room in activity.rooms.all %}
             {{ room }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}<br />
+        {% endfor %}<br>
     {% endif %}
 
     {% if activity.sponsors.count > 0 or activity.rooms.count > 0 %}
-        <br />
+        <br>
     {% endif %}
 
-    <b>Total blocks:</b> {{ total_blocks }}<br />
-    <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br />
-    <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br />
-    <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
-    <b>Total signups:</b> {{ total_signups }}<br />
-    <b>Unique students:</b> {{ students }}<br />
-    <b>Average signups per block:</b> {{ average_signups }}<br />
-    <b>Average signups per student:</b> {{ average_user_signups }}<br />
-    <b>Capacity:</b> {{ capacity }}<br />
+    <b>Total blocks:</b> {{ total_blocks }}<br>
+    <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br>
+    <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br>
+    <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br>
+    <b>Total signups:</b> {{ total_signups }}<br>
+    <b>Unique students:</b> {{ students }}<br>
+    <b>Average signups per block:</b> {{ average_signups }}<br>
+    <b>Average signups per student:</b> {{ average_user_signups }}<br>
+    <b>Capacity:</b> {{ capacity }}<br>
 
-    <br />
+    <br>
 
     <div id="blocks-chart-container">
         <h3>Block Signups</h3>
@@ -157,13 +157,13 @@
         </tbody>
     </table>
 
-    <br />
+    <br>
     {% if year %}
         <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} not in the {{ year|add:"-1" }}-{{ year }} school year and {{ old_blocks|pluralize:"is,are" }} not included on this page.
     {% else %}
-        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {{ past_start_date|pluralize:"is,are" }} not included on this page.<br />
-        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} from previous years {{ old_blocks|pluralize:"is,are" }} not included on this page.<br />
+        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {{ past_start_date|pluralize:"is,are" }} not included on this page.<br>
+        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} from previous years {{ old_blocks|pluralize:"is,are" }} not included on this page.<br>
     {% endif %}
-    <br />
+    <br>
 </div>
 {% endblock %}

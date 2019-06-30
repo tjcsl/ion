@@ -78,12 +78,12 @@
         {% if show_attend %}
             <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
                 {% csrf_token %}
-                <input type="hidden" name="attending" value="false" />
+                <input type="hidden" name="attending" value="false">
             </form>
 
             <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
                 {% csrf_token %}
-                <input type="hidden" name="attending" value="true" />
+                <input type="hidden" name="attending" value="true">
             </form>
         {% endif %}
 
@@ -94,8 +94,8 @@
                     {% if not event.approved %}
                         <form action="{% url 'events' %}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="approve" value="{{ event.id }}" />
-                            <input type="submit" value="Approve" class="small-button" />
+                            <input type="hidden" name="approve" value="{{ event.id }}">
+                            <input type="submit" value="Approve" class="small-button">
                         </form>
                     {% else %}
                         Approved by {{ event.approved_by.full_name }}.
@@ -105,8 +105,8 @@
                     {% if not event.approved %}
                         <form action="{% url 'events' %}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="reject" value="{{ event.id }}" />
-                            <input type="submit" value="Reject" class="small-button" />
+                            <input type="hidden" name="reject" value="{{ event.id }}">
+                            <input type="submit" value="Reject" class="small-button">
                         </form>
                     {% elif event.rejected %}
                         Rejected by {{ event.rejected_by.full_name }}.

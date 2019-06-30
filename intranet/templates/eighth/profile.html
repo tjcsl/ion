@@ -36,14 +36,14 @@
         </a>
         &nbsp; <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a>
         &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
-        <br />
+        <br>
         <h2>Eighth Period - {{ date_now }}{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}</h2>
     {% endif %}
 
     <section class="user-info-eighth">
     <form action="{% url 'eighth_signup' %}" method="GET">
 
-        <input type="hidden" name="user" value="{{ profile_user.id }}" />
+        <input type="hidden" name="user" value="{{ profile_user.id }}">
         {% if show_profile_header %}
             <h3>
                 Eighth Period - {{ date_now }}
@@ -66,7 +66,7 @@
                     <span class="button-center">
                     {% if eighth_schedule %}
                         {% if request.user.is_eighth_admin or request.user == profile_user %}
-                            <input type="submit" value="Change Selected" />
+                            <input type="submit" value="Change Selected">
                         {% endif %}
                     {% endif %}
 
@@ -85,7 +85,7 @@
             {% if eighth_schedule %}
             <tr class="desc">
                 <th class="center checkbox">
-                    <input type="checkbox" />
+                    <input type="checkbox">
                 </th>
                 <th>
                     <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
@@ -109,7 +109,7 @@
         {% for sch in eighth_schedule %}
         <tr class="form-row">
         <td class="center checkbox block-checkbox">
-                <input type="checkbox" name="block" value="{{ sch.block.id }}" />
+                <input type="checkbox" name="block" value="{{ sch.block.id }}">
             </td>
             <td>
                 {{ sch.block.date|date:'D, N j, Y' }}
@@ -164,7 +164,7 @@
         {% endfor %}
         </table>
     {% else %}
-        <br /><b>This user is not a student. They may not be signed up for activities.</b>
+        <br><b>This user is not a student. They may not be signed up for activities.</b>
     {% endif %}
     </form>
     </section>

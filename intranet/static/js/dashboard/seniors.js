@@ -29,7 +29,7 @@ function initClock(id, evt, endtime) {
         if (dys > 50) {
             clock.innerHTML = "<span class='clock'><b>" + dys + "</b> days, <b>" + hrs + "</b> hours</span> until " + evt;
         } else {
-            clock.innerHTML = "<span class='clock'><b>" + dys + "</b> days, <b>" + hrs + "</b> hours, <b>" + mns + "</b> minutes, <b>" + scs + "</b> seconds</span><br/>until " + evt;
+            clock.innerHTML = "<span class='clock'><b>" + dys + "</b> days, <b>" + hrs + "</b> hours, <b>" + mns + "</b> minutes, <b>" + scs + "</b> seconds</span><br>until " + evt;
         }
 
         if (t.total <= 0) {

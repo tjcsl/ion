@@ -3,26 +3,26 @@
 {% endwith %}
 
 <p>The following event is in the approval queue:</p>
-<b>Title:</b> {{ event.title }}<br />
-<b>Description:</b><br />
+<b>Title:</b> {{ event.title }}<br>
+<b>Description:</b><br>
 {% autoescape off %}
     {{ event.description }}
 {% endautoescape %}
-<br />
+<br>
 <b>Submitted by:</b> {{ event.user.full_name }} ({{ event.user.username }})
-<br />
+<br>
 <b>Time:</b> {{ event.time }}
-<br />
+<br>
 <b>Location:</b> {{ event.location }}
-<br />
+<br>
 <b>Groups:</b> {% for group in event.groups.all %}
     {{ group }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE (Public)
 {% endfor %}
-<br />
-<br />
+<br>
+<br>
 To approve or reject this event, <a href="{{ info_link }}">click on this link</a>.
-<br />
+<br>
 
 {% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

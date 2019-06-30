@@ -16,7 +16,7 @@
                 if(!room_ids) room_ids = [];
                 console.debug("updateRoomChoices", room_ids)
                 for(var i=0; i<room_ids.length; i++) {
-                    var el = $("<input type='hidden' name='room' />");
+                    var el = $("<input type='hidden' name='room'>");
                     el.val(room_ids[i]);
                     $(form).append(el);
                 }
@@ -26,7 +26,7 @@
                 var form = document.forms["choose-fields"];
                 form.action = "";
                 $("input[name=room]", form).remove();
-                var el = $("<input type='hidden' name='show_used' value=1 />");
+                var el = $("<input type='hidden' name='show_used' value=1>");
                 $(form).append(el);
             }
 
@@ -34,7 +34,7 @@
                 var form = document.forms["choose-fields"];
                 form.action = "";
                 $("input[name=room]", form).remove();
-                var el = $("<input type='hidden' name='show_all' value=1 />");
+                var el = $("<input type='hidden' name='show_all' value=1>");
                 $(form).append(el);
             }
 
@@ -42,7 +42,7 @@
                 var form = document.forms["choose-fields"];
                 form.action = "";
                 $("input[name=room]", form).remove();
-                var el = $("<input type='hidden' name='show_available_for_eighth' value=1 />");
+                var el = $("<input type='hidden' name='show_available_for_eighth' value=1>");
                 $(form).append(el);
             }
 
@@ -169,27 +169,27 @@ i.i {
             {% endif %}
             {% comment %}
             {% if wizard.steps.next %}
-                <input type="submit" value="Next"/>
+                <input type="submit" value="Next">
             {% else %}
-                <input type="submit" value="Show Room Utilization"/>
+                <input type="submit" value="Show Room Utilization">
             {% endif %}
             {% endcomment %}
         </form>
         {% if wizard.steps.step1 == 1 %}
-            <br />
-            <br />
+            <br>
+            <br>
             <a href="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" class="button">Select All Blocks</a>
         {% endif %}
 {% else %}
     <table style="width: 100%">
     <tr>
         <td>
-        <br />
+        <br>
         {% if start_block == end_block %}
             <strong>Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
         {% else %}
             <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
-            <br />
+            <br>
             <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
         {% endif %}
         </td>
@@ -203,7 +203,7 @@ i.i {
                         <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
                     {% endfor %}
                 </select>
-                <input type="submit" value="Filter Rooms" id="rooms-submit" />
+                <input type="submit" value="Filter Rooms" id="rooms-submit">
                 {% if not show_used_rooms %}
                     &nbsp; &nbsp; <a href="#" id="show-used-rooms" class="button">Show Used Rooms</a>
                 {% endif %}
@@ -216,37 +216,37 @@ i.i {
             </form>
         </td>
         <td>
-            <br />
+            <br>
             <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
             <label for="hide-administrative">Hide administrative</label>
-            <br />
-            <input type="checkbox" id="only-show-overbooked" />
+            <br>
+            <input type="checkbox" id="only-show-overbooked">
             <label for="only-show-overbooked">Only show overbooked</label>
         </td>
     </tr>
     </table>
 
-    <br />
+    <br>
     Choose the fields that you wish to display:
     <form action="" method="get" name="choose-fields">
         <table class="choose-fields fancy-table">
             <tr>
-                <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}" />
-                <input type="hidden" name="only_show_overbooked" value="{% if only_show_overbooked %}1{% else %}0{% endif %}" />
+                <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}">
+                <input type="hidden" name="only_show_overbooked" value="{% if only_show_overbooked %}1{% else %}0{% endif %}">
             {% for room in room_ids %}
-                <input type="hidden" name="room" value="{{ room }}" />
+                <input type="hidden" name="room" value="{{ room }}">
             {% endfor %}
-                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} /><br />Block</td>
-                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} /><br />Rooms</td>
-                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
-                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
-                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} /><br />AID</td>
-                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity</td>
-                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
-                <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
-                <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
+                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %}><br>Block</td>
+                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %}><br>Rooms</td>
+                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %}><br>Capacity</td>
+                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %}><br>Signups</td>
+                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %}><br>AID</td>
+                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %}><br>Activity</td>
+                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %}><br>Sponsors</td>
+                <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %}><br>Comments</td>
+                <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %}><br>Admin Comments</td>
                 {% if show_listing %}
-                    <th><input type="submit" value="Apply" id="apply-btn" /></th>
+                    <th><input type="submit" value="Apply" id="apply-btn"></th>
                     <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
                     <th><a href="" class="button" id="print-page">Print</a></th>
                 {% endif %}
@@ -254,7 +254,7 @@ i.i {
         </table>
 
     {% if show_listing %}
-        <br />
+        <br>
         Click on column titles to sort.
         <table id="room-util-table" data-sortable class="fancy-table">
             <thead>
@@ -334,7 +334,7 @@ i.i {
             </tbody>
         </table>
     {% else %}
-        <br />
+        <br>
         <p>Adjust the search criteria above and press <b>Filter Rooms</b>, or press <b>Show All Rooms</b> to show all results.</p>
     {% endif %}
     </form>

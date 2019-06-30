@@ -225,7 +225,7 @@
                         <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
                 <%} else {%>
                     None
-                    <br />
+                    <br>
                 <%}%>
             </dd>
 
@@ -236,7 +236,7 @@
                         <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
                 <%} else {%>
                     None
-                    <br />
+                    <br>
                 <%}%>
             </dd>
 
@@ -250,12 +250,12 @@
             <%}%>
 
             <% if (comments) {%>
-                <br />
+                <br>
                 <dt>Comments:</dt><dd><%= comments %></dd>
             <%}%>
 
             <% if (description) {%>
-                <br />
+                <br>
                 <p><%= description %></p>
             <%}%>
 
@@ -287,7 +287,7 @@
                     <%} else {%>
 
                         <% if (display_text.length > 0) {%>
-                            <strong><%= display_text %></strong><br /><br />
+                            <strong><%= display_text %></strong><br><br>
                         <% }else{ %>
                             <% if (waitlisted && waitlistEnabled) { %>
                                 <p class="signup-waitlist-text">You are signed up for notifications for this activity</p>
@@ -337,7 +337,7 @@
         <section class="user-info-eighth user-info">
         <form action="{% url 'eighth_signup' %}" method="GET">
 
-            <input type="hidden" name="user" value="{{ profile_user.id }}" />
+            <input type="hidden" name="user" value="{{ profile_user.id }}">
             <h3>
                 Eighth Period{% if profile_user != real_user %} - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
             </h3>
@@ -345,7 +345,7 @@
                 There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
             {% endif %}
             {% if not profile_user.is_student %}
-                <br /><b>This user is not a student. They may not be signed up for activities.</b>
+                <br><b>This user is not a student. They may not be signed up for activities.</b>
             {% endif %}
             <table class="eighth-table {% if eighth_schedule %}zebra{% endif %}">
             <thead>
@@ -371,7 +371,7 @@
                 </tr>
                 <tr class="desc">
                     <th class="center checkbox">
-                        <input type="checkbox" />
+                        <input type="checkbox">
                     </th>
                     <th>
                         <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
@@ -394,7 +394,7 @@
             {% if sch.block.date == active_block.date %}
                 <tr class="form-row"{% if sch.block == active_block %} style="background-color: yellow"{% endif %}>
                     <td class="center checkbox">
-                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
+                        <input type="checkbox" name="block" value="{{ sch.block.id }}">
                     </td>
                     <td>
                         {{ sch.block.date|date:'D, N j, Y' }}
@@ -537,7 +537,7 @@
                 {% if profile_user != real_user %}
                     <center>
                         <div>
-                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" />
+                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture">
                         </div>
                         <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
                             {{ profile_user.full_name }}

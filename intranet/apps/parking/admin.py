@@ -22,14 +22,14 @@ class ParkingAdmin(admin.ModelAdmin):
 
     def get_user(self, obj):
         u = obj.user
-        return mark_safe("{} {} ({})<br />{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
+        return mark_safe("{} {} ({})<br>{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
 
     get_user.short_description = "User"  # type: ignore
 
     def get_joint_user(self, obj):
         u = obj.joint_user
         if u:
-            return mark_safe("{} {} ({})<br />{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
+            return mark_safe("{} {} ({})<br>{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
         return "n/a"
 
     get_joint_user.short_description = "Joint User"  # type: ignore
@@ -43,7 +43,7 @@ class ParkingAdmin(admin.ModelAdmin):
     get_absences.short_description = "Absences"  # type: ignore
 
     def get_cars(self, obj):
-        template = Template("{% for car in cars %}{{ car }}{% if not forloop.last %}<br />{% endif %}{% endfor %}")
+        template = Template("{% for car in cars %}{{ car }}{% if not forloop.last %}<br>{% endif %}{% endfor %}")
         return template.render(Context({"cars": obj.cars.all()}))
 
     get_cars.short_description = "Cars"  # type: ignore

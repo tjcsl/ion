@@ -5,7 +5,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {% stylesheet 'eighth.schedule' %}
 {% endblock %}
 
@@ -37,16 +37,16 @@
             {% if users_type == "unsigned" %}
                 <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
             {% elif users_type == "group" %}
-                <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br />
+                <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br>
                 <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a> &nbsp; 
             {% endif %}
             <button onclick="distribute(); return false">Evenly Distribute</button>
-            <br />
-            <br />
-            <input type="hidden" name="users" value="true" />
-            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false;" />
+            <br>
+            <br>
+            <input type="hidden" name="users" value="true">
+            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false;">
             {% csrf_token %}
-            <br />
+            <br>
             Click on column titles to sort.
             <table data-sortable class="distribute-group-grid fancy-table">
                 <thead>
@@ -56,9 +56,9 @@
                         <th>Grade</th>
                         {% for sch in schacts %}
                         <th>
-                            {{ sch.activity }}<br />
-                            {{ sch.block }}<br />
-                            <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}" />
+                            {{ sch.activity }}<br>
+                            {{ sch.block }}<br>
+                            <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}">
                         </th>
                         {% empty %}
                         <th>No activities found.</th>
@@ -73,7 +73,7 @@
                     <td>{{ user.grade_number }}</td>
                     {% for sch in schacts %}
                     <td>
-                        <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}" />
+                        <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}">
                     </td>
                     {% endfor %}
                 </tr>
@@ -83,7 +83,7 @@
                 </tbody>
             </table>
 
-            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
+            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false">
     {% else %}
         <form method="post" name="wizard" onsubmit="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;} else return false;">{% csrf_token %}
             {{ wizard.management_form }}
@@ -103,11 +103,11 @@
             {% if wizard.steps.next %}
                 <!--input type="submit" value="Next"/-->
             {% else %}
-                <input type="submit" value="Distribute Group" />
+                <input type="submit" value="Distribute Group">
             {% endif %}
 
             {% if redirect_block_id %}
-                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
+                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}">
                     <script>
                         document.forms["wizard"].action = location.href.split("?")[0];
                         document.forms["wizard"].submit()

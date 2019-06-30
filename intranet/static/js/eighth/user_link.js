@@ -29,7 +29,7 @@ $(function() {
             console.debug(uid, "IN");
         } else {
             console.debug(uid, "LOAD");
-            var img = $("<img class='user-pic' />");
+            var img = $("<img class='user-pic'>");
             img.attr("data-user-id", uid);
             img.attr("src", "/profile/picture/" + uid);
             img.attr("width", 172);

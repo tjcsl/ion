@@ -31,9 +31,9 @@
             <form action="" method="post" autocomplete="off">
                 {% csrf_token %}
                 <label for="id_name"><b>Group Name</b></label>
-                <br />
-                {{ edit_form.name }} <input type="submit" value="Save" />
-                <br />
+                <br>
+                {{ edit_form.name }} <input type="submit" value="Save">
+                <br>
                 <label for="id_student_visible"><b>Student Visible:</b></label>
                 {{ edit_form.student_visible }}
             </form>
@@ -42,7 +42,7 @@
             <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
                 {% csrf_token %}
                 <label for="student-id"><b>Add user(s) by search query</b></label>
-                <br />
+                <br>
                 <input type="text" name="query" id="query"> <input type="submit" value="Add">
                 {% if request.GET.error %}
                 <p class="error-color">
@@ -56,13 +56,13 @@
             </form>
         </td>
         <td>
-            <br />
+            <br>
             <a href="{% url 'eighth_admin_upload_group_members' group.id %}" class="button">Import members</a>
         </td>
     </tr>
 </table>
 
-<br />
+<br>
 <h2>{{ group.name }}: {{ member_count }} members</h2>
 {% if linked_activities %}
     This group is on the restriction list for these activities:
@@ -71,29 +71,29 @@
         <li><a href="{% url 'eighth_admin_edit_activity' act.id %}">{{ act }}</a></li>
     {% endfor %}
     </ul>
-    <br />
+    <br>
 {% endif %}
 {% if "remove_all" in request.GET %}
     <form action="" method="post">
         {% csrf_token %}
         <p><b>Are you sure you want to remove all of the group members?</b></p>
-        <input type="hidden" name="remove_all" value="1" />
-        <input type="submit" value="Remove All" />
+        <input type="hidden" name="remove_all" value="1">
+        <input type="submit" value="Remove All">
     </form>
 {% else %}
     <a href="?remove_all=1" class="button small-button">
     Remove All Group Members
     </a>
 {% endif %}
-<br />
-<br />
+<br>
+<br>
 <div id="member_search">
     <h2>Search members of this group by Ion Username:</h2>
     <input type="text" name="search" placeholder="Split multiple IDs using commas" style="width:250px">
     <a href="#" id="search_students" class="button">Search</a>
     <a href="#" id="clear" class="button">Clear</a>
 </div>
-<br />
+<br>
 <table data-sortable class="fancy-table">
     <thead>
         <tr>
@@ -125,7 +125,7 @@
         {% endfor %}
     </tbody>
 </table>
-<br />
+<br>
 <div class="pagination">
     <span class="step-links">
         <a class="button" {% if members_page.has_previous %} href="?p={{ members_page.previous_page_number }}" {% else %} disabled {% endif %}>Previous</a>
@@ -133,10 +133,10 @@
         <a class="button" {% if members_page.has_next %} href="?p={{ members_page.next_page_number }}" {% else %} disabled {% endif %}>Next</a>
     </span>
 </div>
-<br />
+<br>
 <a href="{% url 'eighth_admin_download_group_csv' group.id %}" class="button">Download as CSV</a>
-<br />
-<br />
+<br>
+<br>
 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
 {% if delete_url %}
     <a class="button" href="{{ delete_url }}">Delete</a>
