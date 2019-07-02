@@ -5,8 +5,6 @@ import sys
 import warnings
 
 warnings.simplefilter('default')
-warnings.filterwarnings('ignore', category=DeprecationWarning, module='distutils')
-warnings.filterwarnings('ignore', category=ImportWarning, module='importlib')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
