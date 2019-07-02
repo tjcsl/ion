@@ -1,4 +1,3 @@
-# pylint: enable=pointless-string-statement
 import logging
 import pickle
 
