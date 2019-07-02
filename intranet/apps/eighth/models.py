@@ -1,5 +1,4 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
-# pylint: enable=pointless-string-statement
 import datetime
 import logging
 
@@ -949,39 +948,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
 
         success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
-        """
-        final_remove_signups = []
-
-        # Check if the block overrides signups on other blocks
-        if len(self.block.override_blocks.all()) > 0:
-            override_blocks = self.block.override_blocks.all()
-            can_change_out = True
-
-            for block in override_blocks:
-                # If block is locked, can't change out of
-                if block.locked and not force:
-                    exception.OverrideBlockLocked = [block]
-                    can_change_out = False
-                    break
-
-                signup_objs = (EighthSignup.objects
-                                           .filter(user=user,
-                                                   scheduled_activity__activity__sticky=True,
-                                                   scheduled_activity__block=block))
-                in_stickie = signup_objs.exists()
-                if in_stickie and not force:
-                    exception.OverrideBlockPermissions = [signup_objs[0].scheduled_activity.activity, block]
-                    can_change_out = False
-                    break
-
-            # Going to change out of dependent activities at the end
-            if can_change_out:
-                for block in override_blocks:
-                    ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
-                    for signup in ovr_signups:
-                        logger.debug("Need to remove signup for {0}".format(signup))
-                        final_remove_signups.append(signup)
-        """
 
         # If we've collected any errors, raise the exception and abort
         # the signup attempt
@@ -1066,14 +1032,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                     # signup.previous_activity_name = signup.activity.name_with_flags
                     # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
-        """
-        # See "If block overrides signup on other blocks" check
-        # If there are EighthSignups that need to be removed, do them at the end
-        for signup in final_remove_signups:
-            success_message += "\nYour signup for {0} on {1} was removed. ".format(
-                signup.scheduled_activity.activity, signup.scheduled_activity.block)
-            signup.delete()
-        """
 
         return success_message
 
@@ -1092,20 +1050,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             logger.debug("Cancelling %s", self)
             self.cancelled = True
             self.save(update_fields=["cancelled"])
-        # NOT USED. Was broken anyway.
-        """
-        cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
-        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
-        if cancelled_room not in list(self.rooms.all()):
-            self.rooms.all().delete()
-            self.rooms.add(cancelled_room)
-
-        if cancelled_sponsor not in list(self.sponsors.all()):
-            self.sponsors.all().delete()
-            self.sponsors.add(cancelled_sponsor)
-
-        self.save()
-        """
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.
@@ -1119,18 +1063,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             logger.debug("Uncancelling %s", self)
             self.cancelled = False
             self.save(update_fields=["cancelled"])
-        # NOT USED. Was broken anyway.
-        """
-        cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
-        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
-        if cancelled_room in list(self.rooms.all()):
-            self.rooms.filter(id=cancelled_room.id).delete()
-
-        if cancelled_sponsor in list(self.sponsors.all()):
-            self.sponsors.filter(id=cancelled_sponsor.id).delete()
-
-        self.save()
-        """
 
     def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         super(EighthScheduledActivity, self).save(*args, **kwargs)
