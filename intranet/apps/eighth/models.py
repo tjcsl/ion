@@ -1,4 +1,4 @@
-# pylint: disable=C0302; Allow more than 1000 lines
+# pylint: disable=too-many-lines; Allow more than 1000 lines
 # pylint: enable=pointless-string-statement
 import datetime
 import logging

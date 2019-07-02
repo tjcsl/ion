@@ -66,7 +66,7 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
 
 class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
 
-    def get_url(self, obj, view_name, request, format):  # pylint: disable=W0622
+    def get_url(self, obj, view_name, request, format):  # pylint: disable=redefined-builtin
         s = super(HyperlinkedImageField, self).get_url(obj, view_name, request, format)
         if "format=" in s:
             return "{}format=jpg".format(s.split("format=", 1)[0])

@@ -13,7 +13,7 @@ if sys.version_info < (3, 5):
     # Require Python 3.5+
     raise Exception("Python 3.5 or higher is required.")
 
-from ..utils import helpers  # pylint: disable=C0413 # noqa
+from ..utils import helpers  # pylint: disable=wrong-import-position # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
 defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
@@ -528,7 +528,7 @@ if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
     LOG_LEVEL = os.environ["LOG_LEVEL"]
 
 
-def get_log(name):  # pylint: disable=W0621; 'name' is used as the target of a for loop, so we can safely override it
+def get_log(name):  # pylint: disable=redefined-outer-name; 'name' is used as the target of a for loop, so we can safely override it
     return [name] if (PRODUCTION and not TRAVIS) else []
 
 
