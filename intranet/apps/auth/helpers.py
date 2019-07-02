@@ -8,7 +8,7 @@ import pexpect
 logger = logging.getLogger(__name__)
 
 
-def change_password(form_data):  # pylint: disable=too-many-return-statements
+def change_password(form_data):
     if form_data:
         form_data["username"] = re.sub(r'\W', '', form_data["username"])
     if (form_data and form_data["username"] == "unknown" or form_data["old_password"] is None or form_data["new_password"] is None or

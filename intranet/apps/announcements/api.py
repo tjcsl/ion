@@ -26,7 +26,7 @@ class ListCreateAnnouncement(generics.ListCreateAPIView):
         return Announcement.objects.visible_to_user(user).prefetch_related("groups")
 
 
-class RetrieveUpdateDestroyAnnouncement(generics.RetrieveUpdateDestroyAPIView):  # pylint: disable=too-many-ancestors; Beyond our control
+class RetrieveUpdateDestroyAnnouncement(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AnnouncementSerializer
     permission_classes = (IsAnnouncementAdminOrReadOnly,)
 
