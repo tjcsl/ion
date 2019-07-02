@@ -16,7 +16,9 @@ def get_date_range_this_year(now=None):
         now = datetime.datetime.now().date()
     if now.month <= settings.YEAR_TURNOVER_MONTH:
         date_start = datetime.datetime(now.year - 1, settings.YEAR_TURNOVER_MONTH + 1, 1, 0, 0, 0)
-        date_end = datetime.datetime(now.year, settings.YEAR_TURNOVER_MONTH, calendar.monthrange(now.year, settings.YEAR_TURNOVER_MONTH)[1], 23, 59, 59)
+        date_end = datetime.datetime(
+            now.year, settings.YEAR_TURNOVER_MONTH, calendar.monthrange(now.year, settings.YEAR_TURNOVER_MONTH)[1], 23, 59, 59
+        )
     else:
         date_start = datetime.datetime(now.year, settings.YEAR_TURNOVER_MONTH + 1, 1, 0, 0, 0)
         date_end = datetime.datetime(now.year + 1, settings.YEAR_TURNOVER_MONTH, 1, 0, 0, 0)
