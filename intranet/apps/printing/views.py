@@ -57,7 +57,7 @@ def convert_soffice(tmpfile_name):
         logger.error("Could not run soffice command (returned %d): %s", e.returncode, e.output)
         return False
 
-    if " -> " in output and " using " in output:  # pylint: disable=E1135; Pylint is wrong
+    if " -> " in output and " using " in output:  # pylint: disable=unsupported-membership-test; Pylint is wrong
         fileout = output.split(" -> ", 2)[1]
         fileout = fileout.split(" using ", 1)[0]
         return fileout

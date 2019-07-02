@@ -204,7 +204,7 @@ class Event(models.Model):
     def user_map(self):
         """Return or create an EventUserMap"""
         try:
-            return self._user_map  # pylint: disable=E1101; Defined via a related_name in EventUserMap
+            return self._user_map  # pylint: disable=no-member; Defined via a related_name in EventUserMap
         except EventUserMap.DoesNotExist:
             return EventUserMap.objects.create(event=self)
 

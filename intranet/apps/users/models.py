@@ -1,4 +1,4 @@
-# pylint: disable=C0302; Allow more than 1000 lines
+# pylint: disable=too-many-lines; Allow more than 1000 lines
 import logging
 from datetime import datetime
 from base64 import b64encode
@@ -802,7 +802,7 @@ class UserProperties(models.Model):
         if name == "birthday":
             if self.attribute_is_visible("show_birthday"):
                 self._birthday = value
-        super(UserProperties, self).__setattr__(name, value)  # pylint: disable=E1101; Pylint is wrong
+        super(UserProperties, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __str__(self):
         return self.user.__str__()
@@ -922,7 +922,7 @@ class Phone(models.Model):
                 self._number = value
                 self.save(update_fields=["_number"])
         else:
-            super(Phone, self).__setattr__(name, value)  # pylint: disable=E1101; Pylint is wrong
+            super(Phone, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "number":
@@ -986,7 +986,7 @@ class Photo(models.Model):
                 self._binary = value
                 self.save(update_fields=["_binary"])
         else:
-            super(Photo, self).__setattr__(name, value)  # pylint: disable=E1101; Pylint is wrong
+            super(Photo, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "binary":
