@@ -110,6 +110,7 @@ class ProfileMiddleware:
         return None
 
     def process_response(self, request, response):
+        # pylint: disable=unsupported-assignment-operation,unsubscriptable-object
         global _current_stats, _middleware_start_time, _log_file_path, _profile_layer, _prof
         if settings.DEBUG:
             if 'time' in request.GET:
