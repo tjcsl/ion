@@ -723,7 +723,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.capacity is not None:
             return self.capacity
 
-        if self.rooms.count() == 0 and self.activity.default_capacity:
+        if self.activity.default_capacity and self.rooms.count() == 0:
             # use activity-level override
             return self.activity.default_capacity
 
@@ -886,14 +886,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         all_sched_act = [self]
         all_blocks = [self.block]
 
-        if self.is_both_blocks():
-            # Finds the other scheduling of the same activity on the same day
-            # See note above in get_both_blocks_sibling()
-            sibling = self.get_both_blocks_sibling()
-
-            if sibling:
-                all_sched_act.append(sibling)
-                all_blocks.append(sibling.block)
+        # Finds the other scheduling of the same activity on the same day
+        # See note above in get_both_blocks_sibling()
+        sibling = self.get_both_blocks_sibling()
+        if sibling:
+            all_sched_act.append(sibling)
+            all_blocks.append(sibling.block)
 
         waitlist = None
         if force:
@@ -1195,10 +1193,8 @@ class EighthSignup(AbstractBaseEighthModel):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
     def has_conflict(self):
-        signup_count = (
-            EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).count()
-        )
-        return signup_count > 0
+        return EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user,
+                                                               scheduled_activity__block=self.scheduled_activity.block).exists()
 
     def remove_signup(self, user=None, force=False, dont_run_waitlist=False):
         """Attempt to remove the EighthSignup if the user has permission to do so."""
