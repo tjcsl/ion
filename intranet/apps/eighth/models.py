@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
 from django.db.models import Manager, Q, Count
-from django.utils import formats
+from django.utils import formats, timezone
 from simple_history.models import HistoricalRecords
 
 from . import exceptions as eighth_exceptions
@@ -383,7 +383,7 @@ class EighthBlockManager(models.Manager):
 
         """
 
-        now = datetime.datetime.now()
+        now = timezone.localtime()
 
         # Show same day if it's before 17:00
         if now.hour < 17:
@@ -506,11 +506,11 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def is_today(self):
         """Does the block occur today?"""
-        return datetime.date.today() == self.date
+        return timezone.localdate() == self.date
 
     def signup_time_future(self):
         """Is the signup time in the future?"""
-        now = datetime.datetime.now()
+        now = timezone.localtime()
         return now.date() < self.date or (self.date == now.date() and self.signup_time > now.time())
 
     def date_in_past(self):
@@ -519,7 +519,7 @@ class EighthBlock(AbstractBaseEighthModel):
         (Has it not yet happened?)
 
         """
-        now = datetime.datetime.now()
+        now = timezone.localtime()
         return now.date() > self.date
 
     def in_clear_absence_period(self):
@@ -528,13 +528,13 @@ class EighthBlock(AbstractBaseEighthModel):
         (Should info on clearing the absence show?)
 
         """
-        now = datetime.datetime.now()
+        now = timezone.localtime()
         two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
         return now.date() <= two_weeks
 
     def attendance_locked(self):
         """Is it past 10PM on the day of the block?"""
-        now = datetime.datetime.now()
+        now = timezone.localtime()
         return now.date() > self.date or (now.date() == self.date and now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0))
 
     def num_signups(self):
@@ -773,9 +773,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Return whether it is too early to sign up for the activity if it is a presign (48 hour
         logic is here)."""
         if now is None:
-            now = datetime.datetime.now()
+            now = timezone.localtime()
 
         activity_date = datetime.datetime.combine(self.block.date, datetime.time(0, 0, 0))
+        if now.tzinfo is not None:
+            activity_date = timezone.make_aware(activity_date, now.tzinfo)
         # Presign activities can only be signed up for 2 days in advance.
         presign_period = datetime.timedelta(days=2)
 
