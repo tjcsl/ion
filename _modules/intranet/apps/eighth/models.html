@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4792) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4825) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,8 +125,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.models</h1><div class="highlight"><pre>
-<span></span><span class="c1"># pylint: disable=C0302; Allow more than 1000 lines</span>
-<span class="c1"># pylint: enable=pointless-string-statement</span>
+<span></span><span class="c1"># pylint: disable=too-many-lines; Allow more than 1000 lines</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -216,7 +215,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">to_be_assigned</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
@@ -240,15 +239,13 @@
 
     <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">),)</span>
 
-<div class="viewcode-block" id="EighthRoom.total_capacity_of_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthRoom.total_capacity_of_rooms">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rooms</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthRoom.total_capacity_of_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthRoom.total_capacity_of_rooms">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">total_capacity_of_rooms</span><span class="p">(</span><span class="n">rooms</span><span class="p">):</span>
         <span class="n">capacity</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rooms</span><span class="p">:</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">capacity</span>
-            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">capacity</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">capacity</span> <span class="o">+=</span> <span class="n">c</span>
+            <span class="n">capacity</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">capacity</span>
         <span class="k">return</span> <span class="n">capacity</span></div>
 
     <span class="nd">@property</span>
@@ -261,18 +258,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">to_be_determined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">)</span>
-        <span class="c1"># return &quot;{}&quot;.format(self.name)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="EighthActivityExcludeDeletedManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivityExcludeDeletedManager">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityExcludeDeletedManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
-
 <div class="viewcode-block" id="EighthActivityExcludeDeletedManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivityExcludeDeletedManager.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthActivityExcludeDeletedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
@@ -391,8 +386,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">rooms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">aid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -417,8 +411,8 @@
         <span class="n">name</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">include_restricted</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (R)&quot;</span>
+
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (R)&quot;</span> <span class="k">if</span> <span class="n">include_restricted</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
@@ -455,28 +449,17 @@
         <span class="n">avail</span> <span class="o">=</span> <span class="n">nums</span> <span class="o">-</span> <span class="n">used</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">avail</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EighthActivity.change_id_to"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.change_id_to">[docs]</a>    <span class="k">def</span> <span class="nf">change_id_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Changes the internal ID field.</span>
-
-<span class="sd">        Possible solution: https://djangosnippets.org/snippets/2691/</span>
-
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="c1"># EighthActivity.objects.filter(pk=self.pk).update(id=new_id)</span>
-
 <div class="viewcode-block" id="EighthActivity.get_active_schedulings"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.get_active_schedulings">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_schedulings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return EighthScheduledActivity&#39;s of this activity since the beginning of the year.&quot;&quot;&quot;</span>
-        <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__in</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+        <span class="n">date_start</span><span class="p">,</span> <span class="n">date_end</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">scheduled_activities</span></div>
+        <span class="k">return</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">block__date__gte</span><span class="o">=</span><span class="n">date_start</span><span class="p">,</span> <span class="n">block__date__lte</span><span class="o">=</span><span class="n">date_end</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether an activity is &quot;active.&quot; An activity is considered to be active if it has</span>
 <span class="sd">        been scheduled at all this year.&quot;&quot;&quot;</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">scheduled_activities</span> <span class="ow">and</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frequent_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -486,9 +469,9 @@
         <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cached</span>
-        <span class="n">freq_users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthsignup_set__user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">administrative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">special</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
-            <span class="n">restricted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">count__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-count&#39;</span><span class="p">)</span>
+        <span class="n">freq_users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">eighthsignup_set__user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">administrative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">special</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">restricted</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+                <span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;eighthsignup_set__user&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">count__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-count&#39;</span><span class="p">)</span>
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">freq_users</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">freq_users</span>
 
@@ -504,7 +487,6 @@
 
 
 <div class="viewcode-block" id="EighthBlockQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockQuerySet">[docs]</a><span class="k">class</span> <span class="nc">EighthBlockQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
-
 <div class="viewcode-block" id="EighthBlockQuerySet.this_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockQuerySet.this_year">[docs]</a>    <span class="k">def</span> <span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get EighthBlocks from this school year only. &quot;&quot;&quot;</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
@@ -512,7 +494,6 @@
 
 
 <div class="viewcode-block" id="EighthBlockManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockManager">[docs]</a><span class="k">class</span> <span class="nc">EighthBlockManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
-
 <div class="viewcode-block" id="EighthBlockManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlockManager.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">EighthBlockQuerySet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span></div>
 
@@ -558,7 +539,7 @@
         <span class="n">next_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">next_block</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
 
         <span class="n">next_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">next_block</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">next_blocks</span></div>
@@ -695,13 +676,6 @@
         <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">15</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">letter_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;Block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> Block&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">short_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Display the date and block letter (mm/dd B, for example: &#39;9/1 B&#39;)</span>
 
@@ -815,10 +789,7 @@
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_scheduled_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_scheduled_rooms">[docs]</a>    <span class="k">def</span> <span class="nf">get_scheduled_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">all_associated_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -847,72 +818,43 @@
 <div class="viewcode-block" id="EighthScheduledActivity.get_true_sponsors"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_true_sponsors">[docs]</a>    <span class="k">def</span> <span class="nf">get_true_sponsors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the sponsors for the scheduled activity, taking into account activity defaults and</span>
 <span class="sd">        overrides.&quot;&quot;&quot;</span>
-
-        <span class="n">sponsors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">sponsors</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sponsors</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.user_is_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.user_is_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">user_is_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether the given user is a sponsor of the activity.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sponsors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors</span><span class="p">:</span>
-            <span class="n">sp_user</span> <span class="o">=</span> <span class="n">sponsor</span><span class="o">.</span><span class="n">user</span>
-            <span class="k">if</span> <span class="n">sp_user</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_true_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_true_rooms">[docs]</a>    <span class="k">def</span> <span class="nf">get_true_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the rooms for the scheduled activity, taking into account activity defaults and</span>
 <span class="sd">        overrides.&quot;&quot;&quot;</span>
-
-        <span class="n">rooms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">rooms</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">rooms</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_true_capacity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_true_capacity">[docs]</a>    <span class="k">def</span> <span class="nf">get_true_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the capacity for the scheduled activity, taking into account activity defaults and</span>
 <span class="sd">        overrides.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span>
 
-        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">c</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
-                <span class="c1"># use activity-level override</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
+            <span class="c1"># use activity-level override</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span>
 
-            <span class="n">rooms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_both_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_both_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">is_both_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_restricted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_restricted">[docs]</a>    <span class="k">def</span> <span class="nf">get_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this scheduled activity is restricted.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_sticky"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_sticky">[docs]</a>    <span class="k">def</span> <span class="nf">get_sticky</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this scheduled activity is sticky.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sticky</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sticky</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_finance"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_finance">[docs]</a>    <span class="k">def</span> <span class="nf">get_finance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this activity has an account with the finance office.&quot;&quot;&quot;</span>
@@ -920,44 +862,28 @@
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_administrative"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_administrative">[docs]</a>    <span class="k">def</span> <span class="nf">get_administrative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this scheduled activity is administrative.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">administrative</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">administrative</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_special"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_special">[docs]</a>    <span class="k">def</span> <span class="nf">get_special</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get whether this scheduled activity is special, checking the</span>
 <span class="sd">           activity-level special settings.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">special</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">special</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_full"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_full">[docs]</a>    <span class="k">def</span> <span class="nf">is_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether the activity is full.&quot;&quot;&quot;</span>
         <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">num_signed_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">num_signed_up</span> <span class="o">&gt;=</span> <span class="n">capacity</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">capacity</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_almost_full"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_almost_full">[docs]</a>    <span class="k">def</span> <span class="nf">is_almost_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether the activity is almost full (&gt;90%).&quot;&quot;&quot;</span>
         <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">num_signed_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">num_signed_up</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">capacity</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">capacity</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_overbooked"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_overbooked">[docs]</a>    <span class="k">def</span> <span class="nf">is_overbooked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether the activity is overbooked.&quot;&quot;&quot;</span>
         <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">num_signed_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">num_signed_up</span> <span class="o">&gt;</span> <span class="n">capacity</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">capacity</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_too_early_to_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_too_early_to_signup">[docs]</a>    <span class="k">def</span> <span class="nf">is_too_early_to_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether it is too early to sign up for the activity if it is a presign (48 hour</span>
@@ -973,7 +899,7 @@
 
 <div class="viewcode-block" id="EighthScheduledActivity.has_open_passes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.has_open_passes">[docs]</a>    <span class="k">def</span> <span class="nf">has_open_passes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return whether there are passes that have not been acknowledged.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pass_accepted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pass_accepted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_viewable_members"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_viewable_members">[docs]</a>    <span class="k">def</span> <span class="nf">get_viewable_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the list of members that you have permissions to view.</span>
@@ -983,12 +909,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span><span class="p">:</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span> <span class="ow">and</span> <span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">):</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span> <span class="ow">or</span> <span class="p">(</span><span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
                 <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
@@ -1005,12 +926,7 @@
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span><span class="p">:</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span> <span class="ow">and</span> <span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">):</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span> <span class="ow">or</span> <span class="p">(</span><span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
                 <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -1025,12 +941,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hidden_members</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span><span class="p">:</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span> <span class="ow">and</span> <span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">):</span>
-                <span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">show</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">can_view_eighth</span> <span class="ow">or</span> <span class="p">(</span><span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">member</span> <span class="o">==</span> <span class="n">user</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span><span class="p">:</span>
                 <span class="n">hidden_members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
@@ -1051,20 +962,17 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
             <span class="c1"># both_blocks is not currently implemented for blocks other than A and B</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="n">other_instances</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">block__date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+        <span class="n">other_block_letter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">other_instances</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">inst</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-            <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">inst</span>
-
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">block__date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+                                                                           <span class="n">block__block_letter</span><span class="o">=</span><span class="n">other_block_letter</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.notify_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.notify_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">notify_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waitlists</span><span class="p">,</span> <span class="n">activity</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">}</span>
@@ -1115,14 +1023,8 @@
                 <span class="n">exception</span><span class="o">.</span><span class="n">ActivityDeleted</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Check if the user is already stickied into an activity</span>
-            <span class="n">in_stickie</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                                      <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">in_stickie</span><span class="p">:</span>
-                <span class="n">in_stickie</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                                          <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
-
-            <span class="k">if</span> <span class="n">in_stickie</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">Q</span><span class="p">(</span><span class="n">scheduled_activity__activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">scheduled_activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">exception</span><span class="o">.</span><span class="n">Sticky</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
@@ -1173,39 +1075,6 @@
             <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;Successfully added to waitlist for activity.&quot;</span> <span class="k">if</span> <span class="n">waitlist</span> <span class="k">else</span> <span class="s2">&quot;Successfully signed up for activity.&quot;</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        final_remove_signups = []</span>
-
-<span class="sd">        # Check if the block overrides signups on other blocks</span>
-<span class="sd">        if len(self.block.override_blocks.all()) &gt; 0:</span>
-<span class="sd">            override_blocks = self.block.override_blocks.all()</span>
-<span class="sd">            can_change_out = True</span>
-
-<span class="sd">            for block in override_blocks:</span>
-<span class="sd">                # If block is locked, can&#39;t change out of</span>
-<span class="sd">                if block.locked and not force:</span>
-<span class="sd">                    exception.OverrideBlockLocked = [block]</span>
-<span class="sd">                    can_change_out = False</span>
-<span class="sd">                    break</span>
-
-<span class="sd">                signup_objs = (EighthSignup.objects</span>
-<span class="sd">                                           .filter(user=user,</span>
-<span class="sd">                                                   scheduled_activity__activity__sticky=True,</span>
-<span class="sd">                                                   scheduled_activity__block=block))</span>
-<span class="sd">                in_stickie = signup_objs.exists()</span>
-<span class="sd">                if in_stickie and not force:</span>
-<span class="sd">                    exception.OverrideBlockPermissions = [signup_objs[0].scheduled_activity.activity, block]</span>
-<span class="sd">                    can_change_out = False</span>
-<span class="sd">                    break</span>
-
-<span class="sd">            # Going to change out of dependent activities at the end</span>
-<span class="sd">            if can_change_out:</span>
-<span class="sd">                for block in override_blocks:</span>
-<span class="sd">                    ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)</span>
-<span class="sd">                    for signup in ovr_signups:</span>
-<span class="sd">                        logger.debug(&quot;Need to remove signup for {0}&quot;.format(signup))</span>
-<span class="sd">                        final_remove_signups.append(signup)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># If we&#39;ve collected any errors, raise the exception and abort</span>
         <span class="c1"># the signup attempt</span>
@@ -1225,7 +1094,9 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">():</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">existing_signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
-
+                <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                    <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
                     <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span>
                     <span class="n">prev_sponsors</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
                     <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prev_sponsors</span><span class="p">))</span>
@@ -1261,9 +1132,6 @@
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_activity</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                             <span class="n">waitlists</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_next_waitlist</span><span class="p">(</span><span class="n">previous_activity</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">,</span> <span class="n">previous_activity</span><span class="p">)</span>
-
-                <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">existing_signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span>
 
@@ -1291,14 +1159,6 @@
 
                     <span class="c1"># signup.previous_activity_name = signup.activity.name_with_flags</span>
                     <span class="c1"># signup.previous_activity_sponsors = &quot;, &quot;.join(map(str, signup.get_true_sponsors()))</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        # See &quot;If block overrides signup on other blocks&quot; check</span>
-<span class="sd">        # If there are EighthSignups that need to be removed, do them at the end</span>
-<span class="sd">        for signup in final_remove_signups:</span>
-<span class="sd">            success_message += &quot;\nYour signup for {0} on {1} was removed. &quot;.format(</span>
-<span class="sd">                signup.scheduled_activity.activity, signup.scheduled_activity.block)</span>
-<span class="sd">            signup.delete()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">success_message</span></div>
 
@@ -1316,21 +1176,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cancelling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span>
-        <span class="c1"># NOT USED. Was broken anyway.</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        cancelled_room = EighthRoom.objects.get_or_create(name=&quot;CANCELLED&quot;, capacity=0)[0]</span>
-<span class="sd">        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name=&quot;&quot;, last_name=&quot;CANCELLED&quot;)[0]</span>
-<span class="sd">        if cancelled_room not in list(self.rooms.all()):</span>
-<span class="sd">            self.rooms.all().delete()</span>
-<span class="sd">            self.rooms.add(cancelled_room)</span>
-
-<span class="sd">        if cancelled_sponsor not in list(self.sponsors.all()):</span>
-<span class="sd">            self.sponsors.all().delete()</span>
-<span class="sd">            self.sponsors.add(cancelled_sponsor)</span>
-
-<span class="sd">        self.save()</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.uncancel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.uncancel">[docs]</a>    <span class="k">def</span> <span class="nf">uncancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Uncancel an EighthScheduledActivity.</span>
@@ -1343,19 +1189,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Uncancelling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span>
-        <span class="c1"># NOT USED. Was broken anyway.</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        cancelled_room = EighthRoom.objects.get_or_create(name=&quot;CANCELLED&quot;, capacity=0)[0]</span>
-<span class="sd">        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name=&quot;&quot;, last_name=&quot;CANCELLED&quot;)[0]</span>
-<span class="sd">        if cancelled_room in list(self.rooms.all()):</span>
-<span class="sd">            self.rooms.filter(id=cancelled_room.id).delete()</span>
-
-<span class="sd">        if cancelled_sponsor in list(self.sponsors.all()):</span>
-<span class="sd">            self.sponsors.filter(id=cancelled_sponsor.id).delete()</span>
-
-<span class="sd">        self.save()</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -1374,7 +1208,7 @@
     <span class="sd">&quot;&quot;&quot;Model manager for EighthSignup.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthSignupManager.create_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager.create_signup">[docs]</a>    <span class="k">def</span> <span class="nf">create_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 

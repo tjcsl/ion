@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #4792) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #4825) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -190,8 +190,7 @@
                             <span class="n">other_act</span> <span class="o">=</span> <span class="n">schact</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
                             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;other_act: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">other_act</span><span class="p">)</span>
                             <span class="k">if</span> <span class="n">other_act</span><span class="p">:</span>
-                                <span class="n">other_act</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="n">other_act</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                                <span class="n">other_act</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
                                 <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">other_act</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">schact</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -230,7 +229,8 @@
                 <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cancelled</span><span class="p">:</span>
                     <span class="c1"># Uncancel if this activity/block pairing was already</span>
                     <span class="c1"># created and cancelled</span>
-                    <span class="n">instance</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">():</span>
+                        <span class="n">instance</span><span class="o">.</span><span class="n">uncancel</span><span class="p">()</span>
 
                     <span class="c1"># If an activity has already been cancelled and the</span>
                     <span class="c1"># unschedule checkbox has been checked, delete the</span>
