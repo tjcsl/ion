@@ -24,29 +24,34 @@ def events_view(request):
 
     Shows a list of events occurring in the next week, month, and
     future.
-
     """
 
     is_events_admin = request.user.has_admin_permission("events")
 
     if request.method == "POST":
         if "approve" in request.POST and is_events_admin:
-            event_id = request.POST.get("approve")
-            event = get_object_or_404(Event, id=event_id)
-            event.rejected = False
-            event.approved = True
-            event.approved_by = request.user
-            event.save()
-            messages.success(request, "Approved event {}".format(event))
+            event_id = get_id(request.POST.get("approve"))
+            if event_id:
+                event = get_object_or_404(Event, id=event_id)
+                event.rejected = False
+                event.approved = True
+                event.approved_by = request.user
+                event.save()
+                messages.success(request, "Approved event {}".format(event))
+            else:
+                raise http.Http404
 
         if "reject" in request.POST and is_events_admin:
-            event_id = request.POST.get("reject")
-            event = get_object_or_404(Event, id=event_id)
-            event.approved = False
-            event.rejected = True
-            event.rejected_by = request.user
-            event.save()
-            messages.success(request, "Rejected event {}".format(event))
+            event_id = get_id(request.POST.get("reject"))
+            if event_id:
+                event = get_object_or_404(Event, id=event_id)
+                event.approved = False
+                event.rejected = True
+                event.rejected_by = request.user
+                event.save()
+                messages.success(request, "Rejected event {}".format(event))
+            else:
+                raise http.Http404
 
     if is_events_admin and "show_all" in request.GET:
         viewable_events = Event.objects.all().this_year().prefetch_related("groups")
@@ -85,23 +90,24 @@ def events_view(request):
 @login_required
 @deny_restricted
 def join_event_view(request, event_id):
-    """Join event page. If a POST request, actually add or remove the attendance of the current
+    """The join event page.
+
+    If a POST request, actually add or remove the attendance of the current
     user. Otherwise, display a page with confirmation.
 
-    event_id: event id
-
+    Args:
+        event_id (int): event id
     """
 
     event = get_object_or_404(Event, id=event_id)
+    if not event.show_attending:
+        return redirect("events")
 
     if request.method == "POST":
-        if not event.show_attending:
-            return redirect("events")
         if "attending" in request.POST:
             attending = request.POST.get("attending")
-            attending = attending == "true"
 
-            if attending:
+            if attending == "true":
                 event.attending.add(request.user)
             else:
                 event.attending.remove(request.user)
@@ -115,22 +121,24 @@ def join_event_view(request, event_id):
 @login_required
 @deny_restricted
 def event_roster_view(request, event_id):
-    """Show the event roster. Users with hidden eighth period permissions will not be displayed.
-    Users will be able to view all other users, along with a count of the number of hidden users.
-    (Same as 8th roster page.) Admins will see a full roster at the bottom.
+    """Show the event roster.
 
-    event_id: event id
+    Users with hidden eighth period permissions will not be displayed in the public roster.
+    Users will be able to view all other viewable users, along with a count of the number of hidden users.
+    Event admins will see both the public and full roster.
 
+    Args:
+        event_id (int): the Event id
     """
 
     event = get_object_or_404(Event, id=event_id)
 
-    full_roster = list(event.attending.all())
+    full_roster = event.attending.all()
     viewable_roster = []
     num_hidden_members = 0
-    for p in full_roster:
-        if p.can_view_eighth:
-            viewable_roster.append(p)
+    for user in full_roster:
+        if user.can_view_eighth:
+            viewable_roster.append(user)
         else:
             num_hidden_members += 1
 
@@ -149,11 +157,10 @@ def event_roster_view(request, event_id):
 def add_event_view(request):
     """Add event page.
 
-    Currently, there is an approval process for events. If a user is an
-    events administrator, they can create events directly. Otherwise,
-    their event is added in the system but must be approved.
-
+    An events administrator can create an event directly without
+    approval.
     """
+
     is_events_admin = request.user.has_admin_permission("events")
     if not is_events_admin:
         return redirect("request_event")
@@ -167,7 +174,7 @@ def add_event_view(request):
             # SAFE HTML
             obj.description = safe_html(obj.description)
 
-            # auto-approve if admin
+            # auto-approve
             obj.approved = True
             obj.approved_by = request.user
             messages.success(request, "Because you are an administrator, this event was auto-approved.")
@@ -179,7 +186,7 @@ def add_event_view(request):
             messages.error(request, "Error adding event.")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission("groups"))
-    context = {"form": form, "action": "add", "action_title": "Add" if is_events_admin else "Submit", "is_events_admin": is_events_admin}
+    context = {"form": form, "action": "add", "action_title": "Add", "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
 
 
@@ -188,12 +195,9 @@ def add_event_view(request):
 def request_event_view(request):
     """Request event page.
 
-    Currently, there is an approval process for events. If a user is an
-    events administrator, they can create events directly. Otherwise,
-    their event is added in the system but must be approved.
-
+    The event is added in the system but must be approved by
+    an administrator.
     """
-    is_events_admin = False
 
     if request.method == "POST":
         form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission("groups"))
@@ -215,19 +219,20 @@ def request_event_view(request):
             messages.error(request, "Error adding event.")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission("groups"))
-    context = {"form": form, "action": "request", "action_title": "Submit", "is_events_admin": is_events_admin}
+    context = {"form": form, "action": "request", "action_title": "Submit", "is_events_admin": False}
     return render(request, "events/add_modify.html", context)
 
 
 @login_required
 @deny_restricted
-def modify_event_view(request, event_id=None):
-    """Modify event page. You may only modify an event if you were the creator or you are an
+def modify_event_view(request, event_id):
+    """Modify event page. You may only modify an event if you are an
     administrator.
 
-    event_id: event id
-
+    Args:
+        event_id (int): event id
     """
+
     event = get_object_or_404(Event, id=event_id)
     is_events_admin = request.user.has_admin_permission("events")
 
@@ -243,7 +248,6 @@ def modify_event_view(request, event_id=None):
             obj.description = safe_html(obj.description)
             obj.save()
             messages.success(request, "Successfully modified event.")
-            # return redirect("events")
         else:
             messages.error(request, "Error modifying event.")
     else:
@@ -258,8 +262,8 @@ def delete_event_view(request, event_id):
     """Delete event page. You may only delete an event if you are an
     administrator. Confirmation page if not POST.
 
-    event_id: event id
-
+    Args:
+        event_id: event id
     """
     event = get_object_or_404(Event, id=event_id)
     if not request.user.has_admin_permission("events"):
@@ -270,7 +274,7 @@ def delete_event_view(request, event_id):
         messages.success(request, "Successfully deleted event.")
         return redirect("events")
     else:
-        return render(request, "events/delete.html", {"event": event})
+        return render(request, "events/delete.html", {"event": event, "action": "delete"})
 
 
 @login_required
