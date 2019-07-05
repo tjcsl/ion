@@ -1,8 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
-{% load dates %}
 {% load pipeline %}
-
 
 {% block title %}
     {{ block.super }} - Event Roster
@@ -16,14 +14,6 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
-    $(function() {
-        $("[data-form-submit]").click(function() {
-            var name = $(this).attr("data-form-submit");
-            document.forms[name].submit();
-        });
-    });
-    </script>
 {% endblock %}
 
 {% block main %}
@@ -39,10 +29,10 @@
             <h2>Public Roster</h2>
 
             <ul>
-                {% for p in viewable_roster %}
+                {% for attendee in viewable_roster %}
                     <li>
-                        <a href="{% url 'user_profile' p.id %}">
-                            {{ p.full_name }} ({{ p.grade_number }})
+                        <a href="{% url 'user_profile' attendee.id %}">
+                            {{ attendee.full_name }} ({{ attendee.grade_number }})
                         </a>
                     </li>
                 {% empty %}
@@ -60,10 +50,10 @@
                 <h2>Full Roster</h2>
 
                 <ul>
-                    {% for p in full_roster %}
+                    {% for attendee in full_roster %}
                         <li>
-                            <a href="{% url 'user_profile' p.id %}">
-                                {{ p.full_name }} ({{ p.grade_number }})
+                            <a href="{% url 'user_profile' attendee.id %}">
+                                {{ attendee.full_name }} ({{ attendee.grade_number }})
                             </a>
                         </li>
                     {% empty %}
