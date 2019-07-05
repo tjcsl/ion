@@ -87,7 +87,7 @@ class EventsTest(IonTestCase):
         self.assertRedirects(response, reverse("events"))
         self.assertFalse(event.attending.exists())
 
-        # Test redirect when 
+        # Test redirect when not showing attending users
         event.show_attending = False
         event.save()
         response = self.client.get(reverse("join_event", args=[event.id]))
@@ -113,7 +113,6 @@ class EventsTest(IonTestCase):
         self.assertQuerysetEqual(response.context["full_roster"], get_user_model().objects.none())
 
         # Test with a few attendees
-        users = []
         num_users = 5
         for i in range(num_users):
             user = get_user_model().objects.create(username="2020jdoe{}".format(i))
