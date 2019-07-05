@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
@@ -8,10 +9,15 @@ from ...test.ion_test import IonTestCase
 class EventsTest(IonTestCase):
     """Tests for the events module."""
 
-    def create_random_event(self, user, approved=False, time=timezone.now()):
+    def create_random_event(self, user, approved=False, time=timezone.now(), show_attending=True):
         event = Event.objects.create(title="Test Event", description="", time=time, location="TJHSST", user=user)
         if approved:
             event.approved = True
+            event.approved_by = user
+            event.rejected = False
+        if not show_attending:
+            event.show_attending = False
+        event.save()
         return event
 
     def test_event_model(self):
@@ -29,6 +35,8 @@ class EventsTest(IonTestCase):
         # Test that EventUserMap was created
         self.assertTrue(EventUserMap.objects.filter(event=event).count(), 1)
         self.assertEqual(event.user_map, user_map)
+
+        self.assertEqual(str(event.user_map), "UserMap: {}".format(event.title))
 
         self.assertEqual("UNAPPROVED - {} - {}".format(event.title, event.time), str(event))
 
@@ -52,6 +60,139 @@ class EventsTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertFalse(response.context["is_events_admin"])
+
+    def test_join_event(self):
+        self.login()
+        event = self.create_random_event(self.user)
+
+        # Test GET of valid event
+        response = self.client.get(reverse("join_event", args=[event.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["event"], event)
+        self.assertEqual(response.context["is_events_admin"], False)
+
+        # Test GET of nonexistent event
+        response = self.client.get(reverse("join_event", args=[9999]))
+        self.assertEqual(response.status_code, 404)
+
+        # Test marking as attending
+        data = {"attending": "true"}
+        response = self.client.post(reverse("join_event", args=[event.id]), data=data, follow=True)
+        self.assertRedirects(response, reverse("events"))
+        self.assertEqual(event.attending.count(), 1)
+
+        # Test marking as not attending
+        data = {"attending": "false"}
+        response = self.client.post(reverse("join_event", args=[event.id]), data=data)
+        self.assertRedirects(response, reverse("events"))
+        self.assertFalse(event.attending.exists())
+
+        # Test redirect when 
+        event.show_attending = False
+        event.save()
+        response = self.client.get(reverse("join_event", args=[event.id]))
+        self.assertRedirects(response, reverse("events"))
+        response = self.client.post(reverse("join_event", args=[event.id]), data=data)
+        self.assertRedirects(response, reverse("events"))
+
+    def test_view_roster(self):
+        # Test as a regular person
+        self.login()
+
+        event = self.create_random_event(self.user)
+
+        # Test with non-existent event
+        response = self.client.get(reverse("event_roster", args=[9999]))
+        self.assertEqual(response.status_code, 404)
+
+        # Test with no attendees
+        response = self.client.get(reverse("event_roster", args=[event.id]))
+        expected_context = {"event": event, "viewable_roster": [], "num_hidden_members": 0, "is_events_admin": False}
+        for key in expected_context:
+            self.assertEqual(response.context[key], expected_context[key])
+        self.assertQuerysetEqual(response.context["full_roster"], get_user_model().objects.none())
+
+        # Test with a few attendees
+        users = []
+        num_users = 5
+        for i in range(num_users):
+            user = get_user_model().objects.create(username="2020jdoe{}".format(i))
+            event.attending.add(user)
+        event.save()
+
+        response = self.client.get(reverse("event_roster", args=[event.id]))
+        self.assertEqual(response.context["full_roster"].count(), num_users)
+
+        # Since no one shows their eighth period activities and the user
+        # is not an administrator, no users are viewable.
+        self.assertEqual(response.context["viewable_roster"], [])
+
+    def test_add_event(self):
+        self.make_admin()
+
+        # Test GET of valid event id
+        response = self.client.get(reverse("add_event"))
+        expected_context = {"action": "add", "action_title": "Add", "is_events_admin": True}
+        for key in expected_context:
+            self.assertEqual(response.context[key], expected_context[key])
+
+        # Test POST of valid form
+        data = {
+            "title": "Title",
+            "description": "Description",
+            "time": timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "location": "Location",
+            "scheduled_activity": "",
+            "announcement": "",
+            "groups": 1,
+            "show_attending": "on",
+            "show_on_dashboard": "on",
+            "category": "sports",
+            "open_to": "students",
+        }
+        response = self.client.post(reverse("add_event"), data=data, follow=True)
+
+        messages = list(response.context.get("messages"))
+        success_message = "Because you are an administrator, this event was auto-approved."
+        self.assertEqual(messages[0].message, success_message)
+        self.assertEqual(Event.objects.count(), 1)
+        event = Event.objects.first()
+        self.assertEqual(event.title, data["title"])
+        self.assertEqual(event.description, data["description"])
+        self.assertEqual(event.location, data["location"])
+
+    def test_request_event(self):
+        self.login()
+
+        self.assertFalse(Event.objects.exists())
+
+        # Test GET context
+        response = self.client.get(reverse("request_event"))
+        expected_context = {"action": "request", "action_title": "Submit", "is_events_admin": False}
+        for key in expected_context:
+            self.assertEqual(response.context[key], expected_context[key])
+
+        # Test POST of valid form
+        data = {
+            "title": "Title",
+            "description": "Description",
+            "time": timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "location": "Location",
+            "groups": [],
+            "show_attending": "on",
+            "show_on_dashboard": "on",
+            "category": "sports",
+            "open_to": "students",
+        }
+
+        response = self.client.post(reverse("request_event"), data=data, follow=True)
+        success_message = "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours."
+
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context.get("messages"))
+        self.assertEqual(messages[0].message, success_message)
+        self.assertEqual(Event.objects.count(), 1)
+        self.assertFalse(Event.objects.first().approved)
 
     def test_modify_event(self):
         self.login()
@@ -122,6 +263,7 @@ class EventsTest(IonTestCase):
         response = self.client.get(reverse("delete_event", args=[event.id]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["event"], event)
+        self.assertEqual(response.context["action"], "delete")
 
         # Test GET for nonexistent event
         response = self.client.get(reverse("delete_event", args=[9999]))
