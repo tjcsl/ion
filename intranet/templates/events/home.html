@@ -14,14 +14,6 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
-    $(function() {
-        $("[data-form-submit]").click(function() {
-            var name = $(this).attr("data-form-submit");
-            document.forms[name].submit();
-        });
-    });
-    </script>
 {% endblock %}
 
 {% block main %}
@@ -48,28 +40,21 @@
         </div>
 
         <div class="events-container">
-        {% for category in events %}
-            {% if category.events %}
-                <h2 class="category">{{ category.title }}:</h2>
-            {% endif %}
+            {% for category in events %}
+                {% if category.events %}
+                    <h2 class="category">{{ category.title }}:</h2>
+                {% endif %}
 
-            {% for event in category.events %}
-                {% include "events/event.html" %}
+                {% for event in category.events %}
+                    {% include "events/event.html" %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-        {% if num_events == 0 %}
-            <div class="event">
-                There are no events to display at this time.
-            </div>
-        {% endif %}
-
-        {% if start_num > 0 %}
-            <a href="?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
-        {% endif %}
-        {% if more_events %}
-            <a href="?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
-        {% endif %}
+            {% if num_events == 0 %}
+                <div class="event">
+                    There are no events to display at this time.
+                </div>
+            {% endif %}
     </div>
 
     </div>
