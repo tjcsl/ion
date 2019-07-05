@@ -19,10 +19,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = [
-            "title", "description", "time", "location", "groups", "show_attending",
-            "show_on_dashboard", "public", "category", "open_to",
-        ]
+        fields = ["title", "description", "time", "location", "groups", "show_attending", "show_on_dashboard", "public", "category", "open_to"]
 
 
 class AdminEventForm(forms.ModelForm):
@@ -34,8 +31,18 @@ class AdminEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "title", "description", "time", "location", "scheduled_activity", "announcement",
-            "groups", "show_attending", "show_on_dashboard", "public", "category", "open_to",
+            "title",
+            "description",
+            "time",
+            "location",
+            "scheduled_activity",
+            "announcement",
+            "groups",
+            "show_attending",
+            "show_on_dashboard",
+            "public",
+            "category",
+            "open_to",
         ]
         widgets = {"scheduled_activity": forms.NumberInput(), "announcement": forms.NumberInput()}
         help_texts = {
