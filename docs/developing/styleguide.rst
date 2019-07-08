@@ -4,8 +4,6 @@ Coding Style Guide
 
 Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python).
 
-Note that the `flake8` tool can be very useful in this regard.
-
 Main points:
 
 - Indent using 4 spaces.
