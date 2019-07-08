@@ -15,9 +15,10 @@ class IonTestCase(TestCase):
 
     def login(self):
         # We need to add the user to the db before trying to login as them.
-        self.user = get_user_model().objects.get_or_create(username='awilliam')[0]  # pylint: disable=attribute-defined-outside-init
+        user = get_user_model().objects.get_or_create(username='awilliam')[0]  # pylint: disable=attribute-defined-outside-init
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
             self.client.login(username='awilliam', password='dankmemes')
+        return user
 
     def make_admin(self):
         self.login()

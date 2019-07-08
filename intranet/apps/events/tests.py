@@ -21,8 +21,8 @@ class EventsTest(IonTestCase):
         return event
 
     def test_event_model(self):
-        self.login()
-        event = self.create_random_event(self.user)
+        user = self.login()
+        event = self.create_random_event(user)
 
         # Check event properties
         self.assertTrue(event.is_this_year)
@@ -40,21 +40,21 @@ class EventsTest(IonTestCase):
 
         self.assertEqual("UNAPPROVED - {} - {}".format(event.title, event.time), str(event))
 
-        event = self.create_random_event(self.user, approved=True)
+        event = self.create_random_event(user, approved=True)
         self.assertEqual("{} - {}".format(event.title, event.time), str(event))
 
-        next_event = self.create_random_event(self.user, time=timezone.now() + timezone.timedelta(days=15))
-        prev_event = self.create_random_event(self.user, time=timezone.now() - timezone.timedelta(days=15))
+        next_event = self.create_random_event(user, time=timezone.now() + timezone.timedelta(days=15))
+        prev_event = self.create_random_event(user, time=timezone.now() - timezone.timedelta(days=15))
         self.assertEqual(next_event.show_fuzzy_date(), False)
         self.assertEqual(prev_event.show_fuzzy_date(), False)
 
-        next_event = self.create_random_event(self.user, time=timezone.now() + timezone.timedelta(days=1))
-        prev_event = self.create_random_event(self.user, time=timezone.now() - timezone.timedelta(days=1))
+        next_event = self.create_random_event(user, time=timezone.now() + timezone.timedelta(days=1))
+        prev_event = self.create_random_event(user, time=timezone.now() - timezone.timedelta(days=1))
         self.assertEqual(next_event.show_fuzzy_date(), True)
         self.assertEqual(prev_event.show_fuzzy_date(), True)
 
     def test_events_root_non_admin(self):
-        self.login()
+        user = self.login()
 
         response = self.client.get(reverse("events"))
         self.assertEqual(response.status_code, 200)
@@ -62,8 +62,8 @@ class EventsTest(IonTestCase):
         self.assertFalse(response.context["is_events_admin"])
 
     def test_join_event(self):
-        self.login()
-        event = self.create_random_event(self.user)
+        user = self.login()
+        event = self.create_random_event(user)
 
         # Test GET of valid event
         response = self.client.get(reverse("join_event", args=[event.id]))
@@ -97,9 +97,9 @@ class EventsTest(IonTestCase):
 
     def test_view_roster(self):
         # Test as a regular person
-        self.login()
+        user = self.login()
 
-        event = self.create_random_event(self.user)
+        event = self.create_random_event(user)
 
         # Test with non-existent event
         response = self.client.get(reverse("event_roster", args=[9999]))
@@ -127,7 +127,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(response.context["viewable_roster"], [])
 
     def test_add_event(self):
-        self.make_admin()
+        user = self.make_admin()
 
         # Test GET of valid event id
         response = self.client.get(reverse("add_event"))
@@ -161,7 +161,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(event.location, data["location"])
 
     def test_request_event(self):
-        self.login()
+        user = self.login()
 
         self.assertFalse(Event.objects.exists())
 
@@ -194,9 +194,9 @@ class EventsTest(IonTestCase):
         self.assertFalse(Event.objects.first().approved)
 
     def test_modify_event(self):
-        self.login()
+        user = self.login()
 
-        event = self.create_random_event(self.user)
+        event = self.create_random_event(user)
 
         # Permission should be denied to non-event admins
         response = self.client.get(reverse("modify_event", args=[event.id]))
@@ -206,7 +206,7 @@ class EventsTest(IonTestCase):
         response = self.client.post(reverse("modify_event", args=[event.id]))
         self.assertEqual(response.status_code, 403)
 
-        self.make_admin()
+        user = self.make_admin()
 
         # Test nonexistent event ids
         response = self.client.get(reverse("modify_event", args=[9999]))
@@ -244,9 +244,9 @@ class EventsTest(IonTestCase):
         self.assertEqual(event.location, data["location"])
 
     def test_delete_event(self):
-        self.login()
+        user = self.login()
 
-        event = self.create_random_event(self.user)
+        event = self.create_random_event(user)
 
         # Permission should be denied to non-event admins
         response = self.client.get(reverse("delete_event", args=[event.id]))
@@ -256,7 +256,7 @@ class EventsTest(IonTestCase):
         response = self.client.post(reverse("delete_event", args=[event.id]))
         self.assertEqual(response.status_code, 403)
 
-        self.make_admin()
+        user = self.make_admin()
 
         # Test GET for valid event
         response = self.client.get(reverse("delete_event", args=[event.id]))
@@ -287,9 +287,9 @@ class EventsTest(IonTestCase):
         self.assertRedirects(response, reverse("login") + "?next={}".format(reverse("hide_event")))
 
     def test_show_hide_event(self):
-        self.login()
+        user = self.login()
 
-        event = self.create_random_event(self.user)
+        event = self.create_random_event(user)
 
         # Test disallowed method for hide event
         response = self.client.get(reverse("hide_event"))
@@ -308,7 +308,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode(), "Hidden")
         user_map = EventUserMap.objects.get(event=event)
-        self.assertTrue(self.user in user_map.users_hidden.all())
+        self.assertTrue(user in user_map.users_hidden.all())
 
         # Test for disallowed method for show event
         response = self.client.get(reverse("show_event"))
@@ -326,4 +326,4 @@ class EventsTest(IonTestCase):
         response = self.client.post(reverse("show_event"), data={"event_id": event.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode(), "Unhidden")
-        self.assertFalse(self.user in user_map.users_hidden.all())
+        self.assertFalse(user in user_map.users_hidden.all())
