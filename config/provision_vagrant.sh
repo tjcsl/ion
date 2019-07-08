@@ -92,7 +92,6 @@ cd ../..
 rm -rf redis-stable redis-stable.tar.gz
 
 # Ion
-grep -qs AUTHUSER_PASSWORD intranet/intranet/settings/secret.py || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
 master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
 grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py

@@ -16,7 +16,7 @@ if sys.version_info < (3, 5):
 from ..utils import helpers  # pylint: disable=wrong-import-position # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
-defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
+defines SECRET_KEY, SECRET_DATABASE_URL. !!
 
 
 SECRET_DATABASE_URL should be of the following form:
