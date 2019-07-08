@@ -634,12 +634,6 @@ if SHOW_DEBUG_TOOLBAR:
 
     INSTALLED_APPS += ["debug_toolbar"]
 
-# Maintenance mode
-# This should be adjusted in secrets.py or by running:
-# ./manage.py maintenance [on|off]
-if MAINTENANCE_MODE is None:
-    MAINTENANCE_MODE = False
-
 MAINTENANCE_MODE_TEMPLATE = "error/503.html"
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
