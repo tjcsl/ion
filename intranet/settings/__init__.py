@@ -471,12 +471,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Django plugins
-    "django_extensions",
-    # "django_prometheus",
-    "django_requestlogging",
-    "rest_framework",
-    "maintenance_mode",
-    "pipeline",
+    "django_extensions", # django-extensions
+    "django_requestlogging", # django-requestlogging-redux
+    "rest_framework", # django-rest-framework
+    "maintenance_mode", # django-maintenance-mode
+    "pipeline", # django-pipeline
     "channels",
     # Intranet apps
     "intranet.apps",
@@ -507,11 +506,11 @@ INSTALLED_APPS = [
     "intranet.apps.nomination",
     # Django plugins
     "widget_tweaks",
-    "oauth2_provider",
-    "corsheaders",
-    "cacheops",
-    "svg",
-    "simple_history",
+    "oauth2_provider", # django-oauth-toolkit
+    "corsheaders", # django-cors-headers
+    "cacheops", # django-cacheops
+    "svg", # django-inline-svg
+    "simple_history", # django-simple-history
 ]
 
 # Django Channels Configuration (we use this for websockets)
