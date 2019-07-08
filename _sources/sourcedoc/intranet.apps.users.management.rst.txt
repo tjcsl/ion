@@ -6,12 +6,12 @@ Subpackages
 
 .. toctree::
 
-    intranet.apps.users.management.commands
+   intranet.apps.users.management.commands
 
 Module contents
 ---------------
 
 .. automodule:: intranet.apps.users.management
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

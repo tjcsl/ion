@@ -6,12 +6,12 @@ Subpackages
 
 .. toctree::
 
-    intranet.apps.eighth.management.commands
+   intranet.apps.eighth.management.commands
 
 Module contents
 ---------------
 
 .. automodule:: intranet.apps.eighth.management
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

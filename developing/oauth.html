@@ -2,29 +2,28 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #4828) documentation</title>
+    <meta charset="utf-8" />
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #4837) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Coding Style Guide" href="styleguide.html" />
+    <link rel="next" title="Ion Requirements" href="requirements.html" />
     <link rel="prev" title="How to perform common tasks" href="howto.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -69,6 +68,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Using OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
@@ -137,7 +137,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="using-oauth">
 <h1>Using OAuth<a class="headerlink" href="#using-oauth" title="Permalink to this headline">¶</a></h1>
@@ -145,33 +145,29 @@
 <div class="section" id="register-an-application">
 <h2>Register an application<a class="headerlink" href="#register-an-application" title="Permalink to this headline">¶</a></h2>
 <p>Go to <a class="reference external" href="https://ion.tjhsst.edu/oauth/applications/">https://ion.tjhsst.edu/oauth/applications/</a> and log in to create and register a client application. Specify the following values in the form, as prompted:</p>
-<dl class="docutils">
-<dt>Name</dt>
-<dd><ul class="first last simple">
-<li>Some descriptive name for your application.</li>
+<dl class="simple">
+<dt>Name</dt><dd><ul class="simple">
+<li><p>Some descriptive name for your application.</p></li>
 </ul>
 </dd>
-<dt>Client Type*</dt>
-<dd><ul class="first last simple">
-<li>Choose “Confidential” if your app has a backend component</li>
-<li>Choose “Public” if your app is purely client-side</li>
+<dt>Client Type*</dt><dd><ul class="simple">
+<li><p>Choose “Confidential” if your app has a backend component</p></li>
+<li><p>Choose “Public” if your app is purely client-side</p></li>
 </ul>
 </dd>
-<dt>Authorization Grant Type*</dt>
-<dd><ul class="first last simple">
-<li>Choose “Authorization code” if your client type is “Confidential”</li>
-<li>Choose “Implicit” if your client type is “Public” (for example, on a native application)</li>
+<dt>Authorization Grant Type*</dt><dd><ul class="simple">
+<li><p>Choose “Authorization code” if your client type is “Confidential”</p></li>
+<li><p>Choose “Implicit” if your client type is “Public” (for example, on a native application)</p></li>
 </ul>
 </dd>
-<dt>Redirect URIs</dt>
-<dd><ul class="first last simple">
-<li>Enter one or more URLs that your application will redirect back to after the authorization is completed.</li>
+<dt>Redirect URIs</dt><dd><ul class="simple">
+<li><p>Enter one or more URLs that your application will redirect back to after the authorization is completed.</p></li>
 </ul>
 </dd>
 </dl>
 <p>Store the Client ID and Client Secret tokens for use with your application.</p>
 <ul class="simple">
-<li>These are the recommended settings. For a better understanding of which settings you should choose, read this [introduction to OAuth](<a class="reference external" href="https://aaronparecki.com/oauth-2-simplified/">https://aaronparecki.com/oauth-2-simplified/</a>) and this [guide to grant types](<a class="reference external" href="https://alexbilbie.com/guide-to-oauth-2-grants/">https://alexbilbie.com/guide-to-oauth-2-grants/</a>)</li>
+<li><p>These are the recommended settings. For a better understanding of which settings you should choose, read this [introduction to OAuth](<a class="reference external" href="https://aaronparecki.com/oauth-2-simplified/">https://aaronparecki.com/oauth-2-simplified/</a>) and this [guide to grant types](<a class="reference external" href="https://alexbilbie.com/guide-to-oauth-2-grants/">https://alexbilbie.com/guide-to-oauth-2-grants/</a>)</p></li>
 </ul>
 </div>
 <div class="section" id="requesting-authorization">

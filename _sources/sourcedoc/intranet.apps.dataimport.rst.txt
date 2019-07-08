@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    intranet.apps.dataimport.management
+   intranet.apps.dataimport.management
 
 Submodules
 ----------
@@ -15,23 +15,23 @@ intranet.apps.dataimport.apps module
 ------------------------------------
 
 .. automodule:: intranet.apps.dataimport.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 intranet.apps.dataimport.tests module
 -------------------------------------
 
 .. automodule:: intranet.apps.dataimport.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Module contents
 ---------------
 
 .. automodule:: intranet.apps.dataimport
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

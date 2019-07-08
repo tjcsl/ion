@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ion Requirements &#8212; TJ Intranet v3 (Build #4837) documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coding Style Guide" href="styleguide.html" />
+    <link rel="prev" title="Using OAuth" href="oauth.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oauth.html">Using OAuth</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Ion Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#running-manage-py">Running manage.py</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Ion Requirements</a><ul>
+<li><a class="reference internal" href="#explicit-requirements">Explicit Requirements</a><ul>
+<li><a class="reference internal" href="#argon2-cffi">argon2-cffi</a></li>
+<li><a class="reference internal" href="#asgi-redis">asgi-redis</a></li>
+<li><a class="reference internal" href="#autobahn">autobahn</a></li>
+<li><a class="reference internal" href="#babel">babel</a></li>
+<li><a class="reference internal" href="#bcrypt">bcrypt</a></li>
+<li><a class="reference internal" href="#beautifulsoup4">beautifulsoup4</a></li>
+<li><a class="reference internal" href="#bleach">bleach</a></li>
+<li><a class="reference internal" href="#certifi">certifi</a></li>
+<li><a class="reference internal" href="#channels">channels</a></li>
+<li><a class="reference internal" href="#contextlib2">contextlib2</a></li>
+<li><a class="reference internal" href="#cryptography">cryptography</a></li>
+<li><a class="reference internal" href="#decorator">decorator</a></li>
+<li><a class="reference internal" href="#django">django</a></li>
+<li><a class="reference internal" href="#django-cacheops">django-cacheops</a></li>
+<li><a class="reference internal" href="#django-cors-headers">django-cors-headers</a></li>
+<li><a class="reference internal" href="#django-debug-toolbar">django-debug-toolbar</a></li>
+<li><a class="reference internal" href="#django-extensions">django-extensions</a></li>
+<li><a class="reference internal" href="#django-formtools">django-formtools</a></li>
+<li><a class="reference internal" href="#django-inline-svg">django-inline-svg</a></li>
+<li><a class="reference internal" href="#django-maintenance-mode">django-maintenance-mode</a></li>
+<li><a class="reference internal" href="#django-oauth-toolkit">django-oauth-toolkit</a></li>
+<li><a class="reference internal" href="#django-pipeline">django-pipeline</a></li>
+<li><a class="reference internal" href="#django-prometheus">django-prometheus</a></li>
+<li><a class="reference internal" href="#django-redis-cache">django-redis-cache</a></li>
+<li><a class="reference internal" href="#django-redis-sessions">django-redis-sessions</a></li>
+<li><a class="reference internal" href="#django-request-logging-redux">django-request-logging-redux</a></li>
+<li><a class="reference internal" href="#django-simple-history">django-simple-history</a></li>
+<li><a class="reference internal" href="#django-widget-tweaks">django-widget-tweaks</a></li>
+<li><a class="reference internal" href="#django-rest-framework">django-rest-framework</a></li>
+<li><a class="reference internal" href="#docutils">docutils</a></li>
+<li><a class="reference internal" href="#fabric3">Fabric3</a></li>
+<li><a class="reference internal" href="#gunicorn">gunicorn</a></li>
+<li><a class="reference internal" href="#hiredis">hiredis</a></li>
+<li><a class="reference internal" href="#ipython">ipython</a></li>
+<li><a class="reference internal" href="#pexpect">pexpect</a></li>
+<li><a class="reference internal" href="#psycopg2">psycopg2</a></li>
+<li><a class="reference internal" href="#pycryptodome">pycryptodome</a></li>
+<li><a class="reference internal" href="#pysftp">pysftp</a></li>
+<li><a class="reference internal" href="#python-dateutil">python-dateutil</a></li>
+<li><a class="reference internal" href="#python-gssapi">python-gssapi</a></li>
+<li><a class="reference internal" href="#python-magic">python-magic</a></li>
+<li><a class="reference internal" href="#reportlab">reportlab</a></li>
+<li><a class="reference internal" href="#requests">requests</a></li>
+<li><a class="reference internal" href="#requests-oauthlib">requests-oauthlib</a></li>
+<li><a class="reference internal" href="#sentry-sdk">sentry-sdk</a></li>
+<li><a class="reference internal" href="#setuptools-git">setuptools-git</a></li>
+<li><a class="reference internal" href="#sphinx">Sphinx</a></li>
+<li><a class="reference internal" href="#sphinx-bootstrap-theme">sphinx-bootstrap-theme</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="ion-requirements">
+<h1>Ion Requirements<a class="headerlink" href="#ion-requirements" title="Permalink to this headline">¶</a></h1>
+<p>Intranet 3 (Ion) depends on a variety of third-party libraries and packages</p>
+<div class="section" id="explicit-requirements">
+<h2>Explicit Requirements<a class="headerlink" href="#explicit-requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="argon2-cffi">
+<h3>argon2-cffi<a class="headerlink" href="#argon2-cffi" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/hynek/argon2-cffi">https://github.com/hynek/argon2-cffi</a></p>
+<p>This package provides CFFI-based Argon2 Python bindings.</p>
+<p>It is used to provide bindings for Argon2 hashing of the Ion master password.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="asgi-redis">
+<h3>asgi-redis<a class="headerlink" href="#asgi-redis" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django/channels_redis/tree/1.x">https://github.com/django/channels_redis/tree/1.x</a></p>
+<p>This package provides an ASGI channel layer that uses Redis as its backing store.</p>
+<p>It provides the backend for ASGI requests over Django Channels.</p>
+<p>Note: the package was renamed to <code class="docutils literal notranslate"><span class="pre">channels_redis</span></code> when associated with Channels 2.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="autobahn">
+<h3>autobahn<a class="headerlink" href="#autobahn" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/crossbario/autobahn-python">https://github.com/crossbario/autobahn-python</a></p>
+<p>This package provides <cite>WebSocket &lt;http://tools.ietf.org/html/rfc6455&gt;_</cite> &amp; <cite>Web Appplication Messaging Protocol (WAMP) &lt;http://wamp-proto.org/&gt;_</cite> support.</p>
+<p>It provides WebSocket support for Ion.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="babel">
+<h3>babel<a class="headerlink" href="#babel" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/python-babel/babel">https://github.com/python-babel/babel</a></p>
+<p>This package provides an integrated collection of utilities that assist with internationalizing and localizing Python applications.</p>
+<p>It provides localization support for Jinja templates in Ion.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="bcrypt">
+<h3>bcrypt<a class="headerlink" href="#bcrypt" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/pyca/bcrypt">https://github.com/pyca/bcrypt</a></p>
+<p>This package provides bcrypt hashing support.</p>
+<p>It is used to hash the Ion master password.</p>
+<p>LICENSE: Apache License 2.0</p>
+</div>
+<div class="section" id="beautifulsoup4">
+<h3>beautifulsoup4<a class="headerlink" href="#beautifulsoup4" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/waylan/beautifulsoup">https://github.com/waylan/beautifulsoup</a></p>
+<p>This package provides support for parsing web pages.</p>
+<p>It is used to parse the FCPS emergency webpage.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="bleach">
+<h3>bleach<a class="headerlink" href="#bleach" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/mozilla/bleach">https://github.com/mozilla/bleach</a></p>
+<p>This package provides HTML sanitization that escapes or strips markup and attributes.</p>
+<p>It is used to clean up tags, attributes, and styles in input from polls, announcements, and other forms.</p>
+<p>LICENSE: Apache License 2.0</p>
+</div>
+<div class="section" id="certifi">
+<h3>certifi<a class="headerlink" href="#certifi" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/certifi/python-certifi">https://github.com/certifi/python-certifi</a></p>
+<p>This package provides a collection of trusted root certificates.</p>
+<p>FIXME</p>
+<p>LICENSE: Mozilla Public License 2.0</p>
+</div>
+<div class="section" id="channels">
+<h3>channels<a class="headerlink" href="#channels" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django/channels">https://github.com/django/channels</a></p>
+<p>This package brings WebSocket, long-poll HTTP, task offloading and other async support in a Django-like framework.</p>
+<p>It provides WebSocket support for Ion.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="contextlib2">
+<h3>contextlib2<a class="headerlink" href="#contextlib2" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/jazzband/contextlib2">https://github.com/jazzband/contextlib2</a></p>
+<p>This package provides a backport of <code class="docutils literal notranslate"><span class="pre">contextlib</span></code> from Python 3.5 and adds new functionality.</p>
+<p>FIXME</p>
+<p>LICENSE: Python Software Foundation License</p>
+</div>
+<div class="section" id="cryptography">
+<h3>cryptography<a class="headerlink" href="#cryptography" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/pyca/cryptography">https://github.com/pyca/cryptography</a></p>
+<p>This package provides cryptographic recipes and primitives.</p>
+<p>FIXME</p>
+<p>LICENSE: Apache License 2.0 or 3-clause BSD</p>
+</div>
+<div class="section" id="decorator">
+<h3>decorator<a class="headerlink" href="#decorator" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/micheles/decorator">https://github.com/micheles/decorator</a></p>
+<p>This package provides definitions of signature-preserving function decorators and decorator factories.</p>
+<p>FIXME</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="django">
+<h3>django<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django/django">https://github.com/django/django</a></p>
+<p>Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design.</p>
+<p>It is used as our web framework.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-cacheops">
+<h3>django-cacheops<a class="headerlink" href="#django-cacheops" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/Suor/django-cacheops">https://github.com/Suor/django-cacheops</a></p>
+<p>This package is a Django app that supports automatic or manual queryset caching into a Redis ORM cache.</p>
+<p>It is used for queryset caching into a Redis databse.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-cors-headers">
+<h3>django-cors-headers<a class="headerlink" href="#django-cors-headers" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/ottoyiu/django-cors-headers">https://github.com/ottoyiu/django-cors-headers</a></p>
+<p>This package is a Django app that adds Cross-Origin Resource Sharing (CORS) headers to responses</p>
+<p>It is used to support when absolutely necessary cross-origin requests.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-debug-toolbar">
+<h3>django-debug-toolbar<a class="headerlink" href="#django-debug-toolbar" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/jazzband/django-debug-toolbar">https://github.com/jazzband/django-debug-toolbar</a></p>
+<p>This package is a Django app that provides a configurable set of panels that display various debug information about the current request/response.</p>
+<p>It is used in Django’s debug mode to help diagnose request/response issues.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-extensions">
+<h3>django-extensions<a class="headerlink" href="#django-extensions" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django-extensions/django-extensions">https://github.com/django-extensions/django-extensions</a></p>
+<p>This package is a Django app that adds command extensions.</p>
+<p>It is used to provide additional commands for Django.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-formtools">
+<h3>django-formtools<a class="headerlink" href="#django-formtools" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django/django-formtools">https://github.com/django/django-formtools</a></p>
+<p>This package is a Django app that provides abstractions for Django forms.</p>
+<p>It is used to provide a SessionWizardView, a wizard used in eighth admin.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-inline-svg">
+<h3>django-inline-svg<a class="headerlink" href="#django-inline-svg" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/mixxorz/django-inline-svg">https://github.com/mixxorz/django-inline-svg</a></p>
+<p>This package is a Django app that provides a template tag for inline SVGs.</p>
+<p>It is used to embed SVGs (like in the <code class="docutils literal notranslate"><span class="pre">bus</span></code> app).</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-maintenance-mode">
+<h3>django-maintenance-mode<a class="headerlink" href="#django-maintenance-mode" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/fabiocaccamo/django-maintenance-mode">https://github.com/fabiocaccamo/django-maintenance-mode</a></p>
+<p>This package is a Django app that displays a 503 page when maintenance mode is enabled.</p>
+<p>It is used to enable maintenance on Ion when necessary.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-oauth-toolkit">
+<h3>django-oauth-toolkit<a class="headerlink" href="#django-oauth-toolkit" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/jazzband/django-oauth-toolkit">https://github.com/jazzband/django-oauth-toolkit</a></p>
+<p>This package is a Django app that provides all the endpoints, data and logic needed to add OAuth2 capabilities to your Django projects.</p>
+<p>It is used to provide Ion OAuth2 support.</p>
+<p>NEEDSNEWER (needs Django 2.0)</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="django-pipeline">
+<h3>django-pipeline<a class="headerlink" href="#django-pipeline" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/jazzband/django-pipeline">https://github.com/jazzband/django-pipeline</a></p>
+<p>This package provides both CSS and JavaScript concatenation and compression, built-in JavaScript template support, and optional data-URI image and font embedding.</p>
+<p>It provides the <code class="docutils literal notranslate"><span class="pre">stylesheet</span></code> templatetag and compresses our CSS.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-prometheus">
+<h3>django-prometheus<a class="headerlink" href="#django-prometheus" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/korfuri/django-prometheus">https://github.com/korfuri/django-prometheus</a></p>
+<p>This package is a Django app that provides support for exporting basic monitoring metrics from Django.</p>
+<p>It is used to export prometheus metrics at <code class="docutils literal notranslate"><span class="pre">/prometheus/metrics</span></code>.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: Apache License 2.0</p>
+</div>
+<div class="section" id="django-redis-cache">
+<h3>django-redis-cache<a class="headerlink" href="#django-redis-cache" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/sebleier/django-redis-cache">https://github.com/sebleier/django-redis-cache</a></p>
+<p>This package provides the redis backend cache.</p>
+<p>FIXME: Needs more specific info</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-redis-sessions">
+<h3>django-redis-sessions<a class="headerlink" href="#django-redis-sessions" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/martinrusev/django-redis-sessions">https://github.com/martinrusev/django-redis-sessions</a></p>
+<p>This package provides a redis backend for Django sessions.</p>
+<p>It is used to store session information in redis cache.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-request-logging-redux">
+<h3>django-request-logging-redux<a class="headerlink" href="#django-request-logging-redux" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/tarkatronic/django-requestlogging">https://github.com/tarkatronic/django-requestlogging</a></p>
+<p>This package provides a logging filter and middleware to add information about the current request to the logging record.</p>
+<p>It is used to record information about requests to the console, file, and Sentry log.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-simple-history">
+<h3>django-simple-history<a class="headerlink" href="#django-simple-history" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/treyhunner/django-simple-history">https://github.com/treyhunner/django-simple-history</a></p>
+<p>This package stores Django model state on every create/update/delete.</p>
+<p>It is used to preserve a history of changes to specified eighth models.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="django-widget-tweaks">
+<h3>django-widget-tweaks<a class="headerlink" href="#django-widget-tweaks" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/jazzband/django-widget-tweaks">https://github.com/jazzband/django-widget-tweaks</a></p>
+<p>This package provides support to tweak the form field rendering in templates,</p>
+<p>It is used in the <code class="docutils literal notranslate"><span class="pre">schedule_activity</span></code> template to tweak rendering of form fields.</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="django-rest-framework">
+<h3>django-rest-framework<a class="headerlink" href="#django-rest-framework" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/encode/django-rest-framework">https://github.com/encode/django-rest-framework</a></p>
+<p>This package provides a powerful and flexible toolkit for building Web APIs.</p>
+<p>It is used for the Ion API.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="docutils">
+<h3>docutils<a class="headerlink" href="#docutils" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://sourceforge.net/p/docutils/code/HEAD/tree/trunk/docutils/">https://sourceforge.net/p/docutils/code/HEAD/tree/trunk/docutils/</a></p>
+<p>This package provides a modular system for processing documentation into useful formats, such as HTML, XML, and LaTeX.</p>
+<p>It is an optional dependency for admindocs and setuptools.</p>
+</div>
+<div class="section" id="fabric3">
+<h3>Fabric3<a class="headerlink" href="#fabric3" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/mathiasertl/fabric/">https://github.com/mathiasertl/fabric/</a></p>
+<p>This package provides a basic suite of operations for executing local or remote shell commands (normally or via sudo) and uploading/downloading files, as well as auxiliary functionality such as prompting the running user for input, or aborting execution.</p>
+<p>It is used to manage the Ion application in both developement and production (see <code class="docutils literal notranslate"><span class="pre">fabfile.py</span></code>)</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="gunicorn">
+<h3>gunicorn<a class="headerlink" href="#gunicorn" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/benoitc/gunicorn">https://github.com/benoitc/gunicorn</a></p>
+<p>This package provides a Python WSGI HTTP Server for UNIX.</p>
+<p>FIXME</p>
+<p>OBSOLETE: needs verification</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="hiredis">
+<h3>hiredis<a class="headerlink" href="#hiredis" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/redis/hiredis-py">https://github.com/redis/hiredis-py</a></p>
+<p>This package a Python wrapper for hiredis. hiredis is a library for redis.</p>
+<p>It is directly used as a <code class="docutils literal notranslate"><span class="pre">HiredisParser</span></code> in the redis cache.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="ipython">
+<h3>ipython<a class="headerlink" href="#ipython" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/ipython/ipython">https://github.com/ipython/ipython</a></p>
+<p>This package provides a rich toolkit to help you make the most of using Python interactively, including a powerful interactive Python shell</p>
+<p>It is directly used by the interactive shell for <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">shell_plus</span></code>.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="pexpect">
+<h3>pexpect<a class="headerlink" href="#pexpect" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/pexpect/pexpect">https://github.com/pexpect/pexpect</a></p>
+<p>This package provides the ability to spawn child applications; controll them; and respond to expected patterns in their output. It allows your script to spawn a child application and control it as if a human were typing commands.</p>
+<p>It is used to help interact with Kerberos password authentications and changes.</p>
+<p>LICENSE: ISC License</p>
+</div>
+<div class="section" id="psycopg2">
+<h3>psycopg2<a class="headerlink" href="#psycopg2" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/psycopg/psycopg2">https://github.com/psycopg/psycopg2</a></p>
+<p>This package provides an adapter for PostgreSQL.</p>
+<p>It is used to connect to the PostgreSQL database from the Django application.</p>
+<p>LICENSE: GNU Lesser General Public License v 3.0+</p>
+</div>
+<div class="section" id="pycryptodome">
+<h3>pycryptodome<a class="headerlink" href="#pycryptodome" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/Legrandin/pycryptodome">https://github.com/Legrandin/pycryptodome</a></p>
+<p>This package provides low-level cryptographic primitives.</p>
+<p>It is used to encrypt the password for Ion Files. The key is stored as a client-side cookie and the IV/ciphertext is stored a server-side session variable.</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="pysftp">
+<h3>pysftp<a class="headerlink" href="#pysftp" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://bitbucket.org/dundeemt/pysftp/src/default/">https://bitbucket.org/dundeemt/pysftp/src/default/</a></p>
+<p>This package provides a simple interface to the Secure File Transport Protocol (SFTP).</p>
+<p>It is used by Ion Files to access remote servers/files.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="python-dateutil">
+<h3>python-dateutil<a class="headerlink" href="#python-dateutil" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/dateutil/dateutil">https://github.com/dateutil/dateutil</a></p>
+<p>This package provides powerful extensions to the standard datetime module</p>
+<p>It (<code class="docutils literal notranslate"><span class="pre">datetime.relativedelta</span></code>) is used to compute deltas between datetime objects throughout the codebase.</p>
+<p>LICENSE: Apache License 2.0 (based on code that is 3-clause BSD)</p>
+</div>
+<div class="section" id="python-gssapi">
+<h3>python-gssapi<a class="headerlink" href="#python-gssapi" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/sigmaris/python-gssapi">https://github.com/sigmaris/python-gssapi</a></p>
+<p>This package provides an object-oriented interface to GSSAPI for Python.</p>
+<p>It is used for Kerberos authentication.</p>
+<p>OBSOLETE: need to update is from 2015</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="python-magic">
+<h3>python-magic<a class="headerlink" href="#python-magic" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/ahupp/python-magic">https://github.com/ahupp/python-magic</a></p>
+<p>This package is a wrapper to the libmagic file type identification library</p>
+<p>It is used to identify the file type for Ion Printing.</p>
+<p>NEEDSRELEASE</p>
+<p>LICENSE: MIT</p>
+</div>
+<div class="section" id="reportlab">
+<h3>reportlab<a class="headerlink" href="#reportlab" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://bitbucket.org/rptlab/reportlab/src/default/">https://bitbucket.org/rptlab/reportlab/src/default/</a></p>
+<p>This package allows rapid creation of rich PDF documents, and also creation of charts in a variety of bitmap and vector formats.</p>
+<p>It is used to help generate PDFs in the eighth admin.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="requests">
+<h3>requests<a class="headerlink" href="#requests" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/kennethreitz/requests">https://github.com/kennethreitz/requests</a></p>
+<p>This package is a HTTP library for Python.</p>
+<p>It is used to fetch the FCPS emergency webpage.</p>
+<p>LICENSE: Apache License 2.0</p>
+</div>
+<div class="section" id="requests-oauthlib">
+<h3>requests-oauthlib<a class="headerlink" href="#requests-oauthlib" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/requests/requests-oauthlib">https://github.com/requests/requests-oauthlib</a></p>
+<p>This package provides OAuth library support for Python Requests.</p>
+<p>It is currently used to perform OAuth1a authentication to Twitter.</p>
+<p>LICENSE: ISC License</p>
+</div>
+<div class="section" id="sentry-sdk">
+<h3>sentry-sdk<a class="headerlink" href="#sentry-sdk" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/getsentry/sentry-python">https://github.com/getsentry/sentry-python</a></p>
+<p>This package provides a Python SDK for the Sentry monitoring suite.</p>
+<p>It is used to collect and report information to report to Sentry in production.</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="setuptools-git">
+<h3>setuptools-git<a class="headerlink" href="#setuptools-git" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/msabramo/setuptools-git">https://github.com/msabramo/setuptools-git</a></p>
+<p>This package provides a plugin for setuptools that enables git integration.</p>
+<p>It is used by our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<p>NEEDSMAINTAINER</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="sphinx">
+<h3>Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/sphinx-doc/sphinx">https://github.com/sphinx-doc/sphinx</a></p>
+<p>This package provides a tool that makes it easy to create intelligent and beautiful documentation for Python projects.</p>
+<p>It is used to document Ion.</p>
+<p>LICENSE: 2-clause BSD</p>
+</div>
+<div class="section" id="sphinx-bootstrap-theme">
+<h3>sphinx-bootstrap-theme<a class="headerlink" href="#sphinx-bootstrap-theme" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/ryan-roemer/sphinx-bootstrap-theme">https://github.com/ryan-roemer/sphinx-bootstrap-theme</a></p>
+<p>This package provides a bootstrap theme for Sphinx.</p>
+<p>It is used as the theme for the Ion docs.</p>
+<p>LICENSE: MIT</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
