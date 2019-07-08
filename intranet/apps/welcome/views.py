@@ -27,3 +27,9 @@ def welcome_view(request):
         return student_welcome_view(request)
     else:
         return redirect("index")
+
+@login_required
+def done_welcome_view(request):
+    request.user.seen_welcome = True
+    request.user.save()
+    return redirect("index")
