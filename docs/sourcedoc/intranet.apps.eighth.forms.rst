@@ -6,12 +6,12 @@ Subpackages
 
 .. toctree::
 
-    intranet.apps.eighth.forms.admin
+   intranet.apps.eighth.forms.admin
 
 Module contents
 ---------------
 
 .. automodule:: intranet.apps.eighth.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
