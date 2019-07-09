@@ -16,28 +16,6 @@ from ...test.ion_test import IonTestCase
 Application = get_application_model()
 
 
-class DynamicGroupTest(IonTestCase):
-    """Tests creating dynamic groups."""
-
-    def test_dynamic_groups(self):
-        out = StringIO()
-        with self.settings(SENIOR_GRADUATION_YEAR=2016):
-            get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
-            call_command("dynamic_groups", stdout=out)
-        output = [
-            "2016: 0 users",
-            "2016: Processed",
-            "2017: 1 users",
-            "2017: Processed",
-            "2018: 0 users",
-            "2018: Processed",
-            "2019: 0 users",
-            "2019: Processed",
-            "Done.",
-        ]
-        self.assertEqual(out.getvalue().splitlines(), output)
-
-
 class ProfileTest(IonTestCase):
     def setUp(self):
         self.user = get_user_model().objects.get_or_create(username="awilliam")[0]
