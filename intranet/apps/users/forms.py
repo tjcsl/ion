@@ -5,7 +5,8 @@ from .models import Address
 
 class ProfileEditForm(forms.ModelForm):
     """A form containing editable fields in the User model."""
-    GENDERS = ((True, 'Male'), (False, 'Female'))
+
+    GENDERS = ((True, "Male"), (False, "Female"))
 
     admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
     student_id = forms.IntegerField(label="FCPS Student ID")
@@ -86,4 +87,4 @@ class AddressForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        fields = ['street', 'city', 'state', 'postal_code']
+        fields = ["street", "city", "state", "postal_code"]

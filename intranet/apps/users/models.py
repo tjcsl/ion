@@ -23,7 +23,7 @@ from ..eighth.models import EighthSponsor, EighthBlock, EighthSignup
 logger = logging.getLogger(__name__)
 
 # TODO: this is disgusting
-GRADE_NUMBERS = ((9, 'freshman'), (10, 'sophomore'), (11, 'junior'), (12, 'senior'), (13, 'staff'))
+GRADE_NUMBERS = ((9, "freshman"), (10, "sophomore"), (11, "junior"), (12, "senior"), (13, "staff"))
 # Eighth Office/Demo Student user IDs that should be excluded from teacher/student lists
 EXTRA = [9996, 8888, 7011]
 
@@ -64,15 +64,15 @@ class UserManager(DjangoUserManager):
         if sn and not given_name:
             results = User.objects.filter(last_name=sn)
         elif given_name:
-            query = {'first_name': given_name}
+            query = {"first_name": given_name}
             if sn:
-                query['last_name'] = sn
+                query["last_name"] = sn
             results = User.objects.filter(**query)
 
             if not results:
                 # Try their first name as a nickname
-                del query['first_name']
-                query['nickname'] = given_name
+                del query["first_name"]
+                query["nickname"] = given_name
                 results = User.objects.filter(**query)
 
         if len(results) == 1:
@@ -128,29 +128,30 @@ class UserManager(DjangoUserManager):
         teachers.sort(key=lambda u: (u[0], u[1]))
         # Hack to return QuerySet in given order
         id_list = [t[2] for t in teachers]
-        clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(id_list)])
-        ordering = 'CASE %s END' % clauses
-        queryset = User.objects.filter(id__in=id_list).extra(select={'ordering': ordering}, order_by=('ordering',))
+        clauses = " ".join(["WHEN id=%s THEN %s" % (pk, i) for i, pk in enumerate(id_list)])
+        ordering = "CASE %s END" % clauses
+        queryset = User.objects.filter(id__in=id_list).extra(select={"ordering": ordering}, order_by=("ordering",))
         return queryset
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass
     """
-    TITLES = (('Mr.', 'Mr.'), ('Ms.', 'Ms.'), ('Mrs.', 'Mrs.'), ('Dr.', 'Dr.'))
+
+    TITLES = (("Mr.", "Mr."), ("Ms.", "Ms."), ("Mrs.", "Mrs."), ("Dr.", "Dr."))
 
     USER_TYPES = (
-        ('student', 'Student'),
-        ('teacher', 'Teacher'),
-        ('counselor', 'Counselor'),
-        ('user', 'Attendance-Only User'),
-        ('simple_user', 'Simple User'),
-        ('tjstar_presenter', 'tjStar Presenter'),
-        ('alum', 'Alumnus'),
-        ('service', 'Service Account'),
+        ("student", "Student"),
+        ("teacher", "Teacher"),
+        ("counselor", "Counselor"),
+        ("user", "Attendance-Only User"),
+        ("simple_user", "Simple User"),
+        ("tjstar_presenter", "tjStar Presenter"),
+        ("alum", "Alumnus"),
+        ("service", "Service Account"),
     )
 
-    TITLES = (('mr', 'Mr.'), ('ms', 'Ms.'), ('mrs', 'Mrs.'), ('dr', 'Dr.'))
+    TITLES = (("mr", "Mr."), ("ms", "Ms."), ("mrs", "Mrs."), ("dr", "Dr."))
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
 
@@ -171,9 +172,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_schedule_notifications = models.BooleanField(default=False)
 
     student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH, unique=True, null=True)
-    user_type = models.CharField(max_length=30, choices=USER_TYPES, default='student')
+    user_type = models.CharField(max_length=30, choices=USER_TYPES, default="student")
     admin_comments = models.TextField(blank=True, null=True)
-    counselor = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='students', null=True)
+    counselor = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="students", null=True)
     graduation_year = models.IntegerField(null=True)
     title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
     first_name = models.CharField(max_length=35, null=True)
@@ -181,8 +182,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
     gender = models.NullBooleanField()
-    preferred_photo = models.OneToOneField('Photo', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
-    primary_email = models.OneToOneField('Email', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    preferred_photo = models.OneToOneField("Photo", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
+    primary_email = models.OneToOneField("Email", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True)
 
     # Required to replace the default Django User model
@@ -257,17 +258,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
-        return ("{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "") + ("({}) ".format(self.nickname)
-                                                                                                     if self.nickname else "") +
-                ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
+        return (
+            "{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "")
+            + ("({}) ".format(self.nickname) if self.nickname else "")
+            + ("({})".format(self.student_id if self.is_student and self.student_id else self.username))
+        )
 
     @property
     def last_first_initial(self):
         """Return a name in the format of:
             Lastname, F [(Nickname)]
         """
-        return ("{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + ("({}) ".format(self.nickname)
-                                                                                                               if self.nickname else ""))
+        return "{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + (
+            "({}) ".format(self.nickname) if self.nickname else ""
+        )
 
     @property
     def short_name(self):
@@ -432,7 +436,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.has_admin_permission('eighth')
+        return self.has_admin_permission("eighth")
 
     @property
     def has_print_permission(self):
@@ -443,7 +447,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.has_admin_permission('printing')
+        return self.has_admin_permission("printing")
 
     @property
     def is_parking_admin(self):
@@ -454,7 +458,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.has_admin_permission('parking')
+        return self.has_admin_permission("parking")
 
     @property
     def can_request_parking(self):
@@ -571,7 +575,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.user_type in ['user', 'alum', 'service']
+        return self.user_type in ["user", "alum", "service"]
 
     @property
     def is_staff(self):
@@ -657,10 +661,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
         if cached:
             return cached
-        freq_signups = self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True).exclude(
-            scheduled_activity__activity__special=True).exclude(scheduled_activity__activity__restricted=True).exclude(
-                scheduled_activity__activity__deleted=True).values('scheduled_activity__activity').annotate(
-                    count=Count('scheduled_activity__activity')).filter(count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        freq_signups = (
+            self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True)
+            .exclude(scheduled_activity__activity__special=True)
+            .exclude(scheduled_activity__activity__restricted=True)
+            .exclude(scheduled_activity__activity__deleted=True)
+            .values("scheduled_activity__activity")
+            .annotate(count=Count("scheduled_activity__activity"))
+            .filter(count__gte=settings.SIMILAR_THRESHOLD)
+            .order_by("-count")
+        )
         cache.set(key, freq_signups, timeout=60 * 60 * 24 * 7)
         return freq_signups
 
@@ -671,14 +681,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached:
             return cached
         acts = set()
-        for signup in self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True).exclude(
-                scheduled_activity__activity__special=True).exclude(scheduled_activity__activity__restricted=True).exclude(
-                    scheduled_activity__activity__deleted=True).exclude(
-                        scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6))):
+        for signup in (
+            self.eighthsignup_set.exclude(scheduled_activity__activity__administrative=True)
+            .exclude(scheduled_activity__activity__special=True)
+            .exclude(scheduled_activity__activity__restricted=True)
+            .exclude(scheduled_activity__activity__deleted=True)
+            .exclude(scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6)))
+        ):
             acts.add(signup.scheduled_activity.activity)
         close_acts = set()
         for act in acts:
-            sim = act.similarities.order_by('-weighted').first()
+            sim = act.similarities.order_by("-weighted").first()
             if sim and sim.weighted > 1:
                 close_acts.add(sim.activity_set.exclude(id=act.id).first())
         cache.set(key, close_acts, timeout=60 * 60 * 24 * 7)
@@ -735,8 +748,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def handle_delete(self):
         """Handle a graduated user being deleted."""
         from intranet.apps.eighth.models import EighthScheduledActivity
-        EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(
-            archived_member_count=F('archived_member_count')+1)
+
+        EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(archived_member_count=F("archived_member_count") + 1)
 
     def __getattr__(self, name):
         if name == "properties":
@@ -753,9 +766,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserProperties(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="properties", on_delete=models.CASCADE)
 
-    _address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL)
+    _address = models.OneToOneField("Address", null=True, blank=True, on_delete=models.SET_NULL)
     _birthday = models.DateField(null=True)
-    _schedule = models.ManyToManyField('Section', related_name='_students')
+    _schedule = models.ManyToManyField("Section", related_name="_students")
     """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
         The permission attribute should be the part after "self_" or "parent_"
@@ -813,17 +826,17 @@ class UserProperties(models.Model):
             Returns True if successful.
         """
         try:
-            if not getattr(self, 'parent_{}'.format(permission)) and not parent and not admin:
+            if not getattr(self, "parent_{}".format(permission)) and not parent and not admin:
                 return False
-            level = 'parent' if parent else 'self'
-            setattr(self, '{}_{}'.format(level, permission), value)
+            level = "parent" if parent else "self"
+            setattr(self, "{}_{}".format(level, permission), value)
 
-            update_fields = ['{}_{}'.format(level, permission)]
+            update_fields = ["{}_{}".format(level, permission)]
 
             # Set student permission to false if parent sets permission to false.
             if parent and not value:
-                setattr(self, 'self_{}'.format(permission), False)
-                update_fields.append('self_{}'.format(permission))
+                setattr(self, "self_{}".format(permission), False)
+                update_fields.append("self_{}".format(permission))
 
             self.save(update_fields=update_fields)
             return True
@@ -892,28 +905,31 @@ class UserProperties(models.Model):
             logger.error("Could not retrieve permissions for %s", permission)
 
 
-PERMISSIONS_NAMES = {prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")]
-                     for prefix in ["self", "parent"]}
+PERMISSIONS_NAMES = {
+    prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
+}
 
 
 class Email(models.Model):
     """Represents an email address"""
+
     address = models.EmailField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='emails', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="emails", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.address
 
     class Meta:
-        unique_together = ('user', 'address')
+        unique_together = ("user", "address")
 
 
 class Phone(models.Model):
     """Represents a phone number"""
-    PURPOSES = (('h', 'Home Phone'), ('m', 'Mobile Phone'), ('o', 'Other Phone'))
 
-    purpose = models.CharField(max_length=1, choices=PURPOSES, default='o')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='phones', on_delete=models.CASCADE)
+    PURPOSES = (("h", "Home Phone"), ("m", "Mobile Phone"), ("o", "Other Phone"))
+
+    purpose = models.CharField(max_length=1, choices=PURPOSES, default="o")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="phones", on_delete=models.CASCADE)
     _number = PhoneField()  # validators should be a list
 
     def __setattr__(self, name, value):
@@ -933,19 +949,20 @@ class Phone(models.Model):
         return "{}: {}".format(self.get_purpose_display(), self.number)
 
     class Meta:
-        unique_together = ('user', '_number')
+        unique_together = ("user", "_number")
 
 
 class Website(models.Model):
     """Represents a user's website"""
+
     url = models.URLField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='websites', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="websites", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.url
 
     class Meta:
-        unique_together = ('user', 'url')
+        unique_together = ("user", "url")
 
 
 class Address(models.Model):
@@ -1009,6 +1026,7 @@ class Photo(models.Model):
 
 class Grade:
     """Represents a user's grade."""
+
     names = ["freshman", "sophomore", "junior", "senior"]
 
     def __init__(self, graduation_year):

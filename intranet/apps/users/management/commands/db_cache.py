@@ -7,14 +7,14 @@ class Command(BaseCommand):
     help = "Set DB cache from LDAP for users"
 
     def add_arguments(self, parser):
-        parser.add_argument('action', action='store', nargs=1, metavar='action: [set, flush]', help="Action to perform [set, flush]")
+        parser.add_argument("action", action="store", nargs=1, metavar="action: [set, flush]", help="Action to perform [set, flush]")
 
     def handle(self, *args, **options):
-        if options['action'][0] == "flush":
+        if options["action"][0] == "flush":
             for user in get_user_model().objects.exclude(cache=None):
                 user.cache.delete()
             self.stdout.write("Done.")
-        elif options['action'][0] == "set":
+        elif options["action"][0] == "set":
             for user in get_user_model().objects.all():
                 if not user.is_active:
                     continue

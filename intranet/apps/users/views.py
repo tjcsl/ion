@@ -11,7 +11,7 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from .models import Grade, Section, Course
 from ..auth.decorators import deny_restricted
-from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
+from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..eighth.utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -64,15 +64,16 @@ def profile_view(request, user_id=None):
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
-        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by(
-            "block__date", "block__block_letter"))
+        eighth_sponsor_schedule = (
+            EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by("block__date", "block__block_letter")
+        )
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
     else:
         eighth_sponsor_schedule = None
 
-    admin_or_teacher = (request.user.is_eighth_admin or request.user.is_teacher)
-    can_view_eighth = (profile_user.can_view_eighth or request.user == profile_user)
-    eighth_restricted_msg = (not can_view_eighth and admin_or_teacher)
+    admin_or_teacher = request.user.is_eighth_admin or request.user.is_teacher
+    can_view_eighth = profile_user.can_view_eighth or request.user == profile_user
+    eighth_restricted_msg = not can_view_eighth and admin_or_teacher
 
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
@@ -88,7 +89,7 @@ def profile_view(request, user_id=None):
         "eighth_sponsor_schedule": eighth_sponsor_schedule,
         "nominations_active": settings.NOMINATIONS_ACTIVE,
         "nomination_position": settings.NOMINATION_POSITION,
-        "has_been_nominated": has_been_nominated
+        "has_been_nominated": has_been_nominated,
     }
     return render(request, "users/profile.html", context)
 
@@ -158,14 +159,14 @@ def picture_view(request, user_id, year=None):
 @login_required
 @deny_restricted
 def all_courses_view(request):
-    context = {"courses": Course.objects.all().order_by('name', 'course_id').distinct()}
+    context = {"courses": Course.objects.all().order_by("name", "course_id").distinct()}
     return render(request, "users/all_courses.html", context)
 
 
 @login_required
 @deny_restricted
 def courses_by_period_view(request, period_number):
-    context = {"courses": Course.objects.filter(sections__period=period_number).order_by('name', 'course_id').distinct()}
+    context = {"courses": Course.objects.filter(sections__period=period_number).order_by("name", "course_id").distinct()}
     return render(request, "users/all_courses.html", context)
 
 
@@ -180,7 +181,7 @@ def course_info_view(request, course_id):
 @login_required
 @deny_restricted
 def sections_by_room_view(request, room_number):
-    sections = Section.objects.filter(room=room_number).order_by('period')
+    sections = Section.objects.filter(room=room_number).order_by("period")
     if not sections.exists():
         raise Http404
     context = {"room_number": room_number, "classes": sections}

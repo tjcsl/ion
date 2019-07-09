@@ -36,7 +36,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = ('street', 'city', 'state', 'postal_code')
+        fields = ("street", "city", "state", "postal_code")
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,7 +49,7 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name', 'grade')
+        fields = ("id", "url", "user_type", "username", "full_name", "first_name", "last_name", "grade")
 
 
 class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,11 +61,10 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name')
+        fields = ("id", "url", "user_type", "username", "full_name", "first_name", "last_name")
 
 
 class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
-
     def get_url(self, obj, view_name, request, format):  # pylint: disable=redefined-builtin
         s = super(HyperlinkedImageField, self).get_url(obj, view_name, request, format)
         if "format=" in s:
@@ -97,9 +96,35 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name',
-                  'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'phones', 'websites', 'counselor', 'address',
-                  'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'absences')
+        fields = (
+            "id",
+            "ion_username",
+            "sex",
+            "title",
+            "display_name",
+            "full_name",
+            "short_name",
+            "first_name",
+            "middle_name",
+            "last_name",
+            "nickname",
+            "tj_email",
+            "emails",
+            "grade",
+            "graduation_year",
+            "birthday",
+            "user_type",
+            "phones",
+            "websites",
+            "counselor",
+            "address",
+            "picture",
+            "is_eighth_admin",
+            "is_announcements_admin",
+            "is_teacher",
+            "is_student",
+            "absences",
+        )
 
 
 class ClassSerializer(serializers.Serializer):
