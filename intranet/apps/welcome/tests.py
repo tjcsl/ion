@@ -23,4 +23,6 @@ class WelcomeTest(IonTestCase):
 
     def test_welcome_done(self):
         user = self.login()
-        response = self.client.get(revese("done"))
+        response = self.client.get(reverse("done"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(user.seen_welcome)
