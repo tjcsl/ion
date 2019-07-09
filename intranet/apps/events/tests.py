@@ -54,7 +54,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(prev_event.show_fuzzy_date(), True)
 
     def test_events_root_non_admin(self):
-        user = self.login()
+        _ = self.login()
 
         response = self.client.get(reverse("events"))
         self.assertEqual(response.status_code, 200)
@@ -127,7 +127,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(response.context["viewable_roster"], [])
 
     def test_add_event(self):
-        user = self.make_admin()
+        _ = self.make_admin()
 
         # Test GET of valid event id
         response = self.client.get(reverse("add_event"))
@@ -161,7 +161,7 @@ class EventsTest(IonTestCase):
         self.assertEqual(event.location, data["location"])
 
     def test_request_event(self):
-        user = self.login()
+        _ = self.login()
 
         self.assertFalse(Event.objects.exists())
 

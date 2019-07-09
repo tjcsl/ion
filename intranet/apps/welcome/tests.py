@@ -16,13 +16,13 @@ class WelcomeTest(IonTestCase):
         self.assertTemplateUsed(response, "welcome/teacher.html")
 
     def test_welcome_view_student(self):
-        user = self.login()
+        _ = self.login()
         response = self.client.get(reverse("welcome"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "welcome/student.html")
 
     def test_welcome_done(self):
         user = self.login()
-        response = self.client.get(reverse("done"))
-        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse("welcome_done"))
+        self.assertRedirects(response, reverse("index"))
         self.assertTrue(user.seen_welcome)
