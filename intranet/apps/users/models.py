@@ -31,7 +31,7 @@ EXTRA = [9996, 8888, 7011]
 class UserManager(DjangoUserManager):
     """User model Manager for table-level User queries.
 
-    Provides table-level LDAP abstraction for the User model. If a call
+    Provides an abstraction for the User model. If a call
     to a method fails for this Manager, the call is deferred to the
     default User model manager.
 
@@ -90,10 +90,6 @@ class UserManager(DjangoUserManager):
             results.append(user)
 
         return results
-
-    # Simple way to filter out teachers and students without hitting LDAP.
-    # This shouldn't be a problem unless the username scheme changes and
-    # the consequences of error are not significant.
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
