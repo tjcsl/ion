@@ -12,8 +12,8 @@ from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
 
-class CourseTest(IonTestCase):
 
+class CourseTest(IonTestCase):
     def setUp(self):
         self.create_schedule_test()
 
@@ -72,10 +72,11 @@ class CourseTest(IonTestCase):
     def test_course_section_view(self):
         pass
 
-class UserTest(IonTestCase):
 
+class UserTest(IonTestCase):
     def test_get_signage_user(self):
         self.assertEqual(get_user_model().get_signage_user().id, 99999)
+
 
 class ProfileTest(IonTestCase):
     def setUp(self):
