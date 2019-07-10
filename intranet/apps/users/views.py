@@ -100,10 +100,7 @@ def picture_view(request, user_id, year=None):
             specified, use the preferred picture.
 
     """
-    try:
-        user = get_user_model().objects.get(id=user_id)
-    except get_user_model().DoesNotExist:
-        raise Http404
+    user = get_object_or_404(get_user_model(), id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
 
     if user is None:
