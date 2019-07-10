@@ -1,8 +1,5 @@
-from io import StringIO
 import datetime
 
-from django.conf import settings
-from django.core.management import call_command
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
@@ -10,11 +7,75 @@ from django.utils import timezone
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
-from .models import PERMISSIONS_NAMES, Address
+from .models import PERMISSIONS_NAMES, Address, Course, Section
 from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
 
+class CourseTest(IonTestCase):
+
+    def setUp(self):
+        self.create_schedule_test()
+
+    def create_schedule_test(self):
+        for i in range(9):
+            course = Course.objects.create(name="Test Course {}".format(i), course_id="1111{}".format(i))
+            for pd in range(1, 8):
+                Section.objects.create(course=course, room="Room {}".format(i), period=pd, section_id="{}-{}".format(course.course_id, pd), sem="F")
+
+    def test_section_course_attributes(self):
+        course = Course.objects.first()
+        self.assertEqual(str(course), "{} ({})".format(course.name, course.course_id))
+
+        section = Section.objects.first()
+        self.assertEqual(str(section), "{} ({}) - {} Pd. {}".format(section.course.name, section.section_id, "Unknown", section.period))
+
+    def test_all_courses_view(self):
+        _ = self.login()
+        response = self.client.get(reverse("all_courses"))
+        self.assertTemplateUsed(response, "users/all_courses.html")
+        self.assertEqual(list(response.context["courses"]), list(Course.objects.all().order_by("name", "course_id").distinct()))
+
+    def test_courses_by_period_view(self):
+        _ = self.login()
+        pd = 2
+        response = self.client.get(reverse("period_courses", args=[pd]))
+        self.assertTemplateUsed(response, "users/all_courses.html")
+        self.assertEqual(list(response.context["courses"]), list(Course.objects.filter(sections__period=pd).order_by("name", "course_id").distinct()))
+
+    def test_course_info_view(self):
+        _ = self.login()
+        # Test invalid course
+        course_id = "BAD"
+        response = self.client.get(reverse("course_sections", args=[course_id]))
+        self.assertEqual(response.status_code, 404)
+
+        # Test valid course
+        course_id = "11110"
+        response = self.client.get(reverse("course_sections", args=[course_id]))
+        self.assertTemplateUsed(response, "users/all_classes.html")
+        self.assertEqual(response.context["course"], Course.objects.get(course_id=course_id))
+
+    def test_sections_by_room_view(self):
+        _ = self.login()
+        # Test room with no sections
+        response = self.client.get(reverse("room_sections", args=["BAD"]))
+        self.assertEqual(response.status_code, 404)
+
+        # Test valid room
+        room_number = "Room 1"
+        response = self.client.get(reverse("room_sections", args=[room_number]))
+        self.assertTemplateUsed(response, "users/class_room.html")
+        self.assertEqual(response.context["room_number"], room_number)
+        self.assertEqual(list(response.context["classes"]), list(Section.objects.filter(room=room_number).order_by("period")))
+
+    def test_course_section_view(self):
+        pass
+
+class UserTest(IonTestCase):
+
+    def test_get_signage_user(self):
+        self.assertEqual(get_user_model().get_signage_user().id, 99999)
 
 class ProfileTest(IonTestCase):
     def setUp(self):
