@@ -31,7 +31,7 @@ def profile_view(request, user_id=None):
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:
-        profile_user = get_object_or_404(get_user_model(), id=user_id))
+        profile_user = get_object_or_404(get_user_model(), id=user_id)
     else:
         profile_user = request.user
 
@@ -72,9 +72,8 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
-    has_been_nominated = profile_user.username in [
-        u.nominee.username for u in request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION)
-    ]
+    has_been_nominated = profile_user == request.user and request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION).exists()
+
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
