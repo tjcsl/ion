@@ -31,13 +31,7 @@ def profile_view(request, user_id=None):
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:
-        try:
-            profile_user = get_user_model().objects.get(id=user_id)
-
-            if profile_user is None:
-                raise Http404
-        except get_user_model().DoesNotExist:
-            raise Http404
+        profile_user = get_object_or_404(get_user_model(), id=user_id))
     else:
         profile_user = request.user
 
