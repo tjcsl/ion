@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4837) documentation</title>
+    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4842) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -138,7 +138,7 @@
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Course</span>
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..eighth.utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -191,15 +191,16 @@
     <span class="k">if</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">is_eighth_sponsor</span><span class="p">:</span>
         <span class="n">sponsor</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">)</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
-            <span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="n">eighth_sponsor_schedule</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">admin_or_teacher</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">)</span>
-    <span class="n">can_view_eighth</span> <span class="o">=</span> <span class="p">(</span><span class="n">profile_user</span><span class="o">.</span><span class="n">can_view_eighth</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">profile_user</span><span class="p">)</span>
-    <span class="n">eighth_restricted_msg</span> <span class="o">=</span> <span class="p">(</span><span class="ow">not</span> <span class="n">can_view_eighth</span> <span class="ow">and</span> <span class="n">admin_or_teacher</span><span class="p">)</span>
+    <span class="n">admin_or_teacher</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span>
+    <span class="n">can_view_eighth</span> <span class="o">=</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">can_view_eighth</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">profile_user</span>
+    <span class="n">eighth_restricted_msg</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">can_view_eighth</span> <span class="ow">and</span> <span class="n">admin_or_teacher</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_eighth</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
         <span class="n">eighth_schedule</span> <span class="o">=</span> <span class="p">[]</span>
@@ -215,7 +216,7 @@
         <span class="s2">&quot;eighth_sponsor_schedule&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor_schedule</span><span class="p">,</span>
         <span class="s2">&quot;nominations_active&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">NOMINATIONS_ACTIVE</span><span class="p">,</span>
         <span class="s2">&quot;nomination_position&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">NOMINATION_POSITION</span><span class="p">,</span>
-        <span class="s2">&quot;has_been_nominated&quot;</span><span class="p">:</span> <span class="n">has_been_nominated</span>
+        <span class="s2">&quot;has_been_nominated&quot;</span><span class="p">:</span> <span class="n">has_been_nominated</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/profile.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
@@ -285,14 +286,14 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">all_courses_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;course_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;course_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/all_courses.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">courses_by_period_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">period_number</span><span class="p">):</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sections__period</span><span class="o">=</span><span class="n">period_number</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;course_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sections__period</span><span class="o">=</span><span class="n">period_number</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;course_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/all_courses.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
@@ -307,7 +308,7 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">sections_by_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_number</span><span class="p">):</span>
-    <span class="n">sections</span> <span class="o">=</span> <span class="n">Section</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room</span><span class="o">=</span><span class="n">room_number</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;period&#39;</span><span class="p">)</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="n">Section</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">room</span><span class="o">=</span><span class="n">room_number</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;period&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">sections</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">raise</span> <span class="n">Http404</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;room_number&quot;</span><span class="p">:</span> <span class="n">room_number</span><span class="p">,</span> <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">sections</span><span class="p">}</span>

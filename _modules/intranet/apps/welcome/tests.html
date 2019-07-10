@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.bus.tests &#8212; TJ Intranet v3 (Build #4842) documentation</title>
+    <title>intranet.apps.welcome.tests &#8212; TJ Intranet v3 (Build #4842) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -124,37 +124,37 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.bus.tests</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.welcome.tests</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
-<div class="viewcode-block" id="BusTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest">[docs]</a><span class="k">class</span> <span class="nc">BusTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Test for bus module&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="WelcomeTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.tests.WelcomeTest">[docs]</a><span class="k">class</span> <span class="nc">WelcomeTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests for the welcome module.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BusTest.test_bus"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest.test_bus">[docs]</a>    <span class="k">def</span> <span class="nf">test_bus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+<div class="viewcode-block" id="WelcomeTest.test_welcome_view_teacher"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.tests.WelcomeTest.test_welcome_view_teacher">[docs]</a>    <span class="k">def</span> <span class="nf">test_welcome_view_teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;teacher&quot;</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;welcome&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;first_login&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;welcome/teacher.html&quot;</span><span class="p">)</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+<div class="viewcode-block" id="WelcomeTest.test_welcome_view_student"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.tests.WelcomeTest.test_welcome_view_student">[docs]</a>    <span class="k">def</span> <span class="nf">test_welcome_view_student</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;welcome&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;welcome/student.html&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BusTest.test_routes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest.test_routes">[docs]</a>    <span class="k">def</span> <span class="nf">test_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
-        <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span>
-        <span class="n">route</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-        <span class="n">route</span><span class="o">.</span><span class="n">reset_status</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BusTest.test_route_representation"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest.test_route_representation">[docs]</a>    <span class="k">def</span> <span class="nf">test_route_representation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">route_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">,</span> <span class="n">route_str</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="WelcomeTest.test_welcome_done"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.tests.WelcomeTest.test_welcome_done">[docs]</a>    <span class="k">def</span> <span class="nf">test_welcome_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;welcome_done&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seen_welcome</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">user</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
