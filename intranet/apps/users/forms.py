@@ -19,11 +19,6 @@ class ProfileEditForm(forms.ModelForm):
     counselor_id = forms.IntegerField(label="Counselor ID", required=False)
     birthday = forms.DateField(label="Birth Date", required=False)
 
-    # # locker = forms.CharField(label="Locker")
-
-    # FIELDS = []
-    # ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
-
     class Meta:
         model = get_user_model()
         fields = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender"]
