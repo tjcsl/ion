@@ -268,6 +268,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "oauth",
     "bus",
     "signage.page",
+    "courses",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
