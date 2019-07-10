@@ -1,4 +1,5 @@
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 from ...test.ion_test import IonTestCase
 
@@ -23,6 +24,7 @@ class WelcomeTest(IonTestCase):
 
     def test_welcome_done(self):
         user = self.login()
+        self.assertFalse(user.seen_welcome)
         response = self.client.get(reverse("welcome_done"))
         self.assertRedirects(response, reverse("index"))
-        self.assertTrue(user.seen_welcome)
+        self.assertEqual(get_user_model().objects.get(seen_welcome=True), user)
