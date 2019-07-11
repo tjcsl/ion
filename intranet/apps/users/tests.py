@@ -1,5 +1,6 @@
 import datetime
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
@@ -8,6 +9,8 @@ from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
 from .models import PERMISSIONS_NAMES, Address, Course, Section
+from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthSignup
+from ..nomination.models import Nomination, NominationPosition
 from ...test.ion_test import IonTestCase
 
 Application = get_application_model()
@@ -69,8 +72,18 @@ class CourseTest(IonTestCase):
         self.assertEqual(response.context["room_number"], room_number)
         self.assertEqual(list(response.context["classes"]), list(Section.objects.filter(room=room_number).order_by("period")))
 
-    def test_course_section_view(self):
-        pass
+    def test_section_view(self):
+        _ = self.login()
+
+        # Test invalid section
+        response = self.client.get(reverse("section_info", args=["BAD"]))
+        self.assertEqual(response.status_code, 404)
+
+        # Test valid section
+        section = Course.objects.first()
+        response = self.client.get(reverse("section_info", args=[course.id]))
+        self.assertTemplateUsed(response, "users/class.html")
+        self.assertEqual(response.context["class"], section)
 
 
 class UserTest(IonTestCase):
@@ -111,7 +124,7 @@ class ProfileTest(IonTestCase):
         )
         self.auth = "Bearer {}".format(tok.token)  # pylint: disable=attribute-defined-outside-init
 
-    def test_get_profile(self):
+    def test_get_profile_api(self):
         self.make_admin()
         self.make_token()
         # Check for non-existant user.
@@ -121,6 +134,54 @@ class ProfileTest(IonTestCase):
         response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["address"]["postal_code"], "22312")
+
+    def test_profile_view(self):
+        user = self.login()
+
+        # Test very plain view of own profile
+        response = self.client.get(reverse("user_profile"))
+        self.assertTemplateUsed(response, "users/profile.html")
+        self.assertEqual(response.context["eighth_schedule"], [])
+
+        act = EighthActivity.objects.create(name="Test Activity")
+
+        for day_delta in range(1, 5):
+            for block in ["A", "B"]:
+                block = EighthBlock.objects.create(date=(timezone.now() + timezone.timedelta(days=day_delta)).date(), block_letter=block)
+                EighthScheduledActivity.objects.create(activity=act, block=block)
+
+        # Test as a normal student accessing own profile
+        response = self.client.get(reverse("user_profile"))
+        self.assertTemplateUsed(response, "users/profile.html")
+        self.assertEqual(response.context["profile_user"], user)
+        expected_schedule = []
+        for block in list(EighthBlock.objects.order_by("date"))[:6]:
+            expected_schedule.append({"block": block, "signup": None})
+        self.assertEqual(response.context["eighth_schedule"], expected_schedule)
+        self.assertTrue(response.context["can_view_eighth"])
+        self.assertFalse(response.context["eighth_restricted_msg"])
+        self.assertEqual(response.context["eighth_sponsor_schedule"], None)
+        self.assertFalse(response.context["nominations_active"])
+        self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
+        self.assertFalse(response.context["has_been_nominated"])
+
+        for schact in EighthScheduledActivity.objects.all():
+            EighthSignup.objects.create(scheduled_activity=schact, user=user)
+
+        response = self.client.get(reverse("user_profile"))
+        expected_schedule = []
+        for block in list(EighthBlock.objects.order_by("date"))[:6]:
+            expected_schedule.append({"block": block, "signup": EighthSignup.objects.get(scheduled_activity__block=block)})
+        self.assertEqual(response.context["eighth_schedule"], expected_schedule)
+
+        # Test self-nomination
+        position = NominationPosition.objects.create(position_name=settings.NOMINATION_POSITION)
+        Nomination.objects.create(nominator=user, nominee=user, position=position)
+        with self.settings(NOMINATIONS_ACTIVE=True):
+            response = self.client.get(reverse("user_profile"))
+            self.assertTrue(response.context["has_been_nominated"])
+            self.assertTrue(response.context["nominations_active"])
+            self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
 
     def test_privacy_options(self):
         self.assertEqual(set(PERMISSIONS_NAMES.keys()), {"self", "parent"})
