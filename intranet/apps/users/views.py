@@ -180,7 +180,7 @@ def sections_by_room_view(request, room_number):
 
 @login_required
 @deny_restricted
-def course_section_view(request, section_id):
+def section_view(request, section_id):
     section = get_object_or_404(Section, section_id=section_id)
     context = {"class": section}
     return render(request, "users/class.html", context)
