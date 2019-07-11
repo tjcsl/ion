@@ -1115,6 +1115,9 @@ class Course(models.Model):
     def __str__(self):
         return "{} ({})".format(self.name, self.course_id)
 
+    class Meta:
+        ordering = ("name", "course_id")
+
 
 class Section(models.Model):
     """Represents a section - a class with teacher, period, and room assignments"""
@@ -1133,3 +1136,6 @@ class Section(models.Model):
         if name == "students":
             return [s.user for s in self._students.all() if s.attribute_is_visible("show_schedule")]
         raise AttributeError
+
+    class Meta:
+        ordering = ("section_id", "period")

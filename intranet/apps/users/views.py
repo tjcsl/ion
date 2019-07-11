@@ -72,7 +72,9 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
-    has_been_nominated = profile_user == request.user and request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION).exists()
+    has_been_nominated = (
+        profile_user == request.user and request.user.nomination_votes.filter(position__position_name=settings.NOMINATION_POSITION).exists()
+    )
 
     context = {
         "profile_user": profile_user,
@@ -149,14 +151,14 @@ def picture_view(request, user_id, year=None):
 @login_required
 @deny_restricted
 def all_courses_view(request):
-    context = {"courses": Course.objects.all().order_by("name", "course_id").distinct()}
+    context = {"courses": Course.objects.all().distinct()}
     return render(request, "users/all_courses.html", context)
 
 
 @login_required
 @deny_restricted
 def courses_by_period_view(request, period_number):
-    context = {"courses": Course.objects.filter(sections__period=period_number).order_by("name", "course_id").distinct()}
+    context = {"courses": Course.objects.filter(sections__period=period_number).distinct()}
     return render(request, "users/all_courses.html", context)
 
 
