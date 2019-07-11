@@ -81,7 +81,7 @@ class CourseTest(IonTestCase):
 
         # Test valid section
         section = Section.objects.first()
-        response = self.client.get(reverse("section_info", args=[section.id]))
+        response = self.client.get(reverse("section_info", args=[section.section_id]))
         self.assertTemplateUsed(response, "users/class.html")
         self.assertEqual(response.context["class"], section)
 
