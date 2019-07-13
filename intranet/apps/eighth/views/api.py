@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.contrib.auth import get_user_model
 
@@ -126,7 +127,9 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         return Response(serialized.data)
 
     def create(self, request, user_id=None):
-        if user_id:
+        if user_id and not request.user.is_eighth_admin:
+            raise PermissionDenied
+        elif user_id:
             user = get_user_model().objects.get(id=user_id)
         else:
             user = request.user
