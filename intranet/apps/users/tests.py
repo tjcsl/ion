@@ -127,13 +127,26 @@ class ProfileTest(IonTestCase):
     def test_get_profile_api(self):
         self.make_admin()
         self.make_token()
-        # Check for non-existant user.
-        response = self.client.get(reverse("api_user_profile_detail", args=[42]), HTTP_AUTHORIZATION=self.auth)
+
+        # Check for non-existent user.
+        response = self.client.get(reverse("api_user_profile_detail", args=[9999]), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 404)
+
         # Get data for ourself.
         response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["address"]["postal_code"], "22312")
+        address = self.user.properties._address
+        self.assertEqual(response.json()["address"]["postal_code"], address.postal_code)
+        self.assertEqual(response.json()["address"]["street"], address.street)
+        self.assertEqual(response.json()["address"]["city"], address.city)
+        self.assertEqual(response.json()["address"]["state"], address.state)
+
+        # Verify that response is the same
+        response_with_username = self.client.get(reverse("api_user_myprofile_detail")+"?username={}".format(self.user.username), HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response_with_username.json(), response.json())
+        response_with_pk = self.client.get(reverse("api_user_myprofile_detail")+"?pk={}".format(self.user.pk), HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response_with_pk.json(), response.json())
+
 
     def test_profile_view(self):
         user = self.login()
