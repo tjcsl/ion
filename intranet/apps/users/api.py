@@ -35,9 +35,7 @@ class ProfileDetail(generics.RetrieveAPIView):
         else:
             user = request.user
 
-        serializer = self.get_serializer(user)
-        data = serializer.data
-        return Response(data)
+        return Response(self.get_serializer(user).data)
 
 
 class ProfilePictureDetail(generics.RetrieveAPIView):
@@ -75,8 +73,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
             default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
             binary = io.open(default_image_path, mode="rb").read()
 
-        response = Response(binary, content_type="image/jpeg")
-        return response
+        return Response(binary, content_type="image/jpeg")
 
 
 class Search(generics.RetrieveAPIView):
