@@ -1,4 +1,6 @@
 import datetime
+import io
+import os
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -142,11 +144,26 @@ class ProfileTest(IonTestCase):
         self.assertEqual(response.json()["address"]["state"], address.state)
 
         # Verify that response is the same
-        response_with_username = self.client.get(reverse("api_user_myprofile_detail")+"?username={}".format(self.user.username), HTTP_AUTHORIZATION=self.auth)
+        response_with_username = self.client.get(
+            reverse("api_user_myprofile_detail") + "?username={}".format(self.user.username), HTTP_AUTHORIZATION=self.auth
+        )
         self.assertEqual(response_with_username.json(), response.json())
-        response_with_pk = self.client.get(reverse("api_user_myprofile_detail")+"?pk={}".format(self.user.pk), HTTP_AUTHORIZATION=self.auth)
+        response_with_pk = self.client.get(reverse("api_user_myprofile_detail") + "?pk={}".format(self.user.pk), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response_with_pk.json(), response.json())
 
+    def test_get_profile_picture_api(self):
+        user = self.login()
+        self.make_token()
+
+        # Test with no pictures attached on default
+        response = self.client.get(reverse("api_user_profile_picture_default", args=[user.pk]), HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.content_type, "image/jpeg")
+        image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
+        self.assertEqual(response.content, io.open(image_path, mode="rb").read())
+        response_with_username = self.client.get(
+            reverse("api_user_profile_picture_default_with_username", args=[user.username]), HTTP_AUTHORIZATION=self.auth
+        )
+        self.assertEqual(response.content, response_with_username.content)
 
     def test_profile_view(self):
         user = self.login()
