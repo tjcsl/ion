@@ -22,14 +22,6 @@ class EighthTest(IonTestCase):
     def setUp(self):
         self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
 
-    def make_admin(self):
-        self.login()
-        # Make user an eighth admin
-        user = get_user_model().objects.get_or_create(username="awilliam")[0]
-        group = Group.objects.get_or_create(name="admin_all")[0]
-        user.groups.add(group)
-        return user
-
     def create_sponsor(self):
         user = get_user_model().objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
         return user
