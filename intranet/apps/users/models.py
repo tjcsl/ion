@@ -1038,7 +1038,7 @@ class Grade:
             self._number = settings.SENIOR_GRADUATION_YEAR - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
-            self._name = [elem[1] for elem in GRADE_NUMBERS if elem[0]==self._number][0]
+            self._name = [elem[1] for elem in GRADE_NUMBERS if elem[0] == self._number][0]
         else:
             self._name = "graduate"
 
