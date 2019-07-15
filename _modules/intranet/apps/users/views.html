@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4845) documentation</title>
+    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4848) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -158,13 +158,7 @@
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_profile&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">profile_user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">profile_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">Http404</span>
-        <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">Http404</span>
+        <span class="n">profile_user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
@@ -205,9 +199,10 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_eighth</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
         <span class="n">eighth_schedule</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">has_been_nominated</span> <span class="o">=</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">username</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="n">u</span><span class="o">.</span><span class="n">nominee</span><span class="o">.</span><span class="n">username</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">nomination_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">position__position_name</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">NOMINATION_POSITION</span><span class="p">)</span>
-    <span class="p">]</span>
+    <span class="n">has_been_nominated</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">profile_user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">nomination_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">position__position_name</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">NOMINATION_POSITION</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="p">)</span>
+
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span>
         <span class="s2">&quot;eighth_schedule&quot;</span><span class="p">:</span> <span class="n">eighth_schedule</span><span class="p">,</span>
@@ -233,10 +228,7 @@
 <span class="sd">            specified, use the preferred picture.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="n">default_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;static/img/default_profile_pic.png&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -286,14 +278,14 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">all_courses_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;course_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/all_courses.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">courses_by_period_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">period_number</span><span class="p">):</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sections__period</span><span class="o">=</span><span class="n">period_number</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;course_id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="n">Course</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sections__period</span><span class="o">=</span><span class="n">period_number</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/all_courses.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
@@ -317,7 +309,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">course_section_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">section_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
     <span class="n">section</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Section</span><span class="p">,</span> <span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">section</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;users/class.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
