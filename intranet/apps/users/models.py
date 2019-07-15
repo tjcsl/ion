@@ -1022,6 +1022,7 @@ class Photo(models.Model):
 
 class Grade:
     """Represents a user's grade."""
+    names = [elem[1] for elem in GRADE_NUMBERS]
 
     def __init__(self, graduation_year):
         """Initialize the Grade object.
