@@ -161,7 +161,7 @@ class ProfileTest(IonTestCase):
         image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
         self.assertEqual(response.content, io.open(image_path, mode="rb").read())
         response_with_username = self.client.get(
-            reverse("api_user_profile_picture_default_with_username", args=[user.username]), HTTP_AUTHORIZATION=self.auth
+            reverse("api_user_profile_picture_default_by_username", args=[user.username]), HTTP_AUTHORIZATION=self.auth
         )
         self.assertEqual(response.content, response_with_username.content)
 
