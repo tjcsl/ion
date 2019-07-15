@@ -13,17 +13,16 @@ class IonTestCase(TestCase):
     def tearDownClass(cls):
         super().tearDownClass()
 
-    def login(self):
+    def login(self, username="awilliam"):
         # We need to add the user to the db before trying to login as them.
-        user = get_user_model().objects.get_or_create(username='awilliam')[0]  # pylint: disable=attribute-defined-outside-init
+        user = get_user_model().objects.get_or_create(username=username)[0]
         with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
-            self.client.login(username='awilliam', password='dankmemes')
+            self.client.login(username=username, password='dankmemes')
         return user
 
-    def make_admin(self):
-        self.login()
+    def make_admin(self, username="awilliam"):
+        user = self.login(username=username)
         # Make user an eighth admin
-        user = get_user_model().objects.get_or_create(username='awilliam')[0]
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
         return user
