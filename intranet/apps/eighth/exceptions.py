@@ -1,8 +1,8 @@
 from collections import namedtuple
 
-from django import http
+from django.http import HttpResponse
 
-from rest_framework import status
+from rest_framework.status import HTTP_403_FORBIDDEN
 
 m = namedtuple("Message", ["regular", "admin"])
 
@@ -11,7 +11,7 @@ class SignupException(Exception):
     _messages = {
         "SignupForbidden": m(
             "You may not sign this student up for activities.",
-            "You may not sign this student up for activities. This should not be happening - " "contact an Intranet administrator.",
+            "You may not sign this student up for activities. This should not be happening - contact an Intranet administrator.",
         ),
         "ScheduledActivityCancelled": m("This activity has been cancelled for this block.", "This activity has been cancelled for this block."),
         "ActivityDeleted": m(
@@ -100,4 +100,4 @@ class SignupException(Exception):
             response = "\n".join(self.messages(admin=admin))
             content_type = "text/plain"
 
-        return http.HttpResponse(response, content_type=content_type, status=status.HTTP_403_FORBIDDEN)
+        return HttpResponse(response, content_type=content_type, status=HTTP_403_FORBIDDEN)
