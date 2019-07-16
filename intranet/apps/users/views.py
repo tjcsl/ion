@@ -117,9 +117,9 @@ def picture_view(request, user_id, year=None):
             data = None
 
     if data is None:
-        image_buffer = io.BytesIO(data)
-    else:
         img = io.open(default_image_path, mode="rb").read()
+    else:
+        image_buffer = io.BytesIO(data)
 
     response = HttpResponse(content_type="image/jpeg")
     response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id, year or preferred)
