@@ -94,58 +94,46 @@ def picture_view(request, user_id, year=None):
     """Displays a view of a user's picture.
 
     Args:
-        user_id
-            The ID of the user whose picture is being fetched.
-        year
-            The user's picture from this year is fetched. If not
+        user_id (str): The ID of the user whose picture is being fetched.
+        year (str): The user's picture from this year is fetched. If not
             specified, use the preferred picture.
 
     """
     user = get_object_or_404(get_user_model(), id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
 
-    if user is None:
-        raise Http404
-    else:
-        if year is None:
-            preferred = user.preferred_photo
-
-            if preferred is None:
-                data = user.default_photo
-                if data is None:
-                    image_buffer = io.open(default_image_path, mode="rb")
-                else:
-                    image_buffer = io.BytesIO(data)
-
-            # Exclude 'graduate' from names array
-            else:
-                data = preferred.binary
-                if data:
-                    image_buffer = io.BytesIO(data)
-                else:
-                    image_buffer = io.open(default_image_path, mode="rb")
+    img = None
+    if year is None:
+        preferred = user.preferred_photo
+        if preferred is None:
+            data = user.default_photo
         else:
-            grade_number = Grade.number_from_name(year)
-            if user.photos.filter(grade_number=grade_number).exists():
-                data = user.photos.filter(grade_number=grade_number).first().binary
-            else:
-                data = None
-            if data:
-                image_buffer = io.BytesIO(data)
-            else:
-                image_buffer = io.open(default_image_path, mode="rb")
+            data = preferred.binary
+    else:
+        grade_number = Grade.number_from_name(year)
+        if user.photos.filter(grade_number=grade_number).exists():
+            data = user.photos.filter(grade_number=grade_number).first().binary
+        else:
+            data = None
 
-        response = HttpResponse(content_type="image/jpeg")
-        response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id, year or preferred)
+    if data is None:
+        image_buffer = io.BytesIO(data)
+    else:
+        img = io.open(default_image_path, mode="rb").read()
+
+    response = HttpResponse(content_type="image/jpeg")
+    response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id, year or preferred)
+
+    if img is None:
         try:
             img = image_buffer.read()
         except UnicodeDecodeError:
             img = io.open(default_image_path, mode="rb").read()
 
-        image_buffer.close()
-        response.write(img)
+    image_buffer.close()
+    response.write(img)
 
-        return response
+    return response
 
 
 @login_required
