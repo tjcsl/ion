@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from .models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist)
+from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
 
 logger = logging.getLogger(__name__)
 
@@ -44,15 +44,26 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                 "roster": {
                     "id": scheduled_activity.id,
                     "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"]),
-                }
+                },
             }
         logger.debug(scheduled_on)
         return scheduled_on
 
     class Meta:
         model = EighthActivity
-        fields = ("id", "name", "description", "administrative", "restricted", "presign", "one_a_day", "both_blocks", "sticky", "special",
-                  "scheduled_on")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "administrative",
+            "restricted",
+            "presign",
+            "one_a_day",
+            "both_blocks",
+            "sticky",
+            "special",
+            "scheduled_on",
+        )
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,7 +75,6 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FallbackDict(dict):
-
     def __init__(self, fallback):
         super().__init__()
         self.fallback = fallback
@@ -83,14 +93,15 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     block_letter = serializers.CharField(max_length=10)
     comments = serializers.CharField(max_length=100)
 
-    def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None,
-                                   available_restricted_acts=None):
+    def process_scheduled_activity(
+        self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None, available_restricted_acts=None
+    ):
         activity = scheduled_activity.activity
         if user:
             is_non_student_admin = user.is_eighth_admin and not user.is_student
         else:
             is_non_student_admin = False
-        restricted_for_user = (scheduled_activity.get_restricted() and not is_non_student_admin and (activity.id not in available_restricted_acts))
+        restricted_for_user = scheduled_activity.get_restricted() and not is_non_student_admin and (activity.id not in available_restricted_acts)
         prefix = "Special: " if activity.special else ""
         prefix += activity.name
         if scheduled_activity.title:
@@ -109,7 +120,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "aid": activity.aid,
             "scheduled_activity": {
                 "id": scheduled_activity.id,
-                "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=request)
+                "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=request),
             },
             "url": reverse("api_eighth_activity_detail", args=[activity.id], request=request),
             "name": activity.name,
@@ -121,7 +132,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "roster": {
                 "count": 0,
                 "capacity": 0,
-                "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=request)
+                "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=request),
             },
             "rooms": [],
             "sponsors": [],
@@ -137,7 +148,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
             "display_text": "",
-            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count()
+            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count(),
         }
 
         if user:
@@ -150,8 +161,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
-        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities,
-                                               available_restricted_acts)
+        return self.process_scheduled_activity(
+            scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities, available_restricted_acts
+        )
 
     def get_scheduled_activity(self, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -171,12 +183,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         activity_list = FallbackDict(
-            functools.partial(self.get_activity, user, favorited_activities, recommended_activities, available_restricted_acts))
+            functools.partial(self.get_activity, user, favorited_activities, recommended_activities, available_restricted_acts)
+        )
         scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to
         # deleted activities
-        scheduled_activities = (block.eighthscheduledactivity_set.exclude(activity__deleted=True).select_related("activity"))
+        scheduled_activities = block.eighthscheduledactivity_set.exclude(activity__deleted=True).select_related("activity")
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
@@ -187,28 +200,33 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         # Find the number of students signed up for every activity
         # in this block
-        activities_with_signups = (EighthSignup.objects.filter(scheduled_activity__block=block)
-                                   .exclude(scheduled_activity__activity__deleted=True).values_list("scheduled_activity__activity_id").annotate(
-                                       user_count=Count("scheduled_activity")))
+        activities_with_signups = (
+            EighthSignup.objects.filter(scheduled_activity__block=block)
+            .exclude(scheduled_activity__activity__deleted=True)
+            .values_list("scheduled_activity__activity_id")
+            .annotate(user_count=Count("scheduled_activity"))
+        )
 
         for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
 
-        sponsors_dict = (EighthSponsor.objects.values_list("id", "user_id", "first_name", "last_name", "show_full_name"))
+        sponsors_dict = EighthSponsor.objects.values_list("id", "user_id", "first_name", "last_name", "show_full_name")
 
-        all_sponsors = dict((sponsor[0], {
-            "user_id": sponsor[1],
-            "name": sponsor[2] + " " + sponsor[3] if sponsor[4] else sponsor[3]
-        }) for sponsor in sponsors_dict)
+        all_sponsors = dict(
+            (sponsor[0], {"user_id": sponsor[1], "name": sponsor[2] + " " + sponsor[3] if sponsor[4] else sponsor[3]}) for sponsor in sponsors_dict
+        )
 
         activity_ids = scheduled_activities.values_list("activity__id")
-        sponsorships = (EighthActivity.sponsors.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("sponsors").values(
-            "eighthactivity", "eighthsponsor"))
+        sponsorships = (
+            EighthActivity.sponsors.through.objects.filter(eighthactivity_id__in=activity_ids)
+            .select_related("sponsors")
+            .values("eighthactivity", "eighthsponsor")
+        )
 
         scheduled_activity_ids = scheduled_activities.values_list("id", flat=True)
-        overidden_sponsorships = (
-            EighthScheduledActivity.sponsors.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).values(
-                "eighthscheduledactivity", "eighthsponsor"))
+        overidden_sponsorships = EighthScheduledActivity.sponsors.through.objects.filter(
+            eighthscheduledactivity_id__in=scheduled_activity_ids
+        ).values("eighthscheduledactivity", "eighthsponsor")
 
         for sponsorship in sponsorships:
             activity_id = int(sponsorship["eighthactivity"])
@@ -252,10 +270,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             if activity_id in activity_list:
                 activity_list[activity_id]["sponsors"].append(name)
 
-        roomings = (EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity"))
-        overidden_roomings = (
-            EighthScheduledActivity.rooms.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).select_related(
-                "eighthroom", "eighthscheduledactivity"))
+        roomings = EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity")
+        overidden_roomings = EighthScheduledActivity.rooms.through.objects.filter(
+            eighthscheduledactivity_id__in=scheduled_activity_ids
+        ).select_related("eighthroom", "eighthscheduledactivity")
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
@@ -303,14 +321,14 @@ class EighthSignupSerializer(serializers.ModelSerializer):
             "id": signup.scheduled_activity.block.id,
             "date": signup.scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail", args=[signup.scheduled_activity.block.id], request=self.context["request"]),
-            "block_letter": signup.scheduled_activity.block.block_letter
+            "block_letter": signup.scheduled_activity.block.block_letter,
         }
 
     def activity_info(self, signup):
         return {
             "id": signup.scheduled_activity.activity.id,
             "title": signup.scheduled_activity.title_with_flags,
-            "url": reverse("api_eighth_activity_detail", args=[signup.scheduled_activity.activity.id], request=self.context["request"])
+            "url": reverse("api_eighth_activity_detail", args=[signup.scheduled_activity.activity.id], request=self.context["request"]),
         }
 
     def scheduled_activity_info(self, signup):
@@ -357,14 +375,14 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
         return {
             "id": scheduled_activity.block.id,
             "date": scheduled_activity.block.date,
-            "url": reverse("api_eighth_block_detail", args=[scheduled_activity.block.id], request=self.context["request"])
+            "url": reverse("api_eighth_block_detail", args=[scheduled_activity.block.id], request=self.context["request"]),
         }
 
     def activity_info(self, scheduled_activity):
         return {
             "id": scheduled_activity.activity.id,
             "title": scheduled_activity.title_with_flags,
-            "url": reverse("api_eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"])
+            "url": reverse("api_eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
         }
 
     def signups_info(self, scheduled_activity):
@@ -385,19 +403,21 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
 
 
 def add_signup_validator(value):
-    if 'scheduled_activity' in value:
+    if "scheduled_activity" in value:
         return
-    if 'block' in value and 'activity' in value and not value.get('use_scheduled_activity', False):
+    if "block" in value and "activity" in value and not value.get("use_scheduled_activity", False):
         return
     raise serializers.ValidationError(
-        'Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity.')
+        "Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity."
+    )
 
 
 class EighthAddSignupSerializer(serializers.Serializer):
     block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all(), required=False)
     activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all(), required=False)
     scheduled_activity = serializers.PrimaryKeyRelatedField(
-        queryset=EighthScheduledActivity.objects.select_related('activity').select_related('block'), required=False)
+        queryset=EighthScheduledActivity.objects.select_related("activity").select_related("block"), required=False
+    )
     use_scheduled_activity = serializers.BooleanField(required=False)
     force = serializers.BooleanField(required=False)
 

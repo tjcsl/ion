@@ -3,18 +3,17 @@ from django.core.validators import RegexValidator
 
 from ...models import EighthBlock
 
-block_letter_validator = RegexValidator(r"^[a-z A-Z0-9_-]{1,10}$",
-                                        "A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces.")
+block_letter_validator = RegexValidator(
+    r"^[a-z A-Z0-9_-]{1,10}$", "A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces."
+)
 
 
 class BlockDisplayField(forms.ModelChoiceField):
-
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.id, str(obj))
 
 
 class BlockSelectionForm(forms.Form):
-
     def __init__(self, *args, label="Block", exclude_before_date=None, only_locked=False, **kwargs):
         super(BlockSelectionForm, self).__init__(*args, **kwargs)
 
@@ -50,5 +49,5 @@ class BlockForm(forms.ModelForm):
             "locked",
             # "override_blocks",
             "signup_time",
-            "comments"
+            "comments",
         ]

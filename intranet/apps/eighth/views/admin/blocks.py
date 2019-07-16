@@ -39,8 +39,8 @@ def add_block_view(request):
         date = request.POST.get("date")
     title_suffix = ""
     if date:
-        date_format = re.compile(r'([0-9]{2})\/([0-9]{2})\/([0-9]{4})')
-        fmtdate = date_format.sub(r'\3-\1-\2', date)
+        date_format = re.compile(r"([0-9]{2})\/([0-9]{2})\/([0-9]{4})")
+        fmtdate = date_format.sub(r"\3-\1-\2", date)
         logger.debug(fmtdate)
         title_suffix = " - {}".format(fmtdate)
         show_letters = True
@@ -85,7 +85,7 @@ def add_block_view(request):
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
-        "add_block_form": QuickBlockForm
+        "add_block_form": QuickBlockForm,
     }
 
     return render(request, "eighth/admin/add_block.html", context)
@@ -114,7 +114,7 @@ def edit_block_view(request, block_id):
         "form": form,
         "delete_url": reverse("eighth_admin_delete_block", args=[block_id]),
         "admin_page_title": "Edit Block",
-        "block_id": block_id
+        "block_id": block_id,
     }
     return render(request, "eighth/admin/edit_form.html", context)
 
@@ -141,22 +141,23 @@ def copy_block_view(request, block_id):
                 EighthSignup.objects.filter(scheduled_activity__block=block).delete()
 
                 for schact in EighthScheduledActivity.objects.filter(block=new_block, cancelled=False).prefetch_related("rooms", "sponsors"):
-                    new_schact = EighthScheduledActivity.objects.create(block=block, activity=schact.activity, both_blocks=schact.both_blocks,
-                                                                        special=schact.special)
+                    new_schact = EighthScheduledActivity.objects.create(
+                        block=block, activity=schact.activity, both_blocks=schact.both_blocks, special=schact.special
+                    )
                     new_schact.sponsors.set(schact.sponsors.all())
                     new_schact.rooms.set(schact.rooms.all())
                     new_schact.save()
                     if copy_signups:
-                        EighthSignup.objects.bulk_create([
-                            EighthSignup(user=s.user, scheduled_activity=new_schact) for s in EighthSignup.objects.filter(scheduled_activity=schact)
-                        ])
+                        EighthSignup.objects.bulk_create(
+                            [EighthSignup(user=s.user, scheduled_activity=new_schact) for s in EighthSignup.objects.filter(scheduled_activity=schact)]
+                        )
 
                 context = {
                     "new_activities": EighthScheduledActivity.objects.filter(block=block).count(),
                     "new_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
                     "success": True,
                     "admin_page_title": "Finished Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
-                    "block_id": block_id
+                    "block_id": block_id,
                 }
                 return render(request, "eighth/admin/copy_form.html", context)
 
@@ -171,7 +172,7 @@ def copy_block_view(request, block_id):
         "to_block": "{}: {} ({})".format(block.id, block.formatted_date, block.block_letter),
         "block_id": block_id,
         "locked": block.locked,
-        "success": False
+        "success": False,
     }
     return render(request, "eighth/admin/copy_form.html", context)
 
@@ -192,8 +193,7 @@ def delete_block_view(request, block_id):
         context = {
             "admin_page_title": "Delete Block",
             "item_name": str(block),
-            "help_text": "Deleting this block will remove all records "
-                         "of it related to eighth period."
+            "help_text": "Deleting this block will remove all records " "of it related to eighth period.",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
@@ -203,7 +203,7 @@ def delete_block_view(request, block_id):
 def print_block_rosters_view(request, block_id):
     if "schact_id" in request.POST:
         response = HttpResponse(content_type="application/pdf")
-        response["Content-Disposition"] = "inline; filename=\"block_{}_rosters.pdf\"".format(block_id)
+        response["Content-Disposition"] = 'inline; filename="block_{}_rosters.pdf"'.format(block_id)
         sched_act_ids = request.POST.getlist("schact_id")
 
         pdf_buffer = generate_roster_pdf(sched_act_ids)

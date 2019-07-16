@@ -62,16 +62,21 @@ def list_sponsor_view(request):
 
         if get_csv:
             response = http.HttpResponse(content_type="text/csv")
-            block_str = "{}{}".format(block.date.strftime("%Y%m%d"), re.sub(r'\W+', '', block.block_letter))
-            response['Content-Disposition'] = 'attachment; filename="sponsor_list_{}.csv"'.format(block_str)
+            block_str = "{}{}".format(block.date.strftime("%Y%m%d"), re.sub(r"\W+", "", block.block_letter))
+            response["Content-Disposition"] = 'attachment; filename="sponsor_list_{}.csv"'.format(block_str)
             writer = csv.writer(response)
             writer.writerow(["Sponsor", "Activity", "Room", "Eighth Contracted", "Signups", "Capacity"])
             for row in context["sponsor_list"]:
-                writer.writerow([
-                    row[0].name, "\n".join([x.full_title for x in row[1]]),
-                    "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]), row[0].contracted_eighth, "\n".join(
-                        [str(x.members.count()) for x in row[1]]), "\n".join([str(x.get_true_capacity()) for x in row[1]])
-                ])
+                writer.writerow(
+                    [
+                        row[0].name,
+                        "\n".join([x.full_title for x in row[1]]),
+                        "\n".join([", ".join([str(y) for y in x.get_true_rooms()]) for x in row[1]]),
+                        row[0].contracted_eighth,
+                        "\n".join([str(x.members.count()) for x in row[1]]),
+                        "\n".join([str(x.get_true_capacity()) for x in row[1]]),
+                    ]
+                )
             return response
 
     context["admin_page_title"] = "Sponsor Schedule List"
@@ -113,15 +118,12 @@ def delete_sponsor_view(request, sponsor_id):
         return redirect("eighth_admin_dashboard")
     else:
         context = {
-            "admin_page_title":
-            "Delete Sponsor",
-            "item_name":
-            str(sponsor),
-            "help_text":
-            "Deleting this sponsor will remove all records "
+            "admin_page_title": "Delete Sponsor",
+            "item_name": str(sponsor),
+            "help_text": "Deleting this sponsor will remove all records "
             "of this user related to eighth period, but will "
             "not remove the user account associated with it (if "
-            "there is one)."
+            "there is one).",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
@@ -137,8 +139,9 @@ def sponsor_schedule_view(request, sponsor_id):
     start_date = get_start_date(request)
 
     # for_sponsor() excludes cancelled activities
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True).filter(block__date__gte=start_date).order_by(
-        "block__date", "block__block_letter"))
+    sched_acts = (
+        EighthScheduledActivity.objects.for_sponsor(sponsor, True).filter(block__date__gte=start_date).order_by("block__date", "block__block_letter")
+    )
 
     # Find list of all activities before the list is filtered to only show one activity
     activities = set()
@@ -148,7 +151,7 @@ def sponsor_schedule_view(request, sponsor_id):
 
     activity = None
     if "activity" in request.GET:
-        activity_id = request.GET.get('activity')
+        activity_id = request.GET.get("activity")
         activity = EighthActivity.objects.get(id=activity_id)
         sched_acts = sched_acts.filter(activity=activity)
 
@@ -158,7 +161,7 @@ def sponsor_schedule_view(request, sponsor_id):
         "activity": activity,
         "admin_page_title": "Sponsor Schedule",
         "sponsor": sponsor,
-        "all_sponsors": EighthSponsor.objects.all()
+        "all_sponsors": EighthSponsor.objects.all(),
     }
 
     return render(request, "eighth/admin/sponsor_schedule.html", context)

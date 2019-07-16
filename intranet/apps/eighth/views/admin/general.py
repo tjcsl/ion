@@ -21,7 +21,7 @@ from ....groups.models import Group
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
     all_activities = EighthActivity.objects.order_by("name")  # show deleted activities
-    blocks_after_start_date = (EighthBlock.objects.filter(date__gte=start_date).order_by("date"))
+    blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date).order_by("date")
     if blocks_after_start_date.count() == 0:
         blocks_next = []
         blocks_next_date = None
@@ -30,7 +30,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         blocks_next = EighthBlock.objects.filter(date=blocks_next_date)
     groups = Group.objects.prefetch_related("user_set", "groupproperties").order_by("name")
     rooms = EighthRoom.objects.all()
-    sponsors = EighthSponsor.objects.select_related('user').order_by("last_name", "first_name")
+    sponsors = EighthSponsor.objects.select_related("user").order_by("last_name", "first_name")
 
     signup_users_count = get_user_model().objects.get_students().count()
 
@@ -45,13 +45,12 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "blocks_next_date": blocks_next_date,
         "signup_users_count": signup_users_count,
         "admin_page_title": "Eighth Period Admin",
-
         # Used in place of IDs in data-href-pattern tags of .dynamic-links
         # to reverse single-ID urls in Javascript. It's rather hacky, but
         # not unlike boundaries of multipart/form-data requests, so it's
         # not completely bad. If there's a better way to do this,
         # please implement it.
-        "url_id_placeholder": "734784857438457843756435654645642343465"
+        "url_id_placeholder": "734784857438457843756435654645642343465",
     }
 
     forms = {"add_group_form": group_forms.QuickGroupForm, "add_room_form": room_forms.RoomForm}
@@ -134,7 +133,7 @@ def history_view(request):
         "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
         "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
         "EighthActivity": EighthActivity.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
-        "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe)  # pylint: disable=no-member
+        "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
     }
     context = {"history": history, "admin_page_title": "Event History"}
     return render(request, "eighth/admin/history.html", context)

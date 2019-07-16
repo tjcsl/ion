@@ -52,13 +52,16 @@ class EighthSponsor(AbstractBaseEighthModel):
             (e.x. because there are two teachers named Lewis)
 
     """
-    DEPARTMENTS = (("general", "General"),
-                   ("math_cs", "Math/CS"),
-                   ("english", "English"),
-                   ("social_studies", "Social Studies"),
-                   ("fine_arts", "Fine Arts"),
-                   ("health_pe", "Health/PE"),
-                   ("scitech", "Science/Technology"))
+
+    DEPARTMENTS = (
+        ("general", "General"),
+        ("math_cs", "Math/CS"),
+        ("english", "English"),
+        ("social_studies", "Social Studies"),
+        ("fine_arts", "Fine Arts"),
+        ("health_pe", "Health/PE"),
+        ("scitech", "Science/Technology"),
+    )
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -72,12 +75,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     class Meta:
-        unique_together = (("first_name", "last_name", "user",
-                            "online_attendance", "full_time", "department"),)
-        ordering = (
-            "last_name",
-            "first_name",
-        )
+        unique_together = (("first_name", "last_name", "user", "online_attendance", "full_time", "department"),)
+        ordering = ("last_name", "first_name")
 
     @property
     def name(self):
@@ -104,6 +103,7 @@ class EighthRoom(AbstractBaseEighthModel):
             The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
 
     """
+
     name = models.CharField(max_length=100)
     capacity = models.SmallIntegerField(default=28)
     available_for_eighth = models.BooleanField(default=True)
@@ -125,7 +125,7 @@ class EighthRoom(AbstractBaseEighthModel):
     def formatted_name(self):
         if self.name[0].isdigit():  # All rooms starting with an integer will be prefixed
             return "Rm. {}".format(self.name)
-        if self.name.startswith('Room'):  # Some room names are prefixed with 'Room'; for consistency
+        if self.name.startswith("Room"):  # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
         return self.name
 
@@ -209,6 +209,7 @@ class EighthActivity(AbstractBaseEighthModel):
             Whether the activity still technically exists in the system, but was marked to be deleted.
 
     """
+
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
@@ -247,7 +248,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="favorited_activity_set", blank=True)
 
-    similarities = models.ManyToManyField('EighthActivitySimilarity', related_name='activity_set', blank=True)
+    similarities = models.ManyToManyField("EighthActivitySimilarity", related_name="activity_set", blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
 
@@ -306,7 +307,7 @@ class EighthActivity(AbstractBaseEighthModel):
             grade = None
 
         if grade is not None and 9 <= grade.number <= 12:
-            activities |= set(EighthActivity.objects.filter(**{'{}_allowed'.format(grade.name_plural): True}).values_list("id", flat=True))
+            activities |= set(EighthActivity.objects.filter(**{"{}_allowed".format(grade.name_plural): True}).values_list("id", flat=True))
 
         for group in user.groups.all():
             activities |= set(group.restricted_activity_set.values_list("id", flat=True))
@@ -342,9 +343,13 @@ class EighthActivity(AbstractBaseEighthModel):
         cached = cache.get(key)
         if cached:
             return cached
-        freq_users = self.eighthscheduledactivity_set.exclude(
-            Q(eighthsignup_set__user=None) | Q(administrative=True) | Q(special=True) | Q(restricted=True)).values('eighthsignup_set__user').annotate(
-                count=Count('eighthsignup_set__user')).filter(count__gte=settings.SIMILAR_THRESHOLD).order_by('-count')
+        freq_users = (
+            self.eighthscheduledactivity_set.exclude(Q(eighthsignup_set__user=None) | Q(administrative=True) | Q(special=True) | Q(restricted=True))
+            .values("eighthsignup_set__user")
+            .annotate(count=Count("eighthsignup_set__user"))
+            .filter(count__gte=settings.SIMILAR_THRESHOLD)
+            .order_by("-count")
+        )
         cache.set(key, freq_users, timeout=60 * 60 * 24 * 7)
         return freq_users
 
@@ -479,16 +484,22 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def next_blocks(self, quantity=-1):
         """Get the next blocks in order."""
-        blocks = (EighthBlock.objects.get_blocks_this_year().order_by(
-            "date", "block_letter").filter(Q(date__gt=self.date) | (Q(date=self.date) & Q(block_letter__gt=self.block_letter))))
+        blocks = (
+            EighthBlock.objects.get_blocks_this_year()
+            .order_by("date", "block_letter")
+            .filter(Q(date__gt=self.date) | (Q(date=self.date) & Q(block_letter__gt=self.block_letter)))
+        )
         if quantity == -1:
             return blocks
         return blocks[:quantity]
 
     def previous_blocks(self, quantity=-1):
         """Get the previous blocks in order."""
-        blocks = (EighthBlock.objects.get_blocks_this_year().order_by(
-            "-date", "-block_letter").filter(Q(date__lt=self.date) | (Q(date=self.date) & Q(block_letter__lt=self.block_letter))))
+        blocks = (
+            EighthBlock.objects.get_blocks_this_year()
+            .order_by("-date", "-block_letter")
+            .filter(Q(date__lt=self.date) | (Q(date=self.date) & Q(block_letter__lt=self.block_letter)))
+        )
         if quantity == -1:
             return blocks.reverse()
         return blocks[:quantity].reverse()
@@ -587,8 +598,8 @@ class EighthScheduledActivityManager(Manager):
         counted.
 
         """
-        sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
-        sched_acts = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(sponsoring_filter).distinct())
+        sponsoring_filter = Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor))
+        sched_acts = EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(sponsoring_filter).distinct()
         if not include_cancelled:
             sched_acts = sched_acts.exclude(cancelled=True)
 
@@ -764,7 +775,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if now is None:
             now = datetime.datetime.now()
 
-        activity_date = (datetime.datetime.combine(self.block.date, datetime.time(0, 0, 0)))
+        activity_date = datetime.datetime.combine(self.block.date, datetime.time(0, 0, 0))
         # Presign activities can only be signed up for 2 days in advance.
         presign_period = datetime.timedelta(days=2)
 
@@ -839,11 +850,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # both_blocks is not currently implemented for blocks other than A and B
             return None
 
-        other_block_letter = ("A" if self.block.block_letter == "B" else "B")
+        other_block_letter = "A" if self.block.block_letter == "B" else "B"
 
         try:
-            return EighthScheduledActivity.objects.exclude(pk=self.pk).get(activity=self.activity, block__date=self.block.date,
-                                                                           block__block_letter=other_block_letter)
+            return EighthScheduledActivity.objects.exclude(pk=self.pk).get(
+                activity=self.activity, block__date=self.block.date, block__block_letter=other_block_letter
+            )
         except EighthScheduledActivity.DoesNotExist:
             return None
 
@@ -896,8 +908,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 exception.ActivityDeleted = True
 
             # Check if the user is already stickied into an activity
-            if EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).filter(
-                    Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True)).exists():
+            if (
+                EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
+                .filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
+                .exists()
+            ):
                 exception.Sticky = True
 
             for sched_act in all_sched_act:
@@ -910,9 +925,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.ScheduledActivityCancelled = True
 
                 # Check if the activity is full
-                if settings.ENABLE_WAITLIST and (add_to_waitlist or  # pylint: disable=too-many-boolean-expressions
-                                                 (sched_act.is_full() and not self.is_both_blocks() and
-                                                  (request is not None and not request.user.is_eighth_admin and request.user.is_student))):
+                if settings.ENABLE_WAITLIST and (
+                    add_to_waitlist
+                    or (  # pylint: disable=too-many-boolean-expressions
+                        sched_act.is_full()
+                        and not self.is_both_blocks()
+                        and (request is not None and not request.user.is_eighth_admin and request.user.is_student)
+                    )
+                ):
                     if user.primary_email:
                         if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
@@ -929,8 +949,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             # Check if signup would violate one-a-day constraint
             if not self.is_both_blocks() and self.activity.one_a_day:
-                in_act = (EighthSignup.objects.exclude(scheduled_activity__block=self.block).filter(
-                    user=user, scheduled_activity__block__date=self.block.date, scheduled_activity__activity=self.activity).exists())
+                in_act = (
+                    EighthSignup.objects.exclude(scheduled_activity__block=self.block)
+                    .filter(user=user, scheduled_activity__block__date=self.block.date, scheduled_activity__activity=self.activity)
+                    .exists()
+                )
                 if in_act:
                     exception.OneADay = True
 
@@ -989,19 +1012,26 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
                         sibling = existing_signup.scheduled_activity.get_both_blocks_sibling()
-                        existing_blocks = [
-                            existing_signup.scheduled_activity.block
-                        ]
+                        existing_blocks = [existing_signup.scheduled_activity.block]
                         if sibling:
                             existing_blocks.append(sibling.block)
                         logger.debug(existing_blocks)
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()
-                        EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
-                                                           previous_activity_name=previous_activity_name,
-                                                           previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
-                    if settings.ENABLE_WAITLIST and (previous_activity.waitlist.all().exists() and not self.block.locked and request is not None and
-                                                     not request.session.get("disable_waitlist_transactions", False)):
+                        EighthSignup.objects.create_signup(
+                            user=user,
+                            scheduled_activity=self,
+                            after_deadline=after_deadline,
+                            previous_activity_name=previous_activity_name,
+                            previous_activity_sponsors=previous_activity_sponsors,
+                            own_signup=(user == request.user),
+                        )
+                    if settings.ENABLE_WAITLIST and (
+                        previous_activity.waitlist.all().exists()
+                        and not self.block.locked
+                        and request is not None
+                        and not request.session.get("disable_waitlist_transactions", False)
+                    ):
                         if not previous_activity.is_full():
                             waitlists = EighthWaitlist.objects.get_next_waitlist(previous_activity)
                             self.notify_waitlist(waitlists, previous_activity)
@@ -1013,7 +1043,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     prev_sponsors = signup.scheduled_activity.get_true_sponsors()
                     prev_data[signup.scheduled_activity.block.block_letter] = {
                         "name": signup.scheduled_activity.activity.name_with_flags,
-                        "sponsors": ", ".join(map(str, prev_sponsors))
+                        "sponsors": ", ".join(map(str, prev_sponsors)),
                     }
                 existing_signups.delete()
 
@@ -1026,9 +1056,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         previous_activity_name = None
                         previous_activity_sponsors = None
 
-                    EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
-                                                       previous_activity_name=previous_activity_name,
-                                                       previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
+                    EighthSignup.objects.create_signup(
+                        user=user,
+                        scheduled_activity=sched_act,
+                        after_deadline=after_deadline,
+                        previous_activity_name=previous_activity_name,
+                        previous_activity_sponsors=previous_activity_sponsors,
+                        own_signup=(user == request.user),
+                    )
 
                     # signup.previous_activity_name = signup.activity.name_with_flags
                     # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
@@ -1117,13 +1152,15 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the student has been emailed about the absence.
 
     """
+
     objects = EighthSignupManager()
 
     time = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, on_delete=set_historical_user)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True,
-                                           on_delete=models.CASCADE)
+    scheduled_activity = models.ForeignKey(
+        EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True, on_delete=models.CASCADE
+    )
 
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
@@ -1154,8 +1191,9 @@ class EighthSignup(AbstractBaseEighthModel):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
     def has_conflict(self):
-        signup_count = EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user,
-                                                                       scheduled_activity__block=self.scheduled_activity.block).count()
+        signup_count = (
+            EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).count()
+        )
         return signup_count > 0
 
     def remove_signup(self, user=None, force=False, dont_run_waitlist=False):
@@ -1225,7 +1263,7 @@ class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
     def get_next_waitlist(self, activity):
-        return self.filter(scheduled_activity_id=activity.id).order_by('time')
+        return self.filter(scheduled_activity_id=activity.id).order_by("time")
 
     def check_for_prescence(self, activity, user):
         return self.filter(scheduled_activity_id=activity.id, user=user).exists()
@@ -1242,8 +1280,9 @@ class EighthWaitlist(AbstractBaseEighthModel):
     time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, on_delete=set_historical_user)
     block = models.ForeignKey(EighthBlock, null=False, on_delete=models.CASCADE)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True,
-                                           on_delete=models.CASCADE)
+    scheduled_activity = models.ForeignKey(
+        EighthScheduledActivity, related_name="eighthwaitlist_set", null=False, db_index=True, on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "{}: {}".format(self.user, self.scheduled_activity)

@@ -37,7 +37,6 @@ def get_import_directory():
 
 
 class ImportThread(threading.Thread):
-
     def __init__(self, email, folder):
         threading.Thread.__init__(self)
         self.email = email
@@ -59,12 +58,17 @@ class ImportThread(threading.Thread):
         props = u.properties
         if props._address:
             props._address.delete()
-        props._address = Address.objects.create(street=row[index_dict["Address"]].strip(), city=row[index_dict["City"]].strip(),
-                                                state=row[index_dict["State"]].strip(), postal_code=row[index_dict["Zipcode"]].strip())
+        props._address = Address.objects.create(
+            street=row[index_dict["Address"]].strip(),
+            city=row[index_dict["City"]].strip(),
+            state=row[index_dict["State"]].strip(),
+            postal_code=row[index_dict["Zipcode"]].strip(),
+        )
         birthday_values = row[index_dict["Birth Date"]].strip().split("/")
         props._birthday = "{}-{}-{}".format(birthday_values[2], birthday_values[0], birthday_values[1])
-        course, _ = Course.objects.get_or_create(course_id=row[index_dict["Course ID"]].strip(),
-                                                 defaults={'name': row[index_dict["Course Title"]].strip()})
+        course, _ = Course.objects.get_or_create(
+            course_id=row[index_dict["Course ID"]].strip(), defaults={"name": row[index_dict["Course Title"]].strip()}
+        )
         teacher_name = row[index_dict["Teacher"]].strip().lower().split(",")
         no_teacher = False
         if len(teacher_name) == 1:
@@ -73,19 +77,24 @@ class ImportThread(threading.Thread):
         if not no_teacher:
             fname = teacher_name[1].split()[0].strip()
             lname = teacher_name[0].strip()
-            teacher = get_user_model().objects.filter(user_type='teacher', last_name__iexact=lname, first_name__iexact=fname)
+            teacher = get_user_model().objects.filter(user_type="teacher", last_name__iexact=lname, first_name__iexact=fname)
         if not no_teacher and (not teacher.count() == 1):
-            content.write("Unable to determine teacher for {}; {} options: {}".format(row[index_dict["Section ID"]].strip(), teacher.count(),
-                                                                                      ', '.join([t.full_name for t in teacher])))
+            content.write(
+                "Unable to determine teacher for {}; {} options: {}".format(
+                    row[index_dict["Section ID"]].strip(), teacher.count(), ", ".join([t.full_name for t in teacher])
+                )
+            )
             no_teacher = True
         section, _ = Section.objects.get_or_create(
-            section_id=row[index_dict["Section ID"]].strip(), defaults={
-                'teacher': teacher.first() if not no_teacher else None,
-                'period': int(row[index_dict["Per"]].strip()),
-                'room': row[index_dict["Room"]].strip(),
-                'sem': row[index_dict["Term Code"]].strip(),
-                'course': course
-            })
+            section_id=row[index_dict["Section ID"]].strip(),
+            defaults={
+                "teacher": teacher.first() if not no_teacher else None,
+                "period": int(row[index_dict["Per"]].strip()),
+                "room": row[index_dict["Room"]].strip(),
+                "sem": row[index_dict["Term Code"]].strip(),
+                "course": course,
+            },
+        )
         section._students.add(props)
         props.save()
         u.save()
@@ -112,8 +121,9 @@ class ImportThread(threading.Thread):
                         if row[index_dict["Other Name"]].strip() == "":
                             content.write("Skipping {}, no username available and user does not exist in database\n".format(row))
                             continue
-                        u = get_user_model().objects.create(username=row[index_dict["Other Name"]].strip().lower(),
-                                                            student_id=row[index_dict["Student ID"]].strip())
+                        u = get_user_model().objects.create(
+                            username=row[index_dict["Other Name"]].strip().lower(), student_id=row[index_dict["Student ID"]].strip()
+                        )
                         self.handle_user(u, row, index_dict, content)
                         content.write("User {} did not exist in database - created and updated information\n".format(u.username))
             content.write("\n\n==== Successfully completed SIS Import\n\n")
@@ -128,8 +138,13 @@ class ImportThread(threading.Thread):
         content.seek(0)
 
         data = {"log": content.read(), "failure": failure, "help_email": settings.FEEDBACK_EMAIL, "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")}
-        email_send("eighth/emails/import_notify.txt", "eighth/emails/import_notify.html", data,
-                   "SIS Import Results - {}".format("Failure" if failure else "Success"), [self.email])
+        email_send(
+            "eighth/emails/import_notify.txt",
+            "eighth/emails/import_notify.html",
+            data,
+            "SIS Import Results - {}".format("Failure" if failure else "Success"),
+            [self.email],
+        )
 
 
 @eighth_admin_required
@@ -141,7 +156,7 @@ def sis_import(request):
         "email": request.user.tj_email,
         "help_email": settings.FEEDBACK_EMAIL,
         "already_importing": os.path.isdir(import_dir),
-        "completed": False
+        "completed": False,
     }
     if request.method == "POST":
         if context["already_importing"]:

@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.shortcuts import redirect, render
 
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
-from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist)
+from ...models import EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -26,7 +26,7 @@ def add_activity_view(request):
             if new_id == "default":
                 activity = form.save()
             else:
-                activity = (EighthActivity.objects.create(name=form.cleaned_data["name"], id=int(new_id)))
+                activity = EighthActivity.objects.create(name=form.cleaned_data["name"], id=int(new_id))
             invalidate_obj(activity)
             messages.success(request, "Successfully added activity.")
             return redirect("eighth_admin_edit_activity", activity_id=activity.id)
@@ -78,8 +78,9 @@ def edit_activity_view(request, activity_id):
                                     for sponsor in old_sponsors:
                                         sa.sponsors.add(sponsor)
                                     sa.save()
-                                messages.success(request, "Overrode {} scheduled activities to old sponsor default".format(
-                                    sched_acts_default.count()))
+                                messages.success(
+                                    request, "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count())
+                                )
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default sponsors globally")
@@ -93,7 +94,7 @@ def edit_activity_view(request, activity_id):
                                 "start_date": start_date,
                                 "old_sponsors": EighthSponsor.objects.filter(id__in=old_sponsor_ids),
                                 "new_sponsors": EighthSponsor.objects.filter(id__in=new_sponsor_ids),
-                                "form": form
+                                "form": form,
                             }
                             return render(request, "eighth/admin/keep_sponsor_history.html", context)
                     else:
@@ -140,7 +141,7 @@ def edit_activity_view(request, activity_id):
                                 "start_date": start_date,
                                 "old_rooms": EighthRoom.objects.filter(id__in=old_room_ids),
                                 "new_rooms": EighthRoom.objects.filter(id__in=new_room_ids),
-                                "form": form
+                                "form": form,
                             }
                             return render(request, "eighth/admin/keep_room_history.html", context)
                     else:
@@ -151,8 +152,14 @@ def edit_activity_view(request, activity_id):
                 error = str(error)
                 messages.error(request, error)
             else:
-                if (activity.restricted or activity.one_a_day or activity.presign or  # pylint: disable=too-many-boolean-expressions
-                        activity.both_blocks or activity.sticky or activity.administrative):
+                if (
+                    activity.restricted
+                    or activity.one_a_day
+                    or activity.presign
+                    or activity.both_blocks  # pylint: disable=too-many-boolean-expressions
+                    or activity.sticky
+                    or activity.administrative
+                ):
                     all_sched_acts = EighthScheduledActivity.objects.filter(activity=activity)
                     for sa in all_sched_acts:
                         EighthWaitlist.objects.filter(scheduled_activity=sa).delete()
@@ -193,7 +200,7 @@ def edit_activity_view(request, activity_id):
         "activity": activity,
         "activity_groups": activity_groups,
         "activities": activities,
-        "activity_members": activity_members
+        "activity_members": activity_members,
     }
 
     return render(request, "eighth/admin/edit_activity.html", context)
@@ -221,13 +228,15 @@ def delete_activity_view(request, activity_id=None):
         return redirect("eighth_admin_dashboard")
     else:
         context = {
-            "admin_page_title":
-            "Delete Activity",
-            "item_name":
-            activity.name,
-            "help_text": ("Deleting will not destroy past attendance data for this "
-                          "activity. The activity will just be marked as deleted "
-                          "and hidden from non-attendance views." if not perm_delete else "This will destroy past attendance data.")
+            "admin_page_title": "Delete Activity",
+            "item_name": activity.name,
+            "help_text": (
+                "Deleting will not destroy past attendance data for this "
+                "activity. The activity will just be marked as deleted "
+                "and hidden from non-attendance views."
+                if not perm_delete
+                else "This will destroy past attendance data."
+            ),
         }
 
         return render(request, "eighth/admin/delete_form.html", context)

@@ -4,7 +4,6 @@ from ....groups.models import Group
 
 
 class QuickGroupForm(forms.ModelForm):
-
     class Meta:
         model = Group
         fields = ["name"]

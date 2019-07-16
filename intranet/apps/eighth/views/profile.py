@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
+from ..models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required, deny_restricted
@@ -33,10 +33,10 @@ def edit_profile_view(request, user_id=None):
         # address_form = AddressForm(request.POST, instance=user.properties.address)
         if user_form.is_valid():
             user = user_form.save()
-            counselor_id = user_form.cleaned_data['counselor_id']
+            counselor_id = user_form.cleaned_data["counselor_id"]
             if counselor_id:
                 counselor = get_user_model().objects.get(id=counselor_id)
-                user.properties.birthday = user_form.cleaned_data['birthday']
+                user.properties.birthday = user_form.cleaned_data["birthday"]
                 user.counselor = counselor
             # user.properties.address = address_form.save()
             # user.properties.save()
@@ -45,10 +45,9 @@ def edit_profile_view(request, user_id=None):
         else:
             messages.error(request, "An error occurred updating the student profile.")
     else:
-        user_form = ProfileEditForm(initial={
-            'counselor_id': '' if not user.counselor else user.counselor.id,
-            'birthday': user.properties.birthday
-        }, instance=user)
+        user_form = ProfileEditForm(
+            initial={"counselor_id": "" if not user.counselor else user.counselor.id, "birthday": user.properties.birthday}, instance=user
+        )
         # address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}
@@ -122,14 +121,15 @@ def get_profile_context(request, user_id=None, date=None):
         "date": date,
         "date_end": date_end,
         "skipped_ahead": skipped_ahead,
-        "custom_date_set": custom_date_set
+        "custom_date_set": custom_date_set,
     }
 
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
-        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by(
-            "block__date", "block__block_letter"))
+        eighth_sponsor_schedule = (
+            EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by("block__date", "block__block_letter")
+        )
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
         logger.debug("Eighth sponsor %s", sponsor)
@@ -178,7 +178,7 @@ def profile_history_view(request, user_id=None):
         sch["block"] = block
         try:
             sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
-            sch["highlighted"] = (int(request.GET.get("activity") or 0) == sch["signup"].scheduled_activity.activity.id)
+            sch["highlighted"] = int(request.GET.get("activity") or 0) == sch["signup"].scheduled_activity.activity.id
         except EighthSignup.DoesNotExist:
             sch["signup"] = None
         eighth_schedule.append(sch)
@@ -243,7 +243,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         return redirect(request, "eighth_profile", user_id)
 
     try:
-        block = (EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id))
+        block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id)
     except EighthBlock.DoesNotExist:
         if EighthBlock.objects.count() == 0:
             # No blocks have been added yet
@@ -269,7 +269,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "active_block": block,
         "active_block_current_signup": active_block_current_signup,
         "show_eighth_profile_link": True,
-        "block_info": block_info
+        "block_info": block_info,
     }
     profile_ctx = get_profile_context(request, user_id, block.date)
     if profile_ctx:

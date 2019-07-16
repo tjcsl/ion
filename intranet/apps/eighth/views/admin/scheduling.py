@@ -15,7 +15,7 @@ from formtools.wizard.views import SessionWizardView
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthSignup)
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthSignup
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from .....utils.serialization import safe_json
@@ -37,11 +37,11 @@ def schedule_activity_view(request):
                 activity = form.cleaned_data["activity"]
 
                 # Save changes to cancelled activities and scheduled activities
-                cancelled = (EighthScheduledActivity.objects.filter(block=block, activity=activity, cancelled=True).exists())
+                cancelled = EighthScheduledActivity.objects.filter(block=block, activity=activity, cancelled=True).exists()
 
                 instance = None
                 if form["scheduled"].value() or cancelled:
-                    instance, _ = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
+                    instance, _ = EighthScheduledActivity.objects.get_or_create(block=block, activity=activity)
                     invalidate_obj(instance)
                     invalidate_obj(block)
                     invalidate_obj(activity)
@@ -75,8 +75,17 @@ def schedule_activity_view(request):
 
                 if instance:
                     fields = [
-                        "rooms", "capacity", "sponsors", "title", "special", "administrative", "restricted", "sticky", "both_blocks", "comments",
-                        "admin_comments"
+                        "rooms",
+                        "capacity",
+                        "sponsors",
+                        "title",
+                        "special",
+                        "administrative",
+                        "restricted",
+                        "sticky",
+                        "both_blocks",
+                        "comments",
+                        "admin_comments",
                     ]
                     if "rooms" in form.cleaned_data:
                         for o in form.cleaned_data["rooms"]:
@@ -175,7 +184,7 @@ def schedule_activity_view(request):
         "all_signups": all_signups,
         "rooms": all_rooms,
         "sponsors_json": safe_json(all_sponsors),
-        "rooms_json": safe_json(all_rooms)
+        "rooms_json": safe_json(all_rooms),
     }
 
     if activity is not None:
@@ -186,8 +195,9 @@ def schedule_activity_view(request):
         # , date__lte=end_date)
         initial_formset_data = []
 
-        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related(
-            "rooms", "sponsors", "members"))
+        sched_act_queryset = (
+            EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related("rooms", "sponsors", "members")
+        )
         all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
 
         for block in blocks:
@@ -198,21 +208,23 @@ def schedule_activity_view(request):
                 all_signups[block.id] = sched_act.members.count()
                 all_default_capacities[block.id] = sched_act.get_true_capacity()
                 logger.debug(sched_act)
-                initial_form_data.update({
-                    "rooms": sched_act.rooms.all(),
-                    "capacity": sched_act.capacity,
-                    "sponsors": sched_act.sponsors.all(),
-                    "title": sched_act.title,
-                    "special": sched_act.special,
-                    "administrative": sched_act.administrative,
-                    "restricted": sched_act.restricted,
-                    "sticky": sched_act.sticky,
-                    "both_blocks": sched_act.both_blocks,
-                    "comments": sched_act.comments,
-                    "admin_comments": sched_act.admin_comments,
-                    "scheduled": not sched_act.cancelled,
-                    "cancelled": sched_act.cancelled
-                })
+                initial_form_data.update(
+                    {
+                        "rooms": sched_act.rooms.all(),
+                        "capacity": sched_act.capacity,
+                        "sponsors": sched_act.sponsors.all(),
+                        "title": sched_act.title,
+                        "special": sched_act.special,
+                        "administrative": sched_act.administrative,
+                        "restricted": sched_act.restricted,
+                        "sticky": sched_act.sticky,
+                        "both_blocks": sched_act.both_blocks,
+                        "comments": sched_act.comments,
+                        "admin_comments": sched_act.admin_comments,
+                        "scheduled": not sched_act.cancelled,
+                        "cancelled": sched_act.cancelled,
+                    }
+                )
             except KeyError:
                 all_signups[block.id] = 0
                 all_default_capacities[block.id] = activity.capacity()
@@ -248,8 +260,7 @@ def show_activity_schedule_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by(
-            "block__date", "block__block_letter"))
+        scheduled_activities = activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by("block__date", "block__block_letter")
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "View Activity Schedule"
@@ -263,14 +274,18 @@ def distribute_students_view(request):
 
 
 class EighthAdminTransferStudentsWizard(SessionWizardView):
-    FORMS = [("block_1", BlockSelectionForm), ("activity_1", ActivitySelectionForm), ("block_2", BlockSelectionForm), ("activity_2",
-                                                                                                                       ActivitySelectionForm)]
+    FORMS = [
+        ("block_1", BlockSelectionForm),
+        ("activity_1", ActivitySelectionForm),
+        ("block_2", BlockSelectionForm),
+        ("activity_2", ActivitySelectionForm),
+    ]
 
     TEMPLATES = {
         "block_1": "eighth/admin/transfer_students.html",
         "activity_1": "eighth/admin/transfer_students.html",
         "block_2": "eighth/admin/transfer_students.html",
-        "activity_2": "eighth/admin/transfer_students.html"
+        "activity_2": "eighth/admin/transfer_students.html",
     }
 
     def get_template_names(self):
@@ -406,8 +421,12 @@ def transfer_students_action(request):
 
 @eighth_admin_required
 def remove_duplicates_view(request):
-    duplicates = EighthSignup.objects.all().annotate(Count('user'),
-                                                     Count('scheduled_activity__block')).order_by().filter(scheduled_activity__block__count__gt=1)
+    duplicates = (
+        EighthSignup.objects.all()
+        .annotate(Count("user"), Count("scheduled_activity__block"))
+        .order_by()
+        .filter(scheduled_activity__block__count__gt=1)
+    )
     if request.method == "POST":
         try:
             call_command("delete_duplicate_signups")

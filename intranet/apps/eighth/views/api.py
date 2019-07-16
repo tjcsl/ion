@@ -10,40 +10,49 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
-from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
-from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
-                           EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer, EighthToggleFavoriteSerializer)
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..serializers import (
+    EighthActivityDetailSerializer,
+    EighthActivityListSerializer,
+    EighthAddSignupSerializer,
+    EighthBlockDetailSerializer,
+    EighthBlockListSerializer,
+    EighthScheduledActivitySerializer,
+    EighthSignupSerializer,
+    EighthToggleFavoriteSerializer,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class IsAuthenticatedOrClientCredentials(permissions.BasePermission):
-
     def has_permission(self, request, view):
         return bool((request.user and request.user.is_authenticated) or request.auth)
 
 
 class EighthActivityList(generics.ListAPIView):
-    queryset = EighthActivity.undeleted_objects.all().order_by('id')
+    queryset = EighthActivity.undeleted_objects.all().order_by("id")
     serializer_class = EighthActivityListSerializer
     permission_classes = (IsAuthenticatedOrClientCredentials,)
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that shows details of an eighth activity."""
-    queryset = EighthActivity.undeleted_objects.all().order_by('id')
+
+    queryset = EighthActivity.undeleted_objects.all().order_by("id")
     serializer_class = EighthActivityDetailSerializer
     permission_classes = (IsAuthenticatedOrClientCredentials,)
 
 
 class BlockPagination(PageNumberPagination):
     page_size = 50
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 200
 
 
 class EighthBlockList(generics.ListAPIView):
     """API endpoint that lists all eighth blocks."""
+
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
     permission_classes = (IsAuthenticatedOrClientCredentials,)
@@ -61,19 +70,20 @@ class EighthBlockList(generics.ListAPIView):
             if not self.is_valid_date(start_date):
                 raise ValidationError("Invalid format for start_date.")
 
-            return EighthBlock.objects.filter(date__gte=start_date).order_by('id')
+            return EighthBlock.objects.filter(date__gte=start_date).order_by("id")
 
         if "date" in self.request.GET:
             date = self.request.GET.get("date")
             if not self.is_valid_date(date):
                 raise ValidationError("Invalid format for date.")
-            return EighthBlock.objects.filter(date=date).order_by('id')
+            return EighthBlock.objects.filter(date=date).order_by("id")
 
         return EighthBlock.objects.get_blocks_this_year()
 
 
 class EighthBlockDetail(views.APIView):
     """API endpoint that shows details for an eighth block."""
+
     permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get(self, request, pk):
@@ -88,7 +98,7 @@ class EighthBlockDetail(views.APIView):
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
-    queryset = EighthSignup.objects.all().order_by('id')
+    queryset = EighthSignup.objects.all().order_by("id")
 
     def is_valid_date(self, date_text):
         try:
@@ -119,8 +129,9 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         else:
             all_signups = all_signups.filter(scheduled_activity__block__in=EighthBlock.objects.get_blocks_this_year())
 
-        signups = all_signups.select_related("scheduled_activity__activity").order_by("scheduled_activity__block__date",
-                                                                                      "scheduled_activity__block__block_letter")
+        signups = all_signups.select_related("scheduled_activity__activity").order_by(
+            "scheduled_activity__block__date", "scheduled_activity__block__block_letter"
+        )
 
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
@@ -138,14 +149,20 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if "activity" not in serializer.validated_data or "block" not in serializer.validated_data or serializer.validated_data.get(
-                "use_scheduled_activity", False):
+        if (
+            "activity" not in serializer.validated_data
+            or "block" not in serializer.validated_data
+            or serializer.validated_data.get("use_scheduled_activity", False)
+        ):
             schactivity = serializer.validated_data["scheduled_activity"]
         else:
-            schactivity = EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"]).filter(
-                block=serializer.validated_data["block"]).get()
-        if 'force' in serializer.validated_data:
-            force = serializer.validated_data['force']
+            schactivity = (
+                EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"])
+                .filter(block=serializer.validated_data["block"])
+                .get()
+            )
+        if "force" in serializer.validated_data:
+            force = serializer.validated_data["force"]
         else:
             force = False
 
@@ -179,7 +196,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
         serializer = EighthToggleFavoriteSerializer(data=request.data, context={"request": request})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        activity = serializer.validated_data['activity']
+        activity = serializer.validated_data["activity"]
         favorites = user.favorited_activity_set
         if activity in favorites.all():
             favorites.remove(activity)
@@ -207,7 +224,7 @@ class EighthUserFavoritesAdd(generics.CreateAPIView):
         else:
             user = request.user
         try:
-            activity = EighthActivity.objects.get(id=request.data.get('id'))
+            activity = EighthActivity.objects.get(id=request.data.get("id"))
             favorites = user.favorited_activity_set
             favorites.add(activity)
             return Response(EighthActivityDetailSerializer(activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
@@ -238,7 +255,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
             user = request.user
 
         try:
-            activity = EighthActivity.objects.get(id=request.data.get('id'))
+            activity = EighthActivity.objects.get(id=request.data.get("id"))
             favorites = user.favorited_activity_set
             favorites.remove(activity)
             return Response(EighthActivityDetailSerializer(activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
@@ -260,5 +277,6 @@ class EighthScheduledActivitySignupList(views.APIView):
 
 class EighthSignupDetail(generics.RetrieveAPIView):
     """API endpoint that shows details of an eighth signup."""
+
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer

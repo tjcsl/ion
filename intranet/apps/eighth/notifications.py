@@ -51,7 +51,7 @@ def signup_status_email(user, next_blocks):
         "block_signup_time": block_signup_time,
         "base_url": base_url,
         "issues": issues,
-        "info_link": base_url + "eighth/signup"
+        "info_link": base_url + "eighth/signup",
     }
 
     return email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, subject, emails)

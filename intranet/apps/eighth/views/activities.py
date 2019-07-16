@@ -28,7 +28,7 @@ def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
     scheduled_activities = EighthScheduledActivity.objects.filter(activity=activity)
 
-    show_all = ("show_all" in request.GET)
+    show_all = "show_all" in request.GET
     if not show_all:
         first_date = timezone.localtime(timezone.now()).date()
         first_block = EighthBlock.objects.get_first_upcoming_block()
@@ -47,7 +47,7 @@ def activity_view(request, activity_id=None):
 
 def chunks(l, n):
     for i in range(0, len(l), n):
-        yield l[i:i + n]
+        yield l[i : i + n]
 
 
 def current_school_year():
@@ -58,7 +58,7 @@ def current_school_year():
 
 
 def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):
-    ''' Accepts EighthActivity objects and outputs a PDF file. '''
+    """ Accepts EighthActivity objects and outputs a PDF file. """
     if activities is None:
         activities = EighthActivity.objects.all().order_by("name")
     if year is None:
@@ -104,20 +104,24 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         lelements.append(Paragraph("<b>Average signups per block:</b> {}".format(act_stats["average_signups"]), styles["Indent"]))
         lelements.append(Paragraph("<b>Average signups per student:</b> {}".format(act_stats["average_user_signups"]), styles["Indent"]))
         lelements.append(
-            Paragraph("<b>Unique students:</b> {}, <b>Capacity:</b> {}".format(act_stats["students"], act_stats["capacity"]), styles["Normal"]))
+            Paragraph("<b>Unique students:</b> {}, <b>Capacity:</b> {}".format(act_stats["students"], act_stats["capacity"]), styles["Normal"])
+        )
 
         elements.append(
-            Table([[lelements, relements]], style=[('LEFTPADDING', (0, 0), (-1, -1), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 0), ('VALIGN', (0, 0),
-                                                                                                                                 (-1, -1), 'TOP')]))
+            Table(
+                [[lelements, relements]],
+                style=[("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("VALIGN", (0, 0), (-1, -1), "TOP")],
+            )
+        )
 
         parsed_members = [[x.username, y] for x, y in act_stats["members"]]
         parsed_members = list(chunks(parsed_members, 30))[:3]
         if parsed_members:
             parsed_members = [[["Username", "Signups"]] + x for x in parsed_members]
             parsed_members = [
-                Table(x, style=[('FONT', (0, 0), (1, 0), 'Helvetica-Bold'), ('ALIGN', (1, 0), (1, -1), 'RIGHT')]) for x in parsed_members
+                Table(x, style=[("FONT", (0, 0), (1, 0), "Helvetica-Bold"), ("ALIGN", (1, 0), (1, -1), "RIGHT")]) for x in parsed_members
             ]
-            elements.append(Table([parsed_members], style=[('VALIGN', (-1, -1), (-1, -1), 'TOP')]))
+            elements.append(Table([parsed_members], style=[("VALIGN", (-1, -1), (-1, -1), "TOP")]))
             if act_stats["students"] - 90 > 0:
                 elements.append(Paragraph("<b>{}</b> students were not shown on this page. ".format(act_stats["students"] - 90), styles["Normal"]))
         else:
@@ -125,11 +129,17 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
 
         if start_date is not None:
             elements.append(
-                Paragraph("<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]),
-                          styles["Normal"]))
+                Paragraph(
+                    "<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]),
+                    styles["Normal"],
+                )
+            )
         elements.append(
-            Paragraph("<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(
-                act_stats["old_blocks"], year - 1, year), styles["Normal"]))
+            Paragraph(
+                "<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(act_stats["old_blocks"], year - 1, year),
+                styles["Normal"],
+            )
+        )
 
         elements.append(PageBreak())
 
@@ -139,7 +149,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         empty_activities = list(chunks(empty_activities, 35))
         empty_activities = [[["Activity"]] + x for x in empty_activities]
         empty_activities = [
-            Table(x, style=[('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'), ('LEFTPADDING', (0, 0), (-1, -1), 0)]) for x in empty_activities
+            Table(x, style=[("FONT", (0, 0), (-1, 0), "Helvetica-Bold"), ("LEFTPADDING", (0, 0), (-1, -1), 0)]) for x in empty_activities
         ]
         for i in range(0, len(empty_activities), 2):
             elements.append(Paragraph("Empty Activities (Page {})".format(i // 2 + 1), styles["Title"]))
@@ -147,18 +157,22 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
                 elements.append(Paragraph("The following activities have no 8th period blocks assigned to them.", styles["Normal"]))
             else:
                 elements.append(
-                    Paragraph("The following activities have no 8th period blocks assigned to them for the {}-{} school year.".format(year - 1, year),
-                              styles["Normal"]))
+                    Paragraph(
+                        "The following activities have no 8th period blocks assigned to them for the {}-{} school year.".format(year - 1, year),
+                        styles["Normal"],
+                    )
+                )
             elements.append(Spacer(0, 0.10 * inch))
             ea = [empty_activities[i]]
             if i + 1 < len(empty_activities):
                 ea.append(empty_activities[i + 1])
             elements.append(
-                Table([ea], style=[
-                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                    ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                ], hAlign='LEFT'))
+                Table(
+                    [ea],
+                    style=[("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("VALIGN", (0, 0), (-1, -1), "TOP")],
+                    hAlign="LEFT",
+                )
+            )
             elements.append(PageBreak())
 
     def first_page(canvas, _):
@@ -244,7 +258,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
         "empty_blocks": empty_blocks,
         "capacity": activities[total_blocks - 1].get_true_capacity() if total_blocks > 0 else 0,
         "chart_data": safe_json(chart_data),
-        "past_start_date": past_start_date
+        "past_start_date": past_start_date,
     }
 
 
@@ -260,17 +274,40 @@ def stats_global_view(request):
             response = HttpResponse(content_type="text/csv")
             response["Content-Disposition"] = 'attachment; filename="eighth.csv"'
             writer = csv.writer(response)
-            writer.writerow([
-                "Activity", "Default Sponsors", "Default Rooms", "Capacity", "Unique Students", "Total Blocks", "Scheduled Blocks",
-                "Cancelled Blocks", "Empty Blocks", "Total Signups", "Average Signups per Block", "Average Signups per Student"
-            ])
+            writer.writerow(
+                [
+                    "Activity",
+                    "Default Sponsors",
+                    "Default Rooms",
+                    "Capacity",
+                    "Unique Students",
+                    "Total Blocks",
+                    "Scheduled Blocks",
+                    "Cancelled Blocks",
+                    "Empty Blocks",
+                    "Total Signups",
+                    "Average Signups per Block",
+                    "Average Signups per Student",
+                ]
+            )
             for act in EighthActivity.objects.all().order_by("name").prefetch_related("rooms").prefetch_related("sponsors"):
                 stats = calculate_statistics(act, year=year)
-                writer.writerow([
-                    act.name, ", ".join([x.name for x in act.sponsors.all()]), ", ".join([str(x) for x in act.rooms.all()]), stats["capacity"],
-                    stats["students"], stats["total_blocks"], stats["scheduled_blocks"], stats["cancelled_blocks"], stats["empty_blocks"],
-                    stats["total_signups"], stats["average_signups"], stats["average_user_signups"]
-                ])
+                writer.writerow(
+                    [
+                        act.name,
+                        ", ".join([x.name for x in act.sponsors.all()]),
+                        ", ".join([str(x) for x in act.rooms.all()]),
+                        stats["capacity"],
+                        stats["students"],
+                        stats["total_blocks"],
+                        stats["scheduled_blocks"],
+                        stats["cancelled_blocks"],
+                        stats["empty_blocks"],
+                        stats["total_signups"],
+                        stats["average_signups"],
+                        stats["average_user_signups"],
+                    ]
+                )
         else:
             response = HttpResponse(content_type="application/pdf")
             response["Content-Disposition"] = 'inline; filename="eighth.pdf"'

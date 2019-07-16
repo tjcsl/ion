@@ -73,8 +73,7 @@ def delete_room_view(request, room_id):
         context = {
             "admin_page_title": "Delete Room",
             "item_name": str(room),
-            "help_text": "Deleting this room will remove all records "
-                         "of it related to eighth period."
+            "help_text": "Deleting this room will remove all records " "of it related to eighth period.",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
@@ -171,13 +170,13 @@ def room_utilization_action(request, start_id, end_id):
         start_block = EighthBlock.objects.get(id=start_id)
         end_block = EighthBlock.objects.get(id=end_id)
 
-        one_block = (start_id == end_id)
+        one_block = start_id == end_id
     except EighthBlock.DoesNotExist:
         raise http.Http404
 
-    show_used_rooms = ("show_used" in request.GET)
-    show_available_for_eighth = ("show_available_for_eighth" in request.GET)
-    show_all_rooms = ("show_all" in request.GET)
+    show_used_rooms = "show_used" in request.GET
+    show_available_for_eighth = "show_available_for_eighth" in request.GET
+    show_all_rooms = "show_all" in request.GET
     show_listing = show_all_rooms or show_used_rooms or show_available_for_eighth or ("room" in request.GET)
 
     if show_available_for_eighth:
@@ -211,14 +210,14 @@ def room_utilization_action(request, start_id, end_id):
         "show_listing": show_listing,
         "show_used_rooms": show_used_rooms,
         "show_all_rooms": show_all_rooms,
-        "show_available_for_eighth": show_available_for_eighth
+        "show_available_for_eighth": show_available_for_eighth,
     }
     get_csv = request.resolver_match.url_name == "eighth_admin_room_utilization_csv"
     if show_listing or get_csv:
-        sched_acts = (EighthScheduledActivity.objects.exclude(activity__deleted=True))
+        sched_acts = EighthScheduledActivity.objects.exclude(activity__deleted=True)
         # .exclude(cancelled=True) # include cancelled activities
         if not one_block:
-            sched_acts = (sched_acts.filter(block__date__gte=start_block.date, block__date__lte=end_block.date))
+            sched_acts = sched_acts.filter(block__date__gte=start_block.date, block__date__lte=end_block.date)
         else:
             sched_acts = sched_acts.filter(block=start_block)
 
@@ -232,7 +231,7 @@ def room_utilization_action(request, start_id, end_id):
 
         logger.debug("sched_acts: %d", sched_acts.count())
 
-        sched_acts = (sched_acts.order_by("block__date", "block__block_letter"))
+        sched_acts = sched_acts.order_by("block__date", "block__block_letter")
 
         if "room" in request.GET:
             all_sched_acts = sched_acts
@@ -258,7 +257,7 @@ def room_utilization_action(request, start_id, end_id):
 
     if get_csv:
         response = http.HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=\"room_utilization.csv\""
+        response["Content-Disposition"] = 'attachment; filename="room_utilization.csv"'
 
         writer = csv.writer(response)
 

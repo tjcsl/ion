@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Exported "eighth_activity_permissions" table in CSV format."""
         perm_map = {}
-        with open('eighth_activity_permissions.csv', 'r') as absperms:
+        with open("eighth_activity_permissions.csv", "r") as absperms:
             perms = csv.reader(absperms)
             for aid, uid in perms:
                 try:
