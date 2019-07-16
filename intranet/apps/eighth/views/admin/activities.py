@@ -1,3 +1,4 @@
+# pylint: disable=too-many-boolean-expressions
 import logging
 import pickle
 
@@ -156,7 +157,7 @@ def edit_activity_view(request, activity_id):
                     activity.restricted
                     or activity.one_a_day
                     or activity.presign
-                    or activity.both_blocks  # pylint: disable=too-many-boolean-expressions
+                    or activity.both_blocks
                     or activity.sticky
                     or activity.administrative
                 ):
