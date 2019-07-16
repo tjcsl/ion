@@ -12,6 +12,7 @@ def start_date(request):
 
 
 def enable_waitlist(request):
+    """Add whether the waitlist is enabled to the context"""
     return {"waitlist_enabled": settings.ENABLE_WAITLIST}
 
 
