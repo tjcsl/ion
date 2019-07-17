@@ -12,7 +12,6 @@ from ...utils.date import is_current_year, get_date_range_this_year
 
 
 class AnnouncementManager(Manager):
-
     def visible_to_user(self, user):
         """Get a list of visible announcements for a given user (usually request.user).
 
@@ -25,8 +24,12 @@ class AnnouncementManager(Manager):
         """
 
         return Announcement.objects.filter(
-            Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(announcementrequest__teachers_requested=user) |
-            Q(announcementrequest__user=user) | Q(user=user)).distinct()
+            Q(groups__in=user.groups.all())
+            | Q(groups__isnull=True)
+            | Q(announcementrequest__teachers_requested=user)
+            | Q(announcementrequest__user=user)
+            | Q(user=user)
+        ).distinct()
 
     def hidden_announcements(self, user):
         """Get a list of announcements marked as hidden for a given user (usually request.user).
@@ -64,6 +67,7 @@ class AnnouncementUserMap(models.Model):
             A many-to-many field of Users who have seen this announcement
 
     """
+
     announcement = models.OneToOneField("Announcement", related_name="_user_map", on_delete=models.CASCADE)
     users_hidden = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="announcements_hidden")
     users_seen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="announcements_seen")
@@ -166,7 +170,6 @@ class Announcement(models.Model):
 
 
 class AnnouncementRequestQuerySet(models.query.QuerySet):
-
     def this_year(self):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -174,7 +177,6 @@ class AnnouncementRequestQuerySet(models.query.QuerySet):
 
 
 class AnnouncementRequestManager(Manager):
-
     def get_queryset(self):
         return AnnouncementRequestQuerySet(self.model, using=self._db)
 

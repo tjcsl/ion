@@ -12,8 +12,13 @@ from intranet import settings
 
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
-                            request_announcement_email)
+from .notifications import (
+    admin_request_announcement_email,
+    announcement_approved_email,
+    announcement_posted_email,
+    announcement_posted_twitter,
+    request_announcement_email,
+)
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
@@ -219,8 +224,9 @@ def admin_approve_announcement_view(request, req_id):
                     group_ids = request.POST.getlist("groups")
                     groups = Group.objects.filter(id__in=group_ids)
                 logger.debug(groups)
-                announcement = Announcement.objects.create(title=req.title, content=req.content, author=req.author, user=req.user,
-                                                           expiration_date=req.expiration_date)
+                announcement = Announcement.objects.create(
+                    title=req.title, content=req.content, author=req.author, user=req.user, expiration_date=req.expiration_date
+                )
                 for g in groups:
                     announcement.groups.add(g)
                 announcement.save()
