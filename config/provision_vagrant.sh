@@ -4,14 +4,13 @@ set -e
 function devconfig() {
     python3 -c "
 import json
-with open('/home/ubuntu/intranet/config/devconfig.json', 'r') as f:
+with open('/home/vagrant/intranet/config/devconfig.json', 'r') as f:
     print(json.load(f)['$1'])"
 }
 
-sudo su - ubuntu
-cd /home/ubuntu
-sudo cp -pr /home/vagrant/.ssh /home/ubuntu
-sudo chown -R ubuntu: /home/ubuntu/.ssh
+sudo su - vagrant
+cd /home/vagrant
+sudo chown -R vagrant: /home/vagrant/.ssh
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
@@ -32,8 +31,8 @@ apt-get -y install libkrb5-dev
 
 # Git
 apt-get -y install git
-sudo -i -u ubuntu git config --global user.name "$(devconfig name)"
-sudo -i -u ubuntu git config --global user.email "$(devconfig email)"
+sudo -i -u vagrant git config --global user.name "$(devconfig name)"
+sudo -i -u vagrant git config --global user.email "$(devconfig email)"
 
 # CUPS Printing
 apt-get -y install cups
@@ -66,7 +65,7 @@ if [[ -x "$(which gem)" ]]; then
     fi
     apt-get -y remove ruby-dev
 fi
-apt-get -y install npm nodejs-legacy
+apt-get -y install npm nodejs
 npm -g install sass
 
 # PostsgreSQL
@@ -78,7 +77,7 @@ sqlcmd(){
 }
 sqlcmd "CREATE DATABASE ion;" || echo Database already exists
 sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';" || echo Database user already exists
-sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.*/main/pg_hba.conf
+sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/10/main/pg_hba.conf
 service postgresql restart
 
 # Redis
@@ -96,11 +95,9 @@ master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
 grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
 
-# cffi needs to be installed before we can install argon2-cffi (in requirements.txt)
-sudo -i -u ubuntu bash -c "
+sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
     mkvirtualenv --python=python3 ion && workon ion &&
-    pip install cffi &&
     pip install -U -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate
@@ -110,4 +107,4 @@ mkdir -p uploads
 ./manage.py collectstatic --noinput
 
 mkdir -p /var/log/ion
-chown -R ubuntu: /var/log/ion
+chown -R vagrant: /var/log/ion
