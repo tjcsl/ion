@@ -41,7 +41,7 @@ end
 
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "ubuntu/bionic64"
   config.vm.boot_timeout = 1000
   if devconfig["use_vpn"]
       config.vm.network "public_network", bridge: devconfig["network_interface"]
@@ -76,13 +76,13 @@ Vagrant.configure("2") do |config|
   end
 
   config.bindfs.default_options = {
-    force_user:   'ubuntu',
-    force_group:  'ubuntu',
+    force_user:   'vagrant',
+    force_group:  'vagrant',
     perms:        'u=rwX:g=rD:o=rD'
   }
-  config.bindfs.bind_folder "/vagrant", "/home/ubuntu/intranet",
-      force_user: 'ubuntu',
-      force_group: 'ubuntu'
+  config.bindfs.bind_folder "/vagrant", "/home/vagrant/intranet",
+      force_user: 'vagrant',
+      force_group: 'vagrant'
 
   config.vm.provision "file",
     source: "~/.ssh/#{devconfig['ssh_key']}",
@@ -94,7 +94,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", path: "config/provision_vagrant.sh"
 
-  if ARGV[0] == "ssh"
-      config.ssh.username = "ubuntu"
-  end
+  config.ssh.username = "vagrant"
 end
