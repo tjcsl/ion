@@ -22,7 +22,7 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 **What does the TJ Intranet do?** Ion allows students, teachers, and staff at TJHSST to access student information, manage activity signups for TJ's Eighth Period program, and view information on news and events. `Read more about how Ion is used at Thomas Jefferson <https://ion.tjhsst.edu/about>`_.
 
-**Ion now requires Python 3.5+** Python 3.5 is currently used in both production and testing environments.
+**Ion now requires Python 3.6+** Python 3.6 is currently used in both production and testing environments.
 
 **How can I create a testing environment?** Read the section on `Setting up Vagrant <https://tjcsl.github.io/ion/setup/vagrant.html>`_ in the documentation.
 
