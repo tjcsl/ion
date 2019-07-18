@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -134,7 +134,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
-<span class="kn">from</span> <span class="nn">..models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..serializers</span> <span class="k">import</span> <span class="n">EighthBlockDetailSerializer</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 <span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span><span class="p">,</span> <span class="n">deny_restricted</span>
@@ -160,10 +160,10 @@
         <span class="c1"># address_form = AddressForm(request.POST, instance=user.properties.address)</span>
         <span class="k">if</span> <span class="n">user_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">counselor_id</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;counselor_id&#39;</span><span class="p">]</span>
+            <span class="n">counselor_id</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">counselor_id</span><span class="p">:</span>
                 <span class="n">counselor</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">counselor_id</span><span class="p">)</span>
-                <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;birthday&#39;</span><span class="p">]</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">]</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="o">=</span> <span class="n">counselor</span>
             <span class="c1"># user.properties.address = address_form.save()</span>
             <span class="c1"># user.properties.save()</span>
@@ -172,10 +172,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;An error occurred updating the student profile.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">&#39;counselor_id&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;birthday&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span>
-        <span class="p">},</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span>
+            <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;birthday&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span><span class="p">},</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span>
+        <span class="p">)</span>
         <span class="c1"># address_form = AddressForm(instance=user.properties.address)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;user_form&quot;</span><span class="p">:</span> <span class="n">user_form</span><span class="p">,</span> <span class="s2">&quot;address_form&quot;</span><span class="p">:</span> <span class="n">address_form</span><span class="p">}</span>
@@ -249,14 +248,15 @@
         <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
         <span class="s2">&quot;date_end&quot;</span><span class="p">:</span> <span class="n">date_end</span><span class="p">,</span>
         <span class="s2">&quot;skipped_ahead&quot;</span><span class="p">:</span> <span class="n">skipped_ahead</span><span class="p">,</span>
-        <span class="s2">&quot;custom_date_set&quot;</span><span class="p">:</span> <span class="n">custom_date_set</span>
+        <span class="s2">&quot;custom_date_set&quot;</span><span class="p">:</span> <span class="n">custom_date_set</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">is_eighth_sponsor</span><span class="p">:</span>
         <span class="n">sponsor</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">)</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
-            <span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="n">eighth_sponsor_schedule</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Eighth sponsor </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">)</span>
@@ -305,7 +305,7 @@
         <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">)</span>
-            <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;highlighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;highlighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span>
         <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">eighth_schedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="p">)</span>
@@ -370,7 +370,7 @@
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth_profile&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">))</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># No blocks have been added yet</span>
@@ -396,7 +396,7 @@
         <span class="s2">&quot;active_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span>
         <span class="s2">&quot;active_block_current_signup&quot;</span><span class="p">:</span> <span class="n">active_block_current_signup</span><span class="p">,</span>
         <span class="s2">&quot;show_eighth_profile_link&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;block_info&quot;</span><span class="p">:</span> <span class="n">block_info</span>
+        <span class="s2">&quot;block_info&quot;</span><span class="p">:</span> <span class="n">block_info</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">profile_ctx</span> <span class="o">=</span> <span class="n">get_profile_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">profile_ctx</span><span class="p">:</span>

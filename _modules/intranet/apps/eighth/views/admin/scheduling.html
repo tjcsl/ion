@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -142,7 +142,7 @@
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="k">import</span> <span class="n">ActivitySelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="k">import</span> <span class="n">BlockSelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.scheduling</span> <span class="k">import</span> <span class="n">ScheduledActivityForm</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">.....utils.serialization</span> <span class="k">import</span> <span class="n">safe_json</span>
@@ -164,11 +164,11 @@
                 <span class="n">activity</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
 
                 <span class="c1"># Save changes to cancelled activities and scheduled activities</span>
-                <span class="n">cancelled</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
+                <span class="n">cancelled</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">cancelled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
                 <span class="n">instance</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cancelled</span><span class="p">:</span>
-                    <span class="n">instance</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">))</span>
+                    <span class="n">instance</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
                     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
                     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
                     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
@@ -202,8 +202,17 @@
 
                 <span class="k">if</span> <span class="n">instance</span><span class="p">:</span>
                     <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;special&quot;</span><span class="p">,</span> <span class="s2">&quot;administrative&quot;</span><span class="p">,</span> <span class="s2">&quot;restricted&quot;</span><span class="p">,</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span> <span class="s2">&quot;both_blocks&quot;</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;admin_comments&quot;</span>
+                        <span class="s2">&quot;rooms&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;capacity&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;special&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;administrative&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;restricted&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;both_blocks&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;comments&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;admin_comments&quot;</span><span class="p">,</span>
                     <span class="p">]</span>
                     <span class="k">if</span> <span class="s2">&quot;rooms&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">:</span>
                         <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;rooms&quot;</span><span class="p">]:</span>
@@ -302,7 +311,7 @@
         <span class="s2">&quot;all_signups&quot;</span><span class="p">:</span> <span class="n">all_signups</span><span class="p">,</span>
         <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">all_rooms</span><span class="p">,</span>
         <span class="s2">&quot;sponsors_json&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">all_sponsors</span><span class="p">),</span>
-        <span class="s2">&quot;rooms_json&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">all_rooms</span><span class="p">)</span>
+        <span class="s2">&quot;rooms_json&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">all_rooms</span><span class="p">),</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">activity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -313,8 +322,9 @@
         <span class="c1"># , date__lte=end_date)</span>
         <span class="n">initial_formset_data</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">sched_act_queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
-            <span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">))</span>
+        <span class="n">sched_act_queryset</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="p">{</span><span class="n">sa</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">sa</span> <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_act_queryset</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
@@ -325,21 +335,23 @@
                 <span class="n">all_signups</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
                 <span class="n">all_default_capacities</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sched_act</span><span class="p">)</span>
-                <span class="n">initial_form_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                    <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
-                    <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span>
-                    <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
-                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-                    <span class="s2">&quot;special&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">special</span><span class="p">,</span>
-                    <span class="s2">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">administrative</span><span class="p">,</span>
-                    <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">restricted</span><span class="p">,</span>
-                    <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sticky</span><span class="p">,</span>
-                    <span class="s2">&quot;both_blocks&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span>
-                    <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
-                    <span class="s2">&quot;admin_comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">,</span>
-                    <span class="s2">&quot;scheduled&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
-                    <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span>
-                <span class="p">})</span>
+                <span class="n">initial_form_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                        <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span>
+                        <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                        <span class="s2">&quot;special&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">special</span><span class="p">,</span>
+                        <span class="s2">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">administrative</span><span class="p">,</span>
+                        <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">restricted</span><span class="p">,</span>
+                        <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sticky</span><span class="p">,</span>
+                        <span class="s2">&quot;both_blocks&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span>
+                        <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+                        <span class="s2">&quot;admin_comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">,</span>
+                        <span class="s2">&quot;scheduled&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
+                        <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="n">all_signups</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">all_default_capacities</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span>
@@ -375,8 +387,7 @@
 
     <span class="k">if</span> <span class="n">activity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
-            <span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
         <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scheduled_activities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheduled_activities</span>
 
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;View Activity Schedule&quot;</span>
@@ -390,14 +401,18 @@
 
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminTransferStudentsWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_2&quot;</span><span class="p">,</span>
-                                                                                                                       <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;activity_2&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span>
+    <span class="p">]</span>
 
     <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
         <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
         <span class="s2">&quot;block_2&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;activity_2&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span>
+        <span class="s2">&quot;activity_2&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -533,8 +548,12 @@
 
 <div class="viewcode-block" id="remove_duplicates_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.remove_duplicates_view">[docs]</a><span class="nd">@eighth_admin_required</span>
 <span class="k">def</span> <span class="nf">remove_duplicates_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">duplicates</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">),</span>
-                                                     <span class="n">Count</span><span class="p">(</span><span class="s1">&#39;scheduled_activity__block&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block__count__gt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">duplicates</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">),</span> <span class="n">Count</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">order_by</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block__count__gt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">call_command</span><span class="p">(</span><span class="s2">&quot;delete_duplicate_signups&quot;</span><span class="p">)</span>

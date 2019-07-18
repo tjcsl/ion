@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.blocks &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.admin.blocks &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -166,8 +166,8 @@
         <span class="n">date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
     <span class="n">title_suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
-        <span class="n">date_format</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{2}</span><span class="s1">)\/([0-9]</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span>
-        <span class="n">fmtdate</span> <span class="o">=</span> <span class="n">date_format</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\3-\1-\2&#39;</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="n">date_format</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([0-9]</span><span class="si">{2}</span><span class="s2">)\/([0-9]</span><span class="si">{2}</span><span class="s2">)\/([0-9]</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">fmtdate</span> <span class="o">=</span> <span class="n">date_format</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\3-\1-\2&quot;</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">fmtdate</span><span class="p">)</span>
         <span class="n">title_suffix</span> <span class="o">=</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmtdate</span><span class="p">)</span>
         <span class="n">show_letters</span> <span class="o">=</span> <span class="kc">True</span>
@@ -212,7 +212,7 @@
         <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
         <span class="s2">&quot;letters&quot;</span><span class="p">:</span> <span class="n">letters</span><span class="p">,</span>
         <span class="s2">&quot;show_letters&quot;</span><span class="p">:</span> <span class="n">show_letters</span><span class="p">,</span>
-        <span class="s2">&quot;add_block_form&quot;</span><span class="p">:</span> <span class="n">QuickBlockForm</span>
+        <span class="s2">&quot;add_block_form&quot;</span><span class="p">:</span> <span class="n">QuickBlockForm</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/add_block.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -241,7 +241,7 @@
         <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
         <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_block&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">block_id</span><span class="p">]),</span>
         <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit Block&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="n">block_id</span>
+        <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
@@ -268,22 +268,23 @@
                 <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
                 <span class="k">for</span> <span class="n">schact</span> <span class="ow">in</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">new_block</span><span class="p">,</span> <span class="n">cancelled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">):</span>
-                    <span class="n">new_schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">both_blocks</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span>
-                                                                        <span class="n">special</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">special</span><span class="p">)</span>
+                    <span class="n">new_schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                        <span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">both_blocks</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span> <span class="n">special</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">special</span>
+                    <span class="p">)</span>
                     <span class="n">new_schact</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
                     <span class="n">new_schact</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
                     <span class="n">new_schact</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">copy_signups</span><span class="p">:</span>
-                        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">([</span>
-                            <span class="n">EighthSignup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">new_schact</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact</span><span class="p">)</span>
-                        <span class="p">])</span>
+                        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">EighthSignup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">new_schact</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact</span><span class="p">)]</span>
+                        <span class="p">)</span>
 
                 <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;new_activities&quot;</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                     <span class="s2">&quot;new_signups&quot;</span><span class="p">:</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
                     <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Finished Copy Block - </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">),</span>
-                    <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="n">block_id</span>
+                    <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
                 <span class="p">}</span>
                 <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/copy_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
@@ -298,7 +299,7 @@
         <span class="s2">&quot;to_block&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">),</span>
         <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
         <span class="s2">&quot;locked&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">,</span>
-        <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/copy_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
@@ -319,8 +320,7 @@
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Block&quot;</span><span class="p">,</span>
             <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">),</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this block will remove all records &quot;</span>
-                         <span class="s2">&quot;of it related to eighth period.&quot;</span>
+            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this block will remove all records &quot;</span> <span class="s2">&quot;of it related to eighth period.&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -330,7 +330,7 @@
 <span class="k">def</span> <span class="nf">print_block_rosters_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;schact_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/pdf&quot;</span><span class="p">)</span>
-        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;inline; filename=</span><span class="se">\&quot;</span><span class="s2">block_</span><span class="si">{}</span><span class="s2">_rosters.pdf</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_id</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;inline; filename=&quot;block_</span><span class="si">{}</span><span class="s1">_rosters.pdf&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_id</span><span class="p">)</span>
         <span class="n">sched_act_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;schact_id&quot;</span><span class="p">)</span>
 
         <span class="n">pdf_buffer</span> <span class="o">=</span> <span class="n">generate_roster_pdf</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">)</span>

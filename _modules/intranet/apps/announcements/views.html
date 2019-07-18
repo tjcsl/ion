@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -139,8 +139,13 @@
 
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AnnouncementForm</span><span class="p">,</span> <span class="n">AnnouncementRequestForm</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
-<span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="p">(</span><span class="n">admin_request_announcement_email</span><span class="p">,</span> <span class="n">announcement_approved_email</span><span class="p">,</span> <span class="n">announcement_posted_email</span><span class="p">,</span> <span class="n">announcement_posted_twitter</span><span class="p">,</span>
-                            <span class="n">request_announcement_email</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">admin_request_announcement_email</span><span class="p">,</span>
+    <span class="n">announcement_approved_email</span><span class="p">,</span>
+    <span class="n">announcement_posted_email</span><span class="p">,</span>
+    <span class="n">announcement_posted_twitter</span><span class="p">,</span>
+    <span class="n">request_announcement_email</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">announcements_admin_required</span><span class="p">,</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="k">import</span> <span class="n">dashboard_view</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
@@ -346,8 +351,9 @@
                     <span class="n">group_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
                     <span class="n">groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">group_ids</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
-                <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
-                                                           <span class="n">expiration_date</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">expiration_date</span><span class="p">)</span>
+                <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">expiration_date</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">expiration_date</span>
+                <span class="p">)</span>
                 <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
                     <span class="n">announcement</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
                 <span class="n">announcement</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.general &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.admin.general &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -148,7 +148,7 @@
 <span class="k">def</span> <span class="nf">eighth_admin_dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">all_activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>  <span class="c1"># show deleted activities</span>
-    <span class="n">blocks_after_start_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">))</span>
+    <span class="n">blocks_after_start_date</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">blocks_after_start_date</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">blocks_next</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">blocks_next_date</span> <span class="o">=</span> <span class="kc">None</span>
@@ -157,7 +157,7 @@
         <span class="n">blocks_next</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">blocks_next_date</span><span class="p">)</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;groupproperties&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
     <span class="n">rooms</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">sponsors</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span>
+    <span class="n">sponsors</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span>
 
     <span class="n">signup_users_count</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
@@ -172,13 +172,12 @@
         <span class="s2">&quot;blocks_next_date&quot;</span><span class="p">:</span> <span class="n">blocks_next_date</span><span class="p">,</span>
         <span class="s2">&quot;signup_users_count&quot;</span><span class="p">:</span> <span class="n">signup_users_count</span><span class="p">,</span>
         <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Eighth Period Admin&quot;</span><span class="p">,</span>
-
         <span class="c1"># Used in place of IDs in data-href-pattern tags of .dynamic-links</span>
         <span class="c1"># to reverse single-ID urls in Javascript. It&#39;s rather hacky, but</span>
         <span class="c1"># not unlike boundaries of multipart/form-data requests, so it&#39;s</span>
         <span class="c1"># not completely bad. If there&#39;s a better way to do this,</span>
         <span class="c1"># please implement it.</span>
-        <span class="s2">&quot;url_id_placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;734784857438457843756435654645642343465&quot;</span>
+        <span class="s2">&quot;url_id_placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;734784857438457843756435654645642343465&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">forms</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;add_group_form&quot;</span><span class="p">:</span> <span class="n">group_forms</span><span class="o">.</span><span class="n">QuickGroupForm</span><span class="p">,</span> <span class="s2">&quot;add_room_form&quot;</span><span class="p">:</span> <span class="n">room_forms</span><span class="o">.</span><span class="n">RoomForm</span><span class="p">}</span>
@@ -261,7 +260,7 @@
         <span class="s2">&quot;EighthSignup&quot;</span><span class="p">:</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>  <span class="c1"># pylint: disable=no-member</span>
         <span class="s2">&quot;EighthScheduledActivity&quot;</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>  <span class="c1"># pylint: disable=no-member</span>
         <span class="s2">&quot;EighthActivity&quot;</span><span class="p">:</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>  <span class="c1"># pylint: disable=no-member</span>
-        <span class="s2">&quot;EighthBlock&quot;</span><span class="p">:</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-member</span>
+        <span class="s2">&quot;EighthBlock&quot;</span><span class="p">:</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>  <span class="c1"># pylint: disable=no-member</span>
     <span class="p">}</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">,</span> <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Event History&quot;</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>

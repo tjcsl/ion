@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.users.views &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -221,58 +221,46 @@
     <span class="sd">&quot;&quot;&quot;Displays a view of a user&#39;s picture.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        user_id</span>
-<span class="sd">            The ID of the user whose picture is being fetched.</span>
-<span class="sd">        year</span>
-<span class="sd">            The user&#39;s picture from this year is fetched. If not</span>
+<span class="sd">        user_id (str): The ID of the user whose picture is being fetched.</span>
+<span class="sd">        year (str): The user&#39;s picture from this year is fetched. If not</span>
 <span class="sd">            specified, use the preferred picture.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="n">default_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;static/img/default_profile_pic.png&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">year</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">preferred</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span>
-
-            <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">default_photo</span>
-                <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-            <span class="c1"># Exclude &#39;graduate&#39; from names array</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">preferred</span><span class="o">.</span><span class="n">binary</span>
-                <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">year</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">preferred</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span>
+        <span class="k">if</span> <span class="n">preferred</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">default_photo</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">grade_number</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">number_from_name</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">binary</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-                <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">preferred</span><span class="o">.</span><span class="n">binary</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grade_number</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">number_from_name</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">binary</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span>
-        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;filename=</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">year</span> <span class="ow">or</span> <span class="n">preferred</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">image_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span>
+    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;filename=</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">year</span> <span class="ow">or</span> <span class="n">preferred</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">image_buffer</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-        <span class="n">image_buffer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">image_buffer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">response</span></div>
+    <span class="k">return</span> <span class="n">response</span></div>
 
 
 <span class="nd">@login_required</span>

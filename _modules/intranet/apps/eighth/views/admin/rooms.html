@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.rooms &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.admin.rooms &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -200,8 +200,7 @@
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Room&quot;</span><span class="p">,</span>
             <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">room</span><span class="p">),</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this room will remove all records &quot;</span>
-                         <span class="s2">&quot;of it related to eighth period.&quot;</span>
+            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this room will remove all records &quot;</span> <span class="s2">&quot;of it related to eighth period.&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -298,13 +297,13 @@
         <span class="n">start_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">start_id</span><span class="p">)</span>
         <span class="n">end_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">end_id</span><span class="p">)</span>
 
-        <span class="n">one_block</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_id</span> <span class="o">==</span> <span class="n">end_id</span><span class="p">)</span>
+        <span class="n">one_block</span> <span class="o">=</span> <span class="n">start_id</span> <span class="o">==</span> <span class="n">end_id</span>
     <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-    <span class="n">show_used_rooms</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;show_used&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
-    <span class="n">show_available_for_eighth</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;show_available_for_eighth&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
-    <span class="n">show_all_rooms</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+    <span class="n">show_used_rooms</span> <span class="o">=</span> <span class="s2">&quot;show_used&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+    <span class="n">show_available_for_eighth</span> <span class="o">=</span> <span class="s2">&quot;show_available_for_eighth&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+    <span class="n">show_all_rooms</span> <span class="o">=</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
     <span class="n">show_listing</span> <span class="o">=</span> <span class="n">show_all_rooms</span> <span class="ow">or</span> <span class="n">show_used_rooms</span> <span class="ow">or</span> <span class="n">show_available_for_eighth</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;room&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">show_available_for_eighth</span><span class="p">:</span>
@@ -338,14 +337,14 @@
         <span class="s2">&quot;show_listing&quot;</span><span class="p">:</span> <span class="n">show_listing</span><span class="p">,</span>
         <span class="s2">&quot;show_used_rooms&quot;</span><span class="p">:</span> <span class="n">show_used_rooms</span><span class="p">,</span>
         <span class="s2">&quot;show_all_rooms&quot;</span><span class="p">:</span> <span class="n">show_all_rooms</span><span class="p">,</span>
-        <span class="s2">&quot;show_available_for_eighth&quot;</span><span class="p">:</span> <span class="n">show_available_for_eighth</span>
+        <span class="s2">&quot;show_available_for_eighth&quot;</span><span class="p">:</span> <span class="n">show_available_for_eighth</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">get_csv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_room_utilization_csv&quot;</span>
     <span class="k">if</span> <span class="n">show_listing</span> <span class="ow">or</span> <span class="n">get_csv</span><span class="p">:</span>
-        <span class="n">sched_acts</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">sched_acts</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># .exclude(cancelled=True) # include cancelled activities</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">one_block</span><span class="p">:</span>
-            <span class="n">sched_acts</span> <span class="o">=</span> <span class="p">(</span><span class="n">sched_acts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">block__date__lte</span><span class="o">=</span><span class="n">end_block</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">sched_acts</span> <span class="o">=</span> <span class="n">sched_acts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">block__date__lte</span><span class="o">=</span><span class="n">end_block</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sched_acts</span> <span class="o">=</span> <span class="n">sched_acts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">start_block</span><span class="p">)</span>
 
@@ -359,7 +358,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sched_acts: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sched_acts</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
 
-        <span class="n">sched_acts</span> <span class="o">=</span> <span class="p">(</span><span class="n">sched_acts</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">sched_acts</span> <span class="o">=</span> <span class="n">sched_acts</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;room&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
             <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="n">sched_acts</span>
@@ -385,7 +384,7 @@
 
     <span class="k">if</span> <span class="n">get_csv</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
-        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="s2">room_utilization.csv</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename=&quot;room_utilization.csv&quot;&#39;</span>
 
         <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 

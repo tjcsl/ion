@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -150,14 +150,14 @@
         <span class="n">num_absences</span> <span class="o">=</span> <span class="n">absence_info</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="n">show_notif</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">num_absences</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">notif_seen</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;eighth_absence_notif_seen&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">notif_seen</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eighth_absence_notif_seen&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">notif_seen</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">absence_info</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">in_clear_absence_period</span><span class="p">():</span>
                         <span class="n">show_notif</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="n">show_notif</span><span class="p">:</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;eighth_absence_notif_seen&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;eighth_absence_notif_seen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;eighth_absence_count&quot;</span><span class="p">:</span> <span class="n">num_absences</span><span class="p">,</span> <span class="s2">&quot;eighth_absence_notif&quot;</span><span class="p">:</span> <span class="n">show_notif</span><span class="p">}</span>
 

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #4848) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #4859) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -125,7 +125,8 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.eighth.views.admin.activities</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="c1"># pylint: disable=too-many-boolean-expressions</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_obj</span>
@@ -136,7 +137,7 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="k">import</span> <span class="n">ActivityForm</span><span class="p">,</span> <span class="n">QuickActivityForm</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="k">import</span> <span class="n">Group</span>
@@ -153,7 +154,7 @@
             <span class="k">if</span> <span class="n">new_id</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
                 <span class="n">activity</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">new_id</span><span class="p">)))</span>
+                <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">new_id</span><span class="p">))</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added activity.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span> <span class="n">activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -205,8 +206,9 @@
                                     <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">old_sponsors</span><span class="p">:</span>
                                         <span class="n">sa</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span>
                                     <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Overrode </span><span class="si">{}</span><span class="s2"> scheduled activities to old sponsor default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+                                    <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Overrode </span><span class="si">{}</span><span class="s2"> scheduled activities to old sponsor default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+                                <span class="p">)</span>
                             <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
                                 <span class="c1"># Don&#39;t override</span>
                                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Changing default sponsors globally&quot;</span><span class="p">)</span>
@@ -220,7 +222,7 @@
                                 <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
                                 <span class="s2">&quot;old_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_sponsor_ids</span><span class="p">),</span>
                                 <span class="s2">&quot;new_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_sponsor_ids</span><span class="p">),</span>
-                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
                             <span class="p">}</span>
                             <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/keep_sponsor_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -267,7 +269,7 @@
                                 <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
                                 <span class="s2">&quot;old_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_room_ids</span><span class="p">),</span>
                                 <span class="s2">&quot;new_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_room_ids</span><span class="p">),</span>
-                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
                             <span class="p">}</span>
                             <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/keep_room_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -278,8 +280,14 @@
                 <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span> <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span> <span class="ow">or</span>  <span class="c1"># pylint: disable=too-many-boolean-expressions</span>
-                        <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span> <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span> <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span>
+                    <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span>
+                    <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span>
+                    <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span>
+                    <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span>
+                    <span class="ow">or</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span>
+                <span class="p">):</span>
                     <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">all_sched_acts</span><span class="p">:</span>
                         <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sa</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -320,7 +328,7 @@
         <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
         <span class="s2">&quot;activity_groups&quot;</span><span class="p">:</span> <span class="n">activity_groups</span><span class="p">,</span>
         <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
-        <span class="s2">&quot;activity_members&quot;</span><span class="p">:</span> <span class="n">activity_members</span>
+        <span class="s2">&quot;activity_members&quot;</span><span class="p">:</span> <span class="n">activity_members</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -348,13 +356,15 @@
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span>
-            <span class="s2">&quot;Delete Activity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span>
-            <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Deleting will not destroy past attendance data for this &quot;</span>
-                          <span class="s2">&quot;activity. The activity will just be marked as deleted &quot;</span>
-                          <span class="s2">&quot;and hidden from non-attendance views.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">perm_delete</span> <span class="k">else</span> <span class="s2">&quot;This will destroy past attendance data.&quot;</span><span class="p">)</span>
+            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Activity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;Deleting will not destroy past attendance data for this &quot;</span>
+                <span class="s2">&quot;activity. The activity will just be marked as deleted &quot;</span>
+                <span class="s2">&quot;and hidden from non-attendance views.&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">perm_delete</span>
+                <span class="k">else</span> <span class="s2">&quot;This will destroy past attendance data.&quot;</span>
+            <span class="p">),</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
