@@ -129,8 +129,7 @@ def picture_view(request, user_id, year=None):
             img = image_buffer.read()
         except UnicodeDecodeError:
             img = io.open(default_image_path, mode="rb").read()
-
-    image_buffer.close()
+        image_buffer.close()
     response.write(img)
 
     return response
