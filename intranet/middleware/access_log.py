@@ -1,11 +1,13 @@
 import logging
+
 from datetime import datetime
+
+from django.conf import settings
 
 logger = logging.getLogger("intranet_access")
 
 
 class AccessLogMiddleWare:
-
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -27,9 +29,16 @@ class AccessLogMiddleWare:
         if isinstance(ip, set):
             ip = ip[0]
 
-        log_line = "{} - {} - [{}] \"{}\" \"{}\"".format(ip, username, datetime.now(), request.get_full_path(), request.META.get(
-            "HTTP_USER_AGENT", ""))
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
+        log_line = '{} - {} - [{}] "{}" "{}"'.format(ip, username, datetime.now(), request.get_full_path(), user_agent)
 
-        logger.info(log_line)
+        loggable = True
+        for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS:
+            if user_agent_substring in user_agent:
+                loggable = False
+                break
+
+        if loggable:
+            logger.info(log_line)
 
         return response
