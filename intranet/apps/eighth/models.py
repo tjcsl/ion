@@ -1193,8 +1193,7 @@ class EighthSignup(AbstractBaseEighthModel):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
     def has_conflict(self):
-        return EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user,
-                                                               scheduled_activity__block=self.scheduled_activity.block).exists()
+        return EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).exists()
 
     def remove_signup(self, user=None, force=False, dont_run_waitlist=False):
         """Attempt to remove the EighthSignup if the user has permission to do so."""
