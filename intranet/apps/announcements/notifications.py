@@ -129,8 +129,9 @@ def announcement_posted_email(request, obj, send_all=False):
         send_groups = obj.groups.all()
         emails = []
         users_send = []
+        is_public = not send_groups.exists()
         for u in users:
-            if not send_groups.exists() or send_groups.intersection(u.groups.all()).exists():
+            if is_public or send_groups.intersection(u.groups.all()).exists():
                 # Either it has no groups (public) or user is a member of a send group
                 em = u.emails.first() if u.emails.exists() else u.tj_email
                 if em:
