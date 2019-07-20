@@ -10,18 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 class BusRouteForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
         super(BusRouteForm, self).__init__(*args, **kwargs)
         self.BUS_ROUTE_CHOICES = [(None, "Set bus route...")]
         routes = Route.objects.all().order_by("route_name")
         for route in routes:
             self.BUS_ROUTE_CHOICES += [(route.route_name, route.route_name)]
-        self.fields['bus_route'] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select, required=False)
+        self.fields["bus_route"] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select, required=False)
 
 
 class PreferredPictureForm(forms.Form):
-
     def __init__(self, user, *args, **kwargs):
         super(PreferredPictureForm, self).__init__(*args, **kwargs)
 
@@ -39,7 +37,6 @@ class PreferredPictureForm(forms.Form):
 
 
 class PrivacyOptionsForm(forms.Form):
-
     def __init__(self, user, *args, **kwargs):
         super(PrivacyOptionsForm, self).__init__(*args, **kwargs)
 
@@ -77,11 +74,10 @@ class PrivacyOptionsForm(forms.Form):
         if not user.has_admin_permission("preferences"):
             for name in self.fields:
                 if not name.endswith("-self"):
-                    self.fields[name].widget.attrs['class'] = 'disabled'
+                    self.fields[name].widget.attrs["class"] = "disabled"
 
 
 class NotificationOptionsForm(forms.Form):
-
     def __init__(self, user, *args, **kwargs):
         super(NotificationOptionsForm, self).__init__(*args, **kwargs)
 
@@ -94,47 +90,45 @@ class NotificationOptionsForm(forms.Form):
         if user.emails.all().count() == 0:
             label = "You can set a primary email after adding emails below."
         self.fields["primary_email"] = forms.ModelChoiceField(
-            queryset=Email.objects.filter(user=user), required=False, label=label, disabled=(user.emails.all().count() == 0))
+            queryset=Email.objects.filter(user=user), required=False, label=label, disabled=(user.emails.all().count() == 0)
+        )
 
 
 class DarkModeForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(DarkModeForm, self).__init__(*args, **kwargs)
         self.fields["dark_mode_enabled"] = forms.BooleanField(
-            initial=user.dark_mode_properties.dark_mode_enabled,
-            label="Enable dark mode?",
-            required=False,
+            initial=user.dark_mode_properties.dark_mode_enabled, label="Enable dark mode?", required=False
         )
 
 
 class PhoneForm(forms.ModelForm):
     """Represents a phone number (number + purpose)"""
+
     _number = forms.CharField(max_length=14)
 
     class Meta:
         model = Phone
-        fields = ['purpose', '_number']
+        fields = ["purpose", "_number"]
 
 
 class EmailForm(forms.ModelForm):
-
     def clean_address(self):
         data = self.cleaned_data["address"]
         if "@fcpsschools.net" in data.lower():
-            raise forms.ValidationError("You cannot provide a fcpsschools.net address.",code="invalid")
+            raise forms.ValidationError("You cannot provide a fcpsschools.net address.", code="invalid")
 
         return data
 
     class Meta:
         model = Email
-        fields = ['address']
+        fields = ["address"]
 
 
 class WebsiteForm(forms.ModelForm):
-
     class Meta:
         model = Website
-        fields = ['url']
+        fields = ["url"]
 
 
 PhoneFormset = forms.inlineformset_factory(get_user_model(), Phone, form=PhoneForm, extra=1)
