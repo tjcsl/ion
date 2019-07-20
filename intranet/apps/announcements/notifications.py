@@ -133,7 +133,7 @@ def announcement_posted_email(request, obj, send_all=False):
         for u in users:
             if is_public or send_groups.intersection(u.groups.all()).exists():
                 # Either it has no groups (public) or user is a member of a send group
-                em = u.emails.first() if u.emails.exists() else u.tj_email
+                em = u.notification_email
                 if em:
                     emails.append(em)
                 users_send.append(u)
