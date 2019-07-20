@@ -934,7 +934,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         and (request is not None and not request.user.is_eighth_admin and request.user.is_student)
                     )
                 ):
-                # pylint: enable=too-many-boolean-expressions
+                    # pylint: enable=too-many-boolean-expressions
                     if user.primary_email:
                         if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()

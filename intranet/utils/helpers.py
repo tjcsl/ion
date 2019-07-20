@@ -122,6 +122,7 @@ class GlobList(list):
 def single_css_map(name):
     return {name: {'source_filenames': ['css/%s.scss' % name], 'output_filename': 'css/%s.css' % name}}
 
+
 def get_fcps_emerg(request):
     """Return FCPS emergency information."""
     try:
@@ -155,6 +156,7 @@ def get_ap_week_warning(request):
         return get_template("auth/ap_week_schedule.html").render(data)
 
     return False
+
 
 def dark_mode_enabled(request):
     if request.GET.get("dark", None):

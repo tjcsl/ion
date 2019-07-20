@@ -597,7 +597,7 @@ def eighth_admin_distribute_action(request):
             users_type = "unsigned"
 
             if "limit" in request.GET:
-                users = users[0 : int(request.GET.get("limit"))]
+                users = users[0: int(request.GET.get("limit"))]
 
         # Sort by last name
         users = sorted(list(users), key=lambda x: x.last_name)
