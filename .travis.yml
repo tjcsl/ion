@@ -33,7 +33,7 @@ before_script:
 - cp intranet/settings/travis_secret.py intranet/settings/secret.py
 - psql -U postgres -c 'create database ion'
 script:
-- flake8 --max-line-length 150 --exclude=*/migrations/* .
+- if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]];then flake8 --max-line-length 150 --exclude=*/migrations/* . ;fi
 - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]];then pylint --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/; fi
 - coverage run ./setup.py test
 - coverage run -a ./manage.py migrate
