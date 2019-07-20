@@ -34,7 +34,7 @@ before_script:
 - psql -U postgres -c 'create database ion'
 script:
 - flake8 --max-line-length 150 --exclude=*/migrations/* .
-- pylint --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
+- if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]];then pylint --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/; fi
 - coverage run ./setup.py test
 - coverage run -a ./manage.py migrate
 - "./manage.py collectstatic --noinput -v 0"
