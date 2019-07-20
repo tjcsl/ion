@@ -47,7 +47,7 @@ def activity_view(request, activity_id=None):
 
 def chunks(l, n):
     for i in range(0, len(l), n):
-        yield l[i : i + n]
+        yield l[i: i + n]
 
 
 def current_school_year():

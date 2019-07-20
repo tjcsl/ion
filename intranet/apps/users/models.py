@@ -904,7 +904,7 @@ class UserProperties(models.Model):
 
 
 PERMISSIONS_NAMES = {
-    prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
+    prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
 }
 
 

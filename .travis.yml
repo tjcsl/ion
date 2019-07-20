@@ -28,11 +28,12 @@ install:
 - npm install sass
 - pip install -U pip setuptools
 - pip install -U -r requirements.txt
-- pip install -U coveralls pylint pylint-django codacy-coverage
+- pip install -U coveralls flake8 pylint pylint-django codacy-coverage
 before_script:
 - cp intranet/settings/travis_secret.py intranet/settings/secret.py
 - psql -U postgres -c 'create database ion'
 script:
+- flake8 --max-line-length 150 --exclude=*/migrations/* .
 - pylint --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
 - coverage run ./setup.py test
 - coverage run -a ./manage.py migrate
