@@ -118,6 +118,13 @@ class PhoneForm(forms.ModelForm):
 
 class EmailForm(forms.ModelForm):
 
+    def clean_address(self):
+        data = self.cleaned_data["address"]
+        if "@fcpsschools.net" in data.lower():
+            raise forms.ValidationError("You cannot provide a fcpsschools.net address.",code="invalid")
+
+        return data
+
     class Meta:
         model = Email
         fields = ['address']
