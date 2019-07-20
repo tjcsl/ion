@@ -10,7 +10,7 @@ from django.utils import timezone
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
-from .models import PERMISSIONS_NAMES, Address, Course, Section
+from .models import PERMISSIONS_NAMES, Address, Course, Section, Email
 from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthSignup
 from ..nomination.models import Nomination, NominationPosition
 from ...test.ion_test import IonTestCase
@@ -91,6 +91,22 @@ class CourseTest(IonTestCase):
 class UserTest(IonTestCase):
     def test_get_signage_user(self):
         self.assertEqual(get_user_model().get_signage_user().id, 99999)
+
+    def test_notification_email(self):
+        # Test default user notification email property
+        user = self.login()
+        self.assertEqual(user.primary_email, None)
+        self.assertFalse(user.emails.exists())
+        self.assertEqual(str(user.tj_email), "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.notification_email, user.tj_email)
+
+        email = Email.objects.create(user=user, address="test@example.com")
+        self.assertEqual(user.notification_email, email)
+
+        # Set primary email
+        user.primary_email = Email.objects.create(user=user, address="test2@example.com")
+        user.save()
+        self.assertEqual(user.notification_email, user.primary_email)
 
 
 class ProfileTest(IonTestCase):
