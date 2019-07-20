@@ -31,7 +31,7 @@ class AccessLogMiddleWare:
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         log_line = '{} - {} - [{}] "{}" "{}"'.format(ip, username, datetime.now(), request.get_full_path(), user_agent)
 
-        if user_agent and not any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS)
+        if user_agent and not any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS):
             logger.info(log_line)
 
         return response
