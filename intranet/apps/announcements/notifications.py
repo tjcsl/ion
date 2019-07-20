@@ -39,13 +39,13 @@ def request_announcement_email(request, form, obj):
         emails.append(teacher.tj_email)
     logger.debug(emails)
     logger.info("%s: Announcement request to %s, %s", request.user, teachers, emails)
-    base_url = request.build_absolute_uri(reverse('index'))
+    base_url = request.build_absolute_uri(reverse("index"))
     data = {
         "teachers": teachers,
         "user": request.user,
         "formdata": form.data,
         "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
-        "base_url": base_url
+        "base_url": base_url,
     }
     logger.info("%s: Announcement request %s", request.user, data)
     email_send("announcements/emails/teacher_approve.txt", "announcements/emails/teacher_approve.html", data, subject, emails)
@@ -61,12 +61,12 @@ def admin_request_announcement_email(request, form, obj):
 
     subject = "News Post Approval Needed ({})".format(obj.title)
     emails = [settings.APPROVAL_EMAIL]
-    base_url = request.build_absolute_uri(reverse('index'))
+    base_url = request.build_absolute_uri(reverse("index"))
     data = {
         "req": obj,
         "formdata": form.data,
         "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
-        "base_url": base_url
+        "base_url": base_url,
     }
     email_send("announcements/emails/admin_approve.txt", "announcements/emails/admin_approve.html", data, subject, emails)
 
@@ -93,8 +93,8 @@ def announcement_approved_email(request, obj, req):
         if em:
             teacher_emails.append(em)
 
-    base_url = request.build_absolute_uri(reverse('index'))
-    url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+    base_url = request.build_absolute_uri(reverse("index"))
+    url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
 
     if teacher_emails:
         data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "approved"}
@@ -106,8 +106,9 @@ def announcement_approved_email(request, obj, req):
     if submitter_email:
         submitter_emails = [submitter_email]
         data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
-        email_send("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject,
-                   submitter_emails)
+        email_send(
+            "announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, submitter_emails
+        )
         messages.success(request, "Sent teacher approved email to {} users".format(len(submitter_emails)))
 
 
@@ -151,8 +152,8 @@ def announcement_posted_email(request, obj, send_all=False):
         if not settings.PRODUCTION and len(emails) > 3:
             raise exceptions.PermissionDenied("You're about to email a lot of people, and you aren't in production!")
 
-        base_url = request.build_absolute_uri(reverse('index'))
-        url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+        base_url = request.build_absolute_uri(reverse("index"))
+        url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
         data = {"announcement": obj, "info_link": url, "base_url": base_url}
         email_send_bcc("announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails)
         messages.success(request, "Sent email to {} users".format(len(users_send)))
@@ -165,9 +166,9 @@ def announcement_posted_twitter(request, obj):
         logger.debug("Publicly available")
         title = obj.title
         title = title.replace("&nbsp;", " ")
-        url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+        url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
         if len(title) <= 100:
-            content = re.sub('<[^>]*>', '', obj.content)
+            content = re.sub("<[^>]*>", "", obj.content)
             content = content.replace("&nbsp;", " ")
             content_len = 139 - (len(title) + 2 + 3 + 3 + 22)
             text = "{}: {}... - {}".format(title, content[:content_len], url)
@@ -190,7 +191,7 @@ def announcement_posted_twitter(request, obj):
 
 
 def notify_twitter(status):
-    url = 'https://api.twitter.com/1.1/statuses/update.json'
+    url = "https://api.twitter.com/1.1/statuses/update.json"
 
     cfg = settings.TWITTER_KEYS
 
