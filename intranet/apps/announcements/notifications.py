@@ -130,21 +130,12 @@ def announcement_posted_email(request, obj, send_all=False):
         emails = []
         users_send = []
         for u in users:
-            if not send_groups:
-                # no groups, public.
-                em = u.emails.first() if u.emails.count() >= 1 else u.tj_email
+            if not send_groups.exists() or send_groups.intersection(u.groups.all()).exists():
+                # Either it has no groups (public) or user is a member of a send group
+                em = u.emails.first() if u.emails.exists() else u.tj_email
                 if em:
                     emails.append(em)
                 users_send.append(u)
-            else:
-                # specific to a group
-                user_groups = u.groups.all()
-                if any(i in send_groups for i in user_groups):
-                    # group intersection exists
-                    em = u.emails.first() if u.emails.count() >= 1 else u.tj_email
-                    if em:
-                        emails.append(em)
-                    users_send.append(u)
 
         logger.debug(users_send)
         logger.debug(emails)
