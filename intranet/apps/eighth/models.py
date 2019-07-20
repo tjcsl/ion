@@ -723,7 +723,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.capacity is not None:
             return self.capacity
 
-        if self.activity.default_capacity and self.rooms.count() == 0:
+        if self.activity.default_capacity and not self.rooms.exists():
             # use activity-level override
             return self.activity.default_capacity
 
