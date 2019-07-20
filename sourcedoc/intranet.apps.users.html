@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #4867) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #4871) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -1220,6 +1220,19 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <code class="sig-name descname">counselor_id</code><a class="headerlink" href="#intranet.apps.users.models.User.counselor_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.dark_mode_properties">
+<code class="sig-name descname">dark_mode_properties</code><a class="headerlink" href="#intranet.apps.users.models.User.dark_mode_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2454,6 +2467,68 @@ many-to-one relation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.users.models.UserDarkModeProperties">
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.users.models.</code><code class="sig-name descname">UserDarkModeProperties</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserDarkModeProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Contains user properties relating to dark mode</p>
+<dl class="exception">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v3.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v3.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.dark_mode_enabled">
+<code class="sig-name descname">dark_mode_enabled</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.dark_mode_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.dark_mode_unlocked">
+<em class="property">property </em><code class="sig-name descname">dark_mode_unlocked</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.dark_mode_unlocked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.user">
+<code class="sig-name descname">user</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.UserDarkModeProperties.user_id">
+<code class="sig-name descname">user_id</code><a class="headerlink" href="#intranet.apps.users.models.UserDarkModeProperties.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>

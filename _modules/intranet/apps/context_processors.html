@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #4867) documentation</title>
+    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #4871) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -135,6 +135,7 @@
 
 <span class="kn">from</span> <span class="nn">intranet.apps.notifications.models</span> <span class="k">import</span> <span class="n">NotificationConfig</span>
 <span class="kn">from</span> <span class="nn">.schedule.models</span> <span class="k">import</span> <span class="n">Day</span>
+<span class="kn">from</span> <span class="nn">..utils.helpers</span> <span class="k">import</span> <span class="n">dark_mode_enabled</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -256,6 +257,10 @@
 
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;show_bus_nav&#39;</span><span class="p">:</span> <span class="n">is_bus_admin</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="enable_dark_mode"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.enable_dark_mode">[docs]</a><span class="k">def</span> <span class="nf">enable_dark_mode</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">dark_mode_enabled</span><span class="p">(</span><span class="n">request</span><span class="p">)}</span></div>
 </pre></div>
 
     </div>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4867) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #4871) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,7 +133,8 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
 
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">WebsiteFormset</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span> <span class="n">DarkModeForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span>
+                    <span class="n">WebsiteFormset</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Email</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 
@@ -392,6 +393,17 @@
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Disabled push notifications&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="save_dark_mode_settings"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.save_dark_mode_settings">[docs]</a><span class="k">def</span> <span class="nf">save_dark_mode_settings</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="o">=</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">]</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Dark mode enabled&quot;</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="k">else</span> <span class="s2">&quot;Dark mode disabled&quot;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">dark_mode_form</span></div>
+
+
 <div class="viewcode-block" id="preferences_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.preferences_view">[docs]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">preferences_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View and process updates to the preferences page.&quot;&quot;&quot;</span>
@@ -408,6 +420,10 @@
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">save_notification_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+        <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_unlocked</span><span class="p">:</span>
+            <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">save_dark_mode_settings</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
@@ -443,6 +459,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">notification_options</span><span class="p">)</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">NotificationOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">notification_options</span><span class="p">)</span>
 
+        <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_unlocked</span><span class="p">:</span>
+            <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
+
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;phone_formset&quot;</span><span class="p">:</span> <span class="n">phone_formset</span><span class="p">,</span>
         <span class="s2">&quot;email_formset&quot;</span><span class="p">:</span> <span class="n">email_formset</span><span class="p">,</span>
@@ -450,7 +470,8 @@
         <span class="s2">&quot;preferred_pic_form&quot;</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
         <span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
         <span class="s2">&quot;notification_options_form&quot;</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
-        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;dark_mode_form&quot;</span><span class="p">:</span> <span class="n">dark_mode_form</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/preferences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
