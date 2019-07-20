@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 
 from .views import save_bus_route
+from .forms import EmailForm
 from ..bus.models import Route
 from ...test.ion_test import IonTestCase
 
@@ -121,3 +122,21 @@ class PreferencesTest(IonTestCase):
         for index, route_name in enumerate(self.route_names):
             self.assertEqual(route_name, choices[index][0])
             self.assertEqual(choices[index][1], choices[index][0])
+
+class PreferencesFormTest(IonTestCase):
+
+    def test_email_form(self):
+        # Indirect test of formset validation
+
+        user = self.login()
+
+        # Test valid address
+        form_params = {"address": "test@example.com"}
+        form = EmailForm(form_params)
+        self.assertTrue(form.is_valid())
+
+        # Test invalid address
+        form_params = {"address": "test@fcpsschools.net"}
+        form = EmailForm(form_params)
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("address", code="invalid"))
