@@ -486,6 +486,7 @@ class EighthTest(IonTestCase):
         EighthScheduledActivity.objects.create(activity=act, block=block_future)
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
 
+
 class EighthExceptionTest(IonTestCase):
     def test_signup_exception(self):
         signup_exception = SignupException()
@@ -505,8 +506,8 @@ class EighthExceptionTest(IonTestCase):
         expected_messages_no_admin = []
         expected_messages_admin = []
         for error in ["SignupForbidden", "ScheduledActivityCancelled"]:
-            expected_messages_no_admin.append(SignupException._messages[error][0])
-            expected_messages_admin.append(SignupException._messages[error][1])
+            expected_messages_no_admin.append(SignupException._messages[error][0])  # pylint: disable=protected-access
+            expected_messages_admin.append(SignupException._messages[error][1])  # pylint: disable=protected-access
         self.assertEqual(signup_exception.messages(), expected_messages_no_admin)
         self.assertEqual(signup_exception.messages(admin=True), expected_messages_admin)
         response_plain = signup_exception.as_response(html=False)
