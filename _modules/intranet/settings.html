@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4871) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #4892) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -703,18 +703,26 @@
         <span class="s2">&quot;access_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;require_debug_false&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.FileHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.handlers.TimedRotatingFileHandler&quot;</span><span class="p">,</span>
             <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;access&quot;</span><span class="p">,</span>
             <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/log/ion/app_access.log&quot;</span><span class="p">,</span>
+            <span class="c1"># Rollover on Sundays; preserve 20 weeks</span>
+            <span class="s2">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;W6&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;backupCount&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
             <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="c1"># Log auth to file (DEBUG=FALSE)</span>
         <span class="s2">&quot;auth_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;require_debug_false&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.FileHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.handlers.TimedRotatingFileHandler&quot;</span><span class="p">,</span>
             <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;access&quot;</span><span class="p">,</span>
             <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/log/ion/app_auth.log&quot;</span><span class="p">,</span>
+            <span class="c1"># Rollover on Sundays; preserve 20 weeks</span>
+            <span class="s2">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;W6&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;backupCount&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
             <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="c1"># Log error to file (DEBUG=FALSE)</span>
@@ -841,6 +849,9 @@
     <span class="n">TJSTAR_MAP</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">SIMILAR_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># Substrings of user agents to not log in the Ion access logs</span>
+<span class="n">NONLOGGABLE_USER_AGENT_SUBSTRINGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Prometheus&quot;</span><span class="p">,</span> <span class="s2">&quot;GoogleBot&quot;</span><span class="p">,</span> <span class="s2">&quot;UptimeRobot&quot;</span><span class="p">]</span>
 
 <span class="c1"># Shows a warning message with yellow background on the login page</span>
 <span class="c1"># LOGIN_WARNING = &quot;This is a message to display on the login page.&quot;</span>
