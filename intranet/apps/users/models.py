@@ -309,6 +309,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         return "{}@{}".format(self.username, domain)
 
     @property
+    def notification_email(self):
+        """Returns the notification email.
+
+        If a primary email is set, use it. Otherwise, use the first
+        email on file. If no email addresses exist, use the user's
+        TJ email.
+
+        Returns:
+            A user's notification email address
+
+        """
+
+        return self.primary_email or self.emails.first() or self.tj_email
+
+    @property
     def default_photo(self):
         """Returns default photo (in binary) that should be used
 
@@ -912,6 +927,7 @@ class UserDarkModeProperties(models.Model):
     """
     Contains user properties relating to dark mode
     """
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="dark_mode_properties", on_delete=models.CASCADE)
     _dark_mode_unlocked = models.BooleanField(default=False)
     dark_mode_enabled = models.BooleanField(default=False)
@@ -1040,6 +1056,7 @@ class Photo(models.Model):
 
 class Grade:
     """Represents a user's grade."""
+
     names = [elem[1] for elem in GRADE_NUMBERS]
 
     def __init__(self, graduation_year):
