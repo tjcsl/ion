@@ -123,6 +123,7 @@ class PreferencesTest(IonTestCase):
             self.assertEqual(route_name, choices[index][0])
             self.assertEqual(choices[index][1], choices[index][0])
 
+
 class PreferencesFormTest(IonTestCase):
 
     def test_email_form(self):
