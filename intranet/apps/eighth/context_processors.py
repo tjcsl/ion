@@ -3,7 +3,13 @@ from .utils import get_start_date
 
 
 def start_date(request):
-    """Add the start date to the context for eighth admin views."""
+    """ Add the start date to the context for eighth admins.
+
+        Returns:
+            The start date if an eighth_admin, an empty dictionary
+            otherwise.
+
+    """
 
     if request.user and request.user.is_authenticated and request.user.is_eighth_admin:
         return {"admin_start_date": get_start_date(request)}
@@ -12,12 +18,24 @@ def start_date(request):
 
 
 def enable_waitlist(request):
-    """Add whether the waitlist is enabled to the context"""
+    """ Add whether the waitlist is enabled to the context.
+
+        Returns:
+            bool: Whether the waitlist is enabled.
+
+    """
+
     return {"waitlist_enabled": settings.ENABLE_WAITLIST}
 
 
 def absence_count(request):
-    """Add the absence count to the context for students."""
+    """ Add the absence count to the context for students.
+
+        Returns:
+            Number of absences that a student has if
+            a student, an empty dictionary otherwise.
+
+    """
 
     if request.user and request.user.is_authenticated and request.user.is_student:
         absence_info = request.user.absence_info()
