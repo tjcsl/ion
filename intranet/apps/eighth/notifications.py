@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def signup_status_email(user, next_blocks):
-    em = user.tj_email if user.tj_email else user.emails.first() if user.emails and user.emails.count() >= 1 else None
+    em = user.notification_email
     if em:
         emails = [em]
     else:
@@ -23,7 +23,7 @@ def signup_status_email(user, next_blocks):
 
         cancelled = False
 
-        if not signup:
+        if signup is None:
             issues += 1
 
         if signup and signup.scheduled_activity.cancelled:
