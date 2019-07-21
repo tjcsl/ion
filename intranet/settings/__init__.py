@@ -373,6 +373,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     "simple_history.middleware.HistoryRequestMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
+    "intranet.middleware.dark_mode.DarkModeMiddleware",  # Dark mode-related middleware
 ]
 
 # URLconf at urls.py
