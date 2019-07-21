@@ -69,7 +69,7 @@ def get_bg_pattern(request):
         "squairy_light.png",
         # "squared_metal.png"
     ]
-    file_path = ("img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns")
+    file_path = ("img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns/")
 
     return static(file_path + random.choice(files))
 
