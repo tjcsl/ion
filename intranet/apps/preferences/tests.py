@@ -128,7 +128,7 @@ class PreferencesFormTest(IonTestCase):
     def test_email_form(self):
         # Indirect test of formset validation
 
-        user = self.login()
+        _ = self.login()
 
         # Test valid address
         form_params = {"address": "test@example.com"}
