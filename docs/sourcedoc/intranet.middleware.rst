@@ -20,6 +20,14 @@ intranet.middleware.ajax module
    :undoc-members:
    :show-inheritance:
 
+intranet.middleware.dark\_mode module
+-------------------------------------
+
+.. automodule:: intranet.middleware.dark_mode
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.middleware.profiler module
 -----------------------------------
 

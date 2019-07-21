@@ -162,7 +162,8 @@ def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
-    if request.user.is_authenticated and request.user.dark_mode_properties.dark_mode_unlocked:
-        return request.user.dark_mode_properties.dark_mode_enabled
-
-    return False
+    if request.user.is_authenticated:
+        return request.user.dark_mode_properties.dark_mode_unlocked \
+            and request.user.dark_mode_properties.dark_mode_enabled
+    else:
+        return request.COOKIES.get("dark-mode-enabled", "") == "1"
