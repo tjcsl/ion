@@ -275,8 +275,8 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/events",
     "dark/dashboard",
     "dark/dashboard.widgets",
-    "dark/schedule.widgets",
-    "dark/nav"
+    "dark/schedule.widget",
+    "dark/nav",
     "dark/cke",
     "dark/polls",
     "dark/bus",
