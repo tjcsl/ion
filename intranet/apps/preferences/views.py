@@ -52,6 +52,9 @@ def save_personal_info(request, user):
     if email_formset.is_valid():
         email_formset.save()
     else:
+        for error in email_formset.errors:
+            if isinstance(error.get("address"), list):
+                errors.append(error["address"][0])
         errors.append('Could not set emails.')
     if website_formset.is_valid():
         website_formset.save()
