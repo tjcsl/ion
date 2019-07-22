@@ -36,23 +36,21 @@ class EighthSponsor(AbstractBaseEighthModel):
     A sponsor could be linked to an actual user or just a name.
 
     Attributes:
-        first_name
-            The first name of the sponsor
-        last_name
-            The last name of the sponsor
-        user
-            A :class:`users.User` object
-            linked to the sponsor.
-        online_attendance
-            Whether the sponsor takes attendance online.
-        contracted_eighth
-            Whether the sponsor is contracted to supervise 8th periods.
-        show_full_name
-            Whether to always show the sponsor's full name
-            (e.x. because there are two teachers named Lewis)
-
+        first_name (str): The first name of the sponsor.
+        last_name (str): The last name of the sponsor.
+        user (User): A :class:`users.User` object linked
+            to the sponsor.
+        department (str): The sponsor's department.
+        full_time (bool): Whether the sponsor is full-time.
+        online_attendance (bool): Whether the sponsor takes.
+            attendance online.
+        contracted_eighth (bool): Whether the sponsor is
+            contracted to supervise 8th periods.
+        show_full_name (bool): Whether to always show the sponsor's full name
+            (e.x. because there are two teachers named Lewis).
     """
 
+    # Hard-coded list of departments in the school
     DEPARTMENTS = (
         ("general", "General"),
         ("math_cs", "Math/CS"),
