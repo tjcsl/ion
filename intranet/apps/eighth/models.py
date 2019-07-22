@@ -21,7 +21,14 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractBaseEighthModel(models.Model):
-    """Abstract base model that includes created and last modified times."""
+    """ Abstract base model that includes created
+        and last modified times.
+
+        Attributes:
+            created_time (datetime): The time the model was created
+            last_modified_time (datetime): The time the model was
+                last modified.
+    """
 
     created_time = models.DateTimeField(auto_now_add=True, null=True)
     last_modified_time = models.DateTimeField(auto_now=True, null=True)
@@ -31,7 +38,7 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
-    """Represents a sponsor for an eighth period activity.
+    """ Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
 
