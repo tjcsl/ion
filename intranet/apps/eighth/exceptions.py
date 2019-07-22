@@ -54,10 +54,10 @@ class SignupException(Exception):
         self.desc_errors = {}
 
     def __repr__(self):
-        return "SignupException(%s)" % ", ".join(self.errors)
+        return "SignupException(%s)" % ", ".join(sorted(self.errors))
 
     def __str__(self):
-        return ", ".join(self.errors)
+        return ", ".join(sorted(self.errors))
 
     def __setattr__(self, name, value):
         if name in SignupException._messages:
