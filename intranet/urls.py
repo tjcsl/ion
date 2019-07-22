@@ -47,6 +47,7 @@ urlpatterns = [
     url(r"^nominations", include("intranet.apps.nomination.urls")),
     url(r"^courses", include("intranet.apps.users.courses_urls")),
     url(r"^prometheus/", include('django_prometheus.urls')),
+    url(r"^docs/accounts$", TemplateView.as_view(template_name="docs/accounts.html", content_type="text/html"), name="docs_accounts"),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
