@@ -165,67 +165,63 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 
 class EighthActivity(AbstractBaseEighthModel):
-    """Represents an eighth period activity.
+    """ Represents an eighth period activity.
 
     Attributes:
-        name
-            The name of the activity, max length 100 characters.
-        description
-            The description of the activity, shown on the signup page below the other information.
-            Information on an EighthScheduledActivity basis can be found in the "comments" field
-            of that model. Max length 2000 characters.
-        sponsors
-            The default activity-level sponsors for the activity. On an EighthScheduledActivity basis,
-            you should NOT query this field. Use scheduled_activity.get_true_sponsors()
-        rooms
-            The default activity-level rooms for the activity. On an EighthScheduledActivity basis,
-            you should NOT query this field. Use scheduled_activity.get_true_rooms()
-        default_capacity
-            The default capacity, which overrides the sum of the default rooms when scheduling the
-            activity. By default, this has a null value and is ignored.
-        presign
-            If True, the activity can only be signed up for within 48 hours of the day that the activity
-            is scheduled.
-        one_a_day
-            If True, a student can only sign up for one instance of this activity per day.
-        both_blocks
-            If True, a signup for an EighthScheduledActivity during an A or B block will enforce and
-            automatically trigger a signup on the other block. Does not enforce signups for blocks other
-            than A and B.
-        sticky
-            If True, then students who sign up or are placed in this activity cannot switch out of it.
+        name(str): The name of the activity, max length 100 characters.
+        description (str): The description of the activity, shown on the signup page below
+            the other information. Information on an EighthScheduledActivity basis can
+            be found in the "comments" field of that model. Max length 2000 characters.
+        sponsors (:obj:`list` of :obj:`EighthSponsor`): The default activity-level sponsors for the activity.
+            On an EighthScheduledActivity basis, you should NOT query this field.
+            Instead, use scheduled_activity.get_true_sponsors()
+        rooms (:obj:`list` of :obj:`EighthRoom`): The default activity-level rooms for the activity.
+            On an EighthScheduledActivity basis, you should NOT query this field.
+            Use scheduled_activity.get_true_rooms()
+        default_capacity (int): The default capacity, which overrides the sum of the default rooms when
+            scheduling the activity. By default, this has a null value and is ignored.
+        presign (bool): If True, the activity can only be signed up for within 48 hours of the day that
+            the activity is scheduled.
+        one_a_day (bool): If True, a student can only sign up for one instance of this activity per day.
+        both_blocks (bool): If True, a signup for an EighthScheduledActivity during an A or B block will
+            enforce and automatically trigger a signup on the other block. Does not enforce signups
+            for blocks other than A and B.
+        sticky (bool): If True, then students who sign up or are placed in this activity cannot switch out of it.
             A sticky activity should also be restricted, unless you're mean.
-        special
-            If True, then the activity receives a special designation on the signup list, and is stuck
+        special (bool): If True, then the activity receives a special designation on the signup list, and is stuck
             to the top of the list.
-        administrative
-            If True, then students cannot see the activity in their signup list. However, the activity still
-            exists in the system and can be seen by administrators. Students can still sign up for the activity
-            through the API -- this does not prevent students from signing up for it, and just merely hides it
-            from view. An administrative activity should be restricted.
-        finance
-            If True, then the club has an account with the finance office.
-        users_allowed
-            Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make
-            a group instead through the "Add and Assign Empty Group" button on the Edit Activity page. Only
+        administrative (bool): If True, then students cannot see the activity in their signup list. However,
+            the activity still exists in the system and can be seen by administrators. Students can still
+            sign up for the activity through the API -- this does not prevent students from signing up
+            for it, and just merely hides it from view. An administrative activity should be restricted.
+        finance (str): The account name of the club with the Finance Office. If blank or null, there is no account.
+        restricted (str): Whether the signups for the activity are restricted to certain users/groups or if
+            there are blacklisted users.
+        users_allowed (:obj:`list` of :obj:`User`): Individual users allowed to sign up for this activity.
+            Extensive use of this is discouraged; make a group instead through the
+            "Add and Assign Empty Group" button on the Edit Activity page. Only takes effect if the activity
+            is restricted.
+        groups_allowed (:obj:`list` of :obj:`Group`): Individual groups allowed to sign up for this activity.
+            Only takes effect if the activity is restricted.
+        users_blacklisted (:obj:`list` of :obj:`User`): Individual users who are not allowed to sign up for
+            this activity. Only takes effect if the activity is not restricted.
+        freshman_allowed (bool): Whether freshmen are allowed to sign up for this activity. Only
             takes effect if the activity is restricted.
-        groups_allowed
-            Individual groups allowed to sign up for this activity. Only takes effect if the activity is
-            restricted.
-        users_blacklisted
-            Individual users who are not allowed to sign up for this activity. Only takes effect if the activity
-            is not restricted.
-        freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed
-            Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
+        sophomores_allowed (bool): Whether sophomores are allowed to sign up for this activity. Only
             takes effect if the activity is restricted.
-        wed_a, wed_b, fri_a, fri_b
-            What blocks the activity usually meets. Does not affect schedule, is just information for the Eighth Office.
-        admin_comments
-            Notes for the Eighth Office
-        favorites
-            A ManyToManyField of User objects who have favorited the activity.
-        deleted
-            Whether the activity still technically exists in the system, but was marked to be deleted.
+        juniors_allowed (bool): Whether juniors are allowed to sign up for this activity. Only
+            takes effect if the activity is restricted.
+        seniors_allowed (bool): Whether seniors are allowed to sign up for this activity. Only
+            takes effect if the activity is restricted.
+        wed_a (bool): Whether the activity generally meets on Wednesday A blocks. Does not affect schedule, is just information for the Eighth Office.
+        wed_b (bool): Whether the activity generally meets on Wednesday B blocks. Does not affect schedule, is just information for the Eighth Office.
+        fri_a (bool): Whether the activity generally meets on Friday A blocks. Does not affect schedule, is just information for the Eighth Office.
+        fri_b (bool): Whether the activity generally meets on Friday B blocks. Does not affect schedule, is just information for the Eighth Office.
+        admin_comments (str): Notes for the Eighth Office.
+        favorites (:obj:`list` of :obj:`User`): A ManyToManyField of User objects who have favorited the activity.
+        similarities (:obj:`list` of :obj:`EighthActivitySimilarity`): A ManyToManyField of EighthActivitySimilarity
+            objects which are similar to this activity.
+        deleted (bool): Whether the activity still technically exists in the system, but was marked to be deleted.
 
     """
 
