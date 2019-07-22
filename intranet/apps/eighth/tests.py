@@ -508,8 +508,8 @@ class EighthExceptionTest(IonTestCase):
         for error in ["SignupForbidden", "ScheduledActivityCancelled"]:
             expected_messages_no_admin.append(SignupException._messages[error][0])  # pylint: disable=protected-access
             expected_messages_admin.append(SignupException._messages[error][1])  # pylint: disable=protected-access
-        self.assertEqual(signup_exception.messages(), expected_messages_no_admin)
-        self.assertEqual(signup_exception.messages(admin=True), expected_messages_admin)
+        self.assertCountEqual(signup_exception.messages(), expected_messages_no_admin)
+        self.assertCountEqual(signup_exception.messages(admin=True), expected_messages_admin)
         response_plain = signup_exception.as_response(html=False)
         self.assertEqual(response_plain.content.decode(), "\n".join(expected_messages_no_admin))
         self.assertEqual(response_plain["Content-Type"], "text/plain")
