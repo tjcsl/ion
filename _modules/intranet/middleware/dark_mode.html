@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.middleware.url_slashes &#8212; TJ Intranet v3 (Build #4921) documentation</title>
+    <title>intranet.middleware.dark_mode &#8212; TJ Intranet v3 (Build #4921) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -124,40 +124,19 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.middleware.url_slashes</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="FixSlashes"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.url_slashes.FixSlashes">[docs]</a><span></span><span class="k">class</span> <span class="nc">FixSlashes</span><span class="p">:</span>
-
+  <h1>Source code for intranet.middleware.dark_mode</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="DarkModeMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.dark_mode.DarkModeMiddleware">[docs]</a><span></span><span class="k">class</span> <span class="nc">DarkModeMiddleware</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the &#39;dark-mode-enabled&#39; cookie if the user is logged in and has unlocked dark mode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_response</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span> <span class="o">=</span> <span class="n">get_response</span>
 
-<div class="viewcode-block" id="FixSlashes.__call__"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.url_slashes.FixSlashes.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add or remove trailing slashes where needed.</span>
-
-<span class="sd">        Note that there is no HTTP redirection actually happening. This</span>
-<span class="sd">        just fixes the trailing slashes before the URLs are matched to</span>
-<span class="sd">        any URL patterns by changing the request&#39;s internal properties.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># We can&#39;t remove slashes from these urls - they&#39;re included from</span>
-        <span class="c1"># first/third party apps</span>
-        <span class="n">exception_prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/admin&quot;</span><span class="p">,</span> <span class="s2">&quot;/api-auth&quot;</span><span class="p">,</span> <span class="s2">&quot;/djangoadmin&quot;</span><span class="p">,</span> <span class="s2">&quot;/__debug__&quot;</span><span class="p">,</span> <span class="s2">&quot;/oauth&quot;</span><span class="p">]</span>
-        <span class="n">needs_trailing_slash</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">exception_prefixes</span><span class="p">:</span>
-            <span class="n">needs_trailing_slash</span> <span class="o">|=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">needs_trailing_slash</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
-                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="o">=</span> <span class="n">new_url</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_url</span>
-        <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
-                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="o">=</span> <span class="n">new_url</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_url</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div></div>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_unlocked</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s2">&quot;dark-mode-enabled&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">))),</span> <span class="n">max_age</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span></div>
 </pre></div>
 
     </div>
