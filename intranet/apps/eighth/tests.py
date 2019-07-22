@@ -511,7 +511,7 @@ class EighthExceptionTest(IonTestCase):
         self.assertEqual(signup_exception.messages(), expected_messages_no_admin)
         self.assertEqual(signup_exception.messages(admin=True), expected_messages_admin)
         response_plain = signup_exception.as_response(html=False)
-        self.assertEqual(response_plain.content, "\n".join(expected_messages_no_admin))
+        self.assertEqual(response_plain.content.decode(), "\n".join(expected_messages_no_admin))
         self.assertEqual(response_plain["Content-Type"], "text/plain")
 
         # Test string representations
