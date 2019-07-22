@@ -118,6 +118,17 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @staticmethod
     def total_capacity_of_rooms(rooms):
+        """ Returns the total capacity of the provided rooms.
+
+            Args:
+                rooms: Rooms to determine total capacity
+                    for.
+
+            Returns:
+                The total capacity of the provided rooms.
+
+        """
+
         capacity = 0
         for r in rooms:
             if r.capacity == -1:
@@ -127,14 +138,18 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @property
     def formatted_name(self):
-        if self.name[0].isdigit():  # All rooms starting with an integer will be prefixed
+        """str: The formatted name of the Room."""
+        if self.name[0].isdigit():
+            # All rooms starting with an integer will be prefixed
             return "Rm. {}".format(self.name)
-        if self.name.startswith("Room"):  # Some room names are prefixed with 'Room'; for consistency
+        if self.name.startswith("Room"):
+            # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
         return self.name
 
     @property
     def to_be_determined(self):
+        """str: Whether the Room needs to be assigned."""
         return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
     def __str__(self):
