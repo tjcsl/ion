@@ -99,13 +99,12 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 
 class EighthRoom(AbstractBaseEighthModel):
-    """Represents a room in which an eighth period activity can be held.
+    """ Represents a room in which an eighth period activity can be held.
 
     Attributes:
-        name
-            The name of the room.
-        capacity
-            The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
+        name (str): The name of the room.
+        capacity (int): The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
+        available_for_eighth (bool): Whehther the room is available for eighth period signups.
 
     """
 
