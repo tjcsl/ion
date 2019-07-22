@@ -77,7 +77,7 @@ class SignupException(Exception):
             a = "regular"
 
         msgs = []
-        for e in self.errors:
+        for e in sorted(self.errors):
             exc = SignupException._messages[e]
             if e in self.desc_errors:
                 msgs.append(getattr(exc, a).format(*self.desc_errors[e]))
