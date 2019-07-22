@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.views.generic.base import RedirectView, TemplateView
 
 from intranet.apps.oauth.views import ApplicationUpdateView
-from intranet.apps.error.views import (handle_404_view, handle_500_view, handle_503_view)
+from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
 
 admin.autodiscover()
 
@@ -38,7 +38,7 @@ urlpatterns = [
     url(r"^lostfound", include("intranet.apps.lostfound.urls")),
     url(r"^emailfwd", include("intranet.apps.emailfwd.urls")),
     url(r"^parking", include("intranet.apps.parking.urls")),
-    url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
+    url(r"^djangoadmin/doc/", include("django.contrib.admindocs.urls")),
     # FIXME: update when admin supports django 1.10+ properly
     url(r"^djangoadmin/", admin.site.urls),
     url(r"^oauth/applications/(?P<pk>\d+)/update/$", ApplicationUpdateView.as_view()),
@@ -46,7 +46,7 @@ urlpatterns = [
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
     url(r"^nominations", include("intranet.apps.nomination.urls")),
     url(r"^courses", include("intranet.apps.users.courses_urls")),
-    url(r"^prometheus/", include('django_prometheus.urls')),
+    url(r"^prometheus/", include("django_prometheus.urls")),
     url(r"^docs/accounts$", TemplateView.as_view(template_name="docs/accounts.html", content_type="text/html"), name="docs_accounts"),
 ]
 
