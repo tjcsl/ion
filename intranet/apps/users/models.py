@@ -248,7 +248,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
         """
-        return "{}, {} ".format(self.last_name, self.first_name) + ("({})".format(self.nickname) if self.nickname else "")
+        return "{}, {}".format(self.last_name, self.first_name) + (" ({})".format(self.nickname) if self.nickname else "")
 
     @property
     def last_first_id(self):
@@ -266,8 +266,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, F [(Nickname)]
         """
-        return "{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + (
-            "({}) ".format(self.nickname) if self.nickname else ""
+        return "{}{}".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + (
+            " ({})".format(self.nickname) if self.nickname else ""
         )
 
     @property
