@@ -163,7 +163,7 @@ def delinquent_students_view(request):
 
         writer = csv.writer(response)
         writer.writerow(
-            ["Start Date", "End Date", "Absences", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email", "Other Email"]
+            ["Start Date", "End Date", "Absences", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email", "Personal Email"]
         )
 
         for delinquent in delinquents:
@@ -217,7 +217,7 @@ def no_signups_roster(request, block_id):
             counselor = user.counselor
             row.append(counselor.last_name if counselor else "")
             row.append("{}".format(user.tj_email))
-            row.append(user.emails.first() if user.emails and user.emails.count() > 0 else "")
+            row.append(user.non_tj_email)
             writer.writerow(row)
 
         return response
