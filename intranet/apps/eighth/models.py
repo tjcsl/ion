@@ -688,9 +688,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def get_scheduled_rooms(self):
-        return self.rooms.all() or self.activity.rooms.all()
-
     @property
     def all_associated_rooms(self):
         return list(self.rooms.all()) + list(self.activity.rooms.all())

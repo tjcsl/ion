@@ -48,7 +48,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             current_signup = current_sched_act.title_with_flags
             current_signup_cancelled = current_sched_act.cancelled
             current_signup_sticky = current_sched_act.activity.sticky
-            rooms = current_sched_act.get_scheduled_rooms()
+            rooms = current_sched_act.get_true_rooms()
         else:
             current_signup = None
             current_signup_cancelled = False

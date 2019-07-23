@@ -193,12 +193,12 @@ class EighthTest(IonTestCase):
         act1.rooms.add(room1)
         schact1 = self.schedule_activity(act1.id, block1.id)
 
-        self.assertIn(room1, schact1.get_scheduled_rooms())
-        self.assertEqual(1, len(schact1.get_scheduled_rooms()))
+        self.assertIn(room1, schact1.get_true_rooms())
+        self.assertEqual(1, len(schact1.get_true_rooms()))
 
         schact1.rooms.add(room2)
-        self.assertIn(room2, schact1.get_scheduled_rooms())
-        self.assertEqual(1, len(schact1.get_scheduled_rooms()))
+        self.assertIn(room2, schact1.get_true_rooms())
+        self.assertEqual(1, len(schact1.get_true_rooms()))
 
     def test_room_formatting(self):
         """Make sure a room name formatting is correct."""
