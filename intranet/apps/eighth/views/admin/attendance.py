@@ -13,6 +13,7 @@ from django.shortcuts import redirect, render
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
+from .....utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 
@@ -36,13 +37,13 @@ def delinquent_students_view(request):
     start_date = request.GET.get("start", "")
     end_date = request.GET.get("end", "")
 
-    if not lower_absence_limit.isdigit():
+    if not is_entirely_digit(lower_absence_limit):
         lower_absence_limit = ""
         lower_absence_limit_filter = 1
     else:
         lower_absence_limit_filter = lower_absence_limit
 
-    if not upper_absence_limit.isdigit():
+    if not is_entirely_digit(upper_absence_limit):
         upper_absence_limit = ""
         upper_absence_limit_filter = 1000
     else:

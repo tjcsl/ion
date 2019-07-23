@@ -1,6 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import datetime
 import logging
+import string
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -139,7 +140,7 @@ class EighthRoom(AbstractBaseEighthModel):
     @property
     def formatted_name(self):
         """str: The formatted name of the Room."""
-        if self.name[0].isdigit():
+        if self.name[0] in string.digits:
             # All rooms starting with an integer will be prefixed
             return "Rm. {}".format(self.name)
         if self.name.startswith("Room"):

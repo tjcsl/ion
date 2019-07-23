@@ -14,6 +14,7 @@ from ..search.utils import get_query
 from ..users.models import Grade, Course
 from ..users.views import profile_view
 from ..auth.decorators import deny_restricted
+from ...utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 def query(q, admin=False):
     # If only a digit, search for student ID and user ID
     results = []
-    if q.isdigit():
+    if is_entirely_digit(q):
         logger.debug("Digit search: %s", q)
         sid_users = get_user_model().objects.filter(student_id=q)
         uid_users = get_user_model().objects.filter(id=q)
@@ -110,7 +111,7 @@ def query(q, admin=False):
                     continue
 
                 default_categories = ["first_name", "last_name", "nickname"]
-                if p.isdigit():
+                if is_entirely_digit(p):
                     default_categories.append('id')
                 if admin:
                     default_categories.append("middle_name")
@@ -140,7 +141,7 @@ def query(q, admin=False):
             val = val.lower()
 
             # fix grade, because LDAP only stores graduation year
-            if cat == "grade" and val.isdigit():
+            if cat == "grade" and is_entirely_digit(val):
                 val = "{}".format(Grade.year_from_grade(int(val)))
             elif cat == "grade" and val == "staff":
                 cat = "type"
@@ -190,7 +191,7 @@ def query(q, admin=False):
                 exact = True
                 p = p[1:-1]
             default_categories = ["first_name", "last_name", "nickname", "username"]
-            if p.isdigit():
+            if is_entirely_digit(p):
                 default_categories += ["student_id", "id"]
             if admin:
                 default_categories.append("middle_name")
@@ -282,7 +283,7 @@ def search_view(request):
 
     if q:
         """User search."""
-        if q.isdigit() and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
+        if is_entirely_digit(q) and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
             # Match exact student ID if the input looks like an ID
             u = get_user_model().objects.user_with_student_id(q)
             if u is not None:

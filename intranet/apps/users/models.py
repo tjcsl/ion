@@ -19,6 +19,7 @@ from ..preferences.fields import PhoneField
 from ..bus.models import Route
 from ..polls.models import Poll, Answer
 from ..eighth.models import EighthSponsor, EighthBlock, EighthSignup
+from ...utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ class UserManager(DjangoUserManager):
 
     def user_with_ion_id(self, student_id):
         """Get a unique user object by Ion ID. (Ex. 489)"""
-        if isinstance(student_id, str) and not student_id.isdigit():
+        if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
         results = User.objects.filter(id=student_id)
         if len(results) == 1:
