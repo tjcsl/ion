@@ -177,9 +177,7 @@ class EighthTest(IonTestCase):
         schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.rooms.add(room2)
 
-        self.assertIn(room1, schact1.all_associated_rooms)
-        self.assertIn(room2, schact1.all_associated_rooms)
-        self.assertEqual(2, len(schact1.all_associated_rooms))
+        self.assertQuerysetEqual(schact1.get_all_associated_rooms(), [repr(room1), repr(room2)])
 
     def test_room_use(self):
         """Make sure EighthScheduledActivities return the correct room."""
