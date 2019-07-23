@@ -1,6 +1,7 @@
 from datetime import datetime
 import ipaddress
 import logging
+import string
 import subprocess
 from urllib import parse
 
@@ -117,6 +118,10 @@ class GlobList(list):
         except ValueError:
             pass
         return False
+
+
+def is_entirely_digit(digit_str):
+    return all(c in string.digits for c in digit_str)
 
 
 def single_css_map(name):

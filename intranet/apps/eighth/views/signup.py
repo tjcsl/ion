@@ -13,6 +13,7 @@ from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, Eight
 from ..serializers import EighthBlockDetailSerializer
 from ...auth.decorators import eighth_admin_required, deny_restricted
 from ....utils.serialization import safe_json
+from ....utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ def eighth_signup_view(request, block_id=None):
             return http.HttpResponse(success_message)
 
         for field in ("uid", "bid", "aid"):
-            if not (field in request.POST and request.POST[field].isdigit()):
+            if not (field in request.POST and is_entirely_digit(request.POST[field])):
                 return http.HttpResponseBadRequest(field + " must be an integer")
 
         uid = request.POST["uid"]
@@ -301,7 +302,7 @@ def eighth_multi_signup_view(request):
             return http.HttpResponse("\n".join(display_messages), status=status)
 
         for field in ("uid", "aid"):
-            if not (field in request.POST and request.POST[field].isdigit()):
+            if not (field in request.POST and is_entirely_digit(request.POST[field])):
                 return http.HttpResponseBadRequest(field + " must be an integer")
 
         uid = request.POST["uid"]
@@ -407,7 +408,7 @@ def eighth_multi_signup_view(request):
 def toggle_favorite_view(request):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
-    if not ("aid" in request.POST and request.POST["aid"].isdigit()):
+    if not ("aid" in request.POST and is_entirely_digit(request.POST["aid"])):
         http.HttpResponseBadRequest("Must specify an integer aid")
 
     aid = request.POST["aid"]
@@ -429,7 +430,7 @@ def leave_waitlist_view(request):
         return http.HttpResponseForbidden("Waitlist functionality is currently disabled.")
 
     for field in ("uid", "bid"):
-        if not (field in request.POST and request.POST[field].isdigit()):
+        if not (field in request.POST and is_entirely_digit(request.POST[field])):
             return http.HttpResponseBadRequest(field + " must be an integer")
 
     uid = request.POST["uid"]

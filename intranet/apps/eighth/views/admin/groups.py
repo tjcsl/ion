@@ -114,7 +114,10 @@ def edit_group_view(request, group_id):
     linked_activities = EighthActivity.objects.filter(groups_allowed=group)
 
     def parse_int(value):
-        return int(value) if value.isdigit() else None
+        try:
+            return int(value)
+        except ValueError:
+            return None
 
     context = {
         "group": group,
