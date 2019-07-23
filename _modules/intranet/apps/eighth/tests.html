@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #4921) documentation</title>
+    <title>intranet.apps.eighth.tests &#8212; TJ Intranet v3 (Build #4951) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,8 +133,8 @@
 <span class="kn">from</span> <span class="nn">django.utils.http</span> <span class="k">import</span> <span class="n">urlencode</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 
-<span class="kn">from</span> <span class="nn">..eighth.exceptions</span> <span class="k">import</span> <span class="n">SignupException</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">SignupException</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Email</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
@@ -304,9 +304,7 @@
         <span class="n">schact1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">schact1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room2</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room1</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">all_associated_rooms</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room2</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">all_associated_rooms</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">all_associated_rooms</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertQuerysetEqual</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">get_all_associated_rooms</span><span class="p">(),</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">room1</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">room2</span><span class="p">)])</span></div>
 
 <div class="viewcode-block" id="EighthTest.test_room_use"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_room_use">[docs]</a>    <span class="k">def</span> <span class="nf">test_room_use</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make sure EighthScheduledActivities return the correct room.&quot;&quot;&quot;</span>
@@ -320,12 +318,12 @@
         <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
         <span class="n">schact1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_activity</span><span class="p">(</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">block1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room1</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">get_scheduled_rooms</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">get_scheduled_rooms</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room1</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()))</span>
 
         <span class="n">schact1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room2</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">get_scheduled_rooms</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">get_scheduled_rooms</span><span class="p">()))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">room2</span><span class="p">,</span> <span class="n">schact1</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schact1</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="EighthTest.test_room_formatting"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_room_formatting">[docs]</a>    <span class="k">def</span> <span class="nf">test_room_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make sure a room name formatting is correct.&quot;&quot;&quot;</span>
@@ -612,6 +610,38 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertQuerysetEqual</span><span class="p">(</span><span class="n">act</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">(),</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">schact_today</span><span class="p">)])</span>
         <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="n">block_future</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertQuerysetEqual</span><span class="p">(</span><span class="n">act</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">(),</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">schact_today</span><span class="p">)])</span></div></div>
+
+
+<div class="viewcode-block" id="EighthExceptionTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthExceptionTest">[docs]</a><span class="k">class</span> <span class="nc">EighthExceptionTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthExceptionTest.test_signup_exception"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthExceptionTest.test_signup_exception">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">signup_exception</span> <span class="o">=</span> <span class="n">SignupException</span><span class="p">()</span>
+        <span class="c1"># Test that response is plain with no errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+
+        <span class="n">signup_exception</span><span class="o">.</span><span class="n">SignupForbidden</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Test that response is plain with 1 error</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+
+        <span class="n">signup_exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Test SignupException messages</span>
+        <span class="n">expected_messages_no_admin</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">expected_messages_admin</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ScheduledActivityCancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;SignupForbidden&quot;</span><span class="p">]:</span>
+            <span class="n">expected_messages_no_admin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SignupException</span><span class="o">.</span><span class="n">_messages</span><span class="p">[</span><span class="n">error</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># pylint: disable=protected-access</span>
+            <span class="n">expected_messages_admin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SignupException</span><span class="o">.</span><span class="n">_messages</span><span class="p">[</span><span class="n">error</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># pylint: disable=protected-access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">messages</span><span class="p">(),</span> <span class="n">expected_messages_no_admin</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">expected_messages_admin</span><span class="p">)</span>
+        <span class="n">response_plain</span> <span class="o">=</span> <span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">(</span><span class="n">html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">expected_messages_no_admin</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Test string representations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">&quot;ScheduledActivityCancelled, SignupForbidden&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">&quot;SignupException(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">)))</span></div></div>
 </pre></div>
 
     </div>

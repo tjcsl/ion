@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #4921) documentation</title>
+    <title>intranet.apps.eighth.context_processors &#8212; TJ Intranet v3 (Build #4951) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -130,7 +130,13 @@
 
 
 <div class="viewcode-block" id="start_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.context_processors.start_date">[docs]</a><span class="k">def</span> <span class="nf">start_date</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add the start date to the context for eighth admin views.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Add the start date to the context for eighth admins.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The start date if an eighth_admin, an empty dictionary</span>
+<span class="sd">            otherwise.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;admin_start_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)}</span>
@@ -139,22 +145,31 @@
 
 
 <div class="viewcode-block" id="enable_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.context_processors.enable_waitlist">[docs]</a><span class="k">def</span> <span class="nf">enable_waitlist</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Add whether the waitlist is enabled to the context.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the waitlist is enabled.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;waitlist_enabled&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.context_processors.absence_count">[docs]</a><span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add the absence count to the context for students.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Add the absence count to the context for students.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Number of absences that a student has if</span>
+<span class="sd">            a student, an empty dictionary otherwise.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
         <span class="n">absence_info</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">absence_info</span><span class="p">()</span>
         <span class="n">num_absences</span> <span class="o">=</span> <span class="n">absence_info</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="n">show_notif</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">num_absences</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">notif_seen</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eighth_absence_notif_seen&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">notif_seen</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">absence_info</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">in_clear_absence_period</span><span class="p">():</span>
-                        <span class="n">show_notif</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">num_absences</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eighth_absence_notif_seen&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">show_notif</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">signup</span><span class="o">.</span><span class="n">in_clear_absence_period</span><span class="p">()</span> <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">absence_info</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">show_notif</span><span class="p">:</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;eighth_absence_notif_seen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>

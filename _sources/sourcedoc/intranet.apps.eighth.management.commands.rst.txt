@@ -20,14 +20,6 @@ intranet.apps.eighth.management.commands.delete\_duplicate\_signups module
    :undoc-members:
    :show-inheritance:
 
-intranet.apps.eighth.management.commands.delete\_nonexistent\_users module
---------------------------------------------------------------------------
-
-.. automodule:: intranet.apps.eighth.management.commands.delete_nonexistent_users
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 intranet.apps.eighth.management.commands.find\_duplicates module
 ----------------------------------------------------------------
 
@@ -72,14 +64,6 @@ intranet.apps.eighth.management.commands.signup\_status\_email module
 ---------------------------------------------------------------------
 
 .. automodule:: intranet.apps.eighth.management.commands.signup_status_email
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-intranet.apps.eighth.management.commands.update\_users module
--------------------------------------------------------------
-
-.. automodule:: intranet.apps.eighth.management.commands.update_users
    :members:
    :undoc-members:
    :show-inheritance:
