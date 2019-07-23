@@ -310,6 +310,25 @@ class User(AbstractBaseUser, PermissionsMixin):
         return "{}@{}".format(self.username, domain)
 
     @property
+    def non_tj_email(self):
+        """
+        Returns the user's first non-TJ email found.
+
+        If a user has a primary email set and it is not their TJ email,
+        use that. Otherwise, use the first email found that is not their
+        TJ email.
+
+        Returns:
+            The first non-TJ email found for a user.
+
+        """
+        tj_email = self.tj_email
+        if self.primary_email and self.primary_email != tj_email:
+            return self.primary_email
+
+        return self.emails.exclude(address__iexact=tj_email).first()
+
+    @property
     def notification_email(self):
         """Returns the notification email.
 
