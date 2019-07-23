@@ -804,52 +804,51 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Return whether there are passes that have not been acknowledged."""
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
-    def get_viewable_members(self, user=None):
-        """Get the list of members that you have permissions to view.
+    def _get_viewable_members(self, user):
+        """Get a (unsorted) QuerySet of the members that you have permission to view.
 
-        Returns: List of members
+        Returns: Unsorted QuerySet of the members that you have permssion to view.
 
         """
-        members = []
-        for member in self.members.all():
-            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
+        if user and (user.is_eighth_admin or user.is_eighthoffice or user.is_teacher):
+            return self.members.all()
+        else:
+            q = Q(properties__parent_show_eighth=True, properties__self_show_eighth=True)
+            if user:
+                q |= Q(id=user.id)
+            return self.members.filter(q)
 
-            if show:
-                members.append(member)
+    def get_viewable_members(self, user=None):
+        """Get a QuerySet of the members that you have permission to view, sorted alphabetically.
 
-        return sorted(members, key=lambda u: (u.last_name, u.first_name))
+        Returns: QuerySet of the members that you have permission to view, sorted alphabetically.
+
+        """
+        return self._get_viewable_members(user).order_by("last_name", "first_name")
 
     def get_viewable_members_serializer(self, request):
-        """Get a QuerySet of User objects of students in the activity. Needed for the
-        EighthScheduledActivitySerializer.
+        """Given a request, get an unsorted QuerySet of the members that the requesting user
+        has permission to view.
 
-        Returns: QuerySet
+        Returns: Unsorted QuerySet of the members that you have permssion to view.
 
         """
-        ids = []
-        user = request.user
-        for member in self.members.all():
-            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
-
-            if show:
-                ids.append(member.id)
-
-        return get_user_model().objects.filter(id__in=ids)
+        return self._get_viewable_members(request.user)
 
     def get_hidden_members(self, user=None):
-        """Get the members that you do not have permission to view.
+        """Get a QuerySet of the members that you do not have permission to view.
 
-        Returns: List of members hidden based on their permission preferences
+        Returns: Unsorted QuerySet of the members that you do not have permission to view.
 
         """
-        hidden_members = []
-        for member in self.members.all():
-            show = member.can_view_eighth or (user and (user.is_eighth_admin or user.is_teacher or member == user))
+        if user and (user.is_eighth_admin or user.is_eighthoffice or user.is_teacher):
+            return get_user_model().objects.none()
+        else:
+            hidden_members = self.members.exclude(properties__parent_show_eighth=True, properties__self_show_eighth=True)
+            if user:
+                hidden_members = hidden_members.exclude(id=user.id)
 
-            if not show:
-                hidden_members.append(member)
-
-        return hidden_members
+            return hidden_members
 
     def get_both_blocks_sibling(self):
         """If this is a both-blocks activity, get the other EighthScheduledActivity
