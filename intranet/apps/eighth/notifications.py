@@ -49,22 +49,23 @@ def signup_status_email(user, next_blocks):
         "info_link": base_url + reverse("eighth_signup"),
     }
 
-    subject = "Signup Status for {}".format(date_str)
-
-    return email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, subject, emails)
+    return email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, "Signup Status for {}".format(date_str), emails)
 
 
 def absence_email(signup):
     user = signup.user
     emails = [user.notification_email]
 
-    num_absences = user.absence_count()
-
-    subject = "Eighth Period Absence Information"
-
     # We can't build an absolute URI because this isn't being executed
     # in the context of a Django request
-    base_url = "https://ion.tjhsst.edu/"  # request.build_absolute_uri(reverse('index'))
-    data = {"user": user, "signup": signup, "num_absences": num_absences, "base_url": base_url, "info_link": base_url + "eighth/absences"}
+    base_url = "https://ion.tjhsst.edu"  # request.build_absolute_uri(reverse('index'))
 
-    return email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, subject, emails)
+    data = {
+        "user": user,
+        "signup": signup,
+        "num_absences": user.absence_count(),
+        "base_url": base_url,
+        "info_link": base_url + reverse("eighth_absences"),
+    }
+
+    return email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, "Eighth Period Absence Information", emails)
