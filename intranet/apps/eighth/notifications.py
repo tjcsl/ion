@@ -59,7 +59,7 @@ def signup_status_email(user, next_blocks):
 
 def absence_email(signup):
     user = signup.user
-    em = user.tj_email if user.tj_email else user.emails.first() if user.emails and user.emails.count() >= 1 else None
+    em = user.notification_email
     if em:
         emails = [em]
     else:
