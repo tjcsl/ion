@@ -6,6 +6,7 @@ from cacheops import invalidate_all
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from django.shortcuts import redirect, render
 
 from ...forms.admin import general as general_forms
@@ -28,7 +29,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
     else:
         blocks_next_date = blocks_after_start_date[0].date
         blocks_next = EighthBlock.objects.filter(date=blocks_next_date)
-    groups = Group.objects.prefetch_related("user_set", "groupproperties").order_by("name")
+    groups = Group.objects.prefetch_related("groupproperties").annotate(user_count=Count("user")).order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.select_related("user").order_by("last_name", "first_name")
 
