@@ -5,6 +5,9 @@ from .utils import get_start_date
 def start_date(request):
     """ Add the start date to the context for eighth admins.
 
+        Args:
+            request: The request object
+
         Returns:
             The start date if an eighth_admin, an empty dictionary
             otherwise.
@@ -20,6 +23,9 @@ def start_date(request):
 def enable_waitlist(request):
     """ Add whether the waitlist is enabled to the context.
 
+        Args:
+            request: The request object
+
         Returns:
             bool: Whether the waitlist is enabled.
 
@@ -30,6 +36,9 @@ def enable_waitlist(request):
 
 def absence_count(request):
     """ Add the absence count to the context for students.
+
+        Args:
+            request: The request object
 
         Returns:
             Number of absences that a student has if
