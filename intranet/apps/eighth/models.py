@@ -739,11 +739,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.capacity is not None:
             return self.capacity
 
-        if self.activity.default_capacity and not self.rooms.exists():
+        rooms = self.rooms.all()
+        if rooms:
+            return EighthRoom.total_capacity_of_rooms(rooms)
+
+        if self.activity.default_capacity:
             # use activity-level override
             return self.activity.default_capacity
 
-        return EighthRoom.total_capacity_of_rooms(self.get_true_rooms())
+        return EighthRoom.total_capacity_of_rooms(self.activity.rooms.all())
 
     def is_both_blocks(self):
         return self.both_blocks or self.activity.both_blocks
