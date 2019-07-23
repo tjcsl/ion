@@ -198,9 +198,8 @@
                             </div>
                         {% endif %}
                         {% if profile_user.emails %}
-                        {% with profile_user.emails.all|first as first_email %}
-                        {% if request.user.is_teacher or request.user.is_eighth_admin and first_email == profile_user.tj_email %}
-                        <!-- Don't duplicate TJ email -->
+                        {% if request.user.is_teacher and not profile_user.non_tj_email or request.user.is_eighth_admin and not profile_user.non_tj_email %}
+                            <!-- Don't duplicate TJ email -->
                         {% else %}
                         <tr>
                             <th>
@@ -208,19 +207,18 @@
                             </th>
                             <td>
                                 {% for email in profile_user.emails.all %}
-                                {% if request.user.is_teacher or request.user.is_eighth_admin and email == profile_user.tj_email %}
+                                {% if request.user.is_teacher and email == profile_user.tj_email or request.user.is_eighth_admin and email == profile_user.tj_email %}
                                     <!-- Don't duplicate TJ email -->
                                 {% else %}
                                     <a href="mailto:{{ email }}">
                                         {{ email }}
                                     </a>
-                                {% endif %}
                                     {% if not forloop.last %}<br>{% endif %}
+                                {% endif %}
                                 {% endfor %}
                             </td>
                         </tr>
                         {% endif %}
-                        {% endwith %}
                         {% endif %}
                         {% if profile_user.webpages %}
                         <tr>
