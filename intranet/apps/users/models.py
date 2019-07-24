@@ -472,6 +472,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.attribute_is_visible("show_eighth")
 
     @property
+    def can_view_phone(self):
+        """Checks if a user has the show_telephone permission.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.properties.attribute_is_visible("show_telephone")
+
+    @property
     def is_eighth_admin(self):
         """Checks if user is an eighth period admin.
 
