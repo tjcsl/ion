@@ -87,11 +87,7 @@ def announcement_approved_email(request, obj, req):
     """ Email to teachers who approved. """
     teachers = req.teachers_approved.all()
 
-    teacher_emails = []
-    for u in teachers:
-        em = u.tj_email
-        if em:
-            teacher_emails.append(em)
+    teacher_emails = [u.tj_email for u in teachers]
 
     base_url = request.build_absolute_uri(reverse("index"))
     url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
@@ -102,14 +98,11 @@ def announcement_approved_email(request, obj, req):
         messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
     """ Email to submitter. """
     submitter = req.user
-    submitter_email = submitter.tj_email
-    if submitter_email:
-        submitter_emails = [submitter_email]
-        data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
-        email_send(
-            "announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, submitter_emails
-        )
-        messages.success(request, "Sent teacher approved email to {} users".format(len(submitter_emails)))
+    data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
+    email_send(
+        "announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, [submitter.tj_email]
+    )
+    messages.success(request, "Sent teacher approved email to announcement request submitter")
 
 
 def announcement_posted_email(request, obj, send_all=False):
