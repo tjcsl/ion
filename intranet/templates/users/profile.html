@@ -220,13 +220,13 @@
                         </tr>
                         {% endif %}
                         {% endif %}
-                        {% if profile_user.webpages %}
+                        {% if profile_user.websites.exists %}
                         <tr>
                             <th>
                                 Web
                             </th>
                             <td>
-                                {% for url in profile_user.webpages %}
+                                {% for url in profile_user.websites.all %}
                                 <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
                                 {% if not forloop.last %}<br>{% endif %}
                                 {% endfor %}
