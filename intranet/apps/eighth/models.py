@@ -879,7 +879,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def notify_waitlist(self, waitlists, activity):
         data = {"activity": activity}
         for waitlist in waitlists:
-            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data, "Open Spot Notification", [waitlist.user.primary_email])
+            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data, "Open Spot Notification",
+                       [waitlist.user.primary_email_address])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
@@ -950,7 +951,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     )
                 ):
                     # pylint: enable=too-many-boolean-expressions
-                    if user.primary_email:
+                    if user.primary_email_address:
                         if EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).exists():
                             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
                         waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)

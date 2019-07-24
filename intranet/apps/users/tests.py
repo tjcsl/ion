@@ -106,7 +106,7 @@ class UserTest(IonTestCase):
         # Set primary email
         user.primary_email = Email.objects.create(user=user, address="test2@example.com")
         user.save()
-        self.assertEqual(user.notification_email, user.primary_email.address)
+        self.assertEqual(user.notification_email, user.primary_email_address)
 
 
 class ProfileTest(IonTestCase):

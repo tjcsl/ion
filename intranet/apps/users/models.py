@@ -288,6 +288,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.short_name
 
     @property
+    def primary_email_address(self):
+        try:
+            return self.primary_email.address if self.primary_email else None
+        except Email.DoesNotExist:
+            return None
+
+    @property
     def tj_email(self):
         """Get (or guess) a user's TJ email.
 
@@ -324,8 +331,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         tj_email = self.tj_email
 
-        if self.primary_email and self.primary_email.address != tj_email:
-            return self.primary_email.address
+        if self.primary_email_address and self.primary_email_address != tj_email:
+            return self.primary_email_address
 
         email = self.emails.exclude(address__iexact=tj_email).first()
         return email.address if email else None
@@ -343,8 +350,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        if self.primary_email:
-            return self.primary_email.address
+        if self.primary_email_address:
+            return self.primary_email_address
 
         email = self.emails.first()
         return email.address if email and email.address else self.tj_email
