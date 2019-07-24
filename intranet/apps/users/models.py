@@ -300,7 +300,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         for email in self.emails.all():
             if email.address.endswith(("@fcps.edu", "@tjhsst.edu")):
-                return email
+                return email.address
 
         if self.is_teacher:
             domain = "fcps.edu"
@@ -323,10 +323,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         tj_email = self.tj_email
-        if self.primary_email and self.primary_email != tj_email:
-            return self.primary_email
 
-        return self.emails.exclude(address__iexact=tj_email).first()
+        if self.primary_email and self.primary_email.address != tj_email:
+            return self.primary_email.address
+
+        email = self.emails.exclude(address__iexact=tj_email).first()
+        return email.address if email else None
 
     @property
     def notification_email(self):
@@ -341,7 +343,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.primary_email or self.emails.first() or self.tj_email
+        if self.primary_email:
+            return self.primary_email.address
+
+        email = self.emails.first()
+        return email.address if email and email.address else self.tj_email
 
     @property
     def default_photo(self):
