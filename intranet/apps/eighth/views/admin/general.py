@@ -21,17 +21,26 @@ from ....groups.models import Group
 @eighth_admin_required
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
-    all_activities = EighthActivity.objects.order_by("name")  # show deleted activities
+    all_activities = EighthActivity.objects.order_by("name").only(
+        "id", "name", "special", "restricted", "both_blocks", "administrative", "sticky", "deleted"
+    )  # show deleted activities
     blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date).order_by("date")
-    if blocks_after_start_date.count() == 0:
-        blocks_next = []
+
+    next_block_after_start_date = blocks_after_start_date.first()
+    if next_block_after_start_date is None:
+        blocks_next = EighthBlock.objects.none()
         blocks_next_date = None
     else:
-        blocks_next_date = blocks_after_start_date[0].date
+        blocks_next_date = next_block_after_start_date.date
         blocks_next = EighthBlock.objects.filter(date=blocks_next_date)
+
     groups = Group.objects.prefetch_related("groupproperties").annotate(user_count=Count("user")).order_by("name")
     rooms = EighthRoom.objects.all()
-    sponsors = EighthSponsor.objects.select_related("user").order_by("last_name", "first_name")
+    sponsors = (
+        EighthSponsor.objects.select_related("user")
+        .only("id", "last_name", "first_name", "show_full_name", "user__id")
+        .order_by("last_name", "first_name")
+    )
 
     signup_users_count = get_user_model().objects.get_students().count()
 
