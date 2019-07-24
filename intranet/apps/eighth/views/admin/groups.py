@@ -99,14 +99,13 @@ def edit_group_view(request, group_id):
     members = []
     for user in page:
         grade = user.grade
-        emails = user.emails
         members.append(
             {
                 "id": user.id,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "student_id": user.student_id,
-                "email": user.tj_email if user.tj_email else emails.first() if emails.count() > 0 else "",
+                "email": user.tj_email,
                 "grade": grade.number if user.grade and not user.grade.number == 13 else "Staff",
             }
         )
@@ -363,8 +362,7 @@ def download_group_csv_view(request, group_id):
         row.append(user.student_id)
         grade = user.grade
         row.append(grade.number if grade else "Staff")
-        emails = user.emails
-        row.append(user.tj_email if user.tj_email else emails.first() if emails.count() > 0 else None)
+        row.append(user.tj_email)
         writer.writerow(row)
 
     return response

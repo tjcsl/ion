@@ -97,7 +97,7 @@ class UserTest(IonTestCase):
         user = self.login()
         self.assertEqual(user.primary_email, None)
         self.assertFalse(user.emails.exists())
-        self.assertEqual(str(user.tj_email), "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
         self.assertEqual(user.notification_email, user.tj_email)
 
         email = Email.objects.create(user=user, address="test@example.com")
