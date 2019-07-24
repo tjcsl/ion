@@ -14,24 +14,7 @@ from ...test.ion_test import IonTestCase
 from .notifications import signup_status_email, absence_email
 
 
-class EighthTest(IonTestCase):
-    """
-    Tests for the eighth module.
-    """
-
-    def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
-
-    def create_sponsor(self):
-        user = get_user_model().objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
-        return user
-
-    def test_sponsor(self):
-        sponsor = EighthSponsor.objects.get_or_create(user=self.user, first_name="Eighth", last_name="Sponsor")[0]
-        self.assertEqual(sponsor.name, "Sponsor")
-        sponsor.show_full_name = True
-        self.assertEqual(sponsor.name, "Sponsor, Eighth")
-        self.assertEqual(str(sponsor), "Sponsor, Eighth")
+class EighthAbstractTest(IonTestCase):
 
     def add_block(self, **args):
         # Bypass the manual block creation form.
@@ -49,6 +32,26 @@ class EighthTest(IonTestCase):
         response = self.client.post(reverse("eighth_admin_add_activity"), args)
         self.assertEqual(response.status_code, 302)
         return EighthActivity.objects.get(name=args["name"])
+
+
+class EighthTest(EighthAbstractTest):
+    """
+    Tests for the eighth module.
+    """
+
+    def setUp(self):
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
+
+    def create_sponsor(self):
+        user = get_user_model().objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
+        return user
+
+    def test_sponsor(self):
+        sponsor = EighthSponsor.objects.get_or_create(user=self.user, first_name="Eighth", last_name="Sponsor")[0]
+        self.assertEqual(sponsor.name, "Sponsor")
+        sponsor.show_full_name = True
+        self.assertEqual(sponsor.name, "Sponsor, Eighth")
+        self.assertEqual(str(sponsor), "Sponsor, Eighth")
 
     def schedule_activity(self, block_id, activity_id):
         # FIXME: figure out a way to do this that involves less hard-coding.
@@ -483,6 +486,44 @@ class EighthTest(IonTestCase):
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
         EighthScheduledActivity.objects.create(activity=act, block=block_future)
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
+
+class EighthAdminTest(EighthAbstractTest):
+
+    def add_activity(self, **args):
+        response = self.client.post(reverse("eighth_admin_add_activity"), args)
+        self.assertEqual(response.status_code, 302)
+        return EighthActivity.objects.get(name=args["name"])
+
+    def test_eighth_admin_dashboard_view(self):
+        user = self.login()
+        # Test as non-eighth admin
+        response = self.client.get(reverse("eighth_admin_dashboard"))
+        self.assertEqual(response.status_code, 302)
+
+        user = self.make_admin()
+
+        for i in range(1, 21):
+            self.add_activity(name="Test{}".format(i))
+            Group.objects.create(name="Test{}".format(i))
+            user = get_user_model().objects.create(username="awilliam{}".format(i))
+            EighthRoom.objects.create(name="Test{}".format(i))
+            EighthSponsor.objects.create(user=user, first_name="Angela{}".format(i), last_name="William")
+
+        block = self.add_block(date="9001-4-20", block_letter="A")
+            
+        response = self.client.get(reverse("eighth_admin_dashboard"))
+        self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
+
+        self.assertEqual(response.context["start_date"], timezone.localdate())
+        self.assertQuerysetEqual(response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")])
+        self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()])
+        self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")])
+        self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()])
+        self.assertQuerysetEqual(response.context["sponsors"], [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()])
+        self.assertQuerysetEqual(response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()])
+        self.assertEqual(response.context["blocks_next_date"], datetime.datetime(9001, 4, 20).date())
+        self.assertEqual(response.context["admin_page_title"], "Eighth Period Admin")
+        self.assertEqual(response.context["signup_users_count"], get_user_model().objects.get_students().count())
 
 
 class EighthExceptionTest(IonTestCase):
