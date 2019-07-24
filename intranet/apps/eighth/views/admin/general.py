@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from urllib.parse import unquote
 
 from cacheops import invalidate_all
@@ -8,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
@@ -133,7 +133,7 @@ def cache_view(request):
 
 @eighth_admin_required
 def history_view(request):
-    history_timeframe = datetime.now() - timedelta(minutes=15)
+    history_timeframe = timezone.localtime() - timezone.timedelta(minutes=15)
     history = {
         "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
         "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),  # pylint: disable=no-member
