@@ -45,7 +45,7 @@ def delinquent_students_view(request):
 
     if not is_entirely_digit(upper_absence_limit):
         upper_absence_limit = ""
-        upper_absence_limit_filter = 1000
+        upper_absence_limit_filter = 100
     else:
         upper_absence_limit_filter = upper_absence_limit
 
@@ -78,35 +78,8 @@ def delinquent_students_view(request):
 
     if set(request.GET.keys()).intersection(set(query_params)):
         # attendance MUST have been taken on the activity for the absence to be valid
-        non_delinquents = []
         delinquents = []
-        if int(upper_absence_limit_filter) == 0 or int(lower_absence_limit_filter) == 0:
-            users_with_absence = (
-                EighthSignup.objects.filter(
-                    was_absent=True,
-                    scheduled_activity__attendance_taken=True,
-                    scheduled_activity__block__date__gte=start_date_filter,
-                    scheduled_activity__block__date__lte=end_date_filter,
-                )
-                .values("user")
-                .annotate(absences=Count("user"))
-                .filter(absences__gte=1)
-                .values("user", "absences")
-                .order_by("user")
-            )
-
-            uids_with_absence = [row["user"] for row in users_with_absence]
-            all_students = get_user_model().objects.get_students().values_list("id")
-            uids_all_students = [row[0] for row in all_students]
-            uids_without_absence = set(uids_all_students) - set(uids_with_absence)
-            users_without_absence = get_user_model().objects.filter(id__in=uids_without_absence).order_by("id")
-            non_delinquents = []
-            for usr in users_without_absence:
-                non_delinquents.append({"absences": 0, "user": usr})
-
-            logger.debug(non_delinquents)
-
-        if int(upper_absence_limit_filter) > 0:
+        if int(upper_absence_limit_filter) > 0 and int(lower_absence_limit_filter) > 0:
             delinquents = (
                 EighthSignup.objects.filter(
                     was_absent=True,
@@ -117,19 +90,18 @@ def delinquent_students_view(request):
                 .values("user")
                 .annotate(absences=Count("user"))
                 .filter(absences__gte=lower_absence_limit_filter, absences__lte=upper_absence_limit_filter)
+                # Order with most absences at top
+                .order_by("-absences", "user")
                 .values("user", "absences")
-                .order_by("user")
             )
 
             user_ids = [d["user"] for d in delinquents]
             delinquent_users = get_user_model().objects.filter(id__in=user_ids).order_by("id")
+
             for index, user in enumerate(delinquent_users):
                 delinquents[index]["user"] = user
-            logger.debug(delinquents)
 
             delinquents = list(delinquents)
-
-        delinquents += non_delinquents
 
         def filter_by_grade(delinquent):
             grade = delinquent["user"].grade.number
@@ -145,10 +117,6 @@ def delinquent_students_view(request):
             return include
 
         delinquents = list(filter(filter_by_grade, delinquents))
-        # most absences at top
-        delinquents = sorted(delinquents, key=lambda x: (-1 * x["absences"], x["user"].last_name))
-
-        logger.debug(delinquents)
     else:
         delinquents = None
 
