@@ -95,6 +95,10 @@ class UserTest(IonTestCase):
     def test_notification_email(self):
         # Test default user notification email property
         user = self.login()
+        user.primary_email = None
+        user.save()
+        user.emails.all().delete()
+
         self.assertEqual(user.primary_email, None)
         self.assertFalse(user.emails.exists())
         self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
@@ -107,6 +111,50 @@ class UserTest(IonTestCase):
         user.primary_email = Email.objects.create(user=user, address="test2@example.com")
         user.save()
         self.assertEqual(user.notification_email, user.primary_email_address)
+
+    def test_tj_email_non_tj_email(self):
+        user = self.login()
+        user.primary_email = None
+        user.save()
+        user.emails.all().delete()
+
+        self.assertEqual(user.primary_email, None)
+        self.assertFalse(user.emails.exists())
+        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.non_tj_email, None)
+
+        personal_email = Email.objects.create(user=user, address="abc@example.com")
+        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.non_tj_email, personal_email.address)
+
+        user.user_type = "teacher"
+        user.save()
+        self.assertEqual(user.tj_email, "{}@fcps.edu".format(user.username))
+        self.assertEqual(user.non_tj_email, personal_email.address)
+        user.user_type = "student"
+        user.save()
+
+        email_tj = Email.objects.create(user=user, address="jsmith@tjhsst.edu")
+        self.assertEqual(user.tj_email, email_tj.address)
+        self.assertEqual(user.non_tj_email, personal_email.address)
+        email_tj.delete()
+
+        email_fcps = Email.objects.create(user=user, address="jsmith@fcps.edu")
+        self.assertEqual(user.tj_email, email_fcps.address)
+        self.assertEqual(user.non_tj_email, personal_email.address)
+        email_fcps.delete()
+
+        personal_email.delete()
+
+        email_tj = Email.objects.create(user=user, address="jsmith@tjhsst.edu")
+        self.assertEqual(user.tj_email, email_tj.address)
+        self.assertEqual(user.non_tj_email, None)
+        email_tj.delete()
+
+        email_fcps = Email.objects.create(user=user, address="jsmith@fcps.edu")
+        self.assertEqual(user.tj_email, email_fcps.address)
+        self.assertEqual(user.non_tj_email, None)
+        email_fcps.delete()
 
 
 class ProfileTest(IonTestCase):
