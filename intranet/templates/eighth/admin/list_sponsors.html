@@ -31,15 +31,9 @@
     </style>
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
-{% endblock %}
-
 {% block head %}
+    {{ block.super }}
     {% if dark_mode_enabled %}
-        {% stylesheet 'dark/base' %}
-        {% stylesheet 'dark/nav' %}
         <style>
             #sponsor-list tr.cont {
                 background-color: black;
@@ -52,6 +46,11 @@
             }
         </style>
     {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
 {% endblock %}
 
 {% block admin_main %}

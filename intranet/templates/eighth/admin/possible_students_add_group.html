@@ -20,13 +20,6 @@
     {{ block.super }}
 {% endblock %}
 
-{% block head %}
-    {% if dark_mode_enabled %}
-        {% stylesheet 'dark/base' %}
-        {% stylesheet 'dark/nav' %}
-    {% endif %}
-{% endblock %}
-
 {% block admin_main %}
 <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post" id="add_to_group">
     {% csrf_token %}
