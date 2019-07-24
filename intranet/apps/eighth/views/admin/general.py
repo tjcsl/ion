@@ -132,11 +132,6 @@ def cache_view(request):
 
 
 @eighth_admin_required
-def not_implemented_view(request, *args, **kwargs):
-    raise NotImplementedError("This view has not been implemented yet.")
-
-
-@eighth_admin_required
 def history_view(request):
     history_timeframe = datetime.now() - timedelta(minutes=15)
     history = {
