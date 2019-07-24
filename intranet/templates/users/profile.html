@@ -255,7 +255,8 @@
                         {% endif %}
                         {% endcomment %}
 
-                        {% if profile_user.phones %}
+                        {% if profile_user.phones.exists %}
+                        {% if profile_user.can_view_phone or request.user == profile_user or request.user.is_teacher or request.user.is_eighth_admin %}
                         <tr>
                             <th>
                                 Phone Number{{ profile_user.phones.all|pluralize }}
@@ -272,6 +273,7 @@
                                 {% endfor %}
                             </td>
                         </tr>
+                        {% endif %}
                         {% endif %}
                         {% if profile_user.address %}
                         <tr>
