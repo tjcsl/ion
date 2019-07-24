@@ -178,7 +178,7 @@ def delinquent_students_view(request):
             counselor = delinquent["user"].counselor
             row.append(counselor.last_name if counselor else "")
             row.append(delinquent["user"].tj_email)
-            row.append(delinquent["user"].emails.first() if delinquent["user"].emails and delinquent["user"].emails.count() > 0 else "")
+            row.append(delinquent["user"].non_tj_email or "")
             writer.writerow(row)
 
         return response
@@ -204,7 +204,7 @@ def no_signups_roster(request, block_id):
         response = http.HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = 'attachment; filename="no_signups_roster.csv"'
         writer = csv.writer(response)
-        writer.writerow(["Block ID", "Block Date", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email", "Other Email"])
+        writer.writerow(["Block ID", "Block Date", "Last Name", "First Name", "Student ID", "Grade", "Counselor", "TJ Email", "Personal Email"])
 
         for user in unsigned:
             row = []
@@ -217,7 +217,7 @@ def no_signups_roster(request, block_id):
             counselor = user.counselor
             row.append(counselor.last_name if counselor else "")
             row.append(user.tj_email)
-            row.append(user.non_tj_email)
+            row.append(user.non_tj_email or "")
             writer.writerow(row)
 
         return response
