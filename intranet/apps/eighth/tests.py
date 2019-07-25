@@ -15,7 +15,6 @@ from .notifications import signup_status_email, absence_email
 
 
 class EighthAbstractTest(IonTestCase):
-
     def add_block(self, **args):
         # Bypass the manual block creation form.
         args.update({"custom_block": True})
@@ -487,8 +486,8 @@ class EighthTest(EighthAbstractTest):
         EighthScheduledActivity.objects.create(activity=act, block=block_future)
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
 
-class EighthAdminTest(EighthAbstractTest):
 
+class EighthAdminTest(EighthAbstractTest):
     def add_activity(self, **args):
         response = self.client.post(reverse("eighth_admin_add_activity"), args)
         self.assertEqual(response.status_code, 302)
@@ -509,8 +508,8 @@ class EighthAdminTest(EighthAbstractTest):
             EighthRoom.objects.create(name="Test{}".format(i))
             EighthSponsor.objects.create(user=user, first_name="Angela{}".format(i), last_name="William")
 
-        block = self.add_block(date="9001-4-20", block_letter="A")
-            
+        self.add_block(date="9001-4-20", block_letter="A")
+
         response = self.client.get(reverse("eighth_admin_dashboard"))
         self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
 
@@ -519,7 +518,9 @@ class EighthAdminTest(EighthAbstractTest):
         self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()])
         self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")])
         self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()])
-        self.assertQuerysetEqual(response.context["sponsors"], [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()])
+        self.assertQuerysetEqual(
+            response.context["sponsors"], [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()]
+        )
         self.assertQuerysetEqual(response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()])
         self.assertEqual(response.context["blocks_next_date"], datetime.datetime(9001, 4, 20).date())
         self.assertEqual(response.context["admin_page_title"], "Eighth Period Admin")
