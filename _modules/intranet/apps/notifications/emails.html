@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.notifications.emails &#8212; TJ Intranet v3 (Build #4951) documentation</title>
+    <title>intranet.apps.notifications.emails &#8212; TJ Intranet v3 (Build #4993) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -134,7 +134,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="email_send"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.emails.email_send">[docs]</a><span class="k">def</span> <span class="nf">email_send</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">html_template</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="email_send"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.emails.email_send">[docs]</a><span class="k">def</span> <span class="nf">email_send</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">html_template</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Send an HTML/Plaintext email with the following fields.</span>
 
 <span class="sd">    text_template: URL to a Django template for the text email&#39;s contents</span>
@@ -152,33 +152,10 @@
     <span class="n">html_content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">subject</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_SUBJECT_PREFIX</span> <span class="o">+</span> <span class="n">subject</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">headers</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="n">EmailMultiAlternatives</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">text_content</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-    <span class="n">msg</span><span class="o">.</span><span class="n">attach_alternative</span><span class="p">(</span><span class="n">html_content</span><span class="p">,</span> <span class="s2">&quot;text/html&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Emailing </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
-    <span class="n">msg</span><span class="o">.</span><span class="n">send</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">msg</span></div>
-
-
-<div class="viewcode-block" id="email_send_bcc"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.emails.email_send_bcc">[docs]</a><span class="k">def</span> <span class="nf">email_send_bcc</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">html_template</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Send an HTML/Plaintext email with the following fields.</span>
-
-<span class="sd">    text_template: URL to a Django template for the text email&#39;s contents</span>
-<span class="sd">    html_template: URL to a Django tempalte for the HTML email&#39;s contents</span>
-<span class="sd">    data: The context to pass to the templates</span>
-<span class="sd">    subject: The subject of the email</span>
-<span class="sd">    emails: The addresses to send the email to</span>
-<span class="sd">    headers: A dict of additional headers to send to the message</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">text</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="n">text_template</span><span class="p">)</span>
-    <span class="n">html</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="n">html_template</span><span class="p">)</span>
-    <span class="n">text_content</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">html_content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">subject</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_SUBJECT_PREFIX</span> <span class="o">+</span> <span class="n">subject</span>
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">headers</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="n">EmailMultiAlternatives</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">text_content</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">,</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="n">emails</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bcc</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">EmailMultiAlternatives</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">text_content</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">,</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="n">emails</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">EmailMultiAlternatives</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">text_content</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_FROM</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
     <span class="n">msg</span><span class="o">.</span><span class="n">attach_alternative</span><span class="p">(</span><span class="n">html_content</span><span class="p">,</span> <span class="s2">&quot;text/html&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Emailing </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
     <span class="n">msg</span><span class="o">.</span><span class="n">send</span><span class="p">()</span>

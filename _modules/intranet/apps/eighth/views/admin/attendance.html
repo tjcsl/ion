@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #4951) documentation</title>
+    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #4993) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -172,7 +172,7 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">upper_absence_limit</span><span class="p">):</span>
         <span class="n">upper_absence_limit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">upper_absence_limit_filter</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="n">upper_absence_limit_filter</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">upper_absence_limit_filter</span> <span class="o">=</span> <span class="n">upper_absence_limit</span>
 
@@ -205,35 +205,8 @@
 
     <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">query_params</span><span class="p">)):</span>
         <span class="c1"># attendance MUST have been taken on the activity for the absence to be valid</span>
-        <span class="n">non_delinquents</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">delinquents</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">upper_absence_limit_filter</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">lower_absence_limit_filter</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">users_with_absence</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                    <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date_filter</span><span class="p">,</span>
-                    <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date_filter</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">absences</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">absences__gte</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;absences&quot;</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
-            <span class="p">)</span>
-
-            <span class="n">uids_with_absence</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">users_with_absence</span><span class="p">]</span>
-            <span class="n">all_students</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
-            <span class="n">uids_all_students</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">all_students</span><span class="p">]</span>
-            <span class="n">uids_without_absence</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">uids_all_students</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">uids_with_absence</span><span class="p">)</span>
-            <span class="n">users_without_absence</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">uids_without_absence</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
-            <span class="n">non_delinquents</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">usr</span> <span class="ow">in</span> <span class="n">users_without_absence</span><span class="p">:</span>
-                <span class="n">non_delinquents</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;absences&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">usr</span><span class="p">})</span>
-
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">non_delinquents</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">upper_absence_limit_filter</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">upper_absence_limit_filter</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">lower_absence_limit_filter</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">delinquents</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                     <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -244,19 +217,18 @@
                 <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">absences</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
                 <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">absences__gte</span><span class="o">=</span><span class="n">lower_absence_limit_filter</span><span class="p">,</span> <span class="n">absences__lte</span><span class="o">=</span><span class="n">upper_absence_limit_filter</span><span class="p">)</span>
+                <span class="c1"># Order with most absences at top</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-absences&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;absences&quot;</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
             <span class="p">)</span>
 
             <span class="n">user_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">delinquents</span><span class="p">]</span>
             <span class="n">delinquent_users</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">user_ids</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">user</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">delinquent_users</span><span class="p">):</span>
                 <span class="n">delinquents</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">delinquents</span><span class="p">)</span>
 
             <span class="n">delinquents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">delinquents</span><span class="p">)</span>
-
-        <span class="n">delinquents</span> <span class="o">+=</span> <span class="n">non_delinquents</span>
 
         <span class="k">def</span> <span class="nf">filter_by_grade</span><span class="p">(</span><span class="n">delinquent</span><span class="p">):</span>
             <span class="n">grade</span> <span class="o">=</span> <span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span>
@@ -272,10 +244,6 @@
             <span class="k">return</span> <span class="n">include</span>
 
         <span class="n">delinquents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filter_by_grade</span><span class="p">,</span> <span class="n">delinquents</span><span class="p">))</span>
-        <span class="c1"># most absences at top</span>
-        <span class="n">delinquents</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">delinquents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;absences&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">last_name</span><span class="p">))</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">delinquents</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">delinquents</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -304,8 +272,8 @@
             <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
             <span class="n">counselor</span> <span class="o">=</span> <span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">counselor</span>
             <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counselor</span><span class="o">.</span><span class="n">last_name</span> <span class="k">if</span> <span class="n">counselor</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tj_email</span><span class="p">))</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="k">if</span> <span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">emails</span> <span class="ow">and</span> <span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tj_email</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delinquent</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">non_tj_email</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">response</span></div>
@@ -331,7 +299,7 @@
         <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
         <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename=&quot;no_signups_roster.csv&quot;&#39;</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Block ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Block Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">,</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Student ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;Counselor&quot;</span><span class="p">,</span> <span class="s2">&quot;TJ Email&quot;</span><span class="p">,</span> <span class="s2">&quot;Other Email&quot;</span><span class="p">])</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Block ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Block Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">,</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Student ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;Counselor&quot;</span><span class="p">,</span> <span class="s2">&quot;TJ Email&quot;</span><span class="p">,</span> <span class="s2">&quot;Personal Email&quot;</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">unsigned</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
@@ -343,8 +311,8 @@
             <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
             <span class="n">counselor</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span>
             <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counselor</span><span class="o">.</span><span class="n">last_name</span> <span class="k">if</span> <span class="n">counselor</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">))</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">non_tj_email</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">non_tj_email</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">response</span></div>

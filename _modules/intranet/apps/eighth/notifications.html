@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #4951) documentation</title>
+    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #4993) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -127,6 +127,8 @@
   <h1>Source code for intranet.apps.eighth.notifications</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
+
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span>
 
@@ -134,28 +136,23 @@
 
 
 <div class="viewcode-block" id="signup_status_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.signup_status_email">[docs]</a><span class="k">def</span> <span class="nf">signup_status_email</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">next_blocks</span><span class="p">):</span>
-    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">notification_email</span>
-    <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
-        <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">em</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">notification_email</span><span class="p">]</span>
 
     <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">issues</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">next_blocks</span><span class="p">:</span>
+        <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">blk</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">signup</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">if</span> <span class="n">signup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">issues</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
+                <span class="n">issues</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">if</span> <span class="n">signup</span> <span class="ow">and</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
-            <span class="n">issues</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">blk</span><span class="p">,</span> <span class="s2">&quot;signup&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">cancelled</span><span class="p">})</span>
 
     <span class="n">block_date</span> <span class="o">=</span> <span class="n">next_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">date</span>
@@ -165,11 +162,9 @@
 
     <span class="n">date_str</span> <span class="o">=</span> <span class="n">block_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, %B </span><span class="si">%-d</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Signup Status for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span>
-
     <span class="c1"># We can&#39;t build an absolute URI because this isn&#39;t being executed</span>
     <span class="c1"># in the context of a Django request</span>
-    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu/&quot;</span>  <span class="c1"># request.build_absolute_uri(reverse(&#39;index&#39;))</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu&quot;</span>  <span class="c1"># request.build_absolute_uri(reverse(&#39;index&#39;))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
         <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">blocks</span><span class="p">,</span>
@@ -178,30 +173,29 @@
         <span class="s2">&quot;block_signup_time&quot;</span><span class="p">:</span> <span class="n">block_signup_time</span><span class="p">,</span>
         <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
         <span class="s2">&quot;issues&quot;</span><span class="p">:</span> <span class="n">issues</span><span class="p">,</span>
-        <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;eighth/signup&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">base_url</span> <span class="o">+</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_signup&quot;</span><span class="p">),</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/signup_status.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/signup_status.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/signup_status.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/signup_status.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Signup Status for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_str</span><span class="p">),</span> <span class="n">emails</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.absence_email">[docs]</a><span class="k">def</span> <span class="nf">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">user</span>
-    <span class="n">em</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">notification_email</span>
-    <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
-        <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">em</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="n">num_absences</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span>
-
-    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Eighth Period Absence Information&quot;</span>
+    <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">notification_email</span><span class="p">]</span>
 
     <span class="c1"># We can&#39;t build an absolute URI because this isn&#39;t being executed</span>
     <span class="c1"># in the context of a Django request</span>
-    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu/&quot;</span>  <span class="c1"># request.build_absolute_uri(reverse(&#39;index&#39;))</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;signup&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="p">,</span> <span class="s2">&quot;num_absences&quot;</span><span class="p">:</span> <span class="n">num_absences</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;eighth/absences&quot;</span><span class="p">}</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu&quot;</span>  <span class="c1"># request.build_absolute_uri(reverse(&#39;index&#39;))</span>
 
-    <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/absence.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/absence.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s2">&quot;signup&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="p">,</span>
+        <span class="s2">&quot;num_absences&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">absence_count</span><span class="p">(),</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
+        <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">base_url</span> <span class="o">+</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_absences&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/absence.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/absence.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Eighth Period Absence Information&quot;</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4951) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #4993) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -415,6 +415,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span></div>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">primary_email_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="n">Email</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get (or guess) a user&#39;s TJ email.</span>
 
@@ -427,7 +434,7 @@
 
         <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;@fcps.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;@tjhsst.edu&quot;</span><span class="p">)):</span>
-                <span class="k">return</span> <span class="n">email</span>
+                <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
             <span class="n">domain</span> <span class="o">=</span> <span class="s2">&quot;fcps.edu&quot;</span>
@@ -450,10 +457,12 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tj_email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tj_email</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span> <span class="o">!=</span> <span class="n">tj_email</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">address__iexact</span><span class="o">=</span><span class="n">tj_email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span> <span class="o">!=</span> <span class="n">tj_email</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
+
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">address__iexact</span><span class="o">=</span><span class="n">tj_email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="n">email</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">notification_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -468,7 +477,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tj_email</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
+
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="n">email</span> <span class="ow">and</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">tj_email</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -584,6 +597,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_eighth&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">can_view_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if a user has the show_telephone permission.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_telephone&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighth_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

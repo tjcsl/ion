@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #4951) documentation</title>
+    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #4993) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -139,7 +139,7 @@
 
 <span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="k">import</span> <span class="n">OAuth1</span>
 
-<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span><span class="p">,</span> <span class="n">email_send_bcc</span>
+<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -214,11 +214,7 @@
     <span class="sd">&quot;&quot;&quot; Email to teachers who approved. &quot;&quot;&quot;</span>
     <span class="n">teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_approved</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-    <span class="n">teacher_emails</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">:</span>
-        <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">tj_email</span>
-        <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
-            <span class="n">teacher_emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
+    <span class="n">teacher_emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">]</span>
 
     <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;view_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
@@ -229,14 +225,11 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)))</span>
     <span class="sd">&quot;&quot;&quot; Email to submitter. &quot;&quot;&quot;</span>
     <span class="n">submitter</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">user</span>
-    <span class="n">submitter_email</span> <span class="o">=</span> <span class="n">submitter</span><span class="o">.</span><span class="n">tj_email</span>
-    <span class="k">if</span> <span class="n">submitter_email</span><span class="p">:</span>
-        <span class="n">submitter_emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">submitter_email</span><span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;submitted&quot;</span><span class="p">}</span>
-        <span class="n">email_send</span><span class="p">(</span>
-            <span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">submitter_emails</span>
-        <span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">submitter_emails</span><span class="p">)))</span></div>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;submitted&quot;</span><span class="p">}</span>
+    <span class="n">email_send</span><span class="p">(</span>
+        <span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="p">[</span><span class="n">submitter</span><span class="o">.</span><span class="n">tj_email</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to announcement request submitter&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="announcement_posted_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.announcement_posted_email">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">send_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -274,7 +267,7 @@
         <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;view_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">}</span>
-        <span class="n">email_send_bcc</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_posted.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_posted.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
+        <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_posted.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_posted.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent email to </span><span class="si">{}</span><span class="s2"> users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users_send</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Emailing announcements disabled&quot;</span><span class="p">)</span></div>
