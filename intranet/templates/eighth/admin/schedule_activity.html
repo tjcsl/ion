@@ -7,16 +7,16 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
-    <script type="text/javascript">
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
+    <script>
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
         window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
         window.all_rooms = _.values(all_rooms_lookup);
     </script>
 
-    <script type="text/javascript">
+    <script>
     $(function() {
         $(".schedule-form").areYouSure();
         $("a#schedule-activity").click(function() {
@@ -61,7 +61,7 @@
     });
     </script>
 
-    <script type="text/javascript" src="{% static 'js/eighth/schedule.js' %}"></script>
+    <script src="{% static 'js/eighth/schedule.js' %}"></script>
 {% endblock %}
 
 {% block css %}

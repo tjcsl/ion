@@ -18,16 +18,16 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
-    <script type="text/javascript">
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    <script>
         $(function() {
             Sortable.init();
         });
     </script>
 {% if show_selection %}
-    <script type="text/javascript" src="{% static 'js/eighth/distribute_group.js' %}"></script>
+    <script src="{% static 'js/eighth/distribute_group.js' %}"></script>
 {% else %}
-    <script type="text/javascript">
+    <script>
         $(function() {
             $("form[name=wizard] select#id_block-block").on("change", function() {
                 document.forms["wizard"].submit();

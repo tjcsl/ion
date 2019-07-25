@@ -21,15 +21,15 @@
 
         {% stylesheet 'signage.base' %}
 
-        <script type="text/javascript">
+        <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/signage/serviceworker.js');
             }
             window.lockPage = '{{ sign.lock_page.pk }}';
             window.defaultPage = '{{ sign.default_page.pk }}';
         </script>
-        <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
+        <script src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+        <script src="{% static 'js/signage.js' %}"></script>
     </head>
     <body class="signage {% if sign.landscape %}landscape{% else %}portrait{% endif %}">
         <div class="signage-container">
