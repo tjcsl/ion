@@ -149,13 +149,13 @@
 {% block js %}
     {{ block.super }}
 
-    <script type="text/javascript" src="{% static 'vendor/jquery-ui-1.11.0.custom/jquery-ui.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/responsive.core.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/common.header.js' %}"></script>
+    <script src="{% static 'vendor/jquery-ui-1.11.0.custom/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/responsive.core.js' %}"></script>
+    <script src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
+    <script src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
+    <script src="{% static 'js/common.header.js' %}"></script>
     {% if messages %}
-        <script type="text/javascript">
+        <script>
         window.addEventListener("load", function() {
         {% for message in messages %}
             {% if message.level >= 30 %}
@@ -170,7 +170,7 @@
         </script>
     {% endif %}
 
-    <script type="text/javascript">
+    <script>
     blockSwitch = function(rel) {
         if(location.search.indexOf("block_increment=") != -1) {
             var p = location.search.split("block_increment=");
@@ -182,12 +182,12 @@
     </script>
 
 
-    <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/json2.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
-    <script type="text/javascript">
+    <script src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
+    <script src="{% static 'js/vendor/json2.js' %}"></script>
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
+    <script src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script>
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
             jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
@@ -213,27 +213,27 @@
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
     </script>
-    <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/signage.js' %}"></script>
+    <script src="{% static 'js/eighth/responsive.js' %}"></script>
+    <script src="{% static 'js/eighth/signupUI.js' %}"></script>
+    <script src="{% static 'js/eighth/signup.js' %}"></script>
+    <script src="{% static 'js/eighth/signup.search.js' %}"></script>
+    <script src="{% static 'js/signage.js' %}"></script>
     {% if not request.user.is_eighth_admin %}
-    <script type="text/javascript">
+    <script>
         $(function() {
             $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
         });
     </script>
     {% endif %}
     {% if request.GET.activity %}
-        <script type="text/javascript">
+        <script>
         $(function() {
                 $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
         })
         </script>
     {% endif %}
     {% if use_scroll_individual %}
-        <script type="text/javascript">
+        <script>
         $(function() {
             $(".primary-content").addClass("scroll-display");
             $("#activity-list").before($(".middle-wrapper"));
@@ -265,7 +265,7 @@
     {% endif %}
     {% if use_scroll %}
         <style>body { overflow: hidden; }</style>
-        <script type="text/javascript">
+        <script>
         $(function() {
             $(".primary-content").addClass("scroll-display");
             $("#activity-list").before($(".middle-wrapper"));
@@ -302,14 +302,14 @@
         </script>
     {% endif %}
     {% if do_reload %}
-        <script type="text/javascript">
+        <script>
         window.setTimeout(function() {
             location.reload()
         }, {{ reload_mins }} * 60 * 1000)
         </script>
     {% endif %}
     {% if preload_background %}
-        <script type="text/javascript">
+        <script>
         $(window).load(function() {
             $(".loading").hide();
         });

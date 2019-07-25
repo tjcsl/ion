@@ -33,7 +33,7 @@
 {% block js %}
     {{ block.super }}
     {% if profile_user.is_student %}
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $('.preferred-user-picture img, .preferred-user-picture span').click(function() {
                     $(".user-pictures img").each(function() {
@@ -53,7 +53,7 @@
         </script>
     {% endif %}
     {% if request.user.is_eighth_admin %}
-        <script type="text/javascript">
+        <script>
         $(document).ready(function() {
             $("#user-groups form").submit(function(e) {
                 if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest(".group").find("a").text()) + "?")) {
@@ -63,7 +63,7 @@
         });
         </script>
     {% endif %}
-    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
 {% endblock %}
 
 {% block head %}

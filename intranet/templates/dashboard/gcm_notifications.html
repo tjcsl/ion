@@ -1,5 +1,5 @@
 {% load static %}
-<script type="text/javascript">
+<script>
 window.ion = {
     base_url: "{{ ion_base_url }}",
     authenticated: {% if request.user.is_authenticated %}true{% else %}false{% endif %},
@@ -8,5 +8,5 @@ window.ion = {
     gcm_optout: {% if request.user.is_authenticated and request.user.notificationconfig %}{% if request.user.notificationconfig.gcm_optout and not request.user.is_eighthoffice %}true{% else %}false{% endif %}{% else %}null{% endif %}
 };
 </script>
-<script type="text/javascript" src="{% static 'js/vendor/sha256.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/swnotifications.js' %}"></script>
+<script src="{% static 'js/vendor/sha256.js' %}"></script>
+<script src="{% static 'js/swnotifications.js' %}"></script>
