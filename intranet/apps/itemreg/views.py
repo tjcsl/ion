@@ -111,62 +111,32 @@ def search_view(request):
 
 @login_required
 @deny_restricted
-def register_calculator_view(request):
-    """Register a calculator."""
+def register_view(request, item_type):
+    """Register an item."""
+    registration_types = {
+        "calculator": CalculatorRegistrationForm,
+        "computer": ComputerRegistrationForm,
+        "phone": PhoneRegistrationForm,
+    }
+    if item_type not in registration_types:
+        raise http.Http404
+
+    form_class = registration_types[item_type]
     if request.method == "POST":
-        form = CalculatorRegistrationForm(request.POST)
+        form = form_class(request.POST)
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
             obj.save()
-            messages.success(request, "Successfully added calculator.")
+            messages.success(request, "Successfully added {}.".format(item_type))
             return redirect("itemreg")
         else:
-            messages.error(request, "Error adding calculator.")
+            messages.error(request, "Error adding {}.".format(item_type))
     else:
-        form = CalculatorRegistrationForm()
-    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "calculator", "form_route": "itemreg_calculator"})
+        form = form_class()
 
-
-@login_required
-@deny_restricted
-def register_computer_view(request):
-    """Register a computer."""
-    if request.method == "POST":
-        form = ComputerRegistrationForm(request.POST)
-        logger.debug(form)
-        if form.is_valid():
-            obj = form.save()
-            obj.user = request.user
-            obj.save()
-            messages.success(request, "Successfully added computer.")
-            return redirect("itemreg")
-        else:
-            messages.error(request, "Error adding computer.")
-    else:
-        form = ComputerRegistrationForm()
-    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "computer", "form_route": "itemreg_computer"})
-
-
-@login_required
-@deny_restricted
-def register_phone_view(request):
-    """Register a phone."""
-    if request.method == "POST":
-        form = PhoneRegistrationForm(request.POST)
-        logger.debug(form)
-        if form.is_valid():
-            obj = form.save()
-            obj.user = request.user
-            obj.save()
-            messages.success(request, "Successfully added phone.")
-            return redirect("itemreg")
-        else:
-            messages.error(request, "Error adding phone.")
-    else:
-        form = PhoneRegistrationForm()
-    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "phone", "form_route": "itemreg_phone"})
+    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": item_type})
 
 
 @login_required
