@@ -240,6 +240,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return "{} {}".format(self.first_name, self.last_name)
 
     @property
+    def full_name_nick(self) -> str:
+        """If the user has a nickname, returns their name in the format "Nickname Lastname."
+        Otherwise, this is identical to full_name.
+
+        Returns:
+            The user's full name, with their nickname substituted for their first name if it is set.
+
+        """
+        return f"{self.nickname or self.first_name} {self.last_name}"
+
+    @property
     def display_name(self):
         return self.full_name
 
