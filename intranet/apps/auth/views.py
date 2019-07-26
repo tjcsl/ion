@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.utils import timezone
@@ -167,16 +168,22 @@ class LoginView(View):
             if request.user.is_student and settings.ENABLE_PRE_EIGHTH_REDIRECT:
                 # Redirect to eighth signup page if the user isn't signed up for eighth period activities
                 now = timezone.localtime(timezone.now())
+                future_cutoff = now + timedelta(minutes=20)
 
-                today_blocks = EighthBlock.objects.filter(date=now.date())
-                if today_blocks.exists():
-                    for block in today_blocks:
-                        block_start = timezone.make_aware(datetime.combine(now.date(), block.signup_time), now.tzinfo)
-                        time_difference = block_start - now
-                        if timedelta(0) <= time_difference <= timedelta(minutes=20):
-                            if not EighthSignup.objects.filter(user=request.user, scheduled_activity__block=block).exists():
-                                default_next_page = "eighth_signup"
-                                break
+                if now.date() == future_cutoff.date():
+                    q = Q(date=now.date(), signup_time__gte=now.time(), signup_time__lte=future_cutoff.time())
+                else:
+                    q = (
+                        Q(date=now.date(), signup_time__gte=now.time()) |
+                        Q(date=future_cutoff.date(), signup_time__lte=future_cutoff.time())
+                    )
+
+                blocks = EighthBlock.objects.filter(q)
+                if blocks.exists():
+                    for block in blocks:
+                        if not EighthSignup.objects.filter(user=request.user, scheduled_activity__block=block).exists():
+                            default_next_page = "eighth_signup"
+                            break
 
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
