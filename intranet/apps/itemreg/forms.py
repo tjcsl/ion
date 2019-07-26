@@ -10,7 +10,7 @@ class CalculatorRegistrationForm(forms.ModelForm):
         self.fields["calc_serial"].label = "Calculator Serial"
         self.fields["calc_serial"].help_text = "Enter the calculator serial code (found engraved on the back of the calculator)"
         self.fields["calc_id"].label = "Calculator ID"
-        self.fields["calc_id"].help_text = "Enter the calculator ID (found using the instructions below) without dashes"
+        self.fields["calc_id"].help_text = "Enter the calculator ID (without dashes)"
 
     class Meta:
         model = CalculatorRegistration
