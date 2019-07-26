@@ -18,7 +18,7 @@ def home_view(request):
     phones = PhoneRegistration.objects.filter(user=request.user)
     computers = ComputerRegistration.objects.filter(user=request.user)
     context = {
-        "registered_devices": (calculators or phones or computers),
+        "registered_devices": bool(calculators or phones or computers),
         "calculators": calculators,
         "computers": computers,
         "phones": phones,
@@ -44,73 +44,37 @@ def search_view(request):
         cresults = CalculatorRegistration.objects.all()
         logger.debug(cresults)
 
-        calc_serial = request.GET.get("calc_serial")
-        if calc_serial:
-            cresults = cresults.filter(calc_serial__icontains=calc_serial)
+        for name in ["calc_serial", "calc_id", "calc_type"]:
+            value = request.GET.get(name)
+            if value:
+                cresults = cresults.filter(**{name: value})
 
-        logger.debug(cresults)
+            logger.debug(cresults)
 
-        calc_id = request.GET.get("calc_id")
-        if calc_id:
-            cresults = cresults.filter(calc_id__icontains=calc_id)
-
-        logger.debug(cresults)
-
-        calc_type = request.GET.get("calc_type")
-        if calc_type:
-            cresults = cresults.filter(calc_type=calc_type)
-
-        logger.debug(cresults)
         results["calculator"] = cresults
     elif item_type == "computer":
         cresults = ComputerRegistration.objects.all()
         logger.debug(cresults)
 
-        manufacturer = request.GET.get("manufacturer")
-        if manufacturer:
-            cresults = cresults.filter(manufacturer=manufacturer)
+        for name in ["manufacturer", "model", "serial", "screen_size"]:
+            value = request.GET.get(name)
+            if value:
+                cresults = cresults.filter(**{name: value})
 
-        logger.debug(cresults)
+            logger.debug(cresults)
 
-        model = request.GET.get("model")
-        if model:
-            cresults = cresults.filter(model__icontains=model)
-
-        logger.debug(cresults)
-
-        serial = request.GET.get("serial")
-        if serial:
-            cresults = cresults.filter(serial__icontains=serial)
-
-        logger.debug(cresults)
-
-        screen_size = request.GET.get("screen_size")
-        if screen_size:
-            cresults = cresults.filter(screen_size=screen_size)
-
-        logger.debug(cresults)
         results["computer"] = cresults
     elif item_type == "phone":
         cresults = PhoneRegistration.objects.all()
         logger.debug(cresults)
 
-        manufacturer = request.GET.get("manufacturer")
-        if manufacturer:
-            cresults = cresults.filter(manufacturer=manufacturer)
+        for name in ["manufacturer", "model", "serial"]:
+            value = request.GET.get(name)
+            if value:
+                cresults = cresults.filter(**{name: value})
 
-        logger.debug(cresults)
+            logger.debug(cresults)
 
-        model = request.GET.get("model")
-        if model:
-            cresults = cresults.filter(model__icontains=model)
-
-        logger.debug(cresults)
-
-        serial = request.GET.get("serial")
-        if serial:
-            cresults = cresults.filter(serial__icontains=serial)
-
-        logger.debug(cresults)
         results["phone"] = cresults
     elif item_type == "all":
         results["calculator"] = CalculatorRegistration.objects.all()
@@ -130,16 +94,15 @@ def search_view(request):
                 results[i] = results[i].filter(user__in=search)
 
     class NoneDict(dict):
-
         def __getitem__(self, key):
-            return dict.get(self, key)
+            return self.get(key)
 
     getargs = NoneDict(dict(request.GET))
 
     context.update({
         "type": item_type,
         "results": results,
-        "no_results": sum([len(results[i]) if results[i] else 0 for i in results]) < 1,
+        "no_results": not any(results.values()),
         "getargs": getargs
     })
 
