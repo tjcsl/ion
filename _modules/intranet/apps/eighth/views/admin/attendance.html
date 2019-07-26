@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #5016) documentation</title>
+    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #5018) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -218,7 +218,7 @@
                 <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">absences</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
                 <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">absences__gte</span><span class="o">=</span><span class="n">lower_absence_limit_filter</span><span class="p">,</span> <span class="n">absences__lte</span><span class="o">=</span><span class="n">upper_absence_limit_filter</span><span class="p">)</span>
                 <span class="c1"># Order with most absences at top</span>
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-absences&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;absences&quot;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -244,6 +244,7 @@
             <span class="k">return</span> <span class="n">include</span>
 
         <span class="n">delinquents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filter_by_grade</span><span class="p">,</span> <span class="n">delinquents</span><span class="p">))</span>
+        <span class="n">delinquents</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">delinquents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;absences&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">last_name</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">delinquents</span> <span class="o">=</span> <span class="kc">None</span>
 
