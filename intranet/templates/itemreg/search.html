@@ -120,7 +120,7 @@
         {% for c in results.calculator %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
-            <td>{{ c.calc_name }}</td>
+            <td>{{ c.get_calc_type_display }}</td>
             <td>{{ c.calc_serial|highlight:getargs.calc_serial|safe }}</td>
             <td>{{ c.calc_id|highlight:getargs.calc_id|safe }}</td>
             <td>{{ c.added }}</td>
@@ -148,7 +148,7 @@
         {% for c in results.computer %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
-            <td>{{ c.manuf_name|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.get_manufacturer_display|highlight:getargs.manufacturer|safe }}</td>
             <td>{{ c.model|highlight:getargs.model|safe }}</td>
             <td>{{ c.screen_size|highlight:getargs.screen_size|safe }}</td>
             <td>{{ c.serial|highlight:getargs.serial|safe }}</td>
@@ -177,7 +177,7 @@
         {% for c in results.phone %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
-            <td>{{ c.manuf_name|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.get_manufacturer_display|highlight:getargs.manufacturer|safe }}</td>
             <td>{{ c.model|highlight:getargs.model|safe }}</td>
             <td>{{ c.serial|highlight:getargs.serial|safe }}</td>
             <td>{{ c.description|highlight:getargs.description|safe }}</td>
