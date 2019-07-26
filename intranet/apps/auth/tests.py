@@ -44,6 +44,10 @@ class LoginViewTest(IonTestCase):
         response = self.login_student()
         return response.status_code == 302 and response["Location"] == url
 
+    @staticmethod
+    def create_block_by_signup_datetime(signup_datetime, **kwargs):
+        return EighthBlock.objects.create(date=signup_datetime.date(), signup_time=signup_datetime.time(), **kwargs)
+
     def test_authentication(self):
         self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
@@ -61,27 +65,27 @@ class LoginViewTest(IonTestCase):
         activity = EighthActivity.objects.create(name="Test Activity 1")
 
         with self.settings(ENABLE_PRE_EIGHTH_REDIRECT=True):
-            block_25 = EighthBlock.objects.create(date=now.date(), signup_time=(now + deltas[25]).time(), block_letter="A")
+            block_25 = self.create_block_by_signup_datetime(now + deltas[25], block_letter="A")
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_25, activity=activity))
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
-            block_15 = EighthBlock.objects.create(date=now.date(), signup_time=(now + deltas[15]).time(), block_letter="B")
+            block_15 = self.create_block_by_signup_datetime(now + deltas[15], block_letter="B")
             self.assertTrue(self.does_login_redirect_to(reverse("eighth_signup")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_15, activity=activity))
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
-            block_10 = EighthBlock.objects.create(date=now.date(), signup_time=(now + deltas[10]).time(), block_letter="C")
+            block_10 = self.create_block_by_signup_datetime(now + deltas[10], block_letter="C")
             self.assertTrue(self.does_login_redirect_to(reverse("eighth_signup")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_10, activity=activity))
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
-            block_5 = EighthBlock.objects.create(date=now.date(), signup_time=(now + deltas[5]).time(), block_letter="D")
+            block_5 = self.create_block_by_signup_datetime(now + deltas[5], block_letter="D")
             self.assertTrue(self.does_login_redirect_to(reverse("eighth_signup")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_5, activity=activity))
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
-            block_n5 = EighthBlock.objects.create(date=now.date(), signup_time=(now + deltas[-5]).time(), block_letter="E")
+            block_n5 = self.create_block_by_signup_datetime(now + deltas[-5], block_letter="E")
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_n5, activity=activity))
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
