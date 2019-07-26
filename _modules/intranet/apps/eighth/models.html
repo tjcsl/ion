@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #4993) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5011) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -213,6 +213,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If show_full_name is set, returns &quot;last name, first name&quot;. Otherwise, returns last name only.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The name to display for the sponsor, omitting the first name unless explicitly requested.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_full_name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
         <span class="k">else</span><span class="p">:</span>
@@ -220,6 +226,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">to_be_assigned</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if the sponsor&#39;s name contains &quot;to be assigned&quot; or similar.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the sponsor is a &quot;to be assigned&quot; sponsor.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -398,6 +410,12 @@
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EighthActivity.capacity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.capacity">[docs]</a>    <span class="k">def</span> <span class="nf">capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns &#39;default_capacity&#39; if it is set. Otherwise, returns the total capacity of all the activity&#39;s rooms.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The activity&#39;s capacity.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Note that this is the default capacity if the</span>
         <span class="c1"># rooms/capacity are not overridden for a particular block.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
@@ -459,6 +477,12 @@
 
 <div class="viewcode-block" id="EighthActivity.available_ids"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.available_ids">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">available_ids</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all available IDs not used by an EighthActivity.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of the available activity IDs.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">id_min</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">id_max</span> <span class="o">=</span> <span class="mi">3200</span>
         <span class="n">nums</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">id_min</span><span class="p">,</span> <span class="n">id_max</span><span class="p">))</span>
@@ -498,6 +522,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_popular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if this activity has more than `settings.SIMILAR_THRESHOLD * 2` frequent_users.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether this activity has more than `settings.SIMILAR_THRESHOLD * 2` frequent_users.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequent_users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
@@ -626,7 +656,16 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">EighthBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthBlock.next_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock.next_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">next_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the next blocks in order.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the next blocks in order.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantity (int, optional): The number of blocks to list after this block, or -1 for all following blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QuerySet: A QuerySet with the specified number of blocks after this block. If `quantity` is passed, then the QuerySet will not be</span>
+<span class="sd">            filter()-able.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
@@ -637,7 +676,16 @@
         <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EighthBlock.previous_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock.previous_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">previous_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the previous blocks in order.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the previous blocks in order.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantity (int, optional): The number of blocks to list before this block, or -1 for all previous blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QuerySet: A QuerySet with the specified number of blocks before this block. If `quantity` is passed, then the QuerySet will not be</span>
+<span class="sd">            filter()-able.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-date&quot;</span><span class="p">,</span> <span class="s2">&quot;-block_letter&quot;</span><span class="p">)</span>
@@ -716,6 +764,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">formatted_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the block date, formatted according to settings.EIGHTH_BLOCK_DATE_FORMAT.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The formatted block date.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">formats</span><span class="o">.</span><span class="n">date_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EIGHTH_BLOCK_DATE_FORMAT</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -816,6 +870,12 @@
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_all_associated_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_all_associated_rooms">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_associated_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QuerySet: A QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
@@ -873,6 +933,12 @@
         <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_both_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_both_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">is_both_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets whether this scheduled activity runs both blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether this activity runs both blocks.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.get_restricted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_restricted">[docs]</a>    <span class="k">def</span> <span class="nf">get_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1004,6 +1070,13 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.notify_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.notify_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">notify_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waitlists</span><span class="p">,</span> <span class="n">activity</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Notifies all users on the given EighthWaitlist objects that the activity has an open spot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified.</span>
+<span class="sd">            activity (EighthScheduledActivity): The activity that has an open spot.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">waitlist</span> <span class="ow">in</span> <span class="n">waitlists</span><span class="p">:</span>
             <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span>
@@ -1261,11 +1334,24 @@
     <span class="sd">&quot;&quot;&quot;Model manager for EighthSignup.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthSignupManager.create_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager.create_signup">[docs]</a>    <span class="k">def</span> <span class="nf">create_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an EighthSignup for the given user in the given activity (after checking for duplicate signups).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user (User): The user to create the EighthSignup for.</span>
+<span class="sd">            scheduled_activity (EighthScheduledActivity): The EighthScheduledActivity to sign the user up for.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthSignupManager.get_absences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager.get_absences">[docs]</a>    <span class="k">def</span> <span class="nf">get_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all EighthSignups for which the student was marked as absent.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QuerySet[EighthSignup]: A QuerySet of all the EighthSignups for which the student was marked as absent.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
@@ -1336,6 +1422,12 @@
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">({</span><span class="n">NON_FIELD_ERRORS</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;EighthSignup already exists for the User and the EighthScheduledActivity&#39;s block&quot;</span><span class="p">,)})</span></div>
 
 <div class="viewcode-block" id="EighthSignup.has_conflict"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.has_conflict">[docs]</a>    <span class="k">def</span> <span class="nf">has_conflict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if another EighthSignup object exists for the same user in the same block.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether there is another EighthSignup for the same user in the same block.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthSignup.remove_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.remove_signup">[docs]</a>    <span class="k">def</span> <span class="nf">remove_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dont_run_waitlist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1375,11 +1467,13 @@
             <span class="k">return</span> <span class="s2">&quot;Successfully removed signup for </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthSignup.accept_pass"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.accept_pass">[docs]</a>    <span class="k">def</span> <span class="nf">accept_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Accepts an eighth period pass for the EighthSignup object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pass_accepted</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;was_absent&quot;</span><span class="p">,</span> <span class="s2">&quot;pass_accepted&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthSignup.reject_pass"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.reject_pass">[docs]</a>    <span class="k">def</span> <span class="nf">reject_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rejects an eighth period pass for the EighthSignup object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pass_accepted</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;was_absent&quot;</span><span class="p">,</span> <span class="s2">&quot;pass_accepted&quot;</span><span class="p">])</span></div>
@@ -1389,6 +1483,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">in_clear_absence_period</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthSignup.archive_remove_absence"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.archive_remove_absence">[docs]</a>    <span class="k">def</span> <span class="nf">archive_remove_absence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If user was absent, archives the absence.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">was_absent</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">archived_was_absent</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1405,12 +1500,44 @@
     <span class="sd">&quot;&quot;&quot;Model manager for EighthWaitlist.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthWaitlistManager.get_next_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.get_next_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activity</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a QuerySet of all the EighthWaitlist objects for the given activity, ordered</span>
+<span class="sd">        by signup time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            activity (EighthScheduledActivity): The activity to list the EighthWaitlist objects for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QuerySet[EighthWaitlist]: A QuerySet of all the EighthWaitlist objects for the given activity,</span>
+<span class="sd">            ordered by signup time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthWaitlistManager.check_for_prescence"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.check_for_prescence">[docs]</a>    <span class="k">def</span> <span class="nf">check_for_prescence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activity</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if the given user is in a waitlist for the given activity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            activity (EighthScheduledActivity): The activity for which the waitlist should be queried.</span>
+<span class="sd">            user (User): The user who should be searched for in the activity&#39;s waitlist.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the given user is in a waitlist for the given activity.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EighthWaitlistManager.position_in_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.position_in_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">position_in_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an activity ID and a user ID, returns the user&#39;s position in the waitlist (starting at 1).</span>
+<span class="sd">        If the user is not in the waitlist, returns 0.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            aid (int): The ID of the EighthScheduledActivity for which the waitlist should be queried.</span>
+<span class="sd">            uid (int): The ID of the user whose position in the waitlist should be found.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The user&#39;s position in the waitlist, starting at 1, or 0 if the user is not in the waitlist.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">aid</span><span class="p">,</span> <span class="n">time__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">aid</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">except</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -1442,6 +1569,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">/</span> <span class="n">cap</span>
 
 <div class="viewcode-block" id="EighthActivitySimilarity.update_weighted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivitySimilarity.update_weighted">[docs]</a>    <span class="k">def</span> <span class="nf">update_weighted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Recalculates the &#39;weighted&#39; field based on changes to similar activities.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weighted</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;weighted&quot;</span><span class="p">])</span></div>
 
