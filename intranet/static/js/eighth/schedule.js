@@ -167,7 +167,9 @@ $(function() {
         $("tr.form-row:not(.hidden)").each(function(i, el) {
             var inputWrapper = $("td[data-field='sponsors'] .selectize-input", el);
             if (!inputWrapper.hasClass("has-items") && inputWrapper.find("input").attr('placeholder') == "No default") {
-                activities += "\n    " + $(".block-name a.ui-link", el).text().trim();
+                if(!$("input[type='checkbox'].unschedule", el).prop("checked")) {
+                    activities += "\n    " + $(".block-name a.ui-link", el).text().trim();
+                }
             }
         });
         if (activities !== "" && !confirm("Are you sure you want to add the following activities without a sponsor?\n" + activities)) {
