@@ -91,7 +91,7 @@ def delinquent_students_view(request):
                 .annotate(absences=Count("user"))
                 .filter(absences__gte=lower_absence_limit_filter, absences__lte=upper_absence_limit_filter)
                 # Order with most absences at top
-                .order_by("-absences", "user")
+                .order_by("user")
                 .values("user", "absences")
             )
 
@@ -117,6 +117,7 @@ def delinquent_students_view(request):
             return include
 
         delinquents = list(filter(filter_by_grade, delinquents))
+        delinquents = sorted(delinquents, key=lambda x: (-1 * x["absences"], x["user"].last_name))
     else:
         delinquents = None
 
