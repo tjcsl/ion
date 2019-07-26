@@ -92,6 +92,90 @@ class UserTest(IonTestCase):
     def test_get_signage_user(self):
         self.assertEqual(get_user_model().get_signage_user().id, 99999)
 
+    def test_name(self):
+        user = self.login()
+        user.username = "2000awilliam"
+        user.first_name = "Andrew"
+        user.last_name = "William"
+        user.nickname = ""
+        user.student_id = ""
+        user.user_type = "student"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andrew William")
+        self.assertEqual(user.last_first, "William, Andrew")
+        self.assertEqual(user.last_first_id, "William, Andrew (2000awilliam)")
+        self.assertEqual(user.last_first_initial, "William, A.")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
+        user.student_id = "1234567"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andrew William")
+        self.assertEqual(user.last_first, "William, Andrew")
+        self.assertEqual(user.last_first_id, "William, Andrew (1234567)")
+        self.assertEqual(user.last_first_initial, "William, A.")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
+        user.student_id = ""
+        user.user_type = "teacher"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andrew William")
+        self.assertEqual(user.last_first, "William, Andrew")
+        self.assertEqual(user.last_first_id, "William, Andrew (2000awilliam)")
+        self.assertEqual(user.last_first_initial, "William, A.")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
+        user.nickname = "Andy"
+
+        user.student_id = ""
+        user.user_type = "student"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andy William")
+        self.assertEqual(user.last_first, "William, Andrew (Andy)")
+        self.assertEqual(user.last_first_id, "William, Andrew (Andy) (2000awilliam)")
+        self.assertEqual(user.last_first_initial, "William, A. (Andy)")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
+        user.student_id = "1234567"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andy William")
+        self.assertEqual(user.last_first, "William, Andrew (Andy)")
+        self.assertEqual(user.last_first_id, "William, Andrew (Andy) (1234567)")
+        self.assertEqual(user.last_first_initial, "William, A. (Andy)")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
+        user.student_id = ""
+        user.user_type = "teacher"
+
+        self.assertEqual(user.full_name, "Andrew William")
+        self.assertEqual(user.full_name_nick, "Andy William")
+        self.assertEqual(user.last_first, "William, Andrew (Andy)")
+        self.assertEqual(user.last_first_id, "William, Andrew (Andy) (2000awilliam)")
+        self.assertEqual(user.last_first_initial, "William, A. (Andy)")
+        self.assertEqual(user.full_name, user.display_name)
+        self.assertEqual(user.full_name, user.get_full_name())
+        self.assertEqual(user.first_name, user.short_name)
+        self.assertEqual(user.first_name, user.get_short_name())
+
     def test_notification_email(self):
         # Test default user notification email property
         user = self.login()
