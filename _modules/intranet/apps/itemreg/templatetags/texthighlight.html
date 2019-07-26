@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.itemreg.templatetags.texthighlight &#8212; TJ Intranet v3 (Build #5011) documentation</title>
+    <title>intranet.apps.itemreg.templatetags.texthighlight &#8212; TJ Intranet v3 (Build #5016) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -133,12 +133,10 @@
 <div class="viewcode-block" id="highlight"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.itemreg.templatetags.html#intranet.apps.itemreg.templatetags.texthighlight.highlight">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
 <span class="k">def</span> <span class="nf">highlight</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Highlight str1 with the contents of str2.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------&#39;</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">str2</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">str2</span> <span class="o">=</span> <span class="n">str2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-        <span class="n">str2</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">str1</span> <span class="ow">and</span> <span class="n">str2</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">str1</span> <span class="ow">and</span> <span class="n">str2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">str2</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">str1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">str2</span><span class="p">,</span> <span class="s2">&quot;&lt;b&gt;</span><span class="si">{}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">str2</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">str1</span></div>

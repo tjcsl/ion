@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #5011) documentation</title>
+    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #5016) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -164,14 +164,14 @@
     <span class="n">start_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">end_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">lower_absence_limit</span><span class="p">):</span>
-        <span class="n">lower_absence_limit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">lower_absence_limit</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">lower_absence_limit</span><span class="p">):</span>
+        <span class="n">lower_absence_limit</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
         <span class="n">lower_absence_limit_filter</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lower_absence_limit_filter</span> <span class="o">=</span> <span class="n">lower_absence_limit</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">upper_absence_limit</span><span class="p">):</span>
-        <span class="n">upper_absence_limit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">upper_absence_limit</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">upper_absence_limit</span><span class="p">):</span>
+        <span class="n">upper_absence_limit</span> <span class="o">=</span> <span class="s2">&quot;100&quot;</span>
         <span class="n">upper_absence_limit_filter</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">upper_absence_limit_filter</span> <span class="o">=</span> <span class="n">upper_absence_limit</span>
