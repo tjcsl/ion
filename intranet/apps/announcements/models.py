@@ -113,8 +113,14 @@ class Announcement(models.Model):
 
     pinned = models.BooleanField(default=False)
 
-    def get_author(self):
-        return self.author if self.author else self.user.full_name if self.user else None
+    def get_author(self) -> str:
+        """Returns 'author' if it is set. Otherwise, returns the name of the user who created the announcement.
+
+        Returns:
+            The name of the author as it should be displayed with the announcement.
+
+        """
+        return self.author if self.author else self.user.full_name_nick if self.user else None
 
     def __str__(self):
         return self.title
