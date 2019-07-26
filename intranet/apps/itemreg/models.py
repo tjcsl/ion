@@ -3,27 +3,25 @@ from django.db import models
 
 
 class CalculatorRegistration(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    calc_serial = models.CharField(max_length=10)
-    calc_id = models.CharField(max_length=14)
     CALC_CHOICES = (("ti83", "TI-83"), ("ti83p", "TI-83+"), ("ti84p", "TI-84+"), ("ti84pse", "TI-84+ Silver Edition"),
                     ("ti84pcse", "TI-84+ C Silver Edition"), ("ti84pce", "TI-84+ CE"), ("ti89", "TI-89"), ("nspirecx", "TI-Nspire CX"),
                     ("nspirecas", "TI-Nspire CAS"), ("otherti", "Other TI"), ("other", "Other"))
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    calc_serial = models.CharField(max_length=10)
+    calc_id = models.CharField(max_length=14)
     calc_type = models.CharField(max_length=10, choices=CALC_CHOICES)
     added = models.DateTimeField(auto_now_add=True)
 
-    @property
-    def calc_name(self):
-        return {i[0]: i[1] for i in self.CALC_CHOICES}[self.calc_type]
-
     def __str__(self):
-        return "{}'s {}".format(self.user.full_name, self.calc_name)
+        return "{}'s {}".format(self.user.full_name, self.get_calc_type_display())  # get_FIELD_display() is defined by models.Model
 
 
 class ComputerRegistration(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     MANUF_CHOICES = (("acer", "Acer"), ("apple", "Apple"), ("asus", "Asus"), ("dell", "Dell"), ("hp", "HP"), ("lenovo", "Lenovo"),
                      ("toshiba", "Toshiba"), ("ibm", "IBM"), ("compaq", "Compaq"), ("fujitsu", "Fujitsu"), ("vizio", "Vizio"), ("other", "Other"))
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
     serial = models.CharField(max_length=20)
@@ -32,12 +30,14 @@ class ComputerRegistration(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     @property
-    def manuf_name(self):
-        return {i[0]: i[1] for i in self.MANUF_CHOICES}[self.manufacturer]
+    def computer_name(self) -> str:
+        """Returns a description of the computer, formatted as <screen size>" <manufacturer> <model>.
 
-    @property
-    def computer_name(self):
-        return "{}\" {} {}".format(self.screen_size, self.manuf_name, self.model)
+        Returns:
+            A nicely formatted description of the computer.
+
+        """
+        return "{}\" {} {}".format(self.screen_size, self.get_manufacturer_display(), self.model)
 
     def __str__(self):
         return "{}'s {}".format(self.user.full_name, self.computer_name)
@@ -54,12 +54,14 @@ class PhoneRegistration(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     @property
-    def manuf_name(self):
-        return {i[0]: i[1] for i in self.MANUF_CHOICES}[self.manufacturer]
+    def phone_name(self) -> str:
+        """Returns a description of the phone, formatted as <manufacturer> <model>.
 
-    @property
-    def phone_name(self):
-        return "{} {}".format(self.manuf_name, self.model)
+        Returns:
+            A nicely formatted description of the phone.
+
+        """
+        return "{} {}".format(self.get_manufacturer_display(), self.model)
 
     def __str__(self):
         return "{}'s {}".format(self.user.full_name, self.model)
