@@ -2,7 +2,7 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 from .forms import CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
 from ..search.views import get_search_results
@@ -172,19 +172,19 @@ def register_phone_view(request):
 @login_required
 @deny_restricted
 def register_delete_view(request, item_type, item_id):
-    if item_type == "calculator":
-        obj = CalculatorRegistration.objects.get(id=item_id)
-    elif item_type == "computer":
-        obj = ComputerRegistration.objects.get(id=item_id)
-    elif item_type == "phone":
-        obj = PhoneRegistration.objects.get(id=item_id)
-    else:
+    registration_types = {
+        "calculator": CalculatorRegistration,
+        "computer": ComputerRegistration,
+        "phone": PhoneRegistration,
+    }
+    if item_type not in registration_types:
         raise http.Http404
 
-    if request.method == "POST" and "confirm" in request.POST:
-        if obj.user == request.user:
-            obj.delete()
-            messages.success(request, "Deleted {}".format(item_type))
-            return redirect("itemreg")
+    obj = get_object_or_404(registration_types[item_type], id=item_id, user=request.user)
 
-    return render(request, "itemreg/register_delete.html", {"type": item_type, "id": item_id, "obj": obj})
+    if request.method == "POST" and "confirm" in request.POST:
+        obj.delete()
+        messages.success(request, "Deleted {}".format(item_type))
+        return redirect("itemreg")
+
+    return render(request, "itemreg/register_delete.html", {"type": item_type, "obj": obj})
