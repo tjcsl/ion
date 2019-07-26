@@ -37,14 +37,14 @@ def delinquent_students_view(request):
     start_date = request.GET.get("start", "")
     end_date = request.GET.get("end", "")
 
-    if not is_entirely_digit(lower_absence_limit):
-        lower_absence_limit = ""
+    if lower_absence_limit == "" or not is_entirely_digit(lower_absence_limit):
+        lower_absence_limit = "1"
         lower_absence_limit_filter = 1
     else:
         lower_absence_limit_filter = lower_absence_limit
 
-    if not is_entirely_digit(upper_absence_limit):
-        upper_absence_limit = ""
+    if upper_absence_limit == "" or not is_entirely_digit(upper_absence_limit):
+        upper_absence_limit = "100"
         upper_absence_limit_filter = 100
     else:
         upper_absence_limit_filter = upper_absence_limit
