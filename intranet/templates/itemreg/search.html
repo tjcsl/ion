@@ -10,11 +10,18 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+    $(function() {
+        $("#id_calc_type, #id_manufacturer").selectize();
+    })
+    </script>
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
     {% stylesheet 'lostfound' %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
     <style>
     .errorlist {
         display: none;
@@ -59,47 +66,42 @@
 
     <br>
 
-    <table class="item-search">
-        <tr>
-        <td>
+    <div class="table">
+        <div class="table-row">
             <form action="{% url 'itemreg_search' %}" method="get">
-                <div style="font-size: 16px">Find Calculator:</div>
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Calculator:</h3>
                 <input type="hidden" name="type" value="calculator">
                 <table>
                 {{ calc_form }}
-                <tr><td><input type="submit" value="Search"></td></tr>
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
                 </table>
             </form>
-            <br>
             <form action="{% url 'itemreg_search' %}" method="get">
-                <div style="font-size: 16px">Find By User:</div>
-                <input type="hidden" name="type" value="all">
-                <input type="text" name="user" value="" placeholder="Enter ID or name">
-                &nbsp; <input type="submit" value="Search">
-            </form>
-        </td>
-        <td>
-            <form action="{% url 'itemreg_search' %}" method="get">
-                <div style="font-size: 16px">Find Computer:</div>
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Computer:</h3>
                 <input type="hidden" name="type" value="computer">
                 <table>
                 {{ comp_form }}
-                <tr><td><input type="submit" value="Search"></td></tr>
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
                 </table>
             </form>
-        </td>
-        <td>
             <form action="{% url 'itemreg_search' %}" method="get">
-                <div style="font-size: 16px">Find Phone:</div>
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Phone:</h3>
                 <input type="hidden" name="type" value="phone">
                 <table>
                 {{ phone_form }}
-                <tr><td><input type="submit" value="Search"></td></tr>
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
                 </table>
             </form>
-        </td>
-        </tr>
-    </table>
+        </div>
+        <div class="table-row">
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <h3 style="font-size: 16px;">Find By User:</h3>
+                <input type="hidden" name="type" value="all">
+                <input type="text" name="user" value="" placeholder="Enter ID or name">
+                &nbsp;<input type="submit" value="Search">
+            </form>
+        </div>
+    </div>
 
     <br>
 
@@ -131,7 +133,7 @@
     {% endif %}
     {% if results.computer %}
     <br>
-    <div style="font-size: 16px">Computers Matched:</div>
+    <h3 style="font-size: 16px">Computers Matched:</h3>
     <table class="fancy-table" style="width: 100%">
         <thead>
             <tr>
