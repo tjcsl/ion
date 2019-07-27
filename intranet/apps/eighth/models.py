@@ -3,6 +3,7 @@ import datetime
 import logging
 import string
 
+from cacheops import invalidate_obj
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
@@ -1099,6 +1100,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         existing_signup.previous_activity_sponsors = previous_activity_sponsors
 
                         existing_signup.save()
+                        invalidate_obj(existing_signup)
                     else:
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
