@@ -1225,6 +1225,8 @@ class EighthSignupManager(Manager):
             signup.delete()
             raise ValidationError("EighthSignup already exists for this user on this block.")
 
+        return signup
+
     def get_absences(self):
         """Returns all EighthSignups for which the student was marked as absent.
 
