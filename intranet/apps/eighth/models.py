@@ -944,18 +944,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         except EighthScheduledActivity.DoesNotExist:
             return None
 
-    def notify_waitlist(self, waitlists, activity):
-        """Notifies all users on the given EighthWaitlist objects that the activity has an open spot.
+    def notify_waitlist(self, waitlists):
+        """Notifies all users on the given EighthWaitlist objects that the activity they are on the waitlist for has an open spot.
 
         Args:
-            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified.
-            activity (EighthScheduledActivity): The activity that has an open spot.
+            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified that the activity has an open slot.
 
         """
-        data = {"activity": activity}
         for waitlist in waitlists:
-            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", data, "Open Spot Notification",
-                       [waitlist.user.primary_email_address])
+            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", {"activity": waitlist.scheduled_activity},
+                       "Open Spot Notification", [waitlist.user.primary_email_address])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):
@@ -1176,7 +1174,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     ):
                         if not previous_activity.is_full():
                             waitlists = EighthWaitlist.objects.get_next_waitlist(previous_activity)
-                            self.notify_waitlist(waitlists, previous_activity)
+                            self.notify_waitlist(waitlists)
             else:
                 existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
 
@@ -1416,7 +1414,7 @@ class EighthSignup(AbstractBaseEighthModel):
             if settings.ENABLE_WAITLIST and self.scheduled_activity.waitlist.all().exists() and not block.locked and not dont_run_waitlist:
                 if not self.scheduled_activity.is_full():
                     waitlists = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
-                    self.scheduled_activity.notify_waitlist(waitlists, self.scheduled_activity)
+                    self.scheduled_activity.notify_waitlist(waitlists)
             return "Successfully removed signup for {}.".format(block)
 
     def accept_pass(self):
