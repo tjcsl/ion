@@ -12,6 +12,7 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
 from django.db.models import Manager, Q, Count
 from django.utils import formats, timezone
+from sentry_sdk import add_breadcrumb, capture_exception
 from simple_history.models import HistoricalRecords
 
 from . import exceptions as eighth_exceptions
@@ -1083,7 +1084,19 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 try:
                     existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
                 except EighthSignup.DoesNotExist:
-                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
+                    add_breadcrumb(
+                        category="eighth-signup",
+                        message="Signing user {} up for single-block activity {} in block {}".format(user.id, self.activity.id, self.block.id),
+                        level="debug",
+                    )
+
+                    signup = EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
+
+                    if signup.has_conflict():
+                        try:
+                            signup.save()
+                        except ValidationError as e:
+                            capture_exception(e)
                 else:
                     previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
                     prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
@@ -1091,6 +1104,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     previous_activity = existing_signup.scheduled_activity
 
                     if not existing_signup.scheduled_activity.is_both_blocks():
+                        add_breadcrumb(
+                            category="eighth-signup",
+                            message="Switching user {} from single-block activity {} to single-block activity {} in block {}".format(
+                                user.id,
+                                existing_signup.scheduled_activity.activity.id,
+                                self.activity.id,
+                                self.block.id,
+                            ),
+                            level="debug",
+                        )
+
                         existing_signup.scheduled_activity = self
                         existing_signup.after_deadline = after_deadline
                         existing_signup.was_absent = False
@@ -1101,6 +1125,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                         existing_signup.save()
                         invalidate_obj(existing_signup)
+
+                        if existing_signup.has_conflict():
+                            try:
+                                existing_signup.save()
+                            except ValidationError as e:
+                                capture_exception(e)
                     else:
                         # Clear out the other signups for this block if the user is
                         # switching out of a both-blocks activity
@@ -1109,9 +1139,21 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         if sibling:
                             existing_blocks.append(sibling.block)
                         logger.debug(existing_blocks)
+
+                        add_breadcrumb(
+                            category="eighth-signup",
+                            message="Switching user {} from dual-block activity {} to single-block activity {} in block {}".format(
+                                user.id,
+                                existing_signup.scheduled_activity.activity.id,
+                                self.activity.id,
+                                self.block.id,
+                            ),
+                            level="debug",
+                        )
+
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()
-                        EighthSignup.objects.create_signup(
+                        signup = EighthSignup.objects.create_signup(
                             user=user,
                             scheduled_activity=self,
                             after_deadline=after_deadline,
@@ -1119,6 +1161,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             previous_activity_sponsors=previous_activity_sponsors,
                             own_signup=(user == request.user),
                         )
+
+                        if signup.has_conflict():
+                            try:
+                                signup.save()
+                            except ValidationError as e:
+                                capture_exception(e)
+
                     if settings.ENABLE_WAITLIST and (
                         previous_activity.waitlist.all().exists()
                         and not self.block.locked
@@ -1133,6 +1182,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                 prev_data = {}
                 for signup in existing_signups:
+                    add_breadcrumb(
+                        category="eighth-signup",
+                        message="User {}: original activity for block {}: {}".format(
+                            user.id,
+                            signup.scheduled_activity.block.id,
+                            signup.scheduled_activity.activity.id,
+                        ),
+                        level="debug",
+                    )
+
                     prev_sponsors = signup.scheduled_activity.get_true_sponsors()
                     prev_data[signup.scheduled_activity.block.block_letter] = {
                         "name": signup.scheduled_activity.activity.name_with_flags,
@@ -1149,7 +1208,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         previous_activity_name = None
                         previous_activity_sponsors = None
 
-                    EighthSignup.objects.create_signup(
+                    add_breadcrumb(
+                        category="eighth-signup",
+                        message="Switching user {} to double-block activity {} in block {}".format(user.id, sched_act.id, self.block.id),
+                        level="debug",
+                    )
+
+                    signup = EighthSignup.objects.create_signup(
                         user=user,
                         scheduled_activity=sched_act,
                         after_deadline=after_deadline,
@@ -1157,6 +1222,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         previous_activity_sponsors=previous_activity_sponsors,
                         own_signup=(user == request.user),
                     )
+
+                    if signup.has_conflict():
+                        try:
+                            signup.save()
+                        except ValidationError as e:
+                            capture_exception(e)
 
                     # signup.previous_activity_name = signup.activity.name_with_flags
                     # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
