@@ -1218,7 +1218,12 @@ class EighthSignupManager(Manager):
         """
         if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
             raise ValidationError("EighthSignup already exists for this user on this block.")
-        self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
+
+        signup = self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
+
+        if EighthSignup.objects.exclude(pk=signup.pk).filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
+            signup.delete()
+            raise ValidationError("EighthSignup already exists for this user on this block.")
 
     def get_absences(self):
         """Returns all EighthSignups for which the student was marked as absent.
