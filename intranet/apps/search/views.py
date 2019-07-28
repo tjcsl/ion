@@ -24,13 +24,7 @@ def query(q, admin=False):
     results = []
     if is_entirely_digit(q):
         logger.debug("Digit search: %s", q)
-        sid_users = get_user_model().objects.filter(student_id=q)
-        uid_users = get_user_model().objects.filter(id=q)
-        for u in sid_users:
-            results.append(u)
-
-        for u in uid_users:
-            results.append(u)
+        results = list(get_user_model().objects.exclude_from_search().filter(Q(student_id=q) | Q(id=q)))
     elif ":" in q or ">" in q or "<" in q or "=" in q:
         logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
@@ -171,13 +165,7 @@ def query(q, admin=False):
                 sub_query |= Q(**{"{}{}".format(attr, sep): val})
             search_query &= sub_query
 
-        try:
-            results = get_user_model().objects.filter(search_query)
-            for result in results:
-                results.append(result)
-        except Exception:
-            # TODO: handle this error
-            pass
+        results = list(get_user_model().objects.exclude_from_search().filter(search_query))
     else:
         logger.debug("Simple search")
         # Non-advanced search; no ":"
@@ -215,8 +203,7 @@ def query(q, admin=False):
 
             logger.debug("Running query: %s", search_query)
 
-            res = get_user_model().objects.filter(search_query)
-            results = list(res)
+            results = list(get_user_model().objects.exclude_from_search().filter(search_query))
 
     # loop through the DNs saved and get actual user objects
     users = []
