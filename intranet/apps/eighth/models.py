@@ -293,10 +293,7 @@ class EighthActivity(AbstractBaseEighthModel):
         """
         # Note that this is the default capacity if the
         # rooms/capacity are not overridden for a particular block.
-        if self.default_capacity:
-            return self.default_capacity
-        else:
-            return EighthRoom.total_capacity_of_rooms(self.rooms.all())
+        return self.default_capacity or EighthRoom.total_capacity_of_rooms(self.rooms.all())
 
     @property
     def aid(self):
@@ -331,19 +328,22 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def restricted_activities_available_to_user(cls, user):
-        """Find the restricted activities available to the given user."""
+        """Find the restricted activities available to the given user.
+
+        Args:
+            user (User): The User to find the restricted activities for.
+
+        Returns:
+            list[EighthActivity]: The restricted activities available to the user.
+
+        """
         if not user:
             return []
 
         activities = set(user.restricted_activity_set.values_list("id", flat=True))
 
-        if user and user.grade and user.grade.number and user.grade.name:
-            grade = user.grade
-        else:
-            grade = None
-
-        if grade is not None and 9 <= grade.number <= 12:
-            activities |= set(EighthActivity.objects.filter(**{"{}_allowed".format(grade.name_plural): True}).values_list("id", flat=True))
+        if user and user.grade and user.grade.number and user.grade.name and 9 <= user.grade.number <= 12:
+            activities |= set(EighthActivity.objects.filter(**{"{}_allowed".format(user.grade.name_plural): True}).values_list("id", flat=True))
 
         for group in user.groups.all():
             activities |= set(group.restricted_activity_set.values_list("id", flat=True))
@@ -585,8 +585,7 @@ class EighthBlock(AbstractBaseEighthModel):
         (Has it not yet happened?)
 
         """
-        now = timezone.localtime()
-        return now.date() > self.date
+        return timezone.localdate() > self.date
 
     def in_clear_absence_period(self):
         """Is the current date in the block's clear absence period?
