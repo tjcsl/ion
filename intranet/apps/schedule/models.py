@@ -111,7 +111,7 @@ class DayManager(models.Manager):
 
     def today(self):
         """Return the Day for the current day"""
-        today = timezone.now().date()
+        today = timezone.localdate()
         try:
             return Day.objects.get(date=today)
         except Day.DoesNotExist:
