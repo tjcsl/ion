@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5018) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5028) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -130,6 +130,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">string</span>
 
+<span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_obj</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">DjangoGroup</span>
@@ -138,6 +139,7 @@
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transaction</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Count</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">formats</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk</span> <span class="k">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
 <span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="k">import</span> <span class="n">HistoricalRecords</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">eighth_exceptions</span>
@@ -1209,7 +1211,19 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">existing_signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
+                    <span class="n">add_breadcrumb</span><span class="p">(</span>
+                        <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Signing user </span><span class="si">{}</span><span class="s2"> up for single-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                        <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span>
                     <span class="n">prev_sponsors</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
@@ -1217,6 +1231,17 @@
                     <span class="n">previous_activity</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span>
 
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">():</span>
+                        <span class="n">add_breadcrumb</span><span class="p">(</span>
+                            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
+                            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Switching user </span><span class="si">{}</span><span class="s2"> from single-block activity </span><span class="si">{}</span><span class="s2"> to single-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="p">),</span>
+                            <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="o">=</span> <span class="bp">self</span>
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">after_deadline</span> <span class="o">=</span> <span class="n">after_deadline</span>
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1226,6 +1251,13 @@
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">previous_activity_sponsors</span>
 
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">existing_signup</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="c1"># Clear out the other signups for this block if the user is</span>
                         <span class="c1"># switching out of a both-blocks activity</span>
@@ -1234,9 +1266,21 @@
                         <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
                             <span class="n">existing_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">existing_blocks</span><span class="p">)</span>
+
+                        <span class="n">add_breadcrumb</span><span class="p">(</span>
+                            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
+                            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Switching user </span><span class="si">{}</span><span class="s2"> from dual-block activity </span><span class="si">{}</span><span class="s2"> to single-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="p">),</span>
+                            <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">existing_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                         <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-                        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
+                        <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
                             <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
                             <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                             <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">,</span>
@@ -1244,6 +1288,13 @@
                             <span class="n">previous_activity_sponsors</span><span class="o">=</span><span class="n">previous_activity_sponsors</span><span class="p">,</span>
                             <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span>
                         <span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
                     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span> <span class="ow">and</span> <span class="p">(</span>
                         <span class="n">previous_activity</span><span class="o">.</span><span class="n">waitlist</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
                         <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span>
@@ -1258,6 +1309,16 @@
 
                 <span class="n">prev_data</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">existing_signups</span><span class="p">:</span>
+                    <span class="n">add_breadcrumb</span><span class="p">(</span>
+                        <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2">: original activity for block </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
                     <span class="n">prev_sponsors</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
                     <span class="n">prev_data</span><span class="p">[</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span><span class="p">,</span>
@@ -1274,7 +1335,13 @@
                         <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="kc">None</span>
 
-                    <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
+                    <span class="n">add_breadcrumb</span><span class="p">(</span>
+                        <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Switching user </span><span class="si">{}</span><span class="s2"> to double-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                        <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
                         <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
                         <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sched_act</span><span class="p">,</span>
                         <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">,</span>
@@ -1282,6 +1349,12 @@
                         <span class="n">previous_activity_sponsors</span><span class="o">=</span><span class="n">previous_activity_sponsors</span><span class="p">,</span>
                         <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span>
                     <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
                     <span class="c1"># signup.previous_activity_name = signup.activity.name_with_flags</span>
                     <span class="c1"># signup.previous_activity_sponsors = &quot;, &quot;.join(map(str, signup.get_true_sponsors()))</span>
@@ -1343,7 +1416,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+        <span class="n">signup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">signup</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">signup</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">signup</span></div>
 
 <div class="viewcode-block" id="EighthSignupManager.get_absences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager.get_absences">[docs]</a>    <span class="k">def</span> <span class="nf">get_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns all EighthSignups for which the student was marked as absent.</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.schedule.api &#8212; TJ Intranet v3 (Build #5018) documentation</title>
+    <title>intranet.apps.schedule.api &#8212; TJ Intranet v3 (Build #5028) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,7 +133,7 @@
 <span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="k">import</span> <span class="n">PageNumberPagination</span>
 <span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="k">import</span> <span class="n">AllowAny</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Day</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Day</span><span class="p">,</span> <span class="n">DayType</span>
 <span class="kn">from</span> <span class="nn">.serializers</span> <span class="k">import</span> <span class="n">DaySerializer</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -166,7 +166,10 @@
             <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">day</span>
         <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">day_type</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;NO SCHOOL&lt;br&gt;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">day_type</span><span class="o">=</span><span class="n">day_type</span><span class="p">)</span>
+            <span class="n">day</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># The URL will be null unless pk is set</span>
+            <span class="k">return</span> <span class="n">day</span>
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div></div>
 </pre></div>
