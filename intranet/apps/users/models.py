@@ -130,6 +130,12 @@ class UserManager(DjangoUserManager):
         queryset = User.objects.filter(id__in=id_list).extra(select={"ordering": ordering}, order_by=("ordering",))
         return queryset
 
+    def exclude_from_search(self, existing_queryset=None):
+        if existing_queryset is None:
+            existing_queryset = self
+
+        return existing_queryset.exclude(user_type="service")
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass
