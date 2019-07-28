@@ -1,5 +1,6 @@
 import json
 import datetime
+import urllib.parse
 
 from django.conf import settings
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.contrib.auth import get_user_model
 from oauth2_provider.models import get_application_model, AccessToken
 from oauth2_provider.settings import oauth2_settings
 
+from ..schedule.models import Day, DayType, Block, Time
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom, EighthSignup
 from ...test.ion_test import IonTestCase
@@ -186,6 +188,42 @@ class ApiTest(IonTestCase):
         # Should be able to read API root without authentication
         response = self.client.get(reverse("api_root"))
         self.assertEqual(response.status_code, 200)
+
+    def test_api_schedule_detail(self):
+        self.make_token()
+
+        today = timezone.localdate()
+        one_day = datetime.timedelta(days=1)
+
+        Day.objects.filter(date__gte=today - one_day, date__lte=today + one_day).delete()
+        no_school_type = DayType.objects.get_or_create(name="NO SCHOOL<br>", special=True)[0]
+        Day.objects.create(date=today, day_type=no_school_type)
+
+        test_day_type = DayType.objects.get_or_create(name="Test day")[0]
+        test_day_type.blocks.add(Block.objects.create(name="Test period", start=Time.objects.create(hour=10, minute=0),
+                                                      end=Time.objects.create(hour=11, minute=0), order=1))
+        Day.objects.create(date=today - one_day, day_type=test_day_type)
+
+        date_str = (today - one_day).strftime("%Y-%m-%d")
+        url = reverse("api_schedule_day_detail", kwargs={"date": date_str})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(urllib.parse.urlparse(response.json()["url"]).path, url)
+        self.assertEqual(response.json()["date"], date_str)
+        self.assertEqual(response.json()["day_type"]["name"], test_day_type.name)
+        self.assertEqual(response.json()["day_type"]["special"], False)
+        self.assertEqual(response.json()["day_type"]["blocks"], [{"order": 1, "name": "Test period", "start": "10:00", "end": "11:00"}])
+
+        for day in [today, today + one_day]:
+            date_str = day.strftime("%Y-%m-%d")
+            url = reverse("api_schedule_day_detail", kwargs={"date": date_str})
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(urllib.parse.urlparse(response.json()["url"]).path, url)
+            self.assertEqual(response.json()["date"], date_str)
+            self.assertEqual(response.json()["day_type"]["name"], no_school_type.name)
+            self.assertEqual(response.json()["day_type"]["special"], no_school_type.special)
+            self.assertEqual(response.json()["day_type"]["blocks"], [])
 
     def test_api_eighth_block_list(self):
         self.make_token()
