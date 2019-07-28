@@ -15,10 +15,11 @@ def announcements(page, sign, request):
 
 
 def bus(page, sign, request):
-    now = datetime.datetime.now()
-    try:
-        end_of_day = Day.objects.today().end_time.date_obj(now.date())
-    except Exception:
+    now = timezone.localtime()
+    day = Day.objects.today()
+    if day is not None and day.end_time is not None:
+        end_of_day = day.end_time.date_obj(now.date())
+    else:
         end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
     return {
         'admin': False,
