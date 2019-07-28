@@ -662,8 +662,7 @@ def add_member_to_group_view(request, group_id):
     if not results:
         return redirect(next_url + "?error=n")
     else:
-        users = results
-        results = sorted(results, key=lambda x: (x.last_name, x.first_name))
+        users = sorted(results, key=lambda x: (x.last_name, x.first_name))
         context = {"query": query, "users": users, "group": group, "admin_page_title": "Add Members to Group"}
         return render(request, "eighth/admin/possible_students_add_group.html", context)
 
