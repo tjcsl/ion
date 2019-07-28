@@ -75,27 +75,38 @@ class DayType(models.Model):
             return "day-type-{}".format(t)
 
     @property
-    def start_time(self):
-        """ Returns Time the school day begins.
-            Returns None if there are no blocks.
+    def start_time(self) -> Time:
+        """Returns Time the school day begins.
+        Returns None if there are no blocks.
+
+        Returns:
+            The Time at which the school day starts, or None if there are no blocks.
+
         """
-        if self.no_school:
-            return None
-        return self.blocks.first().start
+        first_block = self.blocks.first()
+        return first_block.start if first_block is not None else None
 
     @property
-    def end_time(self):
-        """ Returns Time the school day ends.
-            Returns None if there are no blocks.
+    def end_time(self) -> Time:
+        """Returns Time the school day ends.
+        Returns None if there are no blocks.
+
+        Returns:
+            The Time at which the school day ends, or None if there are no blocks.
+
         """
-        if self.no_school:
-            return None
-        return self.blocks.last().end
+        last_block = self.blocks.last()
+        return last_block.end if last_block is not None else None
 
     @property
-    def no_school(self):
-        """Returns True if no blocks are scheduled."""
-        return self.blocks.count() == 0
+    def no_school(self) -> bool:
+        """Returns True if no blocks are scheduled.
+
+        Returns:
+            Whether there are no blocks scheduled.
+
+        """
+        return not self.blocks.exists()
 
     class Meta:
         ordering = ("name",)
