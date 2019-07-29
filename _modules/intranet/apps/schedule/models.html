@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #5028) documentation</title>
+    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #5036) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -202,27 +202,38 @@
             <span class="k">return</span> <span class="s2">&quot;day-type-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns Time the school day begins.</span>
-<span class="sd">            Returns None if there are no blocks.</span>
+    <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Time</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns Time the school day begins.</span>
+<span class="sd">        Returns None if there are no blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The Time at which the school day starts, or None if there are no blocks.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_school</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">start</span>
+        <span class="n">first_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">first_block</span><span class="o">.</span><span class="n">start</span> <span class="k">if</span> <span class="n">first_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns Time the school day ends.</span>
-<span class="sd">            Returns None if there are no blocks.</span>
+    <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Time</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns Time the school day ends.</span>
+<span class="sd">        Returns None if there are no blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The Time at which the school day ends, or None if there are no blocks.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_school</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">end</span>
+        <span class="n">last_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">last_block</span><span class="o">.</span><span class="n">end</span> <span class="k">if</span> <span class="n">last_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">no_school</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns True if no blocks are scheduled.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">no_school</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if no blocks are scheduled.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether there are no blocks scheduled.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,)</span></div>
@@ -238,7 +249,7 @@
 
 <div class="viewcode-block" id="DayManager.today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager.today">[docs]</a>    <span class="k">def</span> <span class="nf">today</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the Day for the current day&quot;&quot;&quot;</span>
-        <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5028) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5036) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -420,10 +420,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Note that this is the default capacity if the</span>
         <span class="c1"># rooms/capacity are not overridden for a particular block.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span> <span class="ow">or</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">total_capacity_of_rooms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">aid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -458,19 +455,22 @@
 
 <div class="viewcode-block" id="EighthActivity.restricted_activities_available_to_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.restricted_activities_available_to_user">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">restricted_activities_available_to_user</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the restricted activities available to the given user.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Find the restricted activities available to the given user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user (User): The User to find the restricted activities for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[EighthActivity]: The restricted activities available to the user.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
         <span class="n">activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">restricted_activity_set</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-            <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">grade</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="n">grade</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
-            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_allowed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grade</span><span class="o">.</span><span class="n">name_plural</span><span class="p">):</span> <span class="kc">True</span><span class="p">})</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
+            <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_allowed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name_plural</span><span class="p">):</span> <span class="kc">True</span><span class="p">})</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">restricted_activity_set</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -712,8 +712,7 @@
 <span class="sd">        (Has it not yet happened?)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span></div>
+        <span class="k">return</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span></div>
 
 <div class="viewcode-block" id="EighthBlock.in_clear_absence_period"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock.in_clear_absence_period">[docs]</a>    <span class="k">def</span> <span class="nf">in_clear_absence_period</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Is the current date in the block&#39;s clear absence period?</span>
@@ -1071,18 +1070,16 @@
         <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="EighthScheduledActivity.notify_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.notify_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">notify_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waitlists</span><span class="p">,</span> <span class="n">activity</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Notifies all users on the given EighthWaitlist objects that the activity has an open spot.</span>
+<div class="viewcode-block" id="EighthScheduledActivity.notify_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.notify_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">notify_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waitlists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Notifies all users on the given EighthWaitlist objects that the activity they are on the waitlist for has an open spot.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified.</span>
-<span class="sd">            activity (EighthScheduledActivity): The activity that has an open spot.</span>
+<span class="sd">            waitlists (Iterable[EighthWaitlist]): The EighthWaitlist objects whose users should be notified that the activity has an open slot.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">waitlist</span> <span class="ow">in</span> <span class="n">waitlists</span><span class="p">:</span>
-            <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span>
-                       <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">])</span></div>
+            <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">waitlist</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">},</span>
+                       <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.add_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.add_user">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
     <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_to_waitlist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1303,7 +1300,7 @@
                     <span class="p">):</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_activity</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                             <span class="n">waitlists</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_next_waitlist</span><span class="p">(</span><span class="n">previous_activity</span><span class="p">)</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">,</span> <span class="n">previous_activity</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">existing_signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span>
 
@@ -1543,7 +1540,7 @@
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">waitlist</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dont_run_waitlist</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                     <span class="n">waitlists</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_next_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;Successfully removed signup for </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthSignup.accept_pass"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.accept_pass">[docs]</a>    <span class="k">def</span> <span class="nf">accept_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5028) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5036) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -255,7 +255,13 @@
         <span class="n">clauses</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;WHEN id=</span><span class="si">%s</span><span class="s2"> THEN </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pk</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">id_list</span><span class="p">)])</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="s2">&quot;CASE </span><span class="si">%s</span><span class="s2"> END&quot;</span> <span class="o">%</span> <span class="n">clauses</span>
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">id_list</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ordering&quot;</span><span class="p">:</span> <span class="n">ordering</span><span class="p">},</span> <span class="n">order_by</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ordering&quot;</span><span class="p">,))</span>
-        <span class="k">return</span> <span class="n">queryset</span></div></div>
+        <span class="k">return</span> <span class="n">queryset</span></div>
+
+<div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">existing_queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">existing_queryset</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">return</span> <span class="n">existing_queryset</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
