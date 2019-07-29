@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 from .forms import FeedbackForm
 from .models import Feedback
-from ..notifications.emails import email_send
+from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,8 @@ def send_feedback_email(request, data):
     data["remote_ip"] = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     data["user_agent"] = request.META.get("HTTP_USER_AGENT")
     headers = {"Reply-To": "{}; {}".format(email, settings.FEEDBACK_EMAIL)}
-    email_send("feedback/email.txt", "feedback/email.html", data, "Feedback from {}".format(request.user), [settings.FEEDBACK_EMAIL], headers)
+    email_send_task.delay("feedback/email.txt", "feedback/email.html", data, "Feedback from {}".format(request.user), [settings.FEEDBACK_EMAIL],
+                          headers)
 
 
 @login_required

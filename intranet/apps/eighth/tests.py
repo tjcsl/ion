@@ -253,21 +253,21 @@ class EighthTest(EighthAbstractTest):
         room1 = self.add_room(name="room1", capacity=1)
         act1.rooms.add(room1)
 
-        msg = signup_status_email(user1, [block1, block2])
+        msg = signup_status_email(user1, [block1, block2], use_celery=False)
         self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
         self.assertIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
         sa1 = EighthScheduledActivity.objects.get_or_create(block=block1, activity=act1)[0]
         sa1.add_user(user1)
 
-        msg = signup_status_email(user1, [block1, block2])
+        msg = signup_status_email(user1, [block1, block2], use_celery=False)
         self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
         self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
         sa2 = EighthScheduledActivity.objects.get_or_create(block=block2, activity=act1)[0]
         sa2.add_user(user1)
 
-        msg = signup_status_email(user1, [block1, block2])
+        msg = signup_status_email(user1, [block1, block2], use_celery=False)
         self.assertNotIn("Jan. 1, 2015 (B): No activity selected", msg.body)
         self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
 
@@ -284,7 +284,7 @@ class EighthTest(EighthAbstractTest):
         sa1.attendance_taken = True
         es1 = EighthSignup.objects.get_or_create(user=user1, was_absent=True, scheduled_activity=sa1)[0]
 
-        msg = absence_email(es1)
+        msg = absence_email(es1, use_celery=False)
         self.assertIn("Jan. 1, 2015 (A)", msg.body)
 
     def test_take_attendance_zero(self):

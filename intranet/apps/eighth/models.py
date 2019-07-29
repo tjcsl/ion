@@ -16,7 +16,7 @@ from sentry_sdk import add_breadcrumb, capture_exception
 from simple_history.models import HistoricalRecords
 
 from . import exceptions as eighth_exceptions
-from ..notifications.emails import email_send
+from ..notifications.tasks import email_send_task
 from ...utils.date import is_current_year, get_date_range_this_year
 from ...utils.deletion import set_historical_user
 
@@ -951,8 +951,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         """
         for waitlist in waitlists:
-            email_send("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", {"activity": waitlist.scheduled_activity},
-                       "Open Spot Notification", [waitlist.user.primary_email_address])
+            email_send_task.delay("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", {"activity": waitlist.scheduled_activity},
+                                  "Open Spot Notification", [waitlist.user.primary_email_address])
 
     @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False, add_to_waitlist=False):

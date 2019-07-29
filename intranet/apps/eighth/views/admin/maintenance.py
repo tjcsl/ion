@@ -20,7 +20,7 @@ from ....auth.decorators import eighth_admin_required, reauthentication_required
 
 from ....users.models import Address, Course, Section
 
-from ....notifications.emails import email_send
+from ....notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ class ImportThread(threading.Thread):
         content.seek(0)
 
         data = {"log": content.read(), "failure": failure, "help_email": settings.FEEDBACK_EMAIL, "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")}
-        email_send(
+        email_send_task.delay(
             "eighth/emails/import_notify.txt",
             "eighth/emails/import_notify.html",
             data,

@@ -12,7 +12,7 @@ import requests
 
 from requests_oauthlib import OAuth1
 
-from ..notifications.emails import email_send
+from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ def request_announcement_email(request, form, obj):
         "base_url": base_url,
     }
     logger.info("%s: Announcement request %s", request.user, data)
-    email_send("announcements/emails/teacher_approve.txt", "announcements/emails/teacher_approve.html", data, subject, emails)
+    email_send_task.delay("announcements/emails/teacher_approve.txt", "announcements/emails/teacher_approve.html", data, subject, emails)
 
 
 def admin_request_announcement_email(request, form, obj):
@@ -68,7 +68,7 @@ def admin_request_announcement_email(request, form, obj):
         "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
         "base_url": base_url,
     }
-    email_send("announcements/emails/admin_approve.txt", "announcements/emails/admin_approve.html", data, subject, emails)
+    email_send_task.delay("announcements/emails/admin_approve.txt", "announcements/emails/admin_approve.html", data, subject, emails)
 
 
 def announcement_approved_email(request, obj, req):
@@ -94,12 +94,13 @@ def announcement_approved_email(request, obj, req):
 
     if teacher_emails:
         data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "approved"}
-        email_send("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, teacher_emails)
+        email_send_task.delay("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject,
+                              teacher_emails)
         messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
     """ Email to submitter. """
     submitter = req.user
     data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
-    email_send(
+    email_send_task.delay(
         "announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, [submitter.tj_email]
     )
     messages.success(request, "Sent teacher approved email to announcement request submitter")
@@ -140,7 +141,8 @@ def announcement_posted_email(request, obj, send_all=False):
         base_url = request.build_absolute_uri(reverse("index"))
         url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
         data = {"announcement": obj, "info_link": url, "base_url": base_url}
-        email_send("announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails, bcc=True)
+        email_send_task.delay("announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails,
+                              bcc=True)
         messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
         logger.debug("Emailing announcements disabled")
