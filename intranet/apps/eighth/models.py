@@ -1232,20 +1232,22 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return success_message
 
     def cancel(self):
-        """Cancel an EighthScheduledActivity.
-
-        This does nothing besides set the cancelled flag and save the
-        object.
+        """Cancel an EighthScheduledActivity and send a notification email to signed-up students.
+        This method should be always be called instead of setting the 'cancelled' flag manually.
+        (Note: To avoid spamming students signed up for both-block activities, an email is not sent
+        for the B-block activity in both-block activities.)
 
         """
-        # super(EighthScheduledActivity, self).save(*args, **kwargs)
-
         logger.debug("Running cancel hooks: %s", self)
 
         if not self.cancelled:
             logger.debug("Cancelling %s", self)
             self.cancelled = True
             self.save(update_fields=["cancelled"])
+
+            if not self.is_both_blocks or self.block.block_letter != "B":
+                from .notifications import activity_cancelled_email
+                activity_cancelled_email(self)
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.

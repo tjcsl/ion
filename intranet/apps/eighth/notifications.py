@@ -2,7 +2,7 @@ import logging
 
 from django.urls import reverse
 
-from .models import EighthSignup
+from .models import EighthScheduledActivity, EighthSignup
 from ..notifications.emails import email_send
 from ..notifications.tasks import email_send_task
 
@@ -56,6 +56,32 @@ def signup_status_email(user, next_blocks, use_celery=True):
         return None
     else:
         return email_send(*args)
+
+
+def activity_cancelled_email(sched_act: EighthScheduledActivity):
+    """Notifies all the users signed up for the given EighthScheduledActivity that it has been cancelled.
+
+    Args:
+        sched_act: The activity that has been cancelled.
+
+    """
+    date_str = sched_act.block.date.strftime("%A, %B %-d")
+
+    emails = list({signup.user.notification_email for signup in sched_act.eighthsignup_set.filter(user__receive_eighth_emails=True)})
+
+    base_url = "https://ion.tjhsst.edu"
+
+    data = {
+        "sched_act": sched_act,
+        "date_str": date_str,
+        "base_url": base_url,
+    }
+
+    logger.debug("Scheduled activity %d was cancelled; emailing %d of %d signed up users", sched_act.id, len(emails),
+                 sched_act.eighthsignup_set.count())
+
+    email_send_task.delay("eighth/emails/activity_cancelled.txt", "eighth/emails/activity_cancelled.html", data,
+                          "Activity Cancelled on {}".format(date_str), emails, bcc=True)
 
 
 def absence_email(signup, use_celery=True):
