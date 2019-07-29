@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5041) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5054) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -1359,20 +1359,22 @@
         <span class="k">return</span> <span class="n">success_message</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.cancel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Cancel an EighthScheduledActivity.</span>
-
-<span class="sd">        This does nothing besides set the cancelled flag and save the</span>
-<span class="sd">        object.</span>
+        <span class="sd">&quot;&quot;&quot;Cancel an EighthScheduledActivity and send a notification email to signed-up students.</span>
+<span class="sd">        This method should be always be called instead of setting the &#39;cancelled&#39; flag manually.</span>
+<span class="sd">        (Note: To avoid spamming students signed up for both-block activities, an email is not sent</span>
+<span class="sd">        for the B-block activity in both-block activities.)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># super(EighthScheduledActivity, self).save(*args, **kwargs)</span>
-
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running cancel hooks: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cancelling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">!=</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="n">activity_cancelled_email</span>
+                <span class="n">activity_cancelled_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.uncancel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.uncancel">[docs]</a>    <span class="k">def</span> <span class="nf">uncancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Uncancel an EighthScheduledActivity.</span>

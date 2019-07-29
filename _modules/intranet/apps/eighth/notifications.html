@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #5041) documentation</title>
+    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #5054) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,7 +129,7 @@
 
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span>
 <span class="kn">from</span> <span class="nn">..notifications.tasks</span> <span class="k">import</span> <span class="n">email_send_task</span>
 
@@ -183,6 +183,32 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="activity_cancelled_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.activity_cancelled_email">[docs]</a><span class="k">def</span> <span class="nf">activity_cancelled_email</span><span class="p">(</span><span class="n">sched_act</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Notifies all the users signed up for the given EighthScheduledActivity that it has been cancelled.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sched_act: The activity that has been cancelled.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">date_str</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, %B </span><span class="si">%-d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">emails</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">signup</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">notification_email</span> <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__receive_eighth_emails</span><span class="o">=</span><span class="kc">True</span><span class="p">)})</span>
+
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;sched_act&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="p">,</span>
+        <span class="s2">&quot;date_str&quot;</span><span class="p">:</span> <span class="n">date_str</span><span class="p">,</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Scheduled activity </span><span class="si">%d</span><span class="s2"> was cancelled; emailing </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%d</span><span class="s2"> signed up users&quot;</span><span class="p">,</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">emails</span><span class="p">),</span>
+                 <span class="n">sched_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+
+    <span class="n">email_send_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="s2">&quot;eighth/emails/activity_cancelled.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/activity_cancelled.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+                          <span class="s2">&quot;Activity Cancelled on </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_str</span><span class="p">),</span> <span class="n">emails</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.absence_email">[docs]</a><span class="k">def</span> <span class="nf">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">,</span> <span class="n">use_celery</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

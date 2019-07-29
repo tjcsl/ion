@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #5041) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #5054) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -2657,9 +2657,10 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.eighth.models.EighthScheduledActivity.cancel">
 <code class="sig-name descname">cancel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthScheduledActivity.cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.cancel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancel an EighthScheduledActivity.</p>
-<p>This does nothing besides set the cancelled flag and save the
-object.</p>
+<dd><p>Cancel an EighthScheduledActivity and send a notification email to signed-up students.
+This method should be always be called instead of setting the ‘cancelled’ flag manually.
+(Note: To avoid spamming students signed up for both-block activities, an email is not sent
+for the B-block activity in both-block activities.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3968,6 +3969,17 @@ If the user is not in the waitlist, returns 0.</p>
 <dt id="intranet.apps.eighth.notifications.absence_email">
 <code class="sig-prename descclassname">intranet.apps.eighth.notifications.</code><code class="sig-name descname">absence_email</code><span class="sig-paren">(</span><em class="sig-param">signup</em>, <em class="sig-param">use_celery=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/notifications.html#absence_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.notifications.absence_email" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.notifications.activity_cancelled_email">
+<code class="sig-prename descclassname">intranet.apps.eighth.notifications.</code><code class="sig-name descname">activity_cancelled_email</code><span class="sig-paren">(</span><em class="sig-param">sched_act: intranet.apps.eighth.models.EighthScheduledActivity</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/notifications.html#activity_cancelled_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.notifications.activity_cancelled_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notifies all the users signed up for the given EighthScheduledActivity that it has been cancelled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sched_act</strong> – The activity that has been cancelled.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.eighth.notifications.signup_status_email">
