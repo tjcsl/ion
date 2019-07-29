@@ -727,6 +727,9 @@ SIMILAR_THRESHOLD = 5
 # Substrings of user agents to not log in the Ion access logs
 NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
 
+# The location of the Celery broker (message transport)
+CELERY_BROKER_URL = "amqp://localhost"
+
 CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 
