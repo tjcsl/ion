@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5036) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5041) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -143,7 +143,7 @@
 <span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="k">import</span> <span class="n">HistoricalRecords</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">eighth_exceptions</span>
-<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="k">import</span> <span class="n">email_send</span>
+<span class="kn">from</span> <span class="nn">..notifications.tasks</span> <span class="k">import</span> <span class="n">email_send_task</span>
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="k">import</span> <span class="n">is_current_year</span><span class="p">,</span> <span class="n">get_date_range_this_year</span>
 <span class="kn">from</span> <span class="nn">...utils.deletion</span> <span class="k">import</span> <span class="n">set_historical_user</span>
 
@@ -1078,8 +1078,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">waitlist</span> <span class="ow">in</span> <span class="n">waitlists</span><span class="p">:</span>
-            <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">waitlist</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">},</span>
-                       <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">])</span></div>
+            <span class="n">email_send_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">waitlist</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">},</span>
+                                  <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.add_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.add_user">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
     <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_to_waitlist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
