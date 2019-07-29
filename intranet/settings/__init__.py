@@ -727,6 +727,9 @@ SIMILAR_THRESHOLD = 5
 # Substrings of user agents to not log in the Ion access logs
 NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
 
+CELERY_ACCEPT_CONTENT = ["json", "pickle"]
+CELERY_TASK_SERIALIZER = "pickle"
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

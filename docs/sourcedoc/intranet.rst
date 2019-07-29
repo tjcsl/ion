@@ -23,6 +23,14 @@ intranet.asgi module
    :undoc-members:
    :show-inheritance:
 
+intranet.celery module
+----------------------
+
+.. automodule:: intranet.celery
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.routing module
 -----------------------
 

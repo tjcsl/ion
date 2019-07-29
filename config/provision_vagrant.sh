@@ -90,6 +90,9 @@ echo | ./install_server.sh
 cd ../..
 rm -rf redis-stable redis-stable.tar.gz
 
+# RabbitMQ
+apt-get -y install rabbitmq-server
+
 # Ion
 master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
