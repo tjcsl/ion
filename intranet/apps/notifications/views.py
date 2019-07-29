@@ -65,9 +65,9 @@ def chrome_getdata_view(request):
             ndata = notif.data
             if "title" in ndata and "text" in ndata:
                 data = {
-                    "title": ndata['title'] if 'title' in ndata else '',
-                    "text": ndata['text'] if 'text' in ndata else '',
-                    "url": ndata['url'] if 'url' in ndata else ''
+                    "title": ndata["title"] if "title" in ndata else "",
+                    "text": ndata["text"] if "text" in ndata else "",
+                    "url": ndata["url"] if "url" in ndata else "",
                 }
             else:
                 schedule_chk = chrome_getdata_check(request)
@@ -163,8 +163,9 @@ def gcm_post(nc_users, data, user=None, request=None):
     # {"multicast_id":123456,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:142%771acd"}]}
     logger.debug(resp)
     if "multicast_id" in resp:
-        n = GCMNotification.objects.create(multicast_id=resp["multicast_id"], num_success=resp["success"], num_failure=resp["failure"], user=user,
-                                           sent_data=json.dumps(data))
+        n = GCMNotification.objects.create(
+            multicast_id=resp["multicast_id"], num_success=resp["success"], num_failure=resp["failure"], user=user, sent_data=json.dumps(data)
+        )
         for nc in nc_objs:
             n.sent_to.add(nc)
         n.save()
@@ -178,7 +179,7 @@ def gcm_post_view(request):
     if not request.user.has_admin_permission("notifications"):
         return redirect("index")
     try:
-        has_tokens = (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
+        has_tokens = settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID
     except AttributeError:
         has_tokens = False
 
@@ -194,7 +195,7 @@ def gcm_post_view(request):
         "url": request.POST.get("url", None),
         "sound": request.POST.get("sound", False),
         "wakeup": request.POST.get("wakeup", False),
-        "vibrate": request.POST.get("vibrate", 0)
+        "vibrate": request.POST.get("vibrate", 0),
     }
     context = {"nc_all": nc_all, "has_tokens": has_tokens}
 
@@ -209,6 +210,6 @@ def gcm_post_view(request):
 
 
 def get_gcm_schedule_uids():
-    nc_all = (NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True))
+    nc_all = NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True)
     nc = nc_all.filter(user__receive_schedule_notifications=True)
     return nc.values_list("id", flat=True)
