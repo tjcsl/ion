@@ -17,11 +17,7 @@
 {% endif %}
 </p>
 
-{% if announcement.author %}
-    {{ announcement.author }}
-{% else %}
-    {{ announcement.user.full_name }}
-{% endif %} posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
+{{ announcement.get_author }}  posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
 </p>
 
 <h2>{{ announcement.title }}</h2>
