@@ -316,50 +316,51 @@ class ProfileTest(IonTestCase):
     def test_profile_view(self):
         user = self.login()
 
-        # Test very plain view of own profile
-        response = self.client.get(reverse("user_profile"))
-        self.assertTemplateUsed(response, "users/profile.html")
-        self.assertEqual(response.context["eighth_schedule"], [])
-
-        act = EighthActivity.objects.create(name="Test Activity")
-
-        for day_delta in range(1, 5):
-            for block in ["A", "B"]:
-                block = EighthBlock.objects.create(date=(timezone.now() + timezone.timedelta(days=day_delta)).date(), block_letter=block)
-                EighthScheduledActivity.objects.create(activity=act, block=block)
-
-        # Test as a normal student accessing own profile
-        response = self.client.get(reverse("user_profile"))
-        self.assertTemplateUsed(response, "users/profile.html")
-        self.assertEqual(response.context["profile_user"], user)
-        expected_schedule = []
-        for block in list(EighthBlock.objects.order_by("date"))[:6]:
-            expected_schedule.append({"block": block, "signup": None})
-        self.assertEqual(response.context["eighth_schedule"], expected_schedule)
-        self.assertTrue(response.context["can_view_eighth"])
-        self.assertFalse(response.context["eighth_restricted_msg"])
-        self.assertEqual(response.context["eighth_sponsor_schedule"], None)
-        self.assertFalse(response.context["nominations_active"])
-        self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
-        self.assertFalse(response.context["has_been_nominated"])
-
-        for schact in EighthScheduledActivity.objects.all():
-            EighthSignup.objects.create(scheduled_activity=schact, user=user)
-
-        response = self.client.get(reverse("user_profile"))
-        expected_schedule = []
-        for block in list(EighthBlock.objects.order_by("date"))[:6]:
-            expected_schedule.append({"block": block, "signup": EighthSignup.objects.get(scheduled_activity__block=block)})
-        self.assertEqual(response.context["eighth_schedule"], expected_schedule)
-
-        # Test self-nomination
-        position = NominationPosition.objects.create(position_name=settings.NOMINATION_POSITION)
-        Nomination.objects.create(nominator=user, nominee=user, position=position)
-        with self.settings(NOMINATIONS_ACTIVE=True):
+        with self.settings(YEAR_TURNOVER_MONTH=(timezone.localtime() + timezone.timedelta(days=70)).month):
+            # Test very plain view of own profile
             response = self.client.get(reverse("user_profile"))
-            self.assertTrue(response.context["has_been_nominated"])
-            self.assertTrue(response.context["nominations_active"])
+            self.assertTemplateUsed(response, "users/profile.html")
+            self.assertEqual(response.context["eighth_schedule"], [])
+
+            act = EighthActivity.objects.create(name="Test Activity")
+
+            for day_delta in range(1, 5):
+                for block in ["A", "B"]:
+                    block = EighthBlock.objects.create(date=(timezone.now() + timezone.timedelta(days=day_delta)).date(), block_letter=block)
+                    EighthScheduledActivity.objects.create(activity=act, block=block)
+
+            # Test as a normal student accessing own profile
+            response = self.client.get(reverse("user_profile"))
+            self.assertTemplateUsed(response, "users/profile.html")
+            self.assertEqual(response.context["profile_user"], user)
+            expected_schedule = []
+            for block in list(EighthBlock.objects.order_by("date"))[:6]:
+                expected_schedule.append({"block": block, "signup": None})
+            self.assertEqual(response.context["eighth_schedule"], expected_schedule)
+            self.assertTrue(response.context["can_view_eighth"])
+            self.assertFalse(response.context["eighth_restricted_msg"])
+            self.assertEqual(response.context["eighth_sponsor_schedule"], None)
+            self.assertFalse(response.context["nominations_active"])
             self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
+            self.assertFalse(response.context["has_been_nominated"])
+
+            for schact in EighthScheduledActivity.objects.all():
+                EighthSignup.objects.create(scheduled_activity=schact, user=user)
+
+            response = self.client.get(reverse("user_profile"))
+            expected_schedule = []
+            for block in list(EighthBlock.objects.order_by("date"))[:6]:
+                expected_schedule.append({"block": block, "signup": EighthSignup.objects.get(scheduled_activity__block=block)})
+            self.assertEqual(response.context["eighth_schedule"], expected_schedule)
+
+            # Test self-nomination
+            position = NominationPosition.objects.create(position_name=settings.NOMINATION_POSITION)
+            Nomination.objects.create(nominator=user, nominee=user, position=position)
+            with self.settings(NOMINATIONS_ACTIVE=True):
+                response = self.client.get(reverse("user_profile"))
+                self.assertTrue(response.context["has_been_nominated"])
+                self.assertTrue(response.context["nominations_active"])
+                self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
 
     def test_privacy_options(self):
         self.assertEqual(set(PERMISSIONS_NAMES.keys()), {"self", "parent"})
