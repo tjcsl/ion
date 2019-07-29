@@ -23,14 +23,17 @@ env:
     # CODACY_PROJECT_TOKEN
   - secure: KmWCQvt6IJh5VAAVuIongjTyLSnsc2QlEOQgmSCAigFjo+qwkeatisho05vCD9nhnqRtEOKFnnPwr/es4uKNUMAVKEqs2N0a2ytBL0jVr4obTTUdUQiaGUxOST5HdaiZY9urDECtwBgXogGImTTG6XdFzi9ah3mmmw5lfMIu+3Y=
 before_install:
+- sudo apt update
 - nvm use 11
 install:
+- sudo apt install -y rabbitmq-server
 - npm install sass
 - pip install -U pip setuptools
 - pip install -U -r requirements.txt
 - pip install -U coveralls flake8 pylint pylint-django codacy-coverage
 before_script:
 - cp intranet/settings/travis_secret.py intranet/settings/secret.py
+- sudo systemctl start rabbitmq-server
 - psql -U postgres -c 'create database ion'
 script:
 - if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then flake8 --max-line-length 150 --exclude=*/migrations/* .; fi
