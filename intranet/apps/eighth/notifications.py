@@ -4,11 +4,12 @@ from django.urls import reverse
 
 from .models import EighthSignup
 from ..notifications.emails import email_send
+from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
 
 
-def signup_status_email(user, next_blocks):
+def signup_status_email(user, next_blocks, use_celery=True):
     emails = [user.notification_email]
 
     blocks = []
@@ -49,10 +50,15 @@ def signup_status_email(user, next_blocks):
         "info_link": base_url + reverse("eighth_signup"),
     }
 
-    return email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, "Signup Status for {}".format(date_str), emails)
+    args = ("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, "Signup Status for {}".format(date_str), emails)
+    if use_celery:
+        email_send_task.delay(*args)
+        return None
+    else:
+        return email_send(*args)
 
 
-def absence_email(signup):
+def absence_email(signup, use_celery=True):
     user = signup.user
     emails = [user.notification_email]
 
@@ -68,4 +74,9 @@ def absence_email(signup):
         "info_link": base_url + reverse("eighth_absences"),
     }
 
-    return email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, "Eighth Period Absence Information", emails)
+    args = ("eighth/emails/absence.txt", "eighth/emails/absence.html", data, "Eighth Period Absence Information", emails)
+    if use_celery:
+        email_send_task.delay(*args)
+        return None
+    else:
+        return email_send(*args)
