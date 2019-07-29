@@ -65,9 +65,12 @@ def schedule_activity_view(request):
                             if other_act:
                                 other_act.cancel()
                                 invalidate_obj(other_act)
+
+                            schact[0].cancel()
+                            invalidate_obj(schact[0])
                         else:
-                            schact.update(cancelled=True)
                             for s in schact:
+                                s.cancel()
                                 invalidate_obj(s)
                         instance = schact[0]
 
