@@ -2,7 +2,7 @@
 {{ announcement.content }}
 {% endautoescape %}
 
-Posted by {% if announcement.author %}{{ announcement.author }}{% else %}{{ announcement.user.full_name }}{% endif %} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}
+Posted by {{ announcement.get_author }} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}
 
 View this announcement on Intranet: {{ info_link }}
 
