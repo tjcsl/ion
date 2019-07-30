@@ -538,7 +538,9 @@ INSTALLED_APPS = [
 ]
 
 # Django Channels Configuration (we use this for websockets)
-CHANNEL_LAYERS = {"default": {"BACKEND": "asgi_redis.RedisChannelLayer", "ROUTING": "intranet.routing.channel_routing"}}
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer", "CONFIG": {"hosts": [("127.0.0.1", 6379)]}}}
+
+ASGI_APPLICATION = "intranet.routing.application"
 
 # Eighth period default block date format
 # Post Django 1.8.7, this can no longer be used in templates.
