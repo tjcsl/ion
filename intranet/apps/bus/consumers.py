@@ -1,6 +1,4 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-from channels.http import AsgiRequest
-from django.conf import settings
 
 from .models import Route
 
