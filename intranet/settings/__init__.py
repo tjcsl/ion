@@ -735,6 +735,8 @@ CELERY_BROKER_URL = "amqp://localhost"
 CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 
+MAINTENANCE_MODE = False
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 
