@@ -12,7 +12,7 @@ class BusConsumer(JsonWebsocketConsumer):
         self.accept()
         self.send_json(data)
 
-    def receive(self, text_data=None, bytes_data=None):
+    def receive(self, text_data=None, bytes_data=None, **kwargs):
         if text_data:
             content = self.decode_json(text_data)
         else:
