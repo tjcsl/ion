@@ -9,4 +9,4 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from .apps.bus.consumers import BusConsumer
 
-application = ProtocolTypeRouter({"websocket": AuthMiddlewareStack(URLRouter([url(r"^bus/$", BusConsumer),]))})
+application = ProtocolTypeRouter({"websocket": AuthMiddlewareStack(URLRouter([url(r"^bus/$", BusConsumer)]))})
