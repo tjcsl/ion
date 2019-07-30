@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5054) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5063) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -665,7 +665,9 @@
 <span class="p">]</span>
 
 <span class="c1"># Django Channels Configuration (we use this for websockets)</span>
-<span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;asgi_redis.RedisChannelLayer&quot;</span><span class="p">,</span> <span class="s2">&quot;ROUTING&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.routing.channel_routing&quot;</span><span class="p">}}</span>
+<span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;channels_redis.core.RedisChannelLayer&quot;</span><span class="p">,</span> <span class="s2">&quot;CONFIG&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hosts&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">)]}}}</span>
+
+<span class="n">ASGI_APPLICATION</span> <span class="o">=</span> <span class="s2">&quot;intranet.routing.application&quot;</span>
 
 <span class="c1"># Eighth period default block date format</span>
 <span class="c1"># Post Django 1.8.7, this can no longer be used in templates.</span>
