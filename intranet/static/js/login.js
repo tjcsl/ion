@@ -57,6 +57,10 @@ $(function() {
             return;
         }
 
+        if(!($("#id_username").val() && $("#id_password").val())) {
+            return;
+        }
+
         document.forms["auth_form"].submit();
         $(this).addClass("load-spinner").val("  ").prop("disabled", "disabled");
         var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
