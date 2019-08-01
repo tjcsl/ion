@@ -12,6 +12,8 @@ import requests
 
 from requests_oauthlib import OAuth1
 
+from sentry_sdk import capture_exception
+
 from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
@@ -170,6 +172,7 @@ def announcement_posted_twitter(request, obj):
             # requests_oauthlib exceptions inherit from ValueError
             messages.error(request, f"Error posting to Twitter: {e}")
             logger.debug("Error posting to Twitter: %s: %s", e.__class__, e)
+            capture_exception(e)
         else:
             if respobj and "id" in respobj:
                 messages.success(request, "Posted tweet: {}".format(text))
@@ -178,6 +181,10 @@ def announcement_posted_twitter(request, obj):
                 messages.error(request, resp)
                 logger.debug(resp)
                 logger.debug(respobj)
+                try:
+                    assert respobj and "id" in respobj
+                except AssertionError as e:
+                    capture_exception(e)
     else:
         logger.debug("Not posting to Twitter")
 
