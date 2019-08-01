@@ -114,8 +114,8 @@ APPEND_SLASH = False
 # Email notifications backend and mailserver configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mail.tjhsst.edu"
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False  # FIXME: use tls
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 EMAIL_ANNOUNCEMENTS = True
 
