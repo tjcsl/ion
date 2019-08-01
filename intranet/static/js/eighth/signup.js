@@ -567,31 +567,33 @@ $(function() {
         var force = $(this).attr("force");
 
         var ths = $(this);
-        $.ajax({
-            url: $("#activity-detail").data("signup-endpoint"),
-            type: "POST",
-            data: {
-                "uid": uid,
-                "bid": bid,
-                "unsignup": true,
-                force: force
-            },
-            success: function(response) {
-                if (response) {
-                    alert($("<div>" + response + "</div>").text());
+        if(confirm("Remove signups for all blocks?")) {
+            $.ajax({
+                url: $("#activity-detail").data("signup-endpoint"),
+                type: "POST",
+                data: {
+                    "uid": uid,
+                    "bid": bid,
+                    "unsignup": true,
+                    force: force
+                },
+                success: function(response) {
+                    if (response) {
+                        alert($("<div>" + response + "</div>").text());
+                    }
+                    console.error(response);
+                    location = $(".eighth-profile-signup").data("next-url");
+                },
+                error: function(response, error) {
+                    window.r = response;
+                    if (response.responseText) {
+                        alert($("<div>" + response.statusText + ": " + response.responseText + "</div>").text());
+                    }
+                    console.error(response);
+                    ths.attr("force", true);
+                    ths.html(ths.html() + " (Force)");
                 }
-                console.error(response);
-                //location.reload();
-            },
-            error: function(response, error) {
-                window.r = response;
-                if (response.responseText) {
-                    alert($("<div>" + response.statusText + ": " + response.responseText + "</div>").text());
-                }
-                console.error(response);
-                ths.attr("force", true);
-                ths.html(ths.html() + " (Force)");
-            }
-        });
+            });
+        }
     });
 });
