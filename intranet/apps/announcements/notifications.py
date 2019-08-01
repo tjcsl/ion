@@ -163,16 +163,21 @@ def announcement_posted_twitter(request, obj):
             text = "{}... - {}".format(title[:110], url)
         logger.debug("Posting tweet: %s", text)
 
-        resp = notify_twitter(text)
-        respobj = json.loads(resp)
-
-        if respobj and "id" in respobj:
-            messages.success(request, "Posted tweet: {}".format(text))
-            messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
+        try:
+            resp = notify_twitter(text)
+            respobj = json.loads(resp)
+        except (ValueError, requests.RequestException, json.JSONDecodeError) as e:
+            # requests_oauthlib exceptions inherit from ValueError
+            messages.error(request, f"Error posting to Twitter: {e}")
+            logger.debug("Error posting to Twitter: %s: %s", e.__class__, e)
         else:
-            messages.error(request, resp)
-            logger.debug(resp)
-            logger.debug(respobj)
+            if respobj and "id" in respobj:
+                messages.success(request, "Posted tweet: {}".format(text))
+                messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
+            else:
+                messages.error(request, resp)
+                logger.debug(resp)
+                logger.debug(respobj)
     else:
         logger.debug("Not posting to Twitter")
 
