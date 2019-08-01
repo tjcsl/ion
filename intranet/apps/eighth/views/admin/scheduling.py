@@ -17,6 +17,7 @@ from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthSignup
 from ...utils import get_start_date
+from ...notifications import room_changed_single_email
 from ....auth.decorators import eighth_admin_required
 from .....utils.serialization import safe_json
 
@@ -101,6 +102,11 @@ def schedule_activity_view(request):
                     for field_name in fields:
                         obj = form.cleaned_data[field_name]
                         logger.debug("%s %s", field_name, obj)
+
+                        if field_name == "rooms" and set(obj) != set(instance.rooms.all()) and (not instance.is_both_blocks
+                                                                                                or instance.block.block_letter == "A"):
+                            room_changed_single_email.delay(instance, instance.rooms.all(), obj)
+
                         # Properly handle ManyToMany relations in django 1.10+
                         if isinstance(getattr(instance, field_name), Manager):
                             getattr(instance, field_name).set(obj)

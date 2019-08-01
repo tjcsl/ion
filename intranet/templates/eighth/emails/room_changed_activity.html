@@ -1,0 +1,16 @@
+<html><body>
+{% with description="Room changes" target=info_link name="View status" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    During the following blocks for which you are currently signed up for {{ act.name }}, it has {% if new_rooms_str %}changed rooms {% if old_rooms_str %}from {{ old_rooms_str }} {% endif %}to <strong>{{ new_rooms_str }}</strong>{% else %}been removed from the room{{ num_old_rooms|pluralize }} <strong>{{ old_rooms_str }}</strong>{% endif %}:
+</p>
+<ul>
+    {% for date_str in date_strs %}
+    <li>{{ date_str }}</li>
+    {% endfor %}
+</ul>
+
+{% include "email_footer.html" %}
+</body></html>

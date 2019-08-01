@@ -5,7 +5,7 @@ import string
 import subprocess
 from urllib import parse
 
-from typing import Set  # noqa
+from typing import Collection, Set  # noqa
 
 from django.conf import settings
 from django.template.loader import get_template
@@ -122,6 +122,28 @@ class GlobList(list):
 
 def is_entirely_digit(digit_str):
     return all(c in string.digits for c in digit_str)
+
+
+def join_nicely(items: Collection) -> str:
+    """Joins together a list of items in a human-readable format. Examples:
+    >>> join_nicely([])
+    ''
+    >>> join_nicely(['a'])
+    'a'
+    >>> join_nicely(['a', 'b'])
+    'a and b'
+    >>> join_nicely(['a', 'b', 'c'])
+    'a, b, and c'
+
+    Args:
+        items: The items to join together.
+
+    Returns:
+        The resulting joined-together string.
+
+    """
+    items = tuple(map(str, items))
+    return " and ".join(items) if len(items) <= 2 else ", ".join(items[:-1]) + ", and " + items[-1]
 
 
 def single_css_map(name):
