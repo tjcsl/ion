@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
 from ...models import EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist
 from ...utils import get_start_date
+from ...notifications import room_changed_activity_email
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 
@@ -147,6 +148,10 @@ def edit_activity_view(request, activity_id):
                             return render(request, "eighth/admin/keep_room_history.html", context)
                     else:
                         messages.success(request, "You modified the default rooms, but those changes will not affect any scheduled activities.")
+
+                if set(old_room_ids) != set(new_room_ids):
+                    # Notify people that the activities they're signed up for have changed rooms
+                    room_changed_activity_email.delay(activity, old_rooms, EighthRoom.objects.filter(id__in=new_room_ids))
 
                 form.save()
             except forms.ValidationError as error:
