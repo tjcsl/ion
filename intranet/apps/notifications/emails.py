@@ -31,6 +31,11 @@ def email_send(text_template, html_template, data, subject, emails, headers=None
         msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
     msg.attach_alternative(html_content, "text/html")
     logger.debug("Emailing %s to %s", subject, emails)
-    msg.send()
+
+    # We only want to actually send emails if we are in production or explicitly force sending.
+    if settings.PRODUCTION or settings.FORCE_EMAIL_SEND:
+        msg.send()
+    else:
+        logger.debug("Refusing to email in non-production environments. To force email sending, enable settings.FORCE_EMAIL_SEND.")
 
     return msg

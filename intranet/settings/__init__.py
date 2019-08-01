@@ -74,6 +74,9 @@ DEBUG = os.getenv("DEBUG", str(not PRODUCTION).upper()) == "TRUE"
 EMAIL_ANNOUNCEMENTS = PRODUCTION
 SEND_ANNOUNCEMENT_APPROVAL = PRODUCTION
 
+# Whether to force sending emails, even if we aren't in production.
+FORCE_EMAIL_SEND = False
+
 # Don't require https for testing.
 SESSION_COOKIE_SECURE = PRODUCTION
 CSRF_COOKIE_SECURE = PRODUCTION
