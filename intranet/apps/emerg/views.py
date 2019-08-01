@@ -76,7 +76,6 @@ def get_emerg():
     """
     key = "emerg:{}".format(datetime.datetime.now().date())
     cached = cache.get(key)
-    cached = None  # Remove this for production
     if cached:
         logger.debug("Returning emergency info from cache")
         return cached
