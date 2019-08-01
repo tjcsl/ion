@@ -82,6 +82,7 @@
     {% if dark_mode_enabled %}
         {% stylesheet 'dark/base' %}
         {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/eighth.signup' %}
     {% endif %}
 {% endblock %}
 
@@ -399,7 +400,7 @@
             </thead>
             {% for sch in eighth_schedule %}
             {% if sch.block.date == active_block.date %}
-                <tr class="form-row"{% if sch.block == active_block %} style="background-color: yellow"{% endif %}>
+                <tr class="form-row"{% if sch.block == active_block %} style="background-color: yellow;{% if dark_mode_enabled %} color: black;{% endif %}"{% endif %}>
                     <td class="center checkbox">
                         <input type="checkbox" name="block" value="{{ sch.block.id }}">
                     </td>
