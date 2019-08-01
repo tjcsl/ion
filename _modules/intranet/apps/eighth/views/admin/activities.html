@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #5065) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #5090) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -139,6 +139,7 @@
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="k">import</span> <span class="n">ActivityForm</span><span class="p">,</span> <span class="n">QuickActivityForm</span>
 <span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span> <span class="nn">...notifications</span> <span class="k">import</span> <span class="n">room_changed_activity_email</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="k">import</span> <span class="n">Group</span>
 
@@ -274,6 +275,10 @@
                             <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/keep_room_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You modified the default rooms, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_room_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_room_ids</span><span class="p">):</span>
+                    <span class="c1"># Notify people that the activities they&#39;re signed up for have changed rooms</span>
+                    <span class="n">room_changed_activity_email</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">old_rooms</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_room_ids</span><span class="p">))</span>
 
                 <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>

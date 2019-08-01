@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #5065) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #5090) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -144,6 +144,7 @@
 <span class="kn">from</span> <span class="nn">...forms.admin.scheduling</span> <span class="k">import</span> <span class="n">ScheduledActivityForm</span>
 <span class="kn">from</span> <span class="nn">...models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span> <span class="nn">...notifications</span> <span class="k">import</span> <span class="n">room_changed_single_email</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">.....utils.serialization</span> <span class="k">import</span> <span class="n">safe_json</span>
 
@@ -228,6 +229,11 @@
                     <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                         <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">field_name</span> <span class="o">==</span> <span class="s2">&quot;rooms&quot;</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">instance</span><span class="o">.</span><span class="n">is_both_blocks</span>
+                                                                                                <span class="ow">or</span> <span class="n">instance</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">):</span>
+                            <span class="n">room_changed_single_email</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">obj</span><span class="p">)</span>
+
                         <span class="c1"># Properly handle ManyToMany relations in django 1.10+</span>
                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field_name</span><span class="p">),</span> <span class="n">Manager</span><span class="p">):</span>
                             <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>

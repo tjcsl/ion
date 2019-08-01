@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #5065) documentation</title>
+    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #5090) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -132,7 +132,7 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="k">import</span> <span class="n">get_template</span>
@@ -249,6 +249,28 @@
 
 <div class="viewcode-block" id="is_entirely_digit"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.is_entirely_digit">[docs]</a><span class="k">def</span> <span class="nf">is_entirely_digit</span><span class="p">(</span><span class="n">digit_str</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">digit_str</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="join_nicely"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.join_nicely">[docs]</a><span class="k">def</span> <span class="nf">join_nicely</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Collection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Joins together a list of items in a human-readable format. Examples:</span>
+<span class="sd">    &gt;&gt;&gt; join_nicely([])</span>
+<span class="sd">    &#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt; join_nicely([&#39;a&#39;])</span>
+<span class="sd">    &#39;a&#39;</span>
+<span class="sd">    &gt;&gt;&gt; join_nicely([&#39;a&#39;, &#39;b&#39;])</span>
+<span class="sd">    &#39;a and b&#39;</span>
+<span class="sd">    &gt;&gt;&gt; join_nicely([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])</span>
+<span class="sd">    &#39;a, b, and c&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        items: The items to join together.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The resulting joined-together string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;, and &quot;</span> <span class="o">+</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="single_css_map"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.single_css_map">[docs]</a><span class="k">def</span> <span class="nf">single_css_map</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>

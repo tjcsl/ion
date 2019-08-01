@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.schedule.tests &#8212; TJ Intranet v3 (Build #5065) documentation</title>
+    <title>intranet.apps.schedule.tests &#8212; TJ Intranet v3 (Build #5090) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -137,7 +137,7 @@
 <div class="viewcode-block" id="ScheduleTest.test_day"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.tests.ScheduleTest.test_day">[docs]</a>    <span class="k">def</span> <span class="nf">test_day</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">snow_daytype</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;No School -- Snow Day&quot;</span><span class="p">,</span> <span class="n">special</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">day_type</span><span class="o">=</span><span class="n">snow_daytype</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">(),</span> <span class="n">day_type</span><span class="o">=</span><span class="n">snow_daytype</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Test Snow Days</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">day</span><span class="p">)</span>
