@@ -1,3 +1,4 @@
+from typing import Collection, Mapping
 import logging
 
 from django.conf import settings
@@ -7,17 +8,27 @@ from django.template.loader import get_template
 logger = logging.getLogger(__name__)
 
 
-def email_send(text_template, html_template, data, subject, emails, headers=None, bcc=False):
+def email_send(text_template: str, html_template: str, data: Mapping[str, object], subject: str,
+               emails: Collection[str], headers: Mapping[str, str] = None, bcc: bool = False, *,  # pylint: disable=unsubscriptable-object
+               custom_logger: logging.Logger = None) -> EmailMultiAlternatives:
     """Send an HTML/Plaintext email with the following fields.
+    If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email
 
-    text_template: URL to a Django template for the text email's contents
-    html_template: URL to a Django tempalte for the HTML email's contents
-    data: The context to pass to the templates
-    subject: The subject of the email
-    emails: The addresses to send the email to
-    headers: A dict of additional headers to send to the message
+    Args:
+        text_template: URL to a Django template for the text email's contents
+        html_template: URL to a Django tempalte for the HTML email's contents
+        data: The context to pass to the templates
+        subject: The subject of the email
+        emails: The addresses to send the email to
+        headers: A dict of additional headers to send to the message
+        custom_logger: An optional logger to use instead of the Django logger
+
+    Returns:
+        The email object that was created (and sent if we're in production or settings.FORCE_EMAIL_SEND is set)
 
     """
+
+    logger = (custom_logger if custom_logger is not None else globals()["logger"])  # pylint: disable=redefined-outer-name
 
     text = get_template(text_template)
     html = get_template(html_template)
