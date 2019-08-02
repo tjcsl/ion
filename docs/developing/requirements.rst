@@ -343,6 +343,16 @@ NEEDSRELEASE
 
 LICENSE: 2-clause BSD
 
+flower
+-------
+https://github.com/mher/flower
+
+This package provides a real-time monitor and web admin for the Celery distributed task queue.
+
+It is used to help administrators and developers monitor their Celery task queues.
+
+LICENSE: 3-clause BSD
+
 gunicorn
 ---------
 https://github.com/benoitc/gunicorn
@@ -374,6 +384,16 @@ This package provides a rich toolkit to help you make the most of using Python i
 It is directly used by the interactive shell for ``python manage.py shell_plus``.
 
 LICENSE: 3-clause BSD
+
+objgraph
+----------
+https://github.com/mgedmin/objgraph
+
+This package is a module that lets you visually explore Python object graphs.
+
+It is used by ``flower`` to draw graphs.
+
+LICENSE: MIT
 
 pexpect
 ----------
