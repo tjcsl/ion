@@ -1,5 +1,5 @@
 import logging
-from datetime import date, time, datetime, timedelta
+from datetime import date, timedelta
 from itertools import chain
 
 from django.conf import settings
@@ -167,7 +167,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
 def find_birthdays(request):
     """Return information on user birthdays."""
-    today = date.today()
+    today = timezone.localdate()
     custom = False
     yr_inc = 0
     if "birthday_month" in request.GET and "birthday_day" in request.GET:

@@ -1,6 +1,5 @@
 import csv
 import logging
-from datetime import datetime
 from io import BytesIO
 
 from cacheops import invalidate_obj
@@ -12,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from formtools.wizard.views import SessionWizardView
 
@@ -79,7 +79,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 now, _ = get_date_range_this_year()
                 kwargs.update({"exclude_before_date": now})
             elif not self.request.user.is_eighth_admin:
-                now = datetime.now().date()
+                now = timezone.localdate()
                 kwargs.update({"exclude_before_date": now})
             else:
                 start_date = get_start_date(self.request)

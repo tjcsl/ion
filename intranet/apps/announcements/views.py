@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 from django import http
@@ -353,7 +352,7 @@ def delete_announcement_view(request, announcement_id):
                 a.delete()
                 messages.success(request, "Successfully deleted announcement.")
             else:
-                a.expiration_date = datetime.datetime.now()
+                a.expiration_date = timezone.localtime()
                 a.save()
                 messages.success(request, "Successfully expired announcement.")
         except Announcement.DoesNotExist:

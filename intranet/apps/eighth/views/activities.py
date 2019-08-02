@@ -51,10 +51,11 @@ def chunks(l, n):
 
 
 def current_school_year():
-    if datetime.now().month <= settings.YEAR_TURNOVER_MONTH:
-        return datetime.now().year
+    now = timezone.localtime()
+    if now.month <= settings.YEAR_TURNOVER_MONTH:
+        return now.year
     else:
-        return datetime.now().year + 1
+        return now.year + 1
 
 
 def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):

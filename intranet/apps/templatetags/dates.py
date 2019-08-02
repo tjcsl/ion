@@ -1,8 +1,8 @@
 import logging
-from datetime import date as datetime_date
 from datetime import datetime
 
 from django import template
+from django.utils import timezone
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -18,18 +18,19 @@ def fuzzy_time(time):
 @register.filter(expects_localtime=True)
 def time_to_date(time):
     """Returns a `datetime.datetime` object from a `datetime.time` object using the current date."""
-    d = datetime_date.today()
-    return datetime.combine(d, time)
+    return datetime.combine(timezone.localdate(), time)
 
 
 @register.filter(expects_localtime=True)
 def fuzzy_date(date):
     """Formats a `datetime.datetime` object relative to the current time."""
 
-    date = date.replace(tzinfo=None)
+    if date.tzinfo is None:
+        date = timezone.make_aware(date)
 
-    if date <= datetime.now():
-        diff = datetime.now() - date
+    now = timezone.localtime()
+    if date <= now:
+        diff = now - date
 
         seconds = diff.total_seconds()
         minutes = seconds // 60
@@ -51,7 +52,7 @@ def fuzzy_date(date):
         else:
             return date.strftime("%A, %B %d, %Y")
     else:
-        diff = date - datetime.now()
+        diff = date - now
 
         seconds = diff.total_seconds()
         minutes = seconds // 60

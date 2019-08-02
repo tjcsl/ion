@@ -3,7 +3,6 @@ import os
 import threading
 import shutil
 import traceback
-import datetime
 import csv
 
 from tempfile import gettempdir
@@ -15,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.core.management import call_command
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
@@ -100,7 +100,7 @@ class ImportThread(threading.Thread):
         u.save()
 
     def run(self):
-        start_time = datetime.datetime.now()
+        start_time = timezone.localtime()
         content = StringIO()
         failure = False
 

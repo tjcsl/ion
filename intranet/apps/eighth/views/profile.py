@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from ..models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
@@ -79,9 +80,9 @@ def get_profile_context(request, user_id=None, date=None):
             logger.debug(get_start_date(request))
             date = get_start_date(request)
         else:
-            date = datetime.now()
+            date = timezone.localtime()
     except Exception:
-        date = datetime.now()
+        date = timezone.localtime()
 
     date_end = date + timedelta(days=14)
 

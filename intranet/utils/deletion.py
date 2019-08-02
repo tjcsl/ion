@@ -1,9 +1,9 @@
 import logging
-from datetime import date
 
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.deletion import Collector
+from django.utils import timezone
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ def set_historical_user(collector, field, sub_objs, using):
     for obj in sub_objs:
         if isinstance(obj, EighthSignup):
             scheduled_activity = obj.scheduled_activity
-            if scheduled_activity.block.date < date.today():
+            if scheduled_activity.block.date < timezone.localdate():
                 if scheduled_activity.archived_member_count:
                     scheduled_activity.archived_member_count += 1
                 else:
