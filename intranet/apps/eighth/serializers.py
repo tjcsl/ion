@@ -158,7 +158,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         return activity_info
 
-    def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, block_id, activity_id, scheduled_activity=None):
+    def get_activity(self, user, favorited_activities, recommended_activities, available_restricted_acts, block_id, activity_id,
+                     scheduled_activity=None):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(block_id=block_id, activity_id=activity_id)
         return self.process_scheduled_activity(
@@ -166,8 +167,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         )
 
     def get_scheduled_activity(self, scheduled_activity_id):
-        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
-        return scheduled_activity.activity.id
+        return EighthScheduledActivity.objects.get(id=scheduled_activity_id).activity_id
 
     @transaction.atomic
     def fetch_activity_list_with_metadata(self, block):
@@ -193,7 +193,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
-            activity_info = self.get_activity(user, favorited_activities, recommended_activities, available_restricted_acts, None, None, scheduled_activity)
+            activity_info = self.get_activity(user, favorited_activities, recommended_activities, available_restricted_acts, None, None,
+                                              scheduled_activity)
             activity = scheduled_activity.activity
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
             activity_list[activity.id] = activity_info
@@ -207,8 +208,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             .annotate(user_count=Count("scheduled_activity"))
         )
 
-        for activity, user_count in activities_with_signups:
-            activity_list[activity]["roster"]["count"] = user_count
+        for activity_id, user_count in activities_with_signups:
+            activity_list[activity_id]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects.values_list("id", "user_id", "first_name", "last_name", "show_full_name")
 
@@ -220,17 +221,15 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         sponsorships = (
             EighthActivity.sponsors.through.objects.filter(eighthactivity_id__in=activity_ids)
             .select_related("sponsors")
-            .values("eighthactivity", "eighthsponsor")
+            .values_list("eighthactivity", "eighthsponsor")
         )
 
         scheduled_activity_ids = scheduled_activities.values_list("id", flat=True)
-        overidden_sponsorships = EighthScheduledActivity.sponsors.through.objects.filter(
+        overridden_sponsorships = EighthScheduledActivity.sponsors.through.objects.filter(
             eighthscheduledactivity_id__in=scheduled_activity_ids
-        ).values("eighthscheduledactivity", "eighthsponsor")
+        ).values_list("eighthscheduledactivity", "eighthsponsor")
 
-        for sponsorship in sponsorships:
-            activity_id = int(sponsorship["eighthactivity"])
-            sponsor_id = sponsorship["eighthsponsor"]
+        for activity_id, sponsor_id in sponsorships:
             sponsor = all_sponsors[sponsor_id]
 
             if sponsor["name"]:
@@ -246,16 +245,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             if activity_id in activity_list:
                 activity_list[activity_id]["sponsors"].append(name)
 
-        activities_sponsors_overidden = []
-        for sponsorship in overidden_sponsorships:
-            scheduled_activity_id = sponsorship["eighthscheduledactivity"]
+        activities_sponsors_overridden = set()
+        for scheduled_activity_id, sponsor_id in overridden_sponsorships:
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
-            sponsor_id = sponsorship["eighthsponsor"]
             sponsor = all_sponsors[sponsor_id]
 
-            if activity_id not in activities_sponsors_overidden:
-                activities_sponsors_overidden.append(activity_id)
-                del activity_list[activity_id]["sponsors"][:]
+            if activity_id not in activities_sponsors_overridden:
+                activities_sponsors_overridden.add(activity_id)
+                activity_list[activity_id]["sponsors"].clear()
 
             if sponsor["name"]:
                 name = sponsor["name"]
@@ -271,7 +268,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 activity_list[activity_id]["sponsors"].append(name)
 
         roomings = EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity")
-        overidden_roomings = EighthScheduledActivity.rooms.through.objects.filter(
+        overridden_roomings = EighthScheduledActivity.rooms.through.objects.filter(
             eighthscheduledactivity_id__in=scheduled_activity_ids
         ).select_related("eighthroom", "eighthscheduledactivity")
 
@@ -286,13 +283,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
-        activities_rooms_overidden = []
-        for rooming in overidden_roomings:
+        activities_rooms_overridden = []
+        for rooming in overridden_roomings:
             scheduled_activity_id = rooming.eighthscheduledactivity.id
 
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
-            if activity_id not in activities_rooms_overidden:
-                activities_rooms_overidden.append(activity_id)
+            if activity_id not in activities_rooms_overridden:
+                activities_rooms_overridden.append(activity_id)
                 del activity_list[activity_id]["rooms"][:]
                 activity_list[activity_id]["roster"]["capacity"] = 0
             room_name = rooming.eighthroom.name
@@ -302,8 +299,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         for scheduled_activity in scheduled_activities:
             if scheduled_activity.capacity is not None:
                 capacity = scheduled_activity.capacity
-                sched_act_id = scheduled_activity.activity.id
-                activity_list[sched_act_id]["roster"]["capacity"] = capacity
+                act_id = scheduled_activity.activity.id
+                activity_list[act_id]["roster"]["capacity"] = capacity
 
         return activity_list
 
