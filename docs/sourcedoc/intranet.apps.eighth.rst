@@ -61,6 +61,14 @@ intranet.apps.eighth.serializers module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.tasks module
+---------------------------------
+
+.. automodule:: intranet.apps.eighth.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.eighth.tests module
 ---------------------------------
 

@@ -12,7 +12,7 @@ from django.shortcuts import redirect, render
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
 from ...models import EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist
 from ...utils import get_start_date
-from ...notifications import room_changed_activity_email
+from ...tasks import room_changed_activity_email
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 
