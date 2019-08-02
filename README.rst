@@ -9,11 +9,7 @@ Intranet 3
     :target: https://coveralls.io/github/tjcsl/ion?branch=master
     :alt: Coverage
 
-.. image:: https://readthedocs.org/projects/ion/badge/?version=latest
-    :target: http://ion.readthedocs.io
-    :alt: Docs
-
-Version 3.0.0
+*Version 3.0.0*
 
 Intranet3 (Ion) is the next-generation Intranet platform for `TJHSST 
 <https://www.tjhsst.edu/>`_. Using Python, Django, Redis, Postgres, and many other technologies, Ion was developed from the ground up to be simple, well-documented, and extensible.
