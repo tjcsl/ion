@@ -47,6 +47,7 @@ Vagrant.configure("2") do |config|
       config.vm.network "public_network", bridge: devconfig["network_interface"]
   end
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 5555, host: 5555
 
   config.ssh.forward_agent = true
 
