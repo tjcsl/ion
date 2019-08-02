@@ -1,4 +1,3 @@
-from datetime import datetime
 import ipaddress
 import logging
 import string
@@ -9,6 +8,7 @@ from typing import Collection, Set  # noqa
 
 from django.conf import settings
 from django.template.loader import get_template
+from django.utils import timezone
 
 from ..apps.emerg.views import get_emerg
 
@@ -166,7 +166,7 @@ def get_fcps_emerg(request):
 
 
 def get_ap_week_warning(request):
-    now = datetime.now()
+    now = timezone.localtime()
     today = now.date()
     day = today.day
     if now.hour > 16:

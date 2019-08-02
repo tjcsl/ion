@@ -6,6 +6,7 @@ import os
 
 from django.core.urlresolvers import resolve
 from django.conf import settings
+from django.utils import timezone
 from oauth2_provider.models import Application
 
 from intranet.apps.notifications.models import NotificationConfig
@@ -77,7 +78,7 @@ def mobile_app(request):
                     ncfg.android_gcm_rand = rand
                 else:
                     rand = ncfg.android_gcm_rand
-                ncfg.android_gcm_time = datetime.datetime.now()
+                ncfg.android_gcm_time = timezone.localtime()
 
                 logger.debug("GCM random token generated: %s", rand)
                 ncfg.save()
@@ -95,7 +96,7 @@ def mobile_app(request):
 
 def global_custom_theme(request):
     """Add custom theme javascript and css."""
-    today = datetime.datetime.now().date()
+    today = timezone.localdate()
     theme = {}
 
     if today.month == 3 and (14 <= today.day <= 16):
@@ -106,7 +107,7 @@ def global_custom_theme(request):
 
 def show_homecoming(request):
     """Show homecoming ribbon / scores """
-    return {"show_homecoming": settings.HOCO_START_DATE < datetime.date.today() and datetime.date.today() < settings.HOCO_END_DATE}
+    return {"show_homecoming": settings.HOCO_START_DATE < timezone.localdate() < settings.HOCO_END_DATE}
 
 
 def _get_current_ip(request):
@@ -127,7 +128,7 @@ def is_tj_ip(request):
 
 def show_bus_button(request):
     is_bus_admin = request.user.is_authenticated and request.user.has_admin_permission("bus")
-    now = datetime.datetime.now()
+    now = timezone.localtime()
     window = datetime.timedelta(hours=1)
     today = Day.objects.today()
     if settings.ENABLE_BUS_DRIVER:

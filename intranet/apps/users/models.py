@@ -758,7 +758,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             .exclude(scheduled_activity__activity__special=True)
             .exclude(scheduled_activity__activity__restricted=True)
             .exclude(scheduled_activity__activity__deleted=True)
-            .exclude(scheduled_activity__block__date__lte=(datetime.now() + relativedelta(months=-6)))
+            .exclude(scheduled_activity__block__date__lte=(timezone.localtime() + relativedelta(months=-6)))
         ):
             acts.add(signup.scheduled_activity.activity)
         close_acts = set()
@@ -770,7 +770,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return close_acts
 
     def archive_admin_comments(self):
-        current_year = datetime.now().year
+        current_year = timezone.localdate().year
         previous_year = current_year - 1
         self.admin_comments = "\n=== {}-{} comments ===\n{}".format(previous_year, current_year, self.admin_comments)
         self.save(update_fields=["admin_comments"])
@@ -1174,7 +1174,7 @@ class Grade:
 
     @classmethod
     def grade_from_year(cls, graduation_year):
-        today = datetime.now()
+        today = timezone.localdate()
         if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
         else:
@@ -1184,7 +1184,7 @@ class Grade:
 
     @classmethod
     def year_from_grade(cls, grade):
-        today = datetime.now()
+        today = timezone.localdate()
         if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
         else:

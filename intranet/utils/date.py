@@ -13,7 +13,7 @@ def is_current_year(date):
 def get_date_range_this_year(now=None):
     """Return the starting and ending date of the current school year."""
     if now is None:
-        now = datetime.datetime.now().date()
+        now = timezone.localdate()
     if now.month <= settings.YEAR_TURNOVER_MONTH:
         date_start = datetime.datetime(now.year - 1, settings.YEAR_TURNOVER_MONTH + 1, 1, 0, 0, 0)
         date_end = datetime.datetime(

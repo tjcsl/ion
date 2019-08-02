@@ -1,5 +1,6 @@
-import datetime
 import logging
+
+from django.utils import timezone
 
 from .views import schedule_context
 
@@ -24,8 +25,8 @@ def period_start_end_data(request):
 
 
 def at_period_point(blocks):
-    now = datetime.datetime.now()
-    now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
+    now = timezone.now()
+    now = now.replace(second=0, microsecond=0)
     for b in blocks:
         logger.debug(now, b.start.date_obj(now))
         if now == b.start.date_obj(now):

@@ -1,6 +1,6 @@
 import logging
 import random
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
@@ -41,7 +41,7 @@ def log_auth(request, success):
 
     username = request.POST.get("username", "unknown")
 
-    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, datetime.now(), request.get_full_path(),
+    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, timezone.localtime(), request.get_full_path(),
                                                                request.META.get("HTTP_USER_AGENT", ""))
 
     auth_logger.info(log_line)
@@ -77,7 +77,7 @@ def get_bg_pattern(request):
 
 def get_login_theme():
     """Load a custom login theme (e.g. snow)"""
-    today = datetime.now().date()
+    today = timezone.localdate()
     if today.month == 12 or today.month == 1:
         # Snow
         return {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"}
@@ -112,7 +112,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if ap_week and not login_warning:
             login_warning = ap_week
 
-        events = Event.objects.filter(time__gte=datetime.now(), time__lte=(datetime.now().date() + relativedelta(weeks=1)), public=True).this_year()
+        events = Event.objects.filter(time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)),
+                                      public=True).this_year()
         sports_events = events.filter(approved=True, category="sports").order_by('time')[:3]
         school_events = events.filter(approved=True, category="school").order_by('time')[:3]
 
@@ -167,7 +168,7 @@ class LoginView(View):
 
             if request.user.is_student and settings.ENABLE_PRE_EIGHTH_REDIRECT:
                 # Redirect to eighth signup page if the user isn't signed up for eighth period activities
-                now = timezone.localtime(timezone.now())
+                now = timezone.localtime()
                 future_cutoff = now + timedelta(minutes=20)
 
                 if now.date() == future_cutoff.date():
@@ -195,7 +196,7 @@ class LoginView(View):
 
             if not request.user.first_login:
                 logger.info("First login")
-                request.user.first_login = make_aware(datetime.now())
+                request.user.first_login = timezone.localtime()
                 request.user.save()
                 request.session["first_login"] = True
 

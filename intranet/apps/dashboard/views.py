@@ -142,7 +142,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
     logger.debug(acts)
 
-    cur_date = surrounding_blocks[0].date if acts else given_date if given_date else datetime.now().date()
+    cur_date = surrounding_blocks[0].date if acts else given_date if given_date else timezone.localdate()
 
     last_block = surrounding_blocks[len(surrounding_blocks) - 1] if surrounding_blocks else None
     last_block_date = last_block.date + timedelta(days=1) if last_block else cur_date
@@ -311,7 +311,7 @@ def get_announcements_list(request, context):
             events = (Event.objects.visible_to_user(user))
         else:
             # Unlike announcements, show events for the rest of the day after they occur.
-            midnight = timezone.make_aware(timezone.datetime.combine(datetime.now(), time(0, 0)))
+            midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
             events = (Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True))
 
     items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
