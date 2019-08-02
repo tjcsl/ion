@@ -11,5 +11,5 @@ fi
 mkdir -p "$piddir"
 mkdir -p "$logdir"
 
-celery multi restart worker1 -A intranet -l info --pidfile="$piddir/celery-%n.pid" --logfile="$logdir/celery-%n.log" -c 16
+DEBUG=TRUE,PRODUCTION=FALSE celery multi restart worker1 -A intranet -l info --pidfile="$piddir/celery-%n.pid" --logfile="$logdir/celery-%n.log" -c 16
 
