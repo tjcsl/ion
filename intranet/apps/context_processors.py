@@ -4,7 +4,7 @@ import re
 import binascii
 import os
 
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 from django.conf import settings
 from django.utils import timezone
 from oauth2_provider.models import Application
@@ -151,10 +151,14 @@ def enable_dark_mode(request):
 
 def oauth_toolkit(request):
     if request.user.is_authenticated:
-        resolve_match = resolve(request.path)
-        if resolve_match.namespaces == ["oauth2_provider"] and resolve_match.url_name == "authorized-token-list":
-            applications_tokens = [(application, application.accesstoken_set.filter(user=request.user))
-                                   for application in Application.objects.filter(accesstoken__user=request.user).distinct()]
-            return {"applications_tokens": applications_tokens}
+        try:
+            resolve_match = resolve(request.path)
+        except Resolver404:
+            pass
+        else:
+            if resolve_match.namespaces == ["oauth2_provider"] and resolve_match.url_name == "authorized-token-list":
+                applications_tokens = [(application, application.accesstoken_set.filter(user=request.user))
+                                       for application in Application.objects.filter(accesstoken__user=request.user).distinct()]
+                return {"applications_tokens": applications_tokens}
 
     return {}
