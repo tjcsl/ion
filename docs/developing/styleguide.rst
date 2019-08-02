@@ -33,9 +33,6 @@ Imports
 
 - Use explicit relative imports to avoid hardcoding a module's package. This greatly improves portability and is useful when importing from another module in the current app.
 
-- Do not use implicit relative imports.
-
-
 Examples
 --------
 
