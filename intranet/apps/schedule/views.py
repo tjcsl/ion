@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
 from django.urls import reverse
+from django.utils import timezone
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -47,7 +48,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
         date = decode_date(request.GET['date'])
 
     if date is None:
-        date = datetime.now()
+        date = timezone.localtime()
 
         if is_weekday(date) and date.hour > 17 and show_tomorrow:
             delta = 3 if date.isoweekday() == friday else 1
@@ -148,7 +149,7 @@ def week_data(request, date=None):
         days.append(schedule_context(date=new_date))
     next_week = days[-1]["sched_ctx"]["date_tomorrow"]
     last_week = date_format(days[0]["sched_ctx"]["date"] - timedelta(days=7))
-    today = date_format(datetime.now())
+    today = date_format(timezone.localtime())
     data = {"days": days, "next_week": next_week, "last_week": last_week, "today": today}
     return data
 
@@ -157,7 +158,7 @@ def month_data(request):
     if request and 'date' in request.GET:
         first_date = decode_date(request.GET['date']) + relativedelta(day=1)
     else:
-        first_date = datetime.today() + relativedelta(day=1)
+        first_date = timezone.now() + relativedelta(day=1)
     week1 = week_data(None, first_date)
     week2 = week_data(None, decode_date(week1["next_week"]))
     week3 = week_data(None, decode_date(week2["next_week"]))
@@ -285,7 +286,7 @@ def admin_home_view(request):
     elif "schedule_month" in request.session:
         month = request.session["schedule_month"]
     else:
-        month = datetime.now().strftime("%Y-%m")
+        month = timezone.localtime().strftime("%Y-%m")
 
     request.session["schedule_month"] = month
 

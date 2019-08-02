@@ -1,9 +1,9 @@
-import datetime
 import logging
 import time
 
 from django.conf import settings
 from django.core.cache import cache
+from django.utils import timezone
 
 import requests
 from bs4 import BeautifulSoup, CData
@@ -74,7 +74,7 @@ def get_emerg():
     Timeout defined in settings.CACHE_AGE["emerg"]
 
     """
-    key = "emerg:{}".format(datetime.datetime.now().date())
+    key = "emerg:{}".format(timezone.localdate())
     cached = cache.get(key)
     if cached:
         logger.debug("Returning emergency info from cache")

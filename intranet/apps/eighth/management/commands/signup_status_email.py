@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from intranet.apps.eighth.models import EighthBlock, EighthSignup
 from intranet.apps.eighth.notifications import signup_status_email
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                 self.stdout.write("No upcoming blocks.")
             return
 
-        today = datetime.now().date()
+        today = timezone.localdate()
         if options["only-tomorrow"]:
             tomorrow = today + timedelta(days=1)
             blk_date = next_blocks[0].date

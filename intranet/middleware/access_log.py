@@ -1,7 +1,7 @@
 import logging
-from datetime import datetime
 
 from django.conf import settings
+from django.utils import timezone
 
 logger = logging.getLogger("intranet_access")
 
@@ -29,7 +29,7 @@ class AccessLogMiddleWare:
             ip = ip[0]
 
         user_agent = request.META.get("HTTP_USER_AGENT", "")
-        log_line = '{} - {} - [{}] "{}" "{}"'.format(ip, username, datetime.now(), request.get_full_path(), user_agent)
+        log_line = '{} - {} - [{}] "{}" "{}"'.format(ip, username, timezone.localtime(), request.get_full_path(), user_agent)
 
         if user_agent and not any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS):
             logger.info(log_line)
