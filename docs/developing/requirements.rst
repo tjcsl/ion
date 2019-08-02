@@ -17,18 +17,6 @@ It is used to provide bindings for Argon2 hashing of the Ion master password.
 
 LICENSE: MIT
 
-asgi-redis
------------------
-https://github.com/django/channels_redis/tree/1.x
-
-This package provides an ASGI channel layer that uses Redis as its backing store.
-
-It provides the backend for ASGI requests over Django Channels.
-
-Note: the package was renamed to ``channels_redis`` when associated with Channels 2.
-
-LICENSE: 3-clause BSD
-
 autobahn
 -----------------
 https://github.com/crossbario/autobahn-python
@@ -79,6 +67,16 @@ It is used to clean up tags, attributes, and styles in input from polls, announc
 
 LICENSE: Apache License 2.0
 
+celery
+-----------------
+https://github.com/celery/celery
+
+This package provides an asynchronous task queue/job queue based on distributed message passing. It is focused on real-time operation, but supports scheduling as well.
+
+It provides the task queue that powers long-running operations like sending mass emails.
+
+LICENSE: 3-clause BSD
+
 certifi
 -----------------
 https://github.com/certifi/python-certifi
@@ -96,6 +94,16 @@ https://github.com/django/channels
 This package brings WebSocket, long-poll HTTP, task offloading and other async support in a Django-like framework.
 
 It provides WebSocket support for Ion.
+
+LICENSE: 3-clause BSD
+
+channels-redis
+------------------
+https://github.com/django/channels_redis
+
+This package provides a redis channel layer backend for Django Channels
+
+It provides the backend for ASGI requests over Django Channels.
 
 LICENSE: 3-clause BSD
 
