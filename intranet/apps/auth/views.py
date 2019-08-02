@@ -1,6 +1,6 @@
 import logging
 import random
-from datetime import date, timedelta
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
@@ -10,7 +10,6 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.utils import timezone
-from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
@@ -143,7 +142,7 @@ class LoginView(View):
     def post(self, request):
         """Validate and process the login POST request."""
         """Before September 1st, do not allow Class of [year+4] to log in."""
-        if request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today() < settings.SCHOOL_START_DATE:
+        if request.POST.get("username", "").startswith(str(timezone.localdate().year + 4)) and timezone.localdate() < settings.SCHOOL_START_DATE:
             return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
 
         form = AuthenticateForm(data=request.POST)
