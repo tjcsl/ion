@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5094) documentation</title>
+    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5104) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -131,8 +131,9 @@
 <span class="kn">import</span> <span class="nn">binascii</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">resolve</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="k">import</span> <span class="n">resolve</span><span class="p">,</span> <span class="n">Resolver404</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">oauth2_provider.models</span> <span class="k">import</span> <span class="n">Application</span>
 
 <span class="kn">from</span> <span class="nn">intranet.apps.notifications.models</span> <span class="k">import</span> <span class="n">NotificationConfig</span>
@@ -204,7 +205,7 @@
                     <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_rand</span> <span class="o">=</span> <span class="n">rand</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rand</span> <span class="o">=</span> <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_rand</span>
-                <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;GCM random token generated: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rand</span><span class="p">)</span>
                 <span class="n">ncfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -222,7 +223,7 @@
 
 <div class="viewcode-block" id="global_custom_theme"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.global_custom_theme">[docs]</a><span class="k">def</span> <span class="nf">global_custom_theme</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add custom theme javascript and css.&quot;&quot;&quot;</span>
-    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">14</span> <span class="o">&lt;=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
@@ -233,7 +234,7 @@
 
 <div class="viewcode-block" id="show_homecoming"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.show_homecoming">[docs]</a><span class="k">def</span> <span class="nf">show_homecoming</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Show homecoming ribbon / scores &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;show_homecoming&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_START_DATE</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="ow">and</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_END_DATE</span><span class="p">}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;show_homecoming&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_START_DATE</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_END_DATE</span><span class="p">}</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -254,7 +255,7 @@
 
 <div class="viewcode-block" id="show_bus_button"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.show_bus_button">[docs]</a><span class="k">def</span> <span class="nf">show_bus_button</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">is_bus_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">)</span>
-    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
     <span class="n">window</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">today</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_DRIVER</span><span class="p">:</span>
@@ -277,11 +278,15 @@
 
 <div class="viewcode-block" id="oauth_toolkit"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.oauth_toolkit">[docs]</a><span class="k">def</span> <span class="nf">oauth_toolkit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
-        <span class="n">resolve_match</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">namespaces</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;oauth2_provider&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;authorized-token-list&quot;</span><span class="p">:</span>
-            <span class="n">applications_tokens</span> <span class="o">=</span> <span class="p">[(</span><span class="n">application</span><span class="p">,</span> <span class="n">application</span><span class="o">.</span><span class="n">accesstoken_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
-                                   <span class="k">for</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">Application</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">accesstoken__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()]</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;applications_tokens&quot;</span><span class="p">:</span> <span class="n">applications_tokens</span><span class="p">}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resolve_match</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Resolver404</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">namespaces</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;oauth2_provider&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;authorized-token-list&quot;</span><span class="p">:</span>
+                <span class="n">applications_tokens</span> <span class="o">=</span> <span class="p">[(</span><span class="n">application</span><span class="p">,</span> <span class="n">application</span><span class="o">.</span><span class="n">accesstoken_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+                                       <span class="k">for</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">Application</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">accesstoken__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()]</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;applications_tokens&quot;</span><span class="p">:</span> <span class="n">applications_tokens</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="p">{}</span></div>
 </pre></div>

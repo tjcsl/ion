@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.notifications package &#8212; TJ Intranet v3 (Build #5094) documentation</title>
+    <title>intranet.apps.notifications package &#8212; TJ Intranet v3 (Build #5104) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -147,14 +147,25 @@
 <span id="intranet-apps-notifications-emails-module"></span><h2>intranet.apps.notifications.emails module<a class="headerlink" href="#module-intranet.apps.notifications.emails" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="intranet.apps.notifications.emails.email_send">
-<code class="sig-prename descclassname">intranet.apps.notifications.emails.</code><code class="sig-name descname">email_send</code><span class="sig-paren">(</span><em class="sig-param">text_template</em>, <em class="sig-param">html_template</em>, <em class="sig-param">data</em>, <em class="sig-param">subject</em>, <em class="sig-param">emails</em>, <em class="sig-param">headers=None</em>, <em class="sig-param">bcc=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/emails.html#email_send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.emails.email_send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send an HTML/Plaintext email with the following fields.</p>
-<p>text_template: URL to a Django template for the text email’s contents
-html_template: URL to a Django tempalte for the HTML email’s contents
-data: The context to pass to the templates
-subject: The subject of the email
-emails: The addresses to send the email to
-headers: A dict of additional headers to send to the message</p>
+<code class="sig-prename descclassname">intranet.apps.notifications.emails.</code><code class="sig-name descname">email_send</code><span class="sig-paren">(</span><em class="sig-param">text_template: str, html_template: str, data: Mapping[str, object], subject: str, emails: Collection[str], headers: Mapping[str, str] = None, bcc: bool = False, *, custom_logger: logging.Logger = None</em><span class="sig-paren">)</span> &#x2192; django.core.mail.message.EmailMultiAlternatives<a class="reference internal" href="../_modules/intranet/apps/notifications/emails.html#email_send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.emails.email_send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an HTML/Plaintext email with the following fields.
+If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text_template</strong> – URL to a Django template for the text email’s contents</p></li>
+<li><p><strong>html_template</strong> – URL to a Django tempalte for the HTML email’s contents</p></li>
+<li><p><strong>data</strong> – The context to pass to the templates</p></li>
+<li><p><strong>subject</strong> – The subject of the email</p></li>
+<li><p><strong>emails</strong> – The addresses to send the email to</p></li>
+<li><p><strong>headers</strong> – A dict of additional headers to send to the message</p></li>
+<li><p><strong>custom_logger</strong> – An optional logger to use instead of the Django logger</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The email object that was created (and sent if we’re in production or settings.FORCE_EMAIL_SEND is set)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

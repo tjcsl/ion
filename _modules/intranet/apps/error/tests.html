@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.bus.api &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>intranet.apps.error.tests &#8212; TJ Intranet v3 (Build #5104) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -124,42 +124,17 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.bus.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">generics</span>
-<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="k">import</span> <span class="n">IsAuthenticated</span>
-
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Route</span>
-<span class="kn">from</span> <span class="nn">.serializers</span> <span class="k">import</span> <span class="n">RouteSerializer</span>
+  <h1>Source code for intranet.apps.error.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
-<div class="viewcode-block" id="RouteList"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.api.RouteList">[docs]</a><span class="k">class</span> <span class="nc">RouteList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;API endpoint that retrieves information about buses.</span>
+<div class="viewcode-block" id="ErrorPageTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.tests.ErrorPageTest">[docs]</a><span class="k">class</span> <span class="nc">ErrorPageTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests that the error pages (currently just 404 errors) render properly.&quot;&quot;&quot;</span>
 
-<span class="sd">    /api/bus: retrieve a list of all buses\n</span>
-<span class="sd">    /api/bus/num: retrieve information about bus number num</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">RouteSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="RouteList.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.api.RouteList.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div></div>
-
-
-<div class="viewcode-block" id="RouteDetail"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.api.RouteDetail">[docs]</a><span class="k">class</span> <span class="nc">RouteDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;API endpoint that retrieves information about a specific bus route.</span>
-
-<span class="sd">    /api/bus/&lt;num&gt;: retrieve information about bus number &lt;num&gt;</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">RouteSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
-
-    <span class="c1"># override get_queryset instead of using queryset=...</span>
-    <span class="c1"># so that it always returns fresh data</span>
-<div class="viewcode-block" id="RouteDetail.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.api.RouteDetail.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="ErrorPageTest.test_404_page"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.tests.ErrorPageTest.test_404_page">[docs]</a>    <span class="k">def</span> <span class="nf">test_404_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/nonexistent&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/nonexistent&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

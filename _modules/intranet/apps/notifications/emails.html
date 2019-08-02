@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.notifications.emails &#8212; TJ Intranet v3 (Build #5094) documentation</title>
+    <title>intranet.apps.notifications.emails &#8212; TJ Intranet v3 (Build #5104) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,7 +125,8 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.notifications.emails</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="k">import</span> <span class="n">EmailMultiAlternatives</span>
@@ -134,17 +135,27 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="email_send"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.emails.email_send">[docs]</a><span class="k">def</span> <span class="nf">email_send</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">html_template</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bcc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="email_send"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.emails.email_send">[docs]</a><span class="k">def</span> <span class="nf">email_send</span><span class="p">(</span><span class="n">text_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">html_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">emails</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">headers</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bcc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+               <span class="n">custom_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmailMultiAlternatives</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send an HTML/Plaintext email with the following fields.</span>
+<span class="sd">    If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email</span>
 
-<span class="sd">    text_template: URL to a Django template for the text email&#39;s contents</span>
-<span class="sd">    html_template: URL to a Django tempalte for the HTML email&#39;s contents</span>
-<span class="sd">    data: The context to pass to the templates</span>
-<span class="sd">    subject: The subject of the email</span>
-<span class="sd">    emails: The addresses to send the email to</span>
-<span class="sd">    headers: A dict of additional headers to send to the message</span>
+<span class="sd">    Args:</span>
+<span class="sd">        text_template: URL to a Django template for the text email&#39;s contents</span>
+<span class="sd">        html_template: URL to a Django tempalte for the HTML email&#39;s contents</span>
+<span class="sd">        data: The context to pass to the templates</span>
+<span class="sd">        subject: The subject of the email</span>
+<span class="sd">        emails: The addresses to send the email to</span>
+<span class="sd">        headers: A dict of additional headers to send to the message</span>
+<span class="sd">        custom_logger: An optional logger to use instead of the Django logger</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The email object that was created (and sent if we&#39;re in production or settings.FORCE_EMAIL_SEND is set)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="p">(</span><span class="n">custom_logger</span> <span class="k">if</span> <span class="n">custom_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">globals</span><span class="p">()[</span><span class="s2">&quot;logger&quot;</span><span class="p">])</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
 
     <span class="n">text</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="n">text_template</span><span class="p">)</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="n">html_template</span><span class="p">)</span>
