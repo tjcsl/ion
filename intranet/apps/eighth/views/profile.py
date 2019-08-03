@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_admin_required
-from ...users.forms import ProfileEditForm  # , AddressForm
+from ...users.forms import ProfileEditForm
 from ..models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
