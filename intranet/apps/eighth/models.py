@@ -1410,7 +1410,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             after_deadline=after_deadline,
                             previous_activity_name=previous_activity_name,
                             previous_activity_sponsors=previous_activity_sponsors,
-                            own_signup=(user == request.user),
+                            own_signup=(request is not None and user == request.user),
                         )
 
                         if signup.has_conflict():
@@ -1471,7 +1471,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         after_deadline=after_deadline,
                         previous_activity_name=previous_activity_name,
                         previous_activity_sponsors=previous_activity_sponsors,
-                        own_signup=(user == request.user),
+                        own_signup=(request is not None and user == request.user),
                     )
 
                     if signup.has_conflict():
