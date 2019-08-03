@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Test Writing Guide &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>Testing Ion &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -66,11 +66,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Test Writing Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -95,11 +95,11 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Test Writing Guide</a><ul>
-<li><a class="reference internal" href="#coverage">Coverage</a></li>
-<li><a class="reference internal" href="#location">Location</a></li>
-<li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+<li><a class="reference internal" href="#">Testing Ion</a><ul>
+<li><a class="reference internal" href="#unit-tests">Unit Tests</a></li>
 <li><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li><a class="reference internal" href="#coverage">Coverage</a></li>
+<li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -136,17 +136,24 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="test-writing-guide">
-<h1>Test Writing Guide<a class="headerlink" href="#test-writing-guide" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="testing-ion">
+<h1>Testing Ion<a class="headerlink" href="#testing-ion" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="unit-tests">
+<h2>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h2>
+<p>You will want to write your tests for each module in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>.
+Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code>.</p>
+</div>
+<div class="section" id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
+<p>To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">./setup.py</span> <span class="pre">test</span></code>.
+Note that this deletes and re-creates the db from scratch each time,
+so you may want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
+</div>
 <div class="section" id="coverage">
 <h2>Coverage<a class="headerlink" href="#coverage" title="Permalink to this headline">¶</a></h2>
 <p>Coverage information is auto-generated at <a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Coveralls</a>
-This is useful for finding files with insufficient coverage, so you can focus your test writing more accurately.</p>
-</div>
-<div class="section" id="location">
-<h2>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h2>
-<p>You will want to write your tests for each module in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>
-Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code></p>
+This is useful for finding files with insufficient coverage,
+so you can focus your test writing more accurately.</p>
 </div>
 <div class="section" id="writing-tests">
 <h2>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
@@ -163,19 +170,10 @@ Here is an bare-bones example of the basic layout for a test:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="running-tests">
-<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
-<p>If this is your first time running tests, you need to give the ion user permission to create the test db.
-Run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">postgres</span> <span class="pre">psql</span> <span class="pre">-c</span> <span class="pre">'alter</span> <span class="pre">role</span> <span class="pre">ion</span> <span class="pre">createdb'</span></code> to grant the necessary perms.
-To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">./manage.py</span> <span class="pre">test</span></code>
-Note that this deletes and re-creates the db from scratch each time,
-so you most likely want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
-<p>Is your test working locally but not on Travis CI? Try running <code class="docutils literal notranslate"><span class="pre">./setup.py</span> <span class="pre">test</span></code> instead to execute tests.</p>
-</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.djangoproject.com/en/1.9/topics/testing">Django Testing Guide</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.djangoproject.com/en/1.11/topics/testing">Django Testing Guide</a>.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html">Python unittest documentation</a>.</p></li>
 <li><p><a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Code Coverage</a>.</p></li>
 <li><p><a class="reference external" href="https://travis-ci.org/tjcsl/ion">Travis Continous Integration</a>.</p></li>

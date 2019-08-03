@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Developing for Intranet &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>Developing for Intranet &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="How to perform common tasks" href="howto.html" />
+    <link rel="next" title="How to do Ion development" href="howto.html" />
     <link rel="prev" title="Architecture" href="../architecture/index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -66,11 +66,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developing for Intranet</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -133,7 +133,7 @@
 <h1>Developing for Intranet<a class="headerlink" href="#developing-for-intranet" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="howto.html">How to perform common tasks</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="howto.html">How to do Ion development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="howto.html#formatting-your-code">Formatting your code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto.html#updating-the-dev-branch">Updating the dev branch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto.html#fixing-build">Fixing build</a></li>
@@ -155,14 +155,15 @@
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Ion Requirements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="requirements.html#explicit-requirements">Explicit Requirements</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#argon2-cffi">argon2-cffi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="requirements.html#asgi-redis">asgi-redis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#autobahn">autobahn</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#babel">babel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#bcrypt">bcrypt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#beautifulsoup4">beautifulsoup4</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#bleach">bleach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#celery">celery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#certifi">certifi</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#channels">channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#channels-redis">channels-redis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#contextlib2">contextlib2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#cryptography">cryptography</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#decorator">decorator</a></li>
@@ -185,9 +186,11 @@
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#django-rest-framework">django-rest-framework</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#docutils">docutils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#fabric3">Fabric3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#flower">flower</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#gunicorn">gunicorn</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#hiredis">hiredis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#ipython">ipython</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#objgraph">objgraph</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#pexpect">pexpect</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#psycopg2">psycopg2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="requirements.html#pycryptodome">pycryptodome</a></li>
@@ -214,11 +217,11 @@
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html">Test Writing Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#coverage">Coverage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#location">Location</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#writing-tests">Writing Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Ion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#unit-tests">Unit Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests">Running Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#coverage">Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#writing-tests">Writing Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#references">References</a></li>
 </ul>
 </li>

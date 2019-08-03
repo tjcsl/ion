@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -64,11 +64,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -130,26 +130,20 @@
 <span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">IntegrityError</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">IntegrityError</span><span class="p">,</span> <span class="n">transaction</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">intranet</span> <span class="k">import</span> <span class="n">settings</span>
 
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AnnouncementForm</span><span class="p">,</span> <span class="n">AnnouncementRequestForm</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
-<span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">admin_request_announcement_email</span><span class="p">,</span>
-    <span class="n">announcement_approved_email</span><span class="p">,</span>
-    <span class="n">announcement_posted_email</span><span class="p">,</span>
-    <span class="n">announcement_posted_twitter</span><span class="p">,</span>
-    <span class="n">request_announcement_email</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">announcements_admin_required</span><span class="p">,</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="k">import</span> <span class="n">dashboard_view</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
-
-<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AnnouncementForm</span><span class="p">,</span> <span class="n">AnnouncementRequestForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
+<span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="p">(</span><span class="n">admin_request_announcement_email</span><span class="p">,</span> <span class="n">announcement_approved_email</span><span class="p">,</span> <span class="n">announcement_posted_email</span><span class="p">,</span> <span class="n">announcement_posted_twitter</span><span class="p">,</span>
+                            <span class="n">request_announcement_email</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 

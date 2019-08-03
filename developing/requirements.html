@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Ion Requirements &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>Ion Requirements &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -66,11 +66,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="oauth.html">Using OAuth</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -98,14 +98,15 @@
 <li><a class="reference internal" href="#">Ion Requirements</a><ul>
 <li><a class="reference internal" href="#explicit-requirements">Explicit Requirements</a><ul>
 <li><a class="reference internal" href="#argon2-cffi">argon2-cffi</a></li>
-<li><a class="reference internal" href="#asgi-redis">asgi-redis</a></li>
 <li><a class="reference internal" href="#autobahn">autobahn</a></li>
 <li><a class="reference internal" href="#babel">babel</a></li>
 <li><a class="reference internal" href="#bcrypt">bcrypt</a></li>
 <li><a class="reference internal" href="#beautifulsoup4">beautifulsoup4</a></li>
 <li><a class="reference internal" href="#bleach">bleach</a></li>
+<li><a class="reference internal" href="#celery">celery</a></li>
 <li><a class="reference internal" href="#certifi">certifi</a></li>
 <li><a class="reference internal" href="#channels">channels</a></li>
+<li><a class="reference internal" href="#channels-redis">channels-redis</a></li>
 <li><a class="reference internal" href="#contextlib2">contextlib2</a></li>
 <li><a class="reference internal" href="#cryptography">cryptography</a></li>
 <li><a class="reference internal" href="#decorator">decorator</a></li>
@@ -128,9 +129,11 @@
 <li><a class="reference internal" href="#django-rest-framework">django-rest-framework</a></li>
 <li><a class="reference internal" href="#docutils">docutils</a></li>
 <li><a class="reference internal" href="#fabric3">Fabric3</a></li>
+<li><a class="reference internal" href="#flower">flower</a></li>
 <li><a class="reference internal" href="#gunicorn">gunicorn</a></li>
 <li><a class="reference internal" href="#hiredis">hiredis</a></li>
 <li><a class="reference internal" href="#ipython">ipython</a></li>
+<li><a class="reference internal" href="#objgraph">objgraph</a></li>
 <li><a class="reference internal" href="#pexpect">pexpect</a></li>
 <li><a class="reference internal" href="#psycopg2">psycopg2</a></li>
 <li><a class="reference internal" href="#pycryptodome">pycryptodome</a></li>
@@ -194,14 +197,6 @@
 <p>It is used to provide bindings for Argon2 hashing of the Ion master password.</p>
 <p>LICENSE: MIT</p>
 </div>
-<div class="section" id="asgi-redis">
-<h3>asgi-redis<a class="headerlink" href="#asgi-redis" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference external" href="https://github.com/django/channels_redis/tree/1.x">https://github.com/django/channels_redis/tree/1.x</a></p>
-<p>This package provides an ASGI channel layer that uses Redis as its backing store.</p>
-<p>It provides the backend for ASGI requests over Django Channels.</p>
-<p>Note: the package was renamed to <code class="docutils literal notranslate"><span class="pre">channels_redis</span></code> when associated with Channels 2.</p>
-<p>LICENSE: 3-clause BSD</p>
-</div>
 <div class="section" id="autobahn">
 <h3>autobahn<a class="headerlink" href="#autobahn" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="https://github.com/crossbario/autobahn-python">https://github.com/crossbario/autobahn-python</a></p>
@@ -237,6 +232,13 @@
 <p>It is used to clean up tags, attributes, and styles in input from polls, announcements, and other forms.</p>
 <p>LICENSE: Apache License 2.0</p>
 </div>
+<div class="section" id="celery">
+<h3>celery<a class="headerlink" href="#celery" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/celery/celery">https://github.com/celery/celery</a></p>
+<p>This package provides an asynchronous task queue/job queue based on distributed message passing. It is focused on real-time operation, but supports scheduling as well.</p>
+<p>It provides the task queue that powers long-running operations like sending mass emails.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
 <div class="section" id="certifi">
 <h3>certifi<a class="headerlink" href="#certifi" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="https://github.com/certifi/python-certifi">https://github.com/certifi/python-certifi</a></p>
@@ -249,6 +251,13 @@
 <p><a class="reference external" href="https://github.com/django/channels">https://github.com/django/channels</a></p>
 <p>This package brings WebSocket, long-poll HTTP, task offloading and other async support in a Django-like framework.</p>
 <p>It provides WebSocket support for Ion.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="channels-redis">
+<h3>channels-redis<a class="headerlink" href="#channels-redis" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/django/channels_redis">https://github.com/django/channels_redis</a></p>
+<p>This package provides a redis channel layer backend for Django Channels</p>
+<p>It provides the backend for ASGI requests over Django Channels.</p>
 <p>LICENSE: 3-clause BSD</p>
 </div>
 <div class="section" id="contextlib2">
@@ -413,6 +422,13 @@
 <p>NEEDSRELEASE</p>
 <p>LICENSE: 2-clause BSD</p>
 </div>
+<div class="section" id="flower">
+<h3>flower<a class="headerlink" href="#flower" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/mher/flower">https://github.com/mher/flower</a></p>
+<p>This package provides a real-time monitor and web admin for the Celery distributed task queue.</p>
+<p>It is used to help administrators and developers monitor their Celery task queues.</p>
+<p>LICENSE: 3-clause BSD</p>
+</div>
 <div class="section" id="gunicorn">
 <h3>gunicorn<a class="headerlink" href="#gunicorn" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="https://github.com/benoitc/gunicorn">https://github.com/benoitc/gunicorn</a></p>
@@ -434,6 +450,13 @@
 <p>This package provides a rich toolkit to help you make the most of using Python interactively, including a powerful interactive Python shell</p>
 <p>It is directly used by the interactive shell for <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">shell_plus</span></code>.</p>
 <p>LICENSE: 3-clause BSD</p>
+</div>
+<div class="section" id="objgraph">
+<h3>objgraph<a class="headerlink" href="#objgraph" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/mgedmin/objgraph">https://github.com/mgedmin/objgraph</a></p>
+<p>This package is a module that lets you visually explore Python object graphs.</p>
+<p>It is used by <code class="docutils literal notranslate"><span class="pre">flower</span></code> to draw graphs.</p>
+<p>LICENSE: MIT</p>
 </div>
 <div class="section" id="pexpect">
 <h3>pexpect<a class="headerlink" href="#pexpect" title="Permalink to this headline">¶</a></h3>

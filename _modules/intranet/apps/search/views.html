@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.search.views &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>intranet.apps.search.views &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -64,11 +64,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -128,20 +128,20 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
+<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="k">import</span> <span class="n">is_entirely_digit</span>
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="k">import</span> <span class="n">Announcement</span>
+<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthActivity</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..search.utils</span> <span class="k">import</span> <span class="n">get_query</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Grade</span><span class="p">,</span> <span class="n">Course</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Course</span><span class="p">,</span> <span class="n">Grade</span>
 <span class="kn">from</span> <span class="nn">..users.views</span> <span class="k">import</span> <span class="n">profile_view</span>
-<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
-<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="k">import</span> <span class="n">is_entirely_digit</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -174,15 +174,8 @@
                 <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;nickname&quot;</span><span class="p">,</span>
             <span class="p">),</span>
-            <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__city&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;town&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__city&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;middlename&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;middle&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;middle_name&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;homephone&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;cell&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;phones__number&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__street&quot;</span><span class="p">,),</span>
-            <span class="s2">&quot;zip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;address__postal_code&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduation_year&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;gradyear&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;graduation_year&quot;</span><span class="p">,),</span>
             <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;emails__address&quot;</span><span class="p">,),</span>

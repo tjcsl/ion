@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #5104) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #5116) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -64,11 +64,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developing/index.html">Developing for Intranet</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../developing/requirements.html">Ion Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../developing/styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/testing.html">Testing Ion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../developing/updates.html">Keeping things up-to-date</a></li>
 </ul>
 </li>
@@ -135,12 +135,12 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 
+<span class="kn">from</span> <span class="nn">....utils.serialization</span> <span class="k">import</span> <span class="n">safe_json</span>
+<span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span><span class="p">,</span> <span class="n">eighth_admin_required</span>
+<span class="kn">from</span> <span class="nn">...users.forms</span> <span class="k">import</span> <span class="n">ProfileEditForm</span>
 <span class="kn">from</span> <span class="nn">..models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..serializers</span> <span class="k">import</span> <span class="n">EighthBlockDetailSerializer</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">get_start_date</span>
-<span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span><span class="p">,</span> <span class="n">deny_restricted</span>
-<span class="kn">from</span> <span class="nn">...users.forms</span> <span class="k">import</span> <span class="n">ProfileEditForm</span>  <span class="c1"># , AddressForm</span>
-<span class="kn">from</span> <span class="nn">....utils.serialization</span> <span class="k">import</span> <span class="n">safe_json</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
