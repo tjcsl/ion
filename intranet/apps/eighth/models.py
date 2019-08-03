@@ -156,6 +156,7 @@ class EighthRoom(AbstractBaseEighthModel):
     @property
     def formatted_name(self) -> str:
         """The formatted name of the room.
+
         If it looks like the room is a numbered room -- the name starts with either a number or with
         the text "Room" -- returns "Rm. <room number>."
 
@@ -361,7 +362,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def restricted_activities_available_to_user(cls, user: "get_user_model()") -> List["EighthActivity"]:
-        """Find the restricted activities available to the given user.
+        """Finds the restricted activities available to the given user.
 
         Args:
             user: The User to find the restricted activities for.
@@ -423,7 +424,7 @@ class EighthActivity(AbstractBaseEighthModel):
     def frequent_users(self) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Return a QuerySet of user id's and counts that have signed up for this activity more than
         `settings.SIMILAR_THRESHOLD` times.
-        
+
         This is used for suggesting activities to users.
 
         Returns:
@@ -479,11 +480,11 @@ class EighthBlockManager(models.Manager):
 
     def get_upcoming_blocks(self, max_number: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets the given number of upcoming blocks that will take place in the future.
-        
+
         If there is no block in the future, the most recent block will be returned.
 
         Returns:
-            A QuerySet of the X upcoming `EighthBlock` objects
+            A QuerySet of the X upcoming ``EighthBlock`` objects.
 
         """
 
@@ -504,7 +505,7 @@ class EighthBlockManager(models.Manager):
         """Gets the first upcoming block (the first block that will take place in the future).
 
         Returns:
-            The first upcoming `EighthBlock` object, or `None` if there are none upcoming.
+            The first upcoming ``EighthBlock`` object, or ``None`` if there are none upcoming.
 
         """
 
@@ -512,12 +513,12 @@ class EighthBlockManager(models.Manager):
 
     def get_next_upcoming_blocks(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets the next upccoming blocks.
-        
+
         It finds the other blocks that are occurring on the day of the
         first upcoming block.
 
         Returns:
-            A QuerySet of the next upcoming `EighthBlock` objects.
+            A QuerySet of the next upcoming ``EighthBlock`` objects.
 
         """
 
@@ -678,7 +679,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def attendance_locked(self) -> bool:
         """Returns whether the block's attendance is locked.
-        
+
         If the block's attendance is locked, non-eighth admins cannot
         change attendance.
 
@@ -745,7 +746,7 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def short_text(self) -> str:
         """Returns the date and block letter for this block.
-        
+
          It is returned in the format of  MM/DD B, like "9/1 B"
 
         Returns:
@@ -797,6 +798,15 @@ class EighthScheduledActivityManager(Manager):
 
         EighthScheduledActivities that are deleted or cancelled are also not
         counted.
+
+        Args:
+            sponsor: The sponsor to search for.
+            include_cancelled: Whether to include cancelled activities. Deleted
+                activities are always excluded.
+
+        Returns:
+            A QuerySet of EighthScheduledActivities where the given EighthSponsor
+                is sponsoring.
 
         """
         sponsoring_filter = Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor))
@@ -925,6 +935,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def user_is_sponsor(self, user: "get_user_model()") -> bool:
         """Returns whether the given user is a sponsor of the activity.
 
+        Args:
+            user: The user to check for sponsorship of this activity.
+
         Returns:
             Whether the given user is a sponsor of the activity.
 
@@ -981,7 +994,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return self.restricted or self.activity.restricted
 
     def get_sticky(self) -> bool:
-        """Get whether this scheduled activity is sticky.
+        """Gets whether this scheduled activity is sticky.
 
         Returns:
             Whether this scheduled activity is sticky.
@@ -1050,8 +1063,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def is_too_early_to_signup(self, now: datetime.datetime = None) -> bool:
         """Returns whether it is too early to sign up for the activity
         if it is a presign.
-        
+
         This contains the 48 hour presign logic.
+
+        Args:
+            now: A datetime object to use for the check instead of the current time.
 
         Returns:
             Whether it is too early to sign up for this scheduled activity.
@@ -1081,6 +1097,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                                        Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Get an unsorted QuerySet of the members that you have permission to view.
 
+        Args:
+            user: The user who is attempting to view the member list.
+
         Returns:
             Unsorted QuerySet of the members that you have permssion to view.
 
@@ -1098,6 +1117,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                                        Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you have permission to view, sorted alphabetically.
 
+        Args:
+            user: The user who is attempting to view the member list.
+
         Returns:
             QuerySet of the members that you have permission to view, sorted alphabetically.
 
@@ -1107,6 +1129,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_viewable_members_serializer(self, request) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Given a request, returns an unsorted QuerySet of the members that the requesting user
         has permission to view.
+
+        Args:
+            request: The request object associated with the member list query.
 
         Returns:
             Unsorted QuerySet of the members that you have permssion to view.
@@ -1118,6 +1143,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                            user: "get_user_model()" = None) -> Union[QuerySet,
                                                                      Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you do not have permission to view.
+
+        Args:
+            user: The user who is attempting to view the member list.
 
         Returns:
             Unsorted QuerySet of the members that you do not have permission to view.
@@ -1506,7 +1534,7 @@ class EighthSignupManager(Manager):
 
     def create_signup(self, user: "get_user_model()", scheduled_activity: "EighthScheduledActivity", **kwargs) -> "EighthSignup":
         """Creates an EighthSignup for the given user in the given activity after checking for duplicate signups.
-        
+
         This raises an error if there are duplicate signups.
 
         Args:
