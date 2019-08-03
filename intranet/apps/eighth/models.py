@@ -2,25 +2,26 @@
 import datetime
 import logging
 import string
-from typing import Iterable, List, Collection, Union, Optional
+from typing import Collection, Iterable, List, Optional, Union
 
 from cacheops import invalidate_obj
+from sentry_sdk import add_breadcrumb, capture_exception
+from simple_history.models import HistoricalRecords
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
-from django.db.models import Manager, Q, Count, QuerySet
+from django.db.models import Count, Manager, Q, QuerySet
 from django.http.request import HttpRequest
 from django.utils import formats, timezone
-from sentry_sdk import add_breadcrumb, capture_exception
-from simple_history.models import HistoricalRecords
 
-from . import exceptions as eighth_exceptions
-from ..notifications.tasks import email_send_task
-from ...utils.date import is_current_year, get_date_range_this_year
+from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
+from ..notifications.tasks import email_send_task
+from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 

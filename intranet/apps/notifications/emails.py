@@ -1,5 +1,5 @@
-from typing import Collection, Mapping
 import logging
+from typing import Collection, Mapping
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives

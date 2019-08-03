@@ -4,7 +4,9 @@
 # Modified by: Shwagroo Team
 # Modified further by Doug Stryke
 
+import cProfile
 import os
+import pstats
 import re
 import resource
 import tempfile
@@ -12,10 +14,6 @@ import time
 from collections import defaultdict
 from io import StringIO
 from typing import Any, Dict  # noqa
-
-import cProfile
-
-import pstats
 
 from django.conf import settings
 from django.db import connections

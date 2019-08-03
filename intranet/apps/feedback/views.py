@@ -5,9 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from ..notifications.tasks import email_send_task
 from .forms import FeedbackForm
 from .models import Feedback
-from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
 

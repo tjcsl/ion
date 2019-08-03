@@ -2,9 +2,9 @@ import logging
 
 from django.urls import reverse
 
-from .models import EighthScheduledActivity, EighthSignup
 from ..notifications.emails import email_send
 from ..notifications.tasks import email_send_task
+from .models import EighthScheduledActivity, EighthSignup
 
 logger = logging.getLogger(__name__)
 

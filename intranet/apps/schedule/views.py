@@ -1,21 +1,22 @@
 import calendar
 import logging
 from datetime import datetime, timedelta
+
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from django.http import HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
 
+from ..auth.decorators import deny_restricted
 from .forms import DayForm, DayTypeForm
 from .models import Block, Day, DayType, Time
-from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous and u.has_admin_permission("schedule"))

@@ -1,7 +1,7 @@
+from rest_framework import authentication, exceptions
+
 from django.contrib import auth
 from django.views.decorators.debug import sensitive_variables
-
-from rest_framework import authentication, exceptions
 
 
 class ApiBasicAuthentication(authentication.BasicAuthentication):

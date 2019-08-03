@@ -1,17 +1,16 @@
 import csv
 import re
-
 from collections import defaultdict
 
 from django import http
 from django.contrib import messages
-from django.urls import reverse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor, EighthBlock
-from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
+from ...forms.admin.sponsors import SponsorForm
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSponsor
+from ...utils import get_start_date
 
 
 @eighth_admin_required

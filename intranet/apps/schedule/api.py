@@ -1,10 +1,10 @@
 import logging
 
-from django.core import exceptions
-
 from rest_framework import generics, serializers
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
+
+from django.core import exceptions
 
 from .models import Day, DayType
 from .serializers import DaySerializer

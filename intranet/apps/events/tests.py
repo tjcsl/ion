@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Event, EventUserMap
 from ...test.ion_test import IonTestCase
+from .models import Event, EventUserMap
 
 
 class EventsTest(IonTestCase):

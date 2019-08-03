@@ -1,9 +1,11 @@
-import sys
 import datetime
+import sys
+
 from django.conf import settings
-from django.utils import timezone
-from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+
 from intranet.apps.eighth.models import EighthSignup
 
 

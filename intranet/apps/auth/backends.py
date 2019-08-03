@@ -1,16 +1,18 @@
 import logging
 import os
 import re
-import uuid
 import subprocess
+import uuid
+
+import pexpect
 
 from django.conf import settings
 # from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+
 # from django.views.decorators.debug import sensitive_variables
 
-import pexpect
 
 logger = logging.getLogger(__name__)
 

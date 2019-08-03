@@ -1,6 +1,6 @@
 
-from django.shortcuts import render
 from django.conf import settings
+from django.shortcuts import render
 
 
 def handle_404_view(request, exception):

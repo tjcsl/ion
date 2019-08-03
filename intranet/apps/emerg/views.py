@@ -1,12 +1,12 @@
 import logging
 import time
 
+import requests
+from bs4 import BeautifulSoup, CData
+
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
-
-import requests
-from bs4 import BeautifulSoup, CData
 
 logger = logging.getLogger(__name__)
 

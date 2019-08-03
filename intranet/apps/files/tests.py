@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 
 from django.urls import reverse
 
-from .models import Host
 from ...test.ion_test import IonTestCase
+from .models import Host
 
 
 class FilesTest(IonTestCase):

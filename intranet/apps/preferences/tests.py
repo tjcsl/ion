@@ -1,12 +1,12 @@
 from django.conf import settings
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
+from django.urls import reverse
 
-from .views import save_bus_route
-from .forms import EmailForm
-from ..bus.models import Route
 from ...test.ion_test import IonTestCase
+from ..bus.models import Route
+from .forms import EmailForm
+from .views import save_bus_route
 
 
 class PreferencesTest(IonTestCase):

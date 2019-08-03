@@ -1,7 +1,7 @@
 import json
 
-from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
 
 from intranet.apps.notifications.views import gcm_post, get_gcm_schedule_uids
 from intranet.apps.schedule.notifications import period_start_end_data

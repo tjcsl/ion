@@ -1,9 +1,11 @@
 import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .models import SeniorEmailForward
+from django.shortcuts import redirect, render
+
 from .forms import SeniorEmailForwardForm
+from .models import SeniorEmailForward
 
 logger = logging.getLogger(__name__)
 

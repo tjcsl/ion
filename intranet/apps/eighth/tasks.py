@@ -2,12 +2,13 @@ from typing import Collection
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
+
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from .models import EighthActivity, EighthRoom, EighthScheduledActivity
-from ..notifications.emails import email_send
 from ...utils.helpers import join_nicely
+from ..notifications.emails import email_send
+from .models import EighthActivity, EighthRoom, EighthScheduledActivity
 
 logger = get_task_logger(__name__)
 

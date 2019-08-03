@@ -1,6 +1,8 @@
 import json
 import logging
 
+import requests
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,10 +10,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
-import requests
-
-from .models import GCMNotification, NotificationConfig
 from ..schedule.notifications import chrome_getdata_check
+from .models import GCMNotification, NotificationConfig
 
 logger = logging.getLogger(__name__)
 

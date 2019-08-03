@@ -6,14 +6,14 @@ from cacheops import invalidate_model
 
 from django import http
 from django.contrib import messages
-from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from ..attendance import generate_roster_pdf
+from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
 from ...models import EighthBlock, EighthScheduledActivity, EighthSignup
-from ....auth.decorators import eighth_admin_required
+from ..attendance import generate_roster_pdf
 
 logger = logging.getLogger(__name__)
 

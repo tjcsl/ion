@@ -1,20 +1,20 @@
 import logging
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
+from ...utils.helpers import is_entirely_digit
 from ..announcements.models import Announcement
+from ..auth.decorators import deny_restricted
 from ..eighth.models import EighthActivity
 from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import Grade, Course
+from ..users.models import Course, Grade
 from ..users.views import profile_view
-from ..auth.decorators import deny_restricted
-from ...utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 

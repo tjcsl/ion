@@ -1,6 +1,6 @@
-import logging
-import json
 import csv
+import json
+import logging
 from collections import OrderedDict
 
 from django import http
@@ -8,14 +8,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
 from django.core.serializers import serialize
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .models import Answer, Choice, Poll, Question
-from .forms import PollForm
-from ..auth.decorators import deny_restricted
 from ...utils.html import safe_html
+from ..auth.decorators import deny_restricted
+from .forms import PollForm
+from .models import Answer, Choice, Poll, Question
 
 logger = logging.getLogger(__name__)
 

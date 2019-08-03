@@ -1,13 +1,13 @@
-from io import StringIO
 import datetime
+from io import StringIO
 
+from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.urls import reverse
 from django.utils import timezone
-from django.core.management import call_command
-from django.contrib.auth import get_user_model
 
-from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ...test.ion_test import IonTestCase
+from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 
 
 class GrantAdminTest(IonTestCase):

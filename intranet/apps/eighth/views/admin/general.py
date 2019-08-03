@@ -9,13 +9,13 @@ from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
 from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
 from ...forms.admin import rooms as room_forms
-from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, EighthScheduledActivity, EighthSignup
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ...utils import get_start_date, set_start_date
-from ....auth.decorators import eighth_admin_required
-from ....groups.models import Group
 
 
 @eighth_admin_required

@@ -1,7 +1,7 @@
 from django.utils import timezone
 
-from .models import Day, DayType
 from ...test.ion_test import IonTestCase
+from .models import Day, DayType
 
 
 class ScheduleTest(IonTestCase):

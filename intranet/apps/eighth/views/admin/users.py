@@ -1,8 +1,8 @@
 import logging
 
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render
 
 from ....auth.decorators import eighth_admin_required
 

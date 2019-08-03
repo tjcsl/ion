@@ -1,6 +1,7 @@
 import logging
 
 from cacheops import invalidate_obj
+from formtools.wizard.views import SessionWizardView
 
 from django.contrib import messages
 from django.core.management import call_command
@@ -10,16 +11,14 @@ from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
 
-from formtools.wizard.views import SessionWizardView
-
+from .....utils.serialization import safe_json
+from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthSignup
-from ...utils import get_start_date
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ...tasks import room_changed_single_email
-from ....auth.decorators import eighth_admin_required
-from .....utils.serialization import safe_json
+from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
 

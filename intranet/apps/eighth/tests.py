@@ -1,17 +1,17 @@
 import datetime
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
-from django.contrib.auth import get_user_model
 
-from .exceptions import SignupException
-from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
+from ...test.ion_test import IonTestCase
 from ..groups.models import Group
 from ..users.models import Email
-from ...test.ion_test import IonTestCase
-from .notifications import signup_status_email, absence_email
+from .exceptions import SignupException
+from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
+from .notifications import absence_email, signup_status_email
 
 
 class EighthAbstractTest(IonTestCase):

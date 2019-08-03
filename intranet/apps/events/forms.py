@@ -1,8 +1,8 @@
 from django import forms
 from django.utils import timezone
 
-from .models import Event
 from ..groups.models import Group
+from .models import Event
 
 
 class EventForm(forms.ModelForm):

@@ -3,18 +3,7 @@ import logging
 from io import BytesIO
 
 from cacheops import invalidate_obj
-
-from django import http
-from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
-
 from formtools.wizard.views import SessionWizardView
-
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
@@ -22,14 +11,23 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+from django import http
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+
+from ....utils.date import get_date_range_this_year
+from ...auth.decorators import attendance_taker_required, eighth_admin_required
+from ...dashboard.views import gen_sponsor_schedule
+from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
 from ..utils import get_start_date
-from ...auth.decorators import attendance_taker_required, eighth_admin_required
-from ...dashboard.views import gen_sponsor_schedule
-from ...schedule.views import decode_date
-from ....utils.date import get_date_range_this_year
 
 logger = logging.getLogger(__name__)
 

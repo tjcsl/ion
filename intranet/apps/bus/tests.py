@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from .models import Route
 from ...test.ion_test import IonTestCase
+from .models import Route
 
 
 class BusTest(IonTestCase):

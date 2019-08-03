@@ -3,18 +3,18 @@ import os
 import subprocess
 import tempfile
 
-from django.conf import settings
-from django.core.cache import cache
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.utils.text import slugify
-
 import magic
 
-from .forms import PrintJobForm
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.shortcuts import redirect, render
+from django.utils.text import slugify
+
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
+from .forms import PrintJobForm
 
 logger = logging.getLogger(__name__)
 

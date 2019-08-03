@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Sign, Page
+from .models import Page, Sign
 
 
 class SignAdmin(admin.ModelAdmin):

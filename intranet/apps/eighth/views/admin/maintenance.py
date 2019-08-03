@@ -1,26 +1,23 @@
+import csv
 import logging
 import os
-import threading
 import shutil
+import threading
 import traceback
-import csv
-
-from tempfile import gettempdir
 from io import StringIO
+from tempfile import gettempdir
 
 from django.conf import settings
-from django.urls import reverse
-from django.shortcuts import render, redirect
-from django.core.management import call_command
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
 from ....auth.decorators import eighth_admin_required, reauthentication_required
-
-from ....users.models import Address, Course, Section
-
 from ....notifications.tasks import email_send_task
+from ....users.models import Address, Course, Section
 
 logger = logging.getLogger(__name__)
 

@@ -4,21 +4,21 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from io import BytesIO
 
-from django.conf import settings
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
-
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table
 
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
-from ..utils import get_start_date
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
+
 from ....utils.date import get_date_range_this_year
 from ....utils.serialization import safe_json
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ..utils import get_start_date
 
 logger = logging.getLogger(__name__)
 

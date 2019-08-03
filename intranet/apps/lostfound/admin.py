@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import LostItem, FoundItem
+from .models import FoundItem, LostItem
 
 
 class LostItemAdmin(admin.ModelAdmin):

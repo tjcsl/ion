@@ -1,8 +1,7 @@
 from django import forms
 
-from .models import Poll
-
 from ...utils.html import safe_html
+from .models import Poll
 
 
 class PollForm(forms.ModelForm):

@@ -10,10 +10,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 
+from .....utils.helpers import is_entirely_digit
+from ....auth.decorators import eighth_admin_required
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ...utils import get_start_date
-from ....auth.decorators import eighth_admin_required
-from .....utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 

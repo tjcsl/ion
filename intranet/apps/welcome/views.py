@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+
 from ..dashboard.views import dashboard_view
 
 logger = logging.getLogger(__name__)
