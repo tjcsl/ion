@@ -1,9 +1,9 @@
-from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
-from .models import CarApplication, ParkingApplication
 from ...test.ion_test import IonTestCase
+from .models import CarApplication, ParkingApplication
 
 
 class ParkingTest(IonTestCase):

@@ -1,5 +1,6 @@
 from django import forms
-from .models import ParkingApplication, CarApplication
+
+from .models import CarApplication, ParkingApplication
 
 
 class ParkingApplicationForm(forms.ModelForm):

@@ -3,8 +3,8 @@ import logging
 from django import forms
 from django.contrib.auth import get_user_model
 
-from ..users.models import Grade, Phone, Email, Website
 from ..bus.models import Route
+from ..users.models import Email, Grade, Phone, Website
 
 logger = logging.getLogger(__name__)
 

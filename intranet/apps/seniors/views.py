@@ -4,10 +4,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from ...settings import SENIOR_GRADUATION_YEAR
+from ..auth.decorators import deny_restricted
 from .forms import SeniorForm
 from .models import Senior
-from ..auth.decorators import deny_restricted
-from ...settings import SENIOR_GRADUATION_YEAR
 
 logger = logging.getLogger(__name__)
 

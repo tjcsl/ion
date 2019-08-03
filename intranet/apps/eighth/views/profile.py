@@ -8,12 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from ....utils.serialization import safe_json
+from ...auth.decorators import deny_restricted, eighth_admin_required
+from ...users.forms import ProfileEditForm  # , AddressForm
 from ..models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
-from ...auth.decorators import eighth_admin_required, deny_restricted
-from ...users.forms import ProfileEditForm  # , AddressForm
-from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 

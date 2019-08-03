@@ -1,11 +1,13 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import logging
-from datetime import datetime
 from base64 import b64encode
+from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin
+from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.core.cache import cache
 from django.db import models
 from django.db.models import Count, F
@@ -14,12 +16,12 @@ from django.utils.functional import cached_property
 
 from intranet.middleware import threadlocals
 
-from ..groups.models import Group
-from ..preferences.fields import PhoneField
-from ..bus.models import Route
-from ..polls.models import Poll, Answer
-from ..eighth.models import EighthSponsor, EighthBlock, EighthSignup
 from ...utils.helpers import is_entirely_digit
+from ..bus.models import Route
+from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
+from ..groups.models import Group
+from ..polls.models import Answer, Poll
+from ..preferences.fields import PhoneField
 
 logger = logging.getLogger(__name__)
 

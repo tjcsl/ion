@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Announcement, AnnouncementRequest
 from ..users.forms import SortedTeacherMultipleChoiceField
+from .models import Announcement, AnnouncementRequest
 
 
 class AnnouncementForm(forms.ModelForm):

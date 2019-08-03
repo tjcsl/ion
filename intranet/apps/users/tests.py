@@ -2,18 +2,18 @@ import datetime
 import io
 import os
 
+from oauth2_provider.models import AccessToken, get_application_model
+from oauth2_provider.settings import oauth2_settings
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from oauth2_provider.models import get_application_model, AccessToken
-from oauth2_provider.settings import oauth2_settings
-
-from .models import PERMISSIONS_NAMES, Address, Course, Section, Email
-from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthSignup
-from ..nomination.models import Nomination, NominationPosition
 from ...test.ion_test import IonTestCase
+from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..nomination.models import Nomination, NominationPosition
+from .models import PERMISSIONS_NAMES, Address, Course, Email, Section
 
 Application = get_application_model()
 

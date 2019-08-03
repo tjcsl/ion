@@ -1,8 +1,8 @@
 from collections import namedtuple
 
-from django.http import HttpResponse
-
 from rest_framework.status import HTTP_403_FORBIDDEN
+
+from django.http import HttpResponse
 
 m = namedtuple("Message", ["regular", "admin"])
 

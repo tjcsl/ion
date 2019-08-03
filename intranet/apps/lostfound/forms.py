@@ -1,5 +1,6 @@
 from django import forms
-from .models import LostItem, FoundItem
+
+from .models import FoundItem, LostItem
 
 
 class LostItemForm(forms.ModelForm):

@@ -7,8 +7,8 @@ from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
 
+from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
-from ...utils.date import is_current_year, get_date_range_this_year
 
 
 class AnnouncementManager(Manager):

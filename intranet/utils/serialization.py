@@ -1,6 +1,6 @@
-from django.utils.html import escapejs
-
 from rest_framework.renderers import JSONRenderer
+
+from django.utils.html import escapejs
 
 
 def safe_json(obj):

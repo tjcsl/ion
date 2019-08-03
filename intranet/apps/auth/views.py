@@ -1,29 +1,28 @@
 import logging
 import random
 from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
-from django.urls import reverse
 
+from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
+from ..dashboard.views import dashboard_view, get_fcps_emerg
+from ..eighth.models import EighthBlock, EighthSignup
+from ..events.models import Event
+from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
 from .helpers import change_password
-from ..dashboard.views import dashboard_view, get_fcps_emerg
-from ..schedule.views import schedule_context
-from ..events.models import Event
-from ..eighth.models import EighthBlock, EighthSignup
-from ...utils.helpers import get_ap_week_warning
-
-from ...utils.helpers import dark_mode_enabled
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")

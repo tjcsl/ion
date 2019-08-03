@@ -1,19 +1,19 @@
-import json
 import datetime
+import json
 import urllib.parse
 
-from django.conf import settings
-from django.urls import reverse
-from django.utils import timezone
-from django.contrib.auth import get_user_model
-
-from oauth2_provider.models import get_application_model, AccessToken
+from oauth2_provider.models import AccessToken, get_application_model
 from oauth2_provider.settings import oauth2_settings
 
-from ..schedule.models import Day, DayType, Block, Time
-from ..bus.models import Route
-from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom, EighthSignup
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.utils import timezone
+
 from ...test.ion_test import IonTestCase
+from ..bus.models import Route
+from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
+from ..schedule.models import Block, Day, DayType, Time
 
 Application = get_application_model()
 

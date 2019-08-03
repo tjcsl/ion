@@ -1,8 +1,8 @@
 from datetime import datetime
 from io import StringIO
 
-from django.utils import timezone
 from django.core.management import call_command
+from django.utils import timezone
 
 from ...test.ion_test import IonTestCase
 

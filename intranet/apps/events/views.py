@@ -7,12 +7,11 @@ from django.core import exceptions
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from ...utils.helpers import get_id
+from ...utils.html import safe_html
+from ..auth.decorators import deny_restricted
 from .forms import AdminEventForm, EventForm
 from .models import Event
-
-from ..auth.decorators import deny_restricted
-from ...utils.html import safe_html
-from ...utils.helpers import get_id
 
 logger = logging.getLogger(__name__)
 

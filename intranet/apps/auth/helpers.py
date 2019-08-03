@@ -1,9 +1,9 @@
 import logging
 import re
 
-from django.conf import settings
-
 import pexpect
+
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 

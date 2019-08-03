@@ -3,8 +3,9 @@ from django.conf.urls import include, url
 from .views import activities, attendance, profile, routers, signup
 from .views.admin import activities as admin_activities
 from .views.admin import attendance as admin_attendance
+from .views.admin import blocks, general, groups
 from .views.admin import maintenance as admin_maintenance
-from .views.admin import blocks, general, groups, rooms, scheduling, sponsors, users
+from .views.admin import rooms, scheduling, sponsors, users
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),

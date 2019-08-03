@@ -1,12 +1,14 @@
 import logging
+
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
-from .forms import CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
-from ..search.views import get_search_results
+from django.shortcuts import get_object_or_404, redirect, render
+
 from ..auth.decorators import deny_restricted
+from ..search.views import get_search_results
+from .forms import CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
+from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 
 logger = logging.getLogger(__name__)
 

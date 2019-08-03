@@ -3,26 +3,20 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from intranet import settings
 
-from .forms import AnnouncementForm, AnnouncementRequestForm
-from .models import Announcement, AnnouncementRequest
-from .notifications import (
-    admin_request_announcement_email,
-    announcement_approved_email,
-    announcement_posted_email,
-    announcement_posted_twitter,
-    request_announcement_email,
-)
+from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-
-from ...utils.html import safe_html
+from .forms import AnnouncementForm, AnnouncementRequestForm
+from .models import Announcement, AnnouncementRequest
+from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
+                            request_announcement_email)
 
 logger = logging.getLogger(__name__)
 

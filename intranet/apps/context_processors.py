@@ -1,17 +1,19 @@
+import binascii
 import datetime
 import logging
-import re
-import binascii
 import os
+import re
 
-from django.core.urlresolvers import resolve, Resolver404
-from django.conf import settings
-from django.utils import timezone
 from oauth2_provider.models import Application
 
+from django.conf import settings
+from django.core.urlresolvers import Resolver404, resolve
+from django.utils import timezone
+
 from intranet.apps.notifications.models import NotificationConfig
-from .schedule.models import Day
+
 from ..utils.helpers import dark_mode_enabled
+from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
 

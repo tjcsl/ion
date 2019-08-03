@@ -2,9 +2,8 @@ import ipaddress
 import logging
 import string
 import subprocess
-from urllib import parse
-
 from typing import Collection, Set  # noqa
+from urllib import parse
 
 from django.conf import settings
 from django.template.loader import get_template

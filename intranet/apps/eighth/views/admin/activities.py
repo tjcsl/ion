@@ -6,15 +6,15 @@ from cacheops import invalidate_obj
 
 from django import forms, http
 from django.contrib import messages
-from django.urls import reverse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from ...forms.admin.activities import ActivityForm, QuickActivityForm
-from ...models import EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist
-from ...utils import get_start_date
-from ...tasks import room_changed_activity_email
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
+from ...forms.admin.activities import ActivityForm, QuickActivityForm
+from ...models import EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor, EighthWaitlist
+from ...tasks import room_changed_activity_email
+from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
 

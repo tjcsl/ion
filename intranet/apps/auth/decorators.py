@@ -1,7 +1,7 @@
 """Decorators that restrict views to certain types of users."""
 
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect
 from django.urls import reverse
 

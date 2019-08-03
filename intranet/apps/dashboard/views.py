@@ -6,16 +6,16 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.urls import reverse
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 
+from ...utils.helpers import get_ap_week_warning, get_fcps_emerg
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
-from ...utils.helpers import get_fcps_emerg, get_ap_week_warning
 
 logger = logging.getLogger(__name__)
 

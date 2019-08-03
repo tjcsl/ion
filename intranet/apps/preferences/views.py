@@ -4,12 +4,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
-from .forms import (BusRouteForm, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, DarkModeForm, PhoneFormset, EmailFormset,
-                    WebsiteFormset)
-from ..users.models import Email
 from ..bus.models import Route
+from ..users.models import Email
+from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
+                    WebsiteFormset)
 
 logger = logging.getLogger(__name__)
 

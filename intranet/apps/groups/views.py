@@ -4,10 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from ..auth.decorators import deny_restricted
 from .forms import GroupForm
 from .models import Group
-
-from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,6 @@
 # This file contains logic for server-side rendered pages
 import datetime
+
 from django.utils import timezone
 
 from ..announcements.models import Announcement

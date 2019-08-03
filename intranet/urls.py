@@ -3,8 +3,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView, TemplateView
 
-from intranet.apps.oauth.views import ApplicationUpdateView
 from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
+from intranet.apps.oauth.views import ApplicationUpdateView
 
 admin.autodiscover()
 

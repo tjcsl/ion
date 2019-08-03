@@ -3,25 +3,24 @@ import logging
 import re
 
 from cacheops import invalidate_model, invalidate_obj
+from formtools.wizard.views import SessionWizardView
 
 from django import http
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.urls import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from formtools.wizard.views import SessionWizardView
-
+from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
+from ....search.views import get_search_results
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
 from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ...utils import get_start_date
-from ....auth.decorators import eighth_admin_required
-from ....groups.models import Group
-from ....search.views import get_search_results
 
 logger = logging.getLogger(__name__)
 

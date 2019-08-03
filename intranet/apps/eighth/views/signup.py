@@ -8,12 +8,12 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from ....utils.helpers import is_entirely_digit
+from ....utils.serialization import safe_json
+from ...auth.decorators import deny_restricted, eighth_admin_required
 from ..exceptions import SignupException
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist
 from ..serializers import EighthBlockDetailSerializer
-from ...auth.decorators import eighth_admin_required, deny_restricted
-from ....utils.serialization import safe_json
-from ....utils.helpers import is_entirely_digit
 
 logger = logging.getLogger(__name__)
 

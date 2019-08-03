@@ -1,19 +1,20 @@
 import datetime
+import logging
 import os
 import re
 import sys
-import logging
-from typing import Any, Tuple, Dict, List  # noqa
+from typing import Any, Dict, List, Tuple  # noqa
 
 import sentry_sdk
-from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
+from ..utils import helpers  # pylint: disable=wrong-import-position # noqa
 
 if sys.version_info < (3, 5):
     # Require Python 3.5+
     raise Exception("Python 3.5 or higher is required.")
 
-from ..utils import helpers  # pylint: disable=wrong-import-position # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY, SECRET_DATABASE_URL. !!

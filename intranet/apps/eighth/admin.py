@@ -1,5 +1,6 @@
-from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
+
+from django.contrib import admin
 
 from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 

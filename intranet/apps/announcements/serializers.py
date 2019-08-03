@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from .models import Announcement
 from ..groups.models import Group
+from .models import Announcement
 
 
 class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):

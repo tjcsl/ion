@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
-from .models import NominationPosition, Nomination
 from ..auth.decorators import deny_restricted
+from .models import Nomination, NominationPosition
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models.deletion import Collector
 from django.utils import timezone
 
-
 logger = logging.getLogger(__name__)
 
 

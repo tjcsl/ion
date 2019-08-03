@@ -1,34 +1,31 @@
-import re
 import base64
 import datetime
 import logging
 import os
-from os.path import normpath
+import re
 import stat
 import tempfile
 import zipfile
+from os.path import normpath
 from wsgiref.util import FileWrapper
 
+import pysftp
 from Crypto import Random
 from Crypto.Cipher import AES
+from paramiko import SFTPError, SSHException
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.text import slugify
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 
-from paramiko import SSHException, SFTPError
-
-import pysftp
-
+from ..auth.decorators import deny_restricted
 from .forms import UploadFileForm
 from .models import Host
-
-from ..auth.decorators import deny_restricted
 
 logger = logging.getLogger(__name__)
 
