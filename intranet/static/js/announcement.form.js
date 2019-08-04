@@ -17,7 +17,13 @@ $(function() {
         maxItems: 2
     });
 
-    $("form#announcement_form").bind("submit", function () {
+    $("form#announcement_form").bind("submit", function (e) {
+        if($("#id_notify_email_all").prop("checked")) {
+            if(!confirm("This will send an email to ALL users who can see this post. If you have not selected a group, this will email the entire school. Are you sure you want to do this?")) {
+                e.preventDefault();
+            }
+        }
+
         var button = $("button#submit_announcement");
         button.prop("disabled", true);
         button.append("<i class=\"fa fa-spinner fa-spin\" aria-hidden=\"true\"></i>");
