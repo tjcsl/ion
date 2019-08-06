@@ -4,9 +4,9 @@ Understanding the Eighth models
 
 Most of Ion's apps either do not have models or only have very basic models. The ``eighth`` app, however, has a complicated system of models.
 
-What follows is a brief list of the eighth models with a description of each. More information is available in comments in the source code.
+What follows is a brief list of the eighth models with a description of each. More information is available in comments of the source code.
 
-- ``EighthSponsor``; Represents a sponsor for an eighth period activity. Stores some information on the sponsor, including first/last name and department name. The ``user`` field that associates the ``EighthSponsor`` with a ``User`` is optional, but almost always set.
+- ``EighthSponsor``: Represents a sponsor for an eighth period activity. Stores some information on the sponsor, including first/last name and department name. The ``user`` field that associates the ``EighthSponsor`` with a ``User`` is optional, but almost always set.
 
 - ``EighthRoom``: Represents a room in which an eighth period activity can be held. Stores the name, the capacity, and whether the room is available for use in eighth period activities. If the capacity is -1, that is considered to be infinite capacity.
 

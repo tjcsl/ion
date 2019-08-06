@@ -14,8 +14,8 @@ Go to https://ion.tjhsst.edu/oauth/applications/ and log in to create and regist
 Name
  * Some descriptive name for your application.
 Client Type*
- * Choose "Confidential" if your app has a backend component (if you are running a server that can store the client ID and secret securely)
- * Choose "Public" if your app is purely client-side (if a copy of the credentials will be distributed publicly)
+ * Choose "Confidential" if your app has a backend component and your server can store the client ID and secret securely
+ * Choose "Public" if your app is purely client-side and a copy of the credentials will be distributed publicly
 Authorization Grant Type*
  * Choose "Authorization code" if your client type is "Confidential"
  * Choose "Implicit" if your client type is "Public" (for example, on a native application)
