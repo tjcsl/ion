@@ -4,6 +4,8 @@ Using OAuth
 
 With the Django OAuth Toolkit, Ion supports accessing API and other resources via OAuth2. This allows for applications to be written using the Ion API without the need to prompt for user credentials from within the application. Instead, access tokens are used to gain access to Ion API resources.
 
+**Note**: All of the examples on the page are targeted towards web applications. They will not work for the purposes of, for example, allowing a program running on your computer to access the Ion API.
+
 Register an application
 =======================
 
@@ -12,8 +14,8 @@ Go to https://ion.tjhsst.edu/oauth/applications/ and log in to create and regist
 Name
  * Some descriptive name for your application.
 Client Type*
- * Choose "Confidential" if your app has a backend component
- * Choose "Public" if your app is purely client-side
+ * Choose "Confidential" if your app has a backend component (if you are running a server that can store the client ID and secret securely)
+ * Choose "Public" if your app is purely client-side (if a copy of the credentials will be distributed publicly)
 Authorization Grant Type*
  * Choose "Authorization code" if your client type is "Confidential"
  * Choose "Implicit" if your client type is "Public" (for example, on a native application)
@@ -22,14 +24,22 @@ Redirect URIs
 
 Store the Client ID and Client Secret tokens for use with your application.
 
-* These are the recommended settings. For a better understanding of which settings you should choose, read this [introduction to OAuth](https://aaronparecki.com/oauth-2-simplified/) and this [guide to grant types](https://alexbilbie.com/guide-to-oauth-2-grants/)
+* These are the recommended settings. For a better understanding of which settings you should choose, read this `introduction to OAuth <https://aaronparecki.com/oauth-2-simplified/>`_ and this `guide to grant types <https://alexbilbie.com/guide-to-oauth-2-grants/>`_
 
 Requesting authorization
 ========================
 
 Inside your application, redirect to the OAuth authorization endpoint to receive an authorization code. The URL is https://ion.tjhsst.edu/oauth/authorize/
 
-To access the API, exchange this code for a (temporary) access token. The URL is https://ion.tjhsst.edu/oauth/token/
+To access the API, exchange this code for a (temporary) access token. The URL is https://ion.tjhsst.edu/oauth/token/.
+
+Python-social-auth
+------------------
+
+If you want to use `python-social-auth`, a plugin is available in the ion_oauth package.
+See `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_
+
+For a Django project, add ``AUTHENTICATION_BACKENDS = ['ion_oauth.oauth.IonOauth2']`` and define ``SOCIAL_AUTH_ION_KEY`` and ``SOCIAL_AUTH_ION_SECRET`` in your settings.py file.
 
 Python
 ------
@@ -79,19 +89,12 @@ After 36,000 seconds (1 hour), the token will expire; you need to renew it. This
      args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
      token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
 
-Python-social-auth
-------------------
-
-If you want to use python-social-auth, a plugin is available in the ion_oauth package.
-See `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_
-
-For a Django project, add AUTHENTICATION_BACKENDS = ['ion_oauth.oauth.IonOauth2'] and define SOCIAL_AUTH_ION_KEY and SOCIAL_AUTH_ION_SECRET in your settings.py file.
-
 PHP
 ---
 
 Here is some sample code using `PHP-OAuth2 <https://github.com/adoy/PHP-OAuth2>`_.
 
+**WARNING: This sample code was written by former Ion developers who are no longer TJ students. It is not supported by the current Ion development team. We strongly recommended that you use a more modern language such as Python.**
 
 .. code-block:: php
 
@@ -125,6 +128,8 @@ Node.js
 
 You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ library to perform authentication. Below is some sample code.
 
+**Note**: This code will not work out of the box. Read the comments carefully to determine how to integrate it into your application.
+
 .. code-block:: javascript
 
     var simpleoauth2 = require("simple-oauth2");
@@ -140,11 +145,13 @@ You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ libr
             secret: ion_client_secret
         },
         auth: {
-            tokenHost: 'https://ion.tjhsst.edu/oauth'
+            tokenHost:     'https://ion.tjhsst.edu/oauth/',
+            authorizePath: 'https://ion.tjhsst.edu/oauth/authorize',
+            tokenPath:     'https://ion.tjhsst.edu/oauth/token/'
         }
     });
 
-    // 1) redirect the user to login_url to begin authentication
+    // 1) when the user visits the site, redirect them to login_url to begin authentication
     var login_url = oauth.authorizationCode.authorizeURL({
         scope: "read", // remove scope: read if you also want write access
         redirect_uri: ion_redirect_uri
@@ -152,7 +159,7 @@ You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ libr
 
     // 2) on the ion_redirect_uri endpoint, add the following code to process the authentication
     var code = req.query["code"]; // GET parameter
-    oauth.authorizationCode.getToken({code: code, redirect_uri: ion_redirect_uri}, (error, result) => {
+    oauth.authorizationCode.getToken({code: code, redirect_uri: ion_redirect_uri}).then((result) => {
         const token = oauth.accessToken.create(result);
 
         // you will want to save these variables in your session if you want to make API requests
@@ -163,7 +170,8 @@ You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ libr
         // log the user in
     });
 
-    // 3) when making an API request, add access_token as a POST parameter
+    // 3) when making an API request, add the following header:
+    // Authorization: Bearer {{ insert access token }}
 
     // 4) to refresh the access_token, use the following code
     var token = oauth.accessToken.create({
