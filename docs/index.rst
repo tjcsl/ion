@@ -38,7 +38,7 @@ Developing for Intranet
 -----------------------
 - :doc:`Coding Style Guide<developing/styleguide>`
 - :doc:`Test Writing Guide<developing/testing>`
-- :doc:`Understanding the Eighth models<developing/eighth-models>`
+- :doc:`Understanding the Eighth Models<developing/eighth-models>`
 
 Using Intranet as a Developer
 -----------------------------
