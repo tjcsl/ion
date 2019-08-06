@@ -26,7 +26,7 @@ Redirect URIs
 
 Store the Client ID and Client Secret tokens for use with your application.
 
-* These are the recommended settings. For a better understanding of which settings you should choose, read this `introduction to OAuth <https://aaronparecki.com/oauth-2-simplified/>`_ and this `guide to grant types <https://alexbilbie.com/guide-to-oauth-2-grants/>`_
+* These are the recommended settings. For a better understanding of which settings you should choose, read this `introduction to OAuth <https://aaronparecki.com/oauth-2-simplified/>`_ and this `guide to grant types <https://alexbilbie.com/guide-to-oauth-2-grants/>`_.
 
 Requesting authorization
 ========================
@@ -172,7 +172,7 @@ You can use the `simple-oauth2 <https://github.com/lelylan/simple-oauth2>`_ libr
     });
 
     // 3) when making an API request, add the following header:
-    // Authorization: Bearer {{ insert access token }}
+    // Authorization: Bearer {{ INSERT ACCESS TOKEN }}
 
     // 4) to refresh the access_token, use the following code
     var token = oauth.accessToken.create({
