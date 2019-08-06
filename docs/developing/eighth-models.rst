@@ -10,7 +10,7 @@ What follows is a brief list of the eighth models with a description of each. Mo
 
 - ``EighthRoom``: Represents a room in which an eighth period activity can be held. Stores the name, the capacity, and whether the room is available for use in eighth period activities. If the capacity is -1, that is considered to be infinite capacity.
 
-- ``EighthActivity``: Represents an eighth period activity. Note that this represents an activity, not a specific scheduling of the activity. (In other words, only one of these exists for each club/team/special activity.)
+- ``EighthActivity``: Represents an eighth period activity. Note that this represents an activity, not a specific scheduling of the activity. In other words, only one of these exists for each club/team/special activity.
 
   In addition to the name and the description, this stores a lot of information about the activity that will be explained later.
 
