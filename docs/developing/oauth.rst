@@ -4,6 +4,8 @@ Using OAuth
 
 With the Django OAuth Toolkit, Ion supports accessing API and other resources via OAuth2. This allows for applications to be written using the Ion API without the need to prompt for user credentials from within the application. Instead, access tokens are used to gain access to Ion API resources.
 
+For more details on OAuth, please refer to https://oauth.net.
+
 **Note**: All of the examples on the page are targeted towards web applications. They will not work for the purposes of, for example, allowing a program running on your computer to access the Ion API.
 
 Register an application
@@ -36,8 +38,7 @@ To access the API, exchange this code for a (temporary) access token. The URL is
 Python-social-auth
 ------------------
 
-If you want to use `python-social-auth`, a plugin is available in the ion_oauth package.
-See `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_
+If you want to use `python-social-auth`, a plugin is available in the `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_ package. Note that it is not currently actively maintained by the Ion development team and thus may require modification to work properly.
 
 For a Django project, add ``AUTHENTICATION_BACKENDS = ['ion_oauth.oauth.IonOauth2']`` and define ``SOCIAL_AUTH_ION_KEY`` and ``SOCIAL_AUTH_ION_SECRET`` in your settings.py file.
 
