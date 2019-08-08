@@ -26,6 +26,8 @@ Move into the ``intranet`` directory and run ``workon ion`` to load the Python d
 
 The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
 
+:doc:`Continue with these post-install steps.<postinstall>`
+
 Troubleshooting
 ===============
 
@@ -34,5 +36,3 @@ If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant 
 If you see a ``Adding routes to host computer...`` message, you probably forgot to start the OpenVPN client.
 
 If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for ``ldap_simple_bind_password``.
-
-:doc:`Continue with these post-install steps.<postinstall>`
