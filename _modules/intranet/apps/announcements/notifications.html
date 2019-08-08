@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #5124) documentation</title>
+    <title>intranet.apps.announcements.notifications &#8212; TJ Intranet v3 (Build #5142) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -64,6 +64,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/eighth-models.html">Understanding the Eighth models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
@@ -254,9 +255,7 @@
         <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_public</span> <span class="ow">or</span> <span class="n">send_groups</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="c1"># Either it has no groups (public) or user is a member of a send group</span>
-                <span class="n">em</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">notification_email</span>
-                <span class="k">if</span> <span class="n">em</span><span class="p">:</span>
-                    <span class="n">emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
+                <span class="n">emails</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">notification_email</span><span class="p">)</span>
                 <span class="n">users_send</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">users_send</span><span class="p">)</span>

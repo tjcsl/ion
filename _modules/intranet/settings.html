@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5124) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5142) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -64,6 +64,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../developing/eighth-models.html">Understanding the Eighth models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../developing/howto.html">How to do Ion development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../developing/requirements.html">Ion Requirements</a></li>
@@ -133,6 +134,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>  <span class="c1"># noqa</span>
 
 <span class="kn">import</span> <span class="nn">sentry_sdk</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk.integrations.celery</span> <span class="k">import</span> <span class="n">CeleryIntegration</span>
 <span class="kn">from</span> <span class="nn">sentry_sdk.integrations.django</span> <span class="k">import</span> <span class="n">DjangoIntegration</span>
 <span class="kn">from</span> <span class="nn">sentry_sdk.integrations.logging</span> <span class="k">import</span> <span class="n">LoggingIntegration</span>
 
@@ -900,7 +902,9 @@
     <span class="n">sentry_logging</span> <span class="o">=</span> <span class="n">LoggingIntegration</span><span class="p">(</span>
         <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">event_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>  <span class="c1"># Capture info and above as breadcrumbs  # Send errors as events</span>
     <span class="p">)</span>
-    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">SENTRY_PUBLIC_DSN</span><span class="p">,</span> <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">DjangoIntegration</span><span class="p">(),</span> <span class="n">sentry_logging</span><span class="p">],</span> <span class="n">send_default_pii</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+        <span class="n">SENTRY_PUBLIC_DSN</span><span class="p">,</span> <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">DjangoIntegration</span><span class="p">(),</span> <span class="n">sentry_logging</span><span class="p">,</span> <span class="n">CeleryIntegration</span><span class="p">()],</span> <span class="n">send_default_pii</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
 </pre></div>
 
     </div>
