@@ -2,7 +2,7 @@
 Coding Style Guide
 ******************
 
-Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by ``pylint`` and/or ``flake8``, so if you do not follow them the build may not pass.
+Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by ``pylint`` and/or ``flake8``. Therefore, if you do not follow them, the build may not pass.
 
 However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.
 
@@ -31,7 +31,7 @@ At the time of this writing, the Travis build runs the following commands:
 
 ``flake8`` is a PEP8 style checker, ``pylint`` is a linter (but it also enforces some PEP8 conventions), and ``isort``, when called with these options, checks that all imports are sorted alphabetically.
 
-It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the ``pylint`` check locally because it takes a long time to run). All of them are intended to be run from the root directoy of the Git repository.
+It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the ``pylint`` check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.
 
 If ``flake8`` or ``pylint`` throw errors, the error messages are usually human-readable. if ``isort`` gives any errors, you can have it automatically correct the order of all imports by running ``isort --recursive intranet``.
 
