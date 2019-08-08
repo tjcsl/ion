@@ -20,12 +20,6 @@ from django.db.models import Manager, Q
 
         afs.groups_visible.add(Group.objects.get(name="admin_all"))
 
-        Host.objects.create(name="Home Folder (M)",
-                            code="tj03_m",
-                            address="tj03.local.tjhsst.edu",
-                            directory="{win}",
-                            windows=True)
-
 """
 
 
