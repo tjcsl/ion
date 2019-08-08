@@ -164,7 +164,7 @@ class ActivityForm(forms.ModelForm):
             "admin_comments",
         ]
         widgets = {
-            "description": forms.Textarea(attrs={"rows": 5, "cols": 46}),
+            "description": forms.Textarea(attrs={"rows": 9, "cols": 46}),
             "name": forms.TextInput(attrs={"style": "width: 292px"}),
             "admin_comments": forms.Textarea(attrs={"rows": 5, "cols": 46}),
         }
