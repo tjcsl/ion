@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Architecture &#8212; TJ Intranet v3 (Build #5142) documentation</title>
+    <title>Architecture &#8212; TJ Intranet v3 (Build #5152) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -103,6 +103,8 @@
 <li><a class="reference internal" href="#redis">Redis</a></li>
 <li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
 <li><a class="reference internal" href="#daphne">Daphne</a></li>
+<li><a class="reference internal" href="#celery">Celery</a></li>
+<li><a class="reference internal" href="#rabbitmq">RabbitMQ</a></li>
 </ul>
 </li>
 </ul>
@@ -165,6 +167,14 @@ Django has allowed us to deploy faster, onboard new web developers faster, and h
 <div class="section" id="daphne">
 <h3>Daphne<a class="headerlink" href="#daphne" title="Permalink to this headline">¶</a></h3>
 <p>We use <a class="reference external" href="https://github.com/django/daphne/">Daphne</a> for our production Django Channels HTTP/WebSocket server. We serve stuff over ASGI for WebSockets (bus) and Daphne allows us to run our application in production simply.</p>
+</div>
+<div class="section" id="celery">
+<h3>Celery<a class="headerlink" href="#celery" title="Permalink to this headline">¶</a></h3>
+<p>We use <a class="reference external" href="http://www.celeryproject.org/">Celery</a> to run background tasks such as sending emails asynchronously.</p>
+</div>
+<div class="section" id="rabbitmq">
+<h3>RabbitMQ<a class="headerlink" href="#rabbitmq" title="Permalink to this headline">¶</a></h3>
+<p>We use <a class="reference external" href="https://www.rabbitmq.com/">RabbitMQ</a> as a message broker for Celery (Celery claims to support <a class="reference external" href="#redis">Redis</a>, but attempts to get it working were unsuccessful).</p>
 </div>
 </div>
 </div>

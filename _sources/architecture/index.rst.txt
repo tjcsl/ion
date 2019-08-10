@@ -28,3 +28,11 @@ We use `PostgreSQL <https://www.postgresql.org/>`_ for our production and develo
 Daphne
 ----------
 We use `Daphne <https://github.com/django/daphne/>`_ for our production Django Channels HTTP/WebSocket server. We serve stuff over ASGI for WebSockets (bus) and Daphne allows us to run our application in production simply.
+
+Celery
+------
+We use `Celery <http://www.celeryproject.org/>`_ to run background tasks such as sending emails asynchronously.
+
+RabbitMQ
+--------
+We use `RabbitMQ <https://www.rabbitmq.com/>`_ as a message broker for Celery (Celery claims to support `Redis <#redis>`_, but attempts to get it working were unsuccessful).

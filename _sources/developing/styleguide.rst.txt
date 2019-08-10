@@ -2,21 +2,38 @@
 Coding Style Guide
 ******************
 
-Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python).
+Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by ``pylint`` and/or ``flake8``. Therefore, if you do not follow them, the build may not pass.
 
 However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.
 
-Main points:
+Main points
+===========
 
 - Indent using 4 spaces.
 - Use underscores in favor of camel case for all names except the names of classes.
 - Limit the line length of docstrings or comments to 72 characters.
 - Separate top-level functions and class definitions with two blank lines.
 - Separate method definitions inside a class with a single blank line.
-- Use two spaces before inline comment and one space between the pound sign and comment.
+- Use two spaces before inline comments and one space between the pound sign and comment.
 - Use a plugin for your text editor to check for/remind you of PEP8 conventions.
-- Run the ``flake8`` linter periodically.
 - Capitalize and punctuate comments and Git commit messages properly.
+
+What is enforced in the build
+=============================
+
+At the time of this writing, the Travis build runs the following commands:
+
+.. code-block:: sh
+
+        flake8 --max-line-length 150 --exclude=*/migrations/* .
+        pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
+        isort --check --recursive intranet
+
+``flake8`` is a PEP8 style checker, ``pylint`` is a linter (but it also enforces some PEP8 conventions), and ``isort``, when called with these options, checks that all imports are sorted alphabetically.
+
+It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the ``pylint`` check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.
+
+If ``flake8`` or ``pylint`` throw errors, the error messages are usually human-readable. if ``isort`` gives any errors, you can have it automatically correct the order of all imports by running ``isort --recursive intranet``.
 
 Imports
 =======
@@ -27,11 +44,13 @@ Imports
     #. Imports from Django
     #. Local imports
 
-- Avoid using ``import *``
+- Within these groups, place ``from ... import ...`` imports after ``import ...`` imports, and order imports alphabetically within *those* groups.
 
-- Explicitly import each module used
+- Avoid using ``from ... import *``.
 
-- Use explicit relative imports to avoid hardcoding a module's package. This greatly improves portability and is useful when importing from another module in the current app.
+- Explicitly import each module used.
+
+- Use relative imports to avoid hardcoding a module's package name. This greatly improves portability and is useful when importing from another module in the current app.
 
 Examples
 --------
@@ -49,30 +68,25 @@ Core Django imports:
 
         from django.db import models
 
-Third-party app imports
+Third-party app imports:
 
 .. code-block:: python
 
         from django_extensions.db.models import TimeStampedModel
 
-Imports from your apps
-
-.. code-block:: python
-
-        from intranet.models import User
-
 Good:
 
 .. code-block:: python
 
-    from .models import SomeModel  # explicit relative import
-    from  otherdjangoapp.models import OtherModel  # absolute import
+        from .models import SomeModel  # explicit relative import
+        from otherdjangoapp.models import OtherModel  # absolute import
 
 Bad:
 
 .. code-block:: python
 
-    from currentapp.models import MyModel  # implicit relative import
+        # intranet/apps/users/views.py
+        from intranet.apps.users.models import MyModel  # absolute import within same package
 
 
 References

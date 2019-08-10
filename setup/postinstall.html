@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #5142) documentation</title>
+    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #5152) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -142,13 +142,13 @@
 <p>Start by connecting to the Vagrant box using <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">ssh</span></code>. (Consider running all of the following in a <code class="docutils literal notranslate"><span class="pre">screen</span></code> or <code class="docutils literal notranslate"><span class="pre">tmux</span></code> session.)</p>
 <p>After you connect to your Vagrant box, make sure you are in the <code class="docutils literal notranslate"><span class="pre">intranet</span></code> directory and run <code class="docutils literal notranslate"><span class="pre">workon</span> <span class="pre">ion</span></code> to access your Python virtual environment.</p>
 <p>You will then need to run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">migrate</span></code> to set up the Postgres database.</p>
-<p>You can then start the built-in Django web server with <code class="docutils literal notranslate"><span class="pre">fab</span> <span class="pre">runserver</span></code>. Now that you are running the development server, open a browser to <a class="reference external" href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> and log in. If it fails, check the output of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">runserver</span></code>.</p>
+<p>You can then start the built-in Django web server with <code class="docutils literal notranslate"><span class="pre">fab</span> <span class="pre">runserver</span></code>. Now that you are running the development server, open a browser to <a class="reference external" href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> and log in (the default master password is <code class="docutils literal notranslate"><span class="pre">swordfish</span></code>). If it fails, check the output of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">runserver</span></code>.</p>
 <div class="section" id="setting-up-groups">
 <h2>Setting Up Groups<a class="headerlink" href="#setting-up-groups" title="Permalink to this headline">¶</a></h2>
 <p>Currently, there are no default groups set up when you first install Ion. In order to grant yourself administrative privileges, you must be a member of the <code class="docutils literal notranslate"><span class="pre">admin_all</span></code> group.</p>
-<p>To create and add yourself to this group, run the following commands:</p>
+<p>To create and add yourself to this group, run the following commands (substituting your username for <code class="docutils literal notranslate"><span class="pre">&lt;USERNAME&gt;</span></code>):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
-&gt;&gt;&gt; <span class="nv">user</span> <span class="o">=</span> User.get_user<span class="o">(</span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;&lt;USERNAME&gt;&quot;</span><span class="o">)</span>
+&gt;&gt;&gt; <span class="nv">user</span> <span class="o">=</span> User.objects.get_or_create<span class="o">(</span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;&lt;USERNAME&gt;&quot;</span><span class="o">)[</span><span class="m">0</span><span class="o">]</span>
 &gt;&gt;&gt; <span class="nv">group</span> <span class="o">=</span> Group.objects.get_or_create<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;admin_all&quot;</span><span class="o">)[</span><span class="m">0</span><span class="o">]</span>
 &gt;&gt;&gt; user.groups.add<span class="o">(</span>group<span class="o">)</span>
 &gt;&gt;&gt; user.is_superuser <span class="o">=</span> True

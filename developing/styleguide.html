@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5142) documentation</title>
+    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5152) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -97,6 +97,8 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Coding Style Guide</a><ul>
+<li><a class="reference internal" href="#main-points">Main points</a></li>
+<li><a class="reference internal" href="#what-is-enforced-in-the-build">What is enforced in the build</a></li>
 <li><a class="reference internal" href="#imports">Imports</a><ul>
 <li><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
@@ -139,20 +141,33 @@
       
   <div class="section" id="coding-style-guide">
 <h1>Coding Style Guide<a class="headerlink" href="#coding-style-guide" title="Permalink to this headline">¶</a></h1>
-<p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python).</p>
+<p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by <code class="docutils literal notranslate"><span class="pre">pylint</span></code> and/or <code class="docutils literal notranslate"><span class="pre">flake8</span></code>. Therefore, if you do not follow them, the build may not pass.</p>
 <p>However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.</p>
-<p>Main points:</p>
+<div class="section" id="main-points">
+<h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Indent using 4 spaces.</p></li>
 <li><p>Use underscores in favor of camel case for all names except the names of classes.</p></li>
 <li><p>Limit the line length of docstrings or comments to 72 characters.</p></li>
 <li><p>Separate top-level functions and class definitions with two blank lines.</p></li>
 <li><p>Separate method definitions inside a class with a single blank line.</p></li>
-<li><p>Use two spaces before inline comment and one space between the pound sign and comment.</p></li>
+<li><p>Use two spaces before inline comments and one space between the pound sign and comment.</p></li>
 <li><p>Use a plugin for your text editor to check for/remind you of PEP8 conventions.</p></li>
-<li><p>Run the <code class="docutils literal notranslate"><span class="pre">flake8</span></code> linter periodically.</p></li>
 <li><p>Capitalize and punctuate comments and Git commit messages properly.</p></li>
 </ul>
+</div>
+<div class="section" id="what-is-enforced-in-the-build">
+<h2>What is enforced in the build<a class="headerlink" href="#what-is-enforced-in-the-build" title="Permalink to this headline">¶</a></h2>
+<p>At the time of this writing, the Travis build runs the following commands:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>flake8 --max-line-length <span class="m">150</span> --exclude<span class="o">=</span>*/migrations/* .
+pylint --jobs<span class="o">=</span><span class="m">0</span> --disable<span class="o">=</span>fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
+isort --check --recursive intranet
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">flake8</span></code> is a PEP8 style checker, <code class="docutils literal notranslate"><span class="pre">pylint</span></code> is a linter (but it also enforces some PEP8 conventions), and <code class="docutils literal notranslate"><span class="pre">isort</span></code>, when called with these options, checks that all imports are sorted alphabetically.</p>
+<p>It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the <code class="docutils literal notranslate"><span class="pre">pylint</span></code> check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">flake8</span></code> or <code class="docutils literal notranslate"><span class="pre">pylint</span></code> throw errors, the error messages are usually human-readable. if <code class="docutils literal notranslate"><span class="pre">isort</span></code> gives any errors, you can have it automatically correct the order of all imports by running <code class="docutils literal notranslate"><span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>.</p>
+</div>
 <div class="section" id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -166,9 +181,10 @@
 </dd>
 </dl>
 </li>
-<li><p>Avoid using <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">*</span></code></p></li>
-<li><p>Explicitly import each module used</p></li>
-<li><p>Use explicit relative imports to avoid hardcoding a module’s package. This greatly improves portability and is useful when importing from another module in the current app.</p></li>
+<li><p>Within these groups, place <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">...</span> <span class="pre">import</span> <span class="pre">...</span></code> imports after <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">...</span></code> imports, and order imports alphabetically within <em>those</em> groups.</p></li>
+<li><p>Avoid using <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">...</span> <span class="pre">import</span> <span class="pre">*</span></code>.</p></li>
+<li><p>Explicitly import each module used.</p></li>
+<li><p>Use relative imports to avoid hardcoding a module’s package name. This greatly improves portability and is useful when importing from another module in the current app.</p></li>
 </ul>
 <div class="section" id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
@@ -181,21 +197,18 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 </pre></div>
 </div>
-<p>Third-party app imports</p>
+<p>Third-party app imports:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django_extensions.db.models</span> <span class="kn">import</span> <span class="n">TimeStampedModel</span>
-</pre></div>
-</div>
-<p>Imports from your apps</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">intranet.models</span> <span class="kn">import</span> <span class="n">User</span>
 </pre></div>
 </div>
 <p>Good:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">SomeModel</span>  <span class="c1"># explicit relative import</span>
-<span class="kn">from</span>  <span class="nn">otherdjangoapp.models</span> <span class="kn">import</span> <span class="n">OtherModel</span>  <span class="c1"># absolute import</span>
+<span class="kn">from</span> <span class="nn">otherdjangoapp.models</span> <span class="kn">import</span> <span class="n">OtherModel</span>  <span class="c1"># absolute import</span>
 </pre></div>
 </div>
 <p>Bad:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">currentapp.models</span> <span class="kn">import</span> <span class="n">MyModel</span>  <span class="c1"># implicit relative import</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># intranet/apps/users/views.py</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">MyModel</span>  <span class="c1"># absolute import within same package</span>
 </pre></div>
 </div>
 </div>
