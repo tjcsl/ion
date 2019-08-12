@@ -7,13 +7,8 @@ import uuid
 import pexpect
 
 from django.conf import settings
-
-# from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-
-# from django.views.decorators.debug import sensitive_variables
-
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +40,6 @@ class KerberosAuthenticationBackend:
         )
 
     @staticmethod
-    # @sensitive_variables('password')
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
 
@@ -110,7 +104,6 @@ class KerberosAuthenticationBackend:
             logger.debug("Kerberos failed to authorize %s", username)
             return False
 
-    # @method_decorator(sensitive_variables("password"))
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -168,7 +161,6 @@ class MasterPasswordAuthenticationBackend:
 
     """
 
-    # @method_decorator(sensitive_variables("password"))
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
