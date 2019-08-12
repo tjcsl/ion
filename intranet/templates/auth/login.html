@@ -6,6 +6,13 @@
     TJ {{ block.super }} - Login
 {% endblock %}
 
+{% block meta %}
+  {{ block.super }}
+  {% if should_not_index_page %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+{% endblock %}
+
 {% block css %}
     {{ block.super }}
     {% stylesheet 'schedule' %}

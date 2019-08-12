@@ -87,7 +87,7 @@ def get_login_theme():
 
 
 @sensitive_post_parameters("password")
-def index_view(request, auth_form=None, force_login=False, added_context=None):
+def index_view(request, auth_form=None, force_login=False, added_context=None, has_next_page=False):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated and not force_login:
         return dashboard_view(request)
@@ -125,7 +125,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             "senior_graduation": settings.SENIOR_GRADUATION,
             "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
             "sports_events": sports_events,
-            "school_events": school_events
+            "school_events": school_events,
+            "should_not_index_page": has_next_page,
         }
         schedule = schedule_context(request)
         data.update(schedule)
@@ -217,7 +218,8 @@ class LoginView(View):
     @method_decorator(sensitive_post_parameters("password"))
     def get(self, request):
         """Redirect to the login page."""
-        return index_view(request, force_login=True)
+        next_page = request.POST.get("next", request.GET.get("next", ""))
+        return index_view(request, force_login=True, has_next_page=(next_page != ""))
 
 
 def about_view(request):
