@@ -1,6 +1,7 @@
 {% load dates %}
 {% load static %}
 {% load users %}
+{% load newtab_links %}
 
 {% block js %}
     <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
@@ -77,7 +78,7 @@
             {% endfor %}
         {% endif %}
         <div class="announcement-content">
-            {{ announcement.content|safe }}
+            {{ announcement.content|safe|replace_newtab_links }}
         </div>
     </div>
 </div>

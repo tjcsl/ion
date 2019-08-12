@@ -44,6 +44,14 @@ intranet.apps.templatetags.math module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.templatetags.newtab\_links module
+-----------------------------------------------
+
+.. automodule:: intranet.apps.templatetags.newtab_links
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.templatetags.strings module
 -----------------------------------------
 
