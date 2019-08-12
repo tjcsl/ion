@@ -16,8 +16,8 @@ class GrantAdminTest(IonTestCase):
     def test_grant_admin(self):
         """Tests giving an valid user admin_all."""
         out = StringIO()
-        call_command('grant_admin', 'awilliam', 'admin_all', stdout=out)
-        self.assertEqual(out.getvalue().strip(), 'Added awilliam to admin_all')
+        call_command("grant_admin", "awilliam", "admin_all", stdout=out)
+        self.assertEqual(out.getvalue().strip(), "Added awilliam to admin_all")
 
 
 class LoginViewTest(IonTestCase):
@@ -34,11 +34,8 @@ class LoginViewTest(IonTestCase):
         user.first_login = timezone.now()
         user.seen_welcome = True
         user.save()
-        with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
-            return self.client.post(reverse("login"), data={
-                "username": "awilliam",
-                "password": "dankmemes"
-            })
+        with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
+            return self.client.post(reverse("login"), data={"username": "awilliam", "password": "dankmemes"})
 
     def does_login_redirect_to(self, url):
         response = self.login_student()

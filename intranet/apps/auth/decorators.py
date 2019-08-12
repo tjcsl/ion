@@ -37,7 +37,6 @@ attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous and u.
 
 
 def deny_restricted(wrapped):
-
     def inner(*args, **kwargs):
         request = args[0]  # request is the first argument in a view
         if not request.user.is_anonymous and not request.user.is_restricted:
@@ -50,12 +49,11 @@ def deny_restricted(wrapped):
 
 
 def reauthentication_required(wrapped):
-
     def inner(*args, **kwargs):
         request = args[0]  # request is the first argument in a view
         if request.session.get("reauthenticated", False):
             return wrapped(*args, **kwargs)
         else:
-            return redirect("{}?next={}".format(reverse('reauth'), request.path))
+            return redirect("{}?next={}".format(reverse("reauth"), request.path))
 
     return inner
