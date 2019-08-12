@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #5152) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #5159) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -135,12 +135,8 @@
 <span class="kn">import</span> <span class="nn">pexpect</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
-<span class="c1"># from django.utils.decorators import method_decorator</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.hashers</span> <span class="k">import</span> <span class="n">check_password</span>
-
-<span class="c1"># from django.views.decorators.debug import sensitive_variables</span>
-
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -161,20 +157,17 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> (invalid user)&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">realm</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;stack&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+            <span class="s2">&quot;kinit timed out for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">realm</span><span class="p">,</span>
+            <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;stack&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">},</span>
+                <span class="s2">&quot;sentry.interfaces.User&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">&quot;ip_address&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">},</span>
             <span class="p">},</span>
-            <span class="s2">&quot;sentry.interfaces.User&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-                <span class="s2">&quot;ip_address&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span>
-            <span class="p">}</span>
-        <span class="p">})</span></div>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_kerberos_ticket"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="c1"># @sensitive_variables(&#39;password&#39;)</span>
     <span class="k">def</span> <span class="nf">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Attempts to create a Kerberos ticket for a user.</span>
 
@@ -229,7 +222,7 @@
                 <span class="n">exitstatus</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;kdestroy&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]])</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;kdestroy&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]])</span>
             <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -239,7 +232,6 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-    <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
 <div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
@@ -260,7 +252,7 @@
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="c1"># remove all non-alphanumerics</span>
-        <span class="n">username</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
 
         <span class="n">krb_ticket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
@@ -297,7 +289,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># @method_decorator(sensitive_variables(&quot;password&quot;))</span>
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
@@ -312,7 +303,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            `User`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;MASTER_PASSWORD&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;MASTER_PASSWORD&quot;</span><span class="p">):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password not set.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_PASSWORD</span><span class="p">):</span>

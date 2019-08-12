@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.decorators &#8212; TJ Intranet v3 (Build #5152) documentation</title>
+    <title>intranet.apps.auth.decorators &#8212; TJ Intranet v3 (Build #5159) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -165,7 +165,6 @@
 
 
 <div class="viewcode-block" id="deny_restricted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.decorators.deny_restricted">[docs]</a><span class="k">def</span> <span class="nf">deny_restricted</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
-
     <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># request is the first argument in a view</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_anonymous</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span><span class="p">:</span>
@@ -178,13 +177,12 @@
 
 
 <div class="viewcode-block" id="reauthentication_required"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.decorators.reauthentication_required">[docs]</a><span class="k">def</span> <span class="nf">reauthentication_required</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
-
     <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># request is the first argument in a view</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reauthenticated&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?next=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;reauth&#39;</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?next=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;reauth&quot;</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">inner</span></div>
 </pre></div>

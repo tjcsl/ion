@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #5152) documentation</title>
+    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #5159) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -144,8 +144,8 @@
 <div class="viewcode-block" id="GrantAdminTest.test_grant_admin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.GrantAdminTest.test_grant_admin">[docs]</a>    <span class="k">def</span> <span class="nf">test_grant_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tests giving an valid user admin_all.&quot;&quot;&quot;</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;grant_admin&#39;</span><span class="p">,</span> <span class="s1">&#39;awilliam&#39;</span><span class="p">,</span> <span class="s1">&#39;admin_all&#39;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s1">&#39;Added awilliam to admin_all&#39;</span><span class="p">)</span></div></div>
+        <span class="n">call_command</span><span class="p">(</span><span class="s2">&quot;grant_admin&quot;</span><span class="p">,</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="s2">&quot;admin_all&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;Added awilliam to admin_all&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="LoginViewTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.LoginViewTest">[docs]</a><span class="k">class</span> <span class="nc">LoginViewTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
@@ -162,11 +162,8 @@
         <span class="n">user</span><span class="o">.</span><span class="n">first_login</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">MASTER_PASSWORD</span><span class="o">=</span><span class="s1">&#39;pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw=&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dankmemes&quot;</span>
-            <span class="p">})</span></div>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">MASTER_PASSWORD</span><span class="o">=</span><span class="s2">&quot;pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw=&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dankmemes&quot;</span><span class="p">})</span></div>
 
 <div class="viewcode-block" id="LoginViewTest.does_login_redirect_to"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.LoginViewTest.does_login_redirect_to">[docs]</a>    <span class="k">def</span> <span class="nf">does_login_redirect_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_student</span><span class="p">()</span>
