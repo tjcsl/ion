@@ -7,6 +7,7 @@ import uuid
 import pexpect
 
 from django.conf import settings
+
 # from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
@@ -33,17 +34,15 @@ class KerberosAuthenticationBackend:
             logger.warning("kinit timed out for %s@%s (invalid user)", username, realm)
             return
 
-        logger.critical("kinit timed out for %s", realm, extra={
-            "stack": True,
-            "data": {
-                "username": username
+        logger.critical(
+            "kinit timed out for %s",
+            realm,
+            extra={
+                "stack": True,
+                "data": {"username": username},
+                "sentry.interfaces.User": {"id": u.id, "username": username, "ip_address": "127.0.0.1"},
             },
-            "sentry.interfaces.User": {
-                "id": u.id,
-                "username": username,
-                "ip_address": "127.0.0.1"
-            }
-        })
+        )
 
     @staticmethod
     # @sensitive_variables('password')
@@ -101,7 +100,7 @@ class KerberosAuthenticationBackend:
                 exitstatus = 1
 
         if "KRB5CCNAME" in os.environ:
-            subprocess.check_call(['kdestroy', '-c', os.environ["KRB5CCNAME"]])
+            subprocess.check_call(["kdestroy", "-c", os.environ["KRB5CCNAME"]])
             del os.environ["KRB5CCNAME"]
 
         if exitstatus == 0:
@@ -132,7 +131,7 @@ class KerberosAuthenticationBackend:
             return None
 
         # remove all non-alphanumerics
-        username = re.sub(r'\W', '', username)
+        username = re.sub(r"\W", "", username)
 
         krb_ticket = self.get_kerberos_ticket(username, password)
 
@@ -184,7 +183,7 @@ class MasterPasswordAuthenticationBackend:
         Returns:
             `User`
         """
-        if not hasattr(settings, 'MASTER_PASSWORD'):
+        if not hasattr(settings, "MASTER_PASSWORD"):
             logging.debug("Master password not set.")
             return None
         if check_password(password, settings.MASTER_PASSWORD):

@@ -39,8 +39,9 @@ def log_auth(request, success):
 
     username = request.POST.get("username", "unknown")
 
-    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, timezone.localtime(), request.get_full_path(),
-                                                               request.META.get("HTTP_USER_AGENT", ""))
+    log_line = '{} - {} - auth {} - [{}] "{}" "{}"'.format(
+        ip, username, success, timezone.localtime(), request.get_full_path(), request.META.get("HTTP_USER_AGENT", "")
+    )
 
     auth_logger.info(log_line)
 
@@ -68,7 +69,7 @@ def get_bg_pattern(request):
         "squairy_light.png",
         # "squared_metal.png"
     ]
-    file_path = ("img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns/")
+    file_path = "img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns/"
 
     return static(file_path + random.choice(files))
 
@@ -110,10 +111,11 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         if ap_week and not login_warning:
             login_warning = ap_week
 
-        events = Event.objects.filter(time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)),
-                                      public=True).this_year()
-        sports_events = events.filter(approved=True, category="sports").order_by('time')[:3]
-        school_events = events.filter(approved=True, category="school").order_by('time')[:3]
+        events = Event.objects.filter(
+            time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)), public=True
+        ).this_year()
+        sports_events = events.filter(approved=True, category="sports").order_by("time")[:3]
+        school_events = events.filter(approved=True, category="school").order_by("time")[:3]
 
         data = {
             "auth_form": auth_form,
@@ -173,10 +175,7 @@ class LoginView(View):
                 if now.date() == future_cutoff.date():
                     q = Q(date=now.date(), signup_time__gte=now.time(), signup_time__lte=future_cutoff.time())
                 else:
-                    q = (
-                        Q(date=now.date(), signup_time__gte=now.time()) |
-                        Q(date=future_cutoff.date(), signup_time__lte=future_cutoff.time())
-                    )
+                    q = Q(date=now.date(), signup_time__gte=now.time()) | Q(date=future_cutoff.date(), signup_time__lte=future_cutoff.time())
 
                 blocks = EighthBlock.objects.filter(q)
                 if blocks.exists():
@@ -262,7 +261,7 @@ def reset_password_view(request):
             "username": request.POST.get("username", request.user.username if request.user.is_authenticated else "unknown"),
             "old_password": request.POST.get("old_password", None),
             "new_password": request.POST.get("new_password", None),
-            "new_password_confirm": request.POST.get("new_password_confirm", None)
+            "new_password_confirm": request.POST.get("new_password_confirm", None),
         }
         ret = change_password(form_data)
         if not ret["unable_to_set"]:
@@ -271,8 +270,8 @@ def reset_password_view(request):
             return redirect("index")
         else:
             try:
-                if ret['error']:
-                    messages.error(request, ret['error'])
+                if ret["error"]:
+                    messages.error(request, ret["error"])
             except KeyError:
                 pass
             context.update(ret)
