@@ -1,4 +1,5 @@
 {% extends "oauth2_provider/base.html" %}
+{% load static %}
 
 {% block title %}
   <title>TJ Intranet - Accounts Docs</title>
@@ -7,37 +8,61 @@
 {% block content %}
   <div class="body-center">
     <h1>CSL Account Documentation</h1>
-    <h3 class="block-center-heading">Introduction</h3>
+    <h3 class="block-center-heading" id="introduction">Introduction</h3>
     <p>The TJHSST Computer Systems Lab (also known as the CSL or SysLab) maintains various services to support the students &amp; staff of TJHSST.  Starting this year, the process to set your password for Ion, Webmail, and other CSL services has changed. This page describes how to manage your CSL account and answers a number of questions you may have regarding these changes.</p>
     <p>If you have any questions with regard to your CSL account or are having trouble logging into your CSL account, please contact the Sysadmins at <a href="mailto:accounts@tjhsst.edu">accounts@tjhsst.edu</a>.</p>
     <br>
 
-    <h3 class="block-center-heading">Setting/Resetting Passwords</h3>
-    <p>You can reset your password by visiting <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a>. Once you click authenticate, you will prompted to login to your FCPS Google Apps for Education account. Do <b>NOT</b> login to your personal Google account.</p>
-    <p>After logging in, you will be redirected to the password reset page where you can reset your password.</p>
+    <h3 class="block-center-heading" id="first-week-checklist">First Week Checklist</h3>
+    <ul>
+      <li>Reset your CSL password by following the steps in the <a href="#setting-passwords">"Setting/Resetting Passwords" section</a>. You will obtain your TJ username during this process.</li>
+      <li>Verify you can log in to Ion.</li>
+      <li>Ensure that you set up mail forwarding for your @tjhsst.edu email address during the Ion welcome process to an email you regularly check.</li>
+      <li>Visit <a href="https://ion.tjhsst.edu/preferences">Ion preferences</a> to set your bus route if applicable.</li>
+      <li>Verify that you can log in to <a href="https://webmail.tjhsst.edu">TJHSST Webmail</a> to check your TJ email address.</li>
+      <li>Sign up for some eighth period activities on Ion.</a>
+    </ul>
     <br>
 
-    <h3 class="block-center-heading">Frequently Asked Questions - Students</h3>
+    <h3 class="block-center-heading" id="setting-passwords">Setting/Resetting Passwords</h3>
+    <p>You can reset your password by visiting <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a>.</p>
+    <ul>
+      <li>Visit <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a> on a school or personal device.</li>
+      <li>Click the "Authenticate" button.</li>
+      <li>Log in to your FCPS Google Apps for Education account (<b>NOT your personal Google account</b>). This authorizes the self-service reset application to collect information to confirm your identity.</li>
+      <li>If successful, you will be redirected to the following screen.  The circled string is your TJ username.</li>
+      <div class="desktop-area">
+      <span>
+        <img src="{% static 'img/accounts/reset.png' %}" alt="Resetter reset page">
+      </span>
+      </div>
+      <li>After you click "Reset Password", a success screen should appear. Otherwise, you will need to correct your password to meet our requirements.</li>
+      <li>If you are successful, you can click "Logout" on the navbar to end your session.</li>
+      <li>You can verify that your password successfully changed by logging in to Ion.</li>
+    </ul>
+    <br>
+
+    <h3 class="block-center-heading" id="faq-students">Frequently Asked Questions - Students</h3>
     <b>What has changed from previous years?</b>
-    <p>Starting this year, there is only one place to set your password for Ion &amp; other CSL services: <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a>. Changing your password on any TJ Windows computer <b>NO LONGER</b> allows you to login to Ion &amp; other CSL services.</p>
+    <p>Starting this year, there is only one place to set your password for Ion &amp; other CSL services: <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a>. Changing your password on any TJ Windows computer <b>NO LONGER</b> allows you to log in to Ion &amp; other CSL services.</p>
     <b>What is my TJ username? How is this different from my FCPS student ID?</b>
     <p>Your TJ username allows you to interact with CSL services.</p>
     <p>For TJ students, this is composed of your graduation year, first initial, first seven characters of your last names, and, if necessary, an additional numeric identifier. For example, if you graduate in 2023 and your name is John Doe, your TJ username is <i>2023jdoe</i>. If you graduate in 2023 and your name is Alice Longestlastnameintheworld, your TJ username is <i>2023alongest</i>.</p>
     <p>If someone else shares the first initial and first seven letters of the last name, a sequential number will be added based on the student's placement in alphabetic order. For the purposes of this username, all dashes and spaces in your first and last names are ignored.</p>
-    <p>If you login to <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a> with your FCPS Google Apps for Education account, it will display your TJ username in the first line.</p>
+    <p>If you log in to <a href="https://resetter.tjhsst.edu">https://resetter.tjhsst.edu</a> with your FCPS Google Apps for Education account, it will display your TJ username in the first line.</p>
     <p>Your FCPS username is managed at the district-level, is used to authenticate to your FCPS Google Apps for Education, Blackboard, and SIS accounts. and is composed of just seven digits.</p>
     <br>
 
-    <h3 class="block-center-heading">Frequently Asked Questions - Staff</h3>
+    <h3 class="block-center-heading" id="faq-staff">Frequently Asked Questions - Staff</h3>
     <b>What is my TJ username?</b>
-    <p>For TJ staff, your TJ username is the same as your FCPS username. Your FCPS username is the username you use to login to your FCPS Google Apps for Education, Blackboard, or SIS account.</p>
+    <p>For TJ staff, your TJ username is the same as your FCPS username. Your FCPS username is the username you use to log in to your FCPS Google Apps for Education, Blackboard, or SIS account.</p>
     <b>Can I reset CSL passwords for my students?</b>
     <p>Please direct students to this page if they need assistance.</p>
-    <b>Why can't I login to Webmail as a staff member?</b>
+    <b>Why can't I log in to Webmail as a staff member?</b>
     <p>Webmail accounts are only granted to students. Please contact <a href="accounts@tjhsst.edu">accounts@tjhsst.edu</a> if you have special needs.</p>
     <br>
 
-    <h3 class="block-center-heading">Frequently Asked Questions - General</h3>
+    <h3 class="block-center-heading" id="faq-general">Frequently Asked Questions - General</h3>
     <b>What services does the Computer Systems Lab account allow access to?</b>
     <p>The Computer Systems Lab maintains the student intranet (<a href="https://ion.tjhsst.edu">Ion</a>), student mail accounts (<a href="https://webmail.tjhsst.edu">TJ Webmail</a>), and website management application (<a href="https://director.tjhsst.edu">Director</a>). In addition, the CSL supports TJ's various computer science courses, the Computer Systems Senior Research Lab, and other critical infrastructure for the school.</p>
     <b>What are the password requirements for CSL accounts?</b>
