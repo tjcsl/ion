@@ -16,7 +16,7 @@ Vendored Libraries
 Updating Top-level Requirements
 ================================
 
-If any commit changes the direct dependencies of Ion, you must update `the requirements documentation<developing/requirements>` to reflect the changes to Ion's dependencies. That page is organized into sections for each dependency, with a line for the package's source URL, a general description of the package, the usage of the package in Ion, and the package's license.
+If any commit changes the direct dependencies of Ion, you must update `the requirements documentation<developing/requirements>`_ to reflect the changes to Ion's dependencies. That page is organized into sections for each dependency, with a line for the package's source URL, a general description of the package, the usage of the package in Ion, and the package's license.
 
 For example, here is a valid section:
 
