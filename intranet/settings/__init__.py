@@ -380,6 +380,7 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
     "intranet.middleware.dark_mode.DarkModeMiddleware",  # Dark mode-related middleware
+    "django_referrer_policy.middleware.ReferrerPolicyMiddleware",  # Sets the Referrer-Policy header
 ]
 
 # URLconf at urls.py
@@ -541,6 +542,7 @@ INSTALLED_APPS = [
     "cacheops",  # django-cacheops
     "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
+    "django_referrer_policy",
 ]
 
 # Django Channels Configuration (we use this for websockets)
@@ -742,6 +744,9 @@ CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 
 MAINTENANCE_MODE = False
+
+# The Referrer-policy header
+REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
