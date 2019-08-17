@@ -174,6 +174,7 @@
             <br>
             {% endif %}
 
+            {% if privacy_options_form %}
             <h3>Privacy Options</h3>
             <p>Note that TJ staff members can view all of this information. Want to modify the privacy permissions authorized by your parents? Complete <a href="https://www.tjhsst.edu/studentservices/forms/docs/intranet.pdf">this form</a> and give it to the eighth period office.</p>
             <table class="privacy-options">
@@ -205,21 +206,23 @@
                 {% endif %}
                 {% endfor %}
             </table>
+            <br>
+            {% endif %}
 
             {% if dark_mode_form %}
-                <br>
                 <h3>Dark Mode</h3>
                 {% for field in dark_mode_form %}
                     {{ field.label }}
                     {{ field }}
                 {% endfor %}
+                <br>
+                <br>
             {% endif %}
-
-            <br>
-            <br>
 
             <button type="submit">Save</button>
             </form>
+
+            {% if request.user.is_student %}
             <h2>Mail Forwarding</h2>
             <p>Enter your password and the email you wish to forward to below.</p>
             <p>Do <b>NOT</b> put down your @fcpsschools.net address.  We cannot forward to it.</p>
@@ -256,6 +259,7 @@
                 </tr>
               </form>
             </table>
+            {% endif %}
 
     </div>
 
