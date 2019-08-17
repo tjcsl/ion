@@ -9,7 +9,7 @@ class GroupManager(auth_models.GroupManager):
     def student_visible(self):
         """Return a QuerySet of groups that are student-visible.
         """
-        return Group.objects.filter(id__in=GroupProperties.objects.filter(student_visible=True).values_list("group__id", flat=True))
+        return Group.objects.filter(groupproperties__student_visible=True)
 
 
 class Group(auth_models.Group):
