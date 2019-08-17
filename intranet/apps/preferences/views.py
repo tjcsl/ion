@@ -291,10 +291,11 @@ def preferences_view(request):
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
             bus_route_form = save_bus_route(request, user)
+            privacy_options_form = save_privacy_options(request, user)
         else:
             preferred_pic_form = None
             bus_route_form = None
-        privacy_options_form = save_privacy_options(request, user)
+            privacy_options_form = None
         notification_options_form = save_notification_options(request, user)
 
         dark_mode_form = None
@@ -322,14 +323,15 @@ def preferences_view(request):
             logger.debug(preferred_pic)
             preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
             bus_route_form = BusRouteForm(initial=bus_route)
+
+            privacy_options = get_privacy_options(user)
+            logger.debug(privacy_options)
+            privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
         else:
             bus_route_form = None
             preferred_pic = None
             preferred_pic_form = None
-
-        privacy_options = get_privacy_options(user)
-        logger.debug(privacy_options)
-        privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
+            privacy_options_form = None
 
         notification_options = get_notification_options(user)
         logger.debug(notification_options)
