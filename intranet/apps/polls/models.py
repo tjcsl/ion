@@ -50,6 +50,9 @@ class Poll(models.Model):
             A time that the poll should close.
         visible
             Whether the poll is visible to the users it is for.
+        is_secret
+            Whether the poll is a 'secret' poll. Poll admins will not be able to view individual
+            user responses for secret polls.
         groups
             The Group's that can view--and vote in--the poll. Like Announcements,
             if there are none set, then it is public to all.
@@ -64,6 +67,7 @@ class Poll(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
+    is_secret = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     # Access questions through .question_set
