@@ -7,7 +7,7 @@ If you are a TJHSST student, you can join the `#ion` channel on the [TJ CSL Slac
 ## Issues
 - Please use the templates. If none of them is a perfect match, choose the closest one.
 
-## Security vulnerabilities & Responsible Disclosure
+## Security Vulnerabilities & Responsible Disclosure
 Please see [our security policy](SECURITY.md). Do not report security vulnerabilities in the public issue tracker.
 
 ## Pull Requests
@@ -17,7 +17,7 @@ Please see [our security policy](SECURITY.md). Do not report security vulnerabil
 - Please read [Formatting commit messages](docs/developing/howto.rst#formatting-commit-messages).
 - If your PR closes an issue, include "Closes #XXX" or similar in the messages of the commits that close each issue so the issues will be [automatically closed](https://help.github.com/en/articles/closing-issues-using-keywords) when the commits are merged into `master`.
   Note that including this text in your PR's description will have no effect because the PR will be merged into `dev`, not `master`, so GitHub does not close the issue. You must add the auto-closing keywords to the *commit* messages.
-- Keep changes minimal.
+- Keep each commit/PR minimal.
 - Try not to introduce bugs.
 - Before you commit, make a final pass and make sure you didn't add something in for debugging and forget to take it out.
 - An Ion maintainer will try to review your PR as soon as possible, but please realize that they are human and have other responsibilities.
