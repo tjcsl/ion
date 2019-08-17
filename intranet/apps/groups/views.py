@@ -30,7 +30,7 @@ def groups_view(request):
 @deny_restricted
 def add_group_view(request):
     success = False
-    if request.method == 'POST':
+    if request.method == "POST":
         form = GroupForm(request.POST)
         if form.is_valid():
             form.save()
