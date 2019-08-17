@@ -7,14 +7,9 @@ class GroupManager(auth_models.GroupManager):
     django.contrib.auth.models.GroupManager, just with an extra method."""
 
     def student_visible(self):
-        """Return a list of groups that are student-visible.
+        """Return a QuerySet of groups that are student-visible.
         """
-        group_ids = set()
-        for group in Group.objects.all():
-            if group.properties.student_visible:
-                group_ids.add(group.id)
-
-        return Group.objects.filter(id__in=group_ids)
+        return Group.objects.filter(id__in=GroupProperties.objects.filter(student_visible=True).values_list("group__id", flat=True))
 
 
 class Group(auth_models.Group):
