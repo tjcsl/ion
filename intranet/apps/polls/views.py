@@ -408,6 +408,9 @@ def modify_poll_view(request, poll_id):
 
     poll = get_object_or_404(Poll, id=poll_id)
 
+    if not poll.before_end_time():
+        return redirect("polls")
+
     if request.method == "POST":
         form = PollForm(data=request.POST, instance=poll)
         question_data = request.POST.get("question_data", None)
@@ -446,6 +449,9 @@ def delete_poll_view(request, poll_id):
         return redirect("polls")
 
     poll = get_object_or_404(Poll, id=poll_id)
+
+    if not poll.before_end_time():
+        return redirect("polls")
 
     if request.method == "POST":
         poll.delete()
