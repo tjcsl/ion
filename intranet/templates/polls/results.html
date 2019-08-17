@@ -60,9 +60,13 @@
         </a> {% if show_answers %}
             &nbsp; <a href="#" class="button small-button print-hide" id="user-sels">Show User Selections</a>
         {% else %}
-            &nbsp; <a href="?show_answers=1" class="button small-button print-hide">Show answers</a>
+            {% if not poll.is_secret %}
+                &nbsp; <a href="?show_answers=1" class="button small-button print-hide">Show answers</a>
+            {% endif %}
         {% endif %}
-        &nbsp; <a href="{% url 'poll_csv_results' poll.id %}" class="button small-button print-hide">Download as CSV</a><br>
+        {% if not poll.is_secret %}
+            &nbsp; <a href="{% url 'poll_csv_results' poll.id %}" class="button small-button print-hide">Download as CSV</a>
+        {% endif %}<br>
         <h2>Results: {{ poll }}</h2>
 
         <ol class="questions">

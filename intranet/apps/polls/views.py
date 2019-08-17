@@ -50,6 +50,11 @@ def csv_results(request, poll_id):
 
     dict_list = list()
     p = get_object_or_404(Poll, id=poll_id)
+
+    if p.is_secret:
+        messages.error(request, "CSV results cannot be generated for secret polls.")
+        return redirect("polls")
+
     if p.in_time_range():
         messages.error(request, "Poll results cannot be viewed while the poll is running.")
         return redirect("polls")
@@ -354,6 +359,10 @@ def poll_results_view(request, poll_id):
 
     do_gender = ("no_gender" not in request.GET)
     show_answers = request.GET.get("show_answers", False)
+
+    if show_answers and poll.is_secret:
+        messages.error(request, "User selections cannot be viewed for secret polls.")
+        return redirect("poll_results", poll_id)
 
     questions = []
     for q in poll.question_set.all():
