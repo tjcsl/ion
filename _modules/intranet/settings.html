@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5184) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5186) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -508,6 +508,7 @@
     <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django_prometheus.middleware.PrometheusAfterMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Django Prometheus after</span>
     <span class="s2">&quot;intranet.middleware.dark_mode.DarkModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Dark mode-related middleware</span>
+    <span class="s2">&quot;django_referrer_policy.middleware.ReferrerPolicyMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Sets the Referrer-Policy header</span>
 <span class="p">]</span>
 
 <span class="c1"># URLconf at urls.py</span>
@@ -669,6 +670,7 @@
     <span class="s2">&quot;cacheops&quot;</span><span class="p">,</span>  <span class="c1"># django-cacheops</span>
     <span class="s2">&quot;svg&quot;</span><span class="p">,</span>  <span class="c1"># django-inline-svg</span>
     <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>  <span class="c1"># django-simple-history</span>
+    <span class="s2">&quot;django_referrer_policy&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># Django Channels Configuration (we use this for websockets)</span>
@@ -870,6 +872,9 @@
 <span class="n">CELERY_TASK_SERIALIZER</span> <span class="o">=</span> <span class="s2">&quot;pickle&quot;</span>
 
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># The Referrer-policy header</span>
+<span class="n">REFERRER_POLICY</span> <span class="o">=</span> <span class="s2">&quot;strict-origin-when-cross-origin&quot;</span>
 
 <span class="c1"># Shows a warning message with yellow background on the login page</span>
 <span class="c1"># LOGIN_WARNING = &quot;This is a message to display on the login page.&quot;</span>

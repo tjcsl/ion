@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5184) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5186) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -419,10 +419,11 @@
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">save_notification_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
         <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="kc">None</span>
@@ -450,14 +451,15 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">PreferredPictureForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">BusRouteForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">bus_route</span><span class="p">)</span>
+
+            <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">privacy_options</span><span class="p">)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">privacy_options</span><span class="p">)</span>
-        <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">notification_options</span> <span class="o">=</span> <span class="n">get_notification_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">notification_options</span><span class="p">)</span>
