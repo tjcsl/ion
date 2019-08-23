@@ -8,6 +8,10 @@ class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_announcements_detail")
     user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
+    author = serializers.CharField(source="get_author")
+
+    def get_author(self, obj):
+        return obj.get_author()
 
     class Meta:
         model = Announcement
