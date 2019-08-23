@@ -491,7 +491,7 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         results = response.json()["results"]
         self.assertEqual(len(results), 1)
-        self.assertEqual(results, [{'status': 'o', 'route_name': route.route_name, 'bus_number': route.bus_number, 'space': ''}])
+        self.assertEqual(results, [{"id": route.id, 'status': 'o', 'route_name': route.route_name, 'bus_number': route.bus_number, 'space': ''}])
 
     def test_api_bus_detail(self):
         self.make_token()
@@ -499,4 +499,5 @@ class ApiTest(IonTestCase):
         response = self.client.get(reverse("api_bus_detail", args=[route_1.pk]), HTTP_AUTHORIZATION=self.auth)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number, "status": "o"})
+        self.assertEqual(response.json(), {"id": route_1.id, "route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number,
+                                           "status": "o"})

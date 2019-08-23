@@ -5,6 +5,7 @@ from .models import Route
 
 
 class RouteSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     route_name = serializers.CharField(max_length=30)
     space = serializers.CharField(max_length=4)
     bus_number = serializers.CharField(max_length=5)
@@ -12,4 +13,4 @@ class RouteSerializer(serializers.Serializer):
 
     class Meta:
         model = Route
-        fields = ('route_name', 'space', 'bus_number', 'status')
+        fields = ('id', 'route_name', 'space', 'bus_number', 'status')
