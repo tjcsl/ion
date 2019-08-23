@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #5186) documentation</title>
+    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #5191) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -160,7 +160,17 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intranet.apps.polls.forms.PollForm.Meta.fields">
-<code class="sig-name descname">fields</code><em class="property"> = ['title', 'description', 'start_time', 'end_time', 'visible', 'groups']</em><a class="headerlink" href="#intranet.apps.polls.forms.PollForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fields</code><em class="property"> = ['title', 'description', 'start_time', 'end_time', 'visible', 'is_secret', 'groups']</em><a class="headerlink" href="#intranet.apps.polls.forms.PollForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.forms.PollForm.Meta.help_texts">
+<code class="sig-name descname">help_texts</code><em class="property"> = {'is_secret': &quot;This will prevent Ion administrators from viewing individual users' votes.&quot;}</em><a class="headerlink" href="#intranet.apps.polls.forms.PollForm.Meta.help_texts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.forms.PollForm.Meta.labels">
+<code class="sig-name descname">labels</code><em class="property"> = {'is_secret': 'Secret'}</em><a class="headerlink" href="#intranet.apps.polls.forms.PollForm.Meta.labels" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -556,6 +566,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.is_secret">
+<code class="sig-name descname">is_secret</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.is_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the poll is a ‘secret’ poll. Poll admins will not be able to view individual
+user responses for secret polls.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.polls.models.Poll.groups">
 <code class="sig-name descname">groups</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Group’s that can view–and vote in–the poll. Like Announcements,
@@ -663,6 +680,13 @@ object the first time, the query is executed.</p>
 <dt id="intranet.apps.polls.models.Poll.in_time_range">
 <code class="sig-name descname">in_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.in_time_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.in_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is it within the poll time range?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">is_secret</code></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">

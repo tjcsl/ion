@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #5186) documentation</title>
+    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #5191) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -178,6 +178,9 @@
 <span class="sd">            A time that the poll should close.</span>
 <span class="sd">        visible</span>
 <span class="sd">            Whether the poll is visible to the users it is for.</span>
+<span class="sd">        is_secret</span>
+<span class="sd">            Whether the poll is a &#39;secret&#39; poll. Poll admins will not be able to view individual</span>
+<span class="sd">            user responses for secret polls.</span>
 <span class="sd">        groups</span>
 <span class="sd">            The Group&#39;s that can view--and vote in--the poll. Like Announcements,</span>
 <span class="sd">            if there are none set, then it is public to all.</span>
@@ -192,6 +195,7 @@
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
     <span class="n">visible</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">is_secret</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Access questions through .question_set</span>
