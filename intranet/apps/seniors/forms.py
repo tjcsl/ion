@@ -4,7 +4,6 @@ from .models import Senior
 
 
 class SeniorForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super(SeniorForm, self).__init__(*args, **kwargs)
         self.fields["college"].help_text = "CollegeBoard CEEB numbers are in parentheses."
