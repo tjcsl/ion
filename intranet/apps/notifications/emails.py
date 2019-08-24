@@ -13,7 +13,7 @@ def email_send(
     html_template: str,
     data: Mapping[str, object],
     subject: str,
-    emails: Collection[str],
+    emails: Collection[str],  # pylint: disable=unsubscriptable-object
     headers: Mapping[str, str] = None,  # pylint: disable=unsubscriptable-object
     bcc: bool = False,
     *,
