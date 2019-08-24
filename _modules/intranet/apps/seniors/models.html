@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -142,7 +142,6 @@
 
 
 <div class="viewcode-block" id="SeniorManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager">[docs]</a><span class="k">class</span> <span class="nc">SeniorManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
-
 <div class="viewcode-block" id="SeniorManager.filled"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager.filled">[docs]</a>    <span class="k">def</span> <span class="nf">filled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">college</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span></div></div>
 
@@ -152,22 +151,106 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">college</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">College</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">MAJORS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;Computer Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Education&quot;</span><span class="p">,</span> <span class="s2">&quot;Mathematics&quot;</span><span class="p">,</span> <span class="s2">&quot;Physics&quot;</span><span class="p">,</span> <span class="s2">&quot;Biology&quot;</span><span class="p">,</span> <span class="s2">&quot;Chemistry&quot;</span><span class="p">,</span> <span class="s2">&quot;Geology&quot;</span><span class="p">,</span> <span class="s2">&quot;History&quot;</span><span class="p">,</span> <span class="s2">&quot;Literature&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">,</span> <span class="s2">&quot;Language&quot;</span><span class="p">,</span> <span class="s2">&quot;Drama/Theater&quot;</span><span class="p">,</span> <span class="s2">&quot;Undecided&quot;</span><span class="p">,</span> <span class="s2">&quot;Music&quot;</span><span class="p">,</span> <span class="s2">&quot;Political Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Neuroscience&quot;</span><span class="p">,</span> <span class="s2">&quot;Business&quot;</span><span class="p">,</span> <span class="s2">&quot;Economics&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Communications&quot;</span><span class="p">,</span> <span class="s2">&quot;World Studies&quot;</span><span class="p">,</span> <span class="s2">&quot;Art/Art History&quot;</span><span class="p">,</span> <span class="s2">&quot;Biochemistry&quot;</span><span class="p">,</span> <span class="s2">&quot;Computer Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Anthropology&quot;</span><span class="p">,</span> <span class="s2">&quot;Film&quot;</span><span class="p">,</span> <span class="s2">&quot;Atmospheric Science&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Astronomy&quot;</span><span class="p">,</span> <span class="s2">&quot;Psychology&quot;</span><span class="p">,</span> <span class="s2">&quot;Genetics&quot;</span><span class="p">,</span> <span class="s2">&quot;Social Work&quot;</span><span class="p">,</span> <span class="s2">&quot;Architecture&quot;</span><span class="p">,</span> <span class="s2">&quot;Public Policy&quot;</span><span class="p">,</span> <span class="s2">&quot;Classics&quot;</span><span class="p">,</span> <span class="s2">&quot;Marine Biology&quot;</span><span class="p">,</span> <span class="s2">&quot;Dance&quot;</span><span class="p">,</span> <span class="s2">&quot;Philosophy&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Emergency Health Services&quot;</span><span class="p">,</span> <span class="s2">&quot;Animal Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Computer and Video Imaging&quot;</span><span class="p">,</span> <span class="s2">&quot;Geography&quot;</span><span class="p">,</span> <span class="s2">&quot;International Relations&quot;</span><span class="p">,</span> <span class="s2">&quot;Foreign Service&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Broadcast Journalism&quot;</span><span class="p">,</span> <span class="s2">&quot;Semitic Studies&quot;</span><span class="p">,</span> <span class="s2">&quot;Microbiology&quot;</span><span class="p">,</span> <span class="s2">&quot;Finance&quot;</span><span class="p">,</span> <span class="s2">&quot;Journalism&quot;</span><span class="p">,</span> <span class="s2">&quot;Aeronautics/Astronautics&quot;</span><span class="p">,</span> <span class="s2">&quot;Pre-med&quot;</span><span class="p">,</span> <span class="s2">&quot;Pre-law&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Automotive Technician&quot;</span><span class="p">,</span> <span class="s2">&quot;Computer Game Design&quot;</span><span class="p">,</span> <span class="s2">&quot;Petroleum Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;American Studies&quot;</span><span class="p">,</span> <span class="s2">&quot;African-American Studies&quot;</span><span class="p">,</span> <span class="s2">&quot;Linguistics&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Sociology&quot;</span><span class="p">,</span> <span class="s2">&quot;International Finance&quot;</span><span class="p">,</span> <span class="s2">&quot;Public Policy in Science and Technology&quot;</span><span class="p">,</span> <span class="s2">&quot;Information Technology&quot;</span><span class="p">,</span> <span class="s2">&quot;Network Engineering&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Environmental Science&quot;</span><span class="p">,</span> <span class="s2">&quot;Evolutionary Biology&quot;</span><span class="p">,</span> <span class="s2">&quot;Advertising&quot;</span><span class="p">,</span> <span class="s2">&quot;Apparel Design&quot;</span><span class="p">,</span> <span class="s2">&quot;East Asian Studies&quot;</span><span class="p">,</span> <span class="s2">&quot;Biomedical Engineering&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Policy Analysis and Management&quot;</span><span class="p">,</span> <span class="s2">&quot;Videogame Design and Development&quot;</span><span class="p">,</span> <span class="s2">&quot;Electrical Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Information Systems&quot;</span><span class="p">,</span> <span class="s2">&quot;Theatre&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Theatre/Directing&quot;</span><span class="p">,</span> <span class="s2">&quot;Leadership&quot;</span><span class="p">,</span> <span class="s2">&quot;Design&quot;</span><span class="p">,</span> <span class="s2">&quot;Environmental Thought and Practice&quot;</span><span class="p">,</span> <span class="s2">&quot;Athletic Training&quot;</span><span class="p">,</span> <span class="s2">&quot;Physical Therapy&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Chemical Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Athletic Training &amp; Physical Therapy&quot;</span><span class="p">,</span> <span class="s2">&quot;Civil Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Industrial and Labor Relations&quot;</span><span class="p">,</span> <span class="s2">&quot;Bowling Management&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Pre-Dental&quot;</span><span class="p">,</span> <span class="s2">&quot;Aerospace Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;French&quot;</span><span class="p">,</span> <span class="s2">&quot;German&quot;</span><span class="p">,</span> <span class="s2">&quot;Spanish&quot;</span><span class="p">,</span> <span class="s2">&quot;Italian&quot;</span><span class="p">,</span> <span class="s2">&quot;Chinese&quot;</span><span class="p">,</span> <span class="s2">&quot;Operations Research&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Game Design and Development&quot;</span><span class="p">,</span> <span class="s2">&quot;Software Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;International Development&quot;</span><span class="p">,</span> <span class="s2">&quot;Mechanical Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;Mathematics &amp; Computer Science&quot;</span>
+        <span class="s2">&quot;Computer Science&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Education&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mathematics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Physics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Biology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chemistry&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Geology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;History&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Literature&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;English&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Other&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Language&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Drama/Theater&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Undecided&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Music&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Political Science&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Neuroscience&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Business&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Economics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Communications&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;World Studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Art/Art History&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Biochemistry&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Computer Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Anthropology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Film&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Atmospheric Science&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Astronomy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Psychology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Genetics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Social Work&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Architecture&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Public Policy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Classics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Marine Biology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Dance&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Philosophy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Emergency Health Services&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Animal Science&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Computer and Video Imaging&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Geography&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;International Relations&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Foreign Service&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Broadcast Journalism&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Semitic Studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Microbiology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Finance&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Journalism&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Aeronautics/Astronautics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Pre-med&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Pre-law&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Automotive Technician&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Computer Game Design&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Petroleum Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;American Studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;African-American Studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Linguistics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Sociology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;International Finance&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Public Policy in Science and Technology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Information Technology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Network Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Environmental Science&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Evolutionary Biology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Advertising&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Apparel Design&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;East Asian Studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Biomedical Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Policy Analysis and Management&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Videogame Design and Development&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Electrical Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Information Systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Theatre&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Theatre/Directing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Leadership&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Design&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Environmental Thought and Practice&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Athletic Training&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Physical Therapy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chemical Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Athletic Training &amp; Physical Therapy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Civil Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Industrial and Labor Relations&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Bowling Management&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Pre-Dental&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Aerospace Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;French&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;German&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Spanish&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Italian&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chinese&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Operations Research&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Game Design and Development&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Software Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;International Development&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mechanical Engineering&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mathematics &amp; Computer Science&quot;</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="n">major</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MAJORS</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Undecided&#39;</span><span class="p">)],</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">major</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MAJORS</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Undecided&quot;</span><span class="p">)],</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">college_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">major_sure</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -140,7 +140,6 @@
 
 
 <div class="viewcode-block" id="PollQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollQuerySet">[docs]</a><span class="k">class</span> <span class="nc">PollQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
-
 <div class="viewcode-block" id="PollQuerySet.this_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollQuerySet.this_year">[docs]</a>    <span class="k">def</span> <span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get AnnouncementRequests from this school year only. &quot;&quot;&quot;</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
@@ -148,7 +147,6 @@
 
 
 <div class="viewcode-block" id="PollManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollManager">[docs]</a><span class="k">class</span> <span class="nc">PollManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
-
 <div class="viewcode-block" id="PollManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollManager.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">PollQuerySet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span></div>
 
@@ -188,6 +186,7 @@
 <span class="sd">    Access questions for the poll through poll.question_set.all()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">objects</span> <span class="o">=</span> <span class="n">PollManager</span><span class="p">()</span>
 
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -274,39 +273,40 @@
 <span class="sd">        Access possible choices for this question through question.choice_set.all()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">poll</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Poll</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">question</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
     <span class="n">num</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
-    <span class="n">STD</span> <span class="o">=</span> <span class="s1">&#39;STD&#39;</span>
-    <span class="n">ELECTION</span> <span class="o">=</span> <span class="s1">&#39;ELC&#39;</span>
-    <span class="n">APP</span> <span class="o">=</span> <span class="s1">&#39;APP&#39;</span>
-    <span class="n">SPLIT_APP</span> <span class="o">=</span> <span class="s1">&#39;SAP&#39;</span>
-    <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s1">&#39;FRE&#39;</span>
-    <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s1">&#39;SRE&#39;</span>
-    <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s1">&#39;STO&#39;</span>
+    <span class="n">STD</span> <span class="o">=</span> <span class="s2">&quot;STD&quot;</span>
+    <span class="n">ELECTION</span> <span class="o">=</span> <span class="s2">&quot;ELC&quot;</span>
+    <span class="n">APP</span> <span class="o">=</span> <span class="s2">&quot;APP&quot;</span>
+    <span class="n">SPLIT_APP</span> <span class="o">=</span> <span class="s2">&quot;SAP&quot;</span>
+    <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s2">&quot;FRE&quot;</span>
+    <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s2">&quot;SRE&quot;</span>
+    <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s2">&quot;STO&quot;</span>
     <span class="n">TYPE</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s1">&#39;Standard&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s1">&#39;Election&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;Approval&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s1">&#39;Split approval&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s1">&#39;Free response&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s1">&#39;Short response&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s1">&#39;Standard other&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s2">&quot;Standard&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s2">&quot;Election&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s2">&quot;Approval&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s2">&quot;Split approval&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s2">&quot;Free response&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s2">&quot;Short response&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s2">&quot;Standard other&quot;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STD</span><span class="p">)</span>
     <span class="n">max_choices</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Question.is_writing"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.is_writing">[docs]</a>    <span class="k">def</span> <span class="nf">is_writing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SHORT_RESP</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SHORT_RESP</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Question.is_single_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.is_single_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_single_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Question.is_many_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.is_many_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_many_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Question.is_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.is_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Question.trunc_question"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question.trunc_question">[docs]</a>    <span class="k">def</span> <span class="nf">trunc_question</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">comp</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="p">)</span>

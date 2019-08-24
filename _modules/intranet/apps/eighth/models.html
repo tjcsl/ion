@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -914,9 +914,9 @@
 <div class="viewcode-block" id="EighthScheduledActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Model Manager for EighthScheduledActivity.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="EighthScheduledActivityManager.for_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager.for_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">for_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="p">,</span>
-                    <span class="n">include_cancelled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span>
-                                                              <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;EighthScheduledActivity&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="EighthScheduledActivityManager.for_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager.for_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">for_sponsor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;EighthScheduledActivity&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Returns a QuerySet of EighthScheduledActivities where the given EighthSponsor is</span>
 <span class="sd">        sponsoring.</span>
 
@@ -1221,8 +1221,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pass_accepted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_viewable_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span>
-                                                                       <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+    <span class="k">def</span> <span class="nf">_get_viewable_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get an unsorted QuerySet of the members that you have permission to view.</span>
 
 <span class="sd">        Args:</span>
@@ -1240,9 +1241,9 @@
                 <span class="n">q</span> <span class="o">|=</span> <span class="n">Q</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EighthScheduledActivity.get_viewable_members"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_viewable_members">[docs]</a>    <span class="k">def</span> <span class="nf">get_viewable_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                             <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span>
-                                                                       <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="EighthScheduledActivity.get_viewable_members"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_viewable_members">[docs]</a>    <span class="k">def</span> <span class="nf">get_viewable_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Returns a QuerySet of the members that you have permission to view, sorted alphabetically.</span>
 
 <span class="sd">        Args:</span>
@@ -1267,9 +1268,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_viewable_members</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EighthScheduledActivity.get_hidden_members"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_hidden_members">[docs]</a>    <span class="k">def</span> <span class="nf">get_hidden_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                           <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span>
-                                                                     <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="EighthScheduledActivity.get_hidden_members"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.get_hidden_members">[docs]</a>    <span class="k">def</span> <span class="nf">get_hidden_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Returns a QuerySet of the members that you do not have permission to view.</span>
 
 <span class="sd">        Args:</span>
@@ -1323,12 +1324,23 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">waitlist</span> <span class="ow">in</span> <span class="n">waitlists</span><span class="p">:</span>
-            <span class="n">email_send_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">waitlist</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">},</span>
-                                  <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">])</span></div>
+            <span class="n">email_send_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span>
+                <span class="s2">&quot;eighth/emails/waitlist.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;eighth/emails/waitlist.html&quot;</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">waitlist</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">},</span>
+                <span class="s2">&quot;Open Spot Notification&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">],</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.add_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.add_user">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
-    <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HttpRequest</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">add_to_waitlist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HttpRequest</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">no_after_deadline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_to_waitlist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Signs up a user to this scheduled activity if possible. This is where the magic happens.</span>
 
 <span class="sd">        Raises an exception if there&#39;s a problem signing the user up</span>
@@ -1486,10 +1498,7 @@
                         <span class="n">add_breadcrumb</span><span class="p">(</span>
                             <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
                             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Switching user </span><span class="si">{}</span><span class="s2"> from single-block activity </span><span class="si">{}</span><span class="s2"> to single-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
                             <span class="p">),</span>
                             <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
@@ -1522,10 +1531,7 @@
                         <span class="n">add_breadcrumb</span><span class="p">(</span>
                             <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
                             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Switching user </span><span class="si">{}</span><span class="s2"> from dual-block activity </span><span class="si">{}</span><span class="s2"> to single-block activity </span><span class="si">{}</span><span class="s2"> in block </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
                             <span class="p">),</span>
                             <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
@@ -1564,9 +1570,7 @@
                     <span class="n">add_breadcrumb</span><span class="p">(</span>
                         <span class="n">category</span><span class="o">=</span><span class="s2">&quot;eighth-signup&quot;</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2">: original activity for block </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span>
                         <span class="p">),</span>
                         <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -1629,6 +1633,7 @@
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_both_blocks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">!=</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">.notifications</span> <span class="k">import</span> <span class="n">activity_cancelled_email</span>
+
                 <span class="n">activity_cancelled_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.uncancel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.uncancel">[docs]</a>    <span class="k">def</span> <span class="nf">uncancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1850,8 +1855,9 @@
 <div class="viewcode-block" id="EighthWaitlistManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager">[docs]</a><span class="k">class</span> <span class="nc">EighthWaitlistManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Model manager for EighthWaitlist.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="EighthWaitlistManager.get_next_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.get_next_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_waitlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activity</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span>
-                                                                            <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;EighthWaitlist&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="EighthWaitlistManager.get_next_waitlist"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthWaitlistManager.get_next_waitlist">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_waitlist</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">activity</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;EighthWaitlist&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Returns a QuerySet of all the EighthWaitlist objects for the given</span>
 <span class="sd">        activity, ordered by signup time.</span>
 

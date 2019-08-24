@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.files.forms &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.files.forms &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -135,12 +135,13 @@
 
 
 <div class="viewcode-block" id="UploadFileForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.forms.UploadFileForm">[docs]</a><span class="k">class</span> <span class="nc">UploadFileForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-
 <div class="viewcode-block" id="UploadFileForm.validate_size"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.forms.UploadFileForm.validate_size">[docs]</a>    <span class="k">def</span> <span class="nf">validate_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">filesize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">__sizeof__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">filesize</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_UPLOAD_SIZE</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;The file uploaded is above the maximum upload size (</span><span class="si">{}</span><span class="s2">MB). &quot;</span>
-                                        <span class="s2">&quot;Use a desktop client to upload this file.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_UPLOAD_SIZE</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;The file uploaded is above the maximum upload size (</span><span class="si">{}</span><span class="s2">MB). &quot;</span>
+                <span class="s2">&quot;Use a desktop client to upload this file.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_UPLOAD_SIZE</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span>
+            <span class="p">)</span></div>
 
     <span class="n">file</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_size</span><span class="p">])</span></div>
 </pre></div>

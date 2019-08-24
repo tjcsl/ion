@@ -12,14 +12,6 @@ intranet.apps.dataimport.management.commands.import\_photos module
    :undoc-members:
    :show-inheritance:
 
-intranet.apps.dataimport.management.commands.import\_sis module
----------------------------------------------------------------
-
-.. automodule:: intranet.apps.dataimport.management.commands.import_sis
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 intranet.apps.dataimport.management.commands.year\_cleanup module
 -----------------------------------------------------------------
 

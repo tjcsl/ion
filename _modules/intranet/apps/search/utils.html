@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.search.utils &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.search.utils &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -131,7 +131,7 @@
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 
 
-<div class="viewcode-block" id="normalize_query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.utils.normalize_query">[docs]</a><span class="k">def</span> <span class="nf">normalize_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">findterms</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;([^&quot;]+)&quot;|(\S+)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">,</span> <span class="n">normspace</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s{2,}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">):</span>
+<div class="viewcode-block" id="normalize_query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.utils.normalize_query">[docs]</a><span class="k">def</span> <span class="nf">normalize_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">findterms</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;([^&quot;]+)&quot;|(\S+)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">,</span> <span class="n">normspace</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s{2,}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Splits the query string in individual keywords, getting rid of unecessary spaces</span>
 <span class="sd">        and grouping quoted words together.</span>
 <span class="sd">        Example:</span>
@@ -140,7 +140,7 @@
 <span class="sd">        [&#39;some&#39;, &#39;random&#39;, &#39;words&#39;, &#39;with quotes&#39;, &#39;and&#39;, &#39;spaces&#39;]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">normspace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">findterms</span><span class="p">(</span><span class="n">query_string</span><span class="p">)]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">normspace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">findterms</span><span class="p">(</span><span class="n">query_string</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="get_query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.utils.get_query">[docs]</a><span class="k">def</span> <span class="nf">get_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">search_fields</span><span class="p">):</span>

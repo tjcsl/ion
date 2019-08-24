@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -287,8 +287,10 @@
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">namespaces</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;oauth2_provider&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">resolve_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;authorized-token-list&quot;</span><span class="p">:</span>
-                <span class="n">applications_tokens</span> <span class="o">=</span> <span class="p">[(</span><span class="n">application</span><span class="p">,</span> <span class="n">application</span><span class="o">.</span><span class="n">accesstoken_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
-                                       <span class="k">for</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">Application</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">accesstoken__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()]</span>
+                <span class="n">applications_tokens</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">application</span><span class="o">.</span><span class="n">accesstoken_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">Application</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">accesstoken__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+                <span class="p">]</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;applications_tokens&quot;</span><span class="p">:</span> <span class="n">applications_tokens</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="p">{}</span></div>

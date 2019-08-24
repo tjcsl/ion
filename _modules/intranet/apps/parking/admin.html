@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.parking.admin &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.parking.admin &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -150,7 +150,6 @@
 
 
 <div class="viewcode-block" id="ParkingAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.parking.html#intranet.apps.parking.admin.ParkingAdmin">[docs]</a><span class="k">class</span> <span class="nc">ParkingAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-
 <div class="viewcode-block" id="ParkingAdmin.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.parking.html#intranet.apps.parking.admin.ParkingAdmin.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">user</span>
         <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&lt;br&gt;</span><span class="si">{}</span><span class="s2"> absences&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()))</span></div>
@@ -178,19 +177,19 @@
         <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s2">&quot;cars&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">cars</span><span class="o">.</span><span class="n">all</span><span class="p">()}))</span></div>
 
     <span class="n">get_cars</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;Cars&quot;</span>  <span class="c1"># type: ignore</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;get_user&#39;</span><span class="p">,</span> <span class="s1">&#39;get_joint_user&#39;</span><span class="p">,</span> <span class="s1">&#39;get_absences&#39;</span><span class="p">,</span> <span class="s1">&#39;mentorship&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;get_cars&#39;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;added&#39;</span><span class="p">,</span> <span class="s1">&#39;updated&#39;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;-added&#39;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;joint_user&#39;</span><span class="p">)</span>
-    <span class="n">filter_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;cars&#39;</span><span class="p">,)</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;get_user&quot;</span><span class="p">,</span> <span class="s2">&quot;get_joint_user&quot;</span><span class="p">,</span> <span class="s2">&quot;get_absences&quot;</span><span class="p">,</span> <span class="s2">&quot;mentorship&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;get_cars&quot;</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;joint_user&quot;</span><span class="p">)</span>
+    <span class="n">filter_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;cars&quot;</span><span class="p">,)</span>
     <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="n">export_csv_action</span><span class="p">()]</span></div>
 
 
 <div class="viewcode-block" id="CarAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.parking.html#intranet.apps.parking.admin.CarAdmin">[docs]</a><span class="k">class</span> <span class="nc">CarAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;license_plate&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;make&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;added&#39;</span><span class="p">,</span> <span class="s1">&#39;updated&#39;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;-added&#39;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,)</span></div>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;license_plate&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)</span></div>
 
 
 <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ParkingApplication</span><span class="p">,</span> <span class="n">ParkingAdmin</span><span class="p">)</span>

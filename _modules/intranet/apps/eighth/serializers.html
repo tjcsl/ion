@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -286,8 +286,9 @@
 
         <span class="k">return</span> <span class="n">activity_info</span></div>
 
-<div class="viewcode-block" id="EighthBlockDetailSerializer.get_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity">[docs]</a>    <span class="k">def</span> <span class="nf">get_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">,</span> <span class="n">block_id</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">,</span>
-                     <span class="n">scheduled_activity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthBlockDetailSerializer.get_activity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.get_activity">[docs]</a>    <span class="k">def</span> <span class="nf">get_activity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">,</span> <span class="n">block_id</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">scheduled_activity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_id</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span> <span class="n">activity_id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_scheduled_activity</span><span class="p">(</span>
@@ -321,8 +322,9 @@
 
         <span class="k">for</span> <span class="n">scheduled_activity</span> <span class="ow">in</span> <span class="n">scheduled_activities</span><span class="p">:</span>
             <span class="c1"># Avoid re-fetching scheduled_activity.</span>
-            <span class="n">activity_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_activity</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                                              <span class="n">scheduled_activity</span><span class="p">)</span>
+            <span class="n">activity_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_activity</span><span class="p">(</span>
+                <span class="n">user</span><span class="p">,</span> <span class="n">favorited_activities</span><span class="p">,</span> <span class="n">recommended_activities</span><span class="p">,</span> <span class="n">available_restricted_acts</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">scheduled_activity</span>
+            <span class="p">)</span>
             <span class="n">activity</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span>
             <span class="n">scheduled_activity_to_activity_map</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span>
             <span class="n">activity_list</span><span class="p">[</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity_info</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -141,8 +141,8 @@
     <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Perform end-of-year cleanup duties.&quot;</span>
 
 <div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--run&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Actually run.&#39;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--confirm&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;confirm&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Skip confirmation.&#39;</span><span class="p">)</span></div>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--run&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Actually run.&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--confirm&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;confirm&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip confirmation.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
@@ -163,10 +163,12 @@
 
         <span class="k">if</span> <span class="n">do_run</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;confirm&quot;</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                         <span class="s2">&quot;This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                         <span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                         <span class="s2">&quot;Continue?&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span>
+                    <span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;===== WARNING! =====</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Continue?&quot;</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;In pretend mode.&quot;</span><span class="p">)</span>
 
@@ -175,8 +177,9 @@
         <span class="n">turnover_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">current_year</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Turnover date set to: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">turnover_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span><span class="p">)))</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span><span class="s2">&quot;SENIOR_GRADUATION_YEAR = </span><span class="si">{}</span><span class="s2"> in settings/__init__.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_senior_year</span><span class="p">),</span>
-                        <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">==</span> <span class="n">new_senior_year</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span>
+            <span class="s2">&quot;SENIOR_GRADUATION_YEAR = </span><span class="si">{}</span><span class="s2"> in settings/__init__.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_senior_year</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">==</span> <span class="n">new_senior_year</span>
+        <span class="p">):</span>
             <span class="k">return</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        EIGHTH:</span>

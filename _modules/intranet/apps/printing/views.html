@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -173,14 +173,18 @@
         <span class="k">if</span> <span class="s2">&quot;&quot;</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
             <span class="n">names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;printers_list&#39;</span><span class="p">])</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">names</span></div>
 
 
 <div class="viewcode-block" id="convert_soffice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_soffice">[docs]</a><span class="k">def</span> <span class="nf">convert_soffice</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;soffice&quot;</span><span class="p">,</span> <span class="s2">&quot;--headless&quot;</span><span class="p">,</span> <span class="s2">&quot;--convert-to&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
-                                         <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;soffice&quot;</span><span class="p">,</span> <span class="s2">&quot;--headless&quot;</span><span class="p">,</span> <span class="s2">&quot;--convert-to&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">],</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+            <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run soffice command (returned </span><span class="si">%d</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -236,7 +240,9 @@
     <span class="n">detected</span> <span class="o">=</span> <span class="n">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
     <span class="n">no_conversion</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">]</span>
     <span class="n">soffice_convert</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;</span><span class="p">,</span> <span class="s2">&quot;application/msword&quot;</span><span class="p">,</span> <span class="s2">&quot;application/vnd.oasis.opendocument.text&quot;</span>
+        <span class="s2">&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;application/msword&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;application/vnd.oasis.opendocument.text&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">detected</span> <span class="ow">in</span> <span class="n">no_conversion</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">tmpfile_name</span>
@@ -293,7 +299,7 @@
     <span class="n">filebase</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileobj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">filebase_escaped</span> <span class="o">=</span> <span class="n">slugify</span><span class="p">(</span><span class="n">filebase</span><span class="p">)</span>
     <span class="n">tmpfile_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_print_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">filebase_escaped</span><span class="p">))</span><span class="o">.</span><span class="n">name</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s1">&#39;wb+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dest</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;wb+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dest</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">chunks</span><span class="p">():</span>
             <span class="n">dest</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
@@ -326,11 +332,15 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">range_count</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified an invalid page range.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">range_count</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified a range of </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">range_count</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;You specified a range of </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">range_count</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">elif</span> <span class="n">num_pages</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This file contains </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">num_pages</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;This file contains </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_pages</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">do_print</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lpr&quot;</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printer</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)]</span>

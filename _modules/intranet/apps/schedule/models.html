@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #5193) documentation</title>
+    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #5197) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -149,21 +149,21 @@
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span></div>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">))</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">)</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Block"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.Block">[docs]</a><span class="k">class</span> <span class="nc">Block</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;blockstart&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;blockend&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;blockstart&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;blockend&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">))</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span></div>
 
 
@@ -176,9 +176,9 @@
 
 <div class="viewcode-block" id="DayType"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayType">[docs]</a><span class="k">class</span> <span class="nc">DayType</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">codenames</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;CodeName&#39;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">codenames</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;CodeName&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">special</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">blocks</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;Block&#39;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;Block&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -241,7 +241,6 @@
 
 
 <div class="viewcode-block" id="DayManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager">[docs]</a><span class="k">class</span> <span class="nc">DayManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
-
 <div class="viewcode-block" id="DayManager.get_future_days"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager.get_future_days">[docs]</a>    <span class="k">def</span> <span class="nf">get_future_days</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return only future Day objects.&quot;&quot;&quot;</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -260,7 +259,7 @@
 <div class="viewcode-block" id="Day"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.Day">[docs]</a><span class="k">class</span> <span class="nc">Day</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">DayManager</span><span class="p">()</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">day_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;DayType&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">day_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;DayType&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">comment</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="nd">@property</span>
