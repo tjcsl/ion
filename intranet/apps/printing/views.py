@@ -45,14 +45,18 @@ def get_printers():
         if "" in names:
             names.remove("")
 
-        cache.set(key, names, timeout=settings.CACHE_AGE['printers_list'])
+        cache.set(key, names, timeout=settings.CACHE_AGE["printers_list"])
         return names
 
 
 def convert_soffice(tmpfile_name):
     try:
-        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT,
-                                         universal_newlines=True, timeout=60)
+        output = subprocess.check_output(
+            ["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            timeout=60,
+        )
     except subprocess.CalledProcessError as e:
         logger.error("Could not run soffice command (returned %d): %s", e.returncode, e.output)
         return False
@@ -108,7 +112,9 @@ def convert_file(tmpfile_name):
     detected = get_mimetype(tmpfile_name)
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword", "application/vnd.oasis.opendocument.text"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/msword",
+        "application/vnd.oasis.opendocument.text",
     ]
     if detected in no_conversion:
         return tmpfile_name
@@ -165,7 +171,7 @@ def print_job(obj, do_print=True):
     filebase = os.path.basename(fileobj.name)
     filebase_escaped = slugify(filebase)
     tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
-    with open(tmpfile_name, 'wb+') as dest:
+    with open(tmpfile_name, "wb+") as dest:
         for chunk in fileobj.chunks():
             dest.write(chunk)
 
@@ -198,11 +204,15 @@ def print_job(obj, do_print=True):
         if not range_count:
             raise Exception("You specified an invalid page range.")
         elif range_count > settings.PRINTING_PAGES_LIMIT:
-            raise Exception("You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
-                range_count, settings.PRINTING_PAGES_LIMIT))
+            raise Exception(
+                "You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
+                    range_count, settings.PRINTING_PAGES_LIMIT
+                )
+            )
     elif num_pages > settings.PRINTING_PAGES_LIMIT:
-        raise Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(
-            num_pages, settings.PRINTING_PAGES_LIMIT))
+        raise Exception(
+            "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
+        )
 
     if do_print:
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
