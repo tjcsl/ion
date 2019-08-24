@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 @login_required
 @deny_restricted
 def home_view(request):
-    lost_all = LostItem.objects.all().order_by('id')
+    lost_all = LostItem.objects.all().order_by("id")
     lost_pg = Paginator(lost_all, 20)
 
-    found_all = FoundItem.objects.all().order_by('id')
+    found_all = FoundItem.objects.all().order_by("id")
     found_pg = Paginator(found_all, 20)
 
     page = request.GET.get("page", 1)
@@ -35,7 +35,7 @@ def home_view(request):
         "found": found,
         "previous_page": lost.previous_page_number if lost.previous_page_number else found.previous_page_number,
         "next_page": lost.next_page_number if lost.next_page_number else found.next_page_number,
-        "is_lostfound_admin": request.user.has_admin_permission("lostfound")
+        "is_lostfound_admin": request.user.has_admin_permission("lostfound"),
     }
     return render(request, "lostfound/home.html", context)
 
