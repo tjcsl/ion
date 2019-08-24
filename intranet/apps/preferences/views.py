@@ -8,8 +8,16 @@ from django.shortcuts import redirect, render
 
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
-                    WebsiteFormset)
+from .forms import (
+    BusRouteForm,
+    DarkModeForm,
+    EmailFormset,
+    NotificationOptionsForm,
+    PhoneFormset,
+    PreferredPictureForm,
+    PrivacyOptionsForm,
+    WebsiteFormset,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,27 +47,27 @@ def get_personal_info(user):
 
 
 def save_personal_info(request, user):
-    phone_formset = PhoneFormset(request.POST, instance=user, prefix='pf')
-    email_formset = EmailFormset(request.POST, instance=user, prefix='ef')
-    website_formset = WebsiteFormset(request.POST, instance=user, prefix='wf')
+    phone_formset = PhoneFormset(request.POST, instance=user, prefix="pf")
+    email_formset = EmailFormset(request.POST, instance=user, prefix="ef")
+    website_formset = WebsiteFormset(request.POST, instance=user, prefix="wf")
 
     errors = []
 
     if phone_formset.is_valid():
         phone_formset.save()
     else:
-        errors.append('Could not set phone numbers.')
+        errors.append("Could not set phone numbers.")
     if email_formset.is_valid():
         email_formset.save()
     else:
         for error in email_formset.errors:
             if isinstance(error.get("address"), list):
                 errors.append(error["address"][0])
-        errors.append('Could not set emails.')
+        errors.append("Could not set emails.")
     if website_formset.is_valid():
         website_formset.save()
     else:
-        errors.append('Could not set websites.')
+        errors.append("Could not set websites.")
 
     return phone_formset, email_formset, website_formset, errors
 
@@ -92,10 +100,11 @@ def save_preferred_pic(request, user):
                 if old_preferred_pic == new_preferred_pic:
                     logger.debug("preferred photo: same (%s)", new_preferred_pic)
                 else:
-                    logger.debug("preferred_photo: new: %s from: %s", new_preferred_pic,
-                                 old_preferred_pic if "preferred_photo" in preferred_pic else None)
+                    logger.debug(
+                        "preferred_photo: new: %s from: %s", new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None
+                    )
                     try:
-                        if new_preferred_pic == 'AUTO':
+                        if new_preferred_pic == "AUTO":
                             user.preferred_photo = None
                         else:
                             user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
@@ -104,9 +113,12 @@ def save_preferred_pic(request, user):
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
                         logger.debug("Unable to set field preferred_pic with value %s: %s", new_preferred_pic, e)
                     else:
-                        messages.success(request, "Set field {} to {}".format("preferred_pic", new_preferred_pic
-                                                                              if not isinstance(new_preferred_pic, list) else
-                                                                              ", ".join(new_preferred_pic)))
+                        messages.success(
+                            request,
+                            "Set field {} to {}".format(
+                                "preferred_pic", new_preferred_pic if not isinstance(new_preferred_pic, list) else ", ".join(new_preferred_pic)
+                            ),
+                        )
     return preferred_pic_form
 
 
@@ -162,8 +174,10 @@ def save_privacy_options(request, user):
                         messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Unable to set field %s with value %s: %s", field, fields[field], e)
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field]
-                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                        messages.success(
+                            request,
+                            "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])),
+                        )
     return privacy_options_form
 
 
@@ -197,13 +211,14 @@ def save_notification_options(request, user):
                 if field in notification_options and notification_options[field] == fields[field]:
                     logger.debug("%s: same (%s)", field, fields[field])
                 else:
-                    logger.debug("%s: new: %s from: %s", field, fields[field], notification_options[field]
-                                 if field in notification_options else None)
+                    logger.debug("%s: new: %s from: %s", field, fields[field], notification_options[field] if field in notification_options else None)
                     setattr(user, field, fields[field])
                     user.save()
                     try:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field]
-                                                                              if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                        messages.success(
+                            request,
+                            "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])),
+                        )
                     except TypeError:
                         pass
     return notification_options_form
@@ -213,7 +228,7 @@ def get_bus_route(user):
     """Get a user's bus route to pass as an initial value to a
     BusRouteForm."""
 
-    return {'bus_route': user.bus_route.route_name if user.bus_route else None}
+    return {"bus_route": user.bus_route.route_name if user.bus_route else None}
 
 
 def save_bus_route(request, user):
@@ -242,9 +257,12 @@ def save_bus_route(request, user):
                         logger.error("Error processing Bus Route Form: %s", e)
                     try:
                         if fields[field]:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field]
-                                                                                  if not isinstance(fields[field], list)
-                                                                                  else ", ".join(fields[field])))
+                            messages.success(
+                                request,
+                                "Set field {} to {}".format(
+                                    field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])
+                                ),
+                            )
                         else:
                             messages.success(request, "Cleared field {}".format(field))
                     except TypeError:
@@ -254,7 +272,7 @@ def save_bus_route(request, user):
 
 def save_gcm_options(request, user):
     if request.user.notificationconfig and request.user.notificationconfig.gcm_token:
-        receive = ("receive_push_notifications" in request.POST)
+        receive = "receive_push_notifications" in request.POST
         if receive:
             nc = user.notificationconfig
             if nc.gcm_optout is True:
@@ -313,9 +331,9 @@ def preferences_view(request):
         return redirect("preferences")
 
     else:
-        phone_formset = PhoneFormset(instance=user, prefix='pf')
-        email_formset = EmailFormset(instance=user, prefix='ef')
-        website_formset = WebsiteFormset(instance=user, prefix='wf')
+        phone_formset = PhoneFormset(instance=user, prefix="pf")
+        email_formset = EmailFormset(instance=user, prefix="ef")
+        website_formset = WebsiteFormset(instance=user, prefix="wf")
 
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
