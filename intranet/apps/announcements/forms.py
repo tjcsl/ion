@@ -18,8 +18,8 @@ class AnnouncementForm(forms.ModelForm):
         )
 
         self.fields["notify_email_all"].help_text = (
-           "This will send an email notification to all of the users who can see this post. This option "
-           "does NOT take users' email notification preferences into account, so please use with care."
+            "This will send an email notification to all of the users who can see this post. This option "
+            "does NOT take users' email notification preferences into account, so please use with care."
         )
 
         self.fields["update_added_date"].help_text = (
@@ -34,17 +34,7 @@ class AnnouncementForm(forms.ModelForm):
 
     class Meta:
         model = Announcement
-        fields = [
-            "title",
-            "author",
-            "content",
-            "groups",
-            "expiration_date",
-            "notify_post",
-            "notify_email_all",
-            "update_added_date",
-            "pinned",
-        ]
+        fields = ["title", "author", "content", "groups", "expiration_date", "notify_post", "notify_email_all", "update_added_date", "pinned"]
 
 
 class AnnouncementRequestForm(forms.ModelForm):
