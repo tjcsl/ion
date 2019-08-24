@@ -22,7 +22,6 @@ for u in group.user_set.all():
 
 
 class ParkingAdmin(admin.ModelAdmin):
-
     def get_user(self, obj):
         u = obj.user
         return mark_safe("{} {} ({})<br>{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
@@ -50,19 +49,19 @@ class ParkingAdmin(admin.ModelAdmin):
         return template.render(Context({"cars": obj.cars.all()}))
 
     get_cars.short_description = "Cars"  # type: ignore
-    list_display = ('get_user', 'get_joint_user', 'get_absences', 'mentorship', 'email', 'get_cars')
-    list_filter = ('added', 'updated')
-    ordering = ('-added',)
-    raw_id_fields = ('user', 'joint_user')
-    filter_horizontal = ('cars',)
+    list_display = ("get_user", "get_joint_user", "get_absences", "mentorship", "email", "get_cars")
+    list_filter = ("added", "updated")
+    ordering = ("-added",)
+    raw_id_fields = ("user", "joint_user")
+    filter_horizontal = ("cars",)
     actions = [export_csv_action()]
 
 
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('license_plate', 'user', 'make', 'model', 'year')
-    list_filter = ('added', 'updated')
-    ordering = ('-added',)
-    raw_id_fields = ('user',)
+    list_display = ("license_plate", "user", "make", "model", "year")
+    list_filter = ("added", "updated")
+    ordering = ("-added",)
+    raw_id_fields = ("user",)
 
 
 admin.site.register(ParkingApplication, ParkingAdmin)

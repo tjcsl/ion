@@ -16,12 +16,12 @@ logger = logging.getLogger(__name__)
 @login_required
 @deny_restricted
 def parking_intro_view(request):
-    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
-        return redirect('index')
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission("parking"):
+        return redirect("index")
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
-        return redirect('index')
+        return redirect("index")
 
     context = {"user": request.user, "absences": request.user.absence_count(), "max_absences": settings.PARKING_MAX_ABSENCES}
 
@@ -31,17 +31,17 @@ def parking_intro_view(request):
 @login_required
 @deny_restricted
 def parking_form_view(request):
-    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
-        return redirect('index')
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission("parking"):
+        return redirect("index")
 
-    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
-        return redirect('parking')
+    if not request.user.has_admin_permission("parking") and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect("parking")
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
     user = request.user
-    if request.user.has_admin_permission('parking'):
+    if request.user.has_admin_permission("parking"):
         if "user" in request.GET:
             user = get_object_or_404(get_user_model(), id=request.GET["user"])
         elif "user" in request.POST:
@@ -84,11 +84,11 @@ def parking_form_view(request):
 @login_required
 @deny_restricted
 def parking_car_view(request):
-    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
-        return redirect('index')
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission("parking"):
+        return redirect("index")
 
-    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
-        return redirect('parking')
+    if not request.user.has_admin_permission("parking") and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect("parking")
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
@@ -98,7 +98,7 @@ def parking_car_view(request):
     except CarApplication.DoesNotExist:
         car = None
     else:
-        if not request.user.has_admin_permission('parking') and car.user != request.user:
+        if not request.user.has_admin_permission("parking") and car.user != request.user:
             messages.error(request, "This isn't your car!")
             return redirect("parking")
 
@@ -141,18 +141,18 @@ def parking_car_view(request):
 @login_required
 @deny_restricted
 def parking_joint_view(request):
-    if not settings.PARKING_ENABLED and not request.user.has_admin_permission('parking'):
-        return redirect('index')
+    if not settings.PARKING_ENABLED and not request.user.has_admin_permission("parking"):
+        return redirect("index")
 
-    if not request.user.has_admin_permission('parking') and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
-        return redirect('parking')
+    if not request.user.has_admin_permission("parking") and request.user.absence_count() > settings.PARKING_MAX_ABSENCES:
+        return redirect("parking")
 
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
 
     user = request.user
-    if request.user.has_admin_permission('parking'):
+    if request.user.has_admin_permission("parking"):
         if "user" in request.GET:
             user = get_object_or_404(get_user_model(), id=request.GET["user"])
         elif "user" in request.POST:

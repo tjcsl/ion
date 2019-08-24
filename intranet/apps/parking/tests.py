@@ -10,22 +10,15 @@ class ParkingTest(IonTestCase):
     """Tests for the parking module."""
 
     def login_with_args(self, uname, grad_year):
-        user = get_user_model().objects.get_or_create(username=uname,
-                                                      graduation_year=grad_year)[0]
-        with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
-            self.client.login(username=uname, password='dankmemes')
+        user = get_user_model().objects.get_or_create(username=uname, graduation_year=grad_year)[0]
+        with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
+            self.client.login(username=uname, password="dankmemes")
         return user
 
     def test_parking_form_junior(self):
-        user = self.login_with_args("awilliam",
-                                    settings.SENIOR_GRADUATION_YEAR + 1)
+        user = self.login_with_args("awilliam", settings.SENIOR_GRADUATION_YEAR + 1)
 
-        response = self.client.post(
-            reverse("parking_form"), data={
-                "email": user.tj_email,
-                "mentorship": False
-            }
-        )
+        response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
         self.assertEqual(response.status_code, 302)
 
@@ -34,12 +27,7 @@ class ParkingTest(IonTestCase):
         self.assertTrue(parking_apps.exists())
         self.assertEqual(parking_apps.count(), 1)
 
-        response = self.client.post(reverse("parking_car"), data={
-            "license_plate": "TJCSL",
-            "make": "Lamborghini",
-            "model": "Veneno",
-            "year": 2018
-        })
+        response = self.client.post(reverse("parking_car"), data={"license_plate": "TJCSL", "make": "Lamborghini", "model": "Veneno", "year": 2018})
 
         self.assertEqual(response.status_code, 302)
 
@@ -53,26 +41,15 @@ class ParkingTest(IonTestCase):
         self.assertTrue(parking_apps[0].cars.count(), 1)
 
     def test_invalid_user(self):
-        user = self.login_with_args("bwilliam",
-                                    settings.SENIOR_GRADUATION_YEAR + 2)
+        user = self.login_with_args("bwilliam", settings.SENIOR_GRADUATION_YEAR + 2)
 
-        response = self.client.post(
-            reverse("parking_form"), data={
-                "email": user.tj_email,
-                "mentorship": False
-            }
-        )
+        response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
         # Check that parking application was not created
         self.assertEqual(response.status_code, 302)
         self.assertFalse(ParkingApplication.objects.filter(user=user).exists())
 
-        response = self.client.post(reverse("parking_car"), data={
-            "license_plate": "TJCSL",
-            "make": "Lamborghini",
-            "model": "Veneno",
-            "year": "2018"
-        })
+        response = self.client.post(reverse("parking_car"), data={"license_plate": "TJCSL", "make": "Lamborghini", "model": "Veneno", "year": "2018"})
 
         # Check that car application is not created
         self.assertEqual(response.status_code, 302)
