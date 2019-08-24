@@ -29,24 +29,13 @@ def query(q, admin=False):
         logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
         map_attrs = {
-            "firstname": (
-                "first_name",
-                "nickname",
-            ),
-            "first": (
-                "first_name",
-                "nickname",
-            ),
+            "firstname": ("first_name", "nickname"),
+            "first": ("first_name", "nickname"),
             "lastname": ("last_name",),
             "last": ("last_name",),
             "nick": ("nickname",),
             "nickname": ("nickname",),
-            "name": (
-                "last_name",
-                "middle_name",
-                "first_name",
-                "nickname",
-            ),
+            "name": ("last_name", "middle_name", "first_name", "nickname"),
             "middlename": ("middle_name",),
             "middle": ("middle_name",),
             "grade": ("graduation_year",),
@@ -58,7 +47,7 @@ def query(q, admin=False):
             "id": ("id",),
             "username": ("username",),
             "counselor": ("counselor__last_name",),
-            "type": ("user_type",)
+            "type": ("user_type",),
         }
 
         parts = q.split(" ")
@@ -99,7 +88,7 @@ def query(q, admin=False):
 
                 default_categories = ["first_name", "last_name", "nickname"]
                 if is_entirely_digit(p):
-                    default_categories.append('id')
+                    default_categories.append("id")
                 if admin:
                     default_categories.append("middle_name")
 
@@ -144,7 +133,7 @@ def query(q, admin=False):
 
             # replace sex:male with sex:m and sex:female with sex:f
             if cat in ("sex", "gender"):
-                val = (val[:1] == 'm')
+                val = val[:1] == "m"
 
             # if an invalid key, ignore
             if cat not in map_attrs:
@@ -232,7 +221,7 @@ def do_activities_search(q):
 
 def do_courses_search(q):
     filter_query = get_query(q, ["name", "course_id"])
-    return Course.objects.filter(filter_query).order_by('name')
+    return Course.objects.filter(filter_query).order_by("name")
 
 
 def do_announcements_search(q):
@@ -259,7 +248,7 @@ def do_events_search(q):
 @deny_restricted
 def search_view(request):
     q = request.GET.get("q", "").strip()
-    is_admin = (not request.user.is_student and request.user.is_eighthoffice)
+    is_admin = not request.user.is_student and request.user.is_eighthoffice
 
     if q:
         """User search."""
@@ -291,7 +280,7 @@ def search_view(request):
         logger.debug(events)
 
         if users and len(users) == 1:
-            no_other_results = (not activities and not announcements)
+            no_other_results = not activities and not announcements
             if request.user.is_eighthoffice or no_other_results:
                 user_id = users[0].id
                 return redirect("user_profile", user_id=user_id)
