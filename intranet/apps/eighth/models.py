@@ -786,9 +786,9 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity."""
 
-    def for_sponsor(self, sponsor: EighthSponsor,
-                    include_cancelled: bool = False) -> Union[QuerySet,
-                                                              Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
+    def for_sponsor(
+        self, sponsor: EighthSponsor, include_cancelled: bool = False
+    ) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthScheduledActivities where the given EighthSponsor is
         sponsoring.
 
@@ -1093,8 +1093,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
-    def _get_viewable_members(self, user: "get_user_model()") -> Union[QuerySet,
-                                                                       Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def _get_viewable_members(
+        self, user: "get_user_model()"
+    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Get an unsorted QuerySet of the members that you have permission to view.
 
         Args:
@@ -1112,9 +1113,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 q |= Q(id=user.id)
             return self.members.filter(q)
 
-    def get_viewable_members(self,
-                             user: "get_user_model()" = None) -> Union[QuerySet,
-                                                                       Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_viewable_members(
+        self, user: "get_user_model()" = None
+    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you have permission to view, sorted alphabetically.
 
         Args:
@@ -1139,9 +1140,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self._get_viewable_members(request.user)
 
-    def get_hidden_members(self,
-                           user: "get_user_model()" = None) -> Union[QuerySet,
-                                                                     Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_hidden_members(
+        self, user: "get_user_model()" = None
+    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you do not have permission to view.
 
         Args:
@@ -1195,12 +1196,23 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         """
         for waitlist in waitlists:
-            email_send_task.delay("eighth/emails/waitlist.txt", "eighth/emails/waitlist.html", {"activity": waitlist.scheduled_activity},
-                                  "Open Spot Notification", [waitlist.user.primary_email_address])
+            email_send_task.delay(
+                "eighth/emails/waitlist.txt",
+                "eighth/emails/waitlist.html",
+                {"activity": waitlist.scheduled_activity},
+                "Open Spot Notification",
+                [waitlist.user.primary_email_address],
+            )
 
     @transaction.atomic
-    def add_user(self, user: "get_user_model()", request: Optional[HttpRequest] = None, force: bool = False, no_after_deadline: bool = False,
-                 add_to_waitlist: bool = False):
+    def add_user(
+        self,
+        user: "get_user_model()",
+        request: Optional[HttpRequest] = None,
+        force: bool = False,
+        no_after_deadline: bool = False,
+        add_to_waitlist: bool = False,
+    ):
         """Signs up a user to this scheduled activity if possible. This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
@@ -1358,10 +1370,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         add_breadcrumb(
                             category="eighth-signup",
                             message="Switching user {} from single-block activity {} to single-block activity {} in block {}".format(
-                                user.id,
-                                existing_signup.scheduled_activity.activity.id,
-                                self.activity.id,
-                                self.block.id,
+                                user.id, existing_signup.scheduled_activity.activity.id, self.activity.id, self.block.id
                             ),
                             level="debug",
                         )
@@ -1394,10 +1403,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         add_breadcrumb(
                             category="eighth-signup",
                             message="Switching user {} from dual-block activity {} to single-block activity {} in block {}".format(
-                                user.id,
-                                existing_signup.scheduled_activity.activity.id,
-                                self.activity.id,
-                                self.block.id,
+                                user.id, existing_signup.scheduled_activity.activity.id, self.activity.id, self.block.id
                             ),
                             level="debug",
                         )
@@ -1436,9 +1442,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     add_breadcrumb(
                         category="eighth-signup",
                         message="User {}: original activity for block {}: {}".format(
-                            user.id,
-                            signup.scheduled_activity.block.id,
-                            signup.scheduled_activity.activity.id,
+                            user.id, signup.scheduled_activity.block.id, signup.scheduled_activity.activity.id
                         ),
                         level="debug",
                     )
@@ -1501,6 +1505,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             if not self.is_both_blocks or self.block.block_letter != "B":
                 from .notifications import activity_cancelled_email
+
                 activity_cancelled_email(self)
 
     def uncancel(self):
@@ -1722,8 +1727,9 @@ class EighthSignup(AbstractBaseEighthModel):
 class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
-    def get_next_waitlist(self, activity: EighthScheduledActivity) -> Union[QuerySet,
-                                                                            Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
+    def get_next_waitlist(
+        self, activity: EighthScheduledActivity
+    ) -> Union[QuerySet, Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the EighthWaitlist objects for the given
         activity, ordered by signup time.
 

@@ -14,8 +14,9 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def room_changed_single_email(sched_act: EighthScheduledActivity, old_rooms: Collection[EighthRoom],  # pylint: disable=unsubscriptable-object
-                              new_rooms: Collection[EighthRoom]):  # pylint: disable=unsubscriptable-object
+def room_changed_single_email(
+    sched_act: EighthScheduledActivity, old_rooms: Collection[EighthRoom], new_rooms: Collection[EighthRoom]  # pylint: disable=unsubscriptable-object
+):  # pylint: disable=unsubscriptable-object
     """Notifies all the users signed up for the given EighthScheduledActivity that it is changing rooms.
 
     Args:
@@ -40,16 +41,29 @@ def room_changed_single_email(sched_act: EighthScheduledActivity, old_rooms: Col
         "new_rooms_str": join_nicely(room.formatted_name for room in new_rooms),
     }
 
-    logger.debug("Scheduled activity %d changed from rooms %s to %s; emailing %d of %d signed up users", sched_act.id, data["old_rooms_str"],
-                 data["new_rooms_str"], len(emails), sched_act.eighthsignup_set.count())
+    logger.debug(
+        "Scheduled activity %d changed from rooms %s to %s; emailing %d of %d signed up users",
+        sched_act.id,
+        data["old_rooms_str"],
+        data["new_rooms_str"],
+        len(emails),
+        sched_act.eighthsignup_set.count(),
+    )
 
-    email_send("eighth/emails/room_changed_single.txt", "eighth/emails/room_changed_single.html", data,
-               "Room change for {} on {}".format(sched_act.activity.name, date_str), emails, bcc=True)
+    email_send(
+        "eighth/emails/room_changed_single.txt",
+        "eighth/emails/room_changed_single.html",
+        data,
+        "Room change for {} on {}".format(sched_act.activity.name, date_str),
+        emails,
+        bcc=True,
+    )
 
 
 @shared_task
-def room_changed_activity_email(act: EighthActivity, old_rooms: Collection[EighthRoom],  # pylint: disable=unsubscriptable-object
-                                new_rooms: Collection[EighthRoom]):  # pylint: disable=unsubscriptable-object
+def room_changed_activity_email(
+    act: EighthActivity, old_rooms: Collection[EighthRoom], new_rooms: Collection[EighthRoom]  # pylint: disable=unsubscriptable-object
+):  # pylint: disable=unsubscriptable-object
     """Notifies all the users signed up for the given EighthActivity on the blocks for which the room
     list is not overriden that it is changing rooms.
 
@@ -61,8 +75,15 @@ def room_changed_activity_email(act: EighthActivity, old_rooms: Collection[Eight
     """
     all_sched_acts = act.eighthscheduledactivity_set.filter(block__date__gte=timezone.localdate())
     sched_acts = all_sched_acts.filter(rooms=None)
-    users = get_user_model().objects.filter(receive_eighth_emails=True, eighthsignup__scheduled_activity__activity=act,
-                                            eighthsignup__scheduled_activity__block__date__gte=timezone.localdate()).distinct()
+    users = (
+        get_user_model()
+        .objects.filter(
+            receive_eighth_emails=True,
+            eighthsignup__scheduled_activity__activity=act,
+            eighthsignup__scheduled_activity__block__date__gte=timezone.localdate(),
+        )
+        .distinct()
+    )
 
     base_url = "https://ion.tjhsst.edu"
 
@@ -75,12 +96,21 @@ def room_changed_activity_email(act: EighthActivity, old_rooms: Collection[Eight
         "new_rooms_str": join_nicely(room.formatted_name for room in new_rooms),
     }
 
-    logger.debug("Activity %d changed from rooms %s to %s; emailing %d signed up users", act.id, data["old_rooms_str"], data["new_rooms_str"],
-                 len(users))
+    logger.debug(
+        "Activity %d changed from rooms %s to %s; emailing %d signed up users", act.id, data["old_rooms_str"], data["new_rooms_str"], len(users)
+    )
 
     for user in users:
-        data["date_strs"] = ["{}, {} block".format(sa.block.date.strftime("%A, %B %-d"), sa.block.block_letter)
-                             for sa in sched_acts.filter(eighthsignup_set__user=user)]
+        data["date_strs"] = [
+            "{}, {} block".format(sa.block.date.strftime("%A, %B %-d"), sa.block.block_letter)
+            for sa in sched_acts.filter(eighthsignup_set__user=user)
+        ]
 
-        email_send("eighth/emails/room_changed_activity.txt", "eighth/emails/room_changed_activity.html", data,
-                   "Room changes for {}".format(act.name), [user.notification_email], bcc=True)
+        email_send(
+            "eighth/emails/room_changed_activity.txt",
+            "eighth/emails/room_changed_activity.html",
+            data,
+            "Room changes for {}".format(act.name),
+            [user.notification_email],
+            bcc=True,
+        )
