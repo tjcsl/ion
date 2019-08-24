@@ -5,8 +5,7 @@ from django.views.decorators.debug import sensitive_variables
 
 
 class ApiBasicAuthentication(authentication.BasicAuthentication):
-
-    @sensitive_variables('password')
+    @sensitive_variables("password")
     def authenticate_credentials(self, userid, password, request=None):
         """Authenticate the userid and password."""
 
@@ -19,6 +18,5 @@ class ApiBasicAuthentication(authentication.BasicAuthentication):
 
 
 class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
-
     def enforce_csrf(self, request):
         return

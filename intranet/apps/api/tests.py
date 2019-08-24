@@ -22,9 +22,7 @@ class ApiTest(IonTestCase):
     """Tests for the api module."""
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(
-            username="awilliam", graduation_year=(settings.SENIOR_GRADUATION_YEAR + 1)
-        )[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=(settings.SENIOR_GRADUATION_YEAR + 1))[0]
         self.application = Application(
             name="Test Application",
             redirect_uris="http://localhost http://example.com http://example.it",
@@ -49,11 +47,7 @@ class ApiTest(IonTestCase):
 
     def make_token(self):
         tok = AccessToken.objects.create(
-            user=self.user,
-            token="1234567890",
-            application=self.application,
-            scope="read write",
-            expires=timezone.now() + datetime.timedelta(days=1),
+            user=self.user, token="1234567890", application=self.application, scope="read write", expires=timezone.now() + datetime.timedelta(days=1)
         )
         self.auth = "Bearer {}".format(tok.token)
 
@@ -69,37 +63,25 @@ class ApiTest(IonTestCase):
 
     def test_get_profile(self):
         self.make_token()
-        response = self.client.get(
-            reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        response = self.client.get(
-            reverse("api_user_profile_detail", args=[9001]), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_user_profile_detail", args=[9001]), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 404)
 
     def test_get_announcements(self):
         self.make_token()
-        response = self.client.get(
-            reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        response = self.client.get(
-            reverse("api_announcements_detail", args=[9001]), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_announcements_detail", args=[9001]), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 404)
 
     def test_oauth_read(self):
 
         self.make_token()
-        response = self.client.get(
-            reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get(
-            reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth
-        )
+        response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
         parsed_response = json.loads(response.content.decode())
         self.assertEqual(parsed_response["id"], int(self.user.id))
@@ -137,9 +119,7 @@ class ApiTest(IonTestCase):
         auth = "Bearer {}".format(tok.token)
 
         # List announcements
-        response = self.client.get(
-            reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=auth
-        )
+        response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
 
         # List emergency status
@@ -160,9 +140,7 @@ class ApiTest(IonTestCase):
 
         # List specific block
         block = EighthBlock.objects.create(date=datetime.datetime(2015, 1, 1), block_letter="A")
-        response = self.client.get(
-            reverse("api_eighth_block_detail", kwargs={"pk": block.pk}), HTTP_AUTHORIZATION=auth
-        )
+        response = self.client.get(reverse("api_eighth_block_detail", kwargs={"pk": block.pk}), HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200)
         resp = json.loads(response.content.decode())
         self.assertTrue("id" in resp)
@@ -200,8 +178,11 @@ class ApiTest(IonTestCase):
         Day.objects.create(date=today, day_type=no_school_type)
 
         test_day_type = DayType.objects.get_or_create(name="Test day")[0]
-        test_day_type.blocks.add(Block.objects.create(name="Test period", start=Time.objects.create(hour=10, minute=0),
-                                                      end=Time.objects.create(hour=11, minute=0), order=1))
+        test_day_type.blocks.add(
+            Block.objects.create(
+                name="Test period", start=Time.objects.create(hour=10, minute=0), end=Time.objects.create(hour=11, minute=0), order=1
+            )
+        )
         Day.objects.create(date=today - one_day, day_type=test_day_type)
 
         date_str = (today - one_day).strftime("%Y-%m-%d")
@@ -491,7 +472,7 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         results = response.json()["results"]
         self.assertEqual(len(results), 1)
-        self.assertEqual(results, [{"id": route.id, 'status': 'o', 'route_name': route.route_name, 'bus_number': route.bus_number, 'space': ''}])
+        self.assertEqual(results, [{"id": route.id, "status": "o", "route_name": route.route_name, "bus_number": route.bus_number, "space": ""}])
 
     def test_api_bus_detail(self):
         self.make_token()
@@ -499,5 +480,6 @@ class ApiTest(IonTestCase):
         response = self.client.get(reverse("api_bus_detail", args=[route_1.pk]), HTTP_AUTHORIZATION=self.auth)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"id": route_1.id, "route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number,
-                                           "status": "o"})
+        self.assertEqual(
+            response.json(), {"id": route_1.id, "route_name": route_1.route_name, "space": "", "bus_number": route_1.bus_number, "status": "o"}
+        )
