@@ -24,7 +24,7 @@ def home_view(request):
         "calculators": calculators,
         "computers": computers,
         "phones": phones,
-        "is_itemreg_admin": request.user.has_admin_permission("itemreg")
+        "is_itemreg_admin": request.user.has_admin_permission("itemreg"),
     }
     return render(request, "itemreg/home.html", context)
 
@@ -39,7 +39,7 @@ def search_view(request):
     context = {
         "calc_form": CalculatorRegistrationForm(request.GET) if item_type == "calculator" else CalculatorRegistrationForm(),
         "comp_form": ComputerRegistrationForm(request.GET) if item_type == "computer" else ComputerRegistrationForm(),
-        "phone_form": PhoneRegistrationForm(request.GET) if item_type == "phone" else PhoneRegistrationForm()
+        "phone_form": PhoneRegistrationForm(request.GET) if item_type == "phone" else PhoneRegistrationForm(),
     }
     results = {"calculator": None, "computer": None, "phone": None}
     if item_type == "calculator":
@@ -101,12 +101,7 @@ def search_view(request):
 
     getargs = NoneDict(dict(request.GET))
 
-    context.update({
-        "type": item_type,
-        "results": results,
-        "no_results": not any(results.values()),
-        "getargs": getargs
-    })
+    context.update({"type": item_type, "results": results, "no_results": not any(results.values()), "getargs": getargs})
 
     return render(request, "itemreg/search.html", context)
 
@@ -115,11 +110,7 @@ def search_view(request):
 @deny_restricted
 def register_view(request, item_type):
     """Register an item."""
-    registration_types = {
-        "calculator": CalculatorRegistrationForm,
-        "computer": ComputerRegistrationForm,
-        "phone": PhoneRegistrationForm,
-    }
+    registration_types = {"calculator": CalculatorRegistrationForm, "computer": ComputerRegistrationForm, "phone": PhoneRegistrationForm}
     if item_type not in registration_types:
         raise http.Http404
 
@@ -144,11 +135,7 @@ def register_view(request, item_type):
 @login_required
 @deny_restricted
 def register_delete_view(request, item_type, item_id):
-    registration_types = {
-        "calculator": CalculatorRegistration,
-        "computer": ComputerRegistration,
-        "phone": PhoneRegistration,
-    }
+    registration_types = {"calculator": CalculatorRegistration, "computer": ComputerRegistration, "phone": PhoneRegistration}
     if item_type not in registration_types:
         raise http.Http404
 

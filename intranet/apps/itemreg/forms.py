@@ -4,7 +4,6 @@ from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistrat
 
 
 class CalculatorRegistrationForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super(CalculatorRegistrationForm, self).__init__(*args, **kwargs)
         self.fields["calc_type"].label = "Calculator Type"
@@ -19,14 +18,12 @@ class CalculatorRegistrationForm(forms.ModelForm):
 
 
 class ComputerRegistrationForm(forms.ModelForm):
-
     class Meta:
         model = ComputerRegistration
         fields = ["manufacturer", "model", "screen_size", "serial", "description"]
 
 
 class PhoneRegistrationForm(forms.ModelForm):
-
     class Meta:
         model = PhoneRegistration
         fields = ["manufacturer", "model", "serial", "description"]
