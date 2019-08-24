@@ -11,13 +11,15 @@ class Command(BaseCommand):
     help = "Import Lifetouch photos into LDAP. Uses the 'TJHSST-Intranet' photo data export format via the Lifetouch Portal."
 
     def add_arguments(self, parser):
-        parser.add_argument('--pretend', action='store_true', dest='pretend', default=False, help="Don't save files to filesystem")
-        parser.add_argument('--root', type=str, dest='root_dir', default='/root/photos/1617/DataImages/',
-                            help='**absolute** path to outer DataImages folder for LDIF')
-        parser.add_argument('--local-root', type=str, dest='local_root_dir', default='/mnt/c/Users/James/DataImages/',
-                            help='path to DataImages folder on this host')
-        parser.add_argument('--grade-offset', type=int, dest='grade_offset', default=0, help='Grade offset, for importing previous year photos')
-        parser.add_argument('--skip-staff', action='store_true', dest='skip_staff', default=False, help='Skip staff')
+        parser.add_argument("--pretend", action="store_true", dest="pretend", default=False, help="Don't save files to filesystem")
+        parser.add_argument(
+            "--root", type=str, dest="root_dir", default="/root/photos/1617/DataImages/", help="**absolute** path to outer DataImages folder for LDIF"
+        )
+        parser.add_argument(
+            "--local-root", type=str, dest="local_root_dir", default="/mnt/c/Users/James/DataImages/", help="path to DataImages folder on this host"
+        )
+        parser.add_argument("--grade-offset", type=int, dest="grade_offset", default=0, help="Grade offset, for importing previous year photos")
+        parser.add_argument("--skip-staff", action="store_true", dest="skip_staff", default=False, help="Skip staff")
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -49,21 +51,21 @@ class Command(BaseCommand):
             users = {}
 
             csv_path = "{}data.txt".format(local_root_dir)
-            with open(csv_path, 'r') as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
+            with open(csv_path, "r") as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter="\t", quotechar='"')
                 next(csv_reader)  # skip header
                 # StudentID, FirstName, LastName, Grade
                 for row in csv_reader:
                     print(row)
                     sid, fname, lname, grade = row
                     grade = self.fix_grade(grade)
-                    if grade == 'IGNORE':
+                    if grade == "IGNORE":
                         # ignore staff with pictures who aren't in LDAP
                         teacher_photo_index += 1
                         continue
 
                     current_grade = self.calc_grade_offset(grade, grade_offset)
-                    if grade != 'STA' and (int(current_grade) > 12 or int(current_grade) < 9):
+                    if grade != "STA" and (int(current_grade) > 12 or int(current_grade) < 9):
                         continue
                     # the CSV includes only "missing-Student ID", but we need the
                     # filename for each specific missing student id file.
@@ -127,41 +129,41 @@ class Command(BaseCommand):
 
     def get_staff_name(self, fname, lname):
         # ignore subnames in parens; wildcard for abbreviated names
-        fname = fname.split('(')[0] + '*'
-        lname = lname + '*'
+        fname = fname.split("(")[0] + "*"
+        lname = lname + "*"
         u = get_user_model().objects.user_with_name(fname, lname)
         if u:
             return u
         # hyphenated vs spaced subnames
-        u = get_user_model().objects.user_with_name(fname, lname.replace(' ', '-'))
+        u = get_user_model().objects.user_with_name(fname, lname.replace(" ", "-"))
         if u:
             return u
         # non-spaced last name
-        u = get_user_model().objects.user_with_name(fname, lname.replace(' ', ''))
+        u = get_user_model().objects.user_with_name(fname, lname.replace(" ", ""))
         if u:
             return u
         # non-spaced first name
-        u = get_user_model().objects.user_with_name(fname.replace(' ', ''), lname)
+        u = get_user_model().objects.user_with_name(fname.replace(" ", ""), lname)
         if u:
             return u
         # middle name in first name
-        u = get_user_model().objects.user_with_name(fname.split(' ')[0], lname)
+        u = get_user_model().objects.user_with_name(fname.split(" ")[0], lname)
         if u:
             return u
         # cathie => catherine
-        u = get_user_model().objects.user_with_name(fname.lower().replace('ie', 'erine'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace("ie", "erine"), lname)
         if u:
             return u
         # mike => michael
-        u = get_user_model().objects.user_with_name(fname.lower().replace('ke', 'chael'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace("ke", "chael"), lname)
         if u:
             return u
         # katrina => katy
-        u = get_user_model().objects.user_with_name(fname.lower().replace('trina', 'ty'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace("trina", "ty"), lname)
         if u:
             return u
         # kathleen => kathy
-        u = get_user_model().objects.user_with_name(fname.lower().replace('hleen', 'hy'), lname)
+        u = get_user_model().objects.user_with_name(fname.lower().replace("hleen", "hy"), lname)
         if u:
             return u
         # If you got to here without a match... they probably aren't in LDAP.
@@ -175,13 +177,13 @@ class Command(BaseCommand):
 
     def fix_grade(self, grade):
         grade = str(grade)
-        if grade == 'NGA':
-            return 'STA'
-        if grade[-2:] == 'TH':
+        if grade == "NGA":
+            return "STA"
+        if grade[-2:] == "TH":
             return grade[:-2]
-        if grade[-1:] == 'T':
+        if grade[-1:] == "T":
             return grade[:-1]
-        if grade[-1:] == 'H':
+        if grade[-1:] == "H":
             return grade[:-1]
 
         return grade
@@ -207,7 +209,9 @@ class Command(BaseCommand):
     def delete_photo_ldif(self, data):
         ldif = """
 dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
-changetype: delete""".format(**data)
+changetype: delete""".format(
+            **data
+        )
 
         return ldif
 
@@ -217,7 +221,9 @@ dn: cn={photo},iodineUid={iodineUid},ou=people,dc=tjhsst,dc=edu
 changetype: add
 objectClass: iodinePhoto
 cn: {photo}
-jpegPhoto:< file://{path}""".format(**data)
+jpegPhoto:< file://{path}""".format(
+            **data
+        )
 
         return ldif
 
@@ -229,6 +235,8 @@ replace: preferredPhoto
 preferredPhoto: freshmanPhoto
 -
 replace: perm-showpictures-self
-perm-showpictures-self: TRUE""".format(**data)
+perm-showpictures-self: TRUE""".format(
+            **data
+        )
 
         return ldif

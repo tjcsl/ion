@@ -14,12 +14,12 @@ class Command(BaseCommand):
     help = "Import data from SIS."
 
     def add_arguments(self, parser):
-        parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
-        parser.add_argument('--confirm', action='store_true', dest='confirm', default=False, help='Skip confirmation message.')
-        parser.add_argument('--csv', type=str, dest='csv_file', default='import.csv', help='Import CSV file')
-        parser.add_argument('--fake-teachers', action='store_true', dest='fake_teachers', default=False, help='Fake teacher names and room numbers')
-        parser.add_argument('--load-users', action='store_true', dest='load_users', default=False, help='Load users into database')
-        parser.add_argument('--teacher-mappings', type=str, dest='teacher_file', default='teacher.csv', help='Import Teacher mappings')
+        parser.add_argument("--run", action="store_true", dest="run", default=False, help="Actually run.")
+        parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation message.")
+        parser.add_argument("--csv", type=str, dest="csv_file", default="import.csv", help="Import CSV file")
+        parser.add_argument("--fake-teachers", action="store_true", dest="fake_teachers", default=False, help="Fake teacher names and room numbers")
+        parser.add_argument("--load-users", action="store_true", dest="load_users", default=False, help="Load users into database")
+        parser.add_argument("--teacher-mappings", type=str, dest="teacher_file", default="teacher.csv", help="Import Teacher mappings")
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -65,10 +65,12 @@ class Command(BaseCommand):
             if skip_confirm:
                 self.stdout.write("Skipping confirmation.")
             else:
-                self.ask("===== WARNING! =====\n\n"
-                         "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
-                         "===== WARNING! =====\n\n"
-                         "Continue?")
+                self.ask(
+                    "===== WARNING! =====\n\n"
+                    "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
+                    "===== WARNING! =====\n\n"
+                    "Continue?"
+                )
         else:
             self.stdout.write("In pretend mode.")
 
@@ -179,23 +181,102 @@ class Command(BaseCommand):
         users_dict_base = "TJUsername"
         class_dict_base = "SectionID"
 
-        with open(self.csv_file, 'r') as csv_open:
+        with open(self.csv_file, "r") as csv_open:
             csv_reader = csv.reader(csv_open)
             next(csv_reader)  # skip first line
             class_rows = [
-                "Period", "EndPeriod", "Teacher", "TeacherStaffName", "Room", "SectionID", "CourseID", "CourseTitle", "CourseShortTitle",
-                "CourseIDTitle", "CourseTitleId", "TermName", "TermCode", "TeacherAide", "TermOverride", "SectionEnterDate", "SectionLeaveDate",
-                "MeetDays"
+                "Period",
+                "EndPeriod",
+                "Teacher",
+                "TeacherStaffName",
+                "Room",
+                "SectionID",
+                "CourseID",
+                "CourseTitle",
+                "CourseShortTitle",
+                "CourseIDTitle",
+                "CourseTitleId",
+                "TermName",
+                "TermCode",
+                "TeacherAide",
+                "TermOverride",
+                "SectionEnterDate",
+                "SectionLeaveDate",
+                "MeetDays",
             ]
             rows = [
-                "StudentID", "Gender", "Grade", "FirstName", "LastName", "MiddleName", "StudentName", "TJUsername", "Nickname", "Birthdate",
-                "Gridcode", "Address", "City", "State", "Zipcode", "CityStateZip", "EthnicCode", "Language", "EnterDate", "LeaveDate", "Track",
-                "Phone", "ScheduleHouse", "HomeroomTeacher", "HomeroomStaffName", "HomeroomName", "CounselorLast", "Counselor", "Locker",
-                "LockerComb", "ADA", "Organization", "Period", "EndPeriod", "Teacher", "TeacherStaffName", "Room", "SectionID", "CourseID",
-                "CourseTitle", "CourseShortTitle", "CourseIDTitle", "CourseTitleId", "TermName", "TermCode", "TeacherAide", "TermOverride",
-                "SectionEnterDate", "SectionLeaveDate", "House", "AuditClass", "MeetDays", "FeeAmount", "FeeCategory", "FeeCode", "FeeDescription",
-                "ParentName1", "Phone1", "Type1", "Extension1", "ParentName2", "Phone2", "Type2", "Extension2", "ParentName3", "Phone3", "Type3",
-                "Extension3", "ParentName4", "Phone4", "Type4", "Extension4"
+                "StudentID",
+                "Gender",
+                "Grade",
+                "FirstName",
+                "LastName",
+                "MiddleName",
+                "StudentName",
+                "TJUsername",
+                "Nickname",
+                "Birthdate",
+                "Gridcode",
+                "Address",
+                "City",
+                "State",
+                "Zipcode",
+                "CityStateZip",
+                "EthnicCode",
+                "Language",
+                "EnterDate",
+                "LeaveDate",
+                "Track",
+                "Phone",
+                "ScheduleHouse",
+                "HomeroomTeacher",
+                "HomeroomStaffName",
+                "HomeroomName",
+                "CounselorLast",
+                "Counselor",
+                "Locker",
+                "LockerComb",
+                "ADA",
+                "Organization",
+                "Period",
+                "EndPeriod",
+                "Teacher",
+                "TeacherStaffName",
+                "Room",
+                "SectionID",
+                "CourseID",
+                "CourseTitle",
+                "CourseShortTitle",
+                "CourseIDTitle",
+                "CourseTitleId",
+                "TermName",
+                "TermCode",
+                "TeacherAide",
+                "TermOverride",
+                "SectionEnterDate",
+                "SectionLeaveDate",
+                "House",
+                "AuditClass",
+                "MeetDays",
+                "FeeAmount",
+                "FeeCategory",
+                "FeeCode",
+                "FeeDescription",
+                "ParentName1",
+                "Phone1",
+                "Type1",
+                "Extension1",
+                "ParentName2",
+                "Phone2",
+                "Type2",
+                "Extension2",
+                "ParentName3",
+                "Phone3",
+                "Type3",
+                "Extension3",
+                "ParentName4",
+                "Phone4",
+                "Type4",
+                "Extension4",
             ]
             for row in csv_reader:
                 row_dict = {rows[i]: row[i] for i in range(len(row))}
@@ -245,7 +326,9 @@ cn: {fullname}
 sn: {lastname}
 givenName: {firstname}
 startpage: news
-structuralObjectClass: tjhsstTeacher""".format(**data)
+structuralObjectClass: tjhsstTeacher""".format(
+            **data
+        )
         return ldif
 
     def gen_add_ldif(self, data):
@@ -299,7 +382,9 @@ perm-showlocker-self: FALSE
 perm-showaddress-self: FALSE
 perm-showschedule-self: FALSE
 perm-showeighth-self: FALSE
-{classes}""".format(**data)
+{classes}""".format(
+            **data
+        )
         if not data["middlename"]:
             ldif = ldif.replace("\nmiddlename: ", "")
 
@@ -368,7 +453,9 @@ replace: middlename
 middlename: {middlename}
 -
 replace: enrolledclass
-{classes}""".format(**data)
+{classes}""".format(
+            **data
+        )
         if not data["middlename"]:
             ldif = ldif.replace("\n-\nreplace: middlename\nmiddlename: ", "")
 
@@ -379,15 +466,15 @@ replace: enrolledclass
 
     def format_counselor(self, name):
         return {
-            'Burke, Sean': 37,
-            'Martinez, Susan L.': 1035,
-            'Scott, Alexa': 105,
-            'Ketchem, Christina Z.': 468,
-            'Hamblin, Kerry': 115,
-            'See Counseling Office': 999,  # TBA TBA
-            'Smith, Andrea G.': 9,
-            'McAleer, Kacey': 165,
-            'Freedman, Naomi L.': 110
+            "Burke, Sean": 37,
+            "Martinez, Susan L.": 1035,
+            "Scott, Alexa": 105,
+            "Ketchem, Christina Z.": 468,
+            "Hamblin, Kerry": 115,
+            "See Counseling Office": 999,  # TBA TBA
+            "Smith, Andrea G.": 9,
+            "McAleer, Kacey": 165,
+            "Freedman, Naomi L.": 110,
         }[name]
 
     def format_birthday(self, bday):
@@ -438,7 +525,7 @@ replace: enrolledclass
             "gender": data["user"]["Gender"],
             "title": self.format_title(data["user"]["Gender"]),
             "middlename": data["user"]["MiddleName"],
-            "classes": self.format_classes(data)
+            "classes": self.format_classes(data),
         }
 
     def add_ldap_user(self, user_dict):
@@ -490,7 +577,9 @@ roomNumber: {roomNumber}
 graduationYear: 2017
 cn: {cn}
 {periods}
-sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
+sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(
+            **data
+        )
 
     def format_courselength(self, data):
         if data["TermCode"] == "YR":
@@ -530,16 +619,16 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             if data["Teacher"]:
                 self.stdout.write("INVALID TEACHER '{}' returning kosatka".format(data["Teacher"]))
                 time.sleep(5)
-            return 'bpkosatka'
+            return "bpkosatka"
 
         try:
 
-            with open(teacher_file, 'r') as csv_file:
+            with open(teacher_file, "r") as csv_file:
                 reader = csv.reader(csv_file)
                 next(reader)
                 for line in reader:
                     if line[0] == last_name and line[1] == first_name and (not line[2] or not middle_initial or line[2].startswith(middle_initial)):
-                        username = line[4].split('@')[0].lower()
+                        username = line[4].split("@")[0].lower()
             if not username:
                 raise Exception("no match")
 
@@ -554,13 +643,15 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
         except get_user_model().DoesNotExist:
             uid_number = self.last_uid_number + 1
             self.last_uid_number += 1
-            self.new_teachers.append({
-                'uid': uid_number,
-                'username': username,
-                'firstname': first_name,
-                'lastname': last_name,
-                'fullname': '{} {}'.format(first_name, last_name)
-            })
+            self.new_teachers.append(
+                {
+                    "uid": uid_number,
+                    "username": username,
+                    "firstname": first_name,
+                    "lastname": last_name,
+                    "fullname": "{} {}".format(first_name, last_name),
+                }
+            )
         return username
 
     def gen_class_fields(self, data, teacher_file):
@@ -570,9 +661,9 @@ sponsorDn: iodineUid={sponsor},ou=people,dc=tjhsst,dc=edu""".format(**data)
             "courseLength": self.format_courselength(data),
             "quarters": self.format_quarters(data),
             "periods": self.format_periods(data),
-            "roomNumber": data["Room"] or 'DSS',
+            "roomNumber": data["Room"] or "DSS",
             "cn": data["CourseTitle"],
-            "sponsor": self.format_sponsor(data, teacher_file)
+            "sponsor": self.format_sponsor(data, teacher_file),
         }
 
     def add_ldap_class(self, data, teacher_file):

@@ -13,8 +13,8 @@ class Command(BaseCommand):
     help = "Perform end-of-year cleanup duties."
 
     def add_arguments(self, parser):
-        parser.add_argument('--run', action='store_true', dest='run', default=False, help='Actually run.')
-        parser.add_argument('--confirm', action='store_true', dest='confirm', default=False, help='Skip confirmation.')
+        parser.add_argument("--run", action="store_true", dest="run", default=False, help="Actually run.")
+        parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation.")
 
     def ask(self, q):
         if input("{} [Yy]: ".format(q)).lower() != "y":
@@ -35,10 +35,12 @@ class Command(BaseCommand):
 
         if do_run:
             if not options["confirm"]:
-                self.ask("===== WARNING! =====\n\n"
-                         "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
-                         "===== WARNING! =====\n\n"
-                         "Continue?")
+                self.ask(
+                    "===== WARNING! =====\n\n"
+                    "This script will DESTROY data! Ensure that you have a properly backed-up copy of your database before proceeding.\n\n"
+                    "===== WARNING! =====\n\n"
+                    "Continue?"
+                )
         else:
             self.stdout.write("In pretend mode.")
 
@@ -47,8 +49,9 @@ class Command(BaseCommand):
         turnover_date = datetime.datetime(current_year, 7, 1)
         self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
 
-        if not self.chk("SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year),
-                        settings.SENIOR_GRADUATION_YEAR == new_senior_year):
+        if not self.chk(
+            "SENIOR_GRADUATION_YEAR = {} in settings/__init__.py".format(new_senior_year), settings.SENIOR_GRADUATION_YEAR == new_senior_year
+        ):
             return
         """
         EIGHTH:
