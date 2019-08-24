@@ -8,9 +8,17 @@ from django.template.loader import get_template
 logger = logging.getLogger(__name__)
 
 
-def email_send(text_template: str, html_template: str, data: Mapping[str, object], subject: str,
-               emails: Collection[str], headers: Mapping[str, str] = None, bcc: bool = False, *,  # pylint: disable=unsubscriptable-object
-               custom_logger: logging.Logger = None) -> EmailMultiAlternatives:
+def email_send(
+    text_template: str,
+    html_template: str,
+    data: Mapping[str, object],
+    subject: str,
+    emails: Collection[str],
+    headers: Mapping[str, str] = None,  # pylint: disable=unsubscriptable-object
+    bcc: bool = False,
+    *,
+    custom_logger: logging.Logger = None
+) -> EmailMultiAlternatives:
     """Send an HTML/Plaintext email with the following fields.
     If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email
 
@@ -28,7 +36,7 @@ def email_send(text_template: str, html_template: str, data: Mapping[str, object
 
     """
 
-    logger = (custom_logger if custom_logger is not None else globals()["logger"])  # pylint: disable=redefined-outer-name
+    logger = custom_logger if custom_logger is not None else globals()["logger"]  # pylint: disable=redefined-outer-name
 
     text = get_template(text_template)
     html = get_template(html_template)
