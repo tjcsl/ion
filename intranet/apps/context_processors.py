@@ -159,8 +159,10 @@ def oauth_toolkit(request):
             pass
         else:
             if resolve_match.namespaces == ["oauth2_provider"] and resolve_match.url_name == "authorized-token-list":
-                applications_tokens = [(application, application.accesstoken_set.filter(user=request.user))
-                                       for application in Application.objects.filter(accesstoken__user=request.user).distinct()]
+                applications_tokens = [
+                    (application, application.accesstoken_set.filter(user=request.user))
+                    for application in Application.objects.filter(accesstoken__user=request.user).distinct()
+                ]
                 return {"applications_tokens": applications_tokens}
 
     return {}
