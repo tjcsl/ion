@@ -8,16 +8,8 @@ from django.shortcuts import redirect, render
 
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import (
-    BusRouteForm,
-    DarkModeForm,
-    EmailFormset,
-    NotificationOptionsForm,
-    PhoneFormset,
-    PreferredPictureForm,
-    PrivacyOptionsForm,
-    WebsiteFormset,
-)
+from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
+                    WebsiteFormset)
 
 logger = logging.getLogger(__name__)
 
