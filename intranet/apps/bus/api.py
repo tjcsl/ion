@@ -26,6 +26,7 @@ class RouteDetail(generics.RetrieveAPIView):
     /api/bus/<num>: retrieve information about bus number <num>
 
     """
+
     serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
 
