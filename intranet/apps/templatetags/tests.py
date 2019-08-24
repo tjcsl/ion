@@ -13,5 +13,5 @@ class TemplateTest(IonTestCase):
         """Validates all the templates."""
         out = StringIO()
         with contextlib.redirect_stdout(out):
-            call_command('validate_templates')
-        self.assertEqual(out.getvalue().strip(), '0 errors found')
+            call_command("validate_templates")
+        self.assertEqual(out.getvalue().strip(), "0 errors found")
