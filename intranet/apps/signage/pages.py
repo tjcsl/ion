@@ -23,10 +23,10 @@ def bus(page, sign, request):
     else:
         end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
     return {
-        'admin': False,
-        'signage': True,
-        'ws_protocol': 'ws' if request.scheme == 'http' else 'wss',
-        'ws_host': request.get_host(),
-        'school_end_hour': end_of_day.hour,
-        'school_end_time': end_of_day.minute
+        "admin": False,
+        "signage": True,
+        "ws_protocol": "ws" if request.scheme == "http" else "wss",
+        "ws_host": request.get_host(),
+        "school_end_hour": end_of_day.hour,
+        "school_end_time": end_of_day.minute,
     }

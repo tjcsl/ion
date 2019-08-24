@@ -16,6 +16,7 @@ class Page(models.Model):
 
         signs: set of signs which display this Page
     """
+
     name = models.CharField(max_length=50)
 
     iframe = models.BooleanField(default=False)
@@ -69,6 +70,7 @@ class Sign(models.Model):
                       amount of time
         pages: a list of pages
     """
+
     name = models.CharField(max_length=1000)
     display = models.CharField(max_length=100, unique=True)
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
