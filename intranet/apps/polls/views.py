@@ -61,9 +61,9 @@ def csv_results(request, poll_id):
     for u in p.get_users_voted():
         answers = Answer.objects.filter(question__poll=p, user=u)
         answer_dict = OrderedDict()
-        answer_dict['Username'] = u.username
-        answer_dict['First'] = u.first_name
-        answer_dict['Last'] = u.last_name
+        answer_dict["Username"] = u.username
+        answer_dict["First"] = u.first_name
+        answer_dict["Last"] = u.last_name
         for answer in answers:
             question = answer.question.question
             if answer.choice:
@@ -71,9 +71,9 @@ def csv_results(request, poll_id):
             elif answer.answer:
                 answer_dict[question] = answer.answer
             elif answer.clear_vote:
-                answer_dict[question] = 'Cleared'
+                answer_dict[question] = "Cleared"
             else:
-                answer_dict[question] = 'None'
+                answer_dict[question] = "None"
         dict_list.append(answer_dict)
 
     response = http.HttpResponse(content_type="text/csv")
@@ -196,7 +196,7 @@ def poll_vote_view(request, poll_id):
             "current_vote": current_votes[0] if current_votes else None,
             "current_choices": [v.choice for v in current_votes],
             "current_vote_none": (len(current_votes) < 1),
-            "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote)
+            "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
         }
         questions.append(question)
 
@@ -233,10 +233,10 @@ def handle_sap(q):
                     "all": len(vote_users),
                     "all_percent": perc(len(vote_users), users.count()),
                     "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
-                    "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
+                    "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes])),
                 }
             },
-            "users": [v.user for v in votes]
+            "users": [v.user for v in votes],
         }
         for yr in range(9, 14):
             yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
@@ -258,10 +258,10 @@ def handle_sap(q):
                 "all": len(clr_users),
                 "all_percent": perc(len(clr_users), users.count()),
                 "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
-                "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
+                "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes])),
             }
         },
-        "users": clr_users
+        "users": clr_users,
     }
     for yr in range(9, 14):
         yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
@@ -269,7 +269,7 @@ def handle_sap(q):
         choice["votes"][yr] = {
             "all": len(yr_votes),
             "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
+            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
         }
 
     choices.append(choice)
@@ -282,9 +282,9 @@ def handle_sap(q):
                 "votes_all": question_votes.count(),
                 "all_percent": perc(users.count(), users.count()),
                 "male": users.filter(gender=True).count(),
-                "female": users.filter(gender__isnull=False, gender=False).count()
+                "female": users.filter(gender__isnull=False, gender=False).count(),
             }
-        }
+        },
     }
     for yr in range(9, 14):
         yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
@@ -292,7 +292,7 @@ def handle_sap(q):
         choice["votes"][yr] = {
             "all": len(set(yr_votes)),
             "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
+            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
         }
 
     choices.append(choice)
@@ -308,10 +308,10 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), total_count),
                 "male": votes.filter(user__gender=True).count() if do_gender else 0,
-                "female": votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0
+                "female": votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0,
             }
         },
-        "users": [v.user for v in votes] if show_answers else None
+        "users": [v.user for v in votes] if show_answers else None,
     }
 
     for yr in range(9, 14):
@@ -319,7 +319,7 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
         choice["votes"][yr] = {
             "all": yr_votes.count(),
             "male": yr_votes.filter(user__gender=True).count() if do_gender else 0,
-            "female": yr_votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0
+            "female": yr_votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0,
         }
     return choice
 
@@ -357,7 +357,7 @@ def poll_results_view(request, poll_id):
         messages.error(request, "Poll results cannot be viewed while the poll is running.")
         return redirect("polls")
 
-    do_gender = ("no_gender" not in request.GET)
+    do_gender = "no_gender" not in request.GET
     show_answers = request.GET.get("show_answers", False)
 
     if show_answers and poll.is_secret:
@@ -445,7 +445,7 @@ def modify_poll_view(request, poll_id):
         "poll_questions": serialize("json", poll.question_set.all()),
         "poll_choices": serialize("json", Choice.objects.filter(question__in=poll.question_set.all())),
         "form": form,
-        "is_polls_admin": True
+        "is_polls_admin": True,
     }
 
     return render(request, "polls/add_modify.html", context)
@@ -493,8 +493,9 @@ def process_question_data(instance, question_data):
             question.choice_set.exclude(pk__in=[x["pk"] for x in q["choices"] if "pk" in x]).delete()
         else:
             # Question does not exist
-            question = Question.objects.create(poll=instance, question=safe_html(q["question"]).strip(), num=count, type=q.get("type", "STD"),
-                                               max_choices=q.get("max_choices", 1))
+            question = Question.objects.create(
+                poll=instance, question=safe_html(q["question"]).strip(), num=count, type=q.get("type", "STD"), max_choices=q.get("max_choices", 1)
+            )
 
         choice_count = 1
         for c in q.get("choices", []):

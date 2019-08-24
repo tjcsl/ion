@@ -12,7 +12,6 @@ from ...utils.date import get_date_range_this_year
 
 
 class PollQuerySet(models.query.QuerySet):
-
     def this_year(self):
         """ Get AnnouncementRequests from this school year only. """
         start_date, end_date = get_date_range_this_year()
@@ -20,7 +19,6 @@ class PollQuerySet(models.query.QuerySet):
 
 
 class PollManager(Manager):
-
     def get_queryset(self):
         return PollQuerySet(self.model, using=self._db)
 
@@ -60,6 +58,7 @@ class Poll(models.Model):
     Access questions for the poll through poll.question_set.all()
 
     """
+
     objects = PollManager()
 
     title = models.CharField(max_length=100)
@@ -146,39 +145,40 @@ class Question(models.Model):
         Access possible choices for this question through question.choice_set.all()
 
     """
+
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     question = models.CharField(max_length=500)
     num = models.IntegerField()
-    STD = 'STD'
-    ELECTION = 'ELC'
-    APP = 'APP'
-    SPLIT_APP = 'SAP'
-    FREE_RESP = 'FRE'
-    SHORT_RESP = 'SRE'
-    STD_OTHER = 'STO'
+    STD = "STD"
+    ELECTION = "ELC"
+    APP = "APP"
+    SPLIT_APP = "SAP"
+    FREE_RESP = "FRE"
+    SHORT_RESP = "SRE"
+    STD_OTHER = "STO"
     TYPE = (
-        (STD, 'Standard'),
-        (ELECTION, 'Election'),
-        (APP, 'Approval'),
-        (SPLIT_APP, 'Split approval'),
-        (FREE_RESP, 'Free response'),
-        (SHORT_RESP, 'Short response'),
-        (STD_OTHER, 'Standard other'),
+        (STD, "Standard"),
+        (ELECTION, "Election"),
+        (APP, "Approval"),
+        (SPLIT_APP, "Split approval"),
+        (FREE_RESP, "Free response"),
+        (SHORT_RESP, "Short response"),
+        (STD_OTHER, "Standard other"),
     )
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
     max_choices = models.IntegerField(default=1)
 
     def is_writing(self):
-        return (self.type in [Question.FREE_RESP, Question.SHORT_RESP])
+        return self.type in [Question.FREE_RESP, Question.SHORT_RESP]
 
     def is_single_choice(self):
-        return (self.type in [Question.STD, Question.ELECTION])
+        return self.type in [Question.STD, Question.ELECTION]
 
     def is_many_choice(self):
-        return (self.type in [Question.APP, Question.SPLIT_APP])
+        return self.type in [Question.APP, Question.SPLIT_APP]
 
     def is_choice(self):
-        return (self.type in [Question.STD, Question.ELECTION, Question.APP, Question.SPLIT_APP])
+        return self.type in [Question.STD, Question.ELECTION, Question.APP, Question.SPLIT_APP]
 
     def trunc_question(self):
         comp = strip_tags(self.question)
