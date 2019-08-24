@@ -63,6 +63,9 @@ class KerberosAuthenticationBackend:
         logger.debug("Setting KRB5CCNAME to 'FILE:%s'", cache)
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
+        authenticated_through_AD = False
+
+        # Attempt to authenticate against CSL Kerberos realm
         try:
             realm = settings.CSL_REALM
             kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
@@ -71,7 +74,7 @@ class KerberosAuthenticationBackend:
             returned = kinit.expect([pexpect.EOF, "password:"])
             if returned == 1:
                 logger.debug("Password for %s@%s expired, needs reset", username, realm)
-                return "reset"
+                return "reset", authenticated_through_AD
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
@@ -79,6 +82,8 @@ class KerberosAuthenticationBackend:
             exitstatus = 1
 
         if exitstatus != 0:
+            # Attempt to authenticate against the Active Directory Kerberos realm
+            authenticated_through_AD = True
             try:
                 realm = settings.AD_REALM
                 kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
@@ -86,7 +91,7 @@ class KerberosAuthenticationBackend:
                 kinit.sendline(password)
                 returned = kinit.expect([pexpect.EOF, "password:"])
                 if returned == 1:
-                    return False
+                    return False, authenticated_through_AD
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
@@ -99,10 +104,10 @@ class KerberosAuthenticationBackend:
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized %s@%s", username, realm)
-            return True
+            return True, authenticated_through_AD
         else:
             logger.debug("Kerberos failed to authorize %s", username)
-            return False
+            return False, authenticated_through_AD
 
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
@@ -124,9 +129,9 @@ class KerberosAuthenticationBackend:
             return None
 
         # remove all non-alphanumerics
-        username = re.sub(r"\W", "", username)
+        username = re.sub(r"\W", "", username).lower()
 
-        krb_ticket = self.get_kerberos_ticket(username, password)
+        krb_ticket, ad_auth = self.get_kerberos_ticket(username, password)
 
         if krb_ticket == "reset":
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
@@ -139,6 +144,9 @@ class KerberosAuthenticationBackend:
             try:
                 user = get_user_model().objects.get(username__iexact=username)
             except get_user_model().DoesNotExist:
+                return None
+            if user.user_type == "student" and ad_auth:
+                # Block authentication for students who authenticated via AD
                 return None
             return user
 
