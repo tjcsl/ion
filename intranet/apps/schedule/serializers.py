@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class TimeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Time
         fields = ("hour", "minute")

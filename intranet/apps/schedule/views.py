@@ -45,8 +45,8 @@ def is_weekday(date):
 def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True):
     monday = 1
     friday = 5
-    if request and 'date' in request.GET:
-        date = decode_date(request.GET['date'])
+    if request and "date" in request.GET:
+        date = decode_date(request.GET["date"])
 
     if date is None:
         date = timezone.localtime()
@@ -73,7 +73,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
             comment = None
 
         if dayobj is not None:
-            blocks = (dayobj.day_type.blocks.select_related("start", "end").order_by("start__hour", "start__minute"))
+            blocks = dayobj.day_type.blocks.select_related("start", "end").order_by("start__hour", "start__minute")
         else:
             blocks = []
 
@@ -112,10 +112,10 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
                 "date_today": date_today,
                 "date_yesterday": date_yesterday,
                 "schedule_tomorrow": schedule_tomorrow,
-                "comment": comment
+                "comment": comment,
             }
         }
-        cache.set(key, data, timeout=settings.CACHE_AGE['bell_schedule'])
+        cache.set(key, data, timeout=settings.CACHE_AGE["bell_schedule"])
         logger.debug("Cached schedule context for %s", date_fmt)
         return data
 
@@ -156,8 +156,8 @@ def week_data(request, date=None):
 
 
 def month_data(request):
-    if request and 'date' in request.GET:
-        first_date = decode_date(request.GET['date']) + relativedelta(day=1)
+    if request and "date" in request.GET:
+        first_date = decode_date(request.GET["date"]) + relativedelta(day=1)
     else:
         first_date = timezone.now() + relativedelta(day=1)
     week1 = week_data(None, first_date)
@@ -178,7 +178,7 @@ def calendar_view(request):
     data = {}
     data["week_data"] = week_data(request)
     data["month_data"] = month_data(request)
-    if 'view' in request.GET and request.GET["view"] == "month":
+    if "view" in request.GET and request.GET["view"] == "month":
         data["view"] = "month"
     else:
         data["view"] = "week"
@@ -235,8 +235,11 @@ def do_default_fill(request):
         blue_day = DayType.objects.get(name="Blue Day")
         red_day = DayType.objects.get(name="Red Day")
     except DayType.DoesNotExist:
-        return render(request, "schedule/fill.html",
-                      {"msgs": ["Failed to insert any schedules.", "Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days."]})
+        return render(
+            request,
+            "schedule/fill.html",
+            {"msgs": ["Failed to insert any schedules.", "Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days."]},
+        )
 
     daymap = {monday: anchor_day, tuesday: blue_day, wednesday: red_day, thursday: blue_day, friday: red_day}
 
@@ -320,7 +323,7 @@ def admin_home_view(request):
         "this_month": this_month,
         "next_month": next_month,
         "last_month": last_month,
-        "daytypes": daytypes
+        "daytypes": daytypes,
     }
 
     return render(request, "schedule/admin_home.html", data)
@@ -418,9 +421,11 @@ def admin_daytype_view(request, daytype_id=None):
             model = form.save()
             """Add blocks"""
             blocks = zip(
-                request.POST.getlist('block_order'), request.POST.getlist('block_name'),
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist('block_start')],
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist('block_end')])
+                request.POST.getlist("block_order"),
+                request.POST.getlist("block_name"),
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist("block_start")],
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist("block_end")],
+            )
             logger.debug(blocks)
             model.blocks.all().delete()
             for blk in blocks:

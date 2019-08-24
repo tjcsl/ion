@@ -14,12 +14,11 @@ logger = logging.getLogger(__name__)
 
 class OnePagePagination(PageNumberPagination):
     page_size = 1
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 7
 
 
 class DayList(generics.ListAPIView):
-
     def get_queryset(self):
         return Day.objects.get_future_days()
 
@@ -36,7 +35,7 @@ class DayDetail(generics.RetrieveAPIView):
 
     def get_object(self):
         try:
-            day = Day.objects.get(date=self.kwargs['date'])
+            day = Day.objects.get(date=self.kwargs["date"])
             return day
         except Day.DoesNotExist:
             day_type = DayType.objects.get_or_create(name="NO SCHOOL<br>")[0]

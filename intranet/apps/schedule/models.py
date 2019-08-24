@@ -21,21 +21,21 @@ class Time(models.Model):
         return datetime.datetime(date.year, date.month, date.day, self.hour, self.minute)
 
     class Meta:
-        unique_together = (("hour", "minute"))
+        unique_together = ("hour", "minute")
         ordering = ("hour", "minute")
 
 
 class Block(models.Model):
     name = models.CharField(max_length=100)
-    start = models.ForeignKey('Time', related_name='blockstart', on_delete=models.CASCADE)
-    end = models.ForeignKey('Time', related_name='blockend', on_delete=models.CASCADE)
+    start = models.ForeignKey("Time", related_name="blockstart", on_delete=models.CASCADE)
+    end = models.ForeignKey("Time", related_name="blockend", on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
 
     def __str__(self):
         return "{}: {} - {}".format(self.name, self.start, self.end)
 
     class Meta:
-        unique_together = (("order", "name", "start", "end"))
+        unique_together = ("order", "name", "start", "end")
         ordering = ("order", "name", "start", "end")
 
 
@@ -48,9 +48,9 @@ class CodeName(models.Model):
 
 class DayType(models.Model):
     name = models.CharField(max_length=100)
-    codenames = models.ManyToManyField('CodeName', blank=True)
+    codenames = models.ManyToManyField("CodeName", blank=True)
     special = models.BooleanField(default=False)
-    blocks = models.ManyToManyField('Block', blank=True)
+    blocks = models.ManyToManyField("Block", blank=True)
 
     def __str__(self):
         return self.name
@@ -113,7 +113,6 @@ class DayType(models.Model):
 
 
 class DayManager(models.Manager):
-
     def get_future_days(self):
         """Return only future Day objects."""
         today = timezone.now().date()
@@ -132,7 +131,7 @@ class DayManager(models.Manager):
 class Day(models.Model):
     objects = DayManager()
     date = models.DateField(unique=True)
-    day_type = models.ForeignKey('DayType', on_delete=models.CASCADE)
+    day_type = models.ForeignKey("DayType", on_delete=models.CASCADE)
     comment = models.CharField(max_length=1000, blank=True)
 
     @property
