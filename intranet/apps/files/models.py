@@ -24,7 +24,6 @@ from django.db.models import Manager, Q
 
 
 class HostManager(Manager):
-
     def visible_to_user(self, user):
         """Get a list of hosts available to a given user.
 

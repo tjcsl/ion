@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 exceptions = (EOFError, OSError, PermissionError, SSHException, SFTPError)
 
 
-@sensitive_variables('password')
+@sensitive_variables("password")
 def create_session(hostname, username, password):
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
@@ -52,8 +52,8 @@ def files_view(request):
 
 @login_required
 @deny_restricted
-@sensitive_variables('message', 'key', 'iv', 'ciphertext')
-@sensitive_post_parameters('password')
+@sensitive_variables("message", "key", "iv", "ciphertext")
+@sensitive_post_parameters("password")
 def files_auth(request):
     """Display authentication for filecenter."""
     if "password" in request.POST:
@@ -93,10 +93,10 @@ def files_auth(request):
         return render(request, "files/auth.html", {"is_admin": request.user.member_of("admin_all")})
 
 
-@sensitive_variables('password')
+@sensitive_variables("password")
 def get_authinfo(request):
     """Get authentication info from the encrypted message."""
-    if (("files_iv" not in request.session) or ("files_text" not in request.session) or ("files_key" not in request.COOKIES)):
+    if ("files_iv" not in request.session) or ("files_text" not in request.session) or ("files_key" not in request.COOKIES):
         return False
     """
         Decrypt the password given the SERVER-side IV, SERVER-side
@@ -229,7 +229,7 @@ def files_type(request, fstype=None):
             tmpfile.seek(0)
             chunk_size = 8192
             response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
-            response['Content-Length'] = content_len
+            response["Content-Length"] = content_len
             response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
             return response
 
@@ -316,13 +316,15 @@ def files_type(request, fstype=None):
             except exceptions:
                 # If we can't stat the file, don't show it
                 continue
-            files.append({
-                "name": f,
-                "folder": sftp.isdir(f),
-                "stat": fstat,
-                "stat_mtime": datetime.datetime.fromtimestamp(int(fstat.st_mtime or 0)),
-                "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
-            })
+            files.append(
+                {
+                    "name": f,
+                    "folder": sftp.isdir(f),
+                    "stat": fstat,
+                    "stat_mtime": datetime.datetime.fromtimestamp(int(fstat.st_mtime or 0)),
+                    "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE,
+                }
+            )
 
     logger.debug(files)
 
@@ -342,7 +344,7 @@ def files_type(request, fstype=None):
         "files": files,
         "current_dir": current_dir,
         "parent_dir": parent_dir if can_access_path(parent_dir) else None,
-        "max_download_mb": (settings.FILES_MAX_DOWNLOAD_SIZE / 1024 / 1024)
+        "max_download_mb": (settings.FILES_MAX_DOWNLOAD_SIZE / 1024 / 1024),
     }
 
     return render(request, "files/directory.html", context)
@@ -501,7 +503,7 @@ def files_upload(request, fstype=None):
                 messages.error(request, "Access to the path you provided is restricted.")
                 return redirect("/files/{}?dir={}".format(fstype, default_dir))
 
-            handle_file_upload(request.FILES['file'], fstype, fsdir, sftp, request)
+            handle_file_upload(request.FILES["file"], fstype, fsdir, sftp, request)
             return redirect("/files/{}?dir={}".format(fstype, fsdir))
     else:
         form = UploadFileForm()
