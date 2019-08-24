@@ -38,8 +38,9 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         return None, False
 
     # Use select_related to reduce query count
-    signups = (EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related(
-        "scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity"))
+    signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related(
+        "scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity"
+    )
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:
@@ -81,7 +82,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             "is_today": blk_today,
             "signup_time": b.signup_time,
             "signup_time_future": b.signup_time_future(),
-            "rooms": rooms
+            "rooms": rooms,
         }
         schedule.append(info)
 
@@ -111,7 +112,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     if surrounding_blocks is None:
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
-    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(block__in=surrounding_blocks))
+    activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(block__in=surrounding_blocks)
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
@@ -161,7 +162,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         "num_attendance_acts": num_acts,
         "sponsor_schedule_cur_date": cur_date,
         "sponsor_schedule_next_date": next_date,
-        "sponsor_schedule_prev_date": prev_date
+        "sponsor_schedule_prev_date": prev_date,
     }
 
 
@@ -205,28 +206,32 @@ def find_birthdays(request):
                 "custom": custom,
                 "today": {
                     "date": today,
-                    "users": [{
-                        "id": u.id,
-                        "full_name": u.full_name,
-                        "grade": {
-                            "name": u.grade.name
-                        },
-                        "age": (u.age + yr_inc) if u.age is not None else -1,
-                        "public": u.properties.attribute_is_public("show_birthday")
-                    } if u else {} for u in get_user_model().objects.users_with_birthday(today.month, today.day)],
+                    "users": [
+                        {
+                            "id": u.id,
+                            "full_name": u.full_name,
+                            "grade": {"name": u.grade.name},
+                            "age": (u.age + yr_inc) if u.age is not None else -1,
+                            "public": u.properties.attribute_is_public("show_birthday"),
+                        }
+                        if u
+                        else {}
+                        for u in get_user_model().objects.users_with_birthday(today.month, today.day)
+                    ],
                     "inc": 0,
                 },
                 "tomorrow": {
                     "date": tomorrow,
-                    "users": [{
-                        "id": u.id,
-                        "full_name": u.full_name,
-                        "grade": {
-                            "name": u.grade.name
-                        },
-                        "age": (u.age - 1) if u.age is not None else -1,
-                        "public": u.properties.attribute_is_public("show_birthday")
-                    } for u in get_user_model().objects.users_with_birthday(tomorrow.month, tomorrow.day)],
+                    "users": [
+                        {
+                            "id": u.id,
+                            "full_name": u.full_name,
+                            "grade": {"name": u.grade.name},
+                            "age": (u.age - 1) if u.age is not None else -1,
+                            "public": u.properties.attribute_is_public("show_birthday"),
+                        }
+                        for u in get_user_model().objects.users_with_birthday(tomorrow.month, tomorrow.day)
+                    ],
                     "inc": 1,
                 },
             }  # yapf: disable
@@ -242,19 +247,19 @@ def find_visible_birthdays(request, data):
     """
     if request.user and (request.user.is_teacher or request.user.is_eighthoffice or request.user.is_eighth_admin):
         return data
-    data['today']['users'] = [u for u in data['today']['users'] if u['public']]
-    data['tomorrow']['users'] = [u for u in data['tomorrow']['users'] if u['public']]
+    data["today"]["users"] = [u for u in data["today"]["users"] if u["public"]]
+    data["tomorrow"]["users"] = [u for u in data["tomorrow"]["users"] if u["public"]]
     return data
 
 
 def get_prerender_url(request):
     if request.user.is_eighth_admin:
         if request.user.is_student:
-            view = 'eighth_signup'
+            view = "eighth_signup"
         else:
-            view = 'eighth_admin_dashboard'
+            view = "eighth_admin_dashboard"
     else:
-        view = 'eighth_redirect'
+        view = "eighth_redirect"
 
     return request.build_absolute_uri(reverse(view))
 
@@ -296,23 +301,23 @@ def get_announcements_list(request, context):
     if context["announcements_admin"] and context["show_all"]:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = (Announcement.objects.all())
+        announcements = Announcement.objects.all()
     else:
         # Only show announcements for groups that the user is enrolled in.
         if context["show_expired"]:
-            announcements = (Announcement.objects.visible_to_user(user))
+            announcements = Announcement.objects.visible_to_user(user)
         else:
-            announcements = (Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now()))
+            announcements = Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now())
 
     if context["events_admin"] and context["show_all"]:
-        events = (Event.objects.all())
+        events = Event.objects.all()
     else:
         if context["show_expired"]:
-            events = (Event.objects.visible_to_user(user))
+            events = Event.objects.visible_to_user(user)
         else:
             # Unlike announcements, show events for the rest of the day after they occur.
             midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
-            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True))
+            events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
 
     items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
     items.reverse()
@@ -338,7 +343,7 @@ def paginate_announcements_list(request, context, items):
     display_num = 10
     end_num = start_num + display_num
     prev_page = start_num - display_num
-    more_items = ((len(items) - start_num) > display_num)
+    more_items = (len(items) - start_num) > display_num
     try:
         items_sorted = items[start_num:end_num]
     except (ValueError, AssertionError):
@@ -346,13 +351,7 @@ def paginate_announcements_list(request, context, items):
     else:
         items = items_sorted
 
-    context.update({
-        "items": items,
-        "start_num": start_num,
-        "end_num": end_num,
-        "prev_page": prev_page,
-        "more_items": more_items,
-    })
+    context.update({"items": items, "start_num": start_num, "end_num": end_num, "prev_page": prev_page, "more_items": more_items})
 
     return context, items
 
@@ -384,13 +383,15 @@ def add_widgets_context(request, context):
 
     if context["is_student"]:
         schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
-        context.update({
-            "schedule": schedule,
-            "last_displayed_block": schedule[-1] if schedule else None,
-            "no_signup_today": no_signup_today,
-            "senior_graduation": settings.SENIOR_GRADUATION,
-            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
-        })
+        context.update(
+            {
+                "schedule": schedule,
+                "last_displayed_block": schedule[-1] if schedule else None,
+                "no_signup_today": no_signup_today,
+                "senior_graduation": settings.SENIOR_GRADUATION,
+                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+            }
+        )
 
     if context["eighth_sponsor"]:
         sponsor_date = request.GET.get("sponsor_date", None)
@@ -427,16 +428,16 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     events_admin = user.has_admin_permission("events")
 
     if not show_expired:
-        show_expired = ("show_expired" in request.GET)
+        show_expired = "show_expired" in request.GET
 
-    show_all = (request.GET.get("show_all", "0") != "0")
+    show_all = request.GET.get("show_all", "0") != "0"
     if "show_all" not in request.GET and request.user.is_eighthoffice:
         # Show all by default to 8th period office
         show_all = True
 
     # Include show_all postfix on next/prev links
     paginate_link_suffix = "&show_all=1" if show_all else ""
-    is_index_page = (request.path_info in ["/", ""])
+    is_index_page = request.path_info in ["/", ""]
 
     context = {
         "prerender_url": get_prerender_url(request),
@@ -446,7 +447,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "is_index_page": is_index_page,
         "show_all": show_all,
         "paginate_link_suffix": paginate_link_suffix,
-        "show_expired": show_expired
+        "show_expired": show_expired,
     }
 
     # Get list of announcements
@@ -455,19 +456,21 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     # Paginate announcements list
     context, items = paginate_announcements_list(request, context, items)
 
-    user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True))
-    user_hidden_events = (Event.objects.hidden_events(user).values_list("id", flat=True))
+    user_hidden_announcements = Announcement.objects.hidden_announcements(user).values_list("id", flat=True)
+    user_hidden_events = Event.objects.hidden_events(user).values_list("id", flat=True)
 
     if ignore_dashboard_types is None:
         ignore_dashboard_types = []
 
-    context.update({
-        "hide_announcements": True,
-        "hide_events": True,
-        "user_hidden_announcements": user_hidden_announcements,
-        "user_hidden_events": user_hidden_events,
-        "ignore_dashboard_types": ignore_dashboard_types
-    })
+    context.update(
+        {
+            "hide_announcements": True,
+            "hide_events": True,
+            "user_hidden_announcements": user_hidden_announcements,
+            "user_hidden_events": user_hidden_events,
+            "ignore_dashboard_types": ignore_dashboard_types,
+        }
+    )
 
     is_student = user.is_student
     is_teacher = user.is_teacher
@@ -502,21 +505,23 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     elif ap_week:
         dash_warning = ap_week
 
-    context.update({
-        "dash_warning": dash_warning,
-        "show_widgets": show_widgets,
-        "show_expired": show_expired,
-        "view_announcements_url": view_announcements_url,
-        "dashboard_title": dashboard_title,
-        "dashboard_header": dashboard_header,
-        "is_student": is_student,
-        "is_teacher": is_teacher,
-        "is_senior": is_senior,
-        "is_global_admin": is_global_admin,
-        "show_admin_widget": show_admin_widget,
-        "eighth_sponsor": eighth_sponsor,
-        "num_senior_destinations": num_senior_destinations
-    })
+    context.update(
+        {
+            "dash_warning": dash_warning,
+            "show_widgets": show_widgets,
+            "show_expired": show_expired,
+            "view_announcements_url": view_announcements_url,
+            "dashboard_title": dashboard_title,
+            "dashboard_header": dashboard_header,
+            "is_student": is_student,
+            "is_teacher": is_teacher,
+            "is_senior": is_senior,
+            "is_global_admin": is_global_admin,
+            "show_admin_widget": show_admin_widget,
+            "eighth_sponsor": eighth_sponsor,
+            "num_senior_destinations": num_senior_destinations,
+        }
+    )
 
     if settings.TJSTAR_MAP:
         context.update(get_tjstar_mapping(request.user))
