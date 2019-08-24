@@ -9,7 +9,7 @@ from .views import get_emerg
 logger = logging.getLogger(__name__)
 
 
-@api_view(('GET',))
+@api_view(("GET",))
 # @renderer_classes((JSONRenderer,))
 @permission_classes((AllowAny,))
 def emerg_status(request):
