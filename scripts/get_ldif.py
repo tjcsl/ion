@@ -2,6 +2,7 @@ from django.forms.models import model_to_dict
 from intranet.apps.users.models import User
 import sys
 
+
 def run(*args):
     if len(args) != 2:
         sys.exit(1)
@@ -9,7 +10,7 @@ def run(*args):
     uidNum = args[1]
     if u.user_type in ["teacher", "service", "counselor"]:
         u.graduation_year = 1984
-        u.user_type= "staff"
+        u.user_type = "staff"
     else:
         u.user_type = "students"
 
@@ -32,7 +33,7 @@ homeDirectory: /afs/csl.tjhsst.edu/{user_type}/{graduation_year}/{username}
 loginShell: /bin/bash"""
     out = ldiftemplate.format(uidNum=uidNum, **model_to_dict(u))
     if u.user_type == "staff":
-        out = out.replace('staff/1984', 'staff')
-        out = out.replace('ou=1984,', '')
+        out = out.replace("staff/1984", "staff")
+        out = out.replace("ou=1984,", "")
 
     print(out)
