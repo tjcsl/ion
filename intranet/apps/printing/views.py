@@ -19,6 +19,10 @@ from .forms import PrintJobForm
 logger = logging.getLogger(__name__)
 
 
+class InvalidInputPrintingError(Exception):
+    """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message."""
+
+
 def get_printers():
     key = "printing:printers"
     cached = cache.get(key)
@@ -126,7 +130,7 @@ def convert_file(tmpfile_name):
     if detected == "application/postscript":
         return convert_pdf(tmpfile_name, "pdf2ps")
 
-    raise Exception("Not sure how to handle a file of type {}".format(detected))
+    raise InvalidInputPrintingError("Invalid file type {}".format(detected))
 
 
 def check_page_range(page_range, max_pages):
@@ -164,7 +168,7 @@ def print_job(obj, do_print=True):
         raise Exception("Printer not authorized.")
 
     if not obj.file:
-        raise Exception("No file.")
+        raise InvalidInputPrintingError("No file given to print.")
 
     fileobj = obj.file
 
@@ -202,15 +206,15 @@ def print_job(obj, do_print=True):
 
     if obj.page_range:
         if not range_count:
-            raise Exception("You specified an invalid page range.")
+            raise InvalidInputPrintingError("You specified an invalid page range.")
         elif range_count > settings.PRINTING_PAGES_LIMIT:
-            raise Exception(
+            raise InvalidInputPrintingError(
                 "You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
                     range_count, settings.PRINTING_PAGES_LIMIT
                 )
             )
     elif num_pages > settings.PRINTING_PAGES_LIMIT:
-        raise Exception(
+        raise InvalidInputPrintingError(
             "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
         )
 
@@ -252,6 +256,9 @@ def print_view(request):
             obj.save()
             try:
                 print_job(obj)
+            except InvalidInputPrintingError as e:
+                messages.error(request, "{}".format(e))
+                logging.error("Printing failed due to invalid user input: %s", e)
             except Exception as e:
                 messages.error(request, "{}".format(e))
                 logging.critical("Printing failed: %s", e)
