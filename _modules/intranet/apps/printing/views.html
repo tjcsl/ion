@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5199) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5203) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -147,6 +147,10 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="InvalidInputPrintingError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.InvalidInputPrintingError">[docs]</a><span class="k">class</span> <span class="nc">InvalidInputPrintingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message.&quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span> <span class="nf">get_printers</span><span class="p">():</span>
     <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;printing:printers&quot;</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -254,7 +258,7 @@
     <span class="k">if</span> <span class="n">detected</span> <span class="o">==</span> <span class="s2">&quot;application/postscript&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;pdf2ps&quot;</span><span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not sure how to handle a file of type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span></div>
+    <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;Invalid file type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span> <span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">):</span>
@@ -292,7 +296,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Printer not authorized.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No file.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;No file given to print.&quot;</span><span class="p">)</span>
 
     <span class="n">fileobj</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">file</span>
 
@@ -330,15 +334,15 @@
 
     <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">page_range</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">range_count</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You specified an invalid page range.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;You specified an invalid page range.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">range_count</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span>
                 <span class="s2">&quot;You specified a range of </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">range_count</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">elif</span> <span class="n">num_pages</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span>
             <span class="s2">&quot;This file contains </span><span class="si">{}</span><span class="s2"> pages. You may only print up to </span><span class="si">{}</span><span class="s2"> pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_pages</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">)</span>
         <span class="p">)</span>
 
@@ -380,6 +384,9 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">InvalidInputPrintingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Printing failed due to invalid user input: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Printing failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
