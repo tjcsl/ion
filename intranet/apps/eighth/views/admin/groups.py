@@ -267,6 +267,8 @@ def upload_group_members_view(request, group_id):
                 user = get_user_model().objects.get(id=uid)
                 if user is None:
                     messages.error(request, "User with ID {} does not exist".format(uid))
+                elif user.groups.filter(id=group.id).exists():
+                    messages.warning(request, "User {} is already in group".format(user.username))
                 else:
                     user.groups.add(group)
                     user.save()
@@ -279,11 +281,15 @@ def upload_group_members_view(request, group_id):
                 import_group = Group.objects.get(id=request.POST["import_group"])
             except Group.DoesNotExist:
                 raise http.Http404
-            num_users = import_group.user_set.count()
+            num_users = 0
             if "import_confirm" in request.POST:
                 for member in import_group.user_set.all():
-                    member.groups.add(group)
-                    member.save()
+                    if member.groups.filter(id=group.id).exists():
+                        messages.warning(request, "User {} is already in group".format(member.username))
+                    else:
+                        member.groups.add(group)
+                        member.save()
+                        num_users += 1
                 invalidate_obj(group)
                 messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
                 return redirect("eighth_admin_edit_group", group.id)
