@@ -8,4 +8,3 @@ about: A topic that needs to be documented
 
 
 ## Why documentation is needed
-

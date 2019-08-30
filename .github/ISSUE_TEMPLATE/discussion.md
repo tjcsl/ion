@@ -11,4 +11,3 @@ about: A topic that needs to be discussed/agreed upon
 
 
 ## Personal opinion (if applicable)
-
