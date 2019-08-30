@@ -1,5 +1,7 @@
 import logging
 
+from cacheops import invalidate_obj
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -285,6 +287,7 @@ def save_dark_mode_settings(request, user):
         if dark_mode_form.has_changed():
             user.dark_mode_properties.dark_mode_enabled = dark_mode_form.cleaned_data["dark_mode_enabled"]
             user.dark_mode_properties.save()
+            invalidate_obj(request.user.dark_mode_properties)
             messages.success(request, ("Dark mode enabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
 
     return dark_mode_form

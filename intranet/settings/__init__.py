@@ -424,6 +424,7 @@ CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 
 CACHEOPS = {
     "eighth.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching activity, block lists
     "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
+    "users.UserDarkModeProperties": {"ops": "get", "timeout": int(datetime.timedelta(minutes=10).total_seconds())},
 }
 
 if not TESTING:
