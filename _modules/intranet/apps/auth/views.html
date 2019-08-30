@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5211) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5214) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,12 +129,14 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">,</span> <span class="n">login</span><span class="p">,</span> <span class="n">logout</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.templatetags.static</span> <span class="k">import</span> <span class="n">static</span>
@@ -215,6 +217,28 @@
     <span class="k">return</span> <span class="p">{}</span></div>
 
 
+<div class="viewcode-block" id="get_week_sports_school_events"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.get_week_sports_school_events">[docs]</a><span class="k">def</span> <span class="nf">get_week_sports_school_events</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Container</span><span class="p">[</span><span class="n">Event</span><span class="p">],</span> <span class="n">Container</span><span class="p">[</span><span class="n">Event</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Lists the sports/school events for the next week. This information is cached.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A 2-tuple of (sports events, school events) for the next week.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cache_result</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sports_school_events&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache_result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">time__gte</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(),</span> <span class="n">time__lte</span><span class="o">=</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
+        <span class="n">sports_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;sports&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">school_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;school&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;sports_school_events&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;sports_school_events&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span> <span class="o">=</span> <span class="n">cache_result</span>
+
+    <span class="k">return</span> <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span></div>
+
+
 <div class="viewcode-block" id="index_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.index_view">[docs]</a><span class="nd">@sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">auth_form</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_next_page</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Process and show the main login page or dashboard if logged in.&quot;&quot;&quot;</span>
@@ -239,11 +263,7 @@
         <span class="k">if</span> <span class="n">ap_week</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">login_warning</span><span class="p">:</span>
             <span class="n">login_warning</span> <span class="o">=</span> <span class="n">ap_week</span>
 
-        <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">time__gte</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(),</span> <span class="n">time__lte</span><span class="o">=</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
-        <span class="n">sports_events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;sports&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">school_events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;school&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span> <span class="o">=</span> <span class="n">get_week_sports_school_events</span><span class="p">()</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;auth_form&quot;</span><span class="p">:</span> <span class="n">auth_form</span><span class="p">,</span>
