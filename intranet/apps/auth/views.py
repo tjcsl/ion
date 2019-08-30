@@ -1,12 +1,14 @@
 import logging
 import random
 from datetime import timedelta
+from typing import Container, Tuple
 
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.core.cache import cache
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
@@ -87,6 +89,28 @@ def get_login_theme():
     return {}
 
 
+def get_week_sports_school_events() -> Tuple[Container[Event], Container[Event]]:
+    """Lists the sports/school events for the next week. This information is cached.
+
+    Returns:
+        A 2-tuple of (sports events, school events) for the next week.
+
+    """
+    cache_result = cache.get("sports_school_events")
+    if not isinstance(cache_result, tuple):
+        events = Event.objects.filter(
+            time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)), public=True
+        ).this_year()
+        sports_events = list(events.filter(approved=True, category="sports").order_by("time")[:3])
+        school_events = list(events.filter(approved=True, category="school").order_by("time")[:3])
+
+        cache.set("sports_school_events", (sports_events, school_events), timeout=settings.CACHE_AGE["sports_school_events"])
+    else:
+        sports_events, school_events = cache_result
+
+    return sports_events, school_events
+
+
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None, has_next_page=False):
     """Process and show the main login page or dashboard if logged in."""
@@ -111,11 +135,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         if ap_week and not login_warning:
             login_warning = ap_week
 
-        events = Event.objects.filter(
-            time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)), public=True
-        ).this_year()
-        sports_events = events.filter(approved=True, category="sports").order_by("time")[:3]
-        school_events = events.filter(approved=True, category="school").order_by("time")[:3]
+        sports_events, school_events = get_week_sports_school_events()
 
         data = {
             "auth_form": auth_form,

@@ -409,6 +409,7 @@ CACHE_AGE = {
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
     "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds()),
+    "sports_school_events": int(datetime.timedelta(hours=1).total_seconds()),
 }
 
 if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
