@@ -8,4 +8,3 @@ about: A part of the codebase that needs to be refactored
 
 
 ## Rationale
-

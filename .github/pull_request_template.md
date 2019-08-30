@@ -4,4 +4,3 @@
 - 
 
 ## Brief description of rationale
-

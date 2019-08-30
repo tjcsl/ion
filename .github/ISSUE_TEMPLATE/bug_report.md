@@ -13,4 +13,3 @@ about: A bug discovered in Ion
 
 
 ## Actual behavior
-
