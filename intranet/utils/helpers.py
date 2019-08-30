@@ -1,3 +1,4 @@
+import datetime
 import ipaddress
 import logging
 import string
@@ -165,20 +166,15 @@ def get_fcps_emerg(request):
 
 
 def get_ap_week_warning(request):
-    now = timezone.localtime()
-    today = now.date()
-    day = today.day
-    if now.hour > 16:
-        day += 1
+    ap_day = timezone.localtime()
+    if ap_day.hour > 16:
+        ap_day += datetime.timedelta(days=1)
 
-    if 11 <= day <= 12:
-        day = 13
+    while ap_day.weekday() >= 5:  # Saturday or Sunday
+        ap_day += datetime.timedelta(days=1)
 
-    if 4 <= day <= 5:
-        day = 6
-
-    data = {"day": day, "date": request.GET.get("date", None)}
-    if today.month == 5 and 4 <= day <= 17:
+    data = {"day": ap_day.day, "date": request.GET.get("date", None)}
+    if ap_day.month == 5 and 4 <= ap_day.day <= 17:
         return get_template("auth/ap_week_schedule.html").render(data)
 
     return False
