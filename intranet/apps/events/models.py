@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
+from django.core.cache import cache
 from django.db import models
 from django.db.models import Manager, Q
+from django.db.models.signals import post_delete, post_save
 from django.utils import timezone
 
 from ...utils.date import get_date_range_this_year, is_current_year
@@ -228,3 +230,12 @@ class TJStarUUIDMap(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     uuid = models.CharField(max_length=40)
+
+
+def clear_event_cache(sender, **kwargs):  # pylint: disable=unused-argument
+    """Clears any cached event data."""
+    cache.delete("sports_school_events")
+
+
+post_save.connect(clear_event_cache, sender=Event)
+post_delete.connect(clear_event_cache, sender=Event)
