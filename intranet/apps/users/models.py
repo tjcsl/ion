@@ -535,6 +535,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("parking")
 
     @property
+    def is_bus_admin(self) -> bool:
+        """Returns whether the user has the ``bus`` admin permission.
+
+        Returns:
+            Whether the user has the ``bus`` admin permission.
+
+        """
+        return self.has_admin_permission("bus")
+
+    @property
     def can_request_parking(self):
         """Checks if user can view the parking interface.
 

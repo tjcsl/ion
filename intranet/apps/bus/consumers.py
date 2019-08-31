@@ -19,7 +19,7 @@ class BusConsumer(JsonWebsocketConsumer):
             self.send({"error": "Invalid data."})
             self.close()
 
-        if self.scope["user"].has_admin_permission("bus"):
+        if self.scope["user"].is_bus_admin:
             try:
                 route = Route.objects.get(id=content["id"])
                 route.status = content["status"]
