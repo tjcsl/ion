@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5214) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5221) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,6 +133,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_obj</span>
+<span class="kn">from</span> <span class="nn">prometheus_client.core</span> <span class="k">import</span> <span class="n">REGISTRY</span><span class="p">,</span> <span class="n">GaugeMetricFamily</span>
 <span class="kn">from</span> <span class="nn">sentry_sdk</span> <span class="k">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
 <span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="k">import</span> <span class="n">HistoricalRecords</span>
 
@@ -1934,6 +1935,28 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">act_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">act_set</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span> <span class="n">act_set</span><span class="o">.</span><span class="n">last</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EighthMetricsCollector"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector">[docs]</a><span class="k">class</span> <span class="nc">EighthMetricsCollector</span><span class="p">:</span>
+<div class="viewcode-block" id="EighthMetricsCollector.describe"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of signups for the next block&quot;</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups_remaining&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of users who are not signed up for the next block&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthMetricsCollector.collect"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector.collect">[docs]</a>    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">next_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">next_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_next_block_signups</span> <span class="o">=</span> <span class="n">next_block</span><span class="o">.</span><span class="n">num_signups</span><span class="p">()</span>
+            <span class="n">num_next_block_remaining</span> <span class="o">=</span> <span class="n">next_block</span><span class="o">.</span><span class="n">num_no_signups</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_next_block_signups</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">num_next_block_remaining</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of signups for the next block&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">num_next_block_signups</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups_remaining&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of users who are not signed up for the next block&quot;</span><span class="p">,</span>
+                                <span class="n">value</span><span class="o">=</span><span class="n">num_next_block_remaining</span><span class="p">)</span></div></div>
+
+
+<span class="n">REGISTRY</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EighthMetricsCollector</span><span class="p">())</span>
 </pre></div>
 
     </div>
