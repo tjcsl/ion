@@ -1,4 +1,7 @@
 import logging
+import time
+
+from prometheus_client import Summary
 
 from django import http
 from django.conf import settings
@@ -17,10 +20,14 @@ from ..serializers import EighthBlockDetailSerializer
 
 logger = logging.getLogger(__name__)
 
+eighth_signup_visits = Summary("intranet_eighth_signup_visits", "Visits to the eighth signup view")
+eighth_signup_submits = Summary("intranet_eighth_signup_submits", "Number of eighth period signups performed from the eighth signup view")
+
 
 @login_required
 @deny_restricted
 def eighth_signup_view(request, block_id=None):
+    start_time = time.time()
 
     if block_id is None and "block" in request.GET:
         block_ids = request.GET.getlist("block")
@@ -79,6 +86,8 @@ def eighth_signup_view(request, block_id=None):
         except SignupException as e:
             show_admin_messages = request.user.is_eighth_admin and not request.user.is_student
             return e.as_response(admin=show_admin_messages)
+
+        eighth_signup_submits.observe(time.time() - start_time)
 
         return http.HttpResponse(success_message)
     else:
@@ -159,6 +168,8 @@ def eighth_signup_view(request, block_id=None):
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
         }
+
+        eighth_signup_visits.observe(time.time() - start_time)
 
         return render(request, "eighth/signup.html", context)
 
