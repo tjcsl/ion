@@ -5,6 +5,7 @@ import string
 from typing import Collection, Iterable, List, Optional, Union
 
 from cacheops import invalidate_obj
+from prometheus_client.core import REGISTRY, GaugeMetricFamily
 from sentry_sdk import add_breadcrumb, capture_exception
 from simple_history.models import HistoricalRecords
 
@@ -1806,3 +1807,25 @@ class EighthActivitySimilarity(AbstractBaseEighthModel):
     def __str__(self):
         act_set = self.activity_set.all()
         return "{} and {}: {}".format(act_set.first(), act_set.last(), self.count)
+
+
+class EighthMetricsCollector:
+    def describe(self):
+        yield GaugeMetricFamily("intranet_eighth_next_block_signups", "The number of signups for the next block")
+        yield GaugeMetricFamily("intranet_eighth_next_block_signups_remaining", "The number of users who are not signed up for the next block")
+
+    def collect(self):
+        next_block = EighthBlock.objects.get_first_upcoming_block()
+        if next_block is not None:
+            num_next_block_signups = next_block.num_signups()
+            num_next_block_remaining = next_block.num_no_signups()
+        else:
+            num_next_block_signups = 0
+            num_next_block_remaining = 0
+
+        yield GaugeMetricFamily("intranet_eighth_next_block_signups", "The number of signups for the next block", value=num_next_block_signups)
+        yield GaugeMetricFamily("intranet_eighth_next_block_signups_remaining", "The number of users who are not signed up for the next block",
+                                value=num_next_block_remaining)
+
+
+REGISTRY.register(EighthMetricsCollector())
