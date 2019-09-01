@@ -5,12 +5,21 @@ import subprocess
 import uuid
 
 import pexpect
+from prometheus_client import Counter, Summary
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 
 logger = logging.getLogger(__name__)
+
+kerberos_authenticate = Summary("intranet_kerberos_authenticate", "Kerberos authentication requests")
+kerberos_authenticate_failures = Counter("intranet_kerberos_authenticate_failures", "Number of failed Kerberos authentication attempts")
+kerberos_authenticate_post_failures = Counter(
+    "intranet_kerberos_authenticate_post_failures",
+    "Number of Kerberos authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not "
+    "exist)",
+)
 
 
 class KerberosAuthenticationBackend:
@@ -109,6 +118,7 @@ class KerberosAuthenticationBackend:
             logger.debug("Kerberos failed to authorize %s", username)
             return False, authenticated_through_AD
 
+    @kerberos_authenticate.time()
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -138,14 +148,19 @@ class KerberosAuthenticationBackend:
             return user
 
         if not krb_ticket:
+            kerberos_authenticate_failures.inc()
             return None
         else:
             logger.debug("Authentication successful")
             try:
                 user = get_user_model().objects.get(username__iexact=username)
             except get_user_model().DoesNotExist:
+                kerberos_authenticate_failures.inc()
+                kerberos_authenticate_post_failures.inc()
                 return None
             if user.user_type == "student" and ad_auth:
+                kerberos_authenticate_failures.inc()
+                kerberos_authenticate_post_failures.inc()
                 # Block authentication for students who authenticated via AD
                 return None
             return user

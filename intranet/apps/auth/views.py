@@ -23,6 +23,7 @@ from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock, EighthSignup
 from ..events.models import Event
 from ..schedule.views import schedule_context
+from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
 from .forms import AuthenticateForm
 from .helpers import change_password
 
