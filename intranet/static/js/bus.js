@@ -333,6 +333,7 @@ $(function() {
                     if (space) {
                         let text = draw.text(route.attributes.route_name);
                         text.path(space.getAttribute('d'));
+                        text.textPath().attr("path", space.getAttribute('d'));
                         text.style('pointer-events', 'none');
                         space.style.fill = '#FFD800';
                         $(space).data({
