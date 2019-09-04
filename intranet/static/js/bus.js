@@ -334,6 +334,10 @@ $(function() {
                         let text = draw.text(route.attributes.route_name);
                         text.path(space.getAttribute('d'));
                         text.style('pointer-events', 'none');
+
+                        if(window.isSignage) {
+                            $(text.node).find("tspan").attr({"x": -3, "dy": 20.5});
+                        }
                         space.style.fill = '#FFD800';
                         $(space).data({
                             'filled': true,
