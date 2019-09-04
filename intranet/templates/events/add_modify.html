@@ -30,6 +30,20 @@
                 placeholder: "Links",
                 create: true
             })
+
+            // name of <textarea> is description
+            var editor = CKEDITOR.replace("id_description", {
+                width: "600px"
+            });
+
+            $("form#event_form").bind("submit", function(e) {
+                if($("#id_title").val().match(/\bION\b/) || editor.getData().match(/\bION\b/)) {
+                    // People frequently write "ION" instead of the correct spelling, "Ion." See https://github.com/tjcsl/ion/issues/805
+                    Messenger().error('We have detected the use of "ION" in all caps in your event. Please correct it to use "Ion", <a href="/docs/terminology" style="color:#7F7FFF">the official name</a>.');
+                    e.preventDefault();
+                    return;
+                }
+            });
         });
     </script>
 {% endblock %}
@@ -55,7 +69,7 @@
     <h2>
         {{ action_title }} Event
     </h2>
-    <form method="post">
+    <form method="post" id="event_form">
     <table>
     {% csrf_token %}
     <tr><td colspan="2">
@@ -83,10 +97,4 @@
     </table>
     </form>
 </div>
-<script>
-    // name of <textarea> is content
-    CKEDITOR.replace("id_description", {
-        width: "600px"
-    });
-</script>
 {% endblock %}
