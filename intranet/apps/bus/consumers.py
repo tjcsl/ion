@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
 from .models import Route
@@ -12,13 +13,7 @@ class BusConsumer(JsonWebsocketConsumer):
         self.accept()
         self.send_json(data)
 
-    def receive(self, text_data=None, bytes_data=None, **kwargs):
-        if text_data:
-            content = self.decode_json(text_data)
-        else:
-            self.send({"error": "Invalid data."})
-            self.close()
-
+    def receive_json(self, content):  # pylint: disable=arguments-differ
         if self.scope["user"].is_bus_admin:
             try:
                 route = Route.objects.get(id=content["id"])
@@ -29,13 +24,16 @@ class BusConsumer(JsonWebsocketConsumer):
                     route.space = ""
                 route.save()
                 data = self._serialize()
-                self.send_json(data)
+                async_to_sync(self.channel_layer.group_send)("bus", {"type": "bus.update", "data": data})
             except Exception as e:
                 # TODO: Add logging
                 print(e)
-                self.send({"error": "An error occurred."})
+                self.send_json({"error": "An error occurred."})
         else:
-            self.send({"error": "User does not have permissions."})
+            self.send_json({"error": "User does not have permissions."})
+
+    def bus_update(self, event):
+        self.send_json(event["data"])
 
     def _serialize(self, user=None):
         all_routes = Route.objects.all()
