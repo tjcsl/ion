@@ -32,7 +32,7 @@ $(function() {
         }
 
         var button = $("button#submit_announcement");
-        button.prop("disabled", true);
+        button.click(function(ev) { ev.preventDefault(); })
         button.append(" <i class=\"fa fa-spinner fa-spin\" aria-hidden=\"true\"></i>");
 
         if ($("input#id_title").val() === "") {
