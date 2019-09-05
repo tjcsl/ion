@@ -176,6 +176,39 @@ class UserTest(IonTestCase):
         self.assertEqual(user.first_name, user.short_name)
         self.assertEqual(user.first_name, user.get_short_name())
 
+    def test_user_with_name(self):
+        users = [
+            get_user_model().objects.create(first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7],
+                                            user_type="teacher")
+            for first_name, last_name in [
+                ("Michael", "Williams"),
+                ("Miguel", "Wilson"),
+                ("John", "Smith"),
+                ("John", "Adams"),
+                ("Michael", "Adams"),
+                ("Adam", "Smith"),
+                ("Andrew", "Adams"),
+            ]
+        ]
+
+        self.assertEqual(get_user_model().objects.user_with_name("Mike", None), None)
+        michael = get_user_model().objects.get(first_name="Michael", last_name="Williams")
+        michael.nickname = "Mike"
+        michael.save()
+        self.assertEqual(get_user_model().objects.user_with_name("Mike", None).id, michael.id)
+
+        self.assertEqual(get_user_model().objects.user_with_name("Miguel", None).last_name, "Wilson")
+        self.assertEqual(get_user_model().objects.user_with_name("Miguel", None).last_name, "Wilson")
+        self.assertEqual(get_user_model().objects.user_with_name("John", None), None)
+        self.assertEqual(get_user_model().objects.user_with_name("Michael", None), None)
+        self.assertEqual(get_user_model().objects.user_with_name("NOBODY", None), None)
+        self.assertEqual(get_user_model().objects.user_with_name(None, "Adams"), None)
+        self.assertEqual(get_user_model().objects.user_with_name(None, "Smith"), None)
+        self.assertEqual(get_user_model().objects.user_with_name(None, "Williams").first_name, "Michael")
+
+        for user in users:
+            user.delete()
+
     def test_notification_email(self):
         # Test default user notification email property
         user = self.login()
