@@ -474,6 +474,15 @@ class EighthBlockQuerySet(models.query.QuerySet):
         start_date, end_date = get_date_range_this_year()
         return self.filter(date__gte=start_date, date__lte=end_date)
 
+    def filter_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+        """Gets EighthBlocks that occur today.
+
+        Returns:
+            A QuerySet containing all of the blocks selected by this QuerySet that occur today.
+
+        """
+        return self.filter(date=timezone.localdate())
+
 
 class EighthBlockManager(models.Manager):
     def get_queryset(self):
@@ -542,6 +551,15 @@ class EighthBlockManager(models.Manager):
         date_start, date_end = get_date_range_this_year()
 
         return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
+
+    def get_blocks_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+        """Gets a QuerySet of blocks that occur today.
+
+        Returns:
+            A QuerySet of all the blocks that occur today.
+
+        """
+        return self.filter(date=timezone.localdate())
 
 
 class EighthBlock(AbstractBaseEighthModel):
