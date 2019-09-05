@@ -13,6 +13,7 @@ from django.utils import timezone
 from ...test.ion_test import IonTestCase
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..nomination.models import Nomination, NominationPosition
+from ..polls.models import Answer, Choice, Poll, Question
 from .models import PERMISSIONS_NAMES, Address, Course, Email, Section
 
 Application = get_application_model()
@@ -293,6 +294,67 @@ class UserTest(IonTestCase):
         user.primary_email = Email.objects.create(user=user, address="test2@example.com")
         user.save()
         self.assertEqual(user.notification_email, user.primary_email_address)
+
+    def test_has_unvoted_polls(self):
+        user = self.login()
+
+        self.assertFalse(user.has_unvoted_polls())
+
+        ago_5 = timezone.localtime() - datetime.timedelta(minutes=5)
+        future_5 = timezone.localtime() + datetime.timedelta(minutes=5)
+
+        poll = Poll.objects.create(title="Test", description="Test", start_time=ago_5, end_time=ago_5, visible=False)
+        # Happened in the past, not visible
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Happened in the past, visible
+        poll.visible = True
+        poll.save()
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Happening in the future, visible
+        poll.start_time = future_5
+        poll.end_time = future_5
+        poll.save()
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Happening in the future, not visible
+        poll.visible = False
+        poll.save()
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Happening now, not visible
+        poll.start_time = ago_5
+        poll.end_time = future_5
+        poll.save()
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Happening now, visible
+        poll.visible = True
+        poll.save()
+        self.assertTrue(user.has_unvoted_polls())
+
+        # Add a question and an answer choice
+        ques1 = Question.objects.create(poll=poll, question="TEST", num=1, type=Question.STD, max_choices=1)
+        self.assertTrue(user.has_unvoted_polls())
+        choice1 = Choice.objects.create(question=ques1, num=1, info="TEST CHOICE")
+        self.assertTrue(user.has_unvoted_polls())
+
+        # Now answer it
+        Answer.objects.create(question=ques1, user=user, choice=choice1)
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Add another question (this should NOT make the poll unanswered, because we just check if the user has answered any of the poll's questions)
+        ques2 = Question.objects.create(poll=poll, question="TEST 2", num=2, type=Question.STD, max_choices=1)
+        self.assertFalse(user.has_unvoted_polls())
+        choice2 = Choice.objects.create(question=ques2, num=1, info="TEST CHOICE")
+        self.assertFalse(user.has_unvoted_polls())
+
+        # Answer it
+        Answer.objects.create(question=ques2, user=user, choice=choice2)
+        self.assertFalse(user.has_unvoted_polls())
+
+        poll.delete()
 
     def test_signed_up_today(self):
         user = self.login()

@@ -21,7 +21,7 @@ from ...utils.helpers import is_entirely_digit
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
 from ..groups.models import Group
-from ..polls.models import Answer, Poll
+from ..polls.models import Poll
 from ..preferences.fields import PhoneField
 
 logger = logging.getLogger(__name__)
@@ -795,12 +795,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def has_unvoted_polls(self):
-        now = timezone.now()
-        for poll in Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now):
-            if Answer.objects.filter(question__in=poll.question_set.all(), user=self).count() == 0:
-                return True
-
-        return False
+        now = timezone.localtime()
+        return Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now).exclude(question__answer__user=self).exists()
 
     def signed_up_today(self):
         if not self.is_student:
