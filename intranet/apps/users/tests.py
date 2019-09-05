@@ -92,6 +92,43 @@ class UserTest(IonTestCase):
     def test_get_signage_user(self):
         self.assertEqual(get_user_model().get_signage_user().id, 99999)
 
+    def test_get_teachers(self):
+        login_user = self.login()
+        login_user.user_type = "student"
+        login_user.save()
+
+        users = [
+            get_user_model().objects.create(first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7],
+                                            user_type="teacher")
+            for first_name, last_name in [
+                ("Michael", "Williams"),
+                ("Miguel", "Wilson"),
+                ("John", "Smith"),
+                ("John", "Adams"),
+                ("Michael", "Adams"),
+                ("Adam", "Smith"),
+                ("Andrew", "Adams"),
+            ]
+        ]
+
+        self.assertQuerysetEqual(get_user_model().objects.get_teachers(), list(map(repr, users)), ordered=False)
+
+        self.assertEqual(list(get_user_model().objects.get_teachers_sorted()), sorted(users, key=lambda u: (u.last_name, u.first_name)))
+
+        blank_user = get_user_model().objects.create(username="NOBODY", user_type="teacher")
+        for first_name in [None, "", "Jack"]:
+            for last_name in [None, "", "Webber"]:
+                if first_name and last_name:
+                    continue
+
+                blank_user.first_name = first_name
+                blank_user.last_name = last_name
+                blank_user.save()
+                self.assertNotIn(blank_user.id, [user.id for user in get_user_model().objects.get_teachers()])
+
+        for user in users:
+            user.delete()
+
     def test_name(self):
         user = self.login()
         user.username = "2000awilliam"

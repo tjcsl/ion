@@ -2,7 +2,7 @@
 import logging
 from base64 import b64encode
 from datetime import datetime
-from typing import Optional
+from typing import Collection, Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
@@ -11,7 +11,7 @@ from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, Permissi
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.core.cache import cache
 from django.db import models
-from django.db.models import Count, F, Q
+from django.db.models import Count, F, Q, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -103,36 +103,27 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers(self):
+    def get_teachers(self) -> Union[Collection["get_user_model()"], QuerySet]:
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
         users = users.exclude(id__in=EXTRA)
         # Add possible exceptions handling here
         users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
 
+        users = users.exclude(Q(first_name=None) | Q(first_name="") | Q(last_name=None) | Q(last_name=""))
+
         return users
 
-    def get_teachers_sorted(self):
-        """Get teachers sorted by last name.
+    def get_teachers_sorted(self) -> Union[Collection["get_user_model()"], QuerySet]:
+        """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
 
         This is used for the announcement request page.
 
+        Returns:
+            A ``QuerySet`` of teachers sorted by last name, then first name.
+
         """
-        teachers = self.get_teachers()
-        teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
-        for t in teachers:
-            if t is None or t[0] is None or t[1] is None or t[2] is None:
-                teachers.remove(t)
-        for t in teachers:
-            if t[0] is None or len(t[0]) <= 1:
-                teachers.remove(t)
-        teachers.sort(key=lambda u: (u[0], u[1]))
-        # Hack to return QuerySet in given order
-        id_list = [t[2] for t in teachers]
-        clauses = " ".join(["WHEN id=%s THEN %s" % (pk, i) for i, pk in enumerate(id_list)])
-        ordering = "CASE %s END" % clauses
-        queryset = User.objects.filter(id__in=id_list).extra(select={"ordering": ordering}, order_by=("ordering",))
-        return queryset
+        return self.get_teachers().order_by("last_name", "first_name")
 
     def exclude_from_search(self, existing_queryset=None):
         if existing_queryset is None:
