@@ -806,11 +806,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.is_student:
             return True
 
-        for b in EighthBlock.objects.get_upcoming_blocks(2):
-            if b.is_today() and not EighthSignup.objects.filter(user=self, scheduled_activity__block=b).count():
-                return False
-
-        return True
+        return not EighthBlock.objects.get_blocks_today().exclude(eighthscheduledactivity__eighthsignup_set__user=self).exists()
 
     def absence_count(self):
         """Return the user's absence count.

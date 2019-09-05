@@ -294,6 +294,33 @@ class UserTest(IonTestCase):
         user.save()
         self.assertEqual(user.notification_email, user.primary_email_address)
 
+    def test_signed_up_today(self):
+        user = self.login()
+        user.user_type = "student"
+        user.save()
+
+        EighthBlock.objects.all().delete()
+
+        self.assertTrue(user.signed_up_today())
+
+        block = EighthBlock.objects.create(date=timezone.localdate() - datetime.timedelta(days=1), block_letter="A")
+        act = EighthActivity.objects.create(name="Test activity 1")
+        schact = EighthScheduledActivity.objects.create(activity=act, block=block)
+
+        self.assertTrue(user.signed_up_today())
+
+        block.date = timezone.localdate()
+        block.save()
+
+        self.assertFalse(user.signed_up_today())
+
+        EighthSignup.objects.create(user=user, scheduled_activity=schact)
+
+        self.assertTrue(user.signed_up_today())
+
+        block.delete()
+        act.delete()
+
     def test_tj_email_non_tj_email(self):
         user = self.login()
         user.primary_email = None
