@@ -20,7 +20,7 @@ from django.views.generic.base import View
 
 from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
 from ..dashboard.views import dashboard_view, get_fcps_emerg
-from ..eighth.models import EighthBlock, EighthSignup
+from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
@@ -199,11 +199,8 @@ class LoginView(View):
                     q = Q(date=now.date(), signup_time__gte=now.time()) | Q(date=future_cutoff.date(), signup_time__lte=future_cutoff.time())
 
                 blocks = EighthBlock.objects.filter(q)
-                if blocks.exists():
-                    for block in blocks:
-                        if not EighthSignup.objects.filter(user=request.user, scheduled_activity__block=block).exists():
-                            default_next_page = "eighth_signup"
-                            break
+                if blocks.exclude(eighthscheduledactivity__eighthsignup_set__user=request.user).exists():
+                    default_next_page = "eighth_signup"
 
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
