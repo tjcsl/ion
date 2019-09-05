@@ -320,9 +320,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        for email in self.emails.all():
-            if email.address.endswith(("@fcps.edu", "@tjhsst.edu")):
-                return email.address
+        email = self.emails.filter(Q(address__endswith="@fcps.edu") | Q(address__endswith="@tjhsst.edu")).first()
+        if email is not None:
+            return email.address
 
         if self.is_teacher:
             domain = "fcps.edu"
