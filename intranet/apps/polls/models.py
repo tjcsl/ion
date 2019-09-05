@@ -31,7 +31,7 @@ class PollManager(Manager):
 
         """
 
-        return Poll.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
+        return Poll.objects.filter(visible=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
 
 
 class Poll(models.Model):
