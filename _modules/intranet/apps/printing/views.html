@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5233) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5239) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -235,9 +235,30 @@
     <span class="k">return</span> <span class="n">num_pages</span></div>
 
 
+<span class="c1"># If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the &quot;magic_files&quot; director) from the corresponding list</span>
+<span class="c1"># will be used to re-examine the file and attempt to find a better match.</span>
+<span class="c1"># Why not just always use those files? Well, if you give libmagic a list of files, it will check *only* the files you tell it to, excluding the</span>
+<span class="c1"># system-wide magic database. Worse, there is no reliable method of getting the system-wide database path (which is distro-specific, so we can&#39;t just</span>
+<span class="c1"># hardcode it). This really is the best solution.</span>
+<span class="n">EXTRA_MAGIC_FILES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;application/zip&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;msooxml&quot;</span><span class="p">]}</span>
+<span class="c1"># If the re-examination of a file with EXTRA_MAGIC_FILES yields one of these mimetypes, the original mimetype (the one that prompted re-examining</span>
+<span class="c1"># based on EXTRA_MAGIC_FILES) will be used instead.</span>
+<span class="n">GENERIC_MIMETYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;application/octet-stream&quot;</span><span class="p">}</span>
+
+
 <div class="viewcode-block" id="get_mimetype"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_mimetype">[docs]</a><span class="k">def</span> <span class="nf">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
     <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span></div>
+    <span class="n">mimetype</span> <span class="o">=</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mimetype</span> <span class="ow">in</span> <span class="n">EXTRA_MAGIC_FILES</span><span class="p">:</span>
+        <span class="n">magic_files</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;magic_files&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">EXTRA_MAGIC_FILES</span><span class="p">[</span><span class="n">mimetype</span><span class="p">])</span>
+
+        <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">magic_file</span><span class="o">=</span><span class="n">magic_files</span><span class="p">)</span>
+        <span class="n">new_mimetype</span> <span class="o">=</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_mimetype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GENERIC_MIMETYPES</span><span class="p">:</span>
+            <span class="n">mimetype</span> <span class="o">=</span> <span class="n">new_mimetype</span>
+
+    <span class="k">return</span> <span class="n">mimetype</span></div>
 
 
 <div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
