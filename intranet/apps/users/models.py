@@ -85,16 +85,19 @@ class UserManager(DjangoUserManager):
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    def users_with_birthday(self, month, day):
-        """Return a list of user objects who have a birthday on a given date."""
+    def users_with_birthday(self, month: int, day: int) -> Union[Collection["get_user_model()"], QuerySet]:
+        """Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
 
-        users = User.objects.filter(properties___birthday__month=month, properties___birthday__day=day)
-        results = []
-        for user in users:
-            # TODO: permissions system
-            results.append(user)
+        Args:
+            month: The month to check for a birthday.
+            day: The day to chack for a birthday.
 
-        return results
+        Returns:
+            A ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
+
+        """
+        return User.objects.filter(properties___birthday__month=month, properties___birthday__day=day, properties__self_show_birthday=True,
+                                   properties__parent_show_birthday=True)
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
