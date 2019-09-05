@@ -2,6 +2,7 @@
 import logging
 from base64 import b64encode
 from datetime import datetime
+from typing import Optional
 
 from dateutil.relativedelta import relativedelta
 
@@ -10,7 +11,7 @@ from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, Permissi
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.core.cache import cache
 from django.db import models
-from django.db.models import Count, F
+from django.db.models import Count, F, Q
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -60,28 +61,29 @@ class UserManager(DjangoUserManager):
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
-    def user_with_name(self, given_name=None, sn=None):
-        """Get a unique user object by given name (first/nickname and last)."""
-        results = []
+    def user_with_name(self, given_name: Optional[str] = None, last_name: Optional[str] = None) -> "User":
+        """Get a unique user object by given name (first/nickname) and/or last name.
 
-        if sn and not given_name:
-            results = User.objects.filter(last_name=sn)
-        elif given_name:
-            query = {"first_name": given_name}
-            if sn:
-                query["last_name"] = sn
-            results = User.objects.filter(**query)
+        Args:
+            given_name: If given, users will be filtered to those who have either this first name or this nickname.
+            last_name: If given, users will be filtered to those who have this last name.
 
-            if not results:
-                # Try their first name as a nickname
-                del query["first_name"]
-                query["nickname"] = given_name
-                results = User.objects.filter(**query)
+        Returns:
+            The unique user object returned by filtering for the given first name/nickname and/or last name. Returns ``None`` if no results were
+            returned or if the given parameters matched more than one user.
 
-        if len(results) == 1:
-            return results.first()
+        """
+        results = User.objects.all()
 
-        return None
+        if last_name:
+            results = results.filter(last_name=last_name)
+        if given_name:
+            results = results.filter(Q(first_name=given_name) | Q(nickname=given_name))
+
+        try:
+            return results.get()
+        except (User.DoesNotExist, User.MultipleObjectsReturned):
+            return None
 
     def users_with_birthday(self, month, day):
         """Return a list of user objects who have a birthday on a given date."""
