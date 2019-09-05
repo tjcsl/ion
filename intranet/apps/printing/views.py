@@ -107,9 +107,30 @@ def get_numpages(tmpfile_name):
     return num_pages
 
 
+# If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the "magic_files" director) from the corresponding list
+# will be used to re-examine the file and attempt to find a better match.
+# Why not just always use those files? Well, if you give libmagic a list of files, it will check *only* the files you tell it to, excluding the
+# system-wide magic database. Worse, there is no reliable method of getting the system-wide database path (which is distro-specific, so we can't just
+# hardcode it). This really is the best solution.
+EXTRA_MAGIC_FILES = {"application/zip": ["msooxml"]}
+# If the re-examination of a file with EXTRA_MAGIC_FILES yields one of these mimetypes, the original mimetype (the one that prompted re-examining
+# based on EXTRA_MAGIC_FILES) will be used instead.
+GENERIC_MIMETYPES = {"application/octet-stream"}
+
+
 def get_mimetype(tmpfile_name):
     mime = magic.Magic(mime=True)
-    return mime.from_file(tmpfile_name)
+    mimetype = mime.from_file(tmpfile_name)
+
+    if mimetype in EXTRA_MAGIC_FILES:
+        magic_files = ":".join(os.path.join(os.path.dirname(__file__), "magic_files", fname) for fname in EXTRA_MAGIC_FILES[mimetype])
+
+        mime = magic.Magic(mime=True, magic_file=magic_files)
+        new_mimetype = mime.from_file(tmpfile_name)
+        if new_mimetype not in GENERIC_MIMETYPES:
+            mimetype = new_mimetype
+
+    return mimetype
 
 
 def convert_file(tmpfile_name):
