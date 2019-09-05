@@ -246,6 +246,34 @@ class UserTest(IonTestCase):
         for user in users:
             user.delete()
 
+    def test_users_with_birthday(self):
+        user = self.login()
+        properties = user.properties
+
+        properties.birthday = datetime.date(2019, 1, 1)
+        properties.self_show_birthday = False
+        properties.parent_show_birthday = False
+        properties.save()
+
+        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
+
+        properties.parent_show_birthday = True
+        properties.save()
+        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
+
+        properties.parent_show_birthday = False
+        properties.self_show_birthday = True
+        properties.save()
+        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
+
+        properties.parent_show_birthday = True
+        properties.self_show_birthday = True
+        properties.save()
+        self.assertIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
+
+        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 2)])
+        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(2, 1)])
+
     def test_notification_email(self):
         # Test default user notification email property
         user = self.login()
