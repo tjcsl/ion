@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from ...test.ion_test import IonTestCase
+from ..groups.models import Group
 from .models import Answer, Choice, Poll, Question
 
 
@@ -62,3 +63,66 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertFalse(Poll.objects.filter(title="Test Poll").exists())
+
+    def test_can_vote(self):
+        user = self.login()
+        user.is_superuser = False
+        user.groups.clear()
+
+        temp_group = Group.objects.get_or_create(name="TEST_POLL")[0]
+        admin_polls_group = Group.objects.get_or_create(name="admin_polls")[0]
+        admin_all_group = Group.objects.get_or_create(name="admin_all")[0]
+
+        ago_5 = timezone.localtime() - datetime.timedelta(minutes=5)
+        future_5 = timezone.localtime() + datetime.timedelta(minutes=5)
+
+        poll = Poll.objects.create(title="Test", description="Test", start_time=ago_5, end_time=ago_5, visible=False)
+
+        # Happened in the past, not visible
+        self.assertFalse(poll.can_vote(user))
+
+        # Happened in the past, visible
+        poll.visible = True
+        poll.save()
+        self.assertFalse(poll.can_vote(user))
+
+        # Happening in the future, visible
+        poll.start_time = future_5
+        poll.end_time = future_5
+        poll.save()
+        self.assertFalse(poll.can_vote(user))
+
+        # Happening in the future, not visible
+        poll.visible = False
+        poll.save()
+        self.assertFalse(poll.can_vote(user))
+
+        # Happening now, not visible
+        poll.start_time = ago_5
+        poll.end_time = future_5
+        poll.save()
+        self.assertFalse(poll.can_vote(user))
+
+        # Happening now, visible
+        poll.visible = True
+        poll.save()
+        self.assertTrue(poll.can_vote(user))
+
+        # Happening now, visible, not in poll group
+        poll.groups.add(temp_group)
+        self.assertFalse(poll.can_vote(user))
+
+        # Happening now, visible, in poll group
+        user.groups.add(temp_group)
+        self.assertTrue(poll.can_vote(user))
+
+        # admin_all, happened in the past, not visible
+        poll.end_time = ago_5
+        poll.visible = False
+        poll.save()
+        user.groups.add(admin_all_group)
+        self.assertTrue(poll.can_vote(user))
+
+        # admin_polls, happened in the past, not visible
+        user.groups.add(admin_polls_group)
+        self.assertTrue(poll.can_vote(user))
