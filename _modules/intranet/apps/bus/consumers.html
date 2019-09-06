@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #5239) documentation</title>
+    <title>intranet.apps.bus.consumers &#8212; TJ Intranet v3 (Build #5241) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -126,7 +126,8 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.bus.consumers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="k">import</span> <span class="n">JsonWebsocketConsumer</span>
+<span></span><span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="k">import</span> <span class="n">async_to_sync</span>
+<span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="k">import</span> <span class="n">JsonWebsocketConsumer</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Route</span>
 
@@ -140,14 +141,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BusConsumer.receive"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bytes_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">text_data</span><span class="p">:</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_json</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid data.&quot;</span><span class="p">})</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="BusConsumer.receive_json"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer.receive_json">[docs]</a>    <span class="k">def</span> <span class="nf">receive_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">is_bus_admin</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">content</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
@@ -157,13 +152,16 @@
                     <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">async_to_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">group_send</span><span class="p">)(</span><span class="s2">&quot;bus&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bus.update&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># TODO: Add logging</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;An error occurred.&quot;</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;An error occurred.&quot;</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;User does not have permissions.&quot;</span><span class="p">})</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;User does not have permissions.&quot;</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="BusConsumer.bus_update"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.consumers.BusConsumer.bus_update">[docs]</a>    <span class="k">def</span> <span class="nf">bus_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span></div>
 
     <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">all_routes</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
