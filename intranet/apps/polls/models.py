@@ -107,14 +107,10 @@ class Poll(models.Model):
         if not self.in_time_range():
             return False
 
-        if self.groups.count() == 0:
+        if not self.groups.exists():
             return True
 
-        for g in self.groups.all():
-            if g in user.groups.all():
-                return True
-
-        return False
+        return user.groups.intersection(self.groups.all()).exists()
 
     def __str__(self):
         return self.title
