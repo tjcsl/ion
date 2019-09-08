@@ -44,18 +44,10 @@ intranet.apps.eighth.management.commands.generate\_statistics module
    :undoc-members:
    :show-inheritance:
 
-intranet.apps.eighth.management.commands.import\_attendance module
-------------------------------------------------------------------
+intranet.apps.eighth.management.commands.remove\_withdrawn\_students module
+---------------------------------------------------------------------------
 
-.. automodule:: intranet.apps.eighth.management.commands.import_attendance
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-intranet.apps.eighth.management.commands.import\_permissions module
--------------------------------------------------------------------
-
-.. automodule:: intranet.apps.eighth.management.commands.import_permissions
+.. automodule:: intranet.apps.eighth.management.commands.remove_withdrawn_students
    :members:
    :undoc-members:
    :show-inheritance:
