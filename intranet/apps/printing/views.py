@@ -217,7 +217,7 @@ def print_job(obj, do_print=True):
     else:
         num_pages = get_numpages(tmpfile_name)
         if num_pages < 0:
-            raise Exception("Could not get number of pages in %s" % filebase)
+            raise Exception("Could not get number of pages in {}".format(filebase))
 
     obj.num_pages = num_pages
     obj.page_range = "".join(obj.page_range.split())  # remove all spaces
@@ -255,7 +255,7 @@ def print_job(obj, do_print=True):
             if "is not accepting jobs" in e.output:
                 raise Exception(e.output.strip())
             logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
-            raise Exception("An error occured while printing your file: %s" % e.output.strip())
+            raise Exception("An error occured while printing your file: {}".format(e.output.strip()))
 
     obj.printed = True
     obj.save()
@@ -278,10 +278,10 @@ def print_view(request):
             try:
                 print_job(obj)
             except InvalidInputPrintingError as e:
-                messages.error(request, "{}".format(e))
+                messages.error(request, str(e))
                 logging.error("Printing failed due to invalid user input: %s", e)
             except Exception as e:
-                messages.error(request, "{}".format(e))
+                messages.error(request, str(e))
                 logging.critical("Printing failed: %s", e)
             else:
                 messages.success(request, "Your file was printed!")
