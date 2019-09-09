@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import subprocess
 import tempfile
 
@@ -218,6 +219,12 @@ def print_job(obj, do_print=True):
         num_pages = get_numpages(tmpfile_name)
         if num_pages < 0:
             raise Exception("Could not get number of pages in {}".format(filebase))
+
+    if re.search(r"\d\s+\d", obj.page_range) is not None:
+        # Make sure that when removing spaces in the page range we don't accidentally combine two numbers
+        raise InvalidInputPrintingError(
+            "You specified an invalid page range (please separate page numbers with 1) commas to print selected pages or 2) dashes to print a range)."
+        )
 
     obj.num_pages = num_pages
     obj.page_range = "".join(obj.page_range.split())  # remove all spaces
