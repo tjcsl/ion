@@ -40,9 +40,9 @@ def get_printers():
             return []
         lines = output.splitlines()
         names = []
-        for l in lines:
-            if "requests since" in l:
-                names.append(l.split(" ", 1)[0])
+        for line in lines:
+            if "requests since" in line:
+                names.append(line.split(" ", 1)[0])
 
         if "Please_Select_a_Printer" in names:
             names.remove("Please_Select_a_Printer")
@@ -97,12 +97,12 @@ def get_numpages(tmpfile_name):
 
     lines = output.splitlines()
     num_pages = -1
-    for l in lines:
-        if l.startswith("Pages:"):
+    pages_prefix = "Pages:"
+    for line in lines:
+        if line.startswith(pages_prefix):
             try:
-                num_pages = l.split("Pages:", 2)[1].strip()
-                num_pages = int(num_pages)
-            except Exception:
+                num_pages = int(line[len(pages_prefix):].strip())
+            except ValueError:
                 num_pages = -1
 
     return num_pages
@@ -159,23 +159,25 @@ def check_page_range(page_range, max_pages):
     """Returns the number of pages in the range, or False if it is an invalid range."""
     pages = 0
     try:
-        for r in page_range.split(","):  # check all ranges separated by commas
-            if "-" in r:
-                rr = r.split("-")
-                if len(rr) != 2:  # make sure 2 values in range
+        for single_range in page_range.split(","):  # check all ranges separated by commas
+            if "-" in single_range:
+                if single_range.count("-") > 1:
                     return False
-                else:
-                    rl = int(rr[0])
-                    rh = int(rr[1])
-                    # check in page range
-                    if not 0 < rl < max_pages and not 0 < rh < max_pages:
-                        return False
-                    if rl > rh:  # check lower bound <= upper bound
-                        return False
-                    pages += rh - rl + 1
+
+                range_low, range_high = map(int, single_range.split("-"))
+
+                # check in page range
+                if range_low <= 0 or range_high <= 0 or range_low > max_pages or range_high > max_pages:
+                    return False
+
+                if range_low > range_high:  # check lower bound <= upper bound
+                    return False
+
+                pages += range_high - range_low + 1
             else:
-                if not 0 < int(r) <= max_pages:  # check in page range
+                if single_range <= 0 or single_range > max_pages:  # check in page range
                     return False
+
                 pages += 1
     except ValueError:  # catch int parse fail
         return False
@@ -210,10 +212,8 @@ def print_job(obj, do_print=True):
         raise Exception("Could not convert file.")
 
     if get_mimetype(tmpfile_name) == "text/plain":
-        num_chars = 0
         with open(tmpfile_name, "r") as f:
-            for line in f:
-                num_chars += len(line)
+            num_chars = sum(len(line) for line in f)
         num_pages = num_chars // (settings.PRINTING_PAGES_LIMIT * 50 * 72)
     else:
         num_pages = get_numpages(tmpfile_name)
@@ -248,19 +248,24 @@ def print_job(obj, do_print=True):
 
     if do_print:
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
+
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+
         if obj.duplex:
             args.extend(["-o", "sides=two-sided-long-edge"])
         else:
             args.extend(["-o", "sides=one-sided"])
+
         if obj.fit:
             args.extend(["-o", "fit-to-page"])
+
         try:
             subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:
             if "is not accepting jobs" in e.output:
                 raise Exception(e.output.strip())
+
             logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
             raise Exception("An error occured while printing your file: {}".format(e.output.strip()))
 
