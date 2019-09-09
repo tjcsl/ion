@@ -85,7 +85,7 @@ class UserManager(DjangoUserManager):
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    def users_with_birthday(self, month: int, day: int) -> Union[Collection["get_user_model()"], QuerySet]:
+    def users_with_birthday(self, month: int, day: int) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
 
         Args:
@@ -106,7 +106,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers(self) -> Union[Collection["get_user_model()"], QuerySet]:
+    def get_teachers(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
         users = users.exclude(id__in=EXTRA)
@@ -117,7 +117,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_sorted(self) -> Union[Collection["get_user_model()"], QuerySet]:
+    def get_teachers_sorted(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
 
         This is used for the announcement request page.
