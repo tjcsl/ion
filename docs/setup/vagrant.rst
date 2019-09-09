@@ -36,3 +36,20 @@ If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant 
 If you see a ``Adding routes to host computer...`` message, you probably forgot to start the OpenVPN client.
 
 If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for ``ldap_simple_bind_password``.
+
+If you get a message that begins with ``Vagrant failed to initialize at a very early stage``, run the commands in this list in order until one of them succeeds and Vagrant works again:
+
+#. ``vagrant plugin update`` (updates all plugins)
+#. ``vagrant plugin repair`` (attempts to repair all plugins)
+#. ``vagrant plugin expunge --reinstall`` (removes and re-installs all plugins)
+#. If none of these work, see "If all else fails" below.
+
+If all else fails
+-----------------
+If Vagrant errors every time you try to do anything and either 1) a solution is not listed here or 2) the solution does not work, then follow these steps:
+
+#. Rename the ``.vagrant.d`` folder in your home directory to something else (which will effectively delete it from Vagrant's perspective)
+#. Re-run the appropriate ``vagrant plugin install ...`` commands listed above.
+#. When they finish, Vagrant should work again. You should then be able to safely delete the old ``.vagrant.d`` directory.
+
+If *that* doesn't work, contact a senior Ion developer.
