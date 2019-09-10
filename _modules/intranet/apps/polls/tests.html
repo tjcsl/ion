@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls.tests &#8212; TJ Intranet v3 (Build #5267) documentation</title>
+    <title>intranet.apps.polls.tests &#8212; TJ Intranet v3 (Build #5273) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,6 +133,7 @@
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Poll</span><span class="p">,</span> <span class="n">Question</span>
 
 
@@ -189,7 +190,70 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Test Poll&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Test Poll&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="ApiTest.test_can_vote"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.tests.ApiTest.test_can_vote">[docs]</a>    <span class="k">def</span> <span class="nf">test_can_vote</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="n">temp_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;TEST_POLL&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">admin_polls_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;admin_polls&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">admin_all_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">ago_5</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">future_5</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">poll</span> <span class="o">=</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">ago_5</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="n">ago_5</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Happened in the past, not visible</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happened in the past, visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening in the future, visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">future_5</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">future_5</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening in the future, not visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening now, not visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">ago_5</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">future_5</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening now, visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening now, visible, not in poll group</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">temp_group</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># Happening now, visible, in poll group</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">temp_group</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># admin_all, happened in the past, not visible</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">ago_5</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">poll</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">admin_all_group</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+
+        <span class="c1"># admin_polls, happened in the past, not visible</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">admin_polls_group</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">poll</span><span class="o">.</span><span class="n">can_vote</span><span class="p">(</span><span class="n">user</span><span class="p">))</span></div></div>
 </pre></div>
 
     </div>

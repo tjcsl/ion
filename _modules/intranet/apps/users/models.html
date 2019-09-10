@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5267) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5273) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -130,6 +130,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 
@@ -138,7 +139,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">UserManager</span> <span class="k">as</span> <span class="n">DjangoUserManager</span>
 <span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="k">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">F</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="k">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">QuerySet</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="k">import</span> <span class="n">cached_property</span>
 
@@ -148,7 +149,7 @@
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="k">import</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Poll</span>
+<span class="kn">from</span> <span class="nn">..polls.models</span> <span class="k">import</span> <span class="n">Poll</span>
 <span class="kn">from</span> <span class="nn">..preferences.fields</span> <span class="k">import</span> <span class="n">PhoneField</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -188,39 +189,43 @@
         <span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname and last).&quot;&quot;&quot;</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">last_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname) and/or last name.</span>
 
-        <span class="k">if</span> <span class="n">sn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">given_name</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="n">sn</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">given_name</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">given_name</span><span class="p">}</span>
-            <span class="k">if</span> <span class="n">sn</span><span class="p">:</span>
-                <span class="n">query</span><span class="p">[</span><span class="s2">&quot;last_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sn</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">query</span><span class="p">)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            given_name: If given, users will be filtered to those who have either this first name or this nickname.</span>
+<span class="sd">            last_name: If given, users will be filtered to those who have this last name.</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
-                <span class="c1"># Try their first name as a nickname</span>
-                <span class="k">del</span> <span class="n">query</span><span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">]</span>
-                <span class="n">query</span><span class="p">[</span><span class="s2">&quot;nickname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">given_name</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">query</span><span class="p">)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The unique user object returned by filtering for the given first name/nickname and/or last name. Returns ``None`` if no results were</span>
+<span class="sd">            returned or if the given parameters matched more than one user.</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">if</span> <span class="n">last_name</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="n">last_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">given_name</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="n">given_name</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">nickname</span><span class="o">=</span><span class="n">given_name</span><span class="p">))</span>
 
-<div class="viewcode-block" id="UserManager.users_with_birthday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_with_birthday">[docs]</a>    <span class="k">def</span> <span class="nf">users_with_birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a list of user objects who have a birthday on a given date.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">MultipleObjectsReturned</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
-        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">properties___birthday__month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">properties___birthday__day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
-            <span class="c1"># TODO: permissions system</span>
-            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<div class="viewcode-block" id="UserManager.users_with_birthday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_with_birthday">[docs]</a>    <span class="k">def</span> <span class="nf">users_with_birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+        <span class="sd">&quot;&quot;&quot;Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.</span>
 
-        <span class="k">return</span> <span class="n">results</span></div>
+<span class="sd">        Args:</span>
+<span class="sd">            month: The month to check for a birthday.</span>
+<span class="sd">            day: The day to chack for a birthday.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">properties___birthday__month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">properties___birthday__day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span> <span class="n">properties__self_show_birthday</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">properties__parent_show_birthday</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
@@ -229,36 +234,27 @@
 
         <span class="k">return</span> <span class="n">users</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are teachers (quickly).&quot;&quot;&quot;</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
         <span class="c1"># Add possible exceptions handling here</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span> <span class="o">|</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="p">[</span><span class="mi">31863</span><span class="p">,</span> <span class="mi">32327</span><span class="p">,</span> <span class="mi">32103</span><span class="p">,</span> <span class="mi">33228</span><span class="p">])</span>
 
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">users</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get teachers sorted by last name.</span>
+<div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of teachers sorted by last name, then first name.</span>
 
 <span class="sd">        This is used for the announcement request page.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``QuerySet`` of teachers sorted by last name, then first name.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">teachers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span>
-        <span class="n">teachers</span> <span class="o">=</span> <span class="p">[(</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">teachers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">teachers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="n">teachers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="c1"># Hack to return QuerySet in given order</span>
-        <span class="n">id_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">]</span>
-        <span class="n">clauses</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;WHEN id=</span><span class="si">%s</span><span class="s2"> THEN </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pk</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">id_list</span><span class="p">)])</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="s2">&quot;CASE </span><span class="si">%s</span><span class="s2"> END&quot;</span> <span class="o">%</span> <span class="n">clauses</span>
-        <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">id_list</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ordering&quot;</span><span class="p">:</span> <span class="n">ordering</span><span class="p">},</span> <span class="n">order_by</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ordering&quot;</span><span class="p">,))</span>
-        <span class="k">return</span> <span class="n">queryset</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">existing_queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -452,9 +448,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;@fcps.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;@tjhsst.edu&quot;</span><span class="p">)):</span>
-                <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">address__endswith</span><span class="o">=</span><span class="s2">&quot;@fcps.edu&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">address__endswith</span><span class="o">=</span><span class="s2">&quot;@tjhsst.edu&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
             <span class="n">domain</span> <span class="o">=</span> <span class="s2">&quot;fcps.edu&quot;</span>
@@ -927,22 +923,14 @@
         <span class="k">return</span> <span class="n">sp</span></div>
 
 <div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">poll</span> <span class="ow">in</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__lt</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">end_time__gt</span><span class="o">=</span><span class="n">now</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__in</span><span class="o">=</span><span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__lt</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">end_time__gt</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">question__answer__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.signed_up_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.signed_up_today">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_today</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_today</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
-                <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_today</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthscheduledactivity__eighthsignup_set__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count.</span>

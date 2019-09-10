@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5267) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5273) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -2622,15 +2622,20 @@ default User model manager.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.get_teachers">
-<code class="sig-name descname">get_teachers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_teachers</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get user objects that are teachers (quickly).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.get_teachers_sorted">
-<code class="sig-name descname">get_teachers_sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_sorted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get teachers sorted by last name.</p>
+<code class="sig-name descname">get_teachers_sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of teachers sorted by last name, then first name.</p>
 <p>This is used for the announcement request page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of teachers sorted by last name, then first name.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2641,8 +2646,20 @@ default User model manager.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.user_with_name">
-<code class="sig-name descname">user_with_name</code><span class="sig-paren">(</span><em class="sig-param">given_name=None</em>, <em class="sig-param">sn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a unique user object by given name (first/nickname and last).</p>
+<code class="sig-name descname">user_with_name</code><span class="sig-paren">(</span><em class="sig-param">given_name: Optional[str] = None</em>, <em class="sig-param">last_name: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; intranet.apps.users.models.User<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a unique user object by given name (first/nickname) and/or last name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>given_name</strong> – If given, users will be filtered to those who have either this first name or this nickname.</p></li>
+<li><p><strong>last_name</strong> – If given, users will be filtered to those who have this last name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The unique user object returned by filtering for the given first name/nickname and/or last name. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if no results were
+returned or if the given parameters matched more than one user.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2659,8 +2676,19 @@ default User model manager.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.users_with_birthday">
-<code class="sig-name descname">users_with_birthday</code><span class="sig-paren">(</span><em class="sig-param">month</em>, <em class="sig-param">day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.users_with_birthday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.users_with_birthday" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of user objects who have a birthday on a given date.</p>
+<code class="sig-name descname">users_with_birthday</code><span class="sig-paren">(</span><em class="sig-param">month: int</em>, <em class="sig-param">day: int</em><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.users_with_birthday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.users_with_birthday" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of user objects who have a birthday on a given date and have made their birthday public.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>month</strong> – The month to check for a birthday.</p></li>
+<li><p><strong>day</strong> – The day to chack for a birthday.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of user objects who have a birthday on a given date and have made their birthday public.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -3132,6 +3160,16 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_get_teachers">
+<code class="sig-name descname">test_get_teachers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_get_teachers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_get_teachers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_has_unvoted_polls">
+<code class="sig-name descname">test_has_unvoted_polls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_has_unvoted_polls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_has_unvoted_polls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.users.tests.UserTest.test_name">
 <code class="sig-name descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3142,8 +3180,23 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_signed_up_today">
+<code class="sig-name descname">test_signed_up_today</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_signed_up_today"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_signed_up_today" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.users.tests.UserTest.test_tj_email_non_tj_email">
 <code class="sig-name descname">test_tj_email_non_tj_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_tj_email_non_tj_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_tj_email_non_tj_email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_user_with_name">
+<code class="sig-name descname">test_user_with_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_user_with_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_user_with_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_users_with_birthday">
+<code class="sig-name descname">test_users_with_birthday</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_users_with_birthday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_users_with_birthday" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

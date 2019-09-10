@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5267) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5273) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -148,7 +148,7 @@
 
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="k">import</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="k">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="k">import</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">backends</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added</span>
@@ -327,11 +327,8 @@
                     <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">signup_time__gte</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">future_cutoff</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">signup_time__lte</span><span class="o">=</span><span class="n">future_cutoff</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
 
                 <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">blocks</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                            <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;eighth_signup&quot;</span>
-                            <span class="k">break</span>
+                <span class="k">if</span> <span class="n">blocks</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthscheduledactivity__eighthsignup_set__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;eighth_signup&quot;</span>
 
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
                 <span class="sd">&quot;&quot;&quot;Default to eighth admin view (for eighthoffice).&quot;&quot;&quot;</span>
