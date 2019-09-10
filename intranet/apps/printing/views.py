@@ -175,6 +175,7 @@ def check_page_range(page_range, max_pages):
 
                 pages += range_high - range_low + 1
             else:
+                single_range = int(single_range)
                 if single_range <= 0 or single_range > max_pages:  # check in page range
                     return False
 
