@@ -165,6 +165,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Local internal fields
     first_login = models.DateTimeField(null=True)
     seen_welcome = models.BooleanField(default=False)
+    last_global_logout_time = models.DateTimeField(null=True)
 
     # Local preference fields
     receive_news_emails = models.BooleanField(default=False)

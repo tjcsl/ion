@@ -38,6 +38,7 @@ urlpatterns = [
     url(r"^lostfound", include("intranet.apps.lostfound.urls")),
     url(r"^emailfwd", include("intranet.apps.emailfwd.urls")),
     url(r"^parking", include("intranet.apps.parking.urls")),
+    url(r"^sessions", include("intranet.apps.sessionmgmt.urls")),
     url(r"^djangoadmin/doc/", include("django.contrib.admindocs.urls")),
     # FIXME: update when admin supports django 1.10+ properly
     url(r"^djangoadmin/", admin.site.urls),

@@ -24,6 +24,7 @@ from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
+from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
 from .forms import AuthenticateForm
 from .helpers import change_password
 

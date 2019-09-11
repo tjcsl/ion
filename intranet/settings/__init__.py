@@ -280,6 +280,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "bus",
     "signage.page",
     "courses",
+    "sessionmgmt",
     "dark/base",
     "dark/login",
     "dark/schedule",
@@ -301,6 +302,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/select",
     "dark/eighth.schedule",
     "dark/oauth",
+    "dark/sessionmgmt",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
@@ -378,6 +380,8 @@ MIDDLEWARE = [
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
     "django.contrib.messages.middleware.MessageMiddleware",  # Messages
+    "django_user_agents.middleware.UserAgentMiddleware",
+    "intranet.middleware.session_management.SessionManagementMiddleware",  # Handles session management (might log the user out, so must be early)
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.templates.NoReferrerMiddleware",  # Prevent malicious JS from changing the referring page
@@ -544,6 +548,7 @@ INSTALLED_APPS = [
     "intranet.apps.parking",
     "intranet.apps.dataimport",
     "intranet.apps.nomination",
+    "intranet.apps.sessionmgmt",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit
@@ -552,6 +557,7 @@ INSTALLED_APPS = [
     "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
     "django_referrer_policy",
+    "django_user_agents",
 ]
 
 # Django Channels Configuration (we use this for websockets)
@@ -753,6 +759,9 @@ CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 
 MAINTENANCE_MODE = False
+
+# Django User Agents configuration
+USER_AGENTS_CACHE = 'default'
 
 # The Referrer-policy header
 REFERRER_POLICY = "strict-origin-when-cross-origin"
