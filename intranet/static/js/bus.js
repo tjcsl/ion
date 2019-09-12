@@ -337,7 +337,7 @@ $(function() {
                         text.style('pointer-events', 'none');
 
                         if(window.isSignage) {
-                            $(text.node).find("tspan").attr({"x": -3, "dy": 20.5});
+                            $(text.node).find("tspan").attr({"x": 0, "dy": 20.5});
                         }
                         space.style.fill = '#FFD800';
                         $(space).data({
