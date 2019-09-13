@@ -670,6 +670,11 @@ $(function() {
     window.appView = new bus.AppView();
 
     socket.onopen = () => {
+        if(keepAliveTimeoutId != null) {
+            clearTimeout(keepAliveTimeoutId);
+            keepAliveTimeoutId = null;
+        }
+
         if (disconnected_msg) {
             disconnected_msg.update({
                 message: 'Connection Restored',
@@ -679,8 +684,22 @@ $(function() {
         }
     };
 
+    let keepAliveTimeoutId = null;
+
     socket.onmessage = (event) => {
-        window.appView.trigger('wss:receive', JSON.parse(event.data));
+        if(keepAliveTimeoutId != null) {
+            clearTimeout(keepAliveTimeoutId);
+            keepAliveTimeoutId = null;
+        }
+
+        var data = JSON.parse(event.data)
+
+        // Don't try and handle keepalives -- when handled, they effectively clear the bus board
+        if(data.type === "keepalive-response") {
+            return;
+        }
+
+        window.appView.trigger('wss:receive', data);
     };
 
     socket.onclose = () => {
@@ -693,7 +712,24 @@ $(function() {
             });
         }
         disconnected = true;
+
+        if(keepAliveTimeoutId != null) {
+            clearTimeout(keepAliveTimeoutId);
+            keepAliveTimeoutId = null;
+        }
     };
+
+    setInterval(function() {
+        if(!disconnected) {
+            socket.send(JSON.stringify({"type": "keepalive"}));
+
+            keepAliveTimeoutId = setTimeout(function() {
+                if(!disconnected) {
+                    socket.refresh();
+                }
+            }, 10000);
+        }
+    }, 30000);
 
     if (enableBusDriver) {
         $(window).unload(function () {
