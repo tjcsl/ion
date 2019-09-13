@@ -666,11 +666,12 @@ $(function() {
     socket.maxReconnectAttempts = null;
 
     let disconnected = false;
+    let disconnected_msg = null;
     window.appView = new bus.AppView();
 
     socket.onopen = () => {
-        if (disconnected) {
-            disconnected.update({
+        if (disconnected_msg) {
+            disconnected_msg.update({
                 message: 'Connection Restored',
                 type: 'success',
                 hideAfter: 3
@@ -684,12 +685,14 @@ $(function() {
 
     socket.onclose = () => {
         console.log('Disconnected');
-        let msg = Messenger().error({
-            message: 'Connection Lost',
-            hideAfter: 0,
-            showCloseButton: false
-        });
-        disconnected = msg;
+        if(window.Messenger) {
+            disconnected_msg = Messenger().error({
+                message: 'Connection Lost',
+                hideAfter: 0,
+                showCloseButton: false
+            });
+        }
+        disconnected = true;
     };
 
     if (enableBusDriver) {
