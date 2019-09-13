@@ -14,6 +14,10 @@ class BusConsumer(JsonWebsocketConsumer):
         self.send_json(data)
 
     def receive_json(self, content):  # pylint: disable=arguments-differ
+        if content.get("type") == "keepalive":
+            self.send_json({"type": "keepalive-response"})
+            return
+
         if self.scope["user"].is_bus_admin:
             try:
                 route = Route.objects.get(id=content["id"])
