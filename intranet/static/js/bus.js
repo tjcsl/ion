@@ -658,6 +658,13 @@ $(function() {
     } else {
         socket = new ReconnectingWebSocket(`${websocketProtocol}://${websocketHost}/bus/`);
     }
+    socket.automaticOpen = true;
+    socket.reconnectInterval = 2000;
+    socket.maxReconnectInterval = 10000;
+    socket.reconnectDecay = 1.25;
+    socket.timeoutInterval = 5000;
+    socket.maxReconnectAttempts = null;
+
     let disconnected = false;
     window.appView = new bus.AppView();
 
