@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Setting up Vagrant &#8212; TJ Intranet v3 (Build #5282) documentation</title>
+    <title>Setting up Vagrant &#8212; TJ Intranet v3 (Build #5284) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -97,7 +97,10 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Setting up Vagrant</a><ul>
-<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li><a class="reference internal" href="#if-all-else-fails">If all else fails</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -155,6 +158,23 @@ If you are on Windows, also run <code class="docutils literal notranslate"><span
 <p>If you get a <code class="docutils literal notranslate"><span class="pre">SIOCADDRT:</span> <span class="pre">Network</span> <span class="pre">is</span> <span class="pre">unreachable</span></code> error when running <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">up</span></code>, you need to start the OpenVPN client.</p>
 <p>If you see a <code class="docutils literal notranslate"><span class="pre">Adding</span> <span class="pre">routes</span> <span class="pre">to</span> <span class="pre">host</span> <span class="pre">computer...</span></code> message, you probably forgot to start the OpenVPN client.</p>
 <p>If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for <code class="docutils literal notranslate"><span class="pre">ldap_simple_bind_password</span></code>.</p>
+<p>If you get a message that begins with <code class="docutils literal notranslate"><span class="pre">Vagrant</span> <span class="pre">failed</span> <span class="pre">to</span> <span class="pre">initialize</span> <span class="pre">at</span> <span class="pre">a</span> <span class="pre">very</span> <span class="pre">early</span> <span class="pre">stage</span></code>, run the commands in this list in order until one of them succeeds and Vagrant works again:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">plugin</span> <span class="pre">update</span></code> (updates all plugins)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">plugin</span> <span class="pre">repair</span></code> (attempts to repair all plugins)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">plugin</span> <span class="pre">expunge</span> <span class="pre">--reinstall</span></code> (removes and re-installs all plugins)</p></li>
+<li><p>If none of these work, see “If all else fails” below.</p></li>
+</ol>
+<div class="section" id="if-all-else-fails">
+<h3>If all else fails<a class="headerlink" href="#if-all-else-fails" title="Permalink to this headline">¶</a></h3>
+<p>If Vagrant errors every time you try to do anything and either 1) a solution is not listed here or 2) the solution does not work, then follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Rename the <code class="docutils literal notranslate"><span class="pre">.vagrant.d</span></code> folder in your home directory to something else (which will effectively delete it from Vagrant’s perspective)</p></li>
+<li><p>Re-run the appropriate <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">plugin</span> <span class="pre">install</span> <span class="pre">...</span></code> commands listed above.</p></li>
+<li><p>When they finish, Vagrant should work again. You should then be able to safely delete the old <code class="docutils literal notranslate"><span class="pre">.vagrant.d</span></code> directory.</p></li>
+</ol>
+<p>If <em>that</em> doesn’t work, contact a senior Ion developer.</p>
+</div>
 </div>
 </div>
 
