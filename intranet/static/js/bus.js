@@ -337,7 +337,32 @@ $(function() {
                         text.style('pointer-events', 'none');
 
                         if(window.isSignage) {
-                            $(text.node).find("tspan").attr({"x": 0, "dy": 20.5});
+                            var tspan = $(text.node).find("tspan");
+                            tspan.attr({"x": 0, "dy": 20.5});
+
+                            // If we run this directly, it hasn't rendered yet, so we have to run it after a timeout
+                            setTimeout(function() {
+                                var tbox = tspan.get(0).getBBox();
+                                var sbox = space.getBBox();
+
+                                var offset;
+                                var dimenDiff;
+                                if(tbox.width > tbox.height) {
+                                    dimenDiff = sbox.width - tbox.width;
+                                    offset = tbox.x - sbox.x;
+                                }
+                                else {
+                                    dimenDiff = sbox.height - tbox.height;
+                                    offset = tbox.y - sbox.y;
+                                }
+
+                                if(dimenDiff < offset + 5) {
+                                    text.node.classList.add("small");
+                                    if(route.attributes.route_name.length > 5) {
+                                        text.node.classList.add("extra-small");
+                                    }
+                                }
+                            }, 0);
                         }
                         space.style.fill = '#FFD800';
                         $(space).data({
