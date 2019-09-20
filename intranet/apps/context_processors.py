@@ -166,3 +166,7 @@ def oauth_toolkit(request):
                 return {"applications_tokens": applications_tokens}
 
     return {}
+
+
+def settings_export(request):
+    return {"DJANGO_SETTINGS": settings}
