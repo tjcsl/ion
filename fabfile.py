@@ -92,7 +92,7 @@ def restart_production_gunicorn(skip=False):
 
     if skip or confirm("Are you sure you want to restart the production " "Gunicorn instance?"):
         clean_production_pyc()
-        local("supervisorctl restart ion")
+        local("supervisorctl restart ion:*")
 
 
 def clear_sessions(venv=None):
