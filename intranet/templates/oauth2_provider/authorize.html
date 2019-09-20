@@ -61,6 +61,9 @@
                 </div>
             </form>
 
+        {% elif request.GET.client_id in DJANGO_SETTINGS.IOS_APP_CLIENT_IDS %}
+            <h2 style="height: initial; white-space: initial; padding: 5px 10px;">Please do not use the unofficial Ion iOS app</h2>
+            <p style="padding: 10px">The app is not maintained by the Sysadmins and has been known to display incorrect signup information. Please use the Ion web interface to sign up for eighth periods.</p>
         {% else %}
             <h2>Error: {{ error.error }}</h2>
             <p>{{ error.description }}</p>

@@ -44,6 +44,9 @@ ENABLE_BUS_DRIVER = True
 ENABLE_PRE_EIGHTH_REDIRECT = False
 NOTIFY_ADMIN_EMAILS = None
 
+IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
+# See templates/oauth2_provider/authorize.html
+
 EMERGENCY_MESSAGE = None  # type: str
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -342,6 +345,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.show_bus_button",
                 "intranet.apps.context_processors.enable_dark_mode",
                 "intranet.apps.context_processors.oauth_toolkit",  # Django OAuth Toolkit-related middleware
+                "intranet.apps.context_processors.settings_export",  # "Exports" django.conf.settings as DJANGO_SETTINGS
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
