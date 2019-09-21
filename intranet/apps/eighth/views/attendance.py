@@ -559,7 +559,9 @@ def generate_roster_pdf(sched_act_ids):
         header_data = [
             [
                 Paragraph("<b>Activity ID: {}<br/>Scheduled ID: {}</b>".format(sact.activity.id, sact.id), styles["Normal"]),
-                Paragraph("{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")), styles["ActivityAttribute"]),
+                Paragraph(
+                    "{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")), styles["ActivityAttribute"]
+                ),
                 Paragraph(block_letter, styles[block_letter_style]),
             ]
         ]
