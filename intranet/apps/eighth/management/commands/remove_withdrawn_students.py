@@ -50,4 +50,4 @@ class Command(BaseCommand):
         for user in group.user_set.all():
             sys.stdout.write("Deleting {}\n".format(user))
             user.handle_delete()
-            sys.stdout.write(str(user.delete())+"\n")
+            sys.stdout.write(str(user.delete()) + "\n")
