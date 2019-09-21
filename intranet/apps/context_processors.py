@@ -19,20 +19,25 @@ logger = logging.getLogger(__name__)
 
 
 def ion_base_url(request):
-    """Return the base URL through request.build_absolute_uri for the index page."""
+    """
+    Return the base URL through request.build_absolute_uri for the index page.
+    """
     return {"ion_base_url": request.build_absolute_uri("/")}
 
 
 def global_warning(request):
-    """Display a global warning on all pages throughout the application."""
+    """
+    Display a global warning on all pages throughout the application.
+    """
     warning = settings.GLOBAL_WARNING if hasattr(settings, "GLOBAL_WARNING") else None
 
     return {"global_warning": warning}
 
 
 def nav_categorizer(request):
-    """Determine which top-level nav category (left nav) a request
-    falls under
+    """
+    Determine which top-level nav category a request falls under
+    for the purposes of the left nav bar.
     """
 
     categories = [
@@ -58,7 +63,9 @@ def nav_categorizer(request):
 
 
 def mobile_app(request):
-    """Determine if the site is being displayed in a WebView from a native application."""
+    """
+    Determine if the site is being displayed in a WebView from a native application.
+    """
 
     ctx = {}
     try:
@@ -97,7 +104,9 @@ def mobile_app(request):
 
 
 def global_custom_theme(request):
-    """Add custom theme javascript and css."""
+    """
+    Add custom theme javascript and css.
+    """
     today = timezone.localdate()
     theme = {}
 
@@ -108,7 +117,9 @@ def global_custom_theme(request):
 
 
 def show_homecoming(request):
-    """Show homecoming ribbon / scores """
+    """
+    Return whether to show homecoming ribbon/scores
+    """
     return {"show_homecoming": settings.HOCO_START_DATE <= timezone.localdate() <= settings.HOCO_END_DATE}
 
 
@@ -123,12 +134,23 @@ def _get_current_ip(request):
 
 
 def is_tj_ip(request):
+    """
+    Return whether the request IP is in the TJ range.
+
+    Returns:
+        Whether the IP associated with a request is within the TJ IP range.
+    """
     ip = _get_current_ip(request)
 
     return {"is_tj_ip": (ip in settings.TJ_IPS)}
 
 
 def show_bus_button(request):
+    """
+    Export if user has access to view the bus button.
+
+    The user must either be a bus admin or be within an hour of the end
+    """
     is_bus_admin = request.user.is_authenticated and request.user.has_admin_permission("bus")
     now = timezone.localtime()
     window = datetime.timedelta(hours=1)
@@ -148,10 +170,16 @@ def show_bus_button(request):
 
 
 def enable_dark_mode(request):
+    """
+    Export whether dark mode is enabled.
+    """
     return {"dark_mode_enabled": dark_mode_enabled(request)}
 
 
 def oauth_toolkit(request):
+    """
+    Export application tokens arranged by application on OAuth pages.
+    """
     if request.user.is_authenticated:
         try:
             resolve_match = resolve(request.path)
@@ -169,4 +197,7 @@ def oauth_toolkit(request):
 
 
 def settings_export(request):
+    """
+    Export all Django settings to templates
+    """
     return {"DJANGO_SETTINGS": settings}
