@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5299) documentation</title>
+    <title>intranet.apps.context_processors &#8212; TJ Intranet v3 (Build #5305) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -147,20 +147,25 @@
 
 
 <div class="viewcode-block" id="ion_base_url"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.ion_base_url">[docs]</a><span class="k">def</span> <span class="nf">ion_base_url</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return the base URL through request.build_absolute_uri for the index page.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the base URL through request.build_absolute_uri for the index page.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ion_base_url&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)}</span></div>
 
 
 <div class="viewcode-block" id="global_warning"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.global_warning">[docs]</a><span class="k">def</span> <span class="nf">global_warning</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Display a global warning on all pages throughout the application.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a global warning on all pages throughout the application.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">warning</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">GLOBAL_WARNING</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;GLOBAL_WARNING&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;global_warning&quot;</span><span class="p">:</span> <span class="n">warning</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="nav_categorizer"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.nav_categorizer">[docs]</a><span class="k">def</span> <span class="nf">nav_categorizer</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Determine which top-level nav category (left nav) a request</span>
-<span class="sd">    falls under</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine which top-level nav category a request falls under</span>
+<span class="sd">    for the purposes of the left nav bar.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span>
@@ -186,7 +191,9 @@
 
 
 <div class="viewcode-block" id="mobile_app"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.mobile_app">[docs]</a><span class="k">def</span> <span class="nf">mobile_app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Determine if the site is being displayed in a WebView from a native application.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine if the site is being displayed in a WebView from a native application.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ctx</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">try</span><span class="p">:</span>
@@ -225,7 +232,9 @@
 
 
 <div class="viewcode-block" id="global_custom_theme"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.global_custom_theme">[docs]</a><span class="k">def</span> <span class="nf">global_custom_theme</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add custom theme javascript and css.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add custom theme javascript and css.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -236,8 +245,10 @@
 
 
 <div class="viewcode-block" id="show_homecoming"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.show_homecoming">[docs]</a><span class="k">def</span> <span class="nf">show_homecoming</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show homecoming ribbon / scores &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;show_homecoming&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_START_DATE</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_END_DATE</span><span class="p">}</span></div>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return whether to show homecoming ribbon/scores</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;show_homecoming&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_START_DATE</span> <span class="o">&lt;=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOCO_END_DATE</span><span class="p">}</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -251,12 +262,23 @@
 
 
 <div class="viewcode-block" id="is_tj_ip"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.is_tj_ip">[docs]</a><span class="k">def</span> <span class="nf">is_tj_ip</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return whether the request IP is in the TJ range.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Whether the IP associated with a request is within the TJ IP range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;is_tj_ip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">ip</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJ_IPS</span><span class="p">)}</span></div>
 
 
 <div class="viewcode-block" id="show_bus_button"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.show_bus_button">[docs]</a><span class="k">def</span> <span class="nf">show_bus_button</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export if user has access to view the bus button.</span>
+
+<span class="sd">    The user must either be a bus admin or be within an hour of the end</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">is_bus_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">)</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
     <span class="n">window</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -276,10 +298,16 @@
 
 
 <div class="viewcode-block" id="enable_dark_mode"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.enable_dark_mode">[docs]</a><span class="k">def</span> <span class="nf">enable_dark_mode</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export whether dark mode is enabled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">dark_mode_enabled</span><span class="p">(</span><span class="n">request</span><span class="p">)}</span></div>
 
 
 <div class="viewcode-block" id="oauth_toolkit"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.oauth_toolkit">[docs]</a><span class="k">def</span> <span class="nf">oauth_toolkit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export application tokens arranged by application on OAuth pages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resolve_match</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
@@ -297,6 +325,9 @@
 
 
 <div class="viewcode-block" id="settings_export"><a class="viewcode-back" href="../../../sourcedoc/intranet.apps.html#intranet.apps.context_processors.settings_export">[docs]</a><span class="k">def</span> <span class="nf">settings_export</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export all Django settings to templates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;DJANGO_SETTINGS&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="p">}</span></div>
 </pre></div>
 
