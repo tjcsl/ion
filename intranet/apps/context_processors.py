@@ -109,7 +109,7 @@ def global_custom_theme(request):
 
 def show_homecoming(request):
     """Show homecoming ribbon / scores """
-    return {"show_homecoming": settings.HOCO_START_DATE < timezone.localdate() < settings.HOCO_END_DATE}
+    return {"show_homecoming": settings.HOCO_START_DATE <= timezone.localdate() <= settings.HOCO_END_DATE}
 
 
 def _get_current_ip(request):
