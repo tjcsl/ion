@@ -15,10 +15,10 @@ class StripNewlinesMiddleware:
     def __call__(self, request):
         """Process the response and strip extra newlines from HTML."""
         response = self.get_response(request)
-        is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
+        is_html = response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;")
         if is_html and settings.DEBUG:
-            response.content = re.sub(r'\n(\s*)\n', '\n', response.content.decode())
-            response.content = re.sub(r'^(\s*)\n', '', response.content.decode())
+            response.content = re.sub(r"\n(\s*)\n", "\n", response.content.decode())
+            response.content = re.sub(r"^(\s*)\n", "", response.content.decode())
         return response
 
 
@@ -35,7 +35,7 @@ class AdminSelectizeLoadingIndicatorMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
+        is_html = response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;")
         if is_html and request.path.startswith("/eighth/admin"):
             replacement = """</select>
                 <div class="selectize-control selectize-loading">
@@ -45,7 +45,7 @@ class AdminSelectizeLoadingIndicatorMiddleware:
                 </div>
                 """
 
-            response.content = re.sub(r'</select>', replacement, response.content.decode())
+            response.content = re.sub(r"</select>", replacement, response.content.decode())
         return response
 
 
@@ -57,7 +57,7 @@ class NoReferrerMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        is_html = (response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;"))
+        is_html = response["Content-Type"] == "text/html" or response["Content-Type"].startswith("text/html;")
         if is_html:
             response.content = re.sub(r'<a(.*href ?= ?[\'"]http.*)>', r'<a rel="noopener noreferrer"\1>', response.content.decode())
         return response

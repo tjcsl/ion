@@ -7,6 +7,7 @@ class SameOriginMiddleware:
     """
     Blocks requests that set an "Origin" header that's different from the "Host" header
     """
+
     def __init__(self, get_response):
         self.get_response = get_response
 

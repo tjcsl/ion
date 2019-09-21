@@ -19,18 +19,18 @@ from django.conf import settings
 from django.db import connections
 
 # FIXME change log base to something appropriate for the particular installation
-PROFILE_LOG_BASE = '/var/tmp/django'
+PROFILE_LOG_BASE = "/var/tmp/django"
 # FIXME change if needed
-DATABASE_CONNECTION = 'default'
+DATABASE_CONNECTION = "default"
 
 time_columns = [
-    ('Middleware time', 'middleware_time'),
-    ('Elapsed time', 'total_time'),
-    ('User cpu', 'utime'),
-    ('System cpu', 'stime'),
-    ('Query time', 'query_time'),
-    ('Query count', 'query_count'),
-    ('Max RSS(kb)', 'max_rss'),
+    ("Middleware time", "middleware_time"),
+    ("Elapsed time", "total_time"),
+    ("User cpu", "utime"),
+    ("System cpu", "stime"),
+    ("Query time", "query_time"),
+    ("Query count", "query_count"),
+    ("Max RSS(kb)", "max_rss"),
 ]
 time_labels = [col[0] for col in time_columns]
 time_fields = [col[1] for col in time_columns]
@@ -44,12 +44,8 @@ _start_time = None
 _middleware_start_time = None
 _current_stats = None
 
-words_re = re.compile(r'\s+')
-group_prefix_re = [
-    re.compile("^.*/django/[^/]+"),
-    re.compile("^(.*)/[^/]+$"),  # extract module path
-    re.compile(".*"),  # catch strange entries
-]
+words_re = re.compile(r"\s+")
+group_prefix_re = [re.compile("^.*/django/[^/]+"), re.compile("^(.*)/[^/]+$"), re.compile(".*")]  # extract module path  # catch strange entries
 _log_file_path = None
 _prof = None
 _profile_layer = False
@@ -81,13 +77,13 @@ class ProfileMiddleware:
     def process_request(self, request):
         global _middleware_start_time, _start_time, _log_file_path, _prof
         if settings.DEBUG:
-            if 'time' in request.GET:
+            if "time" in request.GET:
                 # outer layer of middleware onion
                 if _middleware_start_time is None:
                     _middleware_start_time = time.time()
                 else:
                     # inner layer of onion
-                    if 'reset' in request.GET:
+                    if "reset" in request.GET:
                         time_stats.clear()
                     else:
                         self._auto_reset_time(request)
@@ -95,14 +91,14 @@ class ProfileMiddleware:
                     _start_time = time.time()
                     self._start_rusage = resource.getrusage(resource.RUSAGE_SELF)
 
-            elif 'prof' in request.GET:
+            elif "prof" in request.GET:
                 if _prof is None:
                     _prof = cProfile.Profile()
-                if 'log' in request.GET and _log_file_path is None:
-                    _log_file_path = get_log_file_path('middleware.profile', time.gmtime())
+                if "log" in request.GET and _log_file_path is None:
+                    _log_file_path = get_log_file_path("middleware.profile", time.gmtime())
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
-        if settings.DEBUG and ('prof' in request.GET):
+        if settings.DEBUG and ("prof" in request.GET):
             return _prof.runcall(callback, request, *callback_args, **callback_kwargs)
 
         return None
@@ -111,18 +107,18 @@ class ProfileMiddleware:
         # pylint: disable=unsupported-assignment-operation,unsubscriptable-object
         global _current_stats, _middleware_start_time, _log_file_path, _profile_layer, _prof
         if settings.DEBUG:
-            if 'time' in request.GET:
+            if "time" in request.GET:
                 if _current_stats is None:
                     # inner layer of onion
                     _current_stats = self._collect_time()
                 else:
                     # outer layer of onion
-                    _current_stats['middleware_time'] = (time.time() - _middleware_start_time - _current_stats['total_time'])
+                    _current_stats["middleware_time"] = time.time() - _middleware_start_time - _current_stats["total_time"]
                     self._display_time(request, response)
                     _middleware_start_time = None
                     _current_stats = None
 
-            elif 'prof' in request.GET:
+            elif "prof" in request.GET:
                 if _profile_layer:
                     self._profile(request, response)
                     _prof = None
@@ -142,7 +138,7 @@ class ProfileMiddleware:
             time_stats.clear()
             self._last_uri = uri
 
-    _reUri = re.compile(r'^(http.+/)[?&]time.*$')
+    _reUri = re.compile(r"^(http.+/)[?&]time.*$")
 
     def _get_real_uri(self, request):
         uri = request.build_absolute_uri()
@@ -155,19 +151,19 @@ class ProfileMiddleware:
     def _collect_time(self):
         # record stats from this request
         stats = time_stats.setdefault(_start_time, {})
-        stats['total_time'] = (time.time() - _start_time)
+        stats["total_time"] = time.time() - _start_time
         self._end_rusage = resource.getrusage(resource.RUSAGE_SELF)
-        stats['max_rss'] = self._end_rusage.ru_maxrss
-        stats['utime'] = self._elapsed_ru('ru_utime')
-        stats['stime'] = self._elapsed_ru('ru_stime')
-        queries = connections['DATABASE_CONNECTION'].queries
-        stats['query_time'] = sum([float(query['time']) for query in queries])
-        stats['query_count'] = len(queries)
+        stats["max_rss"] = self._end_rusage.ru_maxrss
+        stats["utime"] = self._elapsed_ru("ru_utime")
+        stats["stime"] = self._elapsed_ru("ru_stime")
+        queries = connections["DATABASE_CONNECTION"].queries
+        stats["query_time"] = sum([float(query["time"]) for query in queries])
+        stats["query_count"] = len(queries)
         return stats
 
     def _display_time(self, request, response):
         # display all stats since last reset
-        stats_str = "%-4s %-24s %13s %14s %10s %12s %12s %12s %12s\n" % tuple(['Req', 'Start time'] + time_labels)
+        stats_str = "%-4s %-24s %13s %14s %10s %12s %12s %12s %12s\n" % tuple(["Req", "Start time"] + time_labels)
         count = 0
         mins = defaultdict(int)
         sums = defaultdict(int)
@@ -184,16 +180,19 @@ class ProfileMiddleware:
                 values[field].append(stats[field])
             # display line
             stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-                [count, time.ctime(start_time)] + [stats[field] for field in time_fields])
+                [count, time.ctime(start_time)] + [stats[field] for field in time_fields]
+            )
 
         # display summary statistics
-        stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Minimum'] + [mins[field] for field in time_fields])
+        stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(["", "Minimum"] + [mins[field] for field in time_fields])
         stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-            ['', 'Mean'] + [sums[field] / count for field in time_fields])
-        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Maximum'] + [maxs[field] for field in time_fields])
+            ["", "Mean"] + [sums[field] / count for field in time_fields]
+        )
+        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(["", "Maximum"] + [maxs[field] for field in time_fields])
         if count > 1:
             stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-                ['', 'Standard deviation'] + [stdev(values[field]) for field in time_fields])
+                ["", "Standard deviation"] + [stdev(values[field]) for field in time_fields]
+            )
 
         if response and response.content and stats_str:
             response.content = "<pre>%s\n\noptions: &reset (clear all stats)\n\n%s</pre>" % (request.build_absolute_uri(), stats_str)
@@ -203,23 +202,23 @@ class ProfileMiddleware:
 
     def _profile(self, request, response):
         out = StringIO()
-        if 'log' in request.GET and _log_file_path is not None:
+        if "log" in request.GET and _log_file_path is not None:
             _prof.dump_stats(_log_file_path)
             stats = pstats.Stats(_log_file_path, stream=out)
         else:
-            with tempfile.NamedTemporaryFile(dir='/tmp') as temp_file:
+            with tempfile.NamedTemporaryFile(dir="/tmp") as temp_file:
                 _prof.dump_stats(temp_file.name)
                 stats = pstats.Stats(temp_file.name, stream=out)
         _prof.clear()
 
-        if 'strip' in request.GET:
+        if "strip" in request.GET:
             stats.strip_dirs()
-        sorts = request.GET.getlist('sort')
+        sorts = request.GET.getlist("sort")
         if sorts:
             stats.sort_stats(*sorts)
         else:
-            stats.sort_stats('cumulative')
-        limit = request.GET.get('limit')
+            stats.sort_stats("cumulative")
+        limit = request.GET.get("limit")
         if limit is None:
             limit = 40
         else:
@@ -236,8 +235,11 @@ class ProfileMiddleware:
         if response and response.content and stats_str:
             response.content = """<pre>%s\n\n
             options: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n
-            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (request.build_absolute_uri(), stats_str)
-            if 'strip' not in request.GET:
+            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (
+                request.build_absolute_uri(),
+                stats_str,
+            )
+            if "strip" not in request.GET:
                 response.content += self._summary_for_files(stats_str)
 
     def _get_group(self, file_name):
@@ -283,10 +285,15 @@ class ProfileMiddleware:
                     mygroups[group] = 0
                 mygroups[group] += time_amt
 
-        return "<pre>" +\
-               " ---- By file ----\n\n" + self._get_summary(mystats, ttl) + "\n" +\
-               " ---- By group ---\n\n" + self._get_summary(mygroups, ttl) +\
-               "</pre>"
+        return (
+            "<pre>"
+            + " ---- By file ----\n\n"
+            + self._get_summary(mystats, ttl)
+            + "\n"
+            + " ---- By group ---\n\n"
+            + self._get_summary(mygroups, ttl)
+            + "</pre>"
+        )
 
 
 def get_log_file_path(log_file_path, called_time):
@@ -311,7 +318,8 @@ def stdev(x):
         https://wiki.python.org/moin/NumericAndScientificRecipes
     """
     from math import sqrt
+
     n = len(x)
     mean = sum(x) / float(n)
-    std = sqrt(sum((a - mean)**2 for a in x) / float(n - 1))
+    std = sqrt(sum((a - mean) ** 2 for a in x) / float(n - 1))
     return std
