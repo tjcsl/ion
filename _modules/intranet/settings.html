@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5288) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5299) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -171,6 +171,9 @@
 <span class="n">ENABLE_BUS_DRIVER</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">ENABLE_PRE_EIGHTH_REDIRECT</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">NOTIFY_ADMIN_EMAILS</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">IOS_APP_CLIENT_IDS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Attempting to OAuth to an application with one of these client IDs will result in a *special* error message</span>
+<span class="c1"># See templates/oauth2_provider/authorize.html</span>
 
 <span class="n">EMERGENCY_MESSAGE</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: str</span>
 
@@ -470,6 +473,7 @@
                 <span class="s2">&quot;intranet.apps.context_processors.show_bus_button&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;intranet.apps.context_processors.enable_dark_mode&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;intranet.apps.context_processors.oauth_toolkit&quot;</span><span class="p">,</span>  <span class="c1"># Django OAuth Toolkit-related middleware</span>
+                <span class="s2">&quot;intranet.apps.context_processors.settings_export&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Exports&quot; django.conf.settings as DJANGO_SETTINGS</span>
             <span class="p">),</span>
             <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Only enabled if DEBUG is true as well</span>
             <span class="s2">&quot;loaders&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;django.template.loaders.filesystem.Loader&quot;</span><span class="p">,</span> <span class="s2">&quot;django.template.loaders.app_directories.Loader&quot;</span><span class="p">),</span>
