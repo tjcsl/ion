@@ -2,6 +2,7 @@ class DarkModeMiddleware:
     """
     Set the 'dark-mode-enabled' cookie if the user is logged in and has unlocked dark mode
     """
+
     def __init__(self, get_response):
         self.get_response = get_response
 
