@@ -12,7 +12,7 @@ from django.utils import timezone
 
 from ..apps.emerg.views import get_emerg
 
-logger = logging.getLogger('intranet.settings')
+logger = logging.getLogger("intranet.settings")
 
 
 def get_id(obj):
@@ -29,9 +29,9 @@ def parse_db_url(db_url):
     if db_url is None:
         raise Exception("You must set SECRET_DATABASE_URL in secret.py")
     url = parse.urlparse(db_url)
-    args = {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
+    args = {"NAME": url.path[1:], "USER": url.username, "PASSWORD": url.password}
     if url.hostname:
-        args.update({'HOST': url.hostname})
+        args.update({"HOST": url.hostname})
     return args
 
 
@@ -42,7 +42,7 @@ def debug_toolbar_callback(request):
     if request.is_ajax():
         return False
 
-    if not hasattr(request, 'user'):
+    if not hasattr(request, "user"):
         return False
     if not request.user.is_authenticated:
         return False
@@ -94,7 +94,7 @@ class MigrationMock:
 
     def __getitem__(self, mod):
         if mod in self.seen:
-            return 'migrations'
+            return "migrations"
         self.seen.add(mod)
         return None
 
@@ -147,7 +147,7 @@ def join_nicely(items: Collection) -> str:
 
 
 def single_css_map(name):
-    return {name: {'source_filenames': ['css/%s.scss' % name], 'output_filename': 'css/%s.css' % name}}
+    return {name: {"source_filenames": ["css/%s.scss" % name], "output_filename": "css/%s.css" % name}}
 
 
 def get_fcps_emerg(request):
@@ -185,7 +185,6 @@ def dark_mode_enabled(request):
         return request.GET["dark"] in ["1", "True"]
 
     if request.user.is_authenticated:
-        return request.user.dark_mode_properties.dark_mode_unlocked \
-            and request.user.dark_mode_properties.dark_mode_enabled
+        return request.user.dark_mode_properties.dark_mode_unlocked and request.user.dark_mode_properties.dark_mode_enabled
     else:
         return request.COOKIES.get("dark-mode-enabled", "") == "1"
