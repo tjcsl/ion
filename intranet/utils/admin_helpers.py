@@ -29,8 +29,8 @@ def export_csv_action(description="Export selected objects as CSV file", fields=
             excludeset = set(exclude)
             field_names = field_names - excludeset
 
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s.csv' % str(opts).replace('.', '_')
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=%s.csv" % str(opts).replace(".", "_")
 
         writer = csv.writer(response)
         if header:
