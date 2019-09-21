@@ -1842,8 +1842,11 @@ class EighthMetricsCollector:
             num_next_block_remaining = 0
 
         yield GaugeMetricFamily("intranet_eighth_next_block_signups", "The number of signups for the next block", value=num_next_block_signups)
-        yield GaugeMetricFamily("intranet_eighth_next_block_signups_remaining", "The number of users who are not signed up for the next block",
-                                value=num_next_block_remaining)
+        yield GaugeMetricFamily(
+            "intranet_eighth_next_block_signups_remaining",
+            "The number of users who are not signed up for the next block",
+            value=num_next_block_remaining,
+        )
 
 
 REGISTRY.register(EighthMetricsCollector())
