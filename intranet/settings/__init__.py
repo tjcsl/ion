@@ -786,6 +786,4 @@ if PRODUCTION:
     sentry_logging = LoggingIntegration(
         level=logging.INFO, event_level=logging.ERROR  # Capture info and above as breadcrumbs  # Send errors as events
     )
-    sentry_sdk.init(
-        SENTRY_PUBLIC_DSN, integrations=[DjangoIntegration(), sentry_logging, CeleryIntegration()], send_default_pii=True
-    )
+    sentry_sdk.init(SENTRY_PUBLIC_DSN, integrations=[DjangoIntegration(), sentry_logging, CeleryIntegration()], send_default_pii=True)
