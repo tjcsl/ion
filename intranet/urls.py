@@ -49,6 +49,7 @@ urlpatterns = [
     url(r"^prometheus/", include("django_prometheus.urls")),
     url(r"^docs/accounts$", TemplateView.as_view(template_name="docs/accounts.html", content_type="text/html"), name="docs_accounts"),
     url(r"^docs/terminology$", TemplateView.as_view(template_name="docs/terminology.html", content_type="text/html"), name="docs_terminology"),
+    url(r"^docs/privacy$", TemplateView.as_view(template_name="docs/privacy.html", content_type="text/html"), name="docs_privacy"),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
