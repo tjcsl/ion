@@ -15,7 +15,10 @@ def get_date_range_this_year(now=None):
     if now is None:
         now = timezone.localdate()
     if now.month <= settings.YEAR_TURNOVER_MONTH:
-        date_start = datetime.datetime(now.year - 1, settings.YEAR_TURNOVER_MONTH + 1, 1, 0, 0, 0)
+        if settings.YEAR_TURNOVER_MONTH < 12:
+            date_start = datetime.datetime(now.year - 1, settings.YEAR_TURNOVER_MONTH + 1, 1, 0, 0, 0)
+        else:
+            date_start = datetime.datetime(now.year, 1, 1, 0, 0, 0)
         date_end = datetime.datetime(
             now.year, settings.YEAR_TURNOVER_MONTH, calendar.monthrange(now.year, settings.YEAR_TURNOVER_MONTH)[1], 23, 59, 59
         )
