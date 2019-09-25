@@ -10,6 +10,8 @@ class EventForm(forms.ModelForm):
         super(EventForm, self).__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
+            if not Group.objects.student_visible().exists():
+                self.fields["groups"].widget = self.fields["groups"].hidden_widget()
 
     def clean_time(self):
         time = self.cleaned_data["time"]
