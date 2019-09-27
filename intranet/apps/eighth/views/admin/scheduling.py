@@ -330,7 +330,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
-        form_list = [f for f in form_list]
+        form_list = list(form_list)
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
@@ -375,7 +375,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
-        form_list = [f for f in form_list]
+        form_list = list(form_list)
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)

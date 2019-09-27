@@ -158,7 +158,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
-        form_list = [f for f in form_list]
+        form_list = list(form_list)
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
         return redirect("eighth_admin_room_utilization", start_block.id, end_block.id)
