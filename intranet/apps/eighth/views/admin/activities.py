@@ -126,9 +126,7 @@ def edit_activity_view(request, activity_id):
                             if change == "yes":
                                 # Override old entries
                                 for sa in sched_acts_default:
-                                    for room in old_rooms:
-                                        sa.rooms.add(room)
-                                    sa.save()
+                                    sa.rooms.set(old_rooms)
                                 messages.success(request, "Overrode {} scheduled activities to old room default".format(sched_acts_default.count()))
                             elif change == "no":
                                 # Don't override
