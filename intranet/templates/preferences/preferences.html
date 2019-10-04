@@ -75,10 +75,55 @@
     <div class="primary-content">
         <h2>Preferences</h2>
         <br>
+        {% if request.user.is_student %}
+        <h2>Mail Forwarding</h2>
+        <p>Enter your password and the email you wish to forward to below.</p>
+        <p>Do <b>NOT</b> put down your @fcpsschools.net address.  We cannot forward to it.</p>
+        <table>
+          <form id="mail-forwarding-form">
+            <tr>
+              <td>
+                <label for="username">Username: </label>
+              </td>
+              <td>
+                <input id="username" type="text" name="username" value="{{ request.user.username }}" disabled>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="password">Password: </label>
+              </td>
+              <td>
+                <input id="password" type="password" name="password">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="forwarding_email">Email Address: </label>
+              </td>
+              <td>
+                <input id="forwarding_email" type="text" name="forwarding_email">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a id="mail-forwarding-submit" href="#" class="button">Forward Email</a>
+              </td>
+            </tr>
+          </form>
+        </table>
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
-
-
+            <br>
+            {% if bus_route_form %}
+                <h3>Bus Route (PM)</h3>
+                    {{ bus_route_form.as_table }}
+                <br>
+            {% endif %}
+            <button type="submit">Save</button>
+            <br>
+            <br>
             <h3>Notification Options</h3>
             <p>Change how you receive notifications from Intranet.</p>
             <table class="notification-options">
@@ -157,12 +202,6 @@
                 </tr>
                 {% endfor %}
             </table>
-            <br>
-            {% if bus_route_form %}
-                <h3>Bus Route (PM)</h3>
-                    {{ bus_route_form.as_table }}
-                <br>
-            {% endif %}
 
             {% if preferred_pic_form %}
             <h3>Preferred Picture</h3>
@@ -221,45 +260,6 @@
 
             <button type="submit">Save</button>
             </form>
-
-            {% if request.user.is_student %}
-            <h2>Mail Forwarding</h2>
-            <p>Enter your password and the email you wish to forward to below.</p>
-            <p>Do <b>NOT</b> put down your @fcpsschools.net address.  We cannot forward to it.</p>
-            <table>
-              <form id="mail-forwarding-form">
-                <tr>
-                  <td>
-                    <label for="username">Username: </label>
-                  </td>
-                  <td>
-                    <input id="username" type="text" name="username" value="{{ request.user.username }}" disabled>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="password">Password: </label>
-                  </td>
-                  <td>
-                    <input id="password" type="password" name="password">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="forwarding_email">Email Address: </label>
-                  </td>
-                  <td>
-                    <input id="forwarding_email" type="text" name="forwarding_email">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <a id="mail-forwarding-submit" href="#" class="button">Forward Email</a>
-                  </td>
-                </tr>
-              </form>
-            </table>
-            {% endif %}
 
     </div>
 
