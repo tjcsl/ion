@@ -637,7 +637,7 @@ def add_member_to_group_view(request, group_id):
 
     if "user_id" in request.POST:
         user_ids = request.POST.getlist("user_id")
-        user_objects = get_user_model().objects.filter(id__in=user_ids)
+        user_objects = get_user_model().objects.filter(id__in=user_ids).exclude(groups=group)
         next_url += "?"
         for user in user_objects:
             user.groups.add(group)
@@ -654,8 +654,9 @@ def add_member_to_group_view(request, group_id):
     query = request.POST["query"]
     from_sid = get_user_model().objects.user_with_student_id(query)
     if from_sid:
-        from_sid.groups.add(group)
-        from_sid.save()
+        if not from_sid.groups.filter(id=group.id).exists():
+            from_sid.groups.add(group)
+            from_sid.save()
         messages.success(request, 'Successfully added user "{}" to the group.'.format(from_sid.full_name))
         return redirect(next_url + "?added=" + str(from_sid.id))
 
