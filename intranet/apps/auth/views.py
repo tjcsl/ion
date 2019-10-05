@@ -19,7 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
-from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
+from ...utils.helpers import dark_mode_enabled, get_ap_week_warning, halloween_mode_enabled
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
@@ -88,6 +88,9 @@ def get_login_theme():
 
     if today.month == 3 and (14 <= today.day <= 16):
         return {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"}
+
+    elif halloween_mode_enabled():
+        return {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"}
 
     return {}
 
