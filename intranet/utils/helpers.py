@@ -183,6 +183,13 @@ def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
+    if (
+        request.resolver_match is not None
+        and (request.resolver_match.url_name == "login" or (request.resolver_match.url_name == "index" and not request.user.is_authenticated))
+        and halloween_mode_enabled()
+    ):
+        return True
+
     if request.user.is_authenticated:
         return request.user.dark_mode_properties.dark_mode_unlocked and request.user.dark_mode_properties.dark_mode_enabled
     else:
@@ -191,3 +198,8 @@ def dark_mode_enabled(request):
 
 def dark_mode_unlocked_globally():
     return timezone.localdate() >= datetime.date(2019, 10, 30)
+
+
+def halloween_mode_enabled():
+    today = timezone.localdate()
+    return (today.month == 10 and 30 <= today.day <= 31) or (today.month == 11 and today.day == 1)
