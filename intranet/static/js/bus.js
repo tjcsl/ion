@@ -51,11 +51,11 @@ $(function() {
                 console.log('Admin');
             }
             if (!window.isAdmin) {
-                this.icon = 'fa-search';
+                this.icon = 'fas fa-search';
                 this.text = 'search for bus';
                 this.action = 'search';
             } else {
-                this.icon = 'fa-check-square';
+                this.icon = 'fas fa-check-square';
                 this.text = 'mark bus arrived';
                 this.action = 'arrive';
             }
@@ -231,7 +231,7 @@ $(function() {
         },
         vroom: function () {
             this.busDriver = true;
-            this.icon = 'fa-arrow-left';
+            this.icon = 'fas fa-arrow-left';
             this.text = 'run out of gas?';
             this.action = 'stop-bus';
             Messenger().post('Use the arrow keys or WASD to drive!');
@@ -240,13 +240,13 @@ $(function() {
         },
         handleEmptySpace: function (space) {
             if (!isAdmin && enableBusDriver) {
-                this.icon = 'fa-bus';
+                this.icon = 'fas fa-bus';
                 this.text = 'skrt skrt';
                 this.action = 'vroom';
                 this.selected = space;
                 return this.render();
             }
-            this.icon = 'fa-plus-square';
+            this.icon = 'fas fa-plus-square';
             this.text = 'assign bus';
             this.action = 'assign';
             this.selected = space;
@@ -254,13 +254,13 @@ $(function() {
         },
         handleFilledSpace: function (space) {
             if (!isAdmin && enableBusDriver) {
-                this.icon = 'fa-bus';
+                this.icon = 'fas fa-bus';
                 this.text = 'skrt skrt';
                 this.action = 'vroom';
                 this.selected = space;
                 return this.render();
             }
-            this.icon = 'fa-minus-square';
+            this.icon = 'fas fa-minus-square';
             this.text = 'unassign bus';
             this.action = 'unassign';
             this.selected = space;
@@ -268,18 +268,18 @@ $(function() {
         },
         handleDeselectSpace: function () {
             if (this.busDriver) {
-                this.icon = 'fa-arrow-left';
+                this.icon = 'fas fa-arrow-left';
                 this.text = 'ran out of gas?';
                 this.action = 'stop-bus';
                 this.render();
                 return;
             }
             if (!window.isAdmin) {
-                this.icon = 'fa-search';
+                this.icon = 'fas fa-search';
                 this.text = 'search for bus';
                 this.action = 'search';
             } else {
-                this.icon = 'fa-check-square';
+                this.icon = 'fas fa-check-square';
                 this.text = 'mark bus arrived';
                 this.action = 'arrive';
             }

@@ -15,7 +15,7 @@
     <script>
     $(document).ready(function() {
         $("form").submit(function() {
-            $(this).find("button").prop("disabled", true).html("<i class='fa fa-cog fa-spin'></i> Importing...");
+            $(this).find("button").prop("disabled", true).html("<i class='fas fa-cog fa-spin'></i> Importing...");
         });
         var block_selectize = $("#block-select")[0].selectize;
         block_selectize.on("change", function() {
@@ -39,11 +39,11 @@
     <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
 {% else %}
     {% if locked %}
-        <p><i class="fa fa-exclamation-triangle"></i> This block is locked.</p>
+        <p><i class="fas fa-exclamation-triangle"></i> This block is locked.</p>
     {% endif %}
     {% if existing_activities > 0 or existing_signups > 0 %}
         <p>
-            <i class="fa fa-exclamation-triangle"></i> <b>{{ existing_activities }}</b> activit{{ existing_activities|pluralize:"y,ies" }} and <b>{{ existing_signups }}</b> signup{{ existing_signups|pluralize }} already exist for this block.
+            <i class="fas fa-exclamation-triangle"></i> <b>{{ existing_activities }}</b> activit{{ existing_activities|pluralize:"y,ies" }} and <b>{{ existing_signups }}</b> signup{{ existing_signups|pluralize }} already exist for this block.
             Importing from another block will <b style="color:red">delete</b> these activities and signups.
         </p>
     {% endif %}

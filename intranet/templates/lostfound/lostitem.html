@@ -3,16 +3,16 @@
     <h3>
         {{ item.title }}
 
-        <div class="item-icon-wrapper">
+        <div class="item-icon-wrapper" style="display: block">
             <a href="{% url 'lostitem_view' item.id %}" title="Permalink">
-                <i class="fa fa-share-square-o"></i>
+                <i class="fas fa-share-square"></i>
             </a>
             {% if item.user == request.user or is_admin %}
                 <a href="{% url 'lostitem_modify' item.id %}">
-                    <i class="item-icon fa fa-pencil"></i>
+                    <i class="item-icon fas fa-pencil-alt"></i>
                 </a>
                 <a href="{% url 'lostitem_delete' item.id %}" class="item-delete">
-                    <i class="item-icon fa fa-trash-o"></i>
+                    <i class="item-icon far fa-trash-alt"></i>
                 </a>
             {% endif %}
         </div>

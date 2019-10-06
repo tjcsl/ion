@@ -56,7 +56,7 @@
             <form class="search" action="/search" method="get" autocomplete="off">
                 <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" aria-label="Search directory and more">
                 <button type="submit" class="search-button" aria-label="Search">
-                    <i class="fa fa-search"></i>
+                    <i class="fas fa-search"></i>
                 </button>
             </form>
             {% endif %}
@@ -66,7 +66,7 @@
             {% if request.user.is_student and eighth_absence_count > 0 %}
                 <li class="badged-item has-dropdown{% if eighth_absence_notif %} dropdown-open{% endif %}">
                     <a href="{% url 'eighth_absences' %}" class="badge-link">
-                        <i class="fa fa-gavel absence-icon"></i>
+                        <i class="fas fa-gavel absence-icon"></i>
                         <span class="badge-wrapper">
                             <span class="badge red">
                                 {{ eighth_absence_count }}<span class="absence-count-label"> Absence{{ eighth_absence_count|pluralize }}</span>
@@ -76,7 +76,7 @@
                     {% if eighth_absence_notif %}
                         <ul class="dropdown-menu absence-notification">
                             <div class="arrow"></div>
-                            <i class="fa fa-exclamation-triangle fa-2x absence-notification-icon"></i>
+                            <i class="fas fa-exclamation-triangle fa-2x absence-notification-icon"></i>
                             <b>You have {{ eighth_absence_count }} Eighth Period absence{{ eighth_absence_count|pluralize }}.</b>
                             <p>Press the button above to view more information.<br>
                             Click on this message to close.</p>
@@ -87,18 +87,18 @@
 
             <li class="username has-dropdown">
                 <div class="dropdown-item-wrapper">
-                    <i class="fa fa-user"></i><span class="user-name">{{ request.user.first_name }}</span><i class="fa fa-caret-down"></i>
+                    <i class="fas fa-user"></i><span class="user-name">{{ request.user.first_name }}</span><i class="fas fa-caret-down"></i>
                 </div>
                 <ul class="dropdown-menu">
                     <div class="arrow"></div>
-                    <li><a href="{% url 'user_profile'%}"><i class="fa fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'user_profile'%}"><i class="fas fa-user"></i> My Profile</a></li>
                     {% if not request.user.is_restricted %}
-                    <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> Preferences</a></li>
-                    <li><a href="{% url 'itemreg' %}"><i class="fa fa-pencil-square-o"></i> Item Registration</a></li>
+                    <li><a href="{% url 'preferences' %}"><i class="fas fa-cog"></i> Preferences</a></li>
+                    <li><a href="{% url 'itemreg' %}"><i class="fas fa-edit"></i> Item Registration</a></li>
                     {% endif %}
-                    <li><a href="{% url 'send_feedback' %}" class="feedback"><i class="fa fa-smile-o"></i> Send Feedback</a></li>
-                    <li><a href="{% url 'about' %}"><i class="fa fa-info-circle"></i> About/Credits</a></li>
-                    <li><a href="{% url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    <li><a href="{% url 'send_feedback' %}" class="feedback"><i class="far fa-smile"></i> Send Feedback</a></li>
+                    <li><a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About/Credits</a></li>
+                    <li><a href="{% url 'logout'%}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>
