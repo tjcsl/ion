@@ -209,7 +209,7 @@ $(function() {
                     <tr><td colspan="2" style="padding-left: 5px">
                         <input type="submit" value="Create Mapping">
                         <button class="close" onclick="$('.change-daytype-form').hide(); return false">
-                            <i class="fa fa-times"></i>
+                            <i class="fas fa-times"></i>
                         </button>
                     </td></tr>
                 </table>
@@ -255,7 +255,7 @@ $(function() {
             <th></th>
             <th>
                 <a class="button" title="Last month" href="?month={{ last_month }}">
-                <i class="fa fa-arrow-left"></i>
+                <i class="fas fa-arrow-left"></i>
                 </a>
             </th>
             <th colspan="1">
@@ -263,7 +263,7 @@ $(function() {
             </th>
             <th>
                 <a class="button" title="Next month" href="?month={{ next_month }}">
-                <i class="fa fa-arrow-right"></i>
+                <i class="fas fa-arrow-right"></i>
                 </a>
             </th>
             <th></th>
@@ -307,21 +307,21 @@ $(function() {
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
                     
                     <a class="button change-daytype-button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}" data-endpoint="{% url 'schedule_add' %}" data-date="{{ day.formatted_date }}">
-                        <i class='edit fa fa-exchange'></i>
+                        <i class='edit fas fa-exchange-alt'></i>
                     </a>
 
                     {% if day.schedule %}
                         <a href="{% url 'schedule_daytype' day.schedule.id %}" class="button make-copy-button" title="Make Copy of Schedule" data-endpoint="{% url 'schedule_daytype' %}" data-id="{{ day.schedule.id }}" data-name="{{ day.schedule.name }}">
-                            <i class='edit fa fa-reply'></i>
+                            <i class='edit fas fa-reply'></i>
                         </a>
                     {% endif %}
 
                     <a href="{% url 'schedule_comment' %}?date={{ day.formatted_date }}" class="button make-comment-button" title="Add Comment on Day" data-endpoint="{% url 'schedule_comment' %}" data-date="{{ day.formatted_date }}">
-                        <i class='edit fa fa-comment'></i>
+                        <i class='edit fas fa-comment'></i>
                     </a>
 
                     <a href="{% url 'schedule_daytype' %}?assign_date={{ day.formatted_date }}" class="button" title="Custom Schedule">
-                        <i class='edit fa fa-star'></i>
+                        <i class='edit fas fa-star'></i>
                     </a>
                 </span>
             {% else %}

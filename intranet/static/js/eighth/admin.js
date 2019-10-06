@@ -91,9 +91,9 @@ $(function() {
         $popover.toggleClass("closed");
 
         if ($popover.hasClass("closed")) {
-            $toggle.html("Select All <i class=\"fa fa-caret-down\"></i>");
+            $toggle.html("Select All <i class=\"fas fa-caret-down\"></i>");
         } else {
-            $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>");
+            $toggle.html("Select All <i class=\"fas fa-caret-up\"></i>");
         }
     });
 

@@ -339,7 +339,7 @@
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
                 <% } else if (waitlisted) { %>
-                    <span class="fa fa-clock-o"></span>
+                    <span class="far fa-clock"></span>
                 <% } else { %>
                     <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
                     <% if(roster.count > 0) { pieNumber = Math.max(pieNumber, 1); } %>
@@ -418,7 +418,7 @@
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
         <button id="close-activity-detail">
-            <i class="fa fa-arrow-left"></i> Close
+            <i class="fas fa-arrow-left"></i> Close
         </button>
         <h3>
             <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
@@ -629,7 +629,7 @@
                             {% if not request.session.seen_feature %}
                             <div class="new-feature">
                                 <div class="new-feature-close">
-                                    <i class="fa fa-close"></i>
+                                    <i class="fas fa-close"></i>
                                 </div>
                                 <span class="new-feature-text"></span>
                             </div>
@@ -638,7 +638,7 @@
                         <div class="block-title">
                             <h2>
                                 {% if active_block.locked %}
-                                    <i class="fa fa-lock"></i>
+                                    <i class="fas fa-lock"></i>
                                 {% endif %}
                                 {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user and not no_user_display %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                             </h2>
@@ -660,13 +660,13 @@
                         {% if next_block %}
                         <div class="block-switch">
                             <button onclick="blockSwitch(1)">
-                            {{ next_block.block_letter }} Block <i class="fa fa-arrow-right"></i>
+                            {{ next_block.block_letter }} Block <i class="fas fa-arrow-right"></i>
                             </button>
                         </div>
                         {% elif prev_block %}
                         <div class="block-switch">
                             <button onclick="blockSwitch(-1)">
-                            <i class="fa fa-arrow-left"></i> {{ prev_block.block_letter }} Block
+                            <i class="fas fa-arrow-left"></i> {{ prev_block.block_letter }} Block
                             </button>
                         </div>
                         {% endif %}

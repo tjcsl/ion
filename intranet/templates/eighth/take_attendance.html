@@ -111,23 +111,23 @@
 
 
         {% if request.GET.ns %}
-            <strong style="color: red"><i class="fa fa-exclamation-triangle"></i>  You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
+            <strong style="color: red"><i class="fas fa-exclamation-triangle"></i>  You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
             <br>
         {% endif %}
 
         {% if no_edit_perm %}
             {% if edit_perm_cancelled %}
-                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> This activity was cancelled, so you can only view the roster.</strong>
+                <strong style="color: red"><i class="fas fa-exclamation-triangle"></i> This activity was cancelled, so you can only view the roster.</strong>
                 <br>
             {% else %}
-                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
+                <strong style="color: red"><i class="fas fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
                 <br>
             {% endif %}
         {% endif %}
 
         {% if request.GET.no_attendance %}
             <a href="{% url 'eighth_admin_view_activities_without_attendance' %}?block={{ request.GET.no_attendance|escape }}" class="button">
-                <i class="fa fa-arrow-left"></i>
+                <i class="fas fa-arrow-left"></i>
                 Activities w/o Attendance
             </a>
             <br>
@@ -251,23 +251,23 @@
 
                 {% if scheduled_activity.attendance_taken %}
                     <div class="attendance-taken">
-                        <i class="fa fa-check"></i> Attendance Taken
+                        <i class="fas fa-check"></i> Attendance Taken
                     </div>
                 {% elif scheduled_activity.block.locked %}
                     <div class="no-attendance">
-                        <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
+                        <i class="fas fa-exclamation-triangle"></i> Attendance Not Taken
                     </div>
                 {% endif %}
 
                 {% if passes and scheduled_activity.block.locked %}
                     <div class="passes-notice">
-                        <i class="fa fa-exclamation-triangle"></i> Unacknowledged Student Passes
+                        <i class="fas fa-exclamation-triangle"></i> Unacknowledged Student Passes
                     </div>
                 {% endif %}
 
                 <div class="pass-container{% if request.user.is_eighth_admin %} eighth-admin{% endif %}{% if passes and scheduled_activity.block.locked %} has-passes{% endif %}">
                 {% if passes and scheduled_activity.block.locked %}
-                    <h3 class="passes-notice"><i class="fa fa-exclamation-triangle"></i> Student Passes</h3>
+                    <h3 class="passes-notice"><i class="fas fa-exclamation-triangle"></i> Student Passes</h3>
                     <table class="take-passes">
                         <thead>
                             <tr>
@@ -312,10 +312,10 @@
                                     <form name="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" name="status" value="">
-                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="accept"><i class="fa fa-check"></i></a> 
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="accept"><i class="fas fa-check"></i></a> 
                                          &nbsp; 
 
-                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="reject"><i class="fa fa-times"></i></a>
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="reject"><i class="fas fa-times"></i></a>
                                     </form>
                                 </td>
                                 {% endif %}
@@ -342,7 +342,7 @@
                 {% else %}
                     <h3>Passes</h3>
                     <span class="no-passes">
-                        <i class="fa fa-check"></i> There are no passes to accept.
+                        <i class="fas fa-check"></i> There are no passes to accept.
                     </span>
                 {% endif %}
                 </div>
@@ -390,9 +390,9 @@
                                     {% elif show_icons %}
                                         <td class="present-checkbox">
                                             {% if member.present or member.pass_present %}
-                                                <i class="fa fa-check"></i>
+                                                <i class="fas fa-check"></i>
                                             {% else %}
-                                                <i class="fa fa-times"></i>
+                                                <i class="fas fa-times"></i>
                                             {% endif %}
                                     {% endif %}
                                     <td class="user-col user-link" data-user-id="{{ member.id }}">
@@ -412,7 +412,7 @@
                             {% empty %}
                                 <tr>
                                     <td colspan="5">
-                                        <i class="fa fa-info-circle"></i> There are no signups.
+                                        <i class="fas fa-info-circle"></i> There are no signups.
                                     </td>
                                 </tr>
                             {% endfor %}

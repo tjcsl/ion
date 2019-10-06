@@ -17,11 +17,11 @@ $(function() {
     $(".sidebar-trigger").click(function() {
         if($(".sidebar").hasClass("has-events")){
             if($(this).css("left") !== "5px") {
-                $(this).html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
+                $(this).html("<i class=\"far fa-fw fa-calendar-alt\"></i>");
                 $(this).css("left", "5px");
             }
             else {
-                $(this).html("<i class=\"fa fa-fw fa-times\"></i>");
+                $(this).html("<i class=\"fas fa-fw fa-times\"></i>");
                 $(this).css("left", "267px");
             }
             $(".sidebar").toggle("slide");
@@ -38,7 +38,7 @@ $(function() {
             else {
                 $(".sidebar").hide("slide");
                 $(".sidebar-trigger").css("left", "5px");
-                $(".sidebar-trigger").html("<i class=\"fa fa-fw fa-calendar-o\"></i>");
+                $(".sidebar-trigger").html("<i class=\"far fa-fw fa-calendar-alt\"></i>");
             }
         }
     });

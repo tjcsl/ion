@@ -112,7 +112,7 @@
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
                 <% } else if (waitlisted) { %>
-                    <span class="fa fa-clock-o"></span>
+                    <span class="far fa-clock"></span>
                 <% } else { %>
                     <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
                     <% if(roster.count > 0) { pieNumber = Math.max(pieNumber, 1); } %>
@@ -359,11 +359,11 @@
         <div class="day-picker">
             <span class="day-picker-buttons">
                 <button class="earlier-days">
-                    <i class="fa fa-chevron-left"></i>
+                    <i class="fas fa-chevron-left"></i>
                 </button>
 
                 <button class="later-days">
-                    <i class="fa fa-chevron-right"></i>
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </span>
             <ul class="days-container">
@@ -381,7 +381,7 @@
                                                     {{ b.block_letter }}
                                                 </span>
                                                 {% if b.locked %}
-                                                    <i class="fa fa-lock" title="The block is locked."></i>
+                                                    <i class="fas fa-lock" title="The block is locked."></i>
                                                 {% endif %}
                                                 <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags_no_restricted }}{% endif %}">
                                                     {% if b.current_signup_cancelled %}
@@ -415,16 +415,16 @@
                 {% if not request.session.seen_feature %}
                 <div class="new-feature">
                     <div class="new-feature-close">
-                        <i class="fa fa-close"></i>
+                        <i class="fas fa-close"></i>
                     </div>
-                    <span class="new-feature-text"><i class="fa fa-rocket"></i> New: Ion will now recommend activities for you based on the activities you have signed up for in the past 3 months.</span>
+                    <span class="new-feature-text"><i class="fas fa-rocket"></i> New: Ion will now recommend activities for you based on the activities you have signed up for in the past 3 months.</span>
                 </div>
                 {% endif %}
                 {% endcomment %}
                 <div class="block-title">
                     <h2>
                         {% if active_block.locked %}
-                            <i class="fa fa-lock" title="The block is locked."></i>
+                            <i class="fas fa-lock" title="The block is locked."></i>
                         {% endif %}
                         {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                     </h2>
@@ -446,10 +446,10 @@
 
                 <div class="desktop-info">
                     <span class="arrow-left">
-                        <i class="fa fa-arrow-down"></i>
+                        <i class="fas fa-arrow-down"></i>
                     </span>
                     <span class="arrow-right">
-                        <i class="fa fa-arrow-up"></i>
+                        <i class="fas fa-arrow-up"></i>
                     </span>
                     <p>
                         Choose an Eighth Period block above,<br>
@@ -458,14 +458,14 @@
                 </div>
 
                 <div class="switch">
-                    <i class="fa fa-chevron-up down"></i>
-                    <i class="fa fa-chevron-down up"></i>
+                    <i class="fas fa-chevron-up down"></i>
+                    <i class="fas fa-chevron-down up"></i>
                 </div>
 
                 <div class="middle-button-container">
                     <div class="history-button">
                         <a href="{% url 'eighth_profile_history' %}" class="button" title="Attendance History">
-                            <i class="fa fa-history"></i><span> History</span>
+                            <i class="fas fa-history"></i><span> History</span>
                         </a>
                     </div>
                 </div>
@@ -474,7 +474,7 @@
 
         <div id="activity-picker" class="{% if request.user != user %}different-user{% endif %}">
             <div class="search-wrapper">
-                <i class="fa fa-search"></i>
+                <i class="fas fa-search"></i>
                 <span>
                     <input type="search" placeholder="Search names, sponsors, rooms..." disabled>
                 </span>
@@ -483,7 +483,7 @@
                 </h5>
             </div>
             <div class="backbtn">
-                <i class="fa fa-chevron-left"></i>
+                <i class="fas fa-chevron-left"></i>
             </div>
             <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
                 <h5 class="sticky-header favorites-header" data-header="favorites-header">

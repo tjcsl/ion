@@ -100,7 +100,7 @@
 
             <span class="announcements-icon-wrapper">
             {% if show_expired or not show_widgets %}
-                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-arrow-left" style="width: 11px"></i> Dashboard</a>
+                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fas fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
             {% if not request.user.is_restricted %}
@@ -111,16 +111,16 @@
                     </a>
                 {% else %}
                     <a class="button" href="{% url view_announcements_url %}">
-                        <i class="fa fa-times"></i> Don't Show All
+                        <i class="fas fa-times"></i> Don't Show All
                     </a>
                 {% endif %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
-                    <i class="fa fa-plus"></i>
+                    <i class="fas fa-plus"></i>
                     Add
                 </a>
             {% else %}
                 <a class="button announcement-request" href="{% url 'request_announcement' %}">
-                    <i class="fa fa-file-text-o"></i>
+                    <i class="far fa-file-alt"></i>
                     Request Post
                 </a>
             {% endif %}
@@ -137,7 +137,7 @@
                 <div class="announcement announcement-meta">
                 {% if awaiting_approval %}
                     <h3>
-                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
+                    <i class="fas fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
                     <ul>
                     {% for req in awaiting_approval %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
@@ -145,7 +145,7 @@
                     </ul>
                 {% endif %}
                 {% if awaiting_teacher %}
-                    <h3> <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending teacher approval</h3>
+                    <h3> <i class="fas fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending teacher approval</h3>
                 {% endif %}
                 </div>
             {% endif %}
@@ -153,7 +153,7 @@
         {% if self_awaiting_teacher %}
             <div class="announcement announcement-meta">
                 <h3>
-                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if self_awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ self_awaiting_teacher|length }} announcement requests{% endif %} waiting for your approval
+                    <i class="fas fa-exclamation-circle" style="color: red"></i> There {% if self_awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ self_awaiting_teacher|length }} announcement requests{% endif %} waiting for your approval
                 </h3>
                 <ul>
                 {% for req in self_awaiting_teacher %}
@@ -194,7 +194,7 @@
         {% endfor %}
         {% if not request.user.is_restricted %}
         {% if start_num == 0 and view_announcements_url != 'announcements_archive' %}
-            <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
+            <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fas fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
 
         {% if start_num > 0 %}

@@ -14,7 +14,7 @@
 <div class="event{% if hide_events and event.id in user_hidden_events %} hidden{% endif %}" data-id="{{ event.id }}">
     <h3>
         {% if show_icon %}
-            <i class="fa fa-calendar dashboard-item-icon" title="Event"></i>
+            <i class="far fa-calendar-alt dashboard-item-icon" title="Event"></i>
         {% endif %}
 
         {% if not event.approved %}<span style="color: red">UNAPPROVED:</span>{% endif %}
@@ -30,21 +30,21 @@
                 {% if hide_events %}
                     <a href="#" class="event-toggle">
                     {% if event.id in user_hidden_events %}
-                        <i class="announcement-icon fa fa-expand" title="You have hidden this event. Click to show." data-visible-title="This event is visible. Click to hide." hidden-title="You have hidden this event. Click to show."></i>
+                        <i class="announcement-icon fas fa-expand" title="You have hidden this event. Click to show." data-visible-title="This event is visible. Click to hide." hidden-title="You have hidden this event. Click to show."></i>
                     {% else %}
-                        <i class="announcement-icon fa fa-compress" title="This event is visible. Click to hide." data-visible-title="This event is visible. Click to hide." data-hidden-title="You have hidden this event. Click to show."></i>
+                        <i class="announcement-icon fas fa-compress" title="This event is visible. Click to hide." data-visible-title="This event is visible. Click to hide." data-hidden-title="You have hidden this event. Click to show."></i>
                     {% endif %}
                     </a>
                 {% endif %}
                     <a href="{% url 'event' event.id %}" title="Event permalink">
-                        <i class="fa fa-share-square-o"></i>
+                        <i class="fas fa-share-square"></i>
                     </a>
                 {% if events_admin %}
                     <a href="{% url 'modify_event' event.id %}">
-                        <i class="event-icon fa fa-pencil"></i>
+                        <i class="event-icon fas fa-pencil-alt"></i>
                     </a>
                     <a href="{% url 'delete_event' event.id %}" class="event-delete">
-                        <i class="event-icon fa fa-trash-o"></i>
+                        <i class="event-icon far fa-trash-alt"></i>
                     </a>
                 {% endif %}
             </div>
@@ -132,7 +132,7 @@
                     You are <b style="color: green">attending</b> this event. 
                     {% if show_attend %}
                         <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
-                            <i class="fa fa-times"></i>
+                            <i class="fas fa-times"></i>
                             Don't Attend
                         </a>
                     {% endif %}
@@ -142,7 +142,7 @@
                     You are <b style="color: red">not attending</b> this event. 
                     {% if show_attend %}
                         <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
-                            <i class="fa fa-check"></i>
+                            <i class="fas fa-check"></i>
                             Attend
                         </a>
                     {% endif %}

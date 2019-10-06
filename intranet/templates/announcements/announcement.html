@@ -10,11 +10,11 @@
 <div class="announcement{% if hide_announcements and announcement.id in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
         {% if show_icon and not announcement.pinned %}
-            <i class="fa fa-file-text-o dashboard-item-icon" title="Announcement"></i>
+            <i class="far fa-file-alt dashboard-item-icon" title="Announcement"></i>
         {% endif %}
 
         {% if announcement.pinned %}
-            <i class="fa fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
+            <i class="fas fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
         {% endif %}
 
         {% if link_to_announcement and not request.user.is_restricted %}
@@ -29,23 +29,23 @@
             {% if hide_announcements %}
                 <a href="#" class="announcement-toggle">
                 {% if announcement.id in user_hidden_announcements %}
-                    <i class="announcement-icon fa fa-expand" title="You have hidden this announcement. Click to show." data-visible-title="This announcement is visible. Click to hide." hidden-title="You have hidden this announcement. Click to show."></i>
+                    <i class="announcement-icon fas fa-expand" title="You have hidden this announcement. Click to show." data-visible-title="This announcement is visible. Click to hide." hidden-title="You have hidden this announcement. Click to show."></i>
                 {% else %}
-                    <i class="announcement-icon fa fa-compress" title="This announcement is visible. Click to hide." data-visible-title="This announcement is visible. Click to hide." data-hidden-title="You have hidden this announcement. Click to show."></i>
+                    <i class="announcement-icon fas fa-compress" title="This announcement is visible. Click to hide." data-visible-title="This announcement is visible. Click to hide." data-hidden-title="You have hidden this announcement. Click to show."></i>
                 {% endif %}
                 </a>
             {% endif %}
             {% if not request.user.is_restricted %}
                 <a href="{% url 'view_announcement' announcement.id %}" title="Announcement permalink">
-                    <i class="fa fa-paperclip fa-flip-horizontal"></i>
+                    <i class="fas fa-paperclip fa-flip-horizontal"></i>
                 </a>
             {% endif %}
             {% if request.user.is_announcements_admin %}
                 <a href="{% url 'modify_announcement' announcement.id %}" title="Modify announcement">
-                    <i class="announcement-icon fa fa-pencil"></i>
+                    <i class="announcement-icon fas fa-pencil-alt"></i>
                 </a>
                 <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete" title="Delete announcement">
-                    <i class="announcement-icon fa fa-trash-o"></i>
+                    <i class="announcement-icon far fa-trash-alt"></i>
                 </a>
             {% endif %}
             </div>

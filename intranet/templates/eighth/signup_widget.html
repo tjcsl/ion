@@ -10,7 +10,7 @@
         <h2>
             {% if no_signup_today %}
             <div class="warning-icon" title="You have not signed up today.">
-                <i class="fa fa-exclamation-triangle"></i>
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
             {% endif %}
             Upcoming Eighth Periods
@@ -35,7 +35,7 @@
                 {% if block.locked %}
                     {% if block.current_signup %}
                         <span class="block-signup locked{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You {% if block.current_signup_sticky %}are stuck to this activity. Questions? Ask 8th Pd. Office{% else %}have signed up for this activity.{% endif %}{% endif %}">
-                            <!--<i class="fa fa-lock"></i>-->
+                            <!--<i class="fas fa-lock"></i>-->
                             {{ block.current_signup }}
                         </span>
                         {% if block.rooms and block != last_displayed_block and not block.is_today and not block.current_signup_cancelled %}
@@ -47,12 +47,12 @@
                         {% endif %}
                     {% else %}
                          <span class="block-signup locked no-activity-selected{% if block.is_today %} today{% endif %}" title="You have not selected an activity, and signups are locked. Questions? Ask 8th Pd. Office">
-                            <!--<i class="fa fa-lock"></i>-->
+                            <!--<i class="fas fa-lock"></i>-->
                             No activity selected
                         </span>
                     {% endif %}
                     <a href="{% url 'eighth_signup' block.id %}" class="btn-link" title="Signups are locked.">
-                        <i class="fa fa-lock"></i>
+                        <i class="fas fa-lock"></i>
                         View
                     </a>
                 {% elif block.current_signup %}
@@ -80,7 +80,7 @@
             </div>
             {% if block.current_signup_cancelled %}
                 <div class="block-info{% if block.is_today and block.signup_time %} with-timeleft{% endif %}">
-                    <i class="fa fa-info-circle"></i> This activity was <b style="color: red">cancelled.</b> {% if block.locked %}Visit 8th Pd. Office{% else %}Select another activity.{% endif %}
+                    <i class="fas fa-info-circle"></i> This activity was <b style="color: red">cancelled.</b> {% if block.locked %}Visit 8th Pd. Office{% else %}Select another activity.{% endif %}
                 </div>
             {% endif %}
             {% if block.is_today and block.signup_time %}
