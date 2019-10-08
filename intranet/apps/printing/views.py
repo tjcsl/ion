@@ -292,12 +292,16 @@ def print_view(request):
                 print_job(obj)
             except InvalidInputPrintingError as e:
                 messages.error(request, str(e))
-                logging.error("Printing failed due to invalid user input: %s", e)
             except Exception as e:
                 messages.error(request, str(e))
                 logging.critical("Printing failed: %s", e)
             else:
-                messages.success(request, "Your file was printed!")
+                messages.success(
+                    request,
+                    "Your file was submitted to the printer."
+                    "If the printers are experiencing trouble, please email the"
+                    "Student Systems Administrators at sysadmins@tjhsst.edu.",
+                )
     else:
         form = PrintJobForm(printers=printers)
     context = {"form": form}
