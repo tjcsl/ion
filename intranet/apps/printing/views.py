@@ -25,6 +25,15 @@ class InvalidInputPrintingError(Exception):
 
 
 def get_printers():
+    """ Returns the list of available printers.
+
+    This requires that a CUPS client be configured on the server.
+    Otherwise, this returns an empty list.
+
+    Returns:
+        A list of available printers.
+    """
+
     key = "printing:printers"
     cached = cache.get(key)
     if cached:
@@ -55,6 +64,15 @@ def get_printers():
 
 
 def convert_soffice(tmpfile_name):
+    """ Converts a doc or docx to a PDF with soffice.
+
+    Args:
+        tmpfile_name: The path to the file to print.
+
+    Returns:
+        The path to the converted file. If it fails, false.
+    """
+
     try:
         output = subprocess.check_output(
             ["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"],
