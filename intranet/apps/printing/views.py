@@ -317,8 +317,9 @@ def print_view(request):
                 messages.success(
                     request,
                     "Your file was submitted to the printer."
-                    "If the printers are experiencing trouble, please email the"
-                    "Student Systems Administrators at sysadmins@tjhsst.edu.",
+                    "If the printers are experiencing trouble, please contact the "
+                    "Student Systems Administrators by filling out the feedback "
+                    "form.",
                 )
     else:
         form = PrintJobForm(printers=printers)

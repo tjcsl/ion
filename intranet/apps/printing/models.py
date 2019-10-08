@@ -18,6 +18,7 @@ class PrintJob(models.Model):
         duplex (bool): Whether to print duplex.
         fit (bool): Whether to fit to page.
     """
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     printer = models.CharField(max_length=100)
     file = models.FileField(upload_to="printing/")
