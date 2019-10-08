@@ -152,7 +152,7 @@ def get_mimetype(tmpfile_name):
     return mimetype
 
 
-def convert_file(tmpfile_name):
+def convert_file(tmpfile_name, orig_fname):
     detected = get_mimetype(tmpfile_name)
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
@@ -169,6 +169,14 @@ def convert_file(tmpfile_name):
 
     if detected == "application/postscript":
         return convert_pdf(tmpfile_name, "pdf2ps")
+
+    # Not detected
+
+    if orig_fname.endswith((".doc", ".docx")):
+        raise InvalidInputPrintingError(
+            "Invalid file type {}<br>Note: It looks like you are trying to print a Word document. Word documents don't always print correctly, so we "
+            "recommend that you convert to a PDF before printing.".format(detected)
+        )
 
     raise InvalidInputPrintingError("Invalid file type {}".format(detected))
 
@@ -224,7 +232,7 @@ def print_job(obj, do_print=True):
 
     logger.debug(tmpfile_name)
 
-    tmpfile_name = convert_file(tmpfile_name)
+    tmpfile_name = convert_file(tmpfile_name, filebase)
     logger.debug(tmpfile_name)
 
     if not tmpfile_name:
