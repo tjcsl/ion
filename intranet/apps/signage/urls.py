@@ -1,13 +1,9 @@
 from django.conf.urls import url
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView
 
 from . import views
 
 urlpatterns = [
-    url(
-        r"^/serviceworker\.js$",
-        TemplateView.as_view(template_name="signage/serviceworker.js", content_type="text/javascript"),
-        name="signage-serviceworker",
-    ),
+    url(r"^/serviceworker\.js$", RedirectView.as_view(url="/static/signage/serviceworker.js"), name="signage-serviceworker"),
     url(r"^/display/(?P<display_id>[\w_-]+)?$", views.signage_display, name="signage_display"),
 ]
