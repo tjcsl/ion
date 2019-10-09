@@ -47,6 +47,8 @@ NOTIFY_ADMIN_EMAILS = None
 IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
 # See templates/oauth2_provider/authorize.html
 
+ALLOWED_METRIC_SCRAPE_IPS = []
+
 EMERGENCY_MESSAGE = None  # type: str
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
