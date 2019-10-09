@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 
-from .views import activities, attendance, profile, routers, signup
+from .views import activities, attendance, monitoring, profile, routers, signup
 from .views.admin import activities as admin_activities
 from .views.admin import attendance as admin_attendance
 from .views.admin import blocks, general, groups
@@ -41,6 +41,7 @@ urlpatterns = [
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
     url(r"^/display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
     url(r"^/toggle_waitlist$", signup.toggle_waitlist_view, name="toggle_waitlist"),
+    url(r"^/prometheus-metrics$", monitoring.metrics_view, name="metrics"),
 ]
 
 eighth_admin_patterns = [
