@@ -1373,7 +1373,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         level="debug",
                     )
 
-                    signup = EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
+                    signup = EighthSignup.objects.create_signup(
+                        user=user, scheduled_activity=self, after_deadline=after_deadline, own_signup=(request is not None and user == request.user)
+                    )
 
                     if signup.has_conflict():
                         try:
@@ -1402,6 +1404,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         existing_signup.pass_accepted = False
                         existing_signup.previous_activity_name = previous_activity_name
                         existing_signup.previous_activity_sponsors = previous_activity_sponsors
+                        existing_signup.own_signup = request is not None and user == request.user
 
                         existing_signup.save()
                         invalidate_obj(existing_signup)
