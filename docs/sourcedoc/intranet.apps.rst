@@ -32,6 +32,7 @@ Subpackages
    intranet.apps.schedule
    intranet.apps.search
    intranet.apps.seniors
+   intranet.apps.sessionmgmt
    intranet.apps.signage
    intranet.apps.templatetags
    intranet.apps.users
