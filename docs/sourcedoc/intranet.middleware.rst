@@ -44,6 +44,14 @@ intranet.middleware.same\_origin module
    :undoc-members:
    :show-inheritance:
 
+intranet.middleware.session\_management module
+----------------------------------------------
+
+.. automodule:: intranet.middleware.session_management
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.middleware.templates module
 ------------------------------------
 
