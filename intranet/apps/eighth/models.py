@@ -640,9 +640,11 @@ class EighthBlock(AbstractBaseEighthModel):
             quantity: The number of blocks to list before this block, or -1 for all previous blocks.
 
         Returns:
-            A QuerySet with the specified number of blocks this school year
-            before this block. If `quantity` is passed, then the QuerySet will
-            not be filter()-able.
+            If `quantity` is not passed, retuns a QuerySet with all the blocks this school year
+            before this block.
+
+            If `quantity` is passed, returns a list with the specified number of blocks this
+            school year before this block.
 
         """
         blocks = (
@@ -652,7 +654,7 @@ class EighthBlock(AbstractBaseEighthModel):
         )
         if quantity == -1:
             return blocks.reverse()
-        return blocks[:quantity].reverse()
+        return blocks[:quantity:-1]
 
     def is_today(self) -> bool:
         """Returns whether the block occurs today.
