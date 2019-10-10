@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Count, F
 from django.shortcuts import render
 
 from ..models import EighthBlock
@@ -20,11 +21,24 @@ def metrics_view(request):
         num_next_block_signups = 0
         num_next_block_remaining = 0
 
-    context = {
-        "metrics": {
-            "intranet_eighth_next_block_signups": num_next_block_signups,
-            "intranet_eighth_next_block_signups_remaining": num_next_block_remaining,
-        },
-    }
+    metrics = {"intranet_eighth_next_block_signups": num_next_block_signups, "intranet_eighth_next_block_signups_remaining": num_next_block_remaining}
+
+    # How this works:
+    # - We list all the blocks this year
+    # - For each block, we find 1) the total number of users signed up and 2) the number of users signed up, removing duplicates
+    # - We only look at blocks where the total is higher than the number without duplicates
+    # - We subtract the number without duplicates from the total to find the number of duplicates
+    for block_id, num_duplicates in (
+        EighthBlock.objects.get_blocks_this_year()
+        .annotate(
+            total_signups=Count("eighthscheduledactivity__eighthsignup_set__user"),
+            unique_signups=Count("eighthscheduledactivity__eighthsignup_set__user", distinct=True),
+        )
+        .filter(unique_signups__lt=F("total_signups"))
+        .values_list("id", F("total_signups") - F("unique_signups"))
+    ):
+        metrics['intranet_eighth_duplicate_signups{{block_id="{}"}}'.format(block_id)] = num_duplicates
+
+    context = {"metrics": metrics}
 
     return render(request, "eighth/prometheus-metrics.txt", context, content_type="text/plain")
