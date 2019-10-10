@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #5326) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &#8212; TJ Intranet v3 (Build #5350) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -254,9 +254,7 @@
                             <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
                                 <span class="c1"># Override old entries</span>
                                 <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_acts_default</span><span class="p">:</span>
-                                    <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">old_rooms</span><span class="p">:</span>
-                                        <span class="n">sa</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
-                                    <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                                    <span class="n">sa</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">old_rooms</span><span class="p">)</span>
                                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Overrode </span><span class="si">{}</span><span class="s2"> scheduled activities to old room default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
                             <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
                                 <span class="c1"># Don&#39;t override</span>

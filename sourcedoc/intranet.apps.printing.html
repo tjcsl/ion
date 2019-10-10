@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5326) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5350) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -218,8 +218,110 @@
 <span id="intranet-apps-printing-models-module"></span><h2>intranet.apps.printing.models module<a class="headerlink" href="#module-intranet.apps.printing.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.printing.models.PrintJob">
-<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.printing.models.</code><code class="sig-name descname">PrintJob</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">user</em>, <em class="sig-param">printer</em>, <em class="sig-param">file</em>, <em class="sig-param">page_range</em>, <em class="sig-param">time</em>, <em class="sig-param">printed</em>, <em class="sig-param">num_pages</em>, <em class="sig-param">duplex</em>, <em class="sig-param">fit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/models.html#PrintJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.models.PrintJob" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.printing.models.</code><code class="sig-name descname">PrintJob</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/models.html#PrintJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.models.PrintJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents a submitted print job to Ion printing.</p>
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.user">
+<code class="sig-name descname">user</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user submitting the job.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">User</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.printer">
+<code class="sig-name descname">printer</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.printer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The printer to run the job on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.file">
+<code class="sig-name descname">file</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file that the user submitted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>File</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.page_range">
+<code class="sig-name descname">page_range</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.page_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>The page range to print.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time the job
+was submitted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.printed">
+<code class="sig-name descname">printed</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.printed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the job was printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.num_pages">
+<code class="sig-name descname">num_pages</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.num_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of pages in this job.
+This is calculated after converting the job.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.duplex">
+<code class="sig-name descname">duplex</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.duplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to print duplex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.printing.models.PrintJob.fit">
+<code class="sig-name descname">fit</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to fit to page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="exception">
 <dt id="intranet.apps.printing.models.PrintJob.DoesNotExist">
 <em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -233,15 +335,15 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.duplex">
-<code class="sig-name descname">duplex</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.duplex" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">duplex</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.file">
-<code class="sig-name descname">file</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.file" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">file</code></dt>
 <dd><p>The descriptor for the file attribute on the model instance. Returns a
 FieldFile when accessed so you can do stuff like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="k">import</span> <span class="n">MyModel</span>
@@ -257,8 +359,8 @@ FieldFile when accessed so you can do stuff like:</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.fit">
-<code class="sig-name descname">fit</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.fit" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">fit</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -281,8 +383,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.num_pages">
-<code class="sig-name descname">num_pages</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.num_pages" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">num_pages</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -293,36 +395,36 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.page_range">
-<code class="sig-name descname">page_range</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.page_range" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">page_range</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.printed">
-<code class="sig-name descname">printed</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.printed" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">printed</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.printer">
-<code class="sig-name descname">printer</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.printer" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">printer</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.time">
-<code class="sig-name descname">time</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.time" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">time</code></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.printing.models.PrintJob.user">
-<code class="sig-name descname">user</code><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.user" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">user</code></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
@@ -374,7 +476,16 @@ object the first time, the query is executed.</p>
 <dl class="function">
 <dt id="intranet.apps.printing.views.convert_soffice">
 <code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">convert_soffice</code><span class="sig-paren">(</span><em class="sig-param">tmpfile_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#convert_soffice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.convert_soffice" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts a doc or docx to a PDF with soffice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tmpfile_name</strong> – The path to the file to print.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the converted file. If it fails, false.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.printing.views.get_mimetype">
@@ -389,7 +500,15 @@ object the first time, the query is executed.</p>
 <dl class="function">
 <dt id="intranet.apps.printing.views.get_printers">
 <code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">get_printers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#get_printers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.get_printers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the list of available printers.</p>
+<p>This requires that a CUPS client be configured on the server.
+Otherwise, this returns an empty list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of available printers.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.printing.views.print_job">

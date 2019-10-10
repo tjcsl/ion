@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5326) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5350) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,7 +133,6 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="k">import</span> <span class="n">invalidate_obj</span>
-<span class="kn">from</span> <span class="nn">prometheus_client.core</span> <span class="k">import</span> <span class="n">REGISTRY</span><span class="p">,</span> <span class="n">GaugeMetricFamily</span>
 <span class="kn">from</span> <span class="nn">sentry_sdk</span> <span class="k">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
 <span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="k">import</span> <span class="n">HistoricalRecords</span>
 
@@ -769,9 +768,11 @@
 <span class="sd">            quantity: The number of blocks to list before this block, or -1 for all previous blocks.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A QuerySet with the specified number of blocks this school year</span>
-<span class="sd">            before this block. If `quantity` is passed, then the QuerySet will</span>
-<span class="sd">            not be filter()-able.</span>
+<span class="sd">            If `quantity` is not passed, retuns a QuerySet with all the blocks this school year</span>
+<span class="sd">            before this block.</span>
+
+<span class="sd">            If `quantity` is passed, returns a list with the specified number of blocks this</span>
+<span class="sd">            school year before this block.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span>
@@ -781,7 +782,7 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">blocks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span><span class="p">]</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EighthBlock.is_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock.is_today">[docs]</a>    <span class="k">def</span> <span class="nf">is_today</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether the block occurs today.</span>
@@ -1500,7 +1501,9 @@
                         <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
 
-                    <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
+                    <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
+                        <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">,</span> <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+                    <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
                         <span class="k">try</span><span class="p">:</span>
@@ -1529,6 +1532,7 @@
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">pass_accepted</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">previous_activity_name</span>
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">previous_activity_sponsors</span>
+                        <span class="n">existing_signup</span><span class="o">.</span><span class="n">own_signup</span> <span class="o">=</span> <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                         <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">existing_signup</span><span class="p">)</span>
@@ -1953,31 +1957,6 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">act_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">act_set</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span> <span class="n">act_set</span><span class="o">.</span><span class="n">last</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="EighthMetricsCollector"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector">[docs]</a><span class="k">class</span> <span class="nc">EighthMetricsCollector</span><span class="p">:</span>
-<div class="viewcode-block" id="EighthMetricsCollector.describe"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of signups for the next block&quot;</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups_remaining&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of users who are not signed up for the next block&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="EighthMetricsCollector.collect"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthMetricsCollector.collect">[docs]</a>    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">next_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">next_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">num_next_block_signups</span> <span class="o">=</span> <span class="n">next_block</span><span class="o">.</span><span class="n">num_signups</span><span class="p">()</span>
-            <span class="n">num_next_block_remaining</span> <span class="o">=</span> <span class="n">next_block</span><span class="o">.</span><span class="n">num_no_signups</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">num_next_block_signups</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">num_next_block_remaining</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span><span class="s2">&quot;intranet_eighth_next_block_signups&quot;</span><span class="p">,</span> <span class="s2">&quot;The number of signups for the next block&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">num_next_block_signups</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">GaugeMetricFamily</span><span class="p">(</span>
-            <span class="s2">&quot;intranet_eighth_next_block_signups_remaining&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;The number of users who are not signed up for the next block&quot;</span><span class="p">,</span>
-            <span class="n">value</span><span class="o">=</span><span class="n">num_next_block_remaining</span><span class="p">,</span>
-        <span class="p">)</span></div></div>
-
-
-<span class="n">REGISTRY</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EighthMetricsCollector</span><span class="p">())</span>
 </pre></div>
 
     </div>
