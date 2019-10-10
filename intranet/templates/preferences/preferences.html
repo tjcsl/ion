@@ -205,7 +205,7 @@
 
             {% if preferred_pic_form %}
             <h3>Preferred Picture</h3>
-            <p>Since the eighth period office and TJ faculty can always see your pictures, it is recommended that you choose your preferred picture even if you disable "Show Pictures" in Privacy Options.</p>
+            <p>Since the eighth period office and TJ faculty can always see your pictures, it is recommended that you choose your preferred picture.</p>
 
             {% for choice in preferred_pic_form.preferred_photo %}
             {{ choice.tag }} {{ choice.choice_label }}<br>
@@ -213,9 +213,14 @@
             <br>
             {% endif %}
 
+            {% comment %}
+              The below privacy options form is disabled due to the
+              permissions feature being unused and changes to school policy.
+            {% endcomment %}
+            {% comment %}
             {% if privacy_options_form %}
             <h3>Privacy Options</h3>
-            <p>Note that TJ staff members can view all of this information. Want to modify the privacy permissions authorized by your parents? Complete <a href="https://www.tjhsst.edu/studentservices/forms/docs/intranet.pdf">this form</a> and give it to the eighth period office.</p>
+            <p>Note that TJ staff members can view all of this information.</p>
             <table class="privacy-options">
                 <thead>
                     {% if request.user.is_student %}
@@ -247,6 +252,7 @@
             </table>
             <br>
             {% endif %}
+          {% endcomment %}
 
             {% if dark_mode_form %}
                 <h3>Dark Mode</h3>
