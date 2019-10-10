@@ -96,8 +96,12 @@ class UserManager(DjangoUserManager):
             A ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
 
         """
-        return User.objects.filter(properties___birthday__month=month, properties___birthday__day=day, properties__self_show_birthday=True,
-                                   properties__parent_show_birthday=True)
+        return User.objects.filter(
+            properties___birthday__month=month,
+            properties___birthday__day=day,
+            properties__self_show_birthday=True,
+            properties__parent_show_birthday=True,
+        )
 
     def get_students(self):
         """Get user objects that are students (quickly)."""

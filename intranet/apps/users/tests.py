@@ -99,8 +99,9 @@ class UserTest(IonTestCase):
         login_user.save()
 
         users = [
-            get_user_model().objects.create(first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7],
-                                            user_type="teacher")
+            get_user_model().objects.create(
+                first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7], user_type="teacher"
+            )
             for first_name, last_name in [
                 ("Michael", "Williams"),
                 ("Miguel", "Wilson"),
@@ -216,8 +217,9 @@ class UserTest(IonTestCase):
 
     def test_user_with_name(self):
         users = [
-            get_user_model().objects.create(first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7],
-                                            user_type="teacher")
+            get_user_model().objects.create(
+                first_name=first_name, last_name=last_name, username=first_name[0].lower() + last_name.lower()[:7], user_type="teacher"
+            )
             for first_name, last_name in [
                 ("Michael", "Williams"),
                 ("Miguel", "Wilson"),
