@@ -761,7 +761,7 @@ CELERY_TASK_SERIALIZER = "pickle"
 MAINTENANCE_MODE = False
 
 # Django User Agents configuration
-USER_AGENTS_CACHE = 'default'
+USER_AGENTS_CACHE = "default"
 
 # The Referrer-policy header
 REFERRER_POLICY = "strict-origin-when-cross-origin"
