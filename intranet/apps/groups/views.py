@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from ..auth.decorators import deny_restricted
+from ..auth.decorators import admin_required, deny_restricted
 from .forms import GroupForm
 from .models import Group
 
@@ -26,7 +26,7 @@ def groups_view(request):
 
 
 # Create individual views for each form action
-@login_required
+@admin_required("groups")
 @deny_restricted
 def add_group_view(request):
     success = False
