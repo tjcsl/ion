@@ -316,7 +316,7 @@ def print_view(request):
             else:
                 messages.success(
                     request,
-                    "Your file was submitted to the printer."
+                    "Your file was submitted to the printer. "
                     "If the printers are experiencing trouble, please contact the "
                     "Student Systems Administrators by filling out the feedback "
                     "form.",
