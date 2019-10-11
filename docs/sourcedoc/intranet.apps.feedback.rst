@@ -28,6 +28,14 @@ intranet.apps.feedback.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.feedback.tests module
+-----------------------------------
+
+.. automodule:: intranet.apps.feedback.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.feedback.urls module
 ----------------------------------
 
