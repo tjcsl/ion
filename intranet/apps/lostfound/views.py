@@ -1,5 +1,6 @@
 import logging
 
+from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -70,8 +71,11 @@ def lostitem_modify_view(request, item_id=None):
     id: lostitem id
 
     """
+    lostitem = get_object_or_404(LostItem, id=item_id)
+    if lostitem.user != request.user and not request.user.has_admin_permission("all"):
+        raise http.Http404
+
     if request.method == "POST":
-        lostitem = get_object_or_404(LostItem, id=item_id)
         form = LostItemForm(request.POST, instance=lostitem)
         if form.is_valid():
             obj = form.save()
@@ -84,7 +88,6 @@ def lostitem_modify_view(request, item_id=None):
         else:
             messages.error(request, "Error adding lost item.")
     else:
-        lostitem = get_object_or_404(LostItem, id=item_id)
         form = LostItemForm(instance=lostitem)
 
     context = {"form": form, "action": "modify", "id": item_id, "lostitem": lostitem}
@@ -99,22 +102,21 @@ def lostitem_delete_view(request, item_id):
     id: lostitem id
 
     """
+    lostitem = get_object_or_404(LostItem, id=item_id)
+    if lostitem.user != request.user and not request.user.has_admin_permission("all"):
+        raise http.Http404
+
     if request.method == "POST":
-        try:
-            a = LostItem.objects.get(id=item_id)
-            if request.POST.get("full_delete", False):
-                a.delete()
-                messages.success(request, "Successfully deleted lost item.")
-            else:
-                a.found = True
-                a.save()
-                messages.success(request, "Successfully marked lost item as found!")
-        except LostItem.DoesNotExist:
-            pass
+        if request.POST.get("full_delete", False):
+            lostitem.delete()
+            messages.success(request, "Successfully deleted lost item.")
+        else:
+            lostitem.found = True
+            lostitem.save()
+            messages.success(request, "Successfully marked lost item as found!")
 
         return redirect("index")
     else:
-        lostitem = get_object_or_404(LostItem, id=item_id)
         return render(request, "lostfound/lostitem_delete.html", {"lostitem": lostitem})
 
 
@@ -160,8 +162,11 @@ def founditem_modify_view(request, item_id=None):
     id: founditem id
 
     """
+    founditem = get_object_or_404(FoundItem, id=item_id)
+    if founditem.user != request.user and not request.user.has_admin_permission("all"):
+        raise http.Http404
+
     if request.method == "POST":
-        founditem = get_object_or_404(FoundItem, id=item_id)
         form = FoundItemForm(request.POST, instance=founditem)
         if form.is_valid():
             obj = form.save()
@@ -174,7 +179,6 @@ def founditem_modify_view(request, item_id=None):
         else:
             messages.error(request, "Error adding found item.")
     else:
-        founditem = get_object_or_404(FoundItem, id=item_id)
         form = FoundItemForm(instance=founditem)
 
     context = {"form": form, "action": "modify", "id": item_id, "founditem": founditem}
@@ -189,22 +193,21 @@ def founditem_delete_view(request, item_id):
     id: founditem id
 
     """
+    founditem = get_object_or_404(FoundItem, id=item_id)
+    if founditem.user != request.user and not request.user.has_admin_permission("all"):
+        raise http.Http404
+
     if request.method == "POST":
-        try:
-            a = FoundItem.objects.get(id=item_id)
-            if request.POST.get("full_delete", False):
-                a.delete()
-                messages.success(request, "Successfully deleted found item.")
-            else:
-                a.found = True
-                a.save()
-                messages.success(request, "Successfully marked found item as found!")
-        except FoundItem.DoesNotExist:
-            pass
+        if request.POST.get("full_delete", False):
+            founditem.delete()
+            messages.success(request, "Successfully deleted found item.")
+        else:
+            founditem.found = True
+            founditem.save()
+            messages.success(request, "Successfully marked found item as found!")
 
         return redirect("index")
     else:
-        founditem = get_object_or_404(FoundItem, id=item_id)
         return render(request, "lostfound/founditem_delete.html", {"founditem": founditem})
 
 
