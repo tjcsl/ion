@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5350) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5357) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -208,13 +208,11 @@
 
 <div class="viewcode-block" id="save_preferred_pic"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.save_preferred_pic">[docs]</a><span class="k">def</span> <span class="nf">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="n">preferred_pic</span> <span class="o">=</span> <span class="n">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">preferred_pic</span><span class="p">)</span>
     <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">PreferredPictureForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">preferred_pic</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Preferred pic form: valid&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">cleaned_data</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;preferred_photo&quot;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="c1"># These aren&#39;t actually the Photos, these are the grade_numbers of the Photos</span>
                 <span class="n">new_preferred_pic</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span>
@@ -427,12 +425,16 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">))</span>
         <span class="n">phone_formset</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">website_formset</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The privacy options form is disabled due to the</span>
+<span class="sd">            permissions feature being unused and changes to school policy.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># privacy_options_form = save_privacy_options(request, user)</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
@@ -461,13 +463,18 @@
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="n">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="n">bus_route</span> <span class="o">=</span> <span class="n">get_bus_route</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">PreferredPictureForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">BusRouteForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">bus_route</span><span class="p">)</span>
 
-            <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">privacy_options</span><span class="p">)</span>
-            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The privacy options form is disabled due to the</span>
+<span class="sd">            permissions feature being unused and changes to school policy.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            privacy_options = get_privacy_options(user)</span>
+<span class="sd">            privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="kc">None</span>
@@ -475,7 +482,6 @@
             <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">notification_options</span> <span class="o">=</span> <span class="n">get_notification_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">notification_options</span><span class="p">)</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">NotificationOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">notification_options</span><span class="p">)</span>
 
         <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="kc">None</span>
