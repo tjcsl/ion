@@ -113,7 +113,6 @@ class GlobList(list):
         try:
             for item in self:
                 if ipaddress.ip_address(key) in ipaddress.ip_network(item) and key != "127.0.0.1":
-                    logger.info("Internal IP: %s", key)
                     return True
         except ValueError:
             pass
