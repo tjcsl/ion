@@ -1373,6 +1373,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         level="debug",
                     )
 
+                    logger.debug("Signing user %d up for single-block activity %d in block %d", user.id, self.activity.id, self.block.id)
+
                     signup = EighthSignup.objects.create_signup(
                         user=user, scheduled_activity=self, after_deadline=after_deadline, own_signup=(request is not None and user == request.user)
                     )
@@ -1395,6 +1397,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                 user.id, existing_signup.scheduled_activity.activity.id, self.activity.id, self.block.id
                             ),
                             level="debug",
+                        )
+
+                        logger.debug(
+                            "Switching user %d from single-block activity %d to single-block activity %d in block %d",
+                            user.id,
+                            existing_signup.scheduled_activity.activity.id,
+                            self.activity.id,
+                            self.block.id,
                         )
 
                         existing_signup.scheduled_activity = self
@@ -1431,6 +1441,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             level="debug",
                         )
 
+                        logger.debug(
+                            "Switching user %d from dual-block activity %d to single-block activity %d in block %d",
+                            user.id,
+                            existing_signup.scheduled_activity.activity.id,
+                            self.activity.id,
+                            self.block.id,
+                        )
+
                         EighthSignup.objects.filter(user=user, scheduled_activity__block__in=existing_blocks).delete()
                         EighthWaitlist.objects.filter(user=user, scheduled_activity=self).delete()
                         signup = EighthSignup.objects.create_signup(
@@ -1459,6 +1477,21 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             self.notify_waitlist(waitlists)
             else:
                 existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
+
+                first_signup = existing_signups.first()
+                prev_sched_act = first_signup.scheduled_activity if first_signup is not None else None
+                if prev_sched_act is None:
+                    logger.debug(
+                        "Signing user %d up for double-block activity %d during block %d and its sibling", user.id, self.activity.id, self.block.id
+                    )
+                else:
+                    logger.debug(
+                        "Switching user %d from activity %d to double-block activity %d during block %d (and also its sibling)",
+                        user.id,
+                        prev_sched_act.activity.id,
+                        self.activity.id,
+                        self.block.id,
+                    )
 
                 prev_data = {}
                 for signup in existing_signups:
