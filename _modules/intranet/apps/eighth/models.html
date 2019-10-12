@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5359) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5368) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -1501,6 +1501,8 @@
                         <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
 
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Signing user </span><span class="si">%d</span><span class="s2"> up for single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
                     <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
                         <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">,</span> <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -1523,6 +1525,14 @@
                                 <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
                             <span class="p">),</span>
                             <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s2">&quot;Switching user </span><span class="si">%d</span><span class="s2"> from single-block activity </span><span class="si">%d</span><span class="s2"> to single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                         <span class="p">)</span>
 
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="o">=</span> <span class="bp">self</span>
@@ -1559,6 +1569,14 @@
                             <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
 
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s2">&quot;Switching user </span><span class="si">%d</span><span class="s2"> from dual-block activity </span><span class="si">%d</span><span class="s2"> to single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">existing_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                         <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                         <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_signup</span><span class="p">(</span>
@@ -1587,6 +1605,21 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">notify_waitlist</span><span class="p">(</span><span class="n">waitlists</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">existing_signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span><span class="p">)</span>
+
+                <span class="n">first_signup</span> <span class="o">=</span> <span class="n">existing_signups</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+                <span class="n">prev_sched_act</span> <span class="o">=</span> <span class="n">first_signup</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">if</span> <span class="n">first_signup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">prev_sched_act</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;Signing user </span><span class="si">%d</span><span class="s2"> up for double-block activity </span><span class="si">%d</span><span class="s2"> during block </span><span class="si">%d</span><span class="s2"> and its sibling&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;Switching user </span><span class="si">%d</span><span class="s2"> from activity </span><span class="si">%d</span><span class="s2"> to double-block activity </span><span class="si">%d</span><span class="s2"> during block </span><span class="si">%d</span><span class="s2"> (and also its sibling)&quot;</span><span class="p">,</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="n">prev_sched_act</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="p">)</span>
 
                 <span class="n">prev_data</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">existing_signups</span><span class="p">:</span>

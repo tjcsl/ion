@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5359) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5368) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -408,6 +408,7 @@
     <span class="s2">&quot;bus&quot;</span><span class="p">,</span>
     <span class="s2">&quot;signage.page&quot;</span><span class="p">,</span>
     <span class="s2">&quot;courses&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sessionmgmt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dark/base&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dark/login&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dark/schedule&quot;</span><span class="p">,</span>
@@ -429,6 +430,7 @@
     <span class="s2">&quot;dark/select&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dark/eighth.schedule&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dark/oauth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dark/sessionmgmt&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LIST_OF_INDEPENDENT_CSS</span><span class="p">:</span>
@@ -506,6 +508,8 @@
     <span class="s2">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Thread locals</span>
     <span class="s2">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Include user in traceback</span>
     <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Messages</span>
+    <span class="s2">&quot;django_user_agents.middleware.UserAgentMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.middleware.session_management.SessionManagementMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Handles session management (might log the user out, so must be early)</span>
     <span class="s2">&quot;intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># See note in ajax.py</span>
     <span class="s2">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Selectize fixes</span>
     <span class="s2">&quot;intranet.middleware.templates.NoReferrerMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Prevent malicious JS from changing the referring page</span>
@@ -672,6 +676,7 @@
     <span class="s2">&quot;intranet.apps.parking&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.dataimport&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.nomination&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.apps.sessionmgmt&quot;</span><span class="p">,</span>
     <span class="c1"># Django plugins</span>
     <span class="s2">&quot;widget_tweaks&quot;</span><span class="p">,</span>
     <span class="s2">&quot;oauth2_provider&quot;</span><span class="p">,</span>  <span class="c1"># django-oauth-toolkit</span>
@@ -680,6 +685,7 @@
     <span class="s2">&quot;svg&quot;</span><span class="p">,</span>  <span class="c1"># django-inline-svg</span>
     <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>  <span class="c1"># django-simple-history</span>
     <span class="s2">&quot;django_referrer_policy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_user_agents&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># Django Channels Configuration (we use this for websockets)</span>
@@ -881,6 +887,9 @@
 <span class="n">CELERY_TASK_SERIALIZER</span> <span class="o">=</span> <span class="s2">&quot;pickle&quot;</span>
 
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Django User Agents configuration</span>
+<span class="n">USER_AGENTS_CACHE</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 
 <span class="c1"># The Referrer-policy header</span>
 <span class="n">REFERRER_POLICY</span> <span class="o">=</span> <span class="s2">&quot;strict-origin-when-cross-origin&quot;</span>
