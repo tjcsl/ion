@@ -30,6 +30,12 @@
     </style>
 {% endblock %}
 
+{% block back %}
+    {% if not error or request.GET.client_id not in DJANGO_SETTINGS.IOS_APP_CLIENT_IDS %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="block-center">
         {% if not error %}
@@ -63,7 +69,8 @@
 
         {% elif request.GET.client_id in DJANGO_SETTINGS.IOS_APP_CLIENT_IDS %}
             <h2 style="height: initial; white-space: initial; padding: 5px 10px;">Please do not use the unofficial Ion iOS app</h2>
-            <p style="padding: 10px">The app is not maintained by the Sysadmins and has been known to display incorrect signup information. Please use the Ion web interface to sign up for eighth periods.</p>
+            <p style="padding: 10px 0px">The app is not maintained by the Sysadmins and has been known to display incorrect signup information. Please use the Ion web interface to sign up for eighth periods.</p>
+            <p style="font-weight: bold">If you're just using the app to pull up Ion quickly, you can instead add Ion to your home screen. To do this, click "Share" (on an iPhone this should be in the bottom center of the screen) and then "Add to Home Screen."</p>
         {% else %}
             <h2>Error: {{ error.error }}</h2>
             <p>{{ error.description }}</p>
