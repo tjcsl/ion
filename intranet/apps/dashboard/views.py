@@ -141,8 +141,6 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         else:
             num_acts += 1
 
-    logger.debug(acts)
-
     cur_date = surrounding_blocks[0].date if acts else given_date if given_date else timezone.localdate()
 
     last_block = surrounding_blocks[len(surrounding_blocks) - 1] if surrounding_blocks else None
@@ -195,11 +193,8 @@ def find_birthdays(request):
     cached = cache.get(key)
 
     if cached:
-        logger.debug("Birthdays on %s loaded from cache.", today)
-        logger.debug(cached)
         return cached
     else:
-        logger.debug("Loading and caching birthday info for %s", today)
         tomorrow = today + timedelta(days=1)
         try:
             data = {
