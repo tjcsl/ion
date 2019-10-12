@@ -66,7 +66,6 @@ def check_emerg():
 
 def get_emerg_result():
     """Run the fetch command from FCPS."""
-    logger.debug("Fetching emergency info from FCPS")
     status, message = check_emerg()
     return {"status": status, "message": message}
 
@@ -80,7 +79,6 @@ def get_emerg():
     key = "emerg:{}".format(timezone.localdate())
     cached = cache.get(key)
     if cached:
-        logger.debug("Returning emergency info from cache")
         return cached
     else:
         result = get_emerg_result()
