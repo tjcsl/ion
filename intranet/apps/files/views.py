@@ -217,7 +217,6 @@ def files_type(request, fstype=None):
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
             tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped))
-            logger.debug(tmpfile)
 
             try:
                 sftp.getfo(filepath, tmpfile)
@@ -325,8 +324,6 @@ def files_type(request, fstype=None):
                     "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE,
                 }
             )
-
-    logger.debug(files)
 
     current_dir = normpath(sftp.pwd)  # current directory
     dir_list = current_dir.split("/")
