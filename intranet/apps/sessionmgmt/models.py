@@ -35,3 +35,6 @@ class TrustedSession(models.Model):
         for trusted_session in trusted_sessions:
             if not SessionStore(session_key=trusted_session.session_key).exists(trusted_session.session_key):
                 trusted_session.delete()
+
+    class Meta:
+        unique_together = (("user", "session_key"),)
