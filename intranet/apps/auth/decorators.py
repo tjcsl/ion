@@ -1,5 +1,7 @@
 """Decorators that restrict views to certain types of users."""
+import time
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect
@@ -51,7 +53,10 @@ def deny_restricted(wrapped):
 def reauthentication_required(wrapped):
     def inner(*args, **kwargs):
         request = args[0]  # request is the first argument in a view
-        if request.session.get("reauthenticated", False):
+        if (
+            isinstance(request.session.get("reauthenticated_at", None), float)
+            and 0 <= (time.time() - request.session["reauthenticated_at"]) <= settings.REAUTHENTICATION_EXPIRE_TIMEOUT
+        ):
             return wrapped(*args, **kwargs)
         else:
             return redirect("{}?next={}".format(reverse("reauth"), request.path))
