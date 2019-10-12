@@ -25,10 +25,8 @@ def query(q, admin=False):
     # If only a digit, search for student ID and user ID
     results = []
     if is_entirely_digit(q):
-        logger.debug("Digit search: %s", q)
         results = list(get_user_model().objects.exclude_from_search().filter(Q(student_id=q) | Q(id=q)))
     elif ":" in q or ">" in q or "<" in q or "=" in q:
-        logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
         map_attrs = {
             "firstname": ("first_name", "nickname"),
@@ -71,7 +69,6 @@ def query(q, admin=False):
                 cat, val = p.split(">")
                 sep = "__gte"
             else:
-                logger.debug("Advanced fallback: %s", p)
                 # Fall back on regular searching (there's no key)
 
                 # Wildcards are already implied at the start and end
@@ -110,7 +107,6 @@ def query(q, admin=False):
 
                 continue  # skip rest of processing
 
-            logger.debug("Advanced exact: %s", p)
             if val.startswith('"') and val.endswith('"'):
                 # Already exact
                 val = val[1:-1]
@@ -151,14 +147,12 @@ def query(q, admin=False):
 
         results = list(get_user_model().objects.exclude_from_search().filter(search_query))
     else:
-        logger.debug("Simple search")
         # Non-advanced search; no ":"
         parts = q.split(" ")
         # split on each word
         search_query = Q(pk__gte=-1)  # Initial query containing all objects to avoid an empty Q() object.
         for p in parts:
             exact = False
-            logger.debug(p)
             if p.startswith('"') and p.endswith('"'):
                 exact = True
                 p = p[1:-1]
@@ -169,12 +163,10 @@ def query(q, admin=False):
                 default_categories.append("middle_name")
             sub_query = Q(pk=-1)
             if exact:
-                logger.debug("Simple exact: %s", p)
                 # No implied wildcard
                 for cat in default_categories:
                     sub_query |= Q(**{"{}__iexact".format(cat): p})
             else:
-                logger.debug("Simple wildcard: %s", p)
                 if p.endswith("*"):
                     p = p[:-1]
                 if p.startswith("*"):
@@ -184,8 +176,6 @@ def query(q, admin=False):
                 for cat in default_categories:
                     sub_query |= Q(**{"{}__icontains".format(cat): p})
             search_query &= sub_query
-
-            logger.debug("Running query: %s", search_query)
 
             results = list(get_user_model().objects.exclude_from_search().filter(search_query))
 
@@ -277,10 +267,6 @@ def search_view(request):
         announcements = do_announcements_search(q)
         events = do_events_search(q)
         classes = do_courses_search(q)
-
-        logger.debug(activities)
-        logger.debug(announcements)
-        logger.debug(events)
 
         if users and len(users) == 1:
             no_other_results = not activities and not announcements
