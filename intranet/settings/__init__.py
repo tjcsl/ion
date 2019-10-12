@@ -766,6 +766,8 @@ USER_AGENTS_CACHE = 'default'
 # The Referrer-policy header
 REFERRER_POLICY = "strict-origin-when-cross-origin"
 
+REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

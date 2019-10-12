@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 from datetime import timedelta
 from typing import Container, Tuple
 
@@ -266,7 +267,7 @@ def reauthentication_view(request):
     context = {"login_failed": False}
     if request.method == "POST":
         if authenticate(username=request.user.username, password=request.POST.get("password", "")):
-            request.session["reauthenticated"] = True
+            request.session["reauthenticated_at"] = time.time()
             return redirect(request.POST.get("next", request.GET.get("next", "/")))
         else:
             context["login_failed"] = True
