@@ -57,12 +57,13 @@ def trust_session_view(request):
 
             description += request.user_agent.os.family
 
-        TrustedSession.objects.create(
-            user=request.user,
-            session_key=request.session.session_key,
-            description=description,
-            device_type=device_type,
-        )
+        if not TrustedSession.objects.filter(user=request.user, session_key=request.session.session_key).exists():
+            TrustedSession.objects.create(
+                user=request.user,
+                session_key=request.session.session_key,
+                description=description,
+                device_type=device_type,
+            )
 
         request.session.set_expiry(7 * 24 * 60 * 60)  # Trusted sessions expire after a week
 
