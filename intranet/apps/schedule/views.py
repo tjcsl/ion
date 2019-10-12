@@ -62,7 +62,6 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
     key = "bell_schedule:{}".format(date_fmt)
     cached = cache.get(key)
     if cached and use_cache:
-        logger.debug("Returning schedule context for %s from cache.", date_fmt)
         return cached
     else:
         try:
@@ -94,7 +93,6 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
         if request and request.user.is_authenticated and request.user.is_eighth_admin:
             try:
                 schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
-                logger.debug("tomorrow: %s", schedule_tomorrow)
                 if not schedule_tomorrow.day_type:
                     schedule_tomorrow = False
             except Day.DoesNotExist:
@@ -116,7 +114,6 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
             }
         }
         cache.set(key, data, timeout=settings.CACHE_AGE["bell_schedule"])
-        logger.debug("Cached schedule context for %s", date_fmt)
         return data
 
 
@@ -253,7 +250,6 @@ def do_default_fill(request):
     for w in cal:
         for d in w:
             day = get_day_data(firstday, d)
-            logger.debug(day)
 
             if "empty" in day:
                 continue
@@ -410,13 +406,10 @@ def admin_daytype_view(request, daytype_id=None):
 
         if daytype_id:
             daytype = get_object_or_404(DayType, id=daytype_id)
-            logger.debug("instance: %s", daytype)
             form = DayTypeForm(request.POST, instance=daytype)
         else:
             daytype = None
             form = DayTypeForm(request.POST)
-        logger.debug(form)
-        logger.debug(request.POST)
         if form.is_valid():
             model = form.save()
             """Add blocks"""
@@ -426,10 +419,8 @@ def admin_daytype_view(request, daytype_id=None):
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist("block_start")],
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist("block_end")],
             )
-            logger.debug(blocks)
             model.blocks.all().delete()
             for blk in blocks:
-                logger.debug(blk)
                 start, _ = Time.objects.get_or_create(hour=blk[2][0], minute=blk[2][1])
                 end, _ = Time.objects.get_or_create(hour=blk[3][0], minute=blk[3][1])
                 bobj, _ = Block.objects.get_or_create(order=blk[0], name=blk[1], start=start, end=end)
