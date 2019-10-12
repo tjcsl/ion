@@ -833,7 +833,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return UserProperties.objects.get_or_create(user=self)[0]
         elif name == "dark_mode_properties":
             return UserDarkModeProperties.objects.get_or_create(user=self)[0]
-        raise AttributeError
+        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     def __str__(self):
         return self.username or self.ion_username or self.id
@@ -885,7 +885,7 @@ class UserProperties(models.Model):
             return self._birthday if self.attribute_is_visible("show_birthday") else None
         if name == "schedule":
             return self._schedule if self.attribute_is_visible("show_schedule") else None
-        raise AttributeError
+        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     def __setattr__(self, name, value):
         if name == "address":
@@ -1039,7 +1039,7 @@ class Phone(models.Model):
     def __getattr__(self, name):
         if name == "number":
             return self._number if self.user.properties.attribute_is_visible("show_telephone") else None
-        raise AttributeError
+        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     def __str__(self):
         return "{}: {}".format(self.get_purpose_display(), self.number)
@@ -1104,7 +1104,7 @@ class Photo(models.Model):
     def __getattr__(self, name):
         if name == "binary":
             return self._binary if self.user.properties.attribute_is_visible("show_pictures") else None
-        raise AttributeError
+        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     @cached_property
     def base64(self):
@@ -1235,7 +1235,7 @@ class Section(models.Model):
     def __getattr__(self, name):
         if name == "students":
             return [s.user for s in self._students.all() if s.attribute_is_visible("show_schedule")]
-        raise AttributeError
+        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     class Meta:
         ordering = ("section_id", "period")
