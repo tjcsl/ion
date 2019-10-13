@@ -254,7 +254,6 @@ def add_announcement_view(request):
     """Add an announcement."""
     if request.method == "POST":
         form = AnnouncementForm(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
