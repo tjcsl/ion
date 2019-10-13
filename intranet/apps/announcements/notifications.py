@@ -25,19 +25,15 @@ def request_announcement_email(request, form, obj):
 
     """
 
-    logger.debug(form.data)
     teacher_ids = form.data["teachers_requested"]
     if not isinstance(teacher_ids, list):
         teacher_ids = [teacher_ids]
-    logger.debug(teacher_ids)
     teachers = get_user_model().objects.filter(id__in=teacher_ids)
-    logger.debug(teachers)
 
     subject = "News Post Confirmation Request from {}".format(request.user.full_name)
     emails = []
     for teacher in teachers:
         emails.append(teacher.tj_email)
-    logger.debug(emails)
     logger.info("%s: Announcement request to %s, %s", request.user, teachers, emails)
     base_url = request.build_absolute_uri(reverse("index"))
     data = {
@@ -131,9 +127,6 @@ def announcement_posted_email(request, obj, send_all=False):
                 emails.append(u.notification_email)
                 users_send.append(u)
 
-        logger.debug(users_send)
-        logger.debug(emails)
-
         if not settings.PRODUCTION and len(emails) > 3:
             raise exceptions.PermissionDenied("You're about to email a lot of people, and you aren't in production!")
 
@@ -145,12 +138,11 @@ def announcement_posted_email(request, obj, send_all=False):
         )
         messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
-        logger.debug("Emailing announcements disabled")
+        logger.info("Emailing announcements disabled")
 
 
 def announcement_posted_twitter(request, obj):
     if obj.groups.count() == 0 and settings.TWITTER_KEYS is not None:
-        logger.debug("Publicly available")
         title = obj.title
         title = title.replace("&nbsp;", " ")
         url = request.build_absolute_uri(reverse("view_announcement", args=[obj.id]))
@@ -161,7 +153,7 @@ def announcement_posted_twitter(request, obj):
             text = "{}: {}... - {}".format(title, content[:content_len], url)
         else:
             text = "{}... - {}".format(title[:110], url)
-        logger.debug("Posting tweet: %s", text)
+        logger.info("Posting tweet: %s", text)
 
         try:
             resp = notify_twitter(text)
@@ -169,7 +161,7 @@ def announcement_posted_twitter(request, obj):
         except (ValueError, requests.RequestException, json.JSONDecodeError) as e:
             # requests_oauthlib exceptions inherit from ValueError
             messages.error(request, f"Error posting to Twitter: {e}")
-            logger.debug("Error posting to Twitter: %s: %s", e.__class__, e)
+            logger.error("Error posting to Twitter: %s: %s", e.__class__, e)
             capture_exception(e)
         else:
             if respobj and "id" in respobj:
@@ -177,8 +169,6 @@ def announcement_posted_twitter(request, obj):
                 messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
             else:
                 messages.error(request, resp)
-                logger.debug(resp)
-                logger.debug(respobj)
                 try:
                     assert respobj and "id" in respobj
                 except AssertionError as e:

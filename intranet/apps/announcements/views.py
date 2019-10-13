@@ -39,10 +39,7 @@ def announcement_posted_hook(request, obj):
     obj: The Announcement object
 
     """
-    logger.debug("Announcement posted")
-
     if obj.notify_post:
-        logger.debug("Announcement notify on")
         announcement_posted_twitter(request, obj)
         try:
             notify_all = obj.notify_email_all
@@ -78,13 +75,9 @@ def request_announcement_view(request):
     """The request announcement page."""
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST)
-        logger.debug(form)
-        logger.debug(form.data)
 
         if form.is_valid():
             teacher_objs = form.cleaned_data["teachers_requested"]
-            logger.debug("teacher objs:")
-            logger.debug(teacher_objs)
 
             if len(teacher_objs) > 2:
                 messages.error(request, "Please select a maximum of 2 teachers to approve this post.")
@@ -97,7 +90,6 @@ def request_announcement_view(request):
                 obj.save()
 
                 ann = AnnouncementRequest.objects.get(id=obj.id)
-                logger.debug(teacher_objs)
                 approve_self = False
                 for teacher in teacher_objs:
                     ann.teachers_requested.add(teacher)
@@ -148,7 +140,6 @@ def approve_announcement_view(request, req_id):
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
     requested_teachers = req.teachers_requested.all()
-    logger.debug(requested_teachers)
     if request.user not in requested_teachers:
         messages.error(request, "You do not have permission to approve this announcement.")
         return redirect("index")
@@ -203,7 +194,6 @@ def admin_approve_announcement_view(request, req_id):
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
     requested_teachers = req.teachers_requested.all()
-    logger.debug(requested_teachers)
 
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST, instance=req)
@@ -216,7 +206,6 @@ def admin_approve_announcement_view(request, req_id):
                 if "groups" in request.POST:
                     group_ids = request.POST.getlist("groups")
                     groups = Group.objects.filter(id__in=group_ids)
-                logger.debug(groups)
                 announcement = Announcement.objects.create(
                     title=req.title, content=req.content, author=req.author, user=req.user, expiration_date=req.expiration_date
                 )
@@ -307,9 +296,7 @@ def modify_announcement_view(request, announcement_id=None):
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
-            logger.debug(form.cleaned_data)
             if "update_added_date" in form.cleaned_data and form.cleaned_data["update_added_date"]:
-                logger.debug("Update added date")
                 obj.added = timezone.now()
             # SAFE HTML
             obj.content = safe_html(obj.content)
