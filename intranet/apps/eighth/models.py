@@ -1431,7 +1431,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         existing_blocks = [existing_signup.scheduled_activity.block]
                         if sibling:
                             existing_blocks.append(sibling.block)
-                        logger.debug(existing_blocks)
 
                         add_breadcrumb(
                             category="eighth-signup",
@@ -1552,10 +1551,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         for the B-block activity in both-block activities.)
 
         """
-        logger.debug("Running cancel hooks: %s", self)
 
         if not self.cancelled:
-            logger.debug("Cancelling %s", self)
             self.cancelled = True
             self.save(update_fields=["cancelled"])
 
@@ -1573,7 +1570,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
 
         if self.cancelled:
-            logger.debug("Uncancelling %s", self)
             self.cancelled = False
             self.save(update_fields=["cancelled"])
 

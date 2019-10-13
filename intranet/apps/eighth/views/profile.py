@@ -29,7 +29,6 @@ def edit_profile_view(request, user_id=None):
     # Disable address form temporarily -- okulkarni, 08/30/2018
     address_form = None
     if request.method == "POST":
-        logger.debug("Saving")
         user_form = ProfileEditForm(request.POST, instance=user)
         # address_form = AddressForm(request.POST, instance=user.properties.address)
         if user_form.is_valid():
@@ -66,8 +65,6 @@ def get_profile_context(request, user_id=None, date=None):
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
         return False
 
-    # logger.debug("is request sender: {}".format(profile_user.properties.is_http_request_sender()))
-
     try:
         custom_date_set = False
         if date:
@@ -77,7 +74,6 @@ def get_profile_context(request, user_id=None, date=None):
             date = datetime.strptime(date, "%Y-%m-%d")
             custom_date_set = True
         elif "start_date" in request.session:
-            logger.debug(get_start_date(request))
             date = get_start_date(request)
         else:
             date = timezone.localtime()
@@ -98,7 +94,6 @@ def get_profile_context(request, user_id=None, date=None):
     if not blocks:
         blocks = list(blocks_all)[:6]
         skipped_ahead = True
-        logger.debug(blocks)
         if blocks:
             date_next = list(blocks)[-1].date + timedelta(days=1)
 
@@ -110,8 +105,6 @@ def get_profile_context(request, user_id=None, date=None):
         except EighthSignup.DoesNotExist:
             sch["signup"] = None
         eighth_schedule.append(sch)
-
-    logger.debug(eighth_schedule)
 
     context = {
         "profile_user": profile_user,
@@ -132,8 +125,6 @@ def get_profile_context(request, user_id=None, date=None):
             EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by("block__date", "block__block_letter")
         )
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
-
-        logger.debug("Eighth sponsor %s", sponsor)
 
         context["eighth_sponsor_schedule"] = eighth_sponsor_schedule
 
@@ -184,8 +175,6 @@ def profile_history_view(request, user_id=None):
             sch["signup"] = None
         eighth_schedule.append(sch)
 
-    logger.debug(eighth_schedule)
-
     context = {"profile_user": profile_user, "eighth_schedule": eighth_schedule, "show_profile_header": request.user.is_eighth_admin}
 
     return render(request, "eighth/profile_history.html", context)
@@ -219,8 +208,6 @@ def profile_often_view(request, user_id=None):
         oftens.append({"count": activities.count(act), "activity": act})
 
     oftens = sorted(oftens, key=lambda x: (-1 * x["count"]))
-
-    logger.debug(oftens)
 
     context = {"profile_user": profile_user, "oftens": oftens, "show_profile_header": request.user.is_eighth_admin}
 

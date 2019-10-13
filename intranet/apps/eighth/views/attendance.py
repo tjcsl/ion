@@ -36,7 +36,6 @@ def should_show_activity_list(wizard):
     if "default_activity" in wizard.request.GET:
         act_id = wizard.request.GET["default_activity"]
         default_activity = EighthActivity.objects.filter(id=act_id)
-        logger.debug(default_activity)
 
         if default_activity.count() == 1:
             wizard.default_activity = default_activity[0]
@@ -123,13 +122,11 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
             if sponsor and not self.request.user.is_eighthoffice:
                 context.update({"sponsor_block": block})
-                logger.debug("sponsor block: %s", block)
 
                 sponsoring_filter = Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor))
                 sponsored_activities = EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).order_by("activity__name")
 
                 context.update({"sponsored_activities": sponsored_activities})
-                logger.debug(sponsored_activities)
         elif "block" in self.request.GET:
             block_id = self.request.GET["block"]
             context["redirect_block_id"] = block_id
@@ -138,7 +135,6 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
     def done(self, form_list, **kwargs):  # pylint: disable=unused-argument
         form_list = list(form_list)
-        logger.debug("debug called in attendance")
 
         if hasattr(self, "no_activities"):
             response = redirect("eighth_attendance_choose_scheduled_activity")
@@ -151,7 +147,6 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             activity = form_list[1].cleaned_data["activity"]
 
         block = form_list[0].cleaned_data["block"]
-        logger.debug(block)
         try:
             scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
         except EighthScheduledActivity.DoesNotExist:
@@ -184,7 +179,6 @@ def roster_view(request, scheduled_activity_id):
     viewable_members = scheduled_activity.get_viewable_members(request.user)
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
     is_sponsor = scheduled_activity.user_is_sponsor(request.user)
-    logger.debug(viewable_members)
     context = {
         "scheduled_activity": scheduled_activity,
         "viewable_members": viewable_members,
@@ -239,16 +233,13 @@ def take_attendance_view(request, scheduled_activity_id):
         raise http.Http404
 
     if request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user):
-        logger.debug("User has permission to edit")
         edit_perm = True
     else:
-        logger.debug("User does not have permission to edit")
         edit_perm = False
 
     edit_perm_cancelled = False
 
     if scheduled_activity.cancelled and not request.user.is_eighth_admin:
-        logger.debug("Non-admin user does not have permission to edit cancelled activity")
         edit_perm = False
         edit_perm_cancelled = True
 
@@ -383,7 +374,6 @@ def take_attendance_view(request, scheduled_activity_id):
 
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id)
-            logger.debug(context["scheduled_activities"])
             context["blocks"] = (
                 EighthBlock.objects
                 # .filter(date__gte=get_start_date(request))
@@ -413,7 +403,6 @@ def take_attendance_view(request, scheduled_activity_id):
             )
             for member in members:
                 row = []
-                logger.debug(member)
                 row.append(str(scheduled_activity.block))
                 row.append(str(scheduled_activity.activity))
                 row.append(member["name"])
@@ -456,13 +445,9 @@ def accept_pass_view(request, signup_id):
 
     status = request.POST.get("status")
 
-    logger.debug(status)
-
     if status == "accept":
-        logger.debug("ACCEPT %d", signup_id)
         signup.accept_pass()
     elif status == "reject":
-        logger.debug("REJECT %d", signup_id)
         signup.reject_pass()
 
     signup.save()
@@ -676,7 +661,6 @@ def sponsor_schedule_widget_view(request):
     if surrounding_blocks is None:
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
-    logger.debug(surrounding_blocks)
     context = {}
 
     if eighth_sponsor:

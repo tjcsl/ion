@@ -38,8 +38,6 @@ class ImportThread(threading.Thread):
         threading.Thread.__init__(self)
         self.email = email
         self.folder = folder
-        logger.debug(self.folder)
-        logger.debug(self.email)
 
     def handle_user(self, u, row, index_dict, content):
         # pylint: disable=protected-access
@@ -130,8 +128,6 @@ class ImportThread(threading.Thread):
             content.write(traceback.format_exc())
             content.write("\n=== The import process has been aborted.")
         shutil.rmtree(self.folder)
-        content.seek(0)
-        logger.debug(content.read())
         content.seek(0)
 
         data = {"log": content.read(), "failure": failure, "help_email": settings.FEEDBACK_EMAIL, "date": start_time.strftime("%I:%M:%S %p %m/%d/%Y")}

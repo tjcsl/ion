@@ -17,9 +17,7 @@ class ActivityDisplayField(forms.ModelChoiceField):
     def __init__(self, *args, **kwargs):
         if "block" in kwargs:
             block = kwargs.pop("block")
-            logger.debug(block)
             self.cancelled_acts = [s.activity for s in EighthScheduledActivity.objects.filter(block=block, cancelled=True)]
-            logger.debug(self.cancelled_acts)
 
         super(ActivityDisplayField, self).__init__(*args, **kwargs)
 
@@ -81,7 +79,6 @@ class ScheduledActivityMultiSelectForm(forms.Form):
 
     def __init__(self, *args, label="Activities", block=None, **kwargs):  # pylint: disable=unused-argument
         super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
-        logger.debug(block)
         if block is not None:
             activity_ids = (
                 EighthScheduledActivity.objects.exclude(activity__deleted=True)
@@ -92,7 +89,6 @@ class ScheduledActivityMultiSelectForm(forms.Form):
         else:
             queryset = EighthActivity.undeleted_objects.all().order_by("name")
 
-        logger.debug(queryset)
         self.fields["activities"].queryset = queryset
 
 
