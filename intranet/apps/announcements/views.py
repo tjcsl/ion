@@ -193,8 +193,6 @@ def admin_approve_announcement_view(request, req_id):
     """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
-    requested_teachers = req.teachers_requested.all()
-
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST, instance=req)
         if form.is_valid():
