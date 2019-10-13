@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5380) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #5389) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -136,6 +136,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
+<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="k">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="k">import</span> <span class="n">Email</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">DarkModeForm</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span>
@@ -501,21 +502,26 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/preferences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.privacy_options_view">[docs]</a><span class="nd">@login_required</span>
+<div class="viewcode-block" id="privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.privacy_options_view">[docs]</a><span class="nd">@eighth_admin_required</span>
 <span class="k">def</span> <span class="nf">privacy_options_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View and edit privacy options for a user.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="s2">&quot;student_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="c1"># NOTE: DO NOT assume that only eighth admins can access this view.</span>
+    <span class="c1"># Yes, this is decorated with @eighth_admin_required. That is subject to change at any time.</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid user.&quot;</span><span class="p">)</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="c1"># ONLY eighth admins are allowed to change other students&#39; prferences</span>
+        <span class="k">if</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;student_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid user.&quot;</span><span class="p">)</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
+        <span class="c1"># Non-students cannot have privacy options set</span>
         <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">user</span><span class="p">:</span>

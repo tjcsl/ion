@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5380) documentation</title>
+    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5389) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -141,7 +141,7 @@
       
   <div class="section" id="coding-style-guide">
 <h1>Coding Style Guide<a class="headerlink" href="#coding-style-guide" title="Permalink to this headline">¶</a></h1>
-<p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by <code class="docutils literal notranslate"><span class="pre">pylint</span></code> and/or <code class="docutils literal notranslate"><span class="pre">flake8</span></code>. Therefore, if you do not follow them, the build may not pass.</p>
+<p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by <code class="docutils literal notranslate"><span class="pre">pylint</span></code>, <code class="docutils literal notranslate"><span class="pre">flake8</span></code>, and a combination of <code class="docutils literal notranslate"><span class="pre">black</span></code>, <code class="docutils literal notranslate"><span class="pre">autopep8</span></code>, and <code class="docutils literal notranslate"><span class="pre">isort</span></code>. Therefore, if you do not follow them, the build may not pass.</p>
 <p>However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.</p>
 <div class="section" id="main-points">
 <h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this headline">¶</a></h2>
@@ -153,6 +153,7 @@
 <li><p>Separate method definitions inside a class with a single blank line.</p></li>
 <li><p>Use two spaces before inline comments and one space between the pound sign and comment.</p></li>
 <li><p>Use a plugin for your text editor to check for/remind you of PEP8 conventions.</p></li>
+<li><p>When in doubt, running <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> will fix a lot of things.</p></li>
 <li><p>Capitalize and punctuate comments and Git commit messages properly.</p></li>
 </ul>
 </div>
@@ -162,11 +163,14 @@
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>flake8 --max-line-length <span class="m">150</span> --exclude<span class="o">=</span>*/migrations/* .
 pylint --jobs<span class="o">=</span><span class="m">0</span> --disable<span class="o">=</span>fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
 isort --check --recursive intranet
+./scripts.format.sh
 </pre></div>
 </div>
+<p>Note: When the <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> check is run, the build will fail if it has to make any changes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">flake8</span></code> is a PEP8 style checker, <code class="docutils literal notranslate"><span class="pre">pylint</span></code> is a linter (but it also enforces some PEP8 conventions), and <code class="docutils literal notranslate"><span class="pre">isort</span></code>, when called with these options, checks that all imports are sorted alphabetically.</p>
+<p><code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> runs <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">intranet</span> <span class="pre">&amp;&amp;</span> <span class="pre">autopep8</span> <span class="pre">--in-place</span> <span class="pre">--recursive</span> <span class="pre">intranet</span> <span class="pre">&amp;&amp;</span> <span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>. The reason for the multiple commands is that <code class="docutils literal notranslate"><span class="pre">black</span></code> introduces certain formatting changes which <code class="docutils literal notranslate"><span class="pre">flake8</span></code>/<code class="docutils literal notranslate"><span class="pre">pylint</span></code> do not agree with (and offers no options to change them), so we have <code class="docutils literal notranslate"><span class="pre">autopep8</span></code> fix it.</p>
 <p>It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the <code class="docutils literal notranslate"><span class="pre">pylint</span></code> check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">flake8</span></code> or <code class="docutils literal notranslate"><span class="pre">pylint</span></code> throw errors, the error messages are usually human-readable. if <code class="docutils literal notranslate"><span class="pre">isort</span></code> gives any errors, you can have it automatically correct the order of all imports by running <code class="docutils literal notranslate"><span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">flake8</span></code> or <code class="docutils literal notranslate"><span class="pre">pylint</span></code> throw errors, the error messages are usually human-readable. if <code class="docutils literal notranslate"><span class="pre">isort</span></code> gives any errors, you can have it automatically correct the order of all imports by running <code class="docutils literal notranslate"><span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>. If the build fails because running <code class="docutils literal notranslate"><span class="pre">scripts/format.sh</span></code> resulted in changes, you can simply run  <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> to fix your formatting.</p>
 </div>
 <div class="section" id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
