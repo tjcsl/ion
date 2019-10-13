@@ -47,7 +47,6 @@ def lostitem_add_view(request):
     """Add a lostitem."""
     if request.method == "POST":
         form = LostItemForm(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
@@ -79,7 +78,6 @@ def lostitem_modify_view(request, item_id=None):
         form = LostItemForm(request.POST, instance=lostitem)
         if form.is_valid():
             obj = form.save()
-            logger.debug(form.cleaned_data)
             # SAFE HTML
             obj.description = safe_html(obj.description)
             obj.save()
@@ -138,7 +136,6 @@ def founditem_add_view(request):
     """Add a founditem."""
     if request.method == "POST":
         form = FoundItemForm(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
