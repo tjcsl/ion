@@ -25,18 +25,14 @@ def android_setup_view(request):
     The "android_gcm_rand" is randomly set when the Android app is detected through
     the user agent. If it has the same value, it is assumed to be correct.
     """
-    logger.debug(request.POST)
     if request.method == "POST":
         if "user_token" in request.POST and "gcm_token" in request.POST:
             user_token = request.POST.get("user_token")
             gcm_token = request.POST.get("gcm_token")
 
-            logger.debug(user_token)
-            logger.debug(gcm_token)
             try:
                 ncfg = NotificationConfig.objects.get(android_gcm_rand=user_token)
             except NotificationConfig.DoesNotExist:
-                logger.debug("No pair")
                 return HttpResponse('{"error":"Invalid data."}', content_type="text/json")
 
             ncfg.gcm_token = gcm_token
@@ -96,7 +92,6 @@ def chrome_setup_view(request):
     parameter in the logged in user's NotificationConfig.
 
     """
-    logger.debug(request.POST)
     token = None
     if request.method == "POST":
         if "token" in request.POST:
@@ -134,7 +129,6 @@ def gcm_post(nc_users, data, user=None, request=None):
     nc_objs = []
     reg_ids = []
     fail_ids = []
-    logger.debug(nc_users)
     for ncid in nc_users:
         try:
             nc = NotificationConfig.objects.get(id=ncid)
@@ -147,21 +141,16 @@ def gcm_post(nc_users, data, user=None, request=None):
         else:
             fail_ids.append(ncid)
 
-    logger.debug(nc_objs)
-    logger.debug(reg_ids)
     headers = {"Content-Type": "application/json", "project_id": settings.GCM_PROJECT_ID, "Authorization": "key={}".format(settings.GCM_AUTH_KEY)}
     postdata = {"registration_ids": reg_ids, "data": data}
-    logger.debug(postdata)
     postjson = json.dumps(postdata)
     req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson)
-    logger.debug(req.text)
     try:
         resp = req.json()
     except ValueError as e:
         logger.debug(e)
     # example output:
     # {"multicast_id":123456,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:142%771acd"}]}
-    logger.debug(resp)
     if "multicast_id" in resp:
         n = GCMNotification.objects.create(
             multicast_id=resp["multicast_id"], num_success=resp["success"], num_failure=resp["failure"], user=user, sent_data=json.dumps(data)
@@ -169,7 +158,6 @@ def gcm_post(nc_users, data, user=None, request=None):
         for nc in nc_objs:
             n.sent_to.add(nc)
         n.save()
-        logger.debug(n)
         return resp, req.text
     return False, req.text
 
