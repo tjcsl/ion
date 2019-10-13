@@ -67,6 +67,7 @@ def check_emerg():
 def get_emerg_result():
     """Run the fetch command from FCPS."""
     status, message = check_emerg()
+    logger.debug("Fetched emergency info from FCPS")
     return {"status": status, "message": message}
 
 
