@@ -212,8 +212,6 @@ def check_page_range(page_range, max_pages):
 
 
 def print_job(obj, do_print=True):
-    logger.debug(obj)
-
     printer = obj.printer
     if printer not in get_printers():
         raise Exception("Printer not authorized.")
@@ -230,10 +228,7 @@ def print_job(obj, do_print=True):
         for chunk in fileobj.chunks():
             dest.write(chunk)
 
-    logger.debug(tmpfile_name)
-
     tmpfile_name = convert_file(tmpfile_name, filebase)
-    logger.debug(tmpfile_name)
 
     if not tmpfile_name:
         raise Exception("Could not convert file.")
