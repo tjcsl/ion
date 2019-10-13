@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
         with open(filename) as f:
             contents = csv.DictReader(f)
-            data = [row for row in contents]
+            data = list(contents)
 
         counselors = get_user_model().objects.filter(user_type="counselor")
 
