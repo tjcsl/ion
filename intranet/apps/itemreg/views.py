@@ -44,38 +44,29 @@ def search_view(request):
     results = {"calculator": None, "computer": None, "phone": None}
     if item_type == "calculator":
         cresults = CalculatorRegistration.objects.all()
-        logger.debug(cresults)
 
         for name in ["calc_serial", "calc_id", "calc_type"]:
             value = request.GET.get(name)
             if value:
                 cresults = cresults.filter(**{name: value})
 
-            logger.debug(cresults)
-
         results["calculator"] = cresults
     elif item_type == "computer":
         cresults = ComputerRegistration.objects.all()
-        logger.debug(cresults)
 
         for name in ["manufacturer", "model", "serial", "screen_size"]:
             value = request.GET.get(name)
             if value:
                 cresults = cresults.filter(**{name: value})
 
-            logger.debug(cresults)
-
         results["computer"] = cresults
     elif item_type == "phone":
         cresults = PhoneRegistration.objects.all()
-        logger.debug(cresults)
 
         for name in ["manufacturer", "model", "serial"]:
             value = request.GET.get(name)
             if value:
                 cresults = cresults.filter(**{name: value})
-
-            logger.debug(cresults)
 
         results["phone"] = cresults
     elif item_type == "all":
@@ -88,8 +79,6 @@ def search_view(request):
         query_error, search = get_search_results(quser)
         if query_error:
             search = []
-
-        logger.debug(search)
 
         for i in results:
             if results[i]:
@@ -117,7 +106,6 @@ def register_view(request, item_type):
     form_class = registration_types[item_type]
     if request.method == "POST":
         form = form_class(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
