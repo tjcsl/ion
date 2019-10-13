@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.notifications.views &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.notifications.views &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -153,18 +153,14 @@
 <span class="sd">    The &quot;android_gcm_rand&quot; is randomly set when the Android app is detected through</span>
 <span class="sd">    the user agent. If it has the same value, it is assumed to be correct.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;user_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="s2">&quot;gcm_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="n">user_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_token&quot;</span><span class="p">)</span>
             <span class="n">gcm_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gcm_token&quot;</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">gcm_token</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">ncfg</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">android_gcm_rand</span><span class="o">=</span><span class="n">user_token</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No pair&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span>
 
             <span class="n">ncfg</span><span class="o">.</span><span class="n">gcm_token</span> <span class="o">=</span> <span class="n">gcm_token</span>
@@ -224,7 +220,6 @@
 <span class="sd">    parameter in the logged in user&#39;s NotificationConfig.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
     <span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
@@ -262,7 +257,6 @@
     <span class="n">nc_objs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">reg_ids</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">fail_ids</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">nc_users</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ncid</span> <span class="ow">in</span> <span class="n">nc_users</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">nc</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">ncid</span><span class="p">)</span>
@@ -275,21 +269,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fail_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ncid</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">nc_objs</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">reg_ids</span><span class="p">)</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span> <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GCM_PROJECT_ID</span><span class="p">,</span> <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;key=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">GCM_AUTH_KEY</span><span class="p">)}</span>
     <span class="n">postdata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;registration_ids&quot;</span><span class="p">:</span> <span class="n">reg_ids</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">postdata</span><span class="p">)</span>
     <span class="n">postjson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">postdata</span><span class="p">)</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://android.googleapis.com/gcm/send&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">postjson</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
     <span class="c1"># example output:</span>
     <span class="c1"># {&quot;multicast_id&quot;:123456,&quot;success&quot;:1,&quot;failure&quot;:0,&quot;canonical_ids&quot;:0,&quot;results&quot;:[{&quot;message_id&quot;:&quot;0:142%771acd&quot;}]}</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;multicast_id&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">multicast_id</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;multicast_id&quot;</span><span class="p">],</span> <span class="n">num_success</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">],</span> <span class="n">num_failure</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;failure&quot;</span><span class="p">],</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">sent_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -297,7 +286,6 @@
         <span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="n">nc_objs</span><span class="p">:</span>
             <span class="n">n</span><span class="o">.</span><span class="n">sent_to</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span>
         <span class="n">n</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">resp</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">text</span>
     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">text</span></div>
 

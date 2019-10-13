@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.emerg.views &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.emerg.views &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -194,8 +194,8 @@
 
 <div class="viewcode-block" id="get_emerg_result"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.get_emerg_result">[docs]</a><span class="k">def</span> <span class="nf">get_emerg_result</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Run the fetch command from FCPS.&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching emergency info from FCPS&quot;</span><span class="p">)</span>
     <span class="n">status</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">check_emerg</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetched emergency info from FCPS&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span></div>
 
 
@@ -208,7 +208,6 @@
     <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;emerg:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">())</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Returning emergency info from cache&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cached</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">get_emerg_result</span><span class="p">()</span>

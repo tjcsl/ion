@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -157,7 +157,6 @@
     <span class="c1"># Disable address form temporarily -- okulkarni, 08/30/2018</span>
     <span class="n">address_form</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving&quot;</span><span class="p">)</span>
         <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
         <span class="c1"># address_form = AddressForm(request.POST, instance=user.properties.address)</span>
         <span class="k">if</span> <span class="n">user_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -194,8 +193,6 @@
     <span class="k">if</span> <span class="n">profile_user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="c1"># logger.debug(&quot;is request sender: {}&quot;.format(profile_user.properties.is_http_request_sender()))</span>
-
     <span class="k">try</span><span class="p">:</span>
         <span class="n">custom_date_set</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
@@ -205,7 +202,6 @@
             <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">custom_date_set</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="s2">&quot;start_date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
@@ -226,7 +222,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">blocks</span><span class="p">:</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">blocks_all</span><span class="p">)[:</span><span class="mi">6</span><span class="p">]</span>
         <span class="n">skipped_ahead</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">blocks</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">blocks</span><span class="p">:</span>
             <span class="n">date_next</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">blocks</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -238,8 +233,6 @@
         <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">eighth_schedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="p">)</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">eighth_schedule</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span>
@@ -260,8 +253,6 @@
             <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">eighth_sponsor_schedule</span> <span class="o">=</span> <span class="n">eighth_sponsor_schedule</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Eighth sponsor </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">)</span>
 
         <span class="n">context</span><span class="p">[</span><span class="s2">&quot;eighth_sponsor_schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eighth_sponsor_schedule</span>
 
@@ -312,8 +303,6 @@
             <span class="n">sch</span><span class="p">[</span><span class="s2">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">eighth_schedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">eighth_schedule</span><span class="p">)</span>
-
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span> <span class="s2">&quot;eighth_schedule&quot;</span><span class="p">:</span> <span class="n">eighth_schedule</span><span class="p">,</span> <span class="s2">&quot;show_profile_header&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/profile_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -347,8 +336,6 @@
         <span class="n">oftens</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">act</span><span class="p">),</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">act</span><span class="p">})</span>
 
     <span class="n">oftens</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">oftens</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]))</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">oftens</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span> <span class="s2">&quot;oftens&quot;</span><span class="p">:</span> <span class="n">oftens</span><span class="p">,</span> <span class="s2">&quot;show_profile_header&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">}</span>
 

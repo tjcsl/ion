@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -311,7 +311,6 @@
 
 
 <div class="viewcode-block" id="handle_group_input"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.handle_group_input">[docs]</a><span class="k">def</span> <span class="nf">handle_group_input</span><span class="p">(</span><span class="n">filetext</span><span class="p">):</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">filetext</span><span class="p">)</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">filetext</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">find_users_input</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
@@ -360,11 +359,6 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
             <span class="n">unsure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">])</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Sure users:&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sure_users</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unsure users:&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">unsure_users</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">sure_users</span><span class="p">,</span> <span class="n">unsure_users</span></div>
 
 
@@ -379,7 +373,6 @@
     <span class="n">filetext</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
             <span class="n">fileobj</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="s2">&quot;text/&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">content_type</span><span class="p">:</span>
@@ -603,7 +596,6 @@
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cleaned block: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">])</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
                 <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
@@ -642,9 +634,6 @@
         <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
         <span class="n">activities</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
-
         <span class="n">schact_ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">activities</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -675,7 +664,6 @@
 <div class="viewcode-block" id="eighth_admin_distribute_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_action">[docs]</a><span class="nd">@eighth_admin_required</span>
 <span class="k">def</span> <span class="nf">eighth_admin_distribute_action</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;users&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="n">activity_user_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;schact&quot;</span><span class="p">:</span>
@@ -689,7 +677,6 @@
                 <span class="n">activity_user_map</span><span class="p">[</span><span class="n">schact</span><span class="p">]</span> <span class="o">=</span> <span class="n">userids</span>
 
         <span class="n">changes</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">activity_user_map</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">schact</span><span class="p">,</span> <span class="n">userids</span> <span class="ow">in</span> <span class="n">activity_user_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">userids</span><span class="p">:</span>
                 <span class="n">changes</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -792,7 +779,6 @@
     <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Could not process search query.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=n&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=n&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

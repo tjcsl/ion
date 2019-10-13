@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -167,10 +167,7 @@
 <span class="sd">    obj: The Announcement object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Announcement posted&quot;</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">notify_post</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Announcement notify on&quot;</span><span class="p">)</span>
         <span class="n">announcement_posted_twitter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">notify_all</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">notify_email_all</span>
@@ -206,13 +203,9 @@
     <span class="sd">&quot;&quot;&quot;The request announcement page.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">teacher_objs</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;teacher objs:&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">teacher_objs</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">teacher_objs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please select a maximum of 2 teachers to approve this post.&quot;</span><span class="p">)</span>
@@ -225,7 +218,6 @@
                 <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
                 <span class="n">ann</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">teacher_objs</span><span class="p">)</span>
                 <span class="n">approve_self</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="n">teacher_objs</span><span class="p">:</span>
                     <span class="n">ann</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">teacher</span><span class="p">)</span>
@@ -276,7 +268,6 @@
     <span class="n">req</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">AnnouncementRequest</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">req_id</span><span class="p">)</span>
 
     <span class="n">requested_teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">requested_teachers</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">requested_teachers</span><span class="p">:</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to approve this announcement.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
@@ -330,9 +321,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">AnnouncementRequest</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">req_id</span><span class="p">)</span>
 
-    <span class="n">requested_teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">requested_teachers</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -344,7 +332,6 @@
                 <span class="k">if</span> <span class="s2">&quot;groups&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                     <span class="n">group_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
                     <span class="n">groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">group_ids</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
                 <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                     <span class="n">title</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">expiration_date</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">expiration_date</span>
                 <span class="p">)</span>
@@ -393,7 +380,6 @@
     <span class="sd">&quot;&quot;&quot;Add an announcement.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
@@ -435,9 +421,7 @@
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;update_added_date&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;update_added_date&quot;</span><span class="p">]:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Update added date&quot;</span><span class="p">)</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
             <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #5389) documentation</title>
+    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #5406) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -345,7 +345,6 @@
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/files/</span><span class="si">{}</span><span class="s2">?dir=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fstype</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)))</span>
 
             <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion_filecenter_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">filebase_escaped</span><span class="p">))</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sftp</span><span class="o">.</span><span class="n">getfo</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
@@ -453,8 +452,6 @@
                     <span class="s2">&quot;too_big&quot;</span><span class="p">:</span> <span class="n">fstat</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_DOWNLOAD_SIZE</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">)</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 
     <span class="n">current_dir</span> <span class="o">=</span> <span class="n">normpath</span><span class="p">(</span><span class="n">sftp</span><span class="o">.</span><span class="n">pwd</span><span class="p">)</span>  <span class="c1"># current directory</span>
     <span class="n">dir_list</span> <span class="o">=</span> <span class="n">current_dir</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
