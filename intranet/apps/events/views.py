@@ -166,7 +166,6 @@ def add_event_view(request):
 
     if request.method == "POST":
         form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission("groups"))
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
@@ -200,7 +199,6 @@ def request_event_view(request):
 
     if request.method == "POST":
         form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission("groups"))
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
@@ -240,7 +238,6 @@ def modify_event_view(request, event_id):
 
     if request.method == "POST":
         form = AdminEventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission("groups"))
-        logger.debug(form)
         if form.is_valid():
             obj = form.save()
             # SAFE HTML
