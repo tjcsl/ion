@@ -2,7 +2,7 @@
 Coding Style Guide
 ******************
 
-Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by ``pylint`` and/or ``flake8``. Therefore, if you do not follow them, the build may not pass.
+Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by ``pylint``, ``flake8``, and a combination of ``black``, ``autopep8``, and ``isort``. Therefore, if you do not follow them, the build may not pass.
 
 However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.
 
@@ -16,6 +16,7 @@ Main points
 - Separate method definitions inside a class with a single blank line.
 - Use two spaces before inline comments and one space between the pound sign and comment.
 - Use a plugin for your text editor to check for/remind you of PEP8 conventions.
+- When in doubt, running ``./scripts/format.sh`` will fix a lot of things.
 - Capitalize and punctuate comments and Git commit messages properly.
 
 What is enforced in the build
@@ -28,12 +29,17 @@ At the time of this writing, the Travis build runs the following commands:
         flake8 --max-line-length 150 --exclude=*/migrations/* .
         pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
         isort --check --recursive intranet
+        ./scripts.format.sh
+
+Note: When the ``./scripts/format.sh`` check is run, the build will fail if it has to make any changes.
 
 ``flake8`` is a PEP8 style checker, ``pylint`` is a linter (but it also enforces some PEP8 conventions), and ``isort``, when called with these options, checks that all imports are sorted alphabetically.
 
+``./scripts/format.sh`` runs ``black intranet && autopep8 --in-place --recursive intranet && isort --recursive intranet``. The reason for the multiple commands is that ``black`` introduces certain formatting changes which ``flake8``/``pylint`` do not agree with (and offers no options to change them), so we have ``autopep8`` fix it.
+
 It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the ``pylint`` check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.
 
-If ``flake8`` or ``pylint`` throw errors, the error messages are usually human-readable. if ``isort`` gives any errors, you can have it automatically correct the order of all imports by running ``isort --recursive intranet``.
+If ``flake8`` or ``pylint`` throw errors, the error messages are usually human-readable. if ``isort`` gives any errors, you can have it automatically correct the order of all imports by running ``isort --recursive intranet``. If the build fails because running ``scripts/format.sh`` resulted in changes, you can simply run  ``./scripts/format.sh`` to fix your formatting.
 
 Imports
 =======
