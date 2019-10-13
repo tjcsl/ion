@@ -60,6 +60,14 @@ intranet.apps.eighth.management.commands.signup\_status\_email module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.management.commands.update\_counselors module
+------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.update_counselors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
