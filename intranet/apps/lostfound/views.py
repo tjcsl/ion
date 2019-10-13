@@ -167,7 +167,6 @@ def founditem_modify_view(request, item_id=None):
         form = FoundItemForm(request.POST, instance=founditem)
         if form.is_valid():
             obj = form.save()
-            logger.debug(form.cleaned_data)
             # SAFE HTML
             obj.description = safe_html(obj.description)
             obj.save()
