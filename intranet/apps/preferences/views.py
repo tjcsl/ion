@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
 from ..users.models import Email
 from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
@@ -373,21 +374,26 @@ def preferences_view(request):
     return render(request, "preferences/preferences.html", context)
 
 
-@login_required
+@eighth_admin_required
 def privacy_options_view(request):
     """View and edit privacy options for a user."""
-    if "user" in request.GET:
-        user = get_user_model().objects.user_with_ion_id(request.GET.get("user"))
-    elif "student_id" in request.GET:
-        user = get_user_model().objects.user_with_student_id(request.GET.get("student_id"))
-    else:
-        user = request.user
+    user = request.user
+    # NOTE: DO NOT assume that only eighth admins can access this view.
+    # Yes, this is decorated with @eighth_admin_required. That is subject to change at any time.
 
-    if not user:
-        messages.error(request, "Invalid user.")
-        user = request.user
+    if request.user.is_eighth_admin:
+        # ONLY eighth admins are allowed to change other students' prferences
+        if "user" in request.GET:
+            user = get_user_model().objects.user_with_ion_id(request.GET.get("user"))
+        elif "student_id" in request.GET:
+            user = get_user_model().objects.user_with_student_id(request.GET.get("student_id"))
 
-    if user.is_eighthoffice:
+        if not user:
+            messages.error(request, "Invalid user.")
+            user = request.user
+
+    if not user.is_student:
+        # Non-students cannot have privacy options set
         user = None
 
     if user:
