@@ -83,7 +83,6 @@ def save_preferred_pic(request, user):
     preferred_pic = get_preferred_pic(user)
     preferred_pic_form = PreferredPictureForm(user, data=request.POST, initial=preferred_pic)
     if preferred_pic_form.is_valid():
-        logger.debug("Preferred pic form: valid")
         if preferred_pic_form.has_changed():
             fields = preferred_pic_form.cleaned_data
             if "preferred_photo" in fields:
@@ -91,11 +90,8 @@ def save_preferred_pic(request, user):
                 new_preferred_pic = fields["preferred_photo"]
                 old_preferred_pic = preferred_pic["preferred_photo"] if preferred_pic else None
                 if old_preferred_pic == new_preferred_pic:
-                    logger.debug("preferred photo: same (%s)", new_preferred_pic)
+                    pass
                 else:
-                    logger.debug(
-                        "preferred_photo: new: %s from: %s", new_preferred_pic, old_preferred_pic if "preferred_photo" in preferred_pic else None
-                    )
                     try:
                         if new_preferred_pic == "AUTO":
                             user.preferred_photo = None
@@ -132,19 +128,14 @@ def get_privacy_options(user):
 
 def save_privacy_options(request, user):
     privacy_options = get_privacy_options(user)
-    logger.debug(privacy_options)
     privacy_options_form = PrivacyOptionsForm(user, data=request.POST, initial=privacy_options)
     if privacy_options_form.is_valid():
-        logger.debug("Privacy options form: valid")
         if privacy_options_form.has_changed():
             fields = privacy_options_form.cleaned_data
-            logger.debug("Privacy form fields:")
-            logger.debug(fields)
             for field in fields:
                 if field in privacy_options and privacy_options[field] == fields[field]:
-                    logger.debug("%s: same (%s)", field, fields[field])
+                    pass
                 else:
-                    logger.debug("%s: new: %s from: %s", field, fields[field], privacy_options[field] if field in privacy_options else None)
                     try:
                         if field.endswith("-self"):
                             field_name = field.split("-self")[0]
@@ -193,18 +184,14 @@ def get_notification_options(user):
 
 def save_notification_options(request, user):
     notification_options = get_notification_options(user)
-    logger.debug(notification_options)
     notification_options_form = NotificationOptionsForm(user, data=request.POST, initial=notification_options)
     if notification_options_form.is_valid():
-        logger.debug("Notification options form: valid")
         if notification_options_form.has_changed():
             fields = notification_options_form.cleaned_data
-            logger.debug("Fields: %s", fields)
             for field in fields:
                 if field in notification_options and notification_options[field] == fields[field]:
-                    logger.debug("%s: same (%s)", field, fields[field])
+                    pass
                 else:
-                    logger.debug("%s: new: %s from: %s", field, fields[field], notification_options[field] if field in notification_options else None)
                     setattr(user, field, fields[field])
                     user.save()
                     try:
@@ -226,18 +213,14 @@ def get_bus_route(user):
 
 def save_bus_route(request, user):
     bus_route = get_bus_route(user)
-    logger.debug(bus_route)
     bus_route_form = BusRouteForm(data=request.POST, initial=bus_route)
     if bus_route_form.is_valid():
-        logger.debug("Bus form: valid")
         if bus_route_form.has_changed():
             fields = bus_route_form.cleaned_data
-            logger.debug(fields)
             for field in fields:
                 if field in bus_route and bus_route[field] == fields[field]:
-                    logger.debug("%s: same (%s)", field, fields[field])
+                    pass
                 else:
-                    logger.debug("%s: new: %s from: %s", field, fields[field], bus_route[field] if field in bus_route else None)
                     try:
                         if fields[field]:
                             route = Route.objects.get(route_name=fields[field])
