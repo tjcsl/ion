@@ -232,7 +232,7 @@ def take_attendance_view(request, scheduled_activity_id):
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
-    edit_perm = (request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user))
+    edit_perm = request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user)
 
     edit_perm_cancelled = False
 
