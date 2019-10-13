@@ -72,8 +72,6 @@ def mobile_app(request):
         ua = request.META.get("HTTP_USER_AGENT", "")
 
         if "IonAndroid: gcmFrame" in ua:
-            logger.debug("IonAndroid %s", request.user)
-
             ctx["is_android_client"] = True
             registered = "appRegistered:False" in ua
             ctx["android_client_registered"] = registered
@@ -89,7 +87,6 @@ def mobile_app(request):
                     rand = ncfg.android_gcm_rand
                 ncfg.android_gcm_time = timezone.localtime()
 
-                logger.debug("GCM random token generated: %s", rand)
                 ncfg.save()
                 ctx["android_client_rand"] = rand
 
