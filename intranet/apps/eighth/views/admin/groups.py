@@ -183,7 +183,6 @@ def get_user_info(key, val):
 
 
 def handle_group_input(filetext):
-    logger.debug(filetext)
     lines = filetext.splitlines()
 
     return find_users_input(lines)
@@ -232,11 +231,6 @@ def find_users_input(lines):
         if not done:
             unsure_users.append([line, r])
 
-    logger.debug("Sure users:")
-    logger.debug(sure_users)
-    logger.debug("Unsure users:")
-    logger.debug(unsure_users)
-
     return sure_users, unsure_users
 
 
@@ -251,7 +245,6 @@ def upload_group_members_view(request, group_id):
     filetext = False
     if request.method == "POST":
         form = UploadGroupForm(request)
-        logger.debug(request.FILES)
         if "file" in request.FILES:
             fileobj = request.FILES["file"]
             if "text/" not in fileobj.content_type:
@@ -475,7 +468,6 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         if step == "block":
             kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity":
-            logger.debug("cleaned block: %s", self.get_cleaned_data_for_step("block")["block"])
             block = self.get_cleaned_data_for_step("block")
             if block:
                 block = block["block"]
@@ -514,9 +506,6 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         block = form_list[0].cleaned_data["block"]
         activities = form_list[1].cleaned_data["activities"]
 
-        logger.debug(block)
-        logger.debug(activities)
-
         schact_ids = []
         for act in activities:
             try:
@@ -547,7 +536,6 @@ eighth_admin_distribute_unsigned = eighth_admin_required(EighthAdminDistributeGr
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
     if "users" in request.POST:
-        logger.debug(request.POST)
         activity_user_map = {}
         for item in request.POST:
             if item[:6] == "schact":
@@ -561,7 +549,6 @@ def eighth_admin_distribute_action(request):
                 activity_user_map[schact] = userids
 
         changes = 0
-        logger.debug(activity_user_map)
         for schact, userids in activity_user_map.items():
             for uid in userids:
                 changes += 1
@@ -664,7 +651,6 @@ def add_member_to_group_view(request, group_id):
     if errors:
         messages.error(request, "Could not process search query.")
         return redirect(next_url + "?error=n")
-    logger.debug(results)
     if not results:
         return redirect(next_url + "?error=n")
     else:

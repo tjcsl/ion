@@ -47,9 +47,6 @@ def schedule_activity_view(request):
                     invalidate_obj(activity)
                 else:
                     schact = EighthScheduledActivity.objects.filter(block=block, activity=activity)
-                    logger.debug(block)
-                    logger.debug(activity)
-                    logger.debug(schact)
 
                     # Instead of deleting and messing up attendance,
                     # cancel the scheduled activity if it is unscheduled.
@@ -61,7 +58,6 @@ def schedule_activity_view(request):
                     if schact:
                         if activity.both_blocks:
                             other_act = schact[0].get_both_blocks_sibling()
-                            logger.debug("other_act: %s", other_act)
                             if other_act:
                                 other_act.cancel()
                                 invalidate_obj(other_act)
@@ -100,7 +96,6 @@ def schedule_activity_view(request):
 
                     for field_name in fields:
                         obj = form.cleaned_data[field_name]
-                        logger.debug("%s %s", field_name, obj)
 
                         if (
                             field_name == "rooms"
@@ -132,7 +127,6 @@ def schedule_activity_view(request):
                     if form["unschedule"].value() and instance.cancelled:
                         name = "{}".format(instance)
                         count = instance.eighthsignup_set.count()
-                        logger.debug("Unschedule %s - signups %d", name, count)
                         bb_ok = True
                         sibling = False
                         if activity.both_blocks:
@@ -153,7 +147,6 @@ def schedule_activity_view(request):
                         else:
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
                     instance.save()
-                    logger.debug(instance)
 
             messages.success(request, "Successfully updated schedule.")
 
@@ -218,7 +211,6 @@ def schedule_activity_view(request):
 
                 all_signups[block.id] = sched_act.members.count()
                 all_default_capacities[block.id] = sched_act.get_true_capacity()
-                logger.debug(sched_act)
                 initial_form_data.update(
                     {
                         "rooms": sched_act.rooms.all(),

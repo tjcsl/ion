@@ -46,7 +46,6 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                     "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"]),
                 },
             }
-        logger.debug(scheduled_on)
         return scheduled_on
 
     class Meta:
@@ -358,7 +357,6 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(EighthScheduledActivitySerializer, self).__init__(*args, **kwargs)
-        logger.debug(kwargs)
         if "context" in kwargs and "request" in kwargs["context"]:
             self.request = kwargs["context"]["request"]
         else:

@@ -171,7 +171,6 @@ def edit_activity_view(request, activity_id):
                 if "add_group" in request.POST:
                     grp_name = "Activity: {}".format(activity.name)
                     grp, status = Group.objects.get_or_create(name=grp_name)
-                    logger.debug(grp)
                     activity.restricted = True
                     activity.groups_allowed.add(grp)
                     activity.save()

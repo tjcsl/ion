@@ -41,7 +41,6 @@ def add_block_view(request):
     if date:
         date_format = re.compile(r"([0-9]{2})\/([0-9]{2})\/([0-9]{4})")
         fmtdate = date_format.sub(r"\3-\1-\2", date)
-        logger.debug(fmtdate)
         title_suffix = " - {}".format(fmtdate)
         show_letters = True
 
@@ -51,8 +50,6 @@ def add_block_view(request):
             blocks_day = EighthBlock.objects.filter(date=fmtdate)
             for day in blocks_day:
                 current_letters.append(day.block_letter)
-            logger.debug(letters)
-            logger.debug(current_letters)
             for l in letters:
                 if not l:
                     continue
