@@ -61,7 +61,6 @@ def parking_form_view(request):
             form = ParkingApplicationForm(request.POST, instance=app)
         else:
             form = ParkingApplicationForm(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
@@ -119,7 +118,6 @@ def parking_car_view(request):
         else:
             form = CarApplicationForm(request.POST)
 
-        logger.debug(form)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
