@@ -281,6 +281,7 @@ def preferences_view(request):
     user = request.user
 
     if request.method == "POST":
+        logger.debug("Preparing to update user preferences for user %s", request.user.id)
         phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
