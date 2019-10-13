@@ -1,9 +1,10 @@
 from importlib import import_module
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from .models import TrustedSession
@@ -73,7 +74,11 @@ def trust_session_view(request):
 @login_required
 def revoke_session_view(request):
     if request.method == "POST" and "session_key" in request.POST:
-        trusted_session = get_object_or_404(TrustedSession, user=request.user, session_key=request.POST.get("session_key", ""))
+        try:
+            trusted_session = TrustedSession.objects.get(user=request.user, session_key=request.POST.get("session_key", ""))
+        except TrustedSession.DoesNotExist:
+            messages.error(request, "You've already revoked that session.")
+            return redirect("sessionmgmt")
 
         session_store = SessionStore(session_key=trusted_session.session_key)
         session_store.delete()
