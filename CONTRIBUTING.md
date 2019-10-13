@@ -13,7 +13,7 @@ Please see [our security policy](SECURITY.md). Do not report security vulnerabil
 ## Pull Requests
 - All PRs should target `dev`, not `master`.
 - If the change is anything more than a simple typo or a fairly obvious fix, please [set up a development environment](docs/setup/vagrant.rst) and test the change there before submitting a PR.
-- It is strongly recommended that you [run `flake8`, `pylint`, `isort`](docs/developing/styleguide.rst#what-is-enforced-in-the-build), and [the test suite](docs/developing/testing.rst#running-tests) to ensure that the build will pass. Please also read the entire [style guide](docs/developing/styleguide.rst).
+- It is strongly recommended that you [run `flake8`, `pylint`, `isort`, `scripts/format.sh`](docs/developing/styleguide.rst#what-is-enforced-in-the-build), and [the test suite](docs/developing/testing.rst#running-tests) to ensure that the build will pass. Please also read the entire [style guide](docs/developing/styleguide.rst).
 - Please read [Formatting commit messages](docs/developing/howto.rst#formatting-commit-messages).
 - If your PR closes an issue, include "Closes #XXX" or similar in the messages of the commits that close each issue so the issues will be [automatically closed](https://help.github.com/en/articles/closing-issues-using-keywords) when the commits are merged into `master`.
   Note that including this text in your PR's description will have no effect because the PR will be merged into `dev`, not `master`, so GitHub does not close the issue. You must add the auto-closing keywords to the *commit* messages.
