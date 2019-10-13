@@ -26,7 +26,6 @@ def senior_email_forward_view(request):
             form = SeniorEmailForwardForm(request.POST, instance=forward)
         else:
             form = SeniorEmailForwardForm(request.POST)
-        logger.debug(form)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
