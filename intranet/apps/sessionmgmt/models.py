@@ -10,7 +10,7 @@ SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 
 class TrustedSession(models.Model):
-    DEVICE_TYPES = (("mobile", "Mobile"), ("computer", "Computer"), ("unknown", "Unknown type"))
+    DEVICE_TYPES = (("mobile", "Mobile"), ("tablet", "Tablet"), ("computer", "Computer"), ("unknown", "Unknown type"))
 
     description = models.CharField(max_length=100)
     device_type = models.CharField(max_length=8, choices=DEVICE_TYPES)
