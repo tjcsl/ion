@@ -34,6 +34,8 @@ def trust_session_view(request):
         device_type = "unknown"
         if request.user_agent.is_mobile:
             device_type = "mobile"
+        if request.user_agent.is_tablet:
+            device_type = "tablet"
         if request.user_agent.is_pc:
             device_type = "computer"
 
