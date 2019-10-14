@@ -24,6 +24,11 @@
             {% for trusted_session in trusted_sessions %}
             <li>
                 <div class="container">
+                    {% if trusted_session.device_type == "mobile" %}
+                        <i class="device-icon device-icon-large fas fa-mobile-alt"></i>
+                    {% elif trusted_session.device_type == "computer" %}
+                        <i class="device-icon device-icon-medium fas fa-desktop"></i>
+                    {% endif %}
                     <div class="info">
                         {% if trusted_session.session_key == request.session.session_key %}
                             <strong>Current device</strong><br>
