@@ -149,6 +149,8 @@ PRINTING_PAGES_LIMIT = 15
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
 FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = FILES_MAX_UPLOAD_SIZE
+
 # Custom error view for CSRF errors; if unspecified, caught by nginx with a generic error
 CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 
