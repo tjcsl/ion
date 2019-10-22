@@ -14,6 +14,6 @@ app.autodiscover_tasks()
 @after_setup_logger.connect
 @after_setup_task_logger.connect
 def setup_logger(logger, **kwargs):  # pylint: disable=unused-argument
-    from django.conf import settings
+    from django.conf import settings  # pylint: disable=import-outside-toplevel
 
     logger.level = getattr(logging, settings.LOG_LEVEL)
