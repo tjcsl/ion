@@ -824,7 +824,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def handle_delete(self):
         """Handle a graduated user being deleted."""
-        from intranet.apps.eighth.models import EighthScheduledActivity
+        from intranet.apps.eighth.models import EighthScheduledActivity  # pylint: disable=import-outside-toplevel
 
         EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(archived_member_count=F("archived_member_count") + 1)
 

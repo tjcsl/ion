@@ -317,7 +317,7 @@ def stdev(x):
         std = sqrt(\sum_i (x_i - mean)^2 \over n-1)
         https://wiki.python.org/moin/NumericAndScientificRecipes
     """
-    from math import sqrt
+    from math import sqrt  # pylint: disable=import-outside-toplevel
 
     n = len(x)
     mean = sum(x) / float(n)
