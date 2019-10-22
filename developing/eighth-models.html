@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Understanding the Eighth models &#8212; TJ Intranet v3 (Build #5413) documentation</title>
+    <title>Understanding the Eighth models &#8212; TJ Intranet v3 (Build #5418) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -155,7 +155,7 @@
 </ul>
 <div class="section" id="more-details-on-eighthactivity-and-eighthscheduledactivity">
 <h2>More details on <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code> and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code><a class="headerlink" href="#more-details-on-eighthactivity-and-eighthscheduledactivity" title="Permalink to this headline">¶</a></h2>
-<p>There are a number of fields (the sponsor list, the room list, the activity capacity, whether the activity runs both blocks, whether it is restricted, etc.) that are usually the same for all schedulings of an <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>, but sometimes change on a per-ctivity basis. Hence, both <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code> and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> have fields that record this information, and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> has helper methods that check both fields to determine the “real” value.</p>
+<p>There are a number of fields (the sponsor list, the room list, the activity capacity, whether the activity runs both blocks, whether it is restricted, etc.) that are usually the same for all schedulings of an <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>, but sometimes change on a per-activity basis. Hence, both <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code> and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> have fields that record this information, and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> has helper methods that check both fields to determine the “real” value.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">BooleanField</span></code>s, this is simple: if either of the <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code>’s field and the <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>’s field is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the activity is considered to have that property. For the room list and the sponsor list, the <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code>’s list is used if it has at least one room/sponsor; otherwise, the <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>’s list is used.</p>
 <p>In addition, the capacity has multiple overrides:</p>
 <ul class="simple">

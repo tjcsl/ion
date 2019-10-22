@@ -32,7 +32,7 @@ What follows is a brief list of the eighth models with a description of each. Mo
 More details on ``EighthActivity`` and ``EighthScheduledActivity``
 ==================================================================
 
-There are a number of fields (the sponsor list, the room list, the activity capacity, whether the activity runs both blocks, whether it is restricted, etc.) that are usually the same for all schedulings of an ``EighthActivity``, but sometimes change on a per-ctivity basis. Hence, both ``EighthActivity`` and ``EighthScheduledActivity`` have fields that record this information, and ``EighthScheduledActivity`` has helper methods that check both fields to determine the "real" value.
+There are a number of fields (the sponsor list, the room list, the activity capacity, whether the activity runs both blocks, whether it is restricted, etc.) that are usually the same for all schedulings of an ``EighthActivity``, but sometimes change on a per-activity basis. Hence, both ``EighthActivity`` and ``EighthScheduledActivity`` have fields that record this information, and ``EighthScheduledActivity`` has helper methods that check both fields to determine the "real" value.
 
 For ``BooleanField``\s, this is simple: if either of the ``EighthScheduledActivity``'s field and the ``EighthActivity``'s field is set to ``True``, the activity is considered to have that property. For the room list and the sponsor list, the ``EighthScheduledActivity``'s list is used if it has at least one room/sponsor; otherwise, the ``EighthActivity``'s list is used.
 
