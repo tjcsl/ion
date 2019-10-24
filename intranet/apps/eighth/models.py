@@ -1379,6 +1379,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         user=user, scheduled_activity=self, after_deadline=after_deadline, own_signup=(request is not None and user == request.user)
                     )
 
+                    logger.debug("Result of new signup existence query: %s", EighthSignup.objects.filter(user=user, scheduled_activity__block=self.block, pk=signup.pk).exists())
+                    logger.debug("Result of conflict existence query: %s", EighthSignup.objects.filter(user=user, scheduled_activity__block=self.block).exclude(pk=signup.pk).exists())
+
                     if signup.has_conflict():
                         try:
                             signup.save()
