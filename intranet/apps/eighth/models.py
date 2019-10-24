@@ -1388,10 +1388,21 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         EighthSignup.objects.filter(user=user, scheduled_activity__block=self.block).exclude(pk=signup.pk).exists(),
                     )
 
+                    logger.debug("Successfully signed user %d up for single-block activity %d in block %d", user.id, self.activity.id, self.block.id)
+
                     if signup.has_conflict():
                         try:
                             signup.save()
                         except ValidationError as e:
+                            logger.error(
+                                "Newly created signup %d (user %d, single-block activity %d, block %d, scheduled activity %d) failed the "
+                                "post-creation duplicate check in add_user()",
+                                signup.id,
+                                user.id,
+                                self.activity.id,
+                                self.block.id,
+                                self.id,
+                            )
                             capture_exception(e)
                 else:
                     previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
@@ -1428,10 +1439,27 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         existing_signup.save()
                         invalidate_obj(existing_signup)
 
+                        logger.debug(
+                            "Successfully switched user %d from single-block activity %d to single-block activity %d in block %d",
+                            user.id,
+                            existing_signup.scheduled_activity.activity.id,
+                            self.activity.id,
+                            self.block.id,
+                        )
+
                         if existing_signup.has_conflict():
                             try:
                                 existing_signup.save()
                             except ValidationError as e:
+                                logger.error(
+                                    "Reused signup %d (user %d, single-block activity %d, block %d, scheduled activity %d) failed the post-creation "
+                                    "duplicate check in add_user()",
+                                    existing_signup.id,
+                                    user.id,
+                                    self.activity.id,
+                                    self.block.id,
+                                    self.id,
+                                )
                                 capture_exception(e)
                     else:
                         # Clear out the other signups for this block if the user is
@@ -1468,10 +1496,27 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                             own_signup=(request is not None and user == request.user),
                         )
 
+                        logger.debug(
+                            "Successfully switched user %d from dual-block activity %d to single-block activity %d in block %d",
+                            user.id,
+                            existing_signup.scheduled_activity.activity.id,
+                            self.activity.id,
+                            self.block.id,
+                        )
+
                         if signup.has_conflict():
                             try:
                                 signup.save()
                             except ValidationError as e:
+                                logger.error(
+                                    "Newly created signup %d created to switch out of dual-block activity (user %d, single-block activity %d, block "
+                                    "%d, scheduled activity %d) failed the post-creation duplicate check in add_user()",
+                                    existing_signup.id,
+                                    user.id,
+                                    self.activity.id,
+                                    self.block.id,
+                                    self.id,
+                                )
                                 capture_exception(e)
 
                     if settings.ENABLE_WAITLIST and (
@@ -1546,10 +1591,35 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         try:
                             signup.save()
                         except ValidationError as e:
+                            logger.error(
+                                "Newly created signup %d created to sign up for dual-block activity (user %d, activity %d, block %d, scheduled "
+                                "activity %d) failed the post-creation duplicate check in add_user()",
+                                signup.id,
+                                user.id,
+                                sched_act.activity.id,
+                                sched_act.block.id,
+                                sched_act.id,
+                            )
                             capture_exception(e)
 
                     # signup.previous_activity_name = signup.activity.name_with_flags
                     # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
+
+                if prev_sched_act is None:
+                    logger.debug(
+                        "Successfully signed user %d up for double-block activity %d during block %d and its sibling",
+                        user.id,
+                        self.activity.id,
+                        self.block.id,
+                    )
+                else:
+                    logger.debug(
+                        "Successfully switched user %d from activity %d to double-block activity %d during block %d (and also its sibling)",
+                        user.id,
+                        prev_sched_act.activity.id,
+                        self.activity.id,
+                        self.block.id,
+                    )
 
         return success_message
 
@@ -1609,11 +1679,26 @@ class EighthSignupManager(Manager):
 
         """
         if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
+            logger.error(
+                "Duplicate signup before creating signup for user %d in activity %d, block %d, scheduled activity %d",
+                self.user.id,
+                self.scheduled_activity.activity.id,
+                self.scheduled_activity.block.id,
+                self.scheduled_activity.id,
+            )
             raise ValidationError("EighthSignup already exists for this user on this block.")
 
         signup = self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
 
         if EighthSignup.objects.exclude(pk=signup.pk).filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
+            logger.error(
+                "Duplicate signup after creating signup %d to sign up user %d in activity %d, block %d, scheduled activity %d; deleting",
+                self.id,
+                self.user.id,
+                self.scheduled_activity.activity.id,
+                self.scheduled_activity.block.id,
+                self.scheduled_activity.id,
+            )
             signup.delete()
             raise ValidationError("EighthSignup already exists for this user on this block.")
 
@@ -1681,6 +1766,14 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         if self.has_conflict():
+            logger.error(
+                "Duplicate signup while saving signup %d for user %d in activity %d, block %d, scheduled activity %d",
+                self.id,
+                self.user.id,
+                self.scheduled_activity.activity.id,
+                self.scheduled_activity.block.id,
+                self.scheduled_activity.id,
+            )
             raise ValidationError("EighthSignup already exists for this user on this block.")
         super(EighthSignup, self).save(*args, **kwargs)
 
