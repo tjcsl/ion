@@ -364,6 +364,28 @@ $(function() {
                                 }
                             }, 0);
                         }
+                        else {
+                            var tspan = $(text.node).find("tspan");
+
+                            setTimeout(function() {
+                                var tbox = tspan.get(0).getBBox();
+                                var sbox = space.getBBox();
+
+                                var offset;
+                                var dimenDiff;
+                                if(tbox.width > tbox.height) {
+                                    dimenDiff = sbox.width - tbox.width;
+                                    offset = tbox.x - sbox.x;
+                                }
+                                else {
+                                    dimenDiff = sbox.height - tbox.height;
+                                    offset = tbox.y - sbox.y;
+                                }
+                                if(dimenDiff < offset + 5 || route.attributes.route_name.length > 5) {
+                                    text.node.classList.add("extra-small");
+                                }
+                            }, 0);
+                        }
                         space.style.fill = '#FFD800';
                         $(space).data({
                             'filled': true,
