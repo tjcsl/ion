@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 @login_required
 @deny_restricted
 def home_view(request):
-    lost_all = LostItem.objects.all().order_by("id")
+    lost_all = LostItem.objects.exclude(found=True).order_by("id")
     lost_pg = Paginator(lost_all, 20)
 
-    found_all = FoundItem.objects.all().order_by("id")
+    found_all = FoundItem.objects.exclude(retrieved=True).order_by("id")
     found_pg = Paginator(found_all, 20)
 
     page = request.GET.get("page", 1)
@@ -113,7 +113,7 @@ def lostitem_delete_view(request, item_id):
             lostitem.save()
             messages.success(request, "Successfully marked lost item as found!")
 
-        return redirect("index")
+        return redirect("lostfound")
     else:
         return render(request, "lostfound/lostitem_delete.html", {"lostitem": lostitem})
 
@@ -127,7 +127,7 @@ def lostitem_view(request, item_id):
 
     """
     lostitem = get_object_or_404(LostItem, id=item_id)
-    return render(request, "itemreg/item_view.html", {"item": lostitem, "type": "lost"})
+    return render(request, "lostfound/item_view.html", {"item": lostitem, "type": "lost"})
 
 
 @login_required
@@ -198,11 +198,11 @@ def founditem_delete_view(request, item_id):
             founditem.delete()
             messages.success(request, "Successfully deleted found item.")
         else:
-            founditem.found = True
+            founditem.retrieved = True
             founditem.save()
-            messages.success(request, "Successfully marked found item as found!")
+            messages.success(request, "Successfully marked found item as retrieved!")
 
-        return redirect("index")
+        return redirect("lostfound")
     else:
         return render(request, "lostfound/founditem_delete.html", {"founditem": founditem})
 
@@ -216,4 +216,4 @@ def founditem_view(request, item_id):
 
     """
     founditem = get_object_or_404(FoundItem, id=item_id)
-    return render(request, "itemreg/item_view.html", {"item": founditem, "type": "found"})
+    return render(request, "lostfound/item_view.html", {"item": founditem, "type": "found"})
