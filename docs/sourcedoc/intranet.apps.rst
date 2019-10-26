@@ -17,6 +17,7 @@ Subpackages
    intranet.apps.emerg
    intranet.apps.error
    intranet.apps.events
+   intranet.apps.features
    intranet.apps.feedback
    intranet.apps.files
    intranet.apps.groups
