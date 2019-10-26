@@ -37,6 +37,7 @@
     {% if is_senior %}
         <script src="{% static 'js/dashboard/seniors.js' %}"></script>
     {% endif %}
+    <script src="{% static 'js/features.js' %}"></script>
 {% endblock %}
 
 {% block head %}
@@ -54,17 +55,6 @@
 {% block main %}
 
 {% if show_widgets %}
-
-{% if dark_mode_unlocked_globally and not request.user.dark_mode_properties.dark_mode_enabled %}
-<div class="primary-content">
-    <div class="new-feature" style="margin: 0px 0px 10px 0px; max-width: fit-content;">
-        <div class="new-feature-close">
-            <i class="fas fa-times"></i>
-        </div>
-        <span class="new-feature-text"><i class="fas fa-rocket" style="padding-right: 2px"></i> Ion now has a dark mode! You can enable it in <a href="{% url 'preferences' %}">Preferences</a>.</span>
-    </div>
-</div>
-{% endif %}
 
 <div class="widgets{% if eighth_sponsor and request.user.is_student %} student-sponsor{% endif %}">
     {% if is_student %}
@@ -96,6 +86,10 @@
     {% include "dashboard/birthdays.html" %}
 </div>
 {% endif %}
+
+<div class="primary-content">
+    {% include "feature_announcements.html" %}
+</div>
 
 <div class="announcements primary-content{% if not show_widgets %} no-widgets{% endif %}">
     {% comment %}

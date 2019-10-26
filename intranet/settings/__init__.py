@@ -352,6 +352,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.enable_dark_mode",
                 "intranet.apps.context_processors.oauth_toolkit",  # Django OAuth Toolkit-related middleware
                 "intranet.apps.context_processors.settings_export",  # "Exports" django.conf.settings as DJANGO_SETTINGS
+                "intranet.apps.features.context_processors.feature_announcements",
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
@@ -439,6 +440,7 @@ CACHEOPS = {
     "eighth.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching activity, block lists
     "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
     "users.UserDarkModeProperties": {"ops": "get", "timeout": int(datetime.timedelta(minutes=10).total_seconds())},
+    "features.FeatureAnnouncement": {"ops": "all", "timeout": int(datetime.timedelta(hours=1).total_seconds())},
 }
 
 if not TESTING:
@@ -551,6 +553,7 @@ INSTALLED_APPS = [
     "intranet.apps.dataimport",
     "intranet.apps.nomination",
     "intranet.apps.sessionmgmt",
+    "intranet.apps.features",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit

@@ -47,6 +47,7 @@ urlpatterns = [
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
     url(r"^nominations", include("intranet.apps.nomination.urls")),
     url(r"^courses", include("intranet.apps.users.courses_urls")),
+    url(r"^features", include("intranet.apps.features.urls", namespace="features")),
     url(r"^prometheus/", include("django_prometheus.urls")),
     url(r"^docs/accounts$", TemplateView.as_view(template_name="docs/accounts.html", content_type="text/html"), name="docs_accounts"),
     url(r"^docs/terminology$", TemplateView.as_view(template_name="docs/terminology.html", content_type="text/html"), name="docs_terminology"),
