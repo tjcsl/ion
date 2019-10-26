@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls.forms &#8212; TJ Intranet v3 (Build #5433) documentation</title>
+    <title>intranet.apps.feedback.tests &#8212; TJ Intranet v3 (Build #5433) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,26 +125,28 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.polls.forms</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django</span> <span class="k">import</span> <span class="n">forms</span>
+  <h1>Source code for intranet.apps.feedback.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">safe_html</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Poll</span>
+<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="k">import</span> <span class="n">IonTestCase</span>
 
 
-<div class="viewcode-block" id="PollForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollForm">[docs]</a><span class="k">class</span> <span class="nc">PollForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-<div class="viewcode-block" id="PollForm.clean_description"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollForm.clean_description">[docs]</a>    <span class="k">def</span> <span class="nf">clean_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
-        <span class="c1"># SAFE HTML</span>
-        <span class="n">desc</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">desc</span></div>
+<div class="viewcode-block" id="FeedbackTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.tests.FeedbackTest">[docs]</a><span class="k">class</span> <span class="nc">FeedbackTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="FeedbackTest.test_send_feedback_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.tests.FeedbackTest.test_send_feedback_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_send_feedback_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PollForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Poll</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;start_time&quot;</span><span class="p">,</span> <span class="s2">&quot;end_time&quot;</span><span class="p">,</span> <span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="s2">&quot;is_secret&quot;</span><span class="p">,</span> <span class="s2">&quot;groups&quot;</span><span class="p">]</span>
-        <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">()}</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;is_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;Secret&quot;</span><span class="p">}</span>
-        <span class="n">help_texts</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;is_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;This will prevent Ion administrators from viewing individual users&#39; votes.&quot;</span><span class="p">}</span></div></div>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;send_feedback&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">PRODUCTION</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">FORCE_EMAIL_SEND</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;send_feedback&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="s2">&quot;This is a test of the feedback system.&quot;</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeedbackTest.test_send_feedback_unauthenticated"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.tests.FeedbackTest.test_send_feedback_unauthenticated">[docs]</a>    <span class="k">def</span> <span class="nf">test_send_feedback_unauthenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;send_feedback&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/login?next=/feedback&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

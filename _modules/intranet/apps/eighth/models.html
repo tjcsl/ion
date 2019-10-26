@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5423) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5433) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -1516,10 +1516,21 @@
                         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">signup</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
                     <span class="p">)</span>
 
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully signed user </span><span class="si">%d</span><span class="s2"> up for single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
                     <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                         <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="s2">&quot;Newly created signup </span><span class="si">%d</span><span class="s2"> (user </span><span class="si">%d</span><span class="s2">, single-block activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">) failed the &quot;</span>
+                                <span class="s2">&quot;post-creation duplicate check in add_user()&quot;</span><span class="p">,</span>
+                                <span class="n">signup</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="p">)</span>
                             <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span>
@@ -1556,10 +1567,27 @@
                         <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                         <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">existing_signup</span><span class="p">)</span>
 
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s2">&quot;Successfully switched user </span><span class="si">%d</span><span class="s2"> from single-block activity </span><span class="si">%d</span><span class="s2"> to single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="k">if</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
                             <span class="k">try</span><span class="p">:</span>
                                 <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                             <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                    <span class="s2">&quot;Reused signup </span><span class="si">%d</span><span class="s2"> (user </span><span class="si">%d</span><span class="s2">, single-block activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">) failed the post-creation &quot;</span>
+                                    <span class="s2">&quot;duplicate check in add_user()&quot;</span><span class="p">,</span>
+                                    <span class="n">existing_signup</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="p">)</span>
                                 <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="c1"># Clear out the other signups for this block if the user is</span>
@@ -1596,10 +1624,27 @@
                             <span class="n">own_signup</span><span class="o">=</span><span class="p">(</span><span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span>
                         <span class="p">)</span>
 
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s2">&quot;Successfully switched user </span><span class="si">%d</span><span class="s2"> from dual-block activity </span><span class="si">%d</span><span class="s2"> to single-block activity </span><span class="si">%d</span><span class="s2"> in block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="p">)</span>
+
                         <span class="k">if</span> <span class="n">signup</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
                             <span class="k">try</span><span class="p">:</span>
                                 <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                             <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                    <span class="s2">&quot;Newly created signup </span><span class="si">%d</span><span class="s2"> created to switch out of dual-block activity (user </span><span class="si">%d</span><span class="s2">, single-block activity </span><span class="si">%d</span><span class="s2">, block &quot;</span>
+                                    <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">) failed the post-creation duplicate check in add_user()&quot;</span><span class="p">,</span>
+                                    <span class="n">existing_signup</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="p">)</span>
                                 <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_WAITLIST</span> <span class="ow">and</span> <span class="p">(</span>
@@ -1674,10 +1719,35 @@
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                         <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="s2">&quot;Newly created signup </span><span class="si">%d</span><span class="s2"> created to sign up for dual-block activity (user </span><span class="si">%d</span><span class="s2">, activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled &quot;</span>
+                                <span class="s2">&quot;activity </span><span class="si">%d</span><span class="s2">) failed the post-creation duplicate check in add_user()&quot;</span><span class="p">,</span>
+                                <span class="n">signup</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">sched_act</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">sched_act</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="p">)</span>
                             <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
                     <span class="c1"># signup.previous_activity_name = signup.activity.name_with_flags</span>
                     <span class="c1"># signup.previous_activity_sponsors = &quot;, &quot;.join(map(str, signup.get_true_sponsors()))</span>
+
+                <span class="k">if</span> <span class="n">prev_sched_act</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;Successfully signed user </span><span class="si">%d</span><span class="s2"> up for double-block activity </span><span class="si">%d</span><span class="s2"> during block </span><span class="si">%d</span><span class="s2"> and its sibling&quot;</span><span class="p">,</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;Successfully switched user </span><span class="si">%d</span><span class="s2"> from activity </span><span class="si">%d</span><span class="s2"> to double-block activity </span><span class="si">%d</span><span class="s2"> during block </span><span class="si">%d</span><span class="s2"> (and also its sibling)&quot;</span><span class="p">,</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="n">prev_sched_act</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">success_message</span></div>
 
@@ -1737,11 +1807,26 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Duplicate signup before creating signup for user </span><span class="si">%d</span><span class="s2"> in activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
 
         <span class="n">signup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">signup</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Duplicate signup after creating signup </span><span class="si">%d</span><span class="s2"> to sign up user </span><span class="si">%d</span><span class="s2"> in activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">; deleting&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">signup</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
 
@@ -1809,6 +1894,14 @@
 
 <div class="viewcode-block" id="EighthSignup.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=arguments-differ</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Duplicate signup while saving signup </span><span class="si">%d</span><span class="s2"> for user </span><span class="si">%d</span><span class="s2"> in activity </span><span class="si">%d</span><span class="s2">, block </span><span class="si">%d</span><span class="s2">, scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EighthSignup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
