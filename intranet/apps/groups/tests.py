@@ -6,9 +6,15 @@ from .models import Group
 
 class GroupsTest(IonTestCase):
     def test_groups_view(self):
-        user = self.login()
         admin_all_group = Group.objects.get_or_create(name="admin_all")[0]
         admin_groups_group = Group.objects.get_or_create(name="admin_groups")[0]
+
+        self.client.logout()
+
+        response = self.client.get(reverse("groups"))
+        self.assertEqual(response.status_code, 302)
+
+        user = self.login()
         user.groups.clear()
 
         response = self.client.get(reverse("groups"))
@@ -29,9 +35,15 @@ class GroupsTest(IonTestCase):
         self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), ordered=False)
 
     def test_add_group_view(self):
-        user = self.login()
         admin_all_group = Group.objects.get_or_create(name="admin_all")[0]
         admin_groups_group = Group.objects.get_or_create(name="admin_groups")[0]
+
+        self.client.logout()
+
+        response = self.client.get(reverse("add_groups"))
+        self.assertEqual(response.status_code, 302)
+
+        user = self.login()
         user.groups.clear()
 
         response = self.client.get(reverse("add_groups"))
