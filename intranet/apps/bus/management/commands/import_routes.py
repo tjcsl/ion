@@ -12,7 +12,7 @@ class Command(BaseCommand):
         reader = csv.reader(open("routes.csv", "r"))
         print("Deleting preexisting buses")
         for row in reader:
-            name, = row
+            (name,) = row
             _, created = Route.objects.get_or_create(route_name=name)
             if created:
                 print("Created route {}".format(name))
