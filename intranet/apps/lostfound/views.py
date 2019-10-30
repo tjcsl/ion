@@ -200,7 +200,7 @@ def founditem_delete_view(request, item_id):
         else:
             founditem.retrieved = True
             founditem.save()
-            messages.success(request, "Successfully marked found item as found!")
+            messages.success(request, "Successfully marked found item as retrieved!")
 
         return redirect("lostfound")
     else:
