@@ -9,11 +9,48 @@ $(document).ready(function() {
         }
     });
 
+    function updatePartiallyHidden() {
+        $(".announcement:not(.toggled):not(.hidden).partially-hidden").each(function() {
+            var content = $(this).find(".announcement-content");
+            if(content.height() <= 200) {
+                $(this).removeClass("partially-hidden");
+                content.off("click");
+            }
+        });
+        $(".announcement:not(.toggled):not(.hidden):not(.partially-hidden)").each(function() {
+            var content = $(this).find(".announcement-content");
+            if(content.height() > 200) {
+                $(this).addClass("partially-hidden");
+                content.click(function() {
+                    announcementToggle.call($(this).closest(".announcement"));
+                });
+            }
+        });
+    }
+    updatePartiallyHidden();
+    $(window).resize(function() {setTimeout(updatePartiallyHidden, 0);});
+
     function announcementToggle() {
-        var announcement = $(this).parent().parent().parent();
+        var announcement = $(this).closest(".announcement");
         var announcementContent = $(".announcement-toggle-content", announcement);
         var icon = $(this).children(0);
         var id = announcement.attr("data-id");
+
+        if(announcement.hasClass("partially-hidden")) {
+            announcement.addClass("toggled");
+
+            announcementContent.animate(
+                {"max-height": announcement.find(".announcement-content").height()},
+                {
+                    "duration": 350,
+                    complete: function() {
+                        announcement.removeClass("partially-hidden");
+                        announcementContent.css("max-height", "");
+                    }
+                }
+            );
+            return;
+        }
 
         if (!id) {
             console.error("Couldn't toggle invalid announcement ID");
@@ -28,6 +65,8 @@ $(document).ready(function() {
         }, function() {
             console.info("Announcement", id, action);
         });
+
+        announcement.addClass("toggled");
 
         if (action === "show") {
             icon.removeClass("fa-expand")
