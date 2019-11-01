@@ -29,6 +29,9 @@ def room_changed_single_email(
 
     emails = [signup.user.notification_email for signup in sched_act.eighthsignup_set.filter(user__receive_eighth_emails=True).distinct()]
 
+    if not emails:
+        return
+
     base_url = "https://ion.tjhsst.edu"
 
     data = {
