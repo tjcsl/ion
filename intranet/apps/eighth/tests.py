@@ -340,6 +340,36 @@ class EighthTest(EighthAbstractTest):
         # Make sure student has correct number of absences.
         self.assertEqual(get_user_model().objects.get(id=user1.id).absence_count(), 1)
 
+    def test_switch_cancelled_sticky(self):
+        """Make sure users can switch out of cancelled activities even if they are stickied in."""
+        self.make_admin()
+        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+
+        EighthActivity.objects.all().delete()
+        EighthBlock.objects.all().delete()
+
+        block1 = self.add_block(date="3000-11-11", block_letter="A")
+        act1 = self.add_activity(name="Test Activity 1")
+        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1, capacity=1)
+        act2 = self.add_activity(name="Test Activity 2")
+        schact2 = EighthScheduledActivity.objects.create(activity=act2, block=block1, capacity=1)
+
+        schact1.sticky = True
+        schact1.save()
+
+        schact1.add_user(user1)
+
+        self.assertTrue(EighthSignup.objects.filter(scheduled_activity=schact1, user=user1).exists())
+
+        with self.assertRaisesMessage(SignupException, "Sticky"):
+            schact2.add_user(user1)
+
+        schact1.cancel()
+
+        schact2.add_user(user1)
+
+        self.assertTrue(EighthSignup.objects.filter(scheduled_activity=schact2, user=user1).exists())
+
     def test_add_sponsor_form(self):
         # Make sure user not in database is not created
         self.make_admin()

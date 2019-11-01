@@ -1285,6 +1285,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if (
                 EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
                 .filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
+                .filter(Q(scheduled_activity__cancelled=False))
                 .exists()
             ):
                 exception.Sticky = True
@@ -1829,7 +1830,7 @@ class EighthSignup(AbstractBaseEighthModel):
             exception.ActivityDeleted = True
 
         # Check if the user is already stickied into an activity
-        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky:
+        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky and not self.scheduled_activity.cancelled:
             exception.Sticky = True
 
         if exception.messages() and not force:
