@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5462) documentation</title>
+    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #5475) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -143,6 +143,7 @@
 <h1>Coding Style Guide<a class="headerlink" href="#coding-style-guide" title="Permalink to this headline">¶</a></h1>
 <p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by <code class="docutils literal notranslate"><span class="pre">pylint</span></code>, <code class="docutils literal notranslate"><span class="pre">flake8</span></code>, and a combination of <code class="docutils literal notranslate"><span class="pre">black</span></code>, <code class="docutils literal notranslate"><span class="pre">autopep8</span></code>, and <code class="docutils literal notranslate"><span class="pre">isort</span></code>. Therefore, if you do not follow them, the build may not pass.</p>
 <p>However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.</p>
+<p>Note: CSS/JS/template formatting is enforced by <code class="docutils literal notranslate"><span class="pre">scripts/static_templates_format.sh</span></code>. Currently, this just strips trailing whitespace.</p>
 <div class="section" id="main-points">
 <h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -164,9 +165,10 @@
 pylint --jobs<span class="o">=</span><span class="m">0</span> --disable<span class="o">=</span>fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
 isort --check --recursive intranet
 ./scripts.format.sh
+./scripts/static_templates_format.sh  <span class="c1"># Static/template files</span>
 </pre></div>
 </div>
-<p>Note: When the <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> check is run, the build will fail if it has to make any changes.</p>
+<p>Note: When the <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">./scripts/static_templates_format.sh</span></code> checks are run, the build will fail if they have to make any changes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">flake8</span></code> is a PEP8 style checker, <code class="docutils literal notranslate"><span class="pre">pylint</span></code> is a linter (but it also enforces some PEP8 conventions), and <code class="docutils literal notranslate"><span class="pre">isort</span></code>, when called with these options, checks that all imports are sorted alphabetically.</p>
 <p><code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> runs <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">intranet</span> <span class="pre">&amp;&amp;</span> <span class="pre">autopep8</span> <span class="pre">--in-place</span> <span class="pre">--recursive</span> <span class="pre">intranet</span> <span class="pre">&amp;&amp;</span> <span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>. The reason for the multiple commands is that <code class="docutils literal notranslate"><span class="pre">black</span></code> introduces certain formatting changes which <code class="docutils literal notranslate"><span class="pre">flake8</span></code>/<code class="docutils literal notranslate"><span class="pre">pylint</span></code> do not agree with (and offers no options to change them), so we have <code class="docutils literal notranslate"><span class="pre">autopep8</span></code> fix it.</p>
 <p>It is recommended that you run all of these locally before opening a pull request (though the Ion developers sometimes skip running the <code class="docutils literal notranslate"><span class="pre">pylint</span></code> check locally because it takes a long time to run). All of them are intended to be run from the root directory of the Git repository.</p>
