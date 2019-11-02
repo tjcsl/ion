@@ -4,8 +4,6 @@ from django.utils import timezone
 
 from .helpers import get_feature_context
 
-# Create your models here.
-
 
 class FeatureAnnouncementQuerySet(models.QuerySet):
     def filter_active(self):
@@ -28,7 +26,7 @@ class FeatureAnnouncementQuerySet(models.QuerySet):
             user: The user to filter the feature announcements to show for.
 
         Returns:
-            The ``QuerySet`` of just ``FeatureAnnouncement``s that should be shown for the given user
+            The ``QuerySet`` of just ``FeatureAnnouncement``s that should be shown for the given user.
 
         """
         return self.exclude(users_dismissed=user)
@@ -66,6 +64,20 @@ class FeatureAnnouncementQuerySet(models.QuerySet):
 
 
 class FeatureAnnouncement(models.Model):
+    """Represents an announcement about a new feature on Ion that should be shown to the school.
+
+    Attributes:
+        activation_date (datetime.date): The date on which this feature announcement should first appear.
+        expiration_date (datetime.date): The date on which this feature announcement should last appear.
+        context (str): The "context" (essentially the page) in which this feature announcement should be
+            shown. Currently supported: dashboard, login, eighth_signup
+        announcement_html (str): The HTML of the actual announcement. WARNING: This is rendered as 'safe'
+            to allow things like links. Do NOT allow untrusted content here.
+        users_seen (:obj:`list` of :obj:`User`): The users who have seen this feature announcement.
+        users_dismissed (:obj:`list` of :obj:`User`): The users who have dismissed this feature announcement
+            (clicked the close button). Used to hide feature announcements the user has dismissed.
+
+    """
     objects = FeatureAnnouncementQuerySet.as_manager()
 
     # Both INCLUSIVE

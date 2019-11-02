@@ -352,7 +352,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.enable_dark_mode",
                 "intranet.apps.context_processors.oauth_toolkit",  # Django OAuth Toolkit-related middleware
                 "intranet.apps.context_processors.settings_export",  # "Exports" django.conf.settings as DJANGO_SETTINGS
-                "intranet.apps.features.context_processors.feature_announcements",
+                "intranet.apps.features.context_processors.feature_announcements",  # Feature announcements that need to be shown on the current page
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
