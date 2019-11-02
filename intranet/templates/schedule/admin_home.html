@@ -10,7 +10,7 @@
     {{ block.super }}
     <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
-    
+
     <script>
 function modify_daytype_form() {
     var v = $("select#modify_daytypes").val();
@@ -277,7 +277,7 @@ $(function() {
             <th class="weekend">Saturday</th>
             <th class="weekend">Sunday</th>
         </tr>
-        {% for week in sch %}        
+        {% for week in sch %}
         <tr>
             {% for day in week %}
             <td{% if forloop.counter == 6 or forloop.counter == 7 %} class="weekend"{% endif %}>
@@ -305,7 +305,7 @@ $(function() {
                     <b>No schedule assigned.</b>
                 {% endif %}
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
-                    
+
                     <a class="button change-daytype-button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}" data-endpoint="{% url 'schedule_add' %}" data-date="{{ day.formatted_date }}">
                         <i class='edit fas fa-exchange-alt'></i>
                     </a>
