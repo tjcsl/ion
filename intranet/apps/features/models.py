@@ -78,6 +78,7 @@ class FeatureAnnouncement(models.Model):
             (clicked the close button). Used to hide feature announcements the user has dismissed.
 
     """
+
     objects = FeatureAnnouncementQuerySet.as_manager()
 
     # Both INCLUSIVE
