@@ -6,6 +6,8 @@ Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style g
 
 However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.
 
+Note: CSS/JS/template formatting is enforced by ``scripts/static_templates_format.sh``. Currently, this just strips trailing whitespace.
+
 Main points
 ===========
 
@@ -30,8 +32,9 @@ At the time of this writing, the Travis build runs the following commands:
         pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
         isort --check --recursive intranet
         ./scripts.format.sh
+        ./scripts/static_templates_format.sh  # Static/template files
 
-Note: When the ``./scripts/format.sh`` check is run, the build will fail if it has to make any changes.
+Note: When the ``./scripts/format.sh`` and ``./scripts/static_templates_format.sh`` checks are run, the build will fail if they have to make any changes.
 
 ``flake8`` is a PEP8 style checker, ``pylint`` is a linter (but it also enforces some PEP8 conventions), and ``isort``, when called with these options, checks that all imports are sorted alphabetically.
 
