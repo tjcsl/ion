@@ -22,7 +22,7 @@
             <a href="{% url 'event' event.id %}" class="event-link">
                 {{ event.title }}
             </a>
-        {% else %}    
+        {% else %}
             {{ event.title }}
         {% endif %}
 
@@ -71,7 +71,7 @@
                 {% include "announcements/announcement.html" %}
             {% endwith %}
         {% endif %}
-        
+
         <div class="event-content">
             {{ event.description|safe }}
         </div>
@@ -129,7 +129,7 @@
 
             {% if request.user in event.attending.all %}
                 <span class="attend-status">
-                    You are <b style="color: green">attending</b> this event. 
+                    You are <b style="color: green">attending</b> this event.
                     {% if show_attend %}
                         <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
                             <i class="fas fa-times"></i>
@@ -139,7 +139,7 @@
                 </span>
             {% else %}
                 <span class="attend-status">
-                    You are <b style="color: red">not attending</b> this event. 
+                    You are <b style="color: red">not attending</b> this event.
                     {% if show_attend %}
                         <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
                             <i class="fas fa-check"></i>

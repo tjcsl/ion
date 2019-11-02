@@ -40,12 +40,12 @@
 {% block admin_main %}
     {% if show_selection %}
         <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
-            
+
             {% if users_type == "unsigned" %}
                 <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
             {% elif users_type == "group" %}
                 <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br>
-                <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a> &nbsp; 
+                <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a> &nbsp;
             {% endif %}
             <button onclick="distribute(); return false">Evenly Distribute</button>
             <br>
