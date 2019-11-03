@@ -6,6 +6,7 @@ import tempfile
 from typing import List, Optional
 
 import magic
+from sentry_sdk import add_breadcrumb, capture_exception
 
 from django.conf import settings
 from django.contrib import messages
@@ -90,19 +91,23 @@ def convert_soffice(tmpfile_name: str) -> Optional[str]:
         fileout = fileout.split(" using ", 1)[0]
         return fileout
 
+    logger.error("soffice command succeeded, but we couldn't find the file name in the output: %r", output)
+
     return None
 
 
 def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> Optional[str]:
     new_name = "{}.pdf".format(tmpfile_name)
     try:
-        subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
+        output = subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run %s command (returned %d): %s", cmdname, e.returncode, e.output)
         return None
 
     if os.path.isfile(new_name):
         return new_name
+
+    logger.error("%s command succeeded, but the file it was supposed to create (%s) does not exist: %r", cmdname, new_name, output)
 
     return None
 
@@ -155,6 +160,11 @@ def get_mimetype(tmpfile_name: str) -> str:
 
 def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     detected = get_mimetype(tmpfile_name)
+
+    add_breadcrumb(
+        category="printing", message="Detected file type {}".format(detected), level="debug",
+    )
+
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -232,7 +242,15 @@ def print_job(obj, do_print=True):
     tmpfile_name = convert_file(tmpfile_name, filebase)
 
     if not tmpfile_name:
-        raise Exception("Could not convert file.")
+        msg = "Error converting file to PDF for printing"
+
+        if filebase.endswith((".doc", ".docx")):
+            msg += (
+                "<br>Note: It looks like you are trying to print a Word document. Word documents don't always print correctly, so we recommend "
+                "that you convert to a PDF before printing."
+            )
+
+        raise Exception(msg)
 
     if get_mimetype(tmpfile_name) == "text/plain":
         with open(tmpfile_name, "r") as f:
@@ -316,7 +334,8 @@ def print_view(request):
                 messages.error(request, str(e))
             except Exception as e:
                 messages.error(request, str(e))
-                logging.critical("Printing failed: %s", e)
+                logging.error("Printing failed: %s", e)
+                capture_exception(e)
             else:
                 messages.success(
                     request,
