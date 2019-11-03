@@ -20,8 +20,8 @@ class AccessLogMiddleWare:
         else:
             username = request.user.username
 
-        if "HTTP_X_FORWARDED_FOR" in request.META:
-            ip = request.META["HTTP_X_FORWARDED_FOR"]
+        if "HTTP_X_REAL_IP" in request.META:
+            ip = request.META["HTTP_X_REAL_IP"]
         else:
             ip = (request.META.get("REMOTE_ADDR", ""),)
 

@@ -34,8 +34,8 @@ auth_logger = logging.getLogger("intranet_auth")
 
 
 def log_auth(request, success):
-    if "HTTP_X_FORWARDED_FOR" in request.META:
-        ip = request.META["HTTP_X_FORWARDED_FOR"]
+    if "HTTP_X_REAL_IP" in request.META:
+        ip = request.META["HTTP_X_REAL_IP"]
     else:
         ip = request.META.get("REMOTE_ADDR", "")
 
