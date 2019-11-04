@@ -500,7 +500,7 @@ def files_upload(request, fstype=None):
                 messages.error(request, "Access to the path you provided is restricted.")
                 return redirect("/files/{}?dir={}".format(fstype, default_dir))
 
-            handle_file_upload(request.FILES["file"], fstype, fsdir, sftp, request)
+            handle_file_upload(request.FILES["file"], fsdir, sftp, request)
             return redirect("/files/{}?dir={}".format(fstype, fsdir))
     else:
         form = UploadFileForm()
@@ -508,7 +508,7 @@ def files_upload(request, fstype=None):
     return render(request, "files/upload.html", context)
 
 
-def handle_file_upload(file, fstype, fsdir, sftp, request=None):
+def handle_file_upload(file, fsdir, sftp, request=None):
     try:
         sftp.chdir(fsdir)
     except exceptions as e:

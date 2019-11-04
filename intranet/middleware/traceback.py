@@ -15,7 +15,7 @@ class UserTracebackMiddleware:
     def __call__(self, request):
         return self.get_response(request)
 
-    def process_exception(self, request, exception):
+    def process_exception(self, request, exception):  # pylint: disable=unused-argument
         if request.user.is_authenticated:
             request.META["AUTH_USER"] = "{}".format(request.user.username)
         else:

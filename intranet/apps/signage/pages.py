@@ -11,11 +11,11 @@ def hello_world(page, sign, request):
     return {"message": "{} from {} says Hello".format(page.name, sign.name)}
 
 
-def announcements(page, sign, request):
+def announcements(page, sign, request):  # pylint: disable=unused-argument
     return {"public_announcements": Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())}
 
 
-def bus(page, sign, request):
+def bus(page, sign, request):  # pylint: disable=unused-argument
     now = timezone.localtime()
     day = Day.objects.today()
     if day is not None and day.end_time is not None:
