@@ -13,7 +13,7 @@ def perma_reverse(request, view, *args, **kwargs):
 
 @api_view(("GET",))
 @permission_classes((AllowAny,))
-def api_root(request, format=None):  # pylint: disable=redefined-builtin; It doesn't appear we can change this keyword argument name
+def api_root(request, format=None):  # pylint: disable=redefined-builtin,unused-argument; It doesn't appear we can change this keyword argument name
     r"""Welcome to the Ion API!
 
     Documentation is below. <pk> refers to the unique id of a certain object - this is shown as "id" in most lists and references.

@@ -5,7 +5,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from ..sessionmgmt.models import TrustedSession
 
 
-def user_login(sender, request, **kwargs):
+def user_login(sender, request, **kwargs):  # pylint: disable=unused-argument
     if request is not None:
         request.session["login_time"] = time.time()
 
@@ -14,7 +14,7 @@ def user_login(sender, request, **kwargs):
         TrustedSession.delete_expired_sessions(user=request.user)
 
 
-def user_logout(sender, request, **kwargs):
+def user_logout(sender, request, **kwargs):  # pylint: disable=unused-argument
     # Delete the associated TrustedSession if it exists
     TrustedSession.objects.filter(session_key=request.session.session_key).delete()
 
