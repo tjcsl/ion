@@ -36,10 +36,6 @@ def email_send(
 
     """
 
-    if not emails:
-        logger.debug("Email list is empty; not sending")
-        return msg
-
     logger = custom_logger if custom_logger is not None else globals()["logger"]  # pylint: disable=redefined-outer-name
 
     text = get_template(text_template)
@@ -53,6 +49,11 @@ def email_send(
     else:
         msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
     msg.attach_alternative(html_content, "text/html")
+
+    if not emails:
+        logger.debug("Email list is empty; not sending")
+        return msg
+
     logger.debug("Emailing %s to %s", subject, emails)
 
     # We only want to actually send emails if we are in production or explicitly force sending.
