@@ -7,7 +7,7 @@ import re
 from oauth2_provider.models import Application
 
 from django.conf import settings
-from django.core.urlresolvers import Resolver404, resolve
+from django.urls import Resolver404, resolve
 from django.utils import timezone
 
 from intranet.apps.notifications.models import NotificationConfig
