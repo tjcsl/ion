@@ -36,6 +36,10 @@ def email_send(
 
     """
 
+    if not emails:
+        logger.debug("Email list is empty; not sending")
+        return msg
+
     logger = custom_logger if custom_logger is not None else globals()["logger"]  # pylint: disable=redefined-outer-name
 
     text = get_template(text_template)
