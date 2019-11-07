@@ -65,7 +65,7 @@ class KerberosAuthenticationBackend:
 
         # We should not try to authenticate with an empty password
         if password == "":
-            return False
+            return False, False
 
         cache = "/tmp/ion-%s" % uuid.uuid4()
 
