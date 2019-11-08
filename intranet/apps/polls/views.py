@@ -156,7 +156,12 @@ def poll_vote_view(request, poll_id):
                                 else:
                                     if (current_choices.count() + 1) <= question_obj.max_choices:
                                         Answer.objects.filter(user=user, question=question_obj, clear_vote=True).delete()
-                                        Answer.objects.get_or_create(user=user, question=question_obj, choice=choice_obj)
+
+                                        # Duplicate Answers have caused errors here, so let's make sure to delete any duplicates
+                                        if Answer.objects.filter(user=user, question=question_obj, choice=choice_obj).count() != 1:
+                                            Answer.objects.filter(user=user, question=question_obj, choice=choice_obj).delete()
+                                            Answer.objects.get_or_create(user=user, question=question_obj, choice=choice_obj)
+
                                         messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
                                     else:
                                         messages.error(request, "You have voted on too many options for {}".format(question_obj))
