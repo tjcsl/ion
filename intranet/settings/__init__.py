@@ -773,6 +773,8 @@ REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
 
+EIGHTH_COORDINATOR_NAME = "Laura Slonina"
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 
