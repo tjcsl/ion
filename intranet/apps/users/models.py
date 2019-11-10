@@ -2,7 +2,7 @@
 import logging
 from base64 import b64encode
 from datetime import datetime, timedelta
-from typing import Collection, Optional, Union
+from typing import Collection, Dict, Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
@@ -41,14 +41,14 @@ class UserManager(DjangoUserManager):
 
     """
 
-    def user_with_student_id(self, student_id):
+    def user_with_student_id(self, student_id: int) -> Optional["get_user_model()"]:
         """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
         results = User.objects.filter(student_id=student_id)
         if len(results) == 1:
             return results.first()
         return None
 
-    def user_with_ion_id(self, student_id):
+    def user_with_ion_id(self, student_id: int) -> Optional["get_user_model()"]:
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
@@ -57,7 +57,7 @@ class UserManager(DjangoUserManager):
             return results.first()
         return None
 
-    def users_in_year(self, year):
+    def users_in_year(self, year: int) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
@@ -103,7 +103,7 @@ class UserManager(DjangoUserManager):
             properties__parent_show_birthday=True,
         )
 
-    def get_students(self):
+    def get_students(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
         users = User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
         users = users.exclude(id__in=EXTRA)
@@ -132,7 +132,9 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers().order_by("last_name", "first_name")
 
-    def exclude_from_search(self, existing_queryset=None):
+    def exclude_from_search(
+        self, existing_queryset: Optional[Union[Collection["get_user_model()"], QuerySet]] = None
+    ) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
 
@@ -199,22 +201,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     @staticmethod
-    def get_signage_user():
+    def get_signage_user() -> "User":
         return User(id=99999)
 
     @property
-    def address(self):
+    def address(self) -> Optional["Address"]:
         return self.properties.address
 
     @property
-    def birthday(self):
+    def birthday(self) -> Optional[datetime.date]:
         return self.properties.birthday
 
     @property
-    def schedule(self):
+    def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:
         return self.properties.schedule
 
-    def member_of(self, group):
+    def member_of(self, group: Union[Group, str]) -> bool:
         """Returns whether a user is a member of a certain group.
 
         Args:
@@ -229,7 +231,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             group = group.name
         return self.groups.filter(name=group).exists()
 
-    def has_admin_permission(self, perm):
+    def has_admin_permission(self, perm: str) -> bool:
         """Returns whether a user has an admin permission (explicitly, or implied by being in the
         "admin_all" group)
 
@@ -240,7 +242,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.member_of("admin_all") or self.member_of("admin_" + perm)
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         """Return full name, e.g. Angela William.
 
         This is required for subclasses of User.
@@ -260,18 +262,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.nickname or self.first_name} {self.last_name}"
 
     @property
-    def display_name(self):
+    def display_name(self) -> str:
         return self.full_name
 
     @property
-    def last_first(self):
+    def last_first(self) -> str:
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
         """
         return "{}, {}".format(self.last_name, self.first_name) + (" ({})".format(self.nickname) if self.nickname else "")
 
     @property
-    def last_first_id(self):
+    def last_first_id(self) -> str:
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
@@ -282,7 +284,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
 
     @property
-    def last_first_initial(self):
+    def last_first_initial(self) -> str:
         """Return a name in the format of:
             Lastname, F [(Nickname)]
         """
@@ -291,7 +293,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
 
     @property
-    def short_name(self):
+    def short_name(self) -> str:
         """Return short name (first name) of a user.
 
         This is required for subclasses of User.
@@ -299,23 +301,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.first_name
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         """Return full name, e.g. Angela William."""
         return self.full_name
 
-    def get_short_name(self):
+    def get_short_name(self) -> str:
         """Get short (first) name of a user."""
         return self.short_name
 
     @property
-    def primary_email_address(self):
+    def primary_email_address(self) -> Optional[str]:
         try:
             return self.primary_email.address if self.primary_email else None
         except Email.DoesNotExist:
             return None
 
     @property
-    def tj_email(self):
+    def tj_email(self) -> str:
         """Get (or guess) a user's TJ email.
 
         If a fcps.edu or tjhsst.edu email is specified in their email
@@ -337,7 +339,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return "{}@{}".format(self.username, domain)
 
     @property
-    def non_tj_email(self):
+    def non_tj_email(self) -> Optional[str]:
         """
         Returns the user's first non-TJ email found.
 
@@ -359,7 +361,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return email.address if email else None
 
     @property
-    def notification_email(self):
+    def notification_email(self) -> str:
         """Returns the notification email.
 
         If a primary email is set, use it. Otherwise, use the first
@@ -379,7 +381,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return email.address if email and email.address else self.tj_email
 
     @property
-    def default_photo(self):
+    def default_photo(self) -> Optional[bytes]:
         """Returns default photo (in binary) that should be used
 
         Returns:
@@ -407,7 +409,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return None
 
     @property
-    def grade(self):
+    def grade(self) -> "Grade":
         """Returns the grade of a user.
 
         Returns:
@@ -417,7 +419,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return Grade(self.graduation_year)
 
     @property
-    def permissions(self):
+    def permissions(self) -> Dict[str, bool]:
         """Dynamically generate dictionary of privacy options
         """
         permissions_dict = {}
@@ -429,7 +431,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return permissions_dict
 
-    def _current_user_override(self):
+    def _current_user_override(self) -> bool:
         """Return whether the currently logged in user is a teacher, and can view all of a student's
         information regardless of their privacy settings."""
         try:
@@ -447,27 +449,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         return can_view_anyway
 
     @property
-    def ion_username(self):
+    def ion_username(self) -> str:
         return self.username
 
     @property
-    def grade_number(self):
+    def grade_number(self) -> int:
         return self.grade.number
 
     @property
-    def sex(self):
+    def sex(self) -> str:
         return "Male" if self.is_male else "Female"
 
     @property
-    def is_male(self):
+    def is_male(self) -> bool:
         return self.gender is True
 
     @property
-    def is_female(self):
+    def is_female(self) -> bool:
         return self.gender is False
 
     @property
-    def age(self):
+    def age(self) -> Optional[int]:
         """Returns a user's age, based on their birthday.
 
         Returns:
@@ -483,7 +485,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return None
 
     @property
-    def can_view_eighth(self):
+    def can_view_eighth(self) -> bool:
         """Checks if a user has the show_eighth permission.
 
         Returns:
@@ -494,7 +496,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.attribute_is_visible("show_eighth")
 
     @property
-    def can_view_phone(self):
+    def can_view_phone(self) -> bool:
         """Checks if a user has the show_telephone permission.
 
         Returns:
@@ -505,7 +507,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.attribute_is_visible("show_telephone")
 
     @property
-    def is_eighth_admin(self):
+    def is_eighth_admin(self) -> bool:
         """Checks if user is an eighth period admin.
 
         Returns:
@@ -516,7 +518,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("eighth")
 
     @property
-    def has_print_permission(self):
+    def has_print_permission(self) -> bool:
         """Checks if user has the admin permission 'printing'.
 
         Returns:
@@ -527,7 +529,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("printing")
 
     @property
-    def is_parking_admin(self):
+    def is_parking_admin(self) -> bool:
         """Checks if user has the admin permission 'parking'.
 
         Returns:
@@ -548,7 +550,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("bus")
 
     @property
-    def can_request_parking(self):
+    def can_request_parking(self) -> bool:
         """Checks if user can view the parking interface.
 
         Returns:
@@ -558,7 +560,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.grade_number >= 11 or self.is_parking_admin
 
     @property
-    def is_announcements_admin(self):
+    def is_announcements_admin(self) -> bool:
         """Checks if user is an announcements admin.
 
         Returns:
@@ -569,7 +571,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("announcements")
 
     @property
-    def is_schedule_admin(self):
+    def is_schedule_admin(self) -> bool:
         """Checks if user is a schedule admin.
 
         Returns:
@@ -580,7 +582,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("schedule")
 
     @property
-    def is_board_admin(self):
+    def is_board_admin(self) -> bool:
         """Checks if user is a board admin.
 
         Returns:
@@ -591,7 +593,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("board")
 
     @property
-    def is_teacher(self):
+    def is_teacher(self) -> bool:
         """Checks if user is a teacher.
 
         Returns:
@@ -601,7 +603,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "teacher" or self.user_type == "counselor"
 
     @property
-    def is_student(self):
+    def is_student(self) -> bool:
         """Checks if user is a student.
 
         Returns:
@@ -611,7 +613,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "student"
 
     @property
-    def is_alum(self):
+    def is_alum(self) -> bool:
         """Checks if user is an alumnus.
 
         Returns:
@@ -621,7 +623,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "alum"
 
     @property
-    def is_senior(self):
+    def is_senior(self) -> bool:
         """Checks if user is a student in Grade 12.
 
         Returns:
@@ -631,7 +633,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_student and self.grade_number == 12
 
     @property
-    def is_eighthoffice(self):
+    def is_eighthoffice(self) -> bool:
         """Checks if user is an Eighth Period office user.
 
         This is currently hardcoded, but is meant to be used instead
@@ -644,7 +646,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.id == 9999
 
     @property
-    def is_active(self):
+    def is_active(self) -> bool:
         """Checks if the user is active.
 
         This is currently used to catch invalid logins.
@@ -654,7 +656,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return not self.username.startswith("INVALID_USER") and not self.user_locked
 
     @property
-    def is_restricted(self):
+    def is_restricted(self) -> bool:
         """Checks if user needs the restricted view of Ion
 
         This applies to users that are user_type 'user', user_type 'alum'
@@ -665,7 +667,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type in ["user", "alum", "service"]
 
     @property
-    def is_staff(self):
+    def is_staff(self) -> bool:
         """Checks if a user should have access to the Django Admin interface.
 
         This has nothing to do with staff at TJ - `is_staff`
@@ -679,7 +681,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser or self.has_admin_permission("staff")
 
     @property
-    def is_attendance_user(self):
+    def is_attendance_user(self) -> bool:
         """Checks if user is an attendance-only user.
 
         Returns:
@@ -689,7 +691,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "user"
 
     @property
-    def is_simple_user(self):
+    def is_simple_user(self) -> bool:
         """Checks if user is a simple user (e.g. eighth office user)
 
         Returns:
@@ -699,7 +701,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "simple_user"
 
     @property
-    def has_senior(self):
+    def has_senior(self) -> bool:
         try:
             self.senior
         except AttributeError:
@@ -707,7 +709,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
     @property
-    def is_attendance_taker(self):
+    def is_attendance_taker(self) -> bool:
         """Checks if user can take attendance for an eighth activity.
 
         Returns:
@@ -717,7 +719,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
 
     @property
-    def is_eighth_sponsor(self):
+    def is_eighth_sponsor(self) -> bool:
         """Determine whether the given user is associated with an.
 
         :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
@@ -727,7 +729,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     @property
-    def startpage(self):
+    def startpage(self) -> Optional[str]:
         return "eighth" if self.is_simple_user else None
 
     @property
@@ -791,11 +793,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return sp
 
-    def has_unvoted_polls(self):
+    def has_unvoted_polls(self) -> bool:
         now = timezone.localtime()
         return Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now).exclude(question__answer__user=self).exists()
 
-    def signed_up_today(self):
+    def signed_up_today(self) -> bool:
         if not self.is_student:
             return True
 
@@ -827,7 +829,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             not EighthBlock.objects.filter(date__gte=today, date__lte=end_date).exclude(eighthscheduledactivity__eighthsignup_set__user=self).exists()
         )
 
-    def absence_count(self):
+    def absence_count(self) -> int:
         """Return the user's absence count.
 
         If the user has no absences
@@ -917,7 +919,7 @@ class UserProperties(models.Model):
     def __str__(self):
         return self.user.__str__()
 
-    def set_permission(self, permission, value, parent=False, admin=False):
+    def set_permission(self, permission: str, value: bool, parent: bool = False, admin: bool = False) -> bool:
         """ Sets permission for personal information.
             Returns False silently if unable to set permission.
             Returns True if successful.
@@ -941,7 +943,7 @@ class UserProperties(models.Model):
             logger.error("Error occurred setting permission %s to %s: %s", permission, value, e)
             return False
 
-    def _current_user_override(self):
+    def _current_user_override(self) -> bool:
         """Return whether the currently logged in user is a teacher, and can view all of a student's
         information regardless of their privacy settings."""
         try:
@@ -958,7 +960,7 @@ class UserProperties(models.Model):
             can_view_anyway = False
         return can_view_anyway
 
-    def is_http_request_sender(self):
+    def is_http_request_sender(self) -> bool:
         """Checks if a user the HTTP request sender (accessing own info)
 
         Used primarily to load private personal information from the
@@ -981,7 +983,7 @@ class UserProperties(models.Model):
 
         return False
 
-    def attribute_is_visible(self, permission):
+    def attribute_is_visible(self, permission: str) -> bool:
         """ Checks privacy options to see if an attribute is visible to public
         """
         try:
@@ -991,7 +993,7 @@ class UserProperties(models.Model):
         except Exception:
             logger.error("Could not retrieve permissions for %s", permission)
 
-    def attribute_is_public(self, permission):
+    def attribute_is_public(self, permission: str) -> bool:
         """ Checks if attribute is visible to public (regardless of admins status)
         """
         try:
@@ -1120,7 +1122,7 @@ class Photo(models.Model):
         raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     @cached_property
-    def base64(self):
+    def base64(self) -> Optional[bytes]:
         """Returns base64 encoded binary data for a user's picture.
 
         Returns:
@@ -1157,7 +1159,7 @@ class Grade:
             self._name = "graduate"
 
     @property
-    def number(self):
+    def number(self) -> int:
         """Return the grade as a number (9-12).
 
         For use in templates since there is no nice integer casting.
@@ -1167,17 +1169,17 @@ class Grade:
         return self._number
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the grade's name (e.g. senior)"""
         return self._name
 
     @property
-    def name_plural(self):
+    def name_plural(self) -> str:
         """Return the grade's plural name (e.g. freshmen)"""
         return "freshmen" if (self._number and self._number == 9) else "{}s".format(self._name) if self._name else ""
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Return the grade's number as a string (e.g. Grade 12, Graduate)"""
         if 9 <= self._number <= 12:
             return "Grade {}".format(self._number)
@@ -1185,13 +1187,13 @@ class Grade:
             return self._name
 
     @staticmethod
-    def number_from_name(name):
+    def number_from_name(name: str) -> Optional[int]:
         if name in Grade.names:
             return Grade.names.index(name) + 9
         return None
 
     @classmethod
-    def grade_from_year(cls, graduation_year):
+    def grade_from_year(cls, graduation_year: int) -> int:
         today = timezone.localdate()
         if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
@@ -1201,7 +1203,7 @@ class Grade:
         return current_senior_year - graduation_year + 12
 
     @classmethod
-    def year_from_grade(cls, grade):
+    def year_from_grade(cls, grade: int) -> int:
         today = timezone.localdate()
         if today.month >= settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
