@@ -1,7 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import logging
 from base64 import b64encode
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Collection, Optional, Union
 
 from dateutil.relativedelta import relativedelta
@@ -808,6 +808,32 @@ class User(AbstractBaseUser, PermissionsMixin):
             return True
 
         return not EighthBlock.objects.get_blocks_today().exclude(eighthscheduledactivity__eighthsignup_set__user=self).exists()
+
+    def signed_up_next_few_days(self, *, num_days: int = 3) -> bool:
+        """If the user is a student, returns whether they are signed up for an activity during
+        all eighth period blocks in the next ``num_days`` days. Otherwise, returns ``True``.
+
+        Today is counted as a day, so ``signed_up_few_next_day(num_days=1)`` is equivalent to
+        ``signed_up_today()``.
+
+        Args:
+            num_days: The number of days (including today) on which to search for blocks during
+                which the user is signed up.
+
+        Returns:
+            If the user is a student, returns whether they are signed up for an activity during
+            all eighth period blocks in the next ``num_days`` days. Otherwise, returns ``True``.
+
+        """
+        if not self.is_student:
+            return True
+
+        today = timezone.localdate()
+        end_date = today + timedelta(days=num_days - 1)
+
+        return (
+            not EighthBlock.objects.filter(date__gte=today, date__lte=end_date).exclude(eighthscheduledactivity__eighthsignup_set__user=self).exists()
+        )
 
     def absence_count(self):
         """Return the user's absence count.

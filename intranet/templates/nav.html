@@ -13,7 +13,7 @@
                 <a href="{% url 'eighth_signup' %}">
                     <div class="nav-alert-container">
                         <i class="nav-icon eighth-icon"></i>
-                        {% if not request.user.signed_up_today %}
+                        {% if not request.user.signed_up_next_few_days %}
                         <i class="fas fa-exclamation-circle nav-alert" style="right: 18px"></i>
                         {% endif %}
                     </div>
@@ -31,7 +31,7 @@
                 <a href="{% if request.user.is_eighth_admin %}{% url 'eighth_admin_dashboard' %}{% else %}{% url 'eighth_redirect' %}{% endif %}">
                     <div class="nav-alert-container">
                         <i class="nav-icon eighth-icon"></i>
-                        {% if not request.user.signed_up_today %}
+                        {% if not request.user.signed_up_next_few_days %}
                         <i class="fas fa-exclamation-circle nav-alert"></i>
                         {% endif %}
                     </div>
