@@ -699,16 +699,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "simple_user"
 
     @property
-    def male(self):
-        """Return if the user is male."""
-        return self.is_male
-
-    @property
-    def female(self):
-        """Return if the user is female."""
-        return self.is_female
-
-    @property
     def has_senior(self):
         try:
             self.senior
