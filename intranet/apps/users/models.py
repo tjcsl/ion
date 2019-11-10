@@ -854,7 +854,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
 
     def __str__(self):
-        return self.username or self.ion_username or self.id
+        return self.username or self.ion_username or str(self.id)
 
     def __int__(self):
         return self.id
