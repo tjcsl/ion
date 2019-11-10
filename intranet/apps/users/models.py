@@ -350,8 +350,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         tj_email = self.tj_email
-        if self.primary_email_address and self.primary_email_address.lower() != tj_email.lower():
-            return self.primary_email_address
+        primary_email_address = self.primary_email_address
+
+        if primary_email_address and primary_email_address.lower() != tj_email.lower():
+            return primary_email_address
 
         email = self.emails.exclude(address__iexact=tj_email).first()
         return email.address if email else None
@@ -369,8 +371,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        if self.primary_email_address:
-            return self.primary_email_address
+        primary_email_address = self.primary_email_address
+        if primary_email_address:
+            return primary_email_address
 
         email = self.emails.first()
         return email.address if email and email.address else self.tj_email
