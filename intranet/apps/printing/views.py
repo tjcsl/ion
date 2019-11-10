@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import tempfile
+from typing import List, Optional
 
 import magic
 
@@ -24,7 +25,7 @@ class InvalidInputPrintingError(Exception):
     """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message."""
 
 
-def get_printers():
+def get_printers() -> List[str]:
     """ Returns the list of available printers.
 
     This requires that a CUPS client be configured on the server.
@@ -63,7 +64,7 @@ def get_printers():
         return names
 
 
-def convert_soffice(tmpfile_name):
+def convert_soffice(tmpfile_name: str) -> Optional[str]:
     """ Converts a doc or docx to a PDF with soffice.
 
     Args:
@@ -92,7 +93,7 @@ def convert_soffice(tmpfile_name):
     return None
 
 
-def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
+def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> Optional[str]:
     new_name = "{}.pdf".format(tmpfile_name)
     try:
         subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
@@ -106,7 +107,7 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     return None
 
 
-def get_numpages(tmpfile_name):
+def get_numpages(tmpfile_name: str) -> int:
     try:
         output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
@@ -137,7 +138,7 @@ EXTRA_MAGIC_FILES = {"application/zip": ["msooxml"]}
 GENERIC_MIMETYPES = {"application/octet-stream"}
 
 
-def get_mimetype(tmpfile_name):
+def get_mimetype(tmpfile_name: str) -> str:
     mime = magic.Magic(mime=True)
     mimetype = mime.from_file(tmpfile_name)
 
@@ -152,7 +153,7 @@ def get_mimetype(tmpfile_name):
     return mimetype
 
 
-def convert_file(tmpfile_name, orig_fname):
+def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     detected = get_mimetype(tmpfile_name)
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
@@ -181,7 +182,7 @@ def convert_file(tmpfile_name, orig_fname):
     raise InvalidInputPrintingError("Invalid file type {}".format(detected))
 
 
-def check_page_range(page_range, max_pages):
+def check_page_range(page_range, max_pages) -> Optional[int]:
     """Returns the number of pages in the range, or None if it is an invalid range."""
     pages = 0
     try:
