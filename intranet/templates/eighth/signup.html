@@ -3,6 +3,7 @@
 {% load math %}
 {% load strings %}
 {% load pipeline %}
+{% load tz %}
 
 
 {% comment %}
@@ -380,8 +381,9 @@
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
                                             <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
-                                                <span class="block-letter{% if b.current_waitlist %} waitlist{% endif %}"{% if b.block_letter_width %} style="width: {{ b.block_letter_width }}px"{% endif %}>
+                                                <span class="block-letter{% if b.current_waitlist %} waitlist{% endif %}" style="{% if b.block_letter_width %}width: {{ b.block_letter_width }}px; {% endif %} position: relative;">
                                                     {{ b.block_letter }}
+                                                    <i class="fas fa-exclamation-circle" style="color: #C22; position: absolute; right: -7px; top: -7px;{% if b.current_signup or not b.within_few_days %} display: none;{% endif %}"></i>
                                                 </span>
                                                 {% if b.locked %}
                                                     <i class="fas fa-lock" title="The block is locked."></i>

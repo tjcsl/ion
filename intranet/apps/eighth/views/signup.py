@@ -1,3 +1,4 @@
+import datetime
 import logging
 import time
 
@@ -9,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from ....utils.helpers import is_entirely_digit
@@ -130,6 +132,8 @@ def eighth_signup_view(request, block_id=None):
         waitlists = EighthWaitlist.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_waitlist_map = {w.scheduled_activity.block.id: w.scheduled_activity for w in waitlists}
 
+        today = timezone.localdate()
+
         for b in surrounding_blocks:
             info = {
                 "id": b.id,
@@ -139,6 +143,7 @@ def eighth_signup_view(request, block_id=None):
                 "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
                 "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
                 "current_waitlist": getattr(block_waitlist_map.get(b.id, {}), "activity", None),
+                "within_few_days": b.date >= today and b.date <= today + datetime.timedelta(days=2),
                 "locked": b.locked,
             }
 
