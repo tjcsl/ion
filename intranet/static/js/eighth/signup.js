@@ -225,6 +225,25 @@ $(function() {
                 var activity = activityModels.get(aid);
 
                 if (response.indexOf("added to waitlist") === -1) {
+                    // If:
+                    // - The signup succeeded
+                    // - The user is signing themselves up
+                    // - They have less then 40 minutes until signups close
+                    // - They are not going to be redirected when they finish signing up
+                    // - They are not already signed up for an activity ('.block.active-block .selected-activity .no-activity-selected' exists)
+                    // Then ask them to sign up sooner.
+                    if(response.toLowerCase().indexOf("successfully signed up") != -1
+                       && window.isSelfSignup
+                       && window.signupTime && window.signupTime - new Date() < 40 * 60 * 1000
+                       && !window.next_url
+                       && $(".block.active-block .selected-activity .no-activity-selected").length) {
+                        Messenger().info({
+                            message: 'In the future, please sign up for eighth period activities sooner.',
+                            hideAfter: 5,
+                            showCloseButton: false
+                        });
+                    }
+
                     if (!activity.attributes.both_blocks) {
                         $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                         $(".current-day .both-blocks").removeClass("both-blocks");
