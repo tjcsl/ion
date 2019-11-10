@@ -82,14 +82,14 @@ def convert_soffice(tmpfile_name):
         )
     except subprocess.CalledProcessError as e:
         logger.error("Could not run soffice command (returned %d): %s", e.returncode, e.output)
-        return False
+        return None
 
     if " -> " in output and " using " in output:  # pylint: disable=unsupported-membership-test; Pylint is wrong
         fileout = output.split(" -> ", 2)[1]
         fileout = fileout.split(" using ", 1)[0]
         return fileout
 
-    return False
+    return None
 
 
 def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
@@ -98,12 +98,12 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
         subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run %s command (returned %d): %s", cmdname, e.returncode, e.output)
-        return False
+        return None
 
     if os.path.isfile(new_name):
         return new_name
 
-    return False
+    return None
 
 
 def get_numpages(tmpfile_name):
@@ -182,32 +182,32 @@ def convert_file(tmpfile_name, orig_fname):
 
 
 def check_page_range(page_range, max_pages):
-    """Returns the number of pages in the range, or False if it is an invalid range."""
+    """Returns the number of pages in the range, or None if it is an invalid range."""
     pages = 0
     try:
         for single_range in page_range.split(","):  # check all ranges separated by commas
             if "-" in single_range:
                 if single_range.count("-") > 1:
-                    return False
+                    return None
 
                 range_low, range_high = map(int, single_range.split("-"))
 
                 # check in page range
                 if range_low <= 0 or range_high <= 0 or range_low > max_pages or range_high > max_pages:
-                    return False
+                    return None
 
                 if range_low > range_high:  # check lower bound <= upper bound
-                    return False
+                    return None
 
                 pages += range_high - range_low + 1
             else:
                 single_range = int(single_range)
                 if single_range <= 0 or single_range > max_pages:  # check in page range
-                    return False
+                    return None
 
                 pages += 1
     except ValueError:  # catch int parse fail
-        return False
+        return None
     return pages
 
 
