@@ -385,6 +385,78 @@ class UserTest(IonTestCase):
         block.delete()
         act.delete()
 
+    def test_signed_up_next_few_days(self):
+        user = self.login()
+        user.user_type = "student"
+        user.save()
+
+        EighthBlock.objects.all().delete()
+
+        act = EighthActivity.objects.create(name="Test activity 1")
+
+        today = timezone.localdate()
+
+        self.assertTrue(user.signed_up_next_few_days())
+        self.assertTrue(user.signed_up_next_few_days(num_days=3))
+        self.assertTrue(user.signed_up_next_few_days(num_days=2))
+        self.assertTrue(user.signed_up_next_few_days(num_days=1))
+
+        for d in [3, -1]:
+            EighthScheduledActivity.objects.create(
+                activity=act, block=EighthBlock.objects.create(date=today + datetime.timedelta(days=d), block_letter="A")
+            )
+
+            self.assertTrue(user.signed_up_next_few_days())
+            self.assertTrue(user.signed_up_next_few_days(num_days=3))
+            self.assertTrue(user.signed_up_next_few_days(num_days=2))
+            self.assertTrue(user.signed_up_next_few_days(num_days=1))
+
+        for d in [2, 1, 0]:
+            schact_a = EighthScheduledActivity.objects.create(
+                activity=act, block=EighthBlock.objects.create(date=today + datetime.timedelta(days=d), block_letter="A")
+            )
+
+            self.assertFalse(user.signed_up_next_few_days())
+            for j in range(d + 1, 5):
+                self.assertFalse(user.signed_up_next_few_days(num_days=j))
+            for j in range(1, d + 1):
+                self.assertTrue(user.signed_up_next_few_days(num_days=j))
+
+            EighthSignup.objects.create(user=user, scheduled_activity=schact_a)
+
+            self.assertTrue(user.signed_up_next_few_days())
+            self.assertTrue(user.signed_up_next_few_days(num_days=3))
+            self.assertTrue(user.signed_up_next_few_days(num_days=2))
+            self.assertTrue(user.signed_up_next_few_days(num_days=1))
+
+            schact_b = EighthScheduledActivity.objects.create(
+                activity=act, block=EighthBlock.objects.create(date=today + datetime.timedelta(days=d), block_letter="B")
+            )
+
+            self.assertFalse(user.signed_up_next_few_days())
+            for j in range(d + 1, 5):
+                self.assertFalse(user.signed_up_next_few_days(num_days=j))
+            for j in range(1, d + 1):
+                self.assertTrue(user.signed_up_next_few_days(num_days=j))
+
+            EighthSignup.objects.create(user=user, scheduled_activity=schact_b)
+
+            self.assertTrue(user.signed_up_next_few_days())
+            self.assertTrue(user.signed_up_next_few_days(num_days=3))
+            self.assertTrue(user.signed_up_next_few_days(num_days=2))
+            self.assertTrue(user.signed_up_next_few_days(num_days=1))
+
+        EighthBlock.objects.all().delete()
+
+        # Teachers are never "not signed up"
+        user.user_type = "teacher"
+        user.save()
+        EighthScheduledActivity.objects.create(activity=act, block=EighthBlock.objects.create(date=today, block_letter="A"))
+        self.assertTrue(user.signed_up_next_few_days())
+        self.assertTrue(user.signed_up_next_few_days(num_days=3))
+        self.assertTrue(user.signed_up_next_few_days(num_days=2))
+        self.assertTrue(user.signed_up_next_few_days(num_days=1))
+
     def test_tj_email_non_tj_email(self):
         user = self.login()
         user.primary_email = None
