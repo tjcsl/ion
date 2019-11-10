@@ -282,6 +282,21 @@ $(function() {
 
                     $(".active-block.cancelled").removeClass("cancelled");
 
+                    if (!activity.attributes.both_blocks) {
+                        $(".current-day .blocks a[data-bid='" + bid + "'] .fa-exclamation-circle").css("display", "none");
+                        $(".current-day .blocks a[data-bid!='" + bid + "'] .fa-exclamation-circle").each(function() {
+                            if($(this).closest(".block").find(".selected-activity .no-activity-selected").length) {
+                                $(this).css("display", "");
+                            }
+                            else {
+                                $(this).css("display", "none");
+                            }
+                        });
+                    } else {
+                        $(".current-day .block-letter .fa-exclamation-circle").css("display", "none");
+                    }
+
+
                     var selectedActivity = activityModels.filter(function(a) {
                         return a.attributes.selected === true
                     });
