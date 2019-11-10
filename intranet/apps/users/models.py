@@ -325,7 +325,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        email = self.emails.filter(Q(address__endswith="@fcps.edu") | Q(address__endswith="@tjhsst.edu")).first()
+        email = self.emails.filter(Q(address__iendswith="@fcps.edu") | Q(address__iendswith="@tjhsst.edu")).first()
         if email is not None:
             return email.address
 
@@ -350,8 +350,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         tj_email = self.tj_email
-
-        if self.primary_email_address and self.primary_email_address != tj_email:
+        if self.primary_email_address and self.primary_email_address.lower() != tj_email.lower():
             return self.primary_email_address
 
         email = self.emails.exclude(address__iexact=tj_email).first()
