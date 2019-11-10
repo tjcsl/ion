@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simple_history.models &#8212; TJ Intranet v3 (Build #5500) documentation</title>
+    <title>simple_history.models &#8212; TJ Intranet v3 (Build #5511) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -656,7 +656,9 @@
 <span class="k">def</span> <span class="nf">transform_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Customize field appropriately for use in historical model&quot;&quot;&quot;</span>
     <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">BigAutoField</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BigIntegerField</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">):</span>
         <span class="n">field</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">):</span>

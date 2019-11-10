@@ -155,8 +155,6 @@ This package is a Django app that supports automatic or manual queryset caching 
 
 It is used for queryset caching into a Redis databse.
 
-NEEDSRELEASE
-
 LICENSE: 3-clause BSD
 
 django-cors-headers
@@ -254,8 +252,6 @@ https://github.com/korfuri/django-prometheus
 This package is a Django app that provides support for exporting basic monitoring metrics from Django.
 
 It is used to export prometheus metrics at ``/prometheus/metrics``.
-
-NEEDSRELEASE
 
 LICENSE: Apache License 2.0
 
