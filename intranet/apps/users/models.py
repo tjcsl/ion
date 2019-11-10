@@ -476,11 +476,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             integer
 
         """
-        date = datetime.today().date()
-
-        b = self.birthday
-        if b:
-            return int((date - b).days / 365)
+        birthday = self.birthday
+        if birthday:
+            return (datetime.today().date() - birthday).days // 365
 
         return None
 
