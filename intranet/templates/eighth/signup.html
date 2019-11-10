@@ -67,6 +67,8 @@
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
         window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        window.signupTime = new Date({{ active_block.date|date:'Y,m-1,j' }},{{ active_block.signup_time|time:'G,i' }});
+        window.isSelfSignup = {% if request.user == user %}true{% else %}false{% endif %};
         window.currentWaitlist = false;
         var pn = location.pathname.substring(7);
         window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
