@@ -61,7 +61,7 @@ class UserManager(DjangoUserManager):
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
-    def user_with_name(self, given_name: Optional[str] = None, last_name: Optional[str] = None) -> "User":
+    def user_with_name(self, given_name: Optional[str] = None, last_name: Optional[str] = None) -> "User":  # pylint: disable=unsubscriptable-object
         """Get a unique user object by given name (first/nickname) and/or last name.
 
         Args:
@@ -133,7 +133,7 @@ class UserManager(DjangoUserManager):
         return self.get_teachers().order_by("last_name", "first_name")
 
     def exclude_from_search(
-        self, existing_queryset: Optional[Union[Collection["get_user_model()"], QuerySet]] = None
+        self, existing_queryset: Optional[Union[Collection["get_user_model()"], QuerySet]] = None  # pylint: disable=unsubscriptable-object
     ) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
@@ -235,7 +235,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.birthday
 
     @property
-    def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:
+    def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the ``Section`` objects representing the classes this student is
         in, or ``None`` if the current user does not have permission to list this student's classes.
 
