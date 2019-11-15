@@ -1691,7 +1691,7 @@ class EighthSignupManager(Manager):
 
         signup = self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
 
-        if EighthSignup.objects.exclude(pk=signup.pk).filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
+        if EighthSignup.objects.exclude(pk=signup.pk).filter(user=user, scheduled_activity__block=scheduled_activity.block).nocache().exists():
             logger.error(
                 "Duplicate signup after creating signup %d to sign up user %d in activity %d, block %d, scheduled activity %d; deleting",
                 self.id,
@@ -1766,7 +1766,7 @@ class EighthSignup(AbstractBaseEighthModel):
     archived_was_absent = models.BooleanField(default=False, blank=True)
 
     def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
-        if self.has_conflict():
+        if self.has_conflict(nocache=True):
             logger.error(
                 "Duplicate signup while saving signup %d for user %d in activity %d, block %d, scheduled activity %d",
                 self.id,
@@ -1786,17 +1786,24 @@ class EighthSignup(AbstractBaseEighthModel):
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
-        if self.has_conflict():
+        if self.has_conflict(nocache=True):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
-    def has_conflict(self) -> bool:
+    def has_conflict(self, nocache: bool = False) -> bool:
         """Returns True if another EighthSignup object exists for the same user in the same block.
+
+        Args:
+            nocache: Whether to explicitly disable caching for this check.
 
         Returns:
             Whether there is another EighthSignup for the same user in the same block.
 
         """
-        return EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).exists()
+        q = EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block)
+        if nocache:
+            q = q.nocache()
+
+        return q.exists()
 
     def remove_signup(self, user: "get_user_model()" = None, force: bool = False, dont_run_waitlist: bool = False) -> str:
         """Attempts to remove the EighthSignup if the user has permission to do so.
