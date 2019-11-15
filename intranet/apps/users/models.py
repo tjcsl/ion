@@ -727,10 +727,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     @property
-    def startpage(self) -> Optional[str]:
-        return "eighth" if self.is_simple_user else None
-
-    @property
     def frequent_signups(self):
         """Return a QuerySet of activity id's and counts for the activities that a given user
         has signed up for more than `settings.SIMILAR_THRESHOLD` times"""
