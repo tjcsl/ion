@@ -1080,7 +1080,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         capacity = self.get_true_capacity()
         return capacity != -1 and self.eighthsignup_set.count() > capacity
 
-    def is_too_early_to_signup(self, now: datetime.datetime = None) -> bool:
+    def is_too_early_to_signup(self, now: Optional[datetime.datetime] = None) -> bool:
         """Returns whether it is too early to sign up for the activity
         if it is a presign.
 
