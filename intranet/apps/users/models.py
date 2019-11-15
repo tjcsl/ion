@@ -202,29 +202,59 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     def get_signage_user() -> "User":
+        """Returns the user used to authenticate signage displays
+
+        Returns:
+            The user used to authenticate signage displays
+
+        """
         return User(id=99999)
 
     @property
     def address(self) -> Optional["Address"]:
+        """Returns the ``Address`` object representing this user's address, or ``None`` if it is not
+        set or the current user does not have permission to access it.
+
+        Returns:
+            The ``Address`` representing this user's address, or ``None`` if that is unavailable to
+            the current user.
+
+        """
         return self.properties.address
 
     @property
     def birthday(self) -> Optional[datetime.date]:
+        """Returns a ``datetime.date`` representing this user's birthday, or ``None`` if it is not
+        set or the current user does not have permission to access it.
+
+        Returns:
+            A ``datetime.date`` representing this user's birthday, or ``None`` if it is not set or
+            the current user does not have permission to access it.
+
+        """
         return self.properties.birthday
 
     @property
     def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:
+        """Returns a QuerySet of the ``Section`` objects representing the classes this student is
+        in, or ``None`` if the current user does not have permission to list this student's classes.
+
+        Returns:
+            Returns a QuerySet of the ``Section`` objects representing the classes this student is
+            in, or ``None`` if the current user does not have permission to list this student's
+            classes.
+
+        """
         return self.properties.schedule
 
     def member_of(self, group: Union[Group, str]) -> bool:
         """Returns whether a user is a member of a certain group.
 
         Args:
-            group
-                The name of a group (string) or a group object
+            group: Either the name of a group or a ``Group`` object.
 
         Returns:
-            Boolean
+            Whether the user is a member of the given group.
 
         """
         if isinstance(group, Group):
@@ -235,8 +265,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns whether a user has an admin permission (explicitly, or implied by being in the
         "admin_all" group)
 
+        Args:
+            perm: The admin permission to check for.
+
         Returns:
-            Boolean
+            Whether the user has the given admin permission (either explicitly or implicitly)
 
         """
         return self.member_of("admin_all") or self.member_of("admin_" + perm)
@@ -246,6 +279,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return full name, e.g. Angela William.
 
         This is required for subclasses of User.
+
+        Returns:
+            The user's full name (first + " " + last).
 
         """
         return "{} {}".format(self.first_name, self.last_name)
@@ -263,6 +299,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def display_name(self) -> str:
+        """Returns ``self.full_name``.
+
+        Returns:
+            The user's full name.
+
+        """
         return self.full_name
 
     @property
@@ -298,15 +340,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         This is required for subclasses of User.
 
+        Returns:
+            The user's fist name.
+
         """
         return self.first_name
 
     def get_full_name(self) -> str:
-        """Return full name, e.g. Angela William."""
+        """Return full name, e.g. Angela William.
+
+        Returns:
+            The user's full name (see ``full_name``).
+
+        """
         return self.full_name
 
     def get_short_name(self) -> str:
-        """Get short (first) name of a user."""
+        """Get short (first) name of a user.
+
+        Returns:
+            The user's first name (see ``short_name`` and ``first_name``).
+
+        """
         return self.short_name
 
     @property
@@ -325,6 +380,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         proper email suffix, depending on whether they are a student or
         teacher.
 
+        Returns:
+            The user's found or guessed FCPS/TJ email address.
+
         """
 
         email = self.emails.filter(Q(address__iendswith="@fcps.edu") | Q(address__iendswith="@tjhsst.edu")).first()
@@ -341,14 +399,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def non_tj_email(self) -> Optional[str]:
         """
-        Returns the user's first non-TJ email found.
+        Returns the user's first non-TJ email found, or None if none is found.
 
         If a user has a primary email set and it is not their TJ email,
         use that. Otherwise, use the first email found that is not their
         TJ email.
 
         Returns:
-            The first non-TJ email found for a user.
+            The first non-TJ email found for a user, or None if no such email is found.
 
         """
         tj_email = self.tj_email
@@ -369,7 +427,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         TJ email.
 
         Returns:
-            A user's notification email address
+            A user's notification email address.
 
         """
 
@@ -385,7 +443,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns default photo (in binary) that should be used
 
         Returns:
-            Binary data
+            The binary representation of the user's default photo.
 
         """
         preferred = self.preferred_photo
@@ -413,14 +471,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns the grade of a user.
 
         Returns:
-            Grade object
+            A Grade object representing the uset's current grade.
 
         """
         return Grade(self.graduation_year)
 
     @property
     def permissions(self) -> Dict[str, bool]:
-        """Dynamically generate dictionary of privacy options
+        """Dynamically generate dictionary of privacy options.
+
+        Returns:
+            A dictionary mapping the name of each privacy option to a boolean indicating whether it
+            is enabled.
+
         """
         permissions_dict = {}
 
@@ -432,8 +495,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return permissions_dict
 
     def _current_user_override(self) -> bool:
-        """Return whether the currently logged in user is a teacher, and can view all of a student's
-        information regardless of their privacy settings."""
+        """Return whether the currently logged in user is a teacher or eighth admin, and can view
+        all of a student's information regardless of their privacy settings.
+
+        Returns:
+            Whether the user has permissions to view all of their information regardless of their
+            privacy settings.
+
+        """
         try:
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
@@ -450,22 +519,53 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def ion_username(self) -> str:
+        """Returns this user's username.
+
+        Returns:
+            This user's username (see ``username``).
+
+        """
         return self.username
 
     @property
     def grade_number(self) -> int:
+        """Returns the number of the grade this user is currently in (9, 10, 11, or 12 for
+        students).
+
+        Returns:
+            The number of the grade this user is currently in.
+
+        """
         return self.grade.number
 
     @property
     def sex(self) -> str:
+        """Returns "Male" if this user is male, "Female" otherwise.
+
+        Returns:
+            "Male" if this user is male, "Female" otherwise.
+
+        """
         return "Male" if self.is_male else "Female"
 
     @property
     def is_male(self) -> bool:
+        """Returns whether the user is male.
+
+        Returns:
+            Whether the user is male.
+
+        """
         return self.gender is True
 
     @property
     def is_female(self) -> bool:
+        """Returns whether the user is female.
+
+        Returns:
+            Whether the user is female.
+
+        """
         return self.gender is False
 
     @property
@@ -473,7 +573,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns a user's age, based on their birthday.
 
         Returns:
-            integer
+            The user's age as an integer, or None if their birthday is not set.
 
         """
         birthday = self.birthday
@@ -487,7 +587,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if a user has the show_eighth permission.
 
         Returns:
-            Boolean
+            Whether this user has made their eighth period signups public.
 
         """
 
@@ -498,7 +598,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if a user has the show_telephone permission.
 
         Returns:
-            Boolean
+            Whether this user has made their phone number public.
 
         """
 
@@ -509,7 +609,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is an eighth period admin.
 
         Returns:
-            Boolean
+            Whether this user is an eighth period admin.
 
         """
 
@@ -520,7 +620,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user has the admin permission 'printing'.
 
         Returns:
-            Boolean
+            Whether this user is a printing administrator.
 
         """
 
@@ -531,7 +631,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user has the admin permission 'parking'.
 
         Returns:
-            Boolean
+            Whether this user is a parking administrator.
 
         """
 
@@ -552,7 +652,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user can view the parking interface.
 
         Returns:
-            Boolean
+            Whether this user can view the parking interface and request a parking spot.
 
         """
         return self.grade_number >= 11 or self.is_parking_admin
@@ -562,7 +662,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is an announcements admin.
 
         Returns:
-            Boolean
+            Whether this user is an announcement admin.
 
         """
 
@@ -573,7 +673,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a schedule admin.
 
         Returns:
-            Boolean
+            Whether this user is a schedule admin.
 
         """
 
@@ -584,7 +684,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a board admin.
 
         Returns:
-            Boolean
+            Whether this user is a board admin.
 
         """
 
@@ -595,7 +695,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a teacher.
 
         Returns:
-            Boolean
+            Whether this user is a teacher.
 
         """
         return self.user_type == "teacher" or self.user_type == "counselor"
@@ -605,7 +705,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a student.
 
         Returns:
-            Boolean
+            Whether this user is a student.
 
         """
         return self.user_type == "student"
@@ -615,7 +715,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is an alumnus.
 
         Returns:
-            Boolean
+            Whether this user is an alumnus.
 
         """
         return self.user_type == "alum"
@@ -625,7 +725,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a student in Grade 12.
 
         Returns:
-            Boolean
+            Whether this user is a senior.
 
         """
         return self.is_student and self.grade_number == 12
@@ -638,7 +738,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         of user.id == 9999 or user.username == "eighthoffice".
 
         Returns:
-            Boolean
+            Whether this user is an Eighth Period office user.
 
         """
         return self.id == 9999
@@ -648,6 +748,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if the user is active.
 
         This is currently used to catch invalid logins.
+
+        Returns:
+            Whether the user is "active" -- i.e. their account is not locked.
 
         """
 
@@ -659,6 +762,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         This applies to users that are user_type 'user', user_type 'alum'
         or user_type 'service'
+
+        Returns:
+            Whether this user should see a restricted view of Ion.
 
         """
 
@@ -672,7 +778,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         has to be overridden to make this a valid user model.
 
         Returns:
-            Boolean
+            Whether the user should have access to the Django Admin interface.
 
         """
 
@@ -683,7 +789,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is an attendance-only user.
 
         Returns:
-            Boolean
+            Whether this user is an attendance-only user.
 
         """
         return self.user_type == "user"
@@ -693,13 +799,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if user is a simple user (e.g. eighth office user)
 
         Returns:
-            Boolean
+            Whether this user is a simple user (e.g. eighth office user).
 
         """
         return self.user_type == "simple_user"
 
     @property
     def has_senior(self) -> bool:
+        """Checks if a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the
+        current user.
+
+        Returns:
+            Whether a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the
+            current user.
+
+        """
         try:
             self.senior
         except AttributeError:
@@ -708,10 +822,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_attendance_taker(self) -> bool:
-        """Checks if user can take attendance for an eighth activity.
+        """Checks if this user can take attendance for an eighth activity.
 
         Returns:
-            Boolean
+            Whether this  user can take attendance for an eighth activity.
 
         """
         return self.is_eighth_admin or self.is_teacher or self.is_attendance_user
@@ -722,6 +836,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
         sponsoring information.
+
+        Returns:
+            Whether this user is an eighth period sponsor.
 
         """
         return EighthSponsor.objects.filter(user=self).exists()
@@ -777,8 +894,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.save(update_fields=["admin_comments"])
 
     def get_eighth_sponsor(self):
-        """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
-        associated with.
+        """Return the ``EighthSponsor`` that this user is associated with.
+
+        Returns:
+            The ``EighthSponsor`` that this user is associated with.
+
         """
         try:
             sp = EighthSponsor.objects.get(user=self)
@@ -788,10 +908,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def has_unvoted_polls(self) -> bool:
+        """Returns whether there are open polls thet this user has not yet voted in.
+
+        Returns:
+            Whether there are open polls thet this user has not yet voted in.
+
+        """
         now = timezone.localtime()
         return Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now).exclude(question__answer__user=self).exists()
 
     def signed_up_today(self) -> bool:
+        """If the user is a student, returns whether they are signed up for an activity during
+        all eighth period blocks that are scheduled today. Otherwise, returns ``True``.
+
+        Returns:
+            If the user is a student, returns whether they are signed up for an activity during
+            all eighth period blocks that are scheduled today. Otherwise, returns ``True``.
+
+        """
         if not self.is_student:
             return True
 
@@ -826,14 +960,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     def absence_count(self) -> int:
         """Return the user's absence count.
 
-        If the user has no absences
-        or is not a signup user, returns 0.
+        If the user has no absences or is not a signup user, returns 0.
+
+        Returns:
+            The number of absences this user has.
 
         """
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
     def absence_info(self):
-        """Return information about the user's absences."""
+        """Returns a ``QuerySet`` of the ``EighthSignup``s for which this user was absent.
+
+        Returns:
+            A ``QuerySet`` of the ``EighthSignup``s for which this user was absent.
+
+        """
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
     def handle_delete(self):
@@ -914,9 +1055,19 @@ class UserProperties(models.Model):
         return self.user.__str__()
 
     def set_permission(self, permission: str, value: bool, parent: bool = False, admin: bool = False) -> bool:
-        """ Sets permission for personal information.
-            Returns False silently if unable to set permission.
-            Returns True if successful.
+        """Sets permission for personal information.
+
+        Returns False silently if unable to set permission. Returns True if successful.
+
+        Args:
+            permission: The name of the permission to set.
+            value: The value to set the permission to.
+            parent: Whether to set the parent's permission instead of the student's permission. If
+                ``parent`` is ``True`` and ``value`` is ``False``, both the parent and the student's
+                permissions will be set to ``False``.
+            admin: If set to ``True``, this will allow changing the student's permission even if the
+                parent's permission is set to ``False`` (normally, this causes an error).
+
         """
         try:
             if not getattr(self, "parent_{}".format(permission)) and not parent and not admin:
@@ -939,7 +1090,13 @@ class UserProperties(models.Model):
 
     def _current_user_override(self) -> bool:
         """Return whether the currently logged in user is a teacher, and can view all of a student's
-        information regardless of their privacy settings."""
+        information regardless of their privacy settings.
+
+        Returns:
+            Whether the currently logged in user can view all of a student's information regardless
+            of their privacy settings.
+
+        """
         try:
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
@@ -962,7 +1119,7 @@ class UserProperties(models.Model):
         regardless of how the permissions are set.)
 
         Returns:
-            Boolean
+            Whether the user is the sender of the current HTTP request.
 
         """
         try:
@@ -978,7 +1135,16 @@ class UserProperties(models.Model):
         return False
 
     def attribute_is_visible(self, permission: str) -> bool:
-        """ Checks privacy options to see if an attribute is visible to public
+        """Checks privacy options to see if an attribute is visible to the user sending the current
+        HTTP request.
+
+        Args:
+            permission: The name of the permission to check.
+
+        Returns:
+            Whether the user sending the current HTTP request has permission to view the given
+            permission.
+
         """
         try:
             parent = getattr(self, "parent_{}".format(permission))
@@ -988,7 +1154,15 @@ class UserProperties(models.Model):
             logger.error("Could not retrieve permissions for %s", permission)
 
     def attribute_is_public(self, permission: str) -> bool:
-        """ Checks if attribute is visible to public (regardless of admins status)
+        """Checks if attribute is visible to public (ignoring whether the user sending the HTTP
+        request has permission to access it).
+
+        Args:
+            permission: The name of the permission to check.
+
+        Returns:
+            Whether the given permission is public.
+
         """
         try:
             parent = getattr(self, "parent_{}".format(permission))
@@ -1120,7 +1294,8 @@ class Photo(models.Model):
         """Returns base64 encoded binary data for a user's picture.
 
         Returns:
-           Base64 string, or None
+           Base 64-encoded binary data for a user's picture.
+
         """
 
         binary = self.binary
