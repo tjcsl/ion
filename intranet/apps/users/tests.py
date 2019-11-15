@@ -501,6 +501,22 @@ class UserTest(IonTestCase):
         self.assertEqual(user.non_tj_email, None)
         email_fcps.delete()
 
+    def test_male_female(self):
+        """Tests all possible values of is_male/is_female."""
+        user = self.login()
+
+        user.gender = None
+        self.assertFalse(user.is_male)
+        self.assertFalse(user.is_female)
+
+        user.gender = True
+        self.assertTrue(user.is_male)
+        self.assertFalse(user.is_female)
+
+        user.gender = False
+        self.assertFalse(user.is_male)
+        self.assertTrue(user.is_female)
+
 
 class ProfileTest(IonTestCase):
     def setUp(self):
