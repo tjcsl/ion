@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.helpers &#8212; TJ Intranet v3 (Build #5527) documentation</title>
+    <title>intranet.apps.auth.helpers &#8212; TJ Intranet v3 (Build #5542) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -128,10 +128,12 @@
   <h1>Source code for intranet.apps.auth.helpers</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">pexpect</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -173,6 +175,37 @@
     <span class="k">if</span> <span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;unable_to_set&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;unable_to_set&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_login_theme_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.helpers.get_login_theme_name">[docs]</a><span class="k">def</span> <span class="nf">get_login_theme_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get the name of the currently active login theme (e.g. &quot;snow&quot; or &quot;piday&quot;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The name of the currently active login theme.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Snow</span>
+        <span class="k">return</span> <span class="s2">&quot;snow&quot;</span>
+    <span class="k">elif</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">14</span> <span class="o">&lt;=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;piday&quot;</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">10</span> <span class="ow">and</span> <span class="mi">30</span> <span class="o">&lt;=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">and</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;halloween&quot;</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="n">LOGIN_THEMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;snow&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/snow/snow.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/snow/snow.css&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;piday&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/piday/piday.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/piday/piday.css&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;halloween&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/halloween/halloween.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/halloween/halloween.css&quot;</span><span class="p">},</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_login_theme"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.helpers.get_login_theme">[docs]</a><span class="k">def</span> <span class="nf">get_login_theme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Load a custom login theme (e.g. snow)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">LOGIN_THEMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">get_login_theme_name</span><span class="p">(),</span> <span class="p">{})</span></div>
 </pre></div>
 
     </div>
