@@ -191,13 +191,9 @@ def dark_mode_enabled(request):
         return True
 
     if request.user.is_authenticated:
-        return request.user.dark_mode_properties.dark_mode_unlocked and request.user.dark_mode_properties.dark_mode_enabled
+        return request.user.dark_mode_properties.dark_mode_enabled
     else:
         return request.COOKIES.get("dark-mode-enabled", "") == "1"
-
-
-def dark_mode_unlocked_globally():
-    return timezone.localdate() >= datetime.date(2019, 10, 30)
 
 
 def halloween_mode_enabled():

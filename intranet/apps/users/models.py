@@ -17,7 +17,7 @@ from django.utils.functional import cached_property
 
 from intranet.middleware import threadlocals
 
-from ...utils.helpers import dark_mode_unlocked_globally, is_entirely_digit
+from ...utils.helpers import is_entirely_digit
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
 from ..groups.models import Group
@@ -1021,12 +1021,7 @@ class UserDarkModeProperties(models.Model):
     """
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="dark_mode_properties", on_delete=models.CASCADE)
-    _dark_mode_unlocked = models.BooleanField(default=False)
     dark_mode_enabled = models.BooleanField(default=False)
-
-    @property
-    def dark_mode_unlocked(self):
-        return dark_mode_unlocked_globally() or self._dark_mode_unlocked
 
     def __str__(self):
         return str(self.user)
