@@ -421,7 +421,7 @@ CACHE_AGE = {
     "user_attribute": int(2 * get_month_seconds()),
     "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
-    "printers_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "printers_list": int(datetime.timedelta(minutes=10).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds()),
     "sports_school_events": int(datetime.timedelta(hours=1).total_seconds()),
 }
