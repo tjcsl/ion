@@ -298,9 +298,7 @@ def preferences_view(request):
             privacy_options_form = None
         notification_options_form = save_notification_options(request, user)
 
-        dark_mode_form = None
-        if user.dark_mode_properties.dark_mode_unlocked:
-            dark_mode_form = save_dark_mode_settings(request, user)
+        dark_mode_form = save_dark_mode_settings(request, user)
 
         for error in errors:
             messages.error(request, error)
@@ -341,9 +339,7 @@ def preferences_view(request):
         notification_options = get_notification_options(user)
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
 
-        dark_mode_form = None
-        if user.dark_mode_properties.dark_mode_unlocked:
-            dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+        dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
 
     context = {
         "phone_formset": phone_formset,

@@ -12,7 +12,7 @@ from django.utils import timezone
 
 from intranet.apps.notifications.models import NotificationConfig
 
-from ..utils.helpers import dark_mode_enabled, dark_mode_unlocked_globally
+from ..utils.helpers import dark_mode_enabled
 from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
@@ -170,7 +170,7 @@ def enable_dark_mode(request):
     """
     Export whether dark mode is enabled.
     """
-    return {"dark_mode_enabled": dark_mode_enabled(request), "dark_mode_unlocked_globally": dark_mode_unlocked_globally()}
+    return {"dark_mode_enabled": dark_mode_enabled(request)}
 
 
 def oauth_toolkit(request):
