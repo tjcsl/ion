@@ -1,6 +1,20 @@
 from django.db import models
 
 
+class PageQuerySet(models.query.QuerySet):
+    def order_properly(self) -> "models.query.QuerySet[Page]":
+        """Returns a QuerySet containing all the pages in this QuerySet, but sorted in ascending
+        order by their ``order`` field (falling back on ``id`` when the ``order``
+        fields for two pages are the same).
+
+        Returns:
+            A QuerySet containing all the pages in this QuerySet sorted by their ``order`` and
+            ``id`` fields in ascending order.
+
+        """
+        return self.order_by("order", "id")
+
+
 class Page(models.Model):
     """
         iframe: True if page is just an iframe
@@ -16,6 +30,8 @@ class Page(models.Model):
 
         signs: set of signs which display this Page
     """
+
+    objects = PageQuerySet.as_manager()
 
     name = models.CharField(max_length=50)
 
