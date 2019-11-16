@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5547) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5559) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -474,8 +474,20 @@ object the first time, the query is executed.</p>
 
 <dl class="function">
 <dt id="intranet.apps.printing.views.check_page_range">
-<code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">check_page_range</code><span class="sig-paren">(</span><em class="sig-param">page_range</em>, <em class="sig-param">max_pages</em><span class="sig-paren">)</span> &#x2192; Optional[int]<a class="reference internal" href="../_modules/intranet/apps/printing/views.html#check_page_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.check_page_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of pages in the range, or None if it is an invalid range.</p>
+<code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">check_page_range</code><span class="sig-paren">(</span><em class="sig-param">page_range: str</em>, <em class="sig-param">max_pages: int</em><span class="sig-paren">)</span> &#x2192; Optional[int]<a class="reference internal" href="../_modules/intranet/apps/printing/views.html#check_page_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.check_page_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of pages included in the range, or None if it is an invalid range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page_range</strong> – The page range as a string, such as “1-5” or “1,2,3”.</p></li>
+<li><p><strong>max_pages</strong> – The number of pages in the submitted document. If the number of pages in the
+given range exceeds this, it will be considered invalid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of pages in the range, or None if it is an invalid range.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -527,7 +539,7 @@ Otherwise, this returns an empty list.</p>
 
 <dl class="function">
 <dt id="intranet.apps.printing.views.print_job">
-<code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">print_job</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">do_print=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#print_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.print_job" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">intranet.apps.printing.views.</code><code class="sig-name descname">print_job</code><span class="sig-paren">(</span><em class="sig-param">obj: intranet.apps.printing.models.PrintJob</em>, <em class="sig-param">do_print: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#print_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.printing.views.print_job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

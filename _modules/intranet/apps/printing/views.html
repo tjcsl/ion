@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5547) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #5559) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -134,6 +134,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">magic</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk</span> <span class="k">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">messages</span>
@@ -145,6 +146,7 @@
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="k">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">..context_processors</span> <span class="k">import</span> <span class="n">_get_current_ip</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">PrintJobForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">PrintJob</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -218,19 +220,23 @@
         <span class="n">fileout</span> <span class="o">=</span> <span class="n">fileout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; using &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">fileout</span>
 
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;soffice command succeeded, but we couldn&#39;t find the file name in the output: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="convert_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf">[docs]</a><span class="k">def</span> <span class="nf">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cmdname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ps2pdf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">new_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.pdf&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run </span><span class="si">%s</span><span class="s2"> command (returned </span><span class="si">%d</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cmdname</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">new_name</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> command succeeded, but the file it was supposed to create (</span><span class="si">%s</span><span class="s2">) does not exist: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cmdname</span><span class="p">,</span> <span class="n">new_name</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -283,6 +289,11 @@
 
 <div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orig_fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+
+    <span class="n">add_breadcrumb</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="s2">&quot;printing&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Detected file type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="n">no_conversion</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">]</span>
     <span class="n">soffice_convert</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;</span><span class="p">,</span>
@@ -310,8 +321,18 @@
     <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;Invalid file type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span> <span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Returns the number of pages in the range, or None if it is an invalid range.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span> <span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns the number of pages included in the range, or None if it is an invalid range.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        page_range: The page range as a string, such as &quot;1-5&quot; or &quot;1,2,3&quot;.</span>
+<span class="sd">        max_pages: The number of pages in the submitted document. If the number of pages in the</span>
+<span class="sd">            given range exceeds this, it will be considered invalid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The number of pages in the range, or None if it is an invalid range.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pages</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">single_range</span> <span class="ow">in</span> <span class="n">page_range</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>  <span class="c1"># check all ranges separated by commas</span>
@@ -340,7 +361,7 @@
     <span class="k">return</span> <span class="n">pages</span></div>
 
 
-<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">do_print</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">PrintJob</span><span class="p">,</span> <span class="n">do_print</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="n">printer</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">printer</span>
     <span class="k">if</span> <span class="n">printer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_printers</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Printer not authorized.&quot;</span><span class="p">)</span>
@@ -360,7 +381,15 @@
     <span class="n">tmpfile_name</span> <span class="o">=</span> <span class="n">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">filebase</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">tmpfile_name</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not convert file.&quot;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error converting file to PDF for printing&quot;</span>
+
+        <span class="k">if</span> <span class="n">filebase</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.doc&quot;</span><span class="p">,</span> <span class="s2">&quot;.docx&quot;</span><span class="p">)):</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="s2">&quot;&lt;br&gt;Note: It looks like you are trying to print a Word document. Word documents don&#39;t always print correctly, so we recommend &quot;</span>
+                <span class="s2">&quot;that you convert to a PDF before printing.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -444,7 +473,8 @@
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Printing failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Printing failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="n">capture_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                     <span class="n">request</span><span class="p">,</span>
