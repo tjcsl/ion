@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </section>
-            {% for page in sign.pages.all %}
+            {% for page in sign.pages.order_properly %}
             <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %} {{ page.strip_links | yesno:"strip-links," }}" id="{{ page.pk }}">
                 {% if page.iframe %}
                 <iframe class="signage-iframe" src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
@@ -65,7 +65,7 @@
         </div>
         <nav class="signage-nav show-back">
                 <a href="#page-home" data-page="home" class="signage-home-button"><i class="fas fa-2x fa-home"></i></a>
-            {% for page in sign.pages.all %}
+            {% for page in sign.pages.order_properly %}
                 {% if page.button %}
                 {# TODO: less hacky way of detecting button type #}
                 {% if "<" in page.button %}
