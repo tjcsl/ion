@@ -19,7 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
-from ...utils.helpers import dark_mode_enabled, get_ap_week_warning, halloween_mode_enabled
+from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
@@ -27,7 +27,7 @@ from ..schedule.views import schedule_context
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
 from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
 from .forms import AuthenticateForm
-from .helpers import change_password
+from .helpers import change_password, get_login_theme
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -77,22 +77,6 @@ def get_bg_pattern(request):
     file_path = "img/patterns/dark/" if dark_mode_enabled(request) else "img/patterns/"
 
     return static(file_path + random.choice(files))
-
-
-def get_login_theme():
-    """Load a custom login theme (e.g. snow)"""
-    today = timezone.localdate()
-    if today.month == 12 or today.month == 1:
-        # Snow
-        return {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"}
-
-    if today.month == 3 and (14 <= today.day <= 16):
-        return {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"}
-
-    elif halloween_mode_enabled():
-        return {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"}
-
-    return {}
 
 
 def get_week_sports_school_events() -> Tuple[Container[Event], Container[Event]]:

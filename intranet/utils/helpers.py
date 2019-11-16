@@ -10,6 +10,7 @@ from django.conf import settings
 from django.template.loader import get_template
 from django.utils import timezone
 
+from ..apps.auth.helpers import get_login_theme_name
 from ..apps.emerg.views import get_emerg
 
 logger = logging.getLogger("intranet.settings")
@@ -183,19 +184,14 @@ def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
-    if (
-        request.resolver_match is not None
-        and (request.resolver_match.url_name == "login" or (request.resolver_match.url_name == "index" and not request.user.is_authenticated))
-        and halloween_mode_enabled()
+    if request.resolver_match is not None and (
+        request.resolver_match.url_name == "login" or (request.resolver_match.url_name == "index" and not request.user.is_authenticated)
     ):
-        return True
+        theme_name = get_login_theme_name()
+        if theme_name == "halloween":
+            return True
 
     if request.user.is_authenticated:
         return request.user.dark_mode_properties.dark_mode_enabled
     else:
         return request.COOKIES.get("dark-mode-enabled", "") == "1"
-
-
-def halloween_mode_enabled():
-    today = timezone.localdate()
-    return (today.month == 10 and 30 <= today.day <= 31) or (today.month == 11 and today.day == 1)

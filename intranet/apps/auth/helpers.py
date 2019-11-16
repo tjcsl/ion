@@ -1,9 +1,11 @@
 import logging
 import re
+from typing import Dict
 
 import pexpect
 
 from django.conf import settings
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -45,3 +47,34 @@ def change_password(form_data):
     if exitstatus == 0:
         return {"unable_to_set": False}
     return {"unable_to_set": True}
+
+
+def get_login_theme_name() -> str:
+    """Get the name of the currently active login theme (e.g. "snow" or "piday").
+
+    Returns:
+        The name of the currently active login theme.
+
+    """
+    today = timezone.localdate()
+    if today.month == 12 or today.month == 1:
+        # Snow
+        return "snow"
+    elif today.month == 3 and (14 <= today.day <= 16):
+        return "piday"
+    elif (today.month == 10 and 30 <= today.day <= 31) or (today.month == 11 and today.day == 1):
+        return "halloween"
+
+    return None
+
+
+LOGIN_THEMES = {
+    "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
+    "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
+    "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
+}
+
+
+def get_login_theme() -> Dict[str, Dict[str, str]]:
+    """Load a custom login theme (e.g. snow)"""
+    return LOGIN_THEMES.get(get_login_theme_name(), {})
