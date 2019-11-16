@@ -382,7 +382,9 @@
                                             <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
                                                 <span class="block-letter{% if b.current_waitlist %} waitlist{% endif %}" style="{% if b.block_letter_width %}width: {{ b.block_letter_width }}px; {% endif %} position: relative;">
                                                     {{ b.block_letter }}
-                                                    <i class="fas fa-exclamation-circle" style="color: #C22; position: absolute; right: -7px; top: -7px;{% if b.current_signup or not b.within_few_days %} display: none;{% endif %}"></i>
+                                                    {% if b.within_few_days %}
+                                                        <i class="fas fa-exclamation-circle" style="color: #C22; position: absolute; right: -7px; top: -7px;{% if b.current_signup %} display: none;{% endif %}"></i>
+                                                    {% endif %}
                                                 </span>
                                                 {% if b.locked %}
                                                     <i class="fas fa-lock" title="The block is locked."></i>
