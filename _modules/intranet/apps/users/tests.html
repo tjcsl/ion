@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.tests &#8212; TJ Intranet v3 (Build #5542) documentation</title>
+    <title>intranet.apps.users.tests &#8212; TJ Intranet v3 (Build #5547) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -627,7 +627,23 @@
         <span class="n">email_fcps</span> <span class="o">=</span> <span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">&quot;jsmith@fcps.edu&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span> <span class="n">email_fcps</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">non_tj_email</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">email_fcps</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div></div>
+        <span class="n">email_fcps</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="UserTest.test_male_female"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.tests.UserTest.test_male_female">[docs]</a>    <span class="k">def</span> <span class="nf">test_male_female</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests all possible values of is_male/is_female.&quot;&quot;&quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ProfileTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.tests.ProfileTest">[docs]</a><span class="k">class</span> <span class="nc">ProfileTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>

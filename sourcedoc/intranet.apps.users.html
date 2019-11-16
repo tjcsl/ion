@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5542) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5547) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -639,7 +639,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.Grade.grade_from_year">
-<em class="property">classmethod </em><code class="sig-name descname">grade_from_year</code><span class="sig-paren">(</span><em class="sig-param">graduation_year</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.grade_from_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.grade_from_year" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">grade_from_year</code><span class="sig-paren">(</span><em class="sig-param">graduation_year: int</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.grade_from_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.grade_from_year" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -669,7 +669,7 @@ In Python code you can also use int() on a Grade object.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.Grade.number_from_name">
-<em class="property">static </em><code class="sig-name descname">number_from_name</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.number_from_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.number_from_name" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">number_from_name</code><span class="sig-paren">(</span><em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; Optional[int]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.number_from_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.number_from_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -680,7 +680,7 @@ In Python code you can also use int() on a Grade object.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.Grade.year_from_grade">
-<em class="property">classmethod </em><code class="sig-name descname">year_from_grade</code><span class="sig-paren">(</span><em class="sig-param">grade</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.year_from_grade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.year_from_grade" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">year_from_grade</code><span class="sig-paren">(</span><em class="sig-param">grade: int</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/intranet/apps/users/models.html#Grade.year_from_grade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.Grade.year_from_grade" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -776,7 +776,7 @@ object the first time, the query is executed.</p>
 <dd><p>Returns base64 encoded binary data for a user’s picture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Base64 string, or None</p>
+<dd class="field-odd"><p>Base 64-encoded binary data for a user’s picture.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -962,22 +962,39 @@ custom UserManager to add table-level functionality.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.absence_count">
-<code class="sig-name descname">absence_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.absence_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.absence_count" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">absence_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.absence_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.absence_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the user’s absence count.</p>
-<p>If the user has no absences
-or is not a signup user, returns 0.</p>
+<p>If the user has no absences or is not a signup user, returns 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of absences this user has.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.absence_info">
 <code class="sig-name descname">absence_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.absence_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.absence_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return information about the user’s absences.</p>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of the <a href="#id1"><span class="problematic" id="id2">``</span></a>EighthSignup``s for which this user was absent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of the <a href="#id3"><span class="problematic" id="id4">``</span></a>EighthSignup``s for which this user was absent.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.address">
 <em class="property">property </em><code class="sig-name descname">address</code><a class="headerlink" href="#intranet.apps.users.models.User.address" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">Address</span></code> object representing this user’s address, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if it is not
+set or the current user does not have permission to access it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The <code class="docutils literal notranslate"><span class="pre">Address</span></code> representing this user’s address, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if that is unavailable to
+the current user.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.admin_comments">
@@ -992,7 +1009,7 @@ object the first time, the query is executed.</p>
 <dd><p>Returns a user’s age, based on their birthday.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>integer</p>
+<dd class="field-odd"><p>The user’s age as an integer, or None if their birthday is not set.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1114,7 +1131,15 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.birthday">
 <em class="property">property </em><code class="sig-name descname">birthday</code><a class="headerlink" href="#intranet.apps.users.models.User.birthday" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code> representing this user’s birthday, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if it is not
+set or the current user does not have permission to access it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code> representing this user’s birthday, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if it is not set or
+the current user does not have permission to access it.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.bus_route">
@@ -1157,7 +1182,7 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dd><p>Checks if user can view the parking interface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user can view the parking interface and request a parking spot.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1168,7 +1193,7 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dd><p>Checks if a user has the show_eighth permission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user has made their eighth period signups public.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1179,7 +1204,7 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dd><p>Checks if a user has the show_telephone permission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user has made their phone number public.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1253,7 +1278,7 @@ relation.</p>
 <dd><p>Returns default photo (in binary) that should be used</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Binary data</p>
+<dd class="field-odd"><p>The binary representation of the user’s default photo.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1261,7 +1286,13 @@ relation.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.display_name">
 <em class="property">property </em><code class="sig-name descname">display_name</code><a class="headerlink" href="#intranet.apps.users.models.User.display_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">self.full_name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s full name.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.eighthactivity_set">
@@ -1463,12 +1494,6 @@ many-to-one relation.</p>
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="intranet.apps.users.models.User.female">
-<em class="property">property </em><code class="sig-name descname">female</code><a class="headerlink" href="#intranet.apps.users.models.User.female" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return if the user is female.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.first_login">
 <code class="sig-name descname">first_login</code><a class="headerlink" href="#intranet.apps.users.models.User.first_login" title="Permalink to this definition">¶</a></dt>
@@ -1510,6 +1535,11 @@ has signed up for more than <cite>settings.SIMILAR_THRESHOLD</cite> times</p>
 <em class="property">property </em><code class="sig-name descname">full_name</code><a class="headerlink" href="#intranet.apps.users.models.User.full_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return full name, e.g. Angela William.</p>
 <p>This is required for subclasses of User.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s full name (first + ” ” + last).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1549,26 +1579,46 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_eighth_sponsor">
 <code class="sig-name descname">get_eighth_sponsor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_eighth_sponsor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_eighth_sponsor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <a class="reference internal" href="intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSponsor" title="intranet.apps.eighth.models.EighthSponsor"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.eighth.models.EighthSponsor</span></code></a> that a given user is
-associated with.</p>
+<dd><p>Return the <code class="docutils literal notranslate"><span class="pre">EighthSponsor</span></code> that this user is associated with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The <code class="docutils literal notranslate"><span class="pre">EighthSponsor</span></code> that this user is associated with.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_full_name">
-<code class="sig-name descname">get_full_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_full_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_full_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_full_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_full_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_full_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return full name, e.g. Angela William.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s full name (see <code class="docutils literal notranslate"><span class="pre">full_name</span></code>).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_short_name">
-<code class="sig-name descname">get_short_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_short_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_short_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_short_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_short_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_short_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get short (first) name of a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s first name (see <code class="docutils literal notranslate"><span class="pre">short_name</span></code> and <code class="docutils literal notranslate"><span class="pre">first_name</span></code>).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_signage_user">
-<em class="property">static </em><code class="sig-name descname">get_signage_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_signage_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_signage_user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="sig-name descname">get_signage_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; intranet.apps.users.models.User<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.get_signage_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.get_signage_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the user used to authenticate signage displays</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user used to authenticate signage displays</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.get_title_display">
@@ -1586,7 +1636,7 @@ associated with.</p>
 <dd><p>Returns the grade of a user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Grade object</p>
+<dd class="field-odd"><p>A Grade object representing the uset’s current grade.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1594,7 +1644,14 @@ associated with.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.grade_number">
 <em class="property">property </em><code class="sig-name descname">grade_number</code><a class="headerlink" href="#intranet.apps.users.models.User.grade_number" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the number of the grade this user is currently in (9, 10, 11, or 12 for
+students).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of the grade this user is currently in.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.graduation_year">
@@ -1627,12 +1684,15 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.has_admin_permission">
-<code class="sig-name descname">has_admin_permission</code><span class="sig-paren">(</span><em class="sig-param">perm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.has_admin_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.has_admin_permission" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">has_admin_permission</code><span class="sig-paren">(</span><em class="sig-param">perm: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.has_admin_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.has_admin_permission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether a user has an admin permission (explicitly, or implied by being in the
 “admin_all” group)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>perm</strong> – The admin permission to check for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the user has the given admin permission (either explicitly or implicitly)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1643,7 +1703,7 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dd><p>Checks if user has the admin permission ‘printing’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a printing administrator.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1651,12 +1711,26 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.has_senior">
 <em class="property">property </em><code class="sig-name descname">has_senior</code><a class="headerlink" href="#intranet.apps.users.models.User.has_senior" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checks if a <code class="docutils literal notranslate"><span class="pre">Senior</span></code> model (see <code class="docutils literal notranslate"><span class="pre">intranet.apps.seniors.models.Senior</span></code> exists for the
+current user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether a <code class="docutils literal notranslate"><span class="pre">Senior</span></code> model (see <code class="docutils literal notranslate"><span class="pre">intranet.apps.seniors.models.Senior</span></code> exists for the
+current user.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.has_unvoted_polls">
-<code class="sig-name descname">has_unvoted_polls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.has_unvoted_polls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.has_unvoted_polls" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">has_unvoted_polls</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.has_unvoted_polls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.has_unvoted_polls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether there are open polls thet this user has not yet voted in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether there are open polls thet this user has not yet voted in.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.id">
@@ -1668,13 +1742,24 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.ion_username">
 <em class="property">property </em><code class="sig-name descname">ion_username</code><a class="headerlink" href="#intranet.apps.users.models.User.ion_username" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns this user’s username.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>This user’s username (see <code class="docutils literal notranslate"><span class="pre">username</span></code>).</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.is_active">
 <em class="property">property </em><code class="sig-name descname">is_active</code><a class="headerlink" href="#intranet.apps.users.models.User.is_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the user is active.</p>
 <p>This is currently used to catch invalid logins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether the user is “active” – i.e. their account is not locked.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1683,7 +1768,7 @@ object the first time, the query is executed.</p>
 <dd><p>Checks if user is an alumnus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is an alumnus.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1694,7 +1779,7 @@ object the first time, the query is executed.</p>
 <dd><p>Checks if user is an announcements admin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is an announcement admin.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1702,10 +1787,10 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.is_attendance_taker">
 <em class="property">property </em><code class="sig-name descname">is_attendance_taker</code><a class="headerlink" href="#intranet.apps.users.models.User.is_attendance_taker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if user can take attendance for an eighth activity.</p>
+<dd><p>Checks if this user can take attendance for an eighth activity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this  user can take attendance for an eighth activity.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1716,7 +1801,7 @@ object the first time, the query is executed.</p>
 <dd><p>Checks if user is an attendance-only user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is an attendance-only user.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1727,7 +1812,7 @@ object the first time, the query is executed.</p>
 <dd><p>Checks if user is a board admin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a board admin.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1749,7 +1834,7 @@ object the first time, the query is executed.</p>
 <dd><p>Checks if user is an eighth period admin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is an eighth period admin.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1760,6 +1845,11 @@ object the first time, the query is executed.</p>
 <dd><p>Determine whether the given user is associated with an.</p>
 <p><a class="reference internal" href="intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSponsor" title="intranet.apps.eighth.models.EighthSponsor"><code class="xref py py-class docutils literal notranslate"><span class="pre">intranet.apps.eighth.models.EighthSponsor</span></code></a> and, therefore, should view activity
 sponsoring information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether this user is an eighth period sponsor.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1770,7 +1860,7 @@ sponsoring information.</p>
 of user.id == 9999 or user.username == “eighthoffice”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is an Eighth Period office user.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1778,12 +1868,24 @@ of user.id == 9999 or user.username == “eighthoffice”.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.User.is_female">
 <em class="property">property </em><code class="sig-name descname">is_female</code><a class="headerlink" href="#intranet.apps.users.models.User.is_female" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns whether the user is female.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether the user is female.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.is_male">
 <em class="property">property </em><code class="sig-name descname">is_male</code><a class="headerlink" href="#intranet.apps.users.models.User.is_male" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns whether the user is male.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether the user is male.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.is_parking_admin">
@@ -1791,7 +1893,7 @@ of user.id == 9999 or user.username == “eighthoffice”.</p>
 <dd><p>Checks if user has the admin permission ‘parking’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a parking administrator.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1802,6 +1904,11 @@ of user.id == 9999 or user.username == “eighthoffice”.</p>
 <dd><p>Checks if user needs the restricted view of Ion</p>
 <p>This applies to users that are user_type ‘user’, user_type ‘alum’
 or user_type ‘service’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether this user should see a restricted view of Ion.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1810,7 +1917,7 @@ or user_type ‘service’</p>
 <dd><p>Checks if user is a schedule admin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a schedule admin.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1821,7 +1928,7 @@ or user_type ‘service’</p>
 <dd><p>Checks if user is a student in Grade 12.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a senior.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1832,7 +1939,7 @@ or user_type ‘service’</p>
 <dd><p>Checks if user is a simple user (e.g. eighth office user)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a simple user (e.g. eighth office user).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1845,7 +1952,7 @@ or user_type ‘service’</p>
 has to be overridden to make this a valid user model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether the user should have access to the Django Admin interface.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1856,7 +1963,7 @@ has to be overridden to make this a valid user model.</p>
 <dd><p>Checks if user is a student.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a student.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1867,7 +1974,7 @@ has to be overridden to make this a valid user model.</p>
 <dd><p>Checks if user is a teacher.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether this user is a teacher.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1938,21 +2045,15 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 </dd></dl>
 
 <dl class="method">
-<dt id="intranet.apps.users.models.User.male">
-<em class="property">property </em><code class="sig-name descname">male</code><a class="headerlink" href="#intranet.apps.users.models.User.male" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return if the user is male.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="intranet.apps.users.models.User.member_of">
-<code class="sig-name descname">member_of</code><span class="sig-paren">(</span><em class="sig-param">group</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.member_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.member_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">member_of</code><span class="sig-paren">(</span><em class="sig-param">group: Union[intranet.apps.groups.models.Group, str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.member_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.member_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether a user is a member of a certain group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>group</strong> – The name of a group (string) or a group object</p>
+<dd class="field-odd"><p><strong>group</strong> – Either the name of a group or a <code class="docutils literal notranslate"><span class="pre">Group</span></code> object.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Boolean</p>
+<dd class="field-even"><p>Whether the user is a member of the given group.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2004,13 +2105,13 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.non_tj_email">
 <em class="property">property </em><code class="sig-name descname">non_tj_email</code><a class="headerlink" href="#intranet.apps.users.models.User.non_tj_email" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the user’s first non-TJ email found.</p>
+<dd><p>Returns the user’s first non-TJ email found, or None if none is found.</p>
 <p>If a user has a primary email set and it is not their TJ email,
 use that. Otherwise, use the first email found that is not their
 TJ email.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The first non-TJ email found for a user.</p>
+<dd class="field-odd"><p>The first non-TJ email found for a user, or None if no such email is found.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2024,7 +2125,7 @@ email on file. If no email addresses exist, use the user’s
 TJ email.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A user’s notification email address</p>
+<dd class="field-odd"><p>A user’s notification email address.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2140,7 +2241,13 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.permissions">
 <em class="property">property </em><code class="sig-name descname">permissions</code><a class="headerlink" href="#intranet.apps.users.models.User.permissions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dynamically generate dictionary of privacy options</p>
+<dd><p>Dynamically generate dictionary of privacy options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary mapping the name of each privacy option to a boolean indicating whether it
+is enabled.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -2349,7 +2456,16 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.schedule">
 <em class="property">property </em><code class="sig-name descname">schedule</code><a class="headerlink" href="#intranet.apps.users.models.User.schedule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a QuerySet of the <code class="docutils literal notranslate"><span class="pre">Section</span></code> objects representing the classes this student is
+in, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the current user does not have permission to list this student’s classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns a QuerySet of the <code class="docutils literal notranslate"><span class="pre">Section</span></code> objects representing the classes this student is
+in, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the current user does not have permission to list this student’s
+classes.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.section_set">
@@ -2404,13 +2520,24 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <dl class="method">
 <dt id="intranet.apps.users.models.User.sex">
 <em class="property">property </em><code class="sig-name descname">sex</code><a class="headerlink" href="#intranet.apps.users.models.User.sex" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns “Male” if this user is male, “Female” otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>“Male” if this user is male, “Female” otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.short_name">
 <em class="property">property </em><code class="sig-name descname">short_name</code><a class="headerlink" href="#intranet.apps.users.models.User.short_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return short name (first name) of a user.</p>
 <p>This is required for subclasses of User.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s fist name.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2434,13 +2561,16 @@ all eighth period blocks in the next <code class="docutils literal notranslate">
 
 <dl class="method">
 <dt id="intranet.apps.users.models.User.signed_up_today">
-<code class="sig-name descname">signed_up_today</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.signed_up_today"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.signed_up_today" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="intranet.apps.users.models.User.startpage">
-<em class="property">property </em><code class="sig-name descname">startpage</code><a class="headerlink" href="#intranet.apps.users.models.User.startpage" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">signed_up_today</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.signed_up_today"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.signed_up_today" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the user is a student, returns whether they are signed up for an activity during
+all eighth period blocks that are scheduled today. Otherwise, returns <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>If the user is a student, returns whether they are signed up for an activity during
+all eighth period blocks that are scheduled today. Otherwise, returns <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.student_id">
@@ -2511,6 +2641,11 @@ object the first time, the query is executed.</p>
 list, use that. Otherwise, append the user’s username to the
 proper email suffix, depending on whether they are a student or
 teacher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user’s found or guessed FCPS/TJ email address.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -2679,12 +2814,12 @@ to a method fails for this Manager, the call is deferred to the
 default User model manager.</p>
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.exclude_from_search">
-<code class="sig-name descname">exclude_from_search</code><span class="sig-paren">(</span><em class="sig-param">existing_queryset=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.exclude_from_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.exclude_from_search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exclude_from_search</code><span class="sig-paren">(</span><em class="sig-param">existing_queryset: Union[Collection[get_user_model()], django.db.models.query.QuerySet, None] = None</em><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.exclude_from_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.exclude_from_search" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.get_students">
-<code class="sig-name descname">get_students</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_students"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_students" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_students</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_students"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_students" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get user objects that are students (quickly).</p>
 </dd></dl>
 
@@ -2708,7 +2843,7 @@ default User model manager.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.user_with_ion_id">
-<code class="sig-name descname">user_with_ion_id</code><span class="sig-paren">(</span><em class="sig-param">student_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_ion_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_ion_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">user_with_ion_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_ion_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_ion_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a unique user object by Ion ID. (Ex. 489)</p>
 </dd></dl>
 
@@ -2732,13 +2867,13 @@ returned or if the given parameters matched more than one user.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.user_with_student_id">
-<code class="sig-name descname">user_with_student_id</code><span class="sig-paren">(</span><em class="sig-param">student_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_student_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_student_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">user_with_student_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_student_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_student_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a unique user object by FCPS student ID. (Ex. 1624472)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.users_in_year">
-<code class="sig-name descname">users_in_year</code><span class="sig-paren">(</span><em class="sig-param">year</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.users_in_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.users_in_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">users_in_year</code><span class="sig-paren">(</span><em class="sig-param">year: int</em><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.users_in_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.users_in_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of users in a specific graduation year.</p>
 </dd></dl>
 
@@ -2779,14 +2914,33 @@ returned or if the given parameters matched more than one user.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserProperties.attribute_is_public">
-<code class="sig-name descname">attribute_is_public</code><span class="sig-paren">(</span><em class="sig-param">permission</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.attribute_is_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.attribute_is_public" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if attribute is visible to public (regardless of admins status)</p>
+<code class="sig-name descname">attribute_is_public</code><span class="sig-paren">(</span><em class="sig-param">permission: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.attribute_is_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.attribute_is_public" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if attribute is visible to public (ignoring whether the user sending the HTTP
+request has permission to access it).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>permission</strong> – The name of the permission to check.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the given permission is public.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserProperties.attribute_is_visible">
-<code class="sig-name descname">attribute_is_visible</code><span class="sig-paren">(</span><em class="sig-param">permission</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.attribute_is_visible"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.attribute_is_visible" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks privacy options to see if an attribute is visible to public</p>
+<code class="sig-name descname">attribute_is_visible</code><span class="sig-paren">(</span><em class="sig-param">permission: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.attribute_is_visible"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.attribute_is_visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks privacy options to see if an attribute is visible to the user sending the current
+HTTP request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>permission</strong> – The name of the permission to check.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the user sending the current HTTP request has permission to view the given
+permission.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -2798,14 +2952,14 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserProperties.is_http_request_sender">
-<code class="sig-name descname">is_http_request_sender</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.is_http_request_sender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.is_http_request_sender" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_http_request_sender</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.is_http_request_sender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.is_http_request_sender" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if a user the HTTP request sender (accessing own info)</p>
 <p>Used primarily to load private personal information from the
 cache. (A student should see all info on his or her own profile
 regardless of how the permissions are set.)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Boolean</p>
+<dd class="field-odd"><p>Whether the user is the sender of the current HTTP request.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2901,10 +3055,22 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserProperties.set_permission">
-<code class="sig-name descname">set_permission</code><span class="sig-paren">(</span><em class="sig-param">permission</em>, <em class="sig-param">value</em>, <em class="sig-param">parent=False</em>, <em class="sig-param">admin=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.set_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.set_permission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets permission for personal information.
-Returns False silently if unable to set permission.
-Returns True if successful.</p>
+<code class="sig-name descname">set_permission</code><span class="sig-paren">(</span><em class="sig-param">permission: str</em>, <em class="sig-param">value: bool</em>, <em class="sig-param">parent: bool = False</em>, <em class="sig-param">admin: bool = False</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserProperties.set_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserProperties.set_permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets permission for personal information.</p>
+<p>Returns False silently if unable to set permission. Returns True if successful.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>permission</strong> – The name of the permission to set.</p></li>
+<li><p><strong>value</strong> – The value to set the permission to.</p></li>
+<li><p><strong>parent</strong> – Whether to set the parent’s permission instead of the student’s permission. If
+<code class="docutils literal notranslate"><span class="pre">parent</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>, both the parent and the student’s
+permissions will be set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>admin</strong> – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, this will allow changing the student’s permission even if the
+parent’s permission is set to <code class="docutils literal notranslate"><span class="pre">False</span></code> (normally, this causes an error).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -3236,6 +3402,12 @@ object the first time, the query is executed.</p>
 <dt id="intranet.apps.users.tests.UserTest.test_has_unvoted_polls">
 <code class="sig-name descname">test_has_unvoted_polls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_has_unvoted_polls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_has_unvoted_polls" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.tests.UserTest.test_male_female">
+<code class="sig-name descname">test_male_female</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/tests.html#UserTest.test_male_female"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.tests.UserTest.test_male_female" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests all possible values of is_male/is_female.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.users.tests.UserTest.test_name">

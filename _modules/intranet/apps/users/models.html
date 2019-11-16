@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5542) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5547) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -130,7 +130,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
 
@@ -169,14 +169,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by FCPS student ID. (Ex. 1624472)&quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">student_id</span><span class="o">=</span><span class="n">student_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by Ion ID. (Ex. 489)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">student_id</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -185,11 +185,11 @@
             <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">last_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">last_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname) and/or last name.</span>
 
 <span class="sd">        Args:</span>
@@ -231,7 +231,7 @@
             <span class="n">properties__parent_show_birthday</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">graduation_year__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
@@ -260,7 +260,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="k">if</span> <span class="n">existing_queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">existing_queryset</span> <span class="o">=</span> <span class="bp">self</span>
 
@@ -327,51 +329,87 @@
     <span class="n">objects</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">()</span>
 
 <div class="viewcode-block" id="User.get_signage_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_signage_user">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_signage_user</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_signage_user</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the user used to authenticate signage displays</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user used to authenticate signage displays</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">99999</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Address&quot;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the ``Address`` object representing this user&#39;s address, or ``None`` if it is not</span>
+<span class="sd">        set or the current user does not have permission to access it.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The ``Address`` representing this user&#39;s address, or ``None`` if that is unavailable to</span>
+<span class="sd">            the current user.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">address</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns a ``datetime.date`` representing this user&#39;s birthday, or ``None`` if it is not</span>
+<span class="sd">        set or the current user does not have permission to access it.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``datetime.date`` representing this user&#39;s birthday, or ``None`` if it is not set or</span>
+<span class="sd">            the current user does not have permission to access it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;Section&quot;</span><span class="p">]]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+        <span class="sd">&quot;&quot;&quot;Returns a QuerySet of the ``Section`` objects representing the classes this student is</span>
+<span class="sd">        in, or ``None`` if the current user does not have permission to list this student&#39;s classes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Returns a QuerySet of the ``Section`` objects representing the classes this student is</span>
+<span class="sd">            in, or ``None`` if the current user does not have permission to list this student&#39;s</span>
+<span class="sd">            classes.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">schedule</span>
 
-<div class="viewcode-block" id="User.member_of"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.member_of">[docs]</a>    <span class="k">def</span> <span class="nf">member_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+<div class="viewcode-block" id="User.member_of"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.member_of">[docs]</a>    <span class="k">def</span> <span class="nf">member_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether a user is a member of a certain group.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            group</span>
-<span class="sd">                The name of a group (string) or a group object</span>
+<span class="sd">            group: Either the name of a group or a ``Group`` object.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether the user is a member of the given group.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">Group</span><span class="p">):</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="User.has_admin_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_admin_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+<div class="viewcode-block" id="User.has_admin_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_admin_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly, or implied by being in the</span>
 <span class="sd">        &quot;admin_all&quot; group)</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            perm: The admin permission to check for.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether the user has the given admin permission (either explicitly or implicitly)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_&quot;</span> <span class="o">+</span> <span class="n">perm</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
 
 <span class="sd">        This is required for subclasses of User.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s full name (first + &quot; &quot; + last).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
@@ -388,18 +426,24 @@
         <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.nickname or self.first_name} </span><span class="si">{self.last_name}</span><span class="s2">&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns ``self.full_name``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s full name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">last_first</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">last_first</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">            Lastname, Firstname [(Nickname)]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot; (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nickname</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">last_first_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">last_first_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">            Lastname, Firstname [(Nickname)] (Student ID/ID/Username)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -410,7 +454,7 @@
         <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">last_first_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">last_first_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">            Lastname, F [(Nickname)]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -419,31 +463,44 @@
         <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return short name (first name) of a user.</span>
 
 <span class="sd">        This is required for subclasses of User.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s fist name.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
 
-<div class="viewcode-block" id="User.get_full_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_full_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="User.get_full_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_full_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s full name (see ``full_name``).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span></div>
 
-<div class="viewcode-block" id="User.get_short_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_short_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get short (first) name of a user.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="User.get_short_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_short_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get short (first) name of a user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s first name (see ``short_name`` and ``first_name``).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">primary_email_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">primary_email_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="n">Email</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get (or guess) a user&#39;s TJ email.</span>
 
 <span class="sd">        If a fcps.edu or tjhsst.edu email is specified in their email</span>
@@ -451,9 +508,12 @@
 <span class="sd">        proper email suffix, depending on whether they are a student or</span>
 <span class="sd">        teacher.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            The user&#39;s found or guessed FCPS/TJ email address.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">address__endswith</span><span class="o">=</span><span class="s2">&quot;@fcps.edu&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">address__endswith</span><span class="o">=</span><span class="s2">&quot;@tjhsst.edu&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">address__iendswith</span><span class="o">=</span><span class="s2">&quot;@fcps.edu&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">address__iendswith</span><span class="o">=</span><span class="s2">&quot;@tjhsst.edu&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">email</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span>
 
@@ -465,28 +525,29 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">non_tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">non_tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the user&#39;s first non-TJ email found.</span>
+<span class="sd">        Returns the user&#39;s first non-TJ email found, or None if none is found.</span>
 
 <span class="sd">        If a user has a primary email set and it is not their TJ email,</span>
 <span class="sd">        use that. Otherwise, use the first email found that is not their</span>
 <span class="sd">        TJ email.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            The first non-TJ email found for a user.</span>
+<span class="sd">            The first non-TJ email found for a user, or None if no such email is found.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tj_email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tj_email</span>
+        <span class="n">primary_email_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span> <span class="o">!=</span> <span class="n">tj_email</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
+        <span class="k">if</span> <span class="n">primary_email_address</span> <span class="ow">and</span> <span class="n">primary_email_address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">tj_email</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">primary_email_address</span>
 
         <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">address__iexact</span><span class="o">=</span><span class="n">tj_email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="n">email</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">notification_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">notification_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns the notification email.</span>
 
 <span class="sd">        If a primary email is set, use it. Otherwise, use the first</span>
@@ -494,22 +555,23 @@
 <span class="sd">        TJ email.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A user&#39;s notification email address</span>
+<span class="sd">            A user&#39;s notification email address.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
+        <span class="n">primary_email_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_email_address</span>
+        <span class="k">if</span> <span class="n">primary_email_address</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">primary_email_address</span>
 
         <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">if</span> <span class="n">email</span> <span class="ow">and</span> <span class="n">email</span><span class="o">.</span><span class="n">address</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">tj_email</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns default photo (in binary) that should be used</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Binary data</span>
+<span class="sd">            The binary representation of the user&#39;s default photo.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">preferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferred_photo</span>
@@ -533,18 +595,23 @@
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">grade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">grade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grade&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns the grade of a user.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Grade object</span>
+<span class="sd">            A Grade object representing the uset&#39;s current grade.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Grade</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graduation_year</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Dynamically generate dictionary of privacy options</span>
+    <span class="k">def</span> <span class="nf">permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Dynamically generate dictionary of privacy options.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary mapping the name of each privacy option to a boolean indicating whether it</span>
+<span class="sd">            is enabled.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">permissions_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -555,9 +622,15 @@
 
         <span class="k">return</span> <span class="n">permissions_dict</span>
 
-    <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher, and can view all of a student&#39;s</span>
-<span class="sd">        information regardless of their privacy settings.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher or eighth admin, and can view</span>
+<span class="sd">        all of a student&#39;s information regardless of their privacy settings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user has permissions to view all of their information regardless of their</span>
+<span class="sd">            privacy settings.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># threadlocals is a module, not an actual thread locals object</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">threadlocals</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
@@ -573,91 +646,120 @@
         <span class="k">return</span> <span class="n">can_view_anyway</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ion_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ion_username</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns this user&#39;s username.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            This user&#39;s username (see ``username``).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">grade_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">grade_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the number of the grade this user is currently in (9, 10, 11, or 12 for</span>
+<span class="sd">        students).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The number of the grade this user is currently in.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">sex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">sex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns &quot;Male&quot; if this user is male, &quot;Female&quot; otherwise.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            &quot;Male&quot; if this user is male, &quot;Female&quot; otherwise.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;Male&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_male</span> <span class="k">else</span> <span class="s2">&quot;Female&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_male</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_male</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether the user is male.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user is male.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gender</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_female</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_female</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether the user is female.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user is female.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gender</span> <span class="ow">is</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns a user&#39;s age, based on their birthday.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            integer</span>
+<span class="sd">            The user&#39;s age as an integer, or None if their birthday is not set.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-
-        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span>
-        <span class="k">if</span> <span class="n">b</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="n">date</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mi">365</span><span class="p">)</span>
+        <span class="n">birthday</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span>
+        <span class="k">if</span> <span class="n">birthday</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">-</span> <span class="n">birthday</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">//</span> <span class="mi">365</span>
 
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">can_view_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">can_view_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if a user has the show_eighth permission.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user has made their eighth period signups public.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_eighth&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">can_view_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">can_view_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if a user has the show_telephone permission.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user has made their phone number public.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_telephone&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_eighth_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_eighth_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is an eighth period admin.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is an eighth period admin.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;eighth&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">has_print_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">has_print_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;printing&#39;.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a printing administrator.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;printing&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_parking_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_parking_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;parking&#39;.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a parking administrator.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -674,168 +776,172 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">can_request_parking</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">can_request_parking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user can view the parking interface.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user can view the parking interface and request a parking spot.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grade_number</span> <span class="o">&gt;=</span> <span class="mi">11</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_parking_admin</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_announcements_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_announcements_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is an announcements admin.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is an announcement admin.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_schedule_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_schedule_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a schedule admin.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a schedule admin.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;schedule&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_board_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_board_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a board admin.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a board admin.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a teacher.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a teacher.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;teacher&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;counselor&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_student</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_student</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a student.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a student.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;student&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_alum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_alum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is an alumnus.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is an alumnus.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;alum&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a student in Grade 12.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a senior.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">grade_number</span> <span class="o">==</span> <span class="mi">12</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_eighthoffice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_eighthoffice</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is an Eighth Period office user.</span>
 
 <span class="sd">        This is currently hardcoded, but is meant to be used instead</span>
 <span class="sd">        of user.id == 9999 or user.username == &quot;eighthoffice&quot;.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is an Eighth Period office user.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">9999</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if the user is active.</span>
 
 <span class="sd">        This is currently used to catch invalid logins.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user is &quot;active&quot; -- i.e. their account is not locked.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;INVALID_USER&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_locked</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user needs the restricted view of Ion</span>
 
 <span class="sd">        This applies to users that are user_type &#39;user&#39;, user_type &#39;alum&#39;</span>
 <span class="sd">        or user_type &#39;service&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether this user should see a restricted view of Ion.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;alum&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_staff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_staff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if a user should have access to the Django Admin interface.</span>
 
 <span class="sd">        This has nothing to do with staff at TJ - `is_staff`</span>
 <span class="sd">        has to be overridden to make this a valid user model.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether the user should have access to the Django Admin interface.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_superuser</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;staff&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_attendance_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_attendance_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is an attendance-only user.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is an attendance-only user.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_simple_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_simple_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if user is a simple user (e.g. eighth office user)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this user is a simple user (e.g. eighth office user).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_type</span> <span class="o">==</span> <span class="s2">&quot;simple_user&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">male</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return if the user is male.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_male</span>
+    <span class="k">def</span> <span class="nf">has_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks if a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the</span>
+<span class="sd">        current user.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">female</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return if the user is female.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_female</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the</span>
+<span class="sd">            current user.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">has_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">senior</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -843,28 +949,27 @@
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_attendance_taker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user can take attendance for an eighth activity.</span>
+    <span class="k">def</span> <span class="nf">is_attendance_taker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks if this user can take attendance for an eighth activity.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether this  user can take attendance for an eighth activity.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_attendance_user</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Determine whether the given user is associated with an.</span>
 
 <span class="sd">        :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity</span>
 <span class="sd">        sponsoring information.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether this user is an eighth period sponsor.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">startpage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;eighth&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_simple_user</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frequent_signups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -917,8 +1022,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;admin_comments&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is</span>
-<span class="sd">        associated with.</span>
+        <span class="sd">&quot;&quot;&quot;Return the ``EighthSponsor`` that this user is associated with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The ``EighthSponsor`` that this user is associated with.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
@@ -927,11 +1035,25 @@
 
         <span class="k">return</span> <span class="n">sp</span></div>
 
-<div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether there are open polls thet this user has not yet voted in.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether there are open polls thet this user has not yet voted in.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__lt</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">end_time__gt</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">question__answer__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="User.signed_up_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.signed_up_today">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_today</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.signed_up_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.signed_up_today">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_today</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;If the user is a student, returns whether they are signed up for an activity during</span>
+<span class="sd">        all eighth period blocks that are scheduled today. Otherwise, returns ``True``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            If the user is a student, returns whether they are signed up for an activity during</span>
+<span class="sd">            all eighth period blocks that are scheduled today. Otherwise, returns ``True``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
@@ -963,17 +1085,24 @@
             <span class="ow">not</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthscheduledactivity__eighthsignup_set__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count.</span>
 
-<span class="sd">        If the user has no absences</span>
-<span class="sd">        or is not a signup user, returns 0.</span>
+<span class="sd">        If the user has no absences or is not a signup user, returns 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The number of absences this user has.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.absence_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_info">[docs]</a>    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return information about the user&#39;s absences.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of the ``EighthSignup``s for which this user was absent.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``QuerySet`` of the ``EighthSignup``s for which this user was absent.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.handle_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -990,7 +1119,7 @@
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> object has no attribute </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ion_username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ion_username</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span></div>
@@ -1053,10 +1182,20 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="UserProperties.set_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.set_permission">[docs]</a>    <span class="k">def</span> <span class="nf">set_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets permission for personal information.</span>
-<span class="sd">            Returns False silently if unable to set permission.</span>
-<span class="sd">            Returns True if successful.</span>
+<div class="viewcode-block" id="UserProperties.set_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.set_permission">[docs]</a>    <span class="k">def</span> <span class="nf">set_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">admin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sets permission for personal information.</span>
+
+<span class="sd">        Returns False silently if unable to set permission. Returns True if successful.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            permission: The name of the permission to set.</span>
+<span class="sd">            value: The value to set the permission to.</span>
+<span class="sd">            parent: Whether to set the parent&#39;s permission instead of the student&#39;s permission. If</span>
+<span class="sd">                ``parent`` is ``True`` and ``value`` is ``False``, both the parent and the student&#39;s</span>
+<span class="sd">                permissions will be set to ``False``.</span>
+<span class="sd">            admin: If set to ``True``, this will allow changing the student&#39;s permission even if the</span>
+<span class="sd">                parent&#39;s permission is set to ``False`` (normally, this causes an error).</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">parent</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">admin</span><span class="p">:</span>
@@ -1077,9 +1216,15 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error occurred setting permission </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher, and can view all of a student&#39;s</span>
-<span class="sd">        information regardless of their privacy settings.&quot;&quot;&quot;</span>
+<span class="sd">        information regardless of their privacy settings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the currently logged in user can view all of a student&#39;s information regardless</span>
+<span class="sd">            of their privacy settings.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># threadlocals is a module, not an actual thread locals object</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">threadlocals</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
@@ -1094,7 +1239,7 @@
             <span class="n">can_view_anyway</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">can_view_anyway</span>
 
-<div class="viewcode-block" id="UserProperties.is_http_request_sender"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.is_http_request_sender">[docs]</a>    <span class="k">def</span> <span class="nf">is_http_request_sender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserProperties.is_http_request_sender"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.is_http_request_sender">[docs]</a>    <span class="k">def</span> <span class="nf">is_http_request_sender</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Checks if a user the HTTP request sender (accessing own info)</span>
 
 <span class="sd">        Used primarily to load private personal information from the</span>
@@ -1102,7 +1247,7 @@
 <span class="sd">        regardless of how the permissions are set.)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean</span>
+<span class="sd">            Whether the user is the sender of the current HTTP request.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1117,8 +1262,17 @@
 
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="UserProperties.attribute_is_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.attribute_is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Checks privacy options to see if an attribute is visible to public</span>
+<div class="viewcode-block" id="UserProperties.attribute_is_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.attribute_is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks privacy options to see if an attribute is visible to the user sending the current</span>
+<span class="sd">        HTTP request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            permission: The name of the permission to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user sending the current HTTP request has permission to view the given</span>
+<span class="sd">            permission.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
@@ -1127,8 +1281,16 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not retrieve permissions for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserProperties.attribute_is_public"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.attribute_is_public">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_public</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Checks if attribute is visible to public (regardless of admins status)</span>
+<div class="viewcode-block" id="UserProperties.attribute_is_public"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserProperties.attribute_is_public">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_public</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks if attribute is visible to public (ignoring whether the user sending the HTTP</span>
+<span class="sd">        request has permission to access it).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            permission: The name of the permission to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the given permission is public.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span>
@@ -1256,11 +1418,12 @@
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> object has no attribute </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">base64</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">base64</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns base64 encoded binary data for a user&#39;s picture.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">           Base64 string, or None</span>
+<span class="sd">           Base 64-encoded binary data for a user&#39;s picture.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">binary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span>
@@ -1293,7 +1456,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;graduate&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).</span>
 
 <span class="sd">        For use in templates since there is no nice integer casting.</span>
@@ -1303,17 +1466,17 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the grade&#39;s name (e.g. senior)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">name_plural</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name_plural</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the grade&#39;s plural name (e.g. freshmen)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;freshmen&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">==</span> <span class="mi">9</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the grade&#39;s number as a string (e.g. Grade 12, Graduate)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Grade </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">)</span>
@@ -1321,13 +1484,13 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
 <div class="viewcode-block" id="Grade.number_from_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade.number_from_name">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">number_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">number_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="mi">9</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Grade.grade_from_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade.grade_from_year">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">grade_from_year</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graduation_year</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">grade_from_year</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graduation_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">YEAR_TURNOVER_MONTH</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
@@ -1337,7 +1500,7 @@
         <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">-</span> <span class="n">graduation_year</span> <span class="o">+</span> <span class="mi">12</span></div>
 
 <div class="viewcode-block" id="Grade.year_from_grade"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade.year_from_grade">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">year_from_grade</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">year_from_grade</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">YEAR_TURNOVER_MONTH</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
