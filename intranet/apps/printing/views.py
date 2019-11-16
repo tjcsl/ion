@@ -18,6 +18,7 @@ from django.utils.text import slugify
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
 from .forms import PrintJobForm
+from .models import PrintJob
 
 logger = logging.getLogger(__name__)
 
@@ -192,8 +193,18 @@ def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     raise InvalidInputPrintingError("Invalid file type {}".format(detected))
 
 
-def check_page_range(page_range, max_pages) -> Optional[int]:
-    """Returns the number of pages in the range, or None if it is an invalid range."""
+def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
+    """Returns the number of pages included in the range, or None if it is an invalid range.
+
+    Args:
+        page_range: The page range as a string, such as "1-5" or "1,2,3".
+        max_pages: The number of pages in the submitted document. If the number of pages in the
+            given range exceeds this, it will be considered invalid.
+
+    Returns:
+        The number of pages in the range, or None if it is an invalid range.
+
+    """
     pages = 0
     try:
         for single_range in page_range.split(","):  # check all ranges separated by commas
@@ -222,7 +233,7 @@ def check_page_range(page_range, max_pages) -> Optional[int]:
     return pages
 
 
-def print_job(obj, do_print=True):
+def print_job(obj: PrintJob, do_print: bool = True):
     printer = obj.printer
     if printer not in get_printers():
         raise Exception("Printer not authorized.")
