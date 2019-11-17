@@ -24,6 +24,7 @@ from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
+from ..sessionmgmt.helpers import trust_session
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
 from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
 from .forms import AuthenticateForm
@@ -209,6 +210,9 @@ class LoginView(View):
                     default_next_page = "welcome"
                 else:
                     pass  # exclude eighth office/special accounts
+
+            if form.cleaned_data["trust_device"]:
+                trust_session(request)
 
             # if the student has not seen the 8th agreement yet, redirect them
             if request.user.is_student and not request.user.seen_welcome:

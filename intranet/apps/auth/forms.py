@@ -20,15 +20,19 @@ class AuthenticateForm(AuthenticationForm):
 
     username = forms.CharField(
         required=True,
+        label="",
         widget=widgets.TextInput(attrs={"placeholder": "Username", "aria-label": "Enter Username"}),
         error_messages={"required": "Invalid username", "inactive": "Access disallowed."},
     )
     password = forms.CharField(
         required=True,
         strip=False,
+        label="",
         widget=widgets.PasswordInput(attrs={"placeholder": "Password", "aria-label": "Enter Password"}),
         error_messages={"required": "Invalid password", "inactive": "Access disallowed."},
     )
+
+    trust_device = forms.BooleanField(required=False, label="Trust this device", label_suffix="")
 
     def is_valid(self):
         """Validates the username and password in the form."""
