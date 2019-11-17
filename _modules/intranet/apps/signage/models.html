@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #5561) documentation</title>
+    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #5565) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,6 +129,20 @@
 <span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
 
 
+<div class="viewcode-block" id="PageQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.PageQuerySet">[docs]</a><span class="k">class</span> <span class="nc">PageQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
+<div class="viewcode-block" id="PageQuerySet.order_properly"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.PageQuerySet.order_properly">[docs]</a>    <span class="k">def</span> <span class="nf">order_properly</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;models.query.QuerySet[Page]&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns a QuerySet containing all the pages in this QuerySet, but sorted in ascending</span>
+<span class="sd">        order by their ``order`` field (falling back on ``id`` when the ``order``</span>
+<span class="sd">        fields for two pages are the same).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A QuerySet containing all the pages in this QuerySet sorted by their ``order`` and</span>
+<span class="sd">            ``id`` fields in ascending order.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="Page"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Page">[docs]</a><span class="k">class</span> <span class="nc">Page</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        iframe: True if page is just an iframe</span>
@@ -144,6 +158,8 @@
 
 <span class="sd">        signs: set of signs which display this Page</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">PageQuerySet</span><span class="o">.</span><span class="n">as_manager</span><span class="p">()</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
