@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5565) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5570) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -152,6 +152,7 @@
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="k">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="k">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="k">import</span> <span class="n">schedule_context</span>
+<span class="kn">from</span> <span class="nn">..sessionmgmt.helpers</span> <span class="k">import</span> <span class="n">trust_session</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">backends</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">signals</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the signals get registered</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">AuthenticateForm</span>
@@ -337,6 +338,9 @@
                     <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;welcome&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">pass</span>  <span class="c1"># exclude eighth office/special accounts</span>
+
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;trust_device&quot;</span><span class="p">]:</span>
+                <span class="n">trust_session</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
             <span class="c1"># if the student has not seen the 8th agreement yet, redirect them</span>
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span><span class="p">:</span>
