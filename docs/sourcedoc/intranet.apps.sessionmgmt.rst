@@ -12,6 +12,14 @@ intranet.apps.sessionmgmt.admin module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.sessionmgmt.helpers module
+----------------------------------------
+
+.. automodule:: intranet.apps.sessionmgmt.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.sessionmgmt.models module
 ---------------------------------------
 
