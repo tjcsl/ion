@@ -25,6 +25,9 @@ $(document).ready(function() {
                     announcementToggle.call($(this).closest(".announcement"));
                 });
             }
+            else {
+                content.off("click");
+            }
         });
     }
     updatePartiallyHidden();
@@ -38,6 +41,8 @@ $(document).ready(function() {
 
         if(announcement.hasClass("partially-hidden")) {
             announcement.addClass("toggled");
+
+            announcement.find(".announcement-content").off("click");
 
             announcementContent.animate(
                 {"max-height": announcement.find(".announcement-content").height()},
