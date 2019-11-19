@@ -1682,10 +1682,10 @@ class EighthSignupManager(Manager):
         if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
             logger.error(
                 "Duplicate signup before creating signup for user %d in activity %d, block %d, scheduled activity %d",
-                self.user.id,
-                self.scheduled_activity.activity.id,
-                self.scheduled_activity.block.id,
-                self.scheduled_activity.id,
+                user.id,
+                scheduled_activity.activity.id,
+                scheduled_activity.block.id,
+                scheduled_activity.id,
             )
             raise ValidationError("EighthSignup already exists for this user on this block.")
 
@@ -1694,11 +1694,11 @@ class EighthSignupManager(Manager):
         if EighthSignup.objects.exclude(pk=signup.pk).filter(user=user, scheduled_activity__block=scheduled_activity.block).nocache().exists():
             logger.error(
                 "Duplicate signup after creating signup %d to sign up user %d in activity %d, block %d, scheduled activity %d; deleting",
-                self.id,
-                self.user.id,
-                self.scheduled_activity.activity.id,
-                self.scheduled_activity.block.id,
-                self.scheduled_activity.id,
+                signup.id,
+                user.id,
+                scheduled_activity.activity.id,
+                scheduled_activity.block.id,
+                scheduled_activity.id,
             )
             signup.delete()
             raise ValidationError("EighthSignup already exists for this user on this block.")
