@@ -1366,7 +1366,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not waitlist:
             if not self.is_both_blocks():
                 try:
-                    existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
+                    existing_signup = EighthSignup.objects.nocache().get(user=user, scheduled_activity__block=self.block)
                 except EighthSignup.DoesNotExist:
                     add_breadcrumb(
                         category="eighth-signup",
@@ -1391,7 +1391,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                     logger.debug("Successfully signed user %d up for single-block activity %d in block %d", user.id, self.activity.id, self.block.id)
 
-                    if signup.has_conflict():
+                    if signup.has_conflict(nocache=True):
                         try:
                             signup.save()
                         except ValidationError as e:
@@ -1679,7 +1679,7 @@ class EighthSignupManager(Manager):
             scheduled_activity: The EighthScheduledActivity to sign the user up for.
 
         """
-        if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).exists():
+        if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).nocache().exists():
             logger.error(
                 "Duplicate signup before creating signup for user %d in activity %d, block %d, scheduled activity %d",
                 user.id,
