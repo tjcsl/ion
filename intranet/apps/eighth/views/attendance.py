@@ -373,11 +373,7 @@ def take_attendance_view(request, scheduled_activity_id):
 
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id)
-            context["blocks"] = (
-                EighthBlock.objects
-                .filter(date__gte=get_start_date(request))
-                .order_by("date")
-            )
+            context["blocks"] = EighthBlock.objects.filter(date__gte=get_start_date(request)).order_by("date")
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
             response = http.HttpResponse(content_type="text/csv")
