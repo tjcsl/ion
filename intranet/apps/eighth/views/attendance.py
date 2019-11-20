@@ -375,7 +375,7 @@ def take_attendance_view(request, scheduled_activity_id):
             context["scheduled_activities"] = EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id)
             context["blocks"] = (
                 EighthBlock.objects
-                # .filter(date__gte=get_start_date(request))
+                .filter(date__gte=get_start_date(request))
                 .order_by("date")
             )
 
