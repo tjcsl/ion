@@ -42,6 +42,7 @@ var resetPage = function () {
 
     $('.signage-container').find('.strip-links iframe').each(function () {
         $(this).contents().find('a').each(function() {
+            this.href = "#";
             $(this).click(function (e) {
                 e.preventDefault();
             });
