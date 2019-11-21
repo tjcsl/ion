@@ -92,10 +92,17 @@
                 {% endif %}
                     {% csrf_token %}
                     {% for field in auth_form %}
-                        {{ field }}{% if field.label %}{{ field.label_tag }}{% endif %}<br>
+                    {% if field.name != "trust_device" %}
+                        {{ field }}<br>
+                    {% endif %}
                     {% endfor %}
                     <input type="submit" value="Login">
                     <div class='spinner-container'></div>
+                    {% for field in auth_form %}
+                    {% if field.name == "trust_device" %}
+                        {{ field }}{{ field.label_tag }}<br>
+                    {% endif %}
+                    {% endfor %}
                     <div class="reset-password-container">
                         <a href="https://resetter.tjhsst.edu">Reset password</a>
                     </div>
