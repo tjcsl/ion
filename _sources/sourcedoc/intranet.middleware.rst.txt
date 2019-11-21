@@ -28,6 +28,14 @@ intranet.middleware.dark\_mode module
    :undoc-members:
    :show-inheritance:
 
+intranet.middleware.monitoring module
+-------------------------------------
+
+.. automodule:: intranet.middleware.monitoring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.middleware.profiler module
 -----------------------------------
 
