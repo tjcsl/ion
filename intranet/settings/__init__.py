@@ -379,6 +379,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
+    "intranet.middleware.monitoring.PrometheusAccessMiddleware",  # Restricts access to Django Prometheus metrics to ALLOWED_METRIC_IPS and superusers
     "maintenance_mode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
