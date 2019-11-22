@@ -335,6 +335,9 @@ $(function() {
                         text.path(space.getAttribute('d'));
                         text.textPath().attr("path", space.getAttribute('d'));
                         text.style('pointer-events', 'none');
+                        // Signage displays may not have Helvetica or Arial installed, so we provide some sane
+                        // fallbacks to avoid issues that have appeared in the past with the "sans-serif" default.
+                        text.font("family", "Helvetica, Arial, 'Open Sans', 'Liberation Sans', sans-serif");
 
                         if(window.isSignage) {
                             var tspan = $(text.node).find("tspan");
