@@ -8,17 +8,25 @@ class BusConsumer(JsonWebsocketConsumer):
     groups = ["bus"]
 
     def connect(self):
-        user = self.scope["user"]
-        data = self._serialize(user=user)
+        self.user = self.scope["user"]
+        if not self.user.is_authenticated:
+            self.user = None
+            self.close()
+            return
+
+        data = self._serialize(user=self.user)
         self.accept()
         self.send_json(data)
 
     def receive_json(self, content):  # pylint: disable=arguments-differ
+        if self.user is None:
+            return
+
         if content.get("type") == "keepalive":
             self.send_json({"type": "keepalive-response"})
             return
 
-        if self.scope["user"].is_bus_admin:
+        if self.user.is_bus_admin:
             try:
                 route = Route.objects.get(id=content["id"])
                 route.status = content["status"]
@@ -37,6 +45,9 @@ class BusConsumer(JsonWebsocketConsumer):
             self.send_json({"error": "User does not have permissions."})
 
     def bus_update(self, event):
+        if self.user is None:
+            return
+
         self.send_json(event["data"])
 
     def _serialize(self, user=None):
