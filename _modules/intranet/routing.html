@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.celery &#8212; TJ Intranet v3 (Build #5599) documentation</title>
+    <title>intranet.routing &#8212; TJ Intranet v3 (Build #5599) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -125,26 +125,35 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.celery</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
+  <h1>Source code for intranet.routing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines routes for channels</span>
+<span class="sd">https://channels.readthedocs.io/en/latest/topics/routing.html</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">celery</span> <span class="k">import</span> <span class="n">Celery</span>
-<span class="kn">from</span> <span class="nn">celery.signals</span> <span class="k">import</span> <span class="n">after_setup_logger</span><span class="p">,</span> <span class="n">after_setup_task_logger</span>
+<span class="kn">from</span> <span class="nn">channels.auth</span> <span class="k">import</span> <span class="n">AuthMiddlewareStack</span>
+<span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="k">import</span> <span class="n">WebsocketConsumer</span>
+<span class="kn">from</span> <span class="nn">channels.routing</span> <span class="k">import</span> <span class="n">ProtocolTypeRouter</span><span class="p">,</span> <span class="n">URLRouter</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;intranet.settings&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="k">import</span> <span class="n">url</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s2">&quot;intranet&quot;</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">config_from_object</span><span class="p">(</span><span class="s2">&quot;django.conf:settings&quot;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;CELERY&quot;</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">autodiscover_tasks</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">.apps.bus.consumers</span> <span class="k">import</span> <span class="n">BusConsumer</span>
 
 
-<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.celery.setup_logger">[docs]</a><span class="nd">@after_setup_logger</span><span class="o">.</span><span class="n">connect</span>
-<span class="nd">@after_setup_task_logger</span><span class="o">.</span><span class="n">connect</span>
-<span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer">[docs]</a><span class="k">class</span> <span class="nc">WebsocketCloseConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer.connect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">LOG_LEVEL</span><span class="p">)</span></div>
+<div class="viewcode-block" id="WebsocketCloseConsumer.receive"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bytes_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="WebsocketCloseConsumer.disconnect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">ProtocolTypeRouter</span><span class="p">({</span><span class="s2">&quot;websocket&quot;</span><span class="p">:</span> <span class="n">AuthMiddlewareStack</span><span class="p">(</span><span class="n">URLRouter</span><span class="p">([</span><span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^bus/$&quot;</span><span class="p">,</span> <span class="n">BusConsumer</span><span class="p">),</span> <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*$&quot;</span><span class="p">,</span> <span class="n">WebsocketCloseConsumer</span><span class="p">)]))})</span>
 </pre></div>
 
     </div>
