@@ -44,9 +44,3 @@ You can find a list of file systems at ``intranet/apps/files/models.py``. To add
 
     $ ./manage.py shell_plus
     >>> Host.objects.create(name="Computer Systems Lab", code="csl", address="remote.tjhsst.edu", linux=True)
-
-Increasing RAM
-==============
-
-With the default RAM size of 1024MB, you may run into performance constraints.
-If you encounter signifigant issues, it is recommended to bump the VM's amount of memory, through VirtualBox Manager, to at least 2GB.
