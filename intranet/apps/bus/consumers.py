@@ -1,6 +1,8 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
+from django.conf import settings
+
 from .models import Route
 
 
@@ -9,24 +11,27 @@ class BusConsumer(JsonWebsocketConsumer):
 
     def connect(self):
         self.user = self.scope["user"]
-        if not self.user.is_authenticated:
-            self.user = None
+        headers = dict(self.scope["headers"])
+        remote_addr = headers[b"x-real-ip"].decode() if b"x-real-ip" in headers else self.scope["client"][0]
+        if not self.user.is_authenticated and remote_addr not in settings.INTERNAL_IPS:
+            self.connected = False
             self.close()
             return
 
+        self.connected = True
         data = self._serialize(user=self.user)
         self.accept()
         self.send_json(data)
 
     def receive_json(self, content):  # pylint: disable=arguments-differ
-        if self.user is None:
+        if not self.connected:
             return
 
         if content.get("type") == "keepalive":
             self.send_json({"type": "keepalive-response"})
             return
 
-        if self.user.is_bus_admin:
+        if self.user is not None and self.user.is_authenticated and self.user.is_bus_admin:
             try:
                 route = Route.objects.get(id=content["id"])
                 route.status = content["status"]
@@ -45,7 +50,7 @@ class BusConsumer(JsonWebsocketConsumer):
             self.send_json({"error": "User does not have permissions."})
 
     def bus_update(self, event):
-        if self.user is None:
+        if not self.connected:
             return
 
         self.send_json(event["data"])
