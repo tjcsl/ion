@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
+from ...utils.html import nullify_links
 
 
 class AnnouncementManager(Manager):
@@ -170,6 +171,16 @@ class Announcement(models.Model):
     @property
     def dashboard_type(self):
         return "announcement"
+
+    @property
+    def content_no_links(self) -> str:
+        """Returns the content of this announcement with all links nullified.
+
+        Returns:
+            The content of this announcement with all links nullified.
+
+        """
+        return nullify_links(self.content)
 
     class Meta:
         ordering = ["-pinned", "-added"]

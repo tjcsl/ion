@@ -1,3 +1,5 @@
+from typing import Mapping, Optional, Tuple, Union
+
 import bleach
 
 ALLOWED_TAGS = ["a", "abbr", "acronym", "b", "br", "blockquote", "code", "em", "hr", "i", "li", "ol", "strong", "ul", "iframe", "img", "div", "p"]
@@ -27,3 +29,28 @@ ALLOWED_STYLES = [
 
 def safe_html(txt):
     return bleach.linkify(bleach.clean(txt, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, styles=ALLOWED_STYLES))
+
+
+def link_removal_callback(  # pylint: disable=unused-argument
+    attrs: Mapping[Union[str, Tuple[Optional[str]]], str], new: bool = False
+) -> Optional[Mapping[Union[str, Tuple[Optional[str]]], str]]:
+    """Internal callback for ``nullify_links()``."""
+    for key in tuple(attrs.keys()):
+        if isinstance(key, tuple) and "href" in key:
+            attrs[key] = "#"
+
+    return attrs
+
+
+def nullify_links(text: str) -> str:
+    """Given a string containing HTML, changes the ``href`` attribute of any links to "#" to render
+    the link useless.
+
+    Args:
+        text: The HTML string in which links should be nullified.
+
+    Returns:
+        The HTML string with all links nullified.
+
+    """
+    return bleach.linkify(text, [link_removal_callback])
