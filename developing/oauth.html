@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #5601) documentation</title>
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #5606) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -55,7 +55,6 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Fixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
@@ -101,7 +100,6 @@
 <li><a class="reference internal" href="#requesting-authorization">Requesting authorization</a><ul>
 <li><a class="reference internal" href="#python-social-auth">Python-social-auth</a></li>
 <li><a class="reference internal" href="#python">Python</a></li>
-<li><a class="reference internal" href="#php">PHP</a></li>
 <li><a class="reference internal" href="#node-js">Node.js</a></li>
 </ul>
 </li>
@@ -222,37 +220,6 @@
 <p>After 36,000 seconds (1 hour), the token will expire; you need to renew it. This can be handled by putting API commands inside a try-except for a oauthlib.oauth2.TokenExpiredError, such as seen above. Alternatively, you can provide “auto_refresh_url=refresh_url, auto_refresh_kwargs=args” as additional arguments to OAuth2Session when it is created.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
 <span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="php">
-<h3>PHP<a class="headerlink" href="#php" title="Permalink to this headline">¶</a></h3>
-<p>Here is some sample code using <a class="reference external" href="https://github.com/adoy/PHP-OAuth2">PHP-OAuth2</a>.</p>
-<p><strong>WARNING: This sample code was written by former Ion developers who are no longer TJ students. It is not supported by the current Ion development team. We strongly recommended that you use a more modern language such as Python.</strong></p>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
-<span class="k">require</span><span class="p">(</span><span class="s1">&#39;Client.php&#39;</span><span class="p">);</span>
-<span class="k">require</span><span class="p">(</span><span class="s1">&#39;GrantType/IGrantType.php&#39;</span><span class="p">);</span>
-<span class="k">require</span><span class="p">(</span><span class="s1">&#39;GrantType/AuthorizationCode.php&#39;</span><span class="p">);</span>
-
-<span class="k">const</span> <span class="no">CLIENT_ID</span>     <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
-<span class="k">const</span> <span class="no">CLIENT_SECRET</span> <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
-
-<span class="k">const</span> <span class="no">REDIRECT_URI</span>           <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
-<span class="k">const</span> <span class="no">AUTHORIZATION_ENDPOINT</span> <span class="o">=</span> <span class="s1">&#39;https://ion.tjhsst.edu/oauth/authorize/&#39;</span><span class="p">;</span>
-<span class="k">const</span> <span class="no">TOKEN_ENDPOINT</span>         <span class="o">=</span> <span class="s1">&#39;https://ion.tjhsst.edu/oauth/token/&#39;</span><span class="p">;</span>
-
-<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OAuth2\\Client</span><span class="p">(</span><span class="nx">CLIENT_ID</span><span class="p">,</span> <span class="nx">CLIENT_SECRET</span><span class="p">);</span>
-<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]))</span> <span class="p">{</span>
-    <span class="nv">$auth_url</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getAuthenticationUrl</span><span class="p">(</span><span class="nx">AUTHORIZATION_ENDPOINT</span><span class="p">,</span> <span class="nx">REDIRECT_URI</span><span class="p">);</span>
-    <span class="k">die</span><span class="p">(</span><span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: &#39;</span> <span class="o">.</span> <span class="nv">$auth_url</span><span class="p">));</span>
-<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;code&#39;</span> <span class="o">=&gt;&gt;&gt;</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span> <span class="s1">&#39;redirect_uri&#39;</span> <span class="o">=&gt;&gt;&gt;</span> <span class="nx">REDIRECT_URI</span><span class="p">);</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getAccessToken</span><span class="p">(</span><span class="nx">TOKEN_ENDPOINT</span><span class="p">,</span> <span class="s1">&#39;authorization_code&#39;</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
-    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">setAccessToken</span><span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;access_token&#39;</span><span class="p">]);</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">(</span><span class="s1">&#39;https://ion.tjhsst.edu/api/profile&#39;</span><span class="p">);</span>
-    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">,</span> <span class="nv">$response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]);</span>
-<span class="p">}</span>
-<span class="cp">?&gt;</span><span class="x"></span>
 </pre></div>
 </div>
 </div>
