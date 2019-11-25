@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #5606) documentation</title>
+    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #5615) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -136,6 +136,7 @@
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="k">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">is_current_year</span>
 <span class="kn">from</span> <span class="nn">...utils.deletion</span> <span class="k">import</span> <span class="n">set_historical_user</span>
+<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="k">import</span> <span class="n">nullify_links</span>
 
 
 <div class="viewcode-block" id="AnnouncementManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementManager">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
@@ -297,6 +298,16 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dashboard_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;announcement&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content_no_links</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the content of this announcement with all links nullified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The content of this announcement with all links nullified.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">nullify_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-pinned&quot;</span><span class="p">,</span> <span class="s2">&quot;-added&quot;</span><span class="p">]</span></div>

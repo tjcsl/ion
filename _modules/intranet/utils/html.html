@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #5606) documentation</title>
+    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #5615) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -125,7 +125,9 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.utils.html</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bleach</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">bleach</span>
 
 <span class="n">ALLOWED_TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">,</span> <span class="s2">&quot;acronym&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">,</span> <span class="s2">&quot;blockquote&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="s2">&quot;ol&quot;</span><span class="p">,</span> <span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;ul&quot;</span><span class="p">,</span> <span class="s2">&quot;iframe&quot;</span><span class="p">,</span> <span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
 
@@ -154,6 +156,31 @@
 
 <div class="viewcode-block" id="safe_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_html">[docs]</a><span class="k">def</span> <span class="nf">safe_html</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">ALLOWED_TAGS</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">ALLOWED_ATTRIBUTES</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="n">ALLOWED_STYLES</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="link_removal_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.link_removal_callback">[docs]</a><span class="k">def</span> <span class="nf">link_removal_callback</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">new</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Internal callback for ``nullify_links()``.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;href&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span>
+
+    <span class="k">return</span> <span class="n">attrs</span></div>
+
+
+<div class="viewcode-block" id="nullify_links"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.nullify_links">[docs]</a><span class="k">def</span> <span class="nf">nullify_links</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Given a string containing HTML, changes the ``href`` attribute of any links to &quot;#&quot; to render</span>
+<span class="sd">    the link useless.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The HTML string in which links should be nullified.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The HTML string with all links nullified.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">[</span><span class="n">link_removal_callback</span><span class="p">])</span></div>
 </pre></div>
 
     </div>
