@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #5615) documentation</title>
+    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #5621) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -130,15 +130,15 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">parse</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="k">import</span> <span class="n">get_template</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">get_template</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">..apps.auth.helpers</span> <span class="k">import</span> <span class="n">get_login_theme_name</span>
-<span class="kn">from</span> <span class="nn">..apps.emerg.views</span> <span class="k">import</span> <span class="n">get_emerg</span>
+<span class="kn">from</span> <span class="nn">..apps.auth.helpers</span> <span class="kn">import</span> <span class="n">get_login_theme_name</span>
+<span class="kn">from</span> <span class="nn">..apps.emerg.views</span> <span class="kn">import</span> <span class="n">get_emerg</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet.settings&quot;</span><span class="p">)</span>
 
@@ -209,7 +209,7 @@
 <div class="viewcode-block" id="InvalidString"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.InvalidString">[docs]</a><span class="k">class</span> <span class="nc">InvalidString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An error for undefined context variables in templates.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Undefined variable or unknown value for: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
@@ -217,10 +217,10 @@
 <div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.MigrationMock">[docs]</a><span class="k">class</span> <span class="nc">MigrationMock</span><span class="p">:</span>
     <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: Set[str]</span>
 
-    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">mod</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;migrations&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
@@ -230,7 +230,7 @@
 <div class="viewcode-block" id="GlobList"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList">[docs]</a><span class="k">class</span> <span class="nc">GlobList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A list of glob-style strings.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GlobList.__contains__"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="GlobList.__contains__"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList.__contains__">[docs]</a>    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if a string matches a glob in the list.&quot;&quot;&quot;</span>
 
         <span class="c1"># request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited</span>

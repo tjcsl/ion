@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.middleware.threadlocals &#8212; TJ Intranet v3 (Build #5615) documentation</title>
+    <title>intranet.middleware.threadlocals &#8212; TJ Intranet v3 (Build #5621) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -126,7 +126,7 @@
       
   <h1>Source code for intranet.middleware.threadlocals</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">local</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_thread_locals</span> <span class="o">=</span> <span class="n">local</span><span class="p">()</span>
@@ -146,10 +146,10 @@
     <span class="sd">&quot;&quot;&quot;Stores the current authorized User object in thread locals for access in models (and</span>
 <span class="sd">    elsewhere) without passing the user around as an argument.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_response</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_response</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span> <span class="o">=</span> <span class="n">get_response</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ThreadLocalsMiddleware.process_view"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_view">[docs]</a>    <span class="nd">@staticmethod</span>

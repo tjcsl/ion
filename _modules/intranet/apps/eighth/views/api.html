@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #5615) documentation</title>
+    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #5621) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -126,19 +126,19 @@
       
   <h1>Source code for intranet.apps.eighth.views.api</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">views</span>
-<span class="kn">from</span> <span class="nn">rest_framework.exceptions</span> <span class="k">import</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="k">import</span> <span class="n">PageNumberPagination</span>
-<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="k">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">views</span>
+<span class="kn">from</span> <span class="nn">rest_framework.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="kn">import</span> <span class="n">PageNumberPagination</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="k">import</span> <span class="n">PermissionDenied</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">PermissionDenied</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
 
-<span class="kn">from</span> <span class="nn">..models</span> <span class="k">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
-<span class="kn">from</span> <span class="nn">..serializers</span> <span class="k">import</span> <span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">,</span> <span class="n">EighthActivityListSerializer</span><span class="p">,</span> <span class="n">EighthAddSignupSerializer</span><span class="p">,</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">..serializers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">,</span> <span class="n">EighthActivityListSerializer</span><span class="p">,</span> <span class="n">EighthAddSignupSerializer</span><span class="p">,</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">,</span>
                            <span class="n">EighthBlockListSerializer</span><span class="p">,</span> <span class="n">EighthScheduledActivitySerializer</span><span class="p">,</span> <span class="n">EighthSignupSerializer</span><span class="p">,</span> <span class="n">EighthToggleFavoriteSerializer</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
