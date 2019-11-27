@@ -37,13 +37,13 @@ def link_removal_callback(  # pylint: disable=unused-argument
     """Internal callback for ``nullify_links()``."""
     for key in tuple(attrs.keys()):
         if isinstance(key, tuple) and "href" in key:
-            attrs[key] = "#"
+            attrs[key] = "javascript:void(0)"
 
     return attrs
 
 
 def nullify_links(text: str) -> str:
-    """Given a string containing HTML, changes the ``href`` attribute of any links to "#" to render
+    """Given a string containing HTML, changes the ``href`` attribute of any links to "javascript:void(0)" to render
     the link useless.
 
     Args:
