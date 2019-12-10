@@ -84,6 +84,9 @@ class Sign(models.Model):
         lock_page: if set, the signage will only display this page
         default_page: if set, the signage will revert to this page after a set
                       amount of time
+        day_end_switch_page: A page to switch to near the end of the day
+        day_end_switch_minutes: The number of minutes before the end of the day to switch
+            to day_end_switch_page. Can be negative to switch after the end of the day.
         pages: a list of pages
     """
 
@@ -97,6 +100,13 @@ class Sign(models.Model):
     lock_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_1")
     default_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_2")
     pages = models.ManyToManyField(Page, related_name="signs")
+
+    day_end_switch_page = models.ForeignKey(
+        Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="+", help_text="Switch to this page near the end of the day"
+    )
+    day_end_switch_minutes = models.IntegerField(
+        default=5, null=False, blank=False, help_text="Switch pages this many minutes before the end of the day"
+    )
 
     def __str__(self):
         return "{} ({})".format(self.name, self.display)
