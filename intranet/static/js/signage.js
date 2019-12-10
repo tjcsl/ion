@@ -153,4 +153,11 @@ window.onload = function () {
         }
         $('.signage-home .time').html(hr + ':' + min + ' ' + ampm);
     }, 1000);
+
+    if(window.endSwitchPage) {
+        var now = new Date();
+        setTimeout(function() {
+            setActive(window.endSwitchPage);
+        }, ((endSwitchHour - now.getHours()) * 3600 + (endSwitchMinute - now.getMinutes()) * 60 - now.getSeconds()) * 1000 - now.getMilliseconds());
+    }
 };

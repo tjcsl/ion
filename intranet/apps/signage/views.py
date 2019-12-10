@@ -1,12 +1,15 @@
+import datetime
 import logging
 
 from django import http
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 
 from ...utils.serialization import safe_json
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
+from ..schedule.models import Day
 from ..schedule.views import schedule_context
 from ..users.models import User
 from .models import Sign
@@ -27,9 +30,18 @@ def signage_display(request, display_id):
     if check_ip:
         return check_ip
     sign = get_object_or_404(Sign, display=display_id)
+
+    now = timezone.localtime()
+    day = Day.objects.today()
+    if day is not None and day.end_time is not None:
+        end_of_day = day.end_time.date_obj(now.date())
+    else:
+        end_of_day = datetime.datetime(now.year, now.month, now.day, 16, 0)
+
     context = schedule_context(request)
     context["sign"] = sign
     context["page_args"] = (sign, request)
+    context["end_switch_page_time"] = end_of_day - datetime.timedelta(minutes=sign.day_end_switch_minutes)
     return render(request, "signage/base.html", context)
 
 
