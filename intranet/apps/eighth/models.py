@@ -1050,15 +1050,24 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.special or self.activity.special
 
-    def is_full(self) -> bool:
+    def is_full(self, nocache: bool = False) -> bool:
         """Returns whether the scheduled activity is full.
+
+        Args:
+            nocache: Whether to disable caching for the query that checks the scheduled activity's
+                current capacity.
 
         Returns:
             Whether this scheduled activity is full.
 
         """
-        capacity = self.get_true_capacity()
-        return capacity != -1 and self.eighthsignup_set.count() >= capacity
+        capacity = self.get_true_capacity()  # We don't disable caching because this changes much less frequently
+
+        signups = self.eighthsignup_set.all()
+        if nocache:
+            signups = signups.nocache()
+
+        return capacity != -1 and signups.count() >= capacity
 
     def is_almost_full(self) -> bool:
         """Returns whether the scheduled activity is almost full (>=90%).
@@ -1316,7 +1325,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                         waitlist = EighthWaitlist.objects.create(user=user, block=self.block, scheduled_activity=sched_act)
                     else:
                         exception.PrimaryEmailNotSet = True
-                elif sched_act.is_full():
+                elif sched_act.is_full(nocache=True):
                     exception.ActivityFull = True
 
             # Check if it's too early to sign up for the activity
