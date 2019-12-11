@@ -1233,7 +1233,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 [waitlist.user.primary_email_address],
             )
 
-    @transaction.atomic
+    @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(
         self,
         user: "get_user_model()",
@@ -1275,6 +1275,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if sibling:
             all_sched_act.append(sibling)
             all_blocks.append(sibling.block)
+
+        # Lock on the User and the EighthScheduledActivity. These are dummy queries that just exist to acquire the lock.
+        # You might be tempted to make these into `assert`s, but don't. That will disable locking when optimizations are enabled (enabling
+        # optimizations disables `assert`s).
+        # See https://docs.djangoproject.com/en/2.2/ref/models/querysets/#select-for-update
+        logging.debug("Locking on user %d", user.id)
+        _ = get_user_model().objects.filter(id=user.id).select_for_update().exists()
+        logging.debug("Successfully locked on user %d", user.id)
+        logging.debug("Locking on scheduled activity %d", self.id)
+        _ = EighthScheduledActivity.objects.filter(id=self.id).select_for_update().exists()
+        logging.debug("Successfully locked on scheduled activity %d", self.id)
 
         waitlist = None
         if force:
