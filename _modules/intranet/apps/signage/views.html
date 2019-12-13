@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #5634) documentation</title>
+    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #5637) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,15 +125,18 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.signage.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">...utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..eighth.serializers</span> <span class="kn">import</span> <span class="n">EighthBlockDetailSerializer</span>
+<span class="kn">from</span> <span class="nn">..schedule.models</span> <span class="kn">import</span> <span class="n">Day</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="kn">import</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Sign</span>
@@ -154,9 +157,18 @@
     <span class="k">if</span> <span class="n">check_ip</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">check_ip</span>
     <span class="n">sign</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Sign</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="n">display_id</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">day</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
     <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sign&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;page_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;end_switch_page_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">sign</span><span class="o">.</span><span class="n">day_end_switch_minutes</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/base.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
