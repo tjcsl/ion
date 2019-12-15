@@ -65,10 +65,13 @@ def check_emerg():
     return status, message
 
 
-def get_emerg_result():
+def get_emerg_result(*, custom_logger=None):
     """Run the fetch command from FCPS."""
+    if custom_logger is None:
+        custom_logger = logger
+
     status, message = check_emerg()
-    logger.debug("Fetched emergency info from FCPS")
+    custom_logger.debug("Fetched emergency info from FCPS")
     return {"status": status, "message": message}
 
 
@@ -83,6 +86,26 @@ def get_emerg():
     if cached:
         return cached
     else:
+        # We have a Celery task updating the cache periodically, so this normally won't run.
+        # However, if Celery stops working, we still want it to update, so we fall back on
+        # updating it here.
         result = get_emerg_result()
         cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])
         return result
+
+
+def update_emerg_cache(*, custom_logger=None) -> None:
+    """Updates the cached contents of FCPS emergency page.
+
+    This forces a cache update, regardless of whether or not the cache has
+    expired. However, it does set the cache entry to expire in
+    ``settings.CACHE_AGE["emerg"]`` seconds.
+
+    Args:
+        custom_logger: A custom ``logging.Logger`` instance to use for log
+            messages relating to the cache update.
+
+    """
+    key = "emerg:{}".format(timezone.localdate())
+    result = get_emerg_result(custom_logger=custom_logger)
+    cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])

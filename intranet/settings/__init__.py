@@ -749,6 +749,10 @@ FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 # The timeout for the request to FCPS' emergency page (in seconds)
 FCPS_EMERGENCY_TIMEOUT = 5
 
+# How frequently the emergency announcement cache should be updated by the Celerybeat task.
+# This should be less than CACHE_AGE["emerg"].
+FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL = CACHE_AGE["emerg"] - 30
+
 # Show an iframe with tjStar activity data
 if TJSTAR_MAP is None:
     TJSTAR_MAP = False
@@ -763,6 +767,14 @@ CELERY_BROKER_URL = "amqp://localhost"
 
 CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
+
+CELERY_BEAT_SCHEDULE = {
+    "update-fcps-emergency-cache": {
+        "task": "intranet.apps.emerg.tasks.update_emerg_cache_task",
+        "schedule": FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL,
+        "args": (),
+    },
+}
 
 MAINTENANCE_MODE = False
 
