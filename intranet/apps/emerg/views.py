@@ -41,6 +41,7 @@ def check_emerg():
         "There are no major announcements at this time.",
         "There are no major emergency announcements at this time.",
         "There are no emergencies at this time.",
+        "Site under maintenance",  # We don't want to get people's attention like this just to tell them that fcps.edu is under maintenance
     ]
     for b in bad_strings:
         if b in res:
