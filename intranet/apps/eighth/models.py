@@ -11,6 +11,7 @@ from simple_history.models import HistoricalRecords
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
+from django.core import validators
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
@@ -254,7 +255,7 @@ class EighthActivity(AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    name = models.CharField(max_length=100)  # This should really be unique
+    name = models.CharField(max_length=100, validators=[validators.MinLengthValidator(4)])  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
