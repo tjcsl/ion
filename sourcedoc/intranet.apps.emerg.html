@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.emerg package &#8212; TJ Intranet v3 (Build #5637) documentation</title>
+    <title>intranet.apps.emerg package &#8212; TJ Intranet v3 (Build #5644) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -98,6 +98,7 @@
 <li><a class="reference internal" href="#">intranet.apps.emerg package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.emerg.api">intranet.apps.emerg.api module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.emerg.tasks">intranet.apps.emerg.tasks module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.emerg.views">intranet.apps.emerg.views module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.emerg">Module contents</a></li>
 </ul>
@@ -148,6 +149,9 @@
 <dd></dd></dl>
 
 </div>
+<div class="section" id="module-intranet.apps.emerg.tasks">
+<span id="intranet-apps-emerg-tasks-module"></span><h2>intranet.apps.emerg.tasks module<a class="headerlink" href="#module-intranet.apps.emerg.tasks" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-intranet.apps.emerg.views">
 <span id="intranet-apps-emerg-views-module"></span><h2>intranet.apps.emerg.views module<a class="headerlink" href="#module-intranet.apps.emerg.views" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -167,8 +171,23 @@
 
 <dl class="function">
 <dt id="intranet.apps.emerg.views.get_emerg_result">
-<code class="sig-prename descclassname">intranet.apps.emerg.views.</code><code class="sig-name descname">get_emerg_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/emerg/views.html#get_emerg_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.emerg.views.get_emerg_result" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">intranet.apps.emerg.views.</code><code class="sig-name descname">get_emerg_result</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">custom_logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/emerg/views.html#get_emerg_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.emerg.views.get_emerg_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the fetch command from FCPS.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.emerg.views.update_emerg_cache">
+<code class="sig-prename descclassname">intranet.apps.emerg.views.</code><code class="sig-name descname">update_emerg_cache</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">custom_logger=None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/intranet/apps/emerg/views.html#update_emerg_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.emerg.views.update_emerg_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the cached contents of FCPS emergency page.</p>
+<p>This forces a cache update, regardless of whether or not the cache has
+expired. However, it does set the cache entry to expire in
+<code class="docutils literal notranslate"><span class="pre">settings.CACHE_AGE[&quot;emerg&quot;]</span></code> seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>custom_logger</strong> – A custom <code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code> instance to use for log
+messages relating to the cache update.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

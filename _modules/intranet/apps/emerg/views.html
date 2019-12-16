@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.emerg.views &#8212; TJ Intranet v3 (Build #5637) documentation</title>
+    <title>intranet.apps.emerg.views &#8212; TJ Intranet v3 (Build #5644) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -168,6 +168,7 @@
         <span class="s2">&quot;There are no major announcements at this time.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;There are no major emergency announcements at this time.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;There are no emergencies at this time.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Site under maintenance&quot;</span><span class="p">,</span>  <span class="c1"># We don&#39;t want to get people&#39;s attention like this just to tell them that fcps.edu is under maintenance</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bad_strings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
@@ -191,10 +192,13 @@
     <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">message</span></div>
 
 
-<div class="viewcode-block" id="get_emerg_result"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.get_emerg_result">[docs]</a><span class="k">def</span> <span class="nf">get_emerg_result</span><span class="p">():</span>
+<div class="viewcode-block" id="get_emerg_result"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.get_emerg_result">[docs]</a><span class="k">def</span> <span class="nf">get_emerg_result</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">custom_logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run the fetch command from FCPS.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">custom_logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">custom_logger</span> <span class="o">=</span> <span class="n">logger</span>
+
     <span class="n">status</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">check_emerg</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetched emergency info from FCPS&quot;</span><span class="p">)</span>
+    <span class="n">custom_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetched emergency info from FCPS&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span></div>
 
 
@@ -209,9 +213,29 @@
     <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">cached</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># We have a Celery task updating the cache periodically, so this normally won&#39;t run.</span>
+        <span class="c1"># However, if Celery stops working, we still want it to update, so we fall back on</span>
+        <span class="c1"># updating it here.</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">get_emerg_result</span><span class="p">()</span>
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;emerg&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="update_emerg_cache"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.update_emerg_cache">[docs]</a><span class="k">def</span> <span class="nf">update_emerg_cache</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">custom_logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Updates the cached contents of FCPS emergency page.</span>
+
+<span class="sd">    This forces a cache update, regardless of whether or not the cache has</span>
+<span class="sd">    expired. However, it does set the cache entry to expire in</span>
+<span class="sd">    ``settings.CACHE_AGE[&quot;emerg&quot;]`` seconds.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        custom_logger: A custom ``logging.Logger`` instance to use for log</span>
+<span class="sd">            messages relating to the cache update.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;emerg:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">())</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">get_emerg_result</span><span class="p">(</span><span class="n">custom_logger</span><span class="o">=</span><span class="n">custom_logger</span><span class="p">)</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;emerg&quot;</span><span class="p">])</span></div>
 </pre></div>
 
     </div>

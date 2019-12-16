@@ -12,6 +12,14 @@ intranet.apps.emerg.api module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.emerg.tasks module
+--------------------------------
+
+.. automodule:: intranet.apps.emerg.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.emerg.views module
 --------------------------------
 

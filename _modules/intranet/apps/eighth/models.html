@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5637) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5644) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -1177,15 +1177,24 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">special</span></div>
 
-<div class="viewcode-block" id="EighthScheduledActivity.is_full"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_full">[docs]</a>    <span class="k">def</span> <span class="nf">is_full</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EighthScheduledActivity.is_full"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_full">[docs]</a>    <span class="k">def</span> <span class="nf">is_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nocache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether the scheduled activity is full.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nocache: Whether to disable caching for the query that checks the scheduled activity&#39;s</span>
+<span class="sd">                current capacity.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this scheduled activity is full.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">capacity</span></div>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>  <span class="c1"># We don&#39;t disable caching because this changes much less frequently</span>
+
+        <span class="n">signups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">nocache</span><span class="p">:</span>
+            <span class="n">signups</span> <span class="o">=</span> <span class="n">signups</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">capacity</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">signups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">capacity</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.is_almost_full"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.is_almost_full">[docs]</a>    <span class="k">def</span> <span class="nf">is_almost_full</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether the scheduled activity is almost full (&gt;=90%).</span>
@@ -1351,7 +1360,7 @@
                 <span class="p">[</span><span class="n">waitlist</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">primary_email_address</span><span class="p">],</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="EighthScheduledActivity.add_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.add_user">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
+<div class="viewcode-block" id="EighthScheduledActivity.add_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.add_user">[docs]</a>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>  <span class="c1"># This MUST be run in a transaction. Do NOT remove this decorator.</span>
     <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">user</span><span class="p">:</span> <span class="s2">&quot;get_user_model()&quot;</span><span class="p">,</span>
@@ -1393,6 +1402,17 @@
         <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
             <span class="n">all_sched_act</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="p">)</span>
             <span class="n">all_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
+
+        <span class="c1"># Lock on the User and the EighthScheduledActivity. These are dummy queries that just exist to acquire the lock.</span>
+        <span class="c1"># You might be tempted to make these into `assert`s, but don&#39;t. That will disable locking when optimizations are enabled (enabling</span>
+        <span class="c1"># optimizations disables `assert`s).</span>
+        <span class="c1"># See https://docs.djangoproject.com/en/2.2/ref/models/querysets/#select-for-update</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Locking on user </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully locked on user </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Locking on scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully locked on scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="n">waitlist</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
@@ -1443,7 +1463,7 @@
                         <span class="n">waitlist</span> <span class="o">=</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sched_act</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">exception</span><span class="o">.</span><span class="n">PrimaryEmailNotSet</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">elif</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
+                <span class="k">elif</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">(</span><span class="n">nocache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">ActivityFull</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Check if it&#39;s too early to sign up for the activity</span>
