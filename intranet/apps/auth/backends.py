@@ -112,10 +112,10 @@ class KerberosAuthenticationBackend:
             del os.environ["KRB5CCNAME"]
 
         if exitstatus == 0:
-            logger.debug("Kerberos authorized %s@%s", username, realm)
+            logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
             return True, authenticated_through_AD
         else:
-            logger.debug("Kerberos failed to authorize %s", username)
+            logger.debug("Kerberos failed to authorize %s - %r", username. authenticated_through_AD)
             return False, authenticated_through_AD
 
     @kerberos_authenticate.time()
