@@ -115,7 +115,7 @@ class KerberosAuthenticationBackend:
             logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
             return True, authenticated_through_AD
         else:
-            logger.debug("Kerberos failed to authorize %s - %r", username. authenticated_through_AD)
+            logger.debug("Kerberos failed to authorize %s - %r", username, authenticated_through_AD)
             return False, authenticated_through_AD
 
     @kerberos_authenticate.time()
