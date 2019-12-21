@@ -20,6 +20,7 @@ from django.utils import formats, timezone
 
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
+from ...utils.locking import lock_on
 from ..notifications.tasks import email_send_task
 from . import exceptions as eighth_exceptions
 
@@ -1276,16 +1277,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             all_sched_act.append(sibling)
             all_blocks.append(sibling.block)
 
-        # Lock on the User and the EighthScheduledActivity. These are dummy queries that just exist to acquire the lock.
-        # You might be tempted to make these into `assert`s, but don't. That will disable locking when optimizations are enabled (enabling
-        # optimizations disables `assert`s).
-        # See https://docs.djangoproject.com/en/2.2/ref/models/querysets/#select-for-update
-        logging.debug("Locking on user %d", user.id)
-        _ = get_user_model().objects.filter(id=user.id).select_for_update().exists()
-        logging.debug("Successfully locked on user %d", user.id)
-        logging.debug("Locking on scheduled activity %d", self.id)
-        _ = EighthScheduledActivity.objects.filter(id=self.id).select_for_update().exists()
-        logging.debug("Successfully locked on scheduled activity %d", self.id)
+        # Lock on the User and the EighthScheduledActivity to prevent duplicates.
+        logger.debug("Locking on user %d and scheduled activity %d", user.id, self.id)
+        lock_on([user, self])
+        logger.debug("Successfully locked on user %d and scheduled activity %d", user.id, self.id)
 
         waitlist = None
         if force:
