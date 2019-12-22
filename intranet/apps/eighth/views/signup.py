@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from ....utils.helpers import is_entirely_digit
+from ....utils.locking import lock_on
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_admin_required
 from ..exceptions import SignupException
@@ -339,6 +340,8 @@ def toggle_favorite_view(request):
     aid = request.POST["aid"]
     with transaction.atomic():
         activity = get_object_or_404(EighthActivity, id=aid)
+        # Lock on the User to prevent duplicates.
+        lock_on([request.user])
         if activity.favorites.filter(id=request.user.id).nocache().exists():
             activity.favorites.remove(request.user)
             return http.HttpResponse("Unfavorited activity.")
