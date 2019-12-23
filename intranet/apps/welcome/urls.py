@@ -1,10 +1,10 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
 urlpatterns = [
-    url(r"^/student$", views.student_welcome_view, name="welcome_student"),
-    url(r"^/teacher$", views.teacher_welcome_view, name="welcome_teacher"),
-    url(r"^/done$", views.done_welcome_view, name="welcome_done"),
-    url(r"^$", views.welcome_view, name="welcome"),
+    re_path(r"^/student$", views.student_welcome_view, name="welcome_student"),
+    re_path(r"^/teacher$", views.teacher_welcome_view, name="welcome_teacher"),
+    re_path(r"^/done$", views.done_welcome_view, name="welcome_done"),
+    re_path(r"^$", views.welcome_view, name="welcome"),
 ]

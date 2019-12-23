@@ -1,5 +1,5 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
-urlpatterns = [url(r"^$", views.send_feedback_view, name="send_feedback")]
+urlpatterns = [re_path(r"^$", views.send_feedback_view, name="send_feedback")]
