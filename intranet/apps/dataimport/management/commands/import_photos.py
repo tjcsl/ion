@@ -1,30 +1,25 @@
 #!/usr/bin/env python3
 
 import io
-import os
 import sys
-
 from pathlib import Path
 
 from PIL import Image
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 from intranet.apps.users.models import Photo
+
 
 class Command(BaseCommand):
     help = "Imports photos from yearbook data export"
 
     def add_arguments(self, parser):
-        parser.add_argument('directory')
+        parser.add_argument("directory")
 
     def handle(self, *args, **options):
-        data = []
-
-        PHOTO_ROOT_DIRECTORY = options['directory']
+        PHOTO_ROOT_DIRECTORY = options["directory"]
         PHOTO_ROOT_PATH = Path(PHOTO_ROOT_DIRECTORY)
         sys.stdout.write("Preparing to import photos from directory {}\n".format(PHOTO_ROOT_DIRECTORY))
         messages = []
@@ -35,7 +30,6 @@ class Command(BaseCommand):
             except ValueError:
                 print("IGNORING {}".format(path.name))
                 continue
-            sid = path.stem
             user = get_user_model().objects.user_with_student_id(path.stem)
             if user is None:
                 print("IGNORING {}".format(path.name))
@@ -49,7 +43,7 @@ class Command(BaseCommand):
             message = "Creating photo for {} grade {}".format(user, grade_number)
             print(message)
             messages.append(message)
-            photo = Photo.objects.create(user=user, grade_number=grade_number, _binary=value)
+            Photo.objects.create(user=user, grade_number=grade_number, _binary=value)
         with open("photos_created.txt", "w") as f:
             f.write("\n".join(messages))
 
