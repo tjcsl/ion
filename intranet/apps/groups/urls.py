@@ -1,5 +1,5 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
-urlpatterns = [url(r"^$", views.groups_view, name="groups"), url(r"^/add$", views.add_group_view, name="add_groups")]
+urlpatterns = [re_path(r"^$", views.groups_view, name="groups"), re_path(r"^/add$", views.add_group_view, name="add_groups")]
