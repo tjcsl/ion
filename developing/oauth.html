@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #5653) documentation</title>
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #5670) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -184,12 +184,12 @@
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p>For a Python client, use requests with requests-oauthlib.</p>
 <p>If running locally (without HTTPS), override the SSL requirement for OAuth2.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OAUTHLIB_INSECURE_TRANSPORT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
 </pre></div>
 </div>
 <p>Create an OAuth2Session, with the CLIENT_ID and REDIRECT_URI you entered in the application form. Redirect the user to authorization_url.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth2Session</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth2Session</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">oauth</span> <span class="o">=</span> <span class="n">OAuth2Session</span><span class="p">(</span><span class="n">CLIENT_ID</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                      <span class="n">redirect_uri</span><span class="o">=</span><span class="n">REDIRECT_URI</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                      <span class="n">scope</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="s2">&quot;write&quot;</span><span class="p">])</span>
@@ -198,7 +198,7 @@
 </pre></div>
 </div>
 <p>The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a “code” GET parameter.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">code</span><span class="o">=</span><span class="n">CODE</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">client_secret</span><span class="o">=</span><span class="n">CLIENT_SECRET</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>

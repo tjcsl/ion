@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simple_history.models &#8212; TJ Intranet v3 (Build #5653) documentation</title>
+    <title>simple_history.models &#8212; TJ Intranet v3 (Build #5670) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -129,37 +129,38 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
+<span class="kn">import</span> <span class="nn">django</span>
+<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">django.apps</span> <span class="kn">import</span> <span class="n">apps</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.serializers</span> <span class="kn">import</span> <span class="n">serialize</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.db.models.fields.proxy</span> <span class="kn">import</span> <span class="n">OrderWrt</span>
+<span class="kn">from</span> <span class="nn">django.forms.models</span> <span class="kn">import</span> <span class="n">model_to_dict</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">python_2_unicode_compatible</span><span class="p">,</span> <span class="n">smart_text</span>
 <span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="kn">import</span> <span class="n">format_lazy</span>
 <span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">now</span>
-<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
-
 <span class="kn">from</span> <span class="nn">simple_history</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">.manager</span> <span class="kn">import</span> <span class="n">HistoryDescriptor</span>
 <span class="kn">from</span> <span class="nn">.signals</span> <span class="kn">import</span> <span class="n">post_create_historical_record</span><span class="p">,</span> <span class="n">pre_create_historical_record</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="k">if</span> <span class="n">django</span><span class="o">.</span><span class="n">VERSION</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">2</span><span class="p">,):</span>
+    <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+    <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">smart_text</span> <span class="k">as</span> <span class="n">smart_str</span>
+    <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">python_2_unicode_compatible</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">gettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+    <span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">smart_str</span>
 
 <span class="n">registered_models</span> <span class="o">=</span> <span class="p">{}</span>
-
-
-<span class="k">def</span> <span class="nf">_model_to_dict</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">model</span><span class="p">]))[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">_default_get_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -352,7 +353,12 @@
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_history_model_name</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="n">registered_models</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="k">return</span> <span class="n">python_2_unicode_compatible</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">))</span>
+        <span class="n">history_model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">python_2_unicode_compatible</span><span class="p">(</span><span class="n">history_model</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">django</span><span class="o">.</span><span class="n">VERSION</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span>
+            <span class="k">else</span> <span class="n">history_model</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">fields_included</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
@@ -505,12 +511,16 @@
                     <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">attname</span>
                     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_history_excluded_fields</span>
                 <span class="p">]</span>
-                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">))</span>
-                    <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">*</span><span class="n">excluded_attnames</span><span class="p">)</span>
-                    <span class="o">.</span><span class="n">get</span><span class="p">()</span>
-                <span class="p">)</span>
-                <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">))</span>
+                        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">*</span><span class="n">excluded_attnames</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">attrs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_next_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -573,7 +583,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_set_verbose_name</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">format_lazy</span><span class="p">(</span><span class="s2">&quot;historical </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smart_text</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">))</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">format_lazy</span><span class="p">(</span><span class="s2">&quot;historical </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smart_str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">))</span>
         <span class="n">meta_fields</span><span class="p">[</span><span class="s2">&quot;verbose_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">:</span>
             <span class="n">meta_fields</span><span class="p">[</span><span class="s2">&quot;app_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span>
@@ -683,8 +693,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span> <span class="o">=</span> <span class="n">fields_included</span>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_included</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">values</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">HistoricalChanges</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -698,8 +708,8 @@
 
         <span class="n">changes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">changed_fields</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">old_values</span> <span class="o">=</span> <span class="n">_model_to_dict</span><span class="p">(</span><span class="n">old_history</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
-        <span class="n">current_values</span> <span class="o">=</span> <span class="n">_model_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">old_values</span> <span class="o">=</span> <span class="n">model_to_dict</span><span class="p">(</span><span class="n">old_history</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">current_values</span> <span class="o">=</span> <span class="n">model_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">current_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">old_values</span><span class="p">:</span>
                 <span class="n">old_value</span> <span class="o">=</span> <span class="n">old_values</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>

@@ -52,6 +52,14 @@ intranet.utils.html module
    :undoc-members:
    :show-inheritance:
 
+intranet.utils.locking module
+-----------------------------
+
+.. automodule:: intranet.utils.locking
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.utils.serialization module
 -----------------------------------
 

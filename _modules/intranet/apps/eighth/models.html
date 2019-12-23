@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5653) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #5670) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -147,6 +147,7 @@
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">is_current_year</span>
 <span class="kn">from</span> <span class="nn">...utils.deletion</span> <span class="kn">import</span> <span class="n">set_historical_user</span>
+<span class="kn">from</span> <span class="nn">...utils.locking</span> <span class="kn">import</span> <span class="n">lock_on</span>
 <span class="kn">from</span> <span class="nn">..notifications.tasks</span> <span class="kn">import</span> <span class="n">email_send_task</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">eighth_exceptions</span>
 
@@ -1403,16 +1404,10 @@
             <span class="n">all_sched_act</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="p">)</span>
             <span class="n">all_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
 
-        <span class="c1"># Lock on the User and the EighthScheduledActivity. These are dummy queries that just exist to acquire the lock.</span>
-        <span class="c1"># You might be tempted to make these into `assert`s, but don&#39;t. That will disable locking when optimizations are enabled (enabling</span>
-        <span class="c1"># optimizations disables `assert`s).</span>
-        <span class="c1"># See https://docs.djangoproject.com/en/2.2/ref/models/querysets/#select-for-update</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Locking on user </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully locked on user </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Locking on scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully locked on scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="c1"># Lock on the User and the EighthScheduledActivity to prevent duplicates.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Locking on user </span><span class="si">%d</span><span class="s2"> and scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">lock_on</span><span class="p">([</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully locked on user </span><span class="si">%d</span><span class="s2"> and scheduled activity </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="n">waitlist</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">force</span><span class="p">:</span>

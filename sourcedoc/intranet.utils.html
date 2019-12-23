@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils package &#8212; TJ Intranet v3 (Build #5653) documentation</title>
+    <title>intranet.utils package &#8212; TJ Intranet v3 (Build #5670) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -103,6 +103,7 @@
 <li><a class="reference internal" href="#module-intranet.utils.deletion">intranet.utils.deletion module</a></li>
 <li><a class="reference internal" href="#module-intranet.utils.helpers">intranet.utils.helpers module</a></li>
 <li><a class="reference internal" href="#module-intranet.utils.html">intranet.utils.html module</a></li>
+<li><a class="reference internal" href="#module-intranet.utils.locking">intranet.utils.locking module</a></li>
 <li><a class="reference internal" href="#module-intranet.utils.serialization">intranet.utils.serialization module</a></li>
 <li><a class="reference internal" href="#module-intranet.utils">Module contents</a></li>
 </ul>
@@ -349,6 +350,33 @@ the link useless.</p>
 <dt id="intranet.utils.html.safe_html">
 <code class="sig-prename descclassname">intranet.utils.html.</code><code class="sig-name descname">safe_html</code><span class="sig-paren">(</span><em class="sig-param">txt</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/utils/html.html#safe_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.utils.html.safe_html" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.utils.locking">
+<span id="intranet-utils-locking-module"></span><h2>intranet.utils.locking module<a class="headerlink" href="#module-intranet.utils.locking" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.utils.locking.lock_on">
+<code class="sig-prename descclassname">intranet.utils.locking.</code><code class="sig-name descname">lock_on</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable[Union[django.db.models.base.Model, django.db.models.manager.Manager, django.db.models.query.QuerySet]]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/intranet/utils/locking.html#lock_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.utils.locking.lock_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an iterable of <code class="docutils literal notranslate"><span class="pre">Model</span></code> instances, <a href="#id1"><span class="problematic" id="id2">``</span></a>Manager``s, and/or <a href="#id3"><span class="problematic" id="id4">``</span></a>QuerySet``s, locks the
+corresponding database rows.</p>
+<p>More specifically, this uses the Django ORM’s <code class="docutils literal notranslate"><span class="pre">select_for_update()</span></code> method, which translates
+to a <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">FOR</span> <span class="pre">UPDATE</span></code> SQL query. For more information on what this actually does in
+PostgreSQL (used as the database backend in all environments) see PostgreSQL’s
+documentation on locking at
+<a class="reference external" href="https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS">https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS</a>.</p>
+<p>As described in Django’s documentation at
+<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/queryset/#django.db.models.query.QuerySet.select_for_update">https://docs.djangoproject.com/en/stable/ref/models/queryset/#django.db.models.query.QuerySet.select_for_update</a>,
+the <code class="docutils literal notranslate"><span class="pre">select_for_update</span></code> locks prevent other transactions from acquiring locks until
+this transaction is complete.</p>
+<p>This MUST by run in a transaction. A straightforward way to do this is to use the
+<code class="docutils literal notranslate"><span class="pre">django.db.transaction.atomic</span></code> wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> – An iterable of <code class="docutils literal notranslate"><span class="pre">Model</span></code> instances, <a href="#id5"><span class="problematic" id="id6">``</span></a>Manager``s, and/or <a href="#id7"><span class="problematic" id="id8">``</span></a>QuerySet``s representing
+the database rows to lock.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-intranet.utils.serialization">

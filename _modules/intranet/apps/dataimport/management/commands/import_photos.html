@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dataimport.management.commands.import_photos &#8212; TJ Intranet v3 (Build #5653) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_photos &#8212; TJ Intranet v3 (Build #5670) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -125,248 +125,56 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.dataimport.management.commands.import_photos</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
 
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">Photo</span>
+
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Import Lifetouch photos into LDAP. Uses the &#39;TJHSST-Intranet&#39; photo data export format via the Lifetouch Portal.&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Imports photos from yearbook data export&quot;</span>
 
 <div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--pretend&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;pretend&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Don&#39;t save files to filesystem&quot;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--root&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;root_dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;/root/photos/1617/DataImages/&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;**absolute** path to outer DataImages folder for LDIF&quot;</span>
-        <span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--local-root&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;local_root_dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;/mnt/c/Users/James/DataImages/&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path to DataImages folder on this host&quot;</span>
-        <span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--grade-offset&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;grade_offset&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Grade offset, for importing previous year photos&quot;</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--skip-staff&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;skip_staff&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip staff&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Command.chk"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.chk">[docs]</a>    <span class="k">def</span> <span class="nf">chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;directory&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-        <span class="n">pretend</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;pretend&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="n">root_dir</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;root_dir&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="n">local_root_dir</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;local_root_dir&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="n">grade_offset</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;grade_offset&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="n">skip_staff</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;skip_staff&quot;</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRADE OFFSET: &quot;</span><span class="p">,</span> <span class="n">grade_offset</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> =&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_grade_offset</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">grade_offset</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">)]))</span>
-        <span class="n">teacher_photo_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;user_sid_map.json&quot;</span><span class="p">):</span>
-            <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_sid_map.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">users</span> <span class="o">=</span> <span class="p">{}</span>
-
-            <span class="n">csv_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">data.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">local_root_dir</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_file</span><span class="p">:</span>
-                <span class="n">csv_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
-                <span class="nb">next</span><span class="p">(</span><span class="n">csv_reader</span><span class="p">)</span>  <span class="c1"># skip header</span>
-                <span class="c1"># StudentID, FirstName, LastName, Grade</span>
-                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-                    <span class="n">sid</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="p">,</span> <span class="n">grade</span> <span class="o">=</span> <span class="n">row</span>
-                    <span class="n">grade</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_grade</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;IGNORE&quot;</span><span class="p">:</span>
-                        <span class="c1"># ignore staff with pictures who aren&#39;t in LDAP</span>
-                        <span class="n">teacher_photo_index</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="k">continue</span>
-
-                    <span class="n">current_grade</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_grade_offset</span><span class="p">(</span><span class="n">grade</span><span class="p">,</span> <span class="n">grade_offset</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">grade</span> <span class="o">!=</span> <span class="s2">&quot;STA&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">current_grade</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">12</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_grade</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">):</span>
-                        <span class="k">continue</span>
-                    <span class="c1"># the CSV includes only &quot;missing-Student ID&quot;, but we need the</span>
-                    <span class="c1"># filename for each specific missing student id file.</span>
-                    <span class="k">if</span> <span class="n">sid</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;missing-&quot;</span><span class="p">):</span>
-                        <span class="n">sid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_photo_name</span><span class="p">(</span><span class="n">teacher_photo_index</span><span class="p">)</span>
-                        <span class="n">teacher_photo_index</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                    <span class="n">entry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sid&quot;</span><span class="p">:</span> <span class="n">sid</span><span class="p">,</span> <span class="s2">&quot;fname&quot;</span><span class="p">:</span> <span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;lname&quot;</span><span class="p">:</span> <span class="n">lname</span><span class="p">,</span> <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="n">grade</span><span class="p">,</span> <span class="s2">&quot;photo_name&quot;</span><span class="p">:</span> <span class="n">sid</span><span class="p">}</span>
-                    <span class="k">if</span> <span class="n">grade</span> <span class="o">!=</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
-                        <span class="n">user_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_from_sid</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
-                        <span class="c1"># entry[&quot;user_obj&quot;] = user_obj</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">user_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_staff_name</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_obj</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INVALID USER OBJECT&quot;</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
-                        <span class="c1"># if grade_offset != 0:</span>
-                        <span class="c1">#    continue</span>
-
-                    <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_obj</span><span class="o">.</span><span class="n">username</span>
-
-                    <span class="n">users</span><span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">entry</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">pretend</span><span class="p">:</span>
-                <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_sid_map.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map loaded.&quot;</span><span class="p">)</span>
-
-        <span class="n">ldifs</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">uname</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
-            <span class="n">udata</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">uname</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">skip_staff</span> <span class="ow">and</span> <span class="n">udata</span><span class="p">[</span><span class="s2">&quot;grade&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
+        <span class="n">PHOTO_ROOT_DIRECTORY</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;directory&quot;</span><span class="p">]</span>
+        <span class="n">PHOTO_ROOT_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">PHOTO_ROOT_DIRECTORY</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Preparing to import photos from directory </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PHOTO_ROOT_DIRECTORY</span><span class="p">))</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_photos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">PHOTO_ROOT_PATH</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.jpg&quot;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">all_photos</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IGNORING </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IGNORING </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">continue</span>
 
-            <span class="n">photo_yr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photo_title_year</span><span class="p">(</span><span class="n">udata</span><span class="p">[</span><span class="s2">&quot;grade&quot;</span><span class="p">])</span>
+            <span class="n">grade_number</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">img_arr</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">img_arr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;JPEG&quot;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">img_arr</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Creating photo for </span><span class="si">{}</span><span class="s2"> grade </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">grade_number</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">Photo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">,</span> <span class="n">_binary</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;photos_created.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">messages</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">photo_yr</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">uname</span><span class="p">,</span> <span class="n">udata</span><span class="p">[</span><span class="s2">&quot;grade&quot;</span><span class="p">],</span> <span class="n">photo_yr</span><span class="p">,</span> <span class="n">users</span><span class="p">[</span><span class="n">uname</span><span class="p">])</span>
-                <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_photo_ldif</span><span class="p">({</span><span class="s2">&quot;photo&quot;</span><span class="p">:</span> <span class="n">photo_yr</span><span class="p">,</span> <span class="s2">&quot;iodineUid&quot;</span><span class="p">:</span> <span class="n">uname</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_photo_path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="n">udata</span><span class="p">[</span><span class="s2">&quot;photo_name&quot;</span><span class="p">])})</span>
-
-                <span class="n">ldifs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">udata</span><span class="p">[</span><span class="s2">&quot;grade&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
-                    <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_default_photo_ldif</span><span class="p">({</span><span class="s2">&quot;iodineUid&quot;</span><span class="p">:</span> <span class="n">uname</span><span class="p">})</span>
-                    <span class="n">ldifs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ldif</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SKIP&quot;</span><span class="p">,</span> <span class="n">uname</span><span class="p">,</span> <span class="n">udata</span><span class="p">[</span><span class="s2">&quot;grade&quot;</span><span class="p">],</span> <span class="n">photo_yr</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pretend</span><span class="p">:</span>
-            <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;import_photos.ldif&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ldifs</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="Command.get_from_sid"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.get_from_sid">[docs]</a>    <span class="k">def</span> <span class="nf">get_from_sid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">):</span>
-        <span class="c1"># fix duplicate student ID map in LDAP</span>
-        <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sid</span> <span class="o">==</span> <span class="mi">1582058</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">33494</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sid</span> <span class="o">==</span> <span class="mi">1163521</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">32391</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.get_staff_name"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.get_staff_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_staff_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="p">):</span>
-        <span class="c1"># ignore subnames in parens; wildcard for abbreviated names</span>
-        <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span>
-        <span class="n">lname</span> <span class="o">=</span> <span class="n">lname</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># hyphenated vs spaced subnames</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># non-spaced last name</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># non-spaced first name</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># middle name in first name</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># cathie =&gt; catherine</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ie&quot;</span><span class="p">,</span> <span class="s2">&quot;erine&quot;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># mike =&gt; michael</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ke&quot;</span><span class="p">,</span> <span class="s2">&quot;chael&quot;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># katrina =&gt; katy</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;trina&quot;</span><span class="p">,</span> <span class="s2">&quot;ty&quot;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># kathleen =&gt; kathy</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;hleen&quot;</span><span class="p">,</span> <span class="s2">&quot;hy&quot;</span><span class="p">),</span> <span class="n">lname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u</span>
-        <span class="c1"># If you got to here without a match... they probably aren&#39;t in LDAP.</span>
-        <span class="c1"># change &quot;STA&quot; to &quot;IGNORE&quot; in the csv</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-<div class="viewcode-block" id="Command.calc_grade_offset"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.calc_grade_offset">[docs]</a>    <span class="k">def</span> <span class="nf">calc_grade_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">grade_offset</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">grade</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">grade_offset</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.fix_grade"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.fix_grade">[docs]</a>    <span class="k">def</span> <span class="nf">fix_grade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
-        <span class="n">grade</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;NGA&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;STA&quot;</span>
-        <span class="k">if</span> <span class="n">grade</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;TH&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">grade</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">grade</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">grade</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">grade</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">grade</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">grade</span></div>
-
-<div class="viewcode-block" id="Command.photo_title_year"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.photo_title_year">[docs]</a>    <span class="k">def</span> <span class="nf">photo_title_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
-        <span class="n">gmap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;9&quot;</span><span class="p">:</span> <span class="s2">&quot;freshmanPhoto&quot;</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">:</span> <span class="s2">&quot;sophomorePhoto&quot;</span><span class="p">,</span> <span class="s2">&quot;11&quot;</span><span class="p">:</span> <span class="s2">&quot;juniorPhoto&quot;</span><span class="p">,</span> <span class="s2">&quot;12&quot;</span><span class="p">:</span> <span class="s2">&quot;seniorPhoto&quot;</span><span class="p">,</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span> <span class="s2">&quot;freshmanPhoto&quot;</span><span class="p">}</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="ow">in</span> <span class="n">gmap</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">grade</span> <span class="o">!=</span> <span class="s2">&quot;STA&quot;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">9</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">gmap</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)]</span>
-            <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="s2">&quot;STA&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">gmap</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">grade</span><span class="p">)]</span>
-
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-<div class="viewcode-block" id="Command.teacher_photo_name"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.teacher_photo_name">[docs]</a>    <span class="k">def</span> <span class="nf">teacher_photo_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;missing-Student ID&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;missing-Student ID-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.get_photo_path"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.get_photo_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_photo_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">,</span> <span class="n">sid</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">images/</span><span class="si">{}</span><span class="s2">.jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="n">sid</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.delete_photo_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.delete_photo_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">delete_photo_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: cn=</span><span class="si">{photo}</span><span class="s2">,iodineUid=</span><span class="si">{iodineUid}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
-<span class="s2">changetype: delete&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">data</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">ldif</span></div>
-
-<div class="viewcode-block" id="Command.add_photo_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.add_photo_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">add_photo_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: cn=</span><span class="si">{photo}</span><span class="s2">,iodineUid=</span><span class="si">{iodineUid}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
-<span class="s2">changetype: add</span>
-<span class="s2">objectClass: iodinePhoto</span>
-<span class="s2">cn: </span><span class="si">{photo}</span><span class="s2"></span>
-<span class="s2">jpegPhoto:&lt; file://</span><span class="si">{path}</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">data</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">ldif</span></div>
-
-<div class="viewcode-block" id="Command.teacher_default_photo_ldif"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_photos.Command.teacher_default_photo_ldif">[docs]</a>    <span class="k">def</span> <span class="nf">teacher_default_photo_ldif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">ldif</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">dn: iodineUid=</span><span class="si">{iodineUid}</span><span class="s2">,ou=people,dc=tjhsst,dc=edu</span>
-<span class="s2">changetype: modify</span>
-<span class="s2">replace: preferredPhoto</span>
-<span class="s2">preferredPhoto: freshmanPhoto</span>
-<span class="s2">-</span>
-<span class="s2">replace: perm-showpictures-self</span>
-<span class="s2">perm-showpictures-self: TRUE&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">data</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">ldif</span></div></div>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Completed photo import.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
