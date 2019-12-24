@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>django.db.models.query_utils &#8212; TJ Intranet v3 (Build #5670) documentation</title>
+    <title>django.db.models.query_utils &#8212; TJ Intranet v3 (Build #5674) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -132,38 +132,32 @@
 <span class="sd">large and/or so that they can be used by other modules without getting into</span>
 <span class="sd">circular import difficulties.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
-
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">django.db.models.constants</span> <span class="kn">import</span> <span class="n">LOOKUP_SEP</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">tree</span>
-<span class="kn">from</span> <span class="nn">django.utils.lru_cache</span> <span class="kn">import</span> <span class="n">lru_cache</span>
 
 <span class="c1"># PathInfo is used when converting lookups (fk__somecol). The contents</span>
 <span class="c1"># describe the relation in Model terms (model Options and Fields for both</span>
 <span class="c1"># sides of the relation. The join_field is the field backing the relation.</span>
-<span class="n">PathInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;PathInfo&#39;</span><span class="p">,</span> <span class="s1">&#39;from_opts to_opts target_fields join_field m2m direct&#39;</span><span class="p">)</span>
+<span class="n">PathInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;PathInfo&#39;</span><span class="p">,</span> <span class="s1">&#39;from_opts to_opts target_fields join_field m2m direct filtered_relation&#39;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">InvalidQuery</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The query passed to raw isn&#39;t a safe query to use with raw.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The query passed to raw() isn&#39;t a safe query to use with raw().&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
 
 <span class="k">def</span> <span class="nf">subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
     <span class="k">yield</span> <span class="bp">cls</span>
-    <span class="c1"># Python 2 lacks &#39;yield from&#39;, which could replace the inner loop</span>
     <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
-        <span class="c1"># yield from subclasses(subclass)</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">item</span>
+        <span class="k">yield from</span> <span class="n">subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">QueryWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">QueryWrapper</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A type that indicates the contents are an SQL fragment and the associate</span>
 <span class="sd">    parameters. Can be used to pass opaque data to a where-clause, for example.</span>
@@ -179,20 +173,29 @@
 
 <span class="k">class</span> <span class="nc">Q</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">Node</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Encapsulates filters as objects that can then be combined logically (using</span>
+<span class="sd">    Encapsulate filters as objects that can then be combined logically (using</span>
 <span class="sd">    `&amp;` and `|`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Connection types</span>
     <span class="n">AND</span> <span class="o">=</span> <span class="s1">&#39;AND&#39;</span>
     <span class="n">OR</span> <span class="o">=</span> <span class="s1">&#39;OR&#39;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="n">AND</span>
+    <span class="n">conditional</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">_connector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_negated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())],</span> <span class="n">connector</span><span class="o">=</span><span class="n">_connector</span><span class="p">,</span> <span class="n">negated</span><span class="o">=</span><span class="n">_negated</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Q</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="c1"># If the other Q() is empty, ignore it and just use `self`.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">other</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># Or if this Q is empty, ignore it and just use `other`.</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)()</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">connector</span> <span class="o">=</span> <span class="n">conn</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
@@ -218,19 +221,35 @@
         <span class="n">query</span><span class="o">.</span><span class="n">promote_joins</span><span class="p">(</span><span class="n">joins</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clause</span>
 
+    <span class="k">def</span> <span class="nf">deconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;django.db.models.query_utils&#39;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;django.db.models.query_utils&#39;</span><span class="p">,</span> <span class="s1">&#39;django.db.models&#39;</span><span class="p">)</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="p">(),</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Q</span><span class="p">):</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">child</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">child</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+                <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_connector&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">negated</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;_negated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span>
 
-<span class="k">class</span> <span class="nc">DeferredAttribute</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<span class="k">class</span> <span class="nc">DeferredAttribute</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper for a deferred-loading field. When the value is read from this</span>
 <span class="sd">    object the first time, the query is executed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieves and caches the value from the datastore on the first lookup.</span>
-<span class="sd">        Returns the cached value.</span>
+<span class="sd">        Retrieve and caches the value from the datastore on the first lookup.</span>
+<span class="sd">        Return the cached value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
@@ -259,14 +278,14 @@
         <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">class</span> <span class="nc">RegisterLookupMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">RegisterLookupMixin</span><span class="p">:</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_get_lookup</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lookup_name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_lookups</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lookup_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">get_lookups</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">class_lookups</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_lookups&#39;</span><span class="p">,</span> <span class="p">{})</span> <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="bp">cls</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">merge_dicts</span><span class="p">(</span><span class="n">class_lookups</span><span class="p">)</span>
@@ -328,7 +347,7 @@
 
 <span class="k">def</span> <span class="nf">select_related_descend</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">restricted</span><span class="p">,</span> <span class="n">requested</span><span class="p">,</span> <span class="n">load_fields</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns True if this field should be used to descend deeper for</span>
+<span class="sd">    Return True if this field should be used to descend deeper for</span>
 <span class="sd">    select_related() purposes. Used by both the query construction code</span>
 <span class="sd">    (sql.query.fill_related_selections()) and the model instance creation code</span>
 <span class="sd">    (query.get_klass_info()).</span>
@@ -364,12 +383,11 @@
 
 <span class="k">def</span> <span class="nf">refs_expression</span><span class="p">(</span><span class="n">lookup_parts</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A helper method to check if the lookup_parts contains references</span>
-<span class="sd">    to the given annotations set. Because the LOOKUP_SEP is contained in the</span>
-<span class="sd">    default annotation names we must check each prefix of the lookup_parts</span>
-<span class="sd">    for a match.</span>
+<span class="sd">    Check if the lookup_parts contains references to the given annotations set.</span>
+<span class="sd">    Because the LOOKUP_SEP is contained in the default annotation names, check</span>
+<span class="sd">    each prefix of the lookup_parts for a match.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lookup_parts</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lookup_parts</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">level_n_lookup</span> <span class="o">=</span> <span class="n">LOOKUP_SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lookup_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">level_n_lookup</span> <span class="ow">in</span> <span class="n">annotations</span> <span class="ow">and</span> <span class="n">annotations</span><span class="p">[</span><span class="n">level_n_lookup</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">annotations</span><span class="p">[</span><span class="n">level_n_lookup</span><span class="p">],</span> <span class="n">lookup_parts</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
@@ -402,6 +420,47 @@
         <span class="n">check</span><span class="p">(</span><span class="n">target_opts</span><span class="p">)</span> <span class="ow">or</span>
         <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;primary_key&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="p">))</span>
     <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FilteredRelation</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Specify custom filtering in the ON clause of SQL joins.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">Q</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">relation_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;relation_name cannot be empty.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relation_name</span> <span class="o">=</span> <span class="n">relation_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">Q</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;condition argument must be a Q() instance.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relation_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">relation_name</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alias</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">alias</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">condition</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">clone</span> <span class="o">=</span> <span class="n">FilteredRelation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relation_name</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="n">clone</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alias</span>
+        <span class="n">clone</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[:]</span>
+        <span class="k">return</span> <span class="n">clone</span>
+
+    <span class="k">def</span> <span class="nf">resolve_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        QuerySet.annotate() only accepts expression-like arguments</span>
+<span class="sd">        (with a resolve_expression() method).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;FilteredRelation.resolve_expression() is unused.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_sql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compiler</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="c1"># Resolve the condition in Join.filtered_relation.</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">query</span>
+        <span class="n">where</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">build_filtered_relation_q</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">reuse</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">where</span><span class="p">)</span>
 </pre></div>
 
     </div>

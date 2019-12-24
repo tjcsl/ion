@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #5670) documentation</title>
+    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #5674) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -490,7 +490,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -517,7 +517,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -537,7 +537,7 @@ a many-to-many relation.</p>
     <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
@@ -571,42 +571,42 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_category_display">
-<code class="sig-name descname">get_category_display</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_category_display" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_category_display</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.CharField: category&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_category_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_next_by_added">
-<code class="sig-name descname">get_next_by_added</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_added" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_next_by_added</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: added&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_added" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_next_by_time">
-<code class="sig-name descname">get_next_by_time</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_next_by_time</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: time&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_next_by_updated">
-<code class="sig-name descname">get_next_by_updated</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_updated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_next_by_updated</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: updated&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_updated" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_open_to_display">
-<code class="sig-name descname">get_open_to_display</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_open_to_display" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_open_to_display</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.CharField: open_to&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_open_to_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_previous_by_added">
-<code class="sig-name descname">get_previous_by_added</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_added" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_previous_by_added</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: added&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_added" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_previous_by_time">
-<code class="sig-name descname">get_previous_by_time</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_previous_by_time</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: time&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.get_previous_by_updated">
-<code class="sig-name descname">get_previous_by_updated</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_updated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_previous_by_updated</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: updated&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_updated" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -619,7 +619,7 @@ a many-to-many relation.</p>
     <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
@@ -648,7 +648,7 @@ a many-to-many relation.</p>
     <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
@@ -708,7 +708,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -728,7 +728,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -794,7 +794,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -929,7 +929,7 @@ the last updated date is changed whenever a student sees or hides an event.</p>
     <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -961,7 +961,7 @@ a many-to-many relation.</p>
     <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
@@ -1018,7 +1018,7 @@ a many-to-many relation.</p>
     <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
 instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
@@ -1103,7 +1103,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1146,7 +1146,7 @@ object the first time, the query is executed.</p>
 <p>Tests for the events module.</p>
 <dl class="method">
 <dt id="intranet.apps.events.tests.EventsTest.create_random_event">
-<code class="sig-name descname">create_random_event</code><span class="sig-paren">(</span><em class="sig-param">user</em>, <em class="sig-param">approved=False</em>, <em class="sig-param">time=datetime.datetime(2019</em>, <em class="sig-param">12</em>, <em class="sig-param">23</em>, <em class="sig-param">14</em>, <em class="sig-param">35</em>, <em class="sig-param">5</em>, <em class="sig-param">913267</em>, <em class="sig-param">tzinfo=&lt;UTC&gt;)</em>, <em class="sig-param">show_attending=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_random_event</code><span class="sig-paren">(</span><em class="sig-param">user</em>, <em class="sig-param">approved=False</em>, <em class="sig-param">time=datetime.datetime(2019</em>, <em class="sig-param">12</em>, <em class="sig-param">24</em>, <em class="sig-param">23</em>, <em class="sig-param">34</em>, <em class="sig-param">58</em>, <em class="sig-param">728386</em>, <em class="sig-param">tzinfo=&lt;UTC&gt;)</em>, <em class="sig-param">show_attending=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1204,6 +1204,11 @@ object the first time, the query is executed.</p>
 </div>
 <div class="section" id="module-intranet.apps.events.urls">
 <span id="intranet-apps-events-urls-module"></span><h2>intranet.apps.events.urls module<a class="headerlink" href="#module-intranet.apps.events.urls" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.events.urls.re_path">
+<code class="sig-prename descclassname">intranet.apps.events.urls.</code><code class="sig-name descname">re_path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RegexPattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.urls.re_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-intranet.apps.events.views">
 <span id="intranet-apps-events-views-module"></span><h2>intranet.apps.events.views module<a class="headerlink" href="#module-intranet.apps.events.views" title="Permalink to this headline">¶</a></h2>

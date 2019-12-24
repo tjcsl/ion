@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>django.db.models.manager &#8212; TJ Intranet v3 (Build #5670) documentation</title>
+    <title>django.db.models.manager &#8212; TJ Intranet v3 (Build #5674) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -131,30 +131,27 @@
 
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">router</span>
 <span class="kn">from</span> <span class="nn">django.db.models.query</span> <span class="kn">import</span> <span class="n">QuerySet</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">python_2_unicode_compatible</span>
 
 
-<span class="nd">@python_2_unicode_compatible</span>
-<span class="k">class</span> <span class="nc">BaseManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="c1"># Tracks each time a Manager instance is created. Used to retain order.</span>
+<span class="k">class</span> <span class="nc">BaseManager</span><span class="p">:</span>
+    <span class="c1"># To retain order, track each time a Manager instance is created.</span>
     <span class="n">creation_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># Set to True for the &#39;objects&#39; managers that are automatically created.</span>
     <span class="n">auto_created</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="c1">#: If set to True the manager will be serialized into migrations and will</span>
-    <span class="c1">#: thus be available in e.g. RunPython operations</span>
+    <span class="c1">#: thus be available in e.g. RunPython operations.</span>
     <span class="n">use_in_migrations</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># We capture the arguments to make returning them trivial</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="c1"># Capture the arguments to make returning them trivial.</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_constructor_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_creation_counter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
@@ -162,15 +159,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_hints</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return &quot;app_label.model_label.manager_name&quot;. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return &quot;app_label.model_label.manager_name&quot;.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">deconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a 5-tuple of the form (as_manager (True), manager_class,</span>
+<span class="sd">        Return a 5-tuple of the form (as_manager (True), manager_class,</span>
 <span class="sd">        queryset_class, args, kwargs).</span>
 
-<span class="sd">        Raises a ValueError if the manager is dynamically generated.</span>
+<span class="sd">        Raise a ValueError if the manager is dynamically generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">qs_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queryset_class</span>
         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_built_with_as_manager&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
@@ -215,9 +212,7 @@
             <span class="k">return</span> <span class="n">manager_method</span>
 
         <span class="n">new_methods</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># Refs http://bugs.python.org/issue1785.</span>
-        <span class="n">predicate</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span> <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="k">else</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">predicate</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">):</span>
             <span class="c1"># Only copy missing methods.</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                 <span class="k">continue</span>
@@ -233,15 +228,13 @@
     <span class="k">def</span> <span class="nf">from_queryset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">queryset_class</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">class_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">class_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">From</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">queryset_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-        <span class="n">class_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">(</span><span class="bp">cls</span><span class="p">,),</span> <span class="p">{</span>
             <span class="s1">&#39;_queryset_class&#39;</span><span class="p">:</span> <span class="n">queryset_class</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="n">class_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_get_queryset_methods</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">))</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">(</span><span class="bp">cls</span><span class="p">,),</span> <span class="n">class_dict</span><span class="p">)</span>
+            <span class="o">**</span><span class="bp">cls</span><span class="o">.</span><span class="n">_get_queryset_methods</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">),</span>
+        <span class="p">})</span>
 
     <span class="k">def</span> <span class="nf">contribute_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ManagerDescriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
@@ -250,7 +243,7 @@
 
     <span class="k">def</span> <span class="nf">_set_creation_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the creation counter value for this instance and increments the</span>
+<span class="sd">        Set the creation counter value for this instance and increment the</span>
 <span class="sd">        class-level copy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">creation_counter</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="o">.</span><span class="n">creation_counter</span>
@@ -272,8 +265,8 @@
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a new QuerySet object.  Subclasses can override this method to</span>
-<span class="sd">        easily customize the behavior of the Manager.</span>
+<span class="sd">        Return a new QuerySet object. Subclasses can override this method to</span>
+<span class="sd">        customize the behavior of the Manager.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queryset_class</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
 
@@ -292,9 +285,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_constructor_args</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_constructor_args</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">other</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -303,7 +293,7 @@
     <span class="k">pass</span>
 
 
-<span class="k">class</span> <span class="nc">ManagerDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ManagerDescriptor</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
@@ -331,11 +321,11 @@
 
 <span class="k">class</span> <span class="nc">EmptyManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EmptyManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EmptyManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
 </pre></div>
 
     </div>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5670) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #5674) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -344,14 +344,14 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt>
 <code class="sig-name descname">file</code></dt>
-<dd><p>The descriptor for the file attribute on the model instance. Returns a
-FieldFile when accessed so you can do stuff like:</p>
+<dd><p>The descriptor for the file attribute on the model instance. Return a
+FieldFile when accessed so you can write code like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">MyModel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">size</span>
 </pre></div>
 </div>
-<p>Assigns a file object on assignment so you can do:</p>
+<p>Assign a file object on assignment so you can do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/hello.world&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">instance</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
@@ -367,12 +367,12 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="intranet.apps.printing.models.PrintJob.get_next_by_time">
-<code class="sig-name descname">get_next_by_time</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.get_next_by_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_next_by_time</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: time&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.get_next_by_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.printing.models.PrintJob.get_previous_by_time">
-<code class="sig-name descname">get_previous_by_time</code><span class="sig-paren">(</span><em class="sig-param">**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_previous_by_time</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: time&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -432,7 +432,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -461,6 +461,11 @@ object the first time, the query is executed.</p>
 </div>
 <div class="section" id="module-intranet.apps.printing.urls">
 <span id="intranet-apps-printing-urls-module"></span><h2>intranet.apps.printing.urls module<a class="headerlink" href="#module-intranet.apps.printing.urls" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.printing.urls.re_path">
+<code class="sig-prename descclassname">intranet.apps.printing.urls.</code><code class="sig-name descname">re_path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RegexPattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.printing.urls.re_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-intranet.apps.printing.views">
 <span id="intranet-apps-printing-views-module"></span><h2>intranet.apps.printing.views module<a class="headerlink" href="#module-intranet.apps.printing.views" title="Permalink to this headline">¶</a></h2>
