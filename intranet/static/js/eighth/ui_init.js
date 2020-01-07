@@ -38,6 +38,12 @@ $(function() {
         });
     });
 
+    $("select[multiple='']").not(".remote-source").each(function(i, el) {
+        $(el).selectize({
+            maxOptions: 99999
+        });
+    });
+
     var safeFieldRenderer = function(field) {
         return function(data, escape) {
             return "<div>" + data[field] + "</div>";
