@@ -69,21 +69,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.network :private_network, ip: '192.168.50.50'
   if devconfig["use_nfs"]
-      config.vm.synced_folder ".", "/vagrant", type: :nfs, nfs_udp: false
+      config.vm.synced_folder ".", "/home/vagrant/intranet", type: :nfs, nfs_udp: false
       config.nfs.map_uid = Process.uid
       config.nfs.map_gid = Process.gid
   else
-      config.vm.synced_folder ".", "/vagrant"
+      config.vm.synced_folder ".", "/home/vagrant/intranet"
   end
-
-  config.bindfs.default_options = {
-    force_user:   'vagrant',
-    force_group:  'vagrant',
-    perms:        'u=rwX:g=rD:o=rD'
-  }
-  config.bindfs.bind_folder "/vagrant", "/home/vagrant/intranet",
-      force_user: 'vagrant',
-      force_group: 'vagrant'
 
   config.vm.provision "file",
     source: "~/.ssh/#{devconfig['ssh_key']}",
