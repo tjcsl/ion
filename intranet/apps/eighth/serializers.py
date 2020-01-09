@@ -187,9 +187,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         )
         scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
-        # Find all scheduled activities that don't correspond to
-        # deleted activities
-        scheduled_activities = block.eighthscheduledactivity_set.exclude(activity__deleted=True).select_related("activity")
+        # Find all scheduled activities that don't correspond to deleted activities.
+        # Also move administrative activities to the end of the list. It appears that it is not possible to sort on "activity__administrative OR
+        # administrative", so we just sort by each in turn. The exact order of administrative activities does not matter *too* much.
+        scheduled_activities = (
+            block.eighthscheduledactivity_set.exclude(activity__deleted=True)
+            .select_related("activity")
+            .order_by("activity__administrative", "administrative", "activity__name")
+        )
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
