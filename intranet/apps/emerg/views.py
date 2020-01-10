@@ -33,7 +33,6 @@ def check_emerg():
     except requests.exceptions.Timeout:
         return False, None
 
-
     res = r.text
     if not res:
         status = False
