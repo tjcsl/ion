@@ -28,7 +28,12 @@ def check_emerg():
 
     timeout = settings.FCPS_EMERGENCY_TIMEOUT
 
-    r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
+    try:
+        r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
+    except requests.exceptions.Timeout:
+        return False, None
+
+
     res = r.text
     if not res:
         status = False
