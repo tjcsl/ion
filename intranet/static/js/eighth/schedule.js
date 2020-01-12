@@ -1,4 +1,5 @@
 /* global $ */
+/* global activitySticky */
 $(function() {
     var toggleRow = function(tr) {
         var i = 0;
@@ -173,6 +174,19 @@ $(function() {
             }
         });
         if (activities !== "" && !confirm("Are you sure you want to add the following activities without a sponsor?\n" + activities)) {
+            e.preventDefault();
+        }
+        var stickyCancel = "";
+        $("tr.form-row.scheduled").each(function() {
+            var scheduledField = $(this).find("td[data-field='scheduled'] input[type='checkbox']");
+            var stickyField = $(this).find("td[data-field='sticky'] input[type='checkbox']");
+            if (!scheduledField.prop("checked")) {
+                if(stickyField.prop("checked") || activitySticky) {
+                    stickyCancel += "\n    " + $(this).find(".block-name a.ui-link").text().trim();
+                }
+            }
+        });
+        if (stickyCancel !== "" && !confirm("Cancelling the following 'sticky' activities will allow students to switch out of them. Are you sure?\n" + stickyCancel)){
             e.preventDefault();
         }
     });
