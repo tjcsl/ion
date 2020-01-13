@@ -10,6 +10,10 @@ $(document).ready(function() {
     });
 
     function updatePartiallyHidden() {
+        if(window.disable_partially_hidden_announcements) {
+            return;
+        }
+
         $(".announcement:not(.toggled):not(.hidden).partially-hidden").each(function() {
             var content = $(this).find(".announcement-content");
             if(content.height() <= 200) {
