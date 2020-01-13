@@ -8,7 +8,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.generic.websocket import WebsocketConsumer
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-from django.conf.urls import url
+from django.urls import re_path
 
 from .apps.bus.consumers import BusConsumer
 
@@ -25,4 +25,6 @@ class WebsocketCloseConsumer(WebsocketConsumer):
         pass
 
 
-application = ProtocolTypeRouter({"websocket": AuthMiddlewareStack(URLRouter([url(r"^bus/$", BusConsumer), url(r"^.*$", WebsocketCloseConsumer)]))})
+application = ProtocolTypeRouter(
+    {"websocket": AuthMiddlewareStack(URLRouter([re_path(r"^bus/$", BusConsumer), re_path(r"^.*$", WebsocketCloseConsumer)]))}
+)
