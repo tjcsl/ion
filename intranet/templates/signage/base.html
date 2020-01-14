@@ -31,6 +31,8 @@
             window.endSwitchHour = {{ end_switch_page_time.hour }};
             window.endSwitchMinute = {{ end_switch_page_time.minute }};
 
+            window.signageHeartbeatIntervalSecs = {{ DJANGO_SETTINGS.SIGNAGE_HEARTBEAT_INTERVAL }};
+
             var now = new Date();
             var reloadTime = new Date();
             reloadTime.setHours(1, 30, 0);
@@ -41,6 +43,7 @@
             }
         </script>
         <script src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+        <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
         <script src="{% static 'js/signage.js' %}"></script>
         <script src="{% static 'js/schedule.js' %}"></script>
     </head>

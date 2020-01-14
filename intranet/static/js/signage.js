@@ -9,6 +9,25 @@ var networkDataReceived = false;
 var offline = false; // This isn't used for anything useful
 var active = null;
 
+var signageSocket;
+
+// Yes, this is complicated enough I think it deserves a function
+var openSignageSocket = function() {
+    var protocol = (location.protocol == "http:" ? "ws" : "wss");
+    var path = location.pathname;  // The URLs are designed to match
+
+    var socket = new ReconnectingWebSocket(`${protocol}://${location.host}${path}`);
+    socket.automaticOpen = true;
+    // We don't need to reconnect *very* quickly
+    socket.reconnectInterval = 10000;
+    socket.maxReconnectInterval = 30000;
+    socket.reconnectDecay = 1.5;
+    socket.timeoutInterval = 10000;
+    socket.maxReconnectAttempts = null;
+
+    return socket;
+};
+
 var setActive = function (id) {
     $('.signage-section.active').removeClass('active');
     page = document.getElementById(id);
@@ -123,6 +142,23 @@ window.addEventListener('offline', function () {
 });
 
 window.onload = function () {
+    if(window.signageHeartbeatIntervalSecs != undefined) {
+        signageSocket = openSignageSocket();
+
+        setInterval(function() {
+            signageSocket.send(JSON.stringify({"type": "heartbeat"}));
+        }, window.signageHeartbeatIntervalSecs * 1000);
+
+        signageSocket.onmessage = function(e) {
+            var data = JSON.parse(event.data)
+
+            switch(data.type) {
+                case "heartbeat-response":
+                    break;
+            }
+        };
+    }
+
     $('.signage-nav').on('click', 'a', function (e) {
         page = $(e.target).data('page');
         console.log(e);

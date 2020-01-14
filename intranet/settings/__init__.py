@@ -790,6 +790,11 @@ REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
 
 EIGHTH_COORDINATOR_NAME = "Laura Slonina"
 
+# How often the signage JS sends a heartbeat
+SIGNAGE_HEARTBEAT_INTERVAL = 60
+# No heartbeat after this many seconds means a sign will be considered offline
+SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS = 2 * 60
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

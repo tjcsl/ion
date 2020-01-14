@@ -19,6 +19,14 @@ intranet.apps.signage.admin module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.signage.consumers module
+--------------------------------------
+
+.. automodule:: intranet.apps.signage.consumers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.signage.models module
 -----------------------------------
 
