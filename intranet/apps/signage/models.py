@@ -1,4 +1,8 @@
+from datetime import timedelta
+
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class PageQuerySet(models.query.QuerySet):
@@ -72,6 +76,20 @@ class Page(models.Model):
             return "{}".format(self.name)
 
 
+class SignQuerySet(models.query.QuerySet):
+    def filter_offline(self) -> "models.query.QuerySet[Sign]":
+        return self.filter(
+            models.Q(latest_heartbeat_time__isnull=True)
+            | models.Q(latest_heartbeat_time__lte=timezone.localtime() - timedelta(seconds=settings.SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS))
+        )
+
+    def filter_online(self) -> "models.query.QuerySet[Sign]":
+        return self.filter(
+            latest_heartbeat_time__isnull=False,
+            latest_heartbeat_time__gt=timezone.localtime() - timedelta(seconds=settings.SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS),
+        )
+
+
 class Sign(models.Model):
     """
         name: friendly display name [required]
@@ -87,8 +105,14 @@ class Sign(models.Model):
         day_end_switch_page: A page to switch to near the end of the day
         day_end_switch_minutes: The number of minutes before the end of the day to switch
             to day_end_switch_page. Can be negative to switch after the end of the day.
+        latest_heartbeat_time: If the sign has an open websocket connection to a
+            SignageConsumer, this is the time at which the last message was received from
+            it. If the sign does not have such a connection open, this is None (even if
+            the sign previously had an open connection).
         pages: a list of pages
     """
+
+    objects = SignQuerySet.as_manager()
 
     name = models.CharField(max_length=1000)
     display = models.CharField(max_length=100, unique=True)
@@ -107,6 +131,15 @@ class Sign(models.Model):
     day_end_switch_minutes = models.IntegerField(
         default=5, null=False, blank=False, help_text="Switch pages this many minutes before the end of the day"
     )
+
+    # This can be set to None at any time if the
+    latest_heartbeat_time = models.DateTimeField(null=True, default=None)
+
+    @property
+    def is_offline(self) -> bool:
+        return self.latest_heartbeat_time is None or timezone.localtime() - self.latest_heartbeat_time >= timedelta(
+            seconds=settings.SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS
+        )
 
     def __str__(self):
         return "{} ({})".format(self.name, self.display)
