@@ -41,18 +41,18 @@ class UserManager(DjangoUserManager):
 
     """
 
-    def user_with_student_id(self, student_id: int) -> Optional["get_user_model()"]:
+    def user_with_student_id(self, student_id: Union[int, str]) -> Optional["get_user_model()"]:
         """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
-        results = User.objects.filter(student_id=student_id)
+        results = User.objects.filter(student_id=str(student_id))
         if len(results) == 1:
             return results.first()
         return None
 
-    def user_with_ion_id(self, student_id: int) -> Optional["get_user_model()"]:
+    def user_with_ion_id(self, student_id: Union[int, str]) -> Optional["get_user_model()"]:
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
-        results = User.objects.filter(id=student_id)
+        results = User.objects.filter(id=str(student_id))
         if len(results) == 1:
             return results.first()
         return None
