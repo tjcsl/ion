@@ -7,7 +7,7 @@ from ..models import EighthBlock
 
 def metrics_view(request):
     remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
-    is_admin = request.user.is_authenticated and request.user.has_admin_permission("eighth")
+    is_admin = request.user.is_authenticated and not request.user.is_restricted and request.user.has_admin_permission("eighth")
 
     # If they're not from an IP on the white list and they're not an eighth admin, deny access
     if remote_addr not in settings.ALLOWED_METRIC_SCRAPE_IPS and not is_admin:

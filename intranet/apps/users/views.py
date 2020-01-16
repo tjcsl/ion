@@ -31,6 +31,9 @@ def profile_view(request, user_id=None):
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:
+        if request.user.is_restricted and user_id != request.user.id:
+            return render(request, "error/403.html", {"reason": "You do not have permission to view this page."}, status=403)
+
         profile_user = get_object_or_404(get_user_model(), id=user_id)
     else:
         profile_user = request.user

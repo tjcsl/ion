@@ -13,7 +13,7 @@ class BusConsumer(JsonWebsocketConsumer):
         self.user = self.scope["user"]
         headers = dict(self.scope["headers"])
         remote_addr = headers[b"x-real-ip"].decode() if b"x-real-ip" in headers else self.scope["client"][0]
-        if not self.user.is_authenticated and remote_addr not in settings.INTERNAL_IPS:
+        if (not self.user.is_authenticated or self.user.is_restricted) and remote_addr not in settings.INTERNAL_IPS:
             self.connected = False
             self.close()
             return

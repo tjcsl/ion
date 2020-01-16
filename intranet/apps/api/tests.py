@@ -110,6 +110,47 @@ class ApiTest(IonTestCase):
 
     def test_oauth_client_credentials_read(self):
         tok = AccessToken.objects.create(
+            user=self.user,
+            token="1234567890",
+            application=self.client_credentials_application,
+            scope="read write",
+            expires=timezone.now() + datetime.timedelta(days=1),
+        )
+        auth = "Bearer {}".format(tok.token)
+
+        # List announcements
+        response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List emergency status
+        response = self.client.get(reverse("api_emerg_status"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List schedule
+        response = self.client.get(reverse("api_schedule_day_list"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List activities
+        response = self.client.get(reverse("api_eighth_activity_list"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List blocks
+        response = self.client.get(reverse("api_eighth_block_list"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+        # List specific block
+        block = EighthBlock.objects.create(date=datetime.datetime(2015, 1, 1), block_letter="A")
+        response = self.client.get(reverse("api_eighth_block_detail", kwargs={"pk": block.pk}), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+        resp = json.loads(response.content.decode())
+        self.assertTrue("id" in resp)
+
+        # Should be able to list profile
+        response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200)
+
+    def test_oauth_client_credentials_read_anonymous(self):
+        tok = AccessToken.objects.create(
             user=None,
             token="1234567890",
             application=self.client_credentials_application,

@@ -24,6 +24,9 @@ class AnnouncementManager(Manager):
 
         """
 
+        if user.is_restricted:  # Restricted users are not authorized to view announcements
+            return Announcement.objects.none()
+
         return Announcement.objects.filter(
             Q(groups__in=user.groups.all())
             | Q(groups__isnull=True)
