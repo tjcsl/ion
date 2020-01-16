@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from ..auth.decorators import deny_restricted
 from .forms import SeniorEmailForwardForm
 from .models import SeniorEmailForward
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def senior_email_forward_view(request):
     """Add a forwarding address for graduating seniors."""
     if not request.user.is_senior:

@@ -108,7 +108,12 @@
                 <a href="{% url 'index' %}" class="button" style="float:left"><i class="fas fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
-            {% if not request.user.is_restricted %}
+            {% if request.user.is_restricted %}
+                <a class="button announcement-request" href="{% url 'request_announcement' %}">
+                    <i class="far fa-file-alt"></i>
+                    Request Post
+                </a>
+            {% else %}
             {% if announcements_admin %}
                 {% if "show_all" not in request.GET %}
                     <a class="button" href="{% url view_announcements_url %}?show_all=1">
@@ -194,7 +199,11 @@
             {% endif %}
         {% empty %}
             <div class="announcement">
+                {% if not request.user.is_restricted %}
                 There are no announcements to display at this time.
+                {% else %}
+                You do not have permission to view announcements.
+                {% endif %}
             </div>
         {% endfor %}
         {% if not request.user.is_restricted %}

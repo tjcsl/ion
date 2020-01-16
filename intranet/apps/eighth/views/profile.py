@@ -215,6 +215,7 @@ def profile_often_view(request, user_id=None):
 
 
 @login_required
+@deny_restricted
 def profile_signup_view(request, user_id=None, block_id=None):
     if user_id:
         try:

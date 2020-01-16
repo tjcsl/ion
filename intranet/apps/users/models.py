@@ -121,8 +121,35 @@ class UserManager(DjangoUserManager):
 
         return users
 
+    def get_teachers_attendance_users(self) -> "QuerySet[get_user_model()]":  # noqa
+        """Like ``get_teachers()``, but includes attendance-only users as well as
+        teachers.
+
+        Returns:
+            A QuerySet of users who are either teachers or attendance-only users.
+
+        """
+        users = User.objects.filter(user_type__in=["teacher", "user"])
+        users = users.exclude(id__in=EXTRA)
+        # Add possible exceptions handling here
+        users = users | User.objects.filter(id__in=[31863, 32327, 32103, 33228])
+
+        users = users.exclude(Q(first_name=None) | Q(first_name="") | Q(last_name=None) | Q(last_name=""))
+
+        return users
+
     def get_teachers_sorted(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
+
+        Returns:
+            A ``QuerySet`` of teachers sorted by last name, then first name.
+
+        """
+        return self.get_teachers().order_by("last_name", "first_name")
+
+    def get_teachers_attendance_users_sorted(self) -> "QuerySet[get_user_model()]":  # noqa
+        """Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by
+        last name, then first name.
 
         This is used for the announcement request page.
 
@@ -130,7 +157,7 @@ class UserManager(DjangoUserManager):
             A ``QuerySet`` of teachers sorted by last name, then first name.
 
         """
-        return self.get_teachers().order_by("last_name", "first_name")
+        return self.get_teachers_attendance_users().order_by("last_name", "first_name")
 
     def exclude_from_search(
         self, existing_queryset: Optional[Union[Collection["get_user_model()"], QuerySet]] = None  # pylint: disable=unsubscriptable-object

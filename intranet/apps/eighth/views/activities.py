@@ -17,6 +17,7 @@ from django.utils import timezone
 
 from ....utils.date import get_date_range_this_year
 from ....utils.serialization import safe_json
+from ...auth.decorators import deny_restricted
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ..utils import get_start_date
 
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
     scheduled_activities = EighthScheduledActivity.objects.filter(activity=activity)
@@ -264,6 +266,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
 
 
 @login_required
+@deny_restricted
 def stats_global_view(request):
     if not request.user.is_eighth_admin:
         return render(request, "error/403.html", {"reason": "You do not have permission to generate global statistics."}, status=403)
@@ -330,6 +333,7 @@ def stats_global_view(request):
 
 
 @login_required
+@deny_restricted
 def stats_view(request, activity_id=None):
     """ If a the GET parameter `year` is set, it uses stats from given year
         with the following caveats:

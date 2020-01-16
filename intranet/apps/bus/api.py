@@ -1,6 +1,6 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
 
+from ..auth.rest_permissions import DenyRestrictedPermission
 from .models import Route
 from .serializers import RouteSerializer
 
@@ -14,7 +14,7 @@ class RouteList(generics.ListAPIView):
     """
 
     serializer_class = RouteSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DenyRestrictedPermission,)
 
     def get_queryset(self):
         return Route.objects.all()
@@ -28,7 +28,7 @@ class RouteDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = RouteSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DenyRestrictedPermission,)
 
     # override get_queryset instead of using queryset=...
     # so that it always returns fresh data

@@ -484,7 +484,9 @@ FCPS_STUDENT_ID_LENGTH = 7
 
 # Django REST framework configuration
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),  # require authentication
+    "DEFAULT_PERMISSION_CLASSES": (
+        "intranet.apps.auth.rest_permissions.DenyRestrictedPermission",  # require authentication and deny restricted users
+    ),
     "USE_ABSOLUTE_URLS": True,
     # Return native `Date` and `Time` objects in `serializer.data`
     "DATETIME_FORMAT": None,

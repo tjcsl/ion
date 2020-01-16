@@ -23,7 +23,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from ....utils.date import get_date_range_this_year
-from ...auth.decorators import attendance_taker_required, eighth_admin_required
+from ...auth.decorators import attendance_taker_required, deny_restricted, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
 from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
@@ -93,13 +93,13 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                     kwargs.update({"include_cancelled": True})
                 block_title = "Take Attendance" if block.locked else "View Roster"
 
-            # try:
-            #    sponsor = self.request.user.eighthsponsor
-            # except (EighthSponsor.DoesNotExist, AttributeError):
-            #    sponsor = None
+            try:
+                sponsor = self.request.user.eighthsponsor
+            except (EighthSponsor.DoesNotExist, AttributeError):
+                sponsor = None
 
-            # if not (self.request.user.is_eighth_admin or (sponsor is None)):
-            #    kwargs.update({"sponsor": sponsor})
+            if self.request.user.is_restricted and sponsor is not None:
+                kwargs.update({"sponsor": sponsor})
 
         labels = {"block": "Select a block", "activity": "Select an activity" if not block else block_title}
 
@@ -170,6 +170,7 @@ admin_choose_scheduled_activity_view = eighth_admin_required(_unsafe_choose_sche
 
 
 @login_required
+@deny_restricted
 def roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -215,6 +216,7 @@ def raw_roster_view(request, scheduled_activity_id):
 
 
 @eighth_admin_required
+@deny_restricted
 def raw_waitlist_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -232,6 +234,10 @@ def take_attendance_view(request, scheduled_activity_id):
             activity__deleted=False, id=scheduled_activity_id
         )
     except EighthScheduledActivity.DoesNotExist:
+        raise http.Http404
+
+    # Attendance-only users can only see their own roster
+    if request.user.is_restricted and not scheduled_activity.user_is_sponsor(request.user):
         raise http.Http404
 
     edit_perm = request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user)
@@ -620,6 +626,7 @@ def generate_roster_pdf(sched_act_ids):
 
 
 @login_required
+@deny_restricted
 def eighth_absences_view(request, user_id=None):
     if user_id and request.user.is_eighth_admin:
         user = get_object_or_404(get_user_model(), id=user_id)
@@ -641,6 +648,7 @@ def eighth_absences_view(request, user_id=None):
 
 
 @login_required
+@deny_restricted
 def sponsor_schedule_widget_view(request):
     user = request.user
     eighth_sponsor = user.get_eighth_sponsor()

@@ -51,6 +51,14 @@ intranet.apps.auth.helpers module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.auth.rest\_permissions module
+-------------------------------------------
+
+.. automodule:: intranet.apps.auth.rest_permissions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.auth.signals module
 ---------------------------------
 

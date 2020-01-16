@@ -2,7 +2,6 @@ import io
 import os
 
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django.conf import settings
@@ -10,6 +9,7 @@ from django.contrib.auth import get_user_model
 
 from intranet.apps.search.views import get_search_results
 
+from ..auth.rest_permissions import DenyRestrictedPermission
 from .models import Grade
 from .renderers import JPEGRenderer
 from .serializers import CounselorTeacherSerializer, StudentSerializer, UserSerializer
@@ -25,7 +25,7 @@ class ProfileDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DenyRestrictedPermission,)
 
     def retrieve(self, request, *args, **kwargs):
         if "pk" in kwargs:
@@ -47,7 +47,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DenyRestrictedPermission,)
     renderer_classes = (JPEGRenderer,)
 
     def retrieve(self, request, *args, **kwargs):
@@ -83,7 +83,7 @@ class Search(generics.RetrieveAPIView):
 
     """
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DenyRestrictedPermission,)
     queryset = get_user_model().objects.all()
 
     def retrieve(self, request, *args, **kwargs):

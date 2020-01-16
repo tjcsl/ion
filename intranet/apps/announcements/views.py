@@ -22,12 +22,14 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
+@deny_restricted
 def view_announcements(request):
     """Show the dashboard with only announcements."""
     return dashboard_view(request, show_widgets=False, ignore_dashboard_types=["event"])
 
 
 @login_required
+@deny_restricted
 def view_announcements_archive(request):
     """Show the dashboard with only announcements, showing expired posts."""
     return dashboard_view(request, show_widgets=False, show_expired=True, ignore_dashboard_types=["event"])
@@ -70,7 +72,6 @@ def announcement_approved_hook(request, obj, req):
 
 
 @login_required
-@deny_restricted
 def request_announcement_view(request):
     """The request announcement page."""
     if request.method == "POST":
@@ -118,13 +119,11 @@ def request_announcement_view(request):
 
 
 @login_required
-@deny_restricted
 def request_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "request"})
 
 
 @login_required
-@deny_restricted
 def request_announcement_success_self_view(request):
     return render(request, "announcements/success.html", {"type": "request", "self": True})
 
@@ -269,6 +268,7 @@ def add_announcement_view(request):
 
 
 @login_required
+@deny_restricted
 def view_announcement_view(request, announcement_id):
     """View an announcement.
 
@@ -343,6 +343,7 @@ def delete_announcement_view(request, announcement_id):
 
 
 @login_required
+@deny_restricted
 @transaction.atomic
 def show_announcement_view(request):
     """ Unhide an announcement that was hidden by the logged-in user.
@@ -363,6 +364,7 @@ def show_announcement_view(request):
 
 
 @login_required
+@deny_restricted
 @transaction.atomic
 def hide_announcement_view(request):
     """ Hide an announcement for the logged-in user.

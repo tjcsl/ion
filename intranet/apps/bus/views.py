@@ -3,8 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render
 
+from ..auth.decorators import deny_restricted
+
 
 @login_required
+@deny_restricted
 def home(request):
     if not settings.ENABLE_BUS_APP:
         raise Http404("Bus app not enabled.")
