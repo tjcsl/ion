@@ -38,7 +38,7 @@ def lock_on(items: Iterable[Union[Model, Manager, QuerySet]]) -> None:
 
         if isinstance(item, (Manager, QuerySet)):
             querysets_by_model.setdefault(model_fullname, [])
-            querysets_by_model[model_fullname].append(item.all())
+            querysets_by_model[model_fullname].append(item.all().nocache())
         else:
             objects_by_model.setdefault(model_fullname, [])
             objects_by_model[model_fullname].append(item)
@@ -57,7 +57,7 @@ def lock_on(items: Iterable[Union[Model, Manager, QuerySet]]) -> None:
 
         # Now construct a QuerySet and add it to the list
         querysets_by_model.setdefault(model_fullname, [])
-        querysets_by_model[model_fullname].append(model_class.objects.filter(pk__in=object_pks))
+        querysets_by_model[model_fullname].append(model_class.objects.filter(pk__in=object_pks).nocache())
 
     # Now, with all lists of QuerySets to lock in querysets_by_model, we actually do the locking.
     # We sort by the dotted name to the model class in an attempt to prevent deadlocks. If all workers
