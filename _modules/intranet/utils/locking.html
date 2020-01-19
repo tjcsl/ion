@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.locking &#8212; TJ Intranet v3 (Build #5686) documentation</title>
+    <title>intranet.utils.locking &#8212; TJ Intranet v3 (Build #5709) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -165,7 +165,7 @@
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Manager</span><span class="p">,</span> <span class="n">QuerySet</span><span class="p">)):</span>
             <span class="n">querysets_by_model</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">model_fullname</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">querysets_by_model</span><span class="p">[</span><span class="n">model_fullname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+            <span class="n">querysets_by_model</span><span class="p">[</span><span class="n">model_fullname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">objects_by_model</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">model_fullname</span><span class="p">,</span> <span class="p">[])</span>
             <span class="n">objects_by_model</span><span class="p">[</span><span class="n">model_fullname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -184,7 +184,7 @@
 
         <span class="c1"># Now construct a QuerySet and add it to the list</span>
         <span class="n">querysets_by_model</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">model_fullname</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="n">querysets_by_model</span><span class="p">[</span><span class="n">model_fullname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_class</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk__in</span><span class="o">=</span><span class="n">object_pks</span><span class="p">))</span>
+        <span class="n">querysets_by_model</span><span class="p">[</span><span class="n">model_fullname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_class</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk__in</span><span class="o">=</span><span class="n">object_pks</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
 
     <span class="c1"># Now, with all lists of QuerySets to lock in querysets_by_model, we actually do the locking.</span>
     <span class="c1"># We sort by the dotted name to the model class in an attempt to prevent deadlocks. If all workers</span>

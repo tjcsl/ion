@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5686) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5709) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -314,9 +314,14 @@
         <span class="p">)</span>
         <span class="n">scheduled_activity_to_activity_map</span> <span class="o">=</span> <span class="n">FallbackDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scheduled_activity</span><span class="p">)</span>
 
-        <span class="c1"># Find all scheduled activities that don&#39;t correspond to</span>
-        <span class="c1"># deleted activities</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">)</span>
+        <span class="c1"># Find all scheduled activities that don&#39;t correspond to deleted activities.</span>
+        <span class="c1"># Also move administrative activities to the end of the list. It appears that it is not possible to sort on &quot;activity__administrative OR</span>
+        <span class="c1"># administrative&quot;, so we just sort by each in turn. The exact order of administrative activities does not matter *too* much.</span>
+        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;activity__administrative&quot;</span><span class="p">,</span> <span class="s2">&quot;administrative&quot;</span><span class="p">,</span> <span class="s2">&quot;activity__name&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">scheduled_activity</span> <span class="ow">in</span> <span class="n">scheduled_activities</span><span class="p">:</span>
             <span class="c1"># Avoid re-fetching scheduled_activity.</span>
