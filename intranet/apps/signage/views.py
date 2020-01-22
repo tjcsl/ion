@@ -127,3 +127,25 @@ def eighth(request):
     }
 
     return render(request, "signage/pages/eighth.html", context)
+
+
+def prometheus_metrics(request):
+    """Prometheus metrics for signage displays. Currently just whether or not they are online."""
+
+    remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
+    is_admin = request.user.is_authenticated and not request.user.is_restricted and request.user.is_superuser
+
+    # If they're not from an IP on the white list and they're not an admin, deny access
+    if remote_addr not in settings.ALLOWED_METRIC_SCRAPE_IPS and not is_admin:
+        return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
+
+    metrics = {
+        "intranet_signage_num_signs_online": Sign.objects.filter_online().count(),
+    }
+
+    for sign in Sign.objects.all():
+        metrics['intranet_signage_sign_is_online{{display="{}"}}'.format(sign.display)] = int(not sign.is_offline)
+
+    context = {"metrics": metrics}
+
+    return render(request, "monitoring/prometheus-metrics.txt", context, content_type="text/plain")

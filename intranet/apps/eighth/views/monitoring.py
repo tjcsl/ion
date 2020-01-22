@@ -42,4 +42,4 @@ def metrics_view(request):
 
     context = {"metrics": metrics}
 
-    return render(request, "eighth/prometheus-metrics.txt", context, content_type="text/plain")
+    return render(request, "monitoring/prometheus-metrics.txt", context, content_type="text/plain")
