@@ -75,4 +75,4 @@ def lock_on(items: Iterable[Union[Model, Manager, QuerySet]]) -> None:
             combined_qs = combined_qs.union(*qs_list, all=False)
 
         # Now we actually do the locking. We order by PK first in an attempt to prevent deadlocks.
-        _ = combined_qs.order_by("pk").select_for_update().values_list("pk")
+        _ = list(combined_qs.order_by("pk").select_for_update().values_list("pk"))
