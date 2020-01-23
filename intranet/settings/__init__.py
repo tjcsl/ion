@@ -451,7 +451,13 @@ if not TESTING:
     SESSION_REDIS_HOST = "127.0.0.1"
     SESSION_REDIS_PORT = 6379
     SESSION_REDIS_DB = 0
-    SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
+    SESSION_REDIS_PREFIX = "ion:session"
+    SESSION_REDIS = {
+        "host": SESSION_REDIS_HOST,
+        "port": SESSION_REDIS_PORT,
+        "db": SESSION_REDIS_DB,
+        "prefix": SESSION_REDIS_PREFIX,
+    }
 
     SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
@@ -473,7 +479,7 @@ else:
         "BACKEND": "redis_cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
         "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
-        "KEY_PREFIX": VIRTUAL_ENV,
+        "KEY_PREFIX": "ion",
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
