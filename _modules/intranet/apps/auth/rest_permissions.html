@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.welcome.views &#8212; TJ Intranet v3 (Build #5709) documentation</title>
+    <title>intranet.apps.auth.rest_permissions &#8212; TJ Intranet v3 (Build #5717) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -124,44 +124,13 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.welcome.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-
-<span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+  <h1>Source code for intranet.apps.auth.rest_permissions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">permissions</span>
 
 
-<div class="viewcode-block" id="student_welcome_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.views.student_welcome_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">student_welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Welcome/first run page for students.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_welcome</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="teacher_welcome_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.views.teacher_welcome_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">teacher_welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;first_login&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;first_login&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;first_login&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span> <span class="k">else</span> <span class="kc">False</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;welcome/teacher.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="welcome_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.views.welcome_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">teacher_welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">student_welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="done_welcome_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.views.done_welcome_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">done_welcome_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DenyRestrictedPermission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.rest_permissions.DenyRestrictedPermission">[docs]</a><span class="k">class</span> <span class="nc">DenyRestrictedPermission</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+<div class="viewcode-block" id="DenyRestrictedPermission.has_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.rest_permissions.DenyRestrictedPermission.has_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span></div></div>
 </pre></div>
 
     </div>

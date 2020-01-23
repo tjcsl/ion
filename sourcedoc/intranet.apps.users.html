@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5709) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #5717) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -193,7 +193,7 @@
 /api/profile/&lt;username&gt;: retrieve the profile of the user with username &lt;username&gt;</p>
 <dl class="attribute">
 <dt id="intranet.apps.users.api.ProfileDetail.permission_classes">
-<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAuthenticated'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.ProfileDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'intranet.apps.auth.rest_permissions.DenyRestrictedPermission'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.ProfileDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -218,7 +218,7 @@
 /api/profile/&lt;pk&gt;/picture/&lt;photo_year&gt;: retrieve profile picture for year &lt;photo_year&gt;</p>
 <dl class="attribute">
 <dt id="intranet.apps.users.api.ProfilePictureDetail.permission_classes">
-<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAuthenticated'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.ProfilePictureDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'intranet.apps.auth.rest_permissions.DenyRestrictedPermission'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.ProfilePictureDetail.permission_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -247,7 +247,7 @@
 <p>Paginated using ?page=&lt;page&gt;</p>
 <dl class="attribute">
 <dt id="intranet.apps.users.api.Search.permission_classes">
-<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'rest_framework.permissions.IsAuthenticated'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.Search.permission_classes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">permission_classes</code><em class="property"> = (&lt;class 'intranet.apps.auth.rest_permissions.DenyRestrictedPermission'&gt;,)</em><a class="headerlink" href="#intranet.apps.users.api.Search.permission_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -265,6 +265,11 @@
 </div>
 <div class="section" id="module-intranet.apps.users.courses_urls">
 <span id="intranet-apps-users-courses-urls-module"></span><h2>intranet.apps.users.courses_urls module<a class="headerlink" href="#module-intranet.apps.users.courses_urls" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.users.courses_urls.re_path">
+<code class="sig-prename descclassname">intranet.apps.users.courses_urls.</code><code class="sig-name descname">re_path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RegexPattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.users.courses_urls.re_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-intranet.apps.users.forms">
 <span id="intranet-apps-users-forms-module"></span><h2>intranet.apps.users.forms module<a class="headerlink" href="#module-intranet.apps.users.forms" title="Permalink to this headline">¶</a></h2>
@@ -2829,9 +2834,22 @@ default User model manager.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="intranet.apps.users.models.UserManager.get_teachers_sorted">
-<code class="sig-name descname">get_teachers_sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_sorted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of teachers sorted by last name, then first name.</p>
+<dt id="intranet.apps.users.models.UserManager.get_teachers_attendance_users">
+<code class="sig-name descname">get_teachers_attendance_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; QuerySet[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_attendance_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_attendance_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like <code class="docutils literal notranslate"><span class="pre">get_teachers()</span></code>, but includes attendance-only users as well as
+teachers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A QuerySet of users who are either teachers or attendance-only users.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.users.models.UserManager.get_teachers_attendance_users_sorted">
+<code class="sig-name descname">get_teachers_attendance_users_sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; QuerySet[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_attendance_users_sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_attendance_users_sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> containing both teachers and attendance-only users sorted by
+last name, then first name.</p>
 <p>This is used for the announcement request page.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2841,8 +2859,19 @@ default User model manager.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="intranet.apps.users.models.UserManager.get_teachers_sorted">
+<code class="sig-name descname">get_teachers_sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[Collection[intranet.apps.users.models.User], django.db.models.query.QuerySet]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.get_teachers_sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.get_teachers_sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of teachers sorted by last name, then first name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of teachers sorted by last name, then first name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="intranet.apps.users.models.UserManager.user_with_ion_id">
-<code class="sig-name descname">user_with_ion_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_ion_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_ion_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">user_with_ion_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: Union[int, str]</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_ion_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_ion_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a unique user object by Ion ID. (Ex. 489)</p>
 </dd></dl>
 
@@ -2866,7 +2895,7 @@ returned or if the given parameters matched more than one user.</p>
 
 <dl class="method">
 <dt id="intranet.apps.users.models.UserManager.user_with_student_id">
-<code class="sig-name descname">user_with_student_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_student_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_student_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">user_with_student_id</code><span class="sig-paren">(</span><em class="sig-param">student_id: Union[int, str]</em><span class="sig-paren">)</span> &#x2192; Optional[get_user_model()]<a class="reference internal" href="../_modules/intranet/apps/users/models.html#UserManager.user_with_student_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.UserManager.user_with_student_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a unique user object by FCPS student ID. (Ex. 1624472)</p>
 </dd></dl>
 

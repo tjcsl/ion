@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.routing &#8212; TJ Intranet v3 (Build #5709) documentation</title>
+    <title>intranet.routing &#8212; TJ Intranet v3 (Build #5717) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -135,7 +135,7 @@
 <span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="kn">import</span> <span class="n">WebsocketConsumer</span>
 <span class="kn">from</span> <span class="nn">channels.routing</span> <span class="kn">import</span> <span class="n">ProtocolTypeRouter</span><span class="p">,</span> <span class="n">URLRouter</span>
 
-<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">re_path</span>
 
 <span class="kn">from</span> <span class="nn">.apps.bus.consumers</span> <span class="kn">import</span> <span class="n">BusConsumer</span>
 
@@ -152,7 +152,9 @@
         <span class="k">pass</span></div></div>
 
 
-<span class="n">application</span> <span class="o">=</span> <span class="n">ProtocolTypeRouter</span><span class="p">({</span><span class="s2">&quot;websocket&quot;</span><span class="p">:</span> <span class="n">AuthMiddlewareStack</span><span class="p">(</span><span class="n">URLRouter</span><span class="p">([</span><span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^bus/$&quot;</span><span class="p">,</span> <span class="n">BusConsumer</span><span class="p">),</span> <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*$&quot;</span><span class="p">,</span> <span class="n">WebsocketCloseConsumer</span><span class="p">)]))})</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">ProtocolTypeRouter</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;websocket&quot;</span><span class="p">:</span> <span class="n">AuthMiddlewareStack</span><span class="p">(</span><span class="n">URLRouter</span><span class="p">([</span><span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^bus/$&quot;</span><span class="p">,</span> <span class="n">BusConsumer</span><span class="p">),</span> <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*$&quot;</span><span class="p">,</span> <span class="n">WebsocketCloseConsumer</span><span class="p">)]))}</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>

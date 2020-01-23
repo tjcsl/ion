@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.locking &#8212; TJ Intranet v3 (Build #5709) documentation</title>
+    <title>intranet.utils.locking &#8212; TJ Intranet v3 (Build #5717) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -202,7 +202,7 @@
             <span class="n">combined_qs</span> <span class="o">=</span> <span class="n">combined_qs</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">qs_list</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Now we actually do the locking. We order by PK first in an attempt to prevent deadlocks.</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="n">combined_qs</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span></div>
+        <span class="n">_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">combined_qs</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">))</span></div>
 </pre></div>
 
     </div>

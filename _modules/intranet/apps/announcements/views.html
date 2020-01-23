@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5709) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #5717) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -148,16 +148,18 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="view_announcements"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.view_announcements">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcements</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="view_announcements_archive"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.view_announcements_archive">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcements_archive</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements, showing expired posts.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="announcement_posted_hook"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.announcement_posted_hook">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -196,8 +198,7 @@
     <span class="n">announcement_approved_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span></div>
 
 
-<span class="nd">@login_required</span>
-<span class="nd">@deny_restricted</span>
+<div class="viewcode-block" id="request_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.request_announcement_view">[docs]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">request_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The request announcement page.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
@@ -241,19 +242,17 @@
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement request&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span></div>
 
 
-<span class="nd">@login_required</span>
-<span class="nd">@deny_restricted</span>
+<div class="viewcode-block" id="request_announcement_success_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.request_announcement_success_view">[docs]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">request_announcement_success_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/success.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/success.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span><span class="p">})</span></div>
 
 
-<span class="nd">@login_required</span>
-<span class="nd">@deny_restricted</span>
+<div class="viewcode-block" id="request_announcement_success_self_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.request_announcement_success_self_view">[docs]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">request_announcement_success_self_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/success.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/success.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -395,7 +394,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span>
 
 
-<div class="viewcode-block" id="view_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.view_announcement_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View an announcement.</span>
 
@@ -404,7 +404,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">announcement</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span>
 
 
 <span class="nd">@announcements_admin_required</span>
@@ -469,7 +469,8 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span>
 
 
-<div class="viewcode-block" id="show_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.show_announcement_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
 <span class="k">def</span> <span class="nf">show_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Unhide an announcement that was hidden by the logged-in user.</span>
@@ -486,10 +487,11 @@
             <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Unhidden&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="hide_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.hide_announcement_view">[docs]</a><span class="nd">@login_required</span>
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
 <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
 <span class="k">def</span> <span class="nf">hide_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Hide an announcement for the logged-in user.</span>
@@ -509,7 +511,7 @@
             <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
