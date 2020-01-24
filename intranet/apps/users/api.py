@@ -2,6 +2,7 @@ import io
 import os
 
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django.conf import settings
@@ -25,7 +26,7 @@ class ProfileDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = UserSerializer
-    permission_classes = (DenyRestrictedPermission,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
         if "pk" in kwargs:
@@ -34,6 +35,9 @@ class ProfileDetail(generics.RetrieveAPIView):
             user = get_user_model().objects.get(username__iexact=kwargs["username"])
         else:
             user = request.user
+
+        if request.user.is_restricted and user != request.user:
+            raise get_user_model().DoesNotExist
 
         return Response(self.get_serializer(user).data)
 
