@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.api &#8212; TJ Intranet v3 (Build #5717) documentation</title>
+    <title>intranet.apps.users.api &#8212; TJ Intranet v3 (Build #5725) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,6 +129,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">generics</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">IsAuthenticated</span>
 <span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
@@ -152,7 +153,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">DenyRestrictedPermission</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="ProfileDetail.retrieve"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.api.ProfileDetail.retrieve">[docs]</a>    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;pk&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -161,6 +162,9 @@
             <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span>
 
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_serializer</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
 
