@@ -3,10 +3,12 @@ from typing import Collection
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from ...utils.helpers import join_nicely
+from ..groups.models import Group
 from ..notifications.emails import email_send
 from .models import EighthActivity, EighthRoom, EighthScheduledActivity
 
@@ -116,4 +118,51 @@ def room_changed_activity_email(
             "Room changes for {}".format(act.name),
             [user.notification_email],
             bcc=True,
+        )
+
+
+@shared_task
+def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: int) -> None:
+    """Sign all users in a specific group up for a specific scheduled activity
+    (in the background), sending an email to the user who requested the operation when
+    it is done.
+
+    Args:
+        user_id: The ID of the user who requested that this operation be performed.
+        group_id: The ID of the group to sign up for the activity.
+        schact_id:.The ID of the EighthScheduledActivity to add the group members to.
+
+    """
+    # Circular dependency
+    from .views.admin.groups import eighth_admin_perform_group_signup  # pylint: disable=import-outside-toplevel
+
+    user = get_user_model().objects.get(id=user_id)
+
+    data = {
+        "group": Group.objects.get(id=group_id),
+        "scheduled_activity": EighthScheduledActivity.objects.get(id=schact_id),
+        "help_email": settings.FEEDBACK_EMAIL,
+    }
+
+    try:
+        eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=None)
+    except Exception:
+        email_send(
+            "eighth/emails/group_signup_error.txt",
+            "eighth/emails/group_signup_error.html",
+            data,
+            "Error during group signup",
+            [user.notification_email],
+            bcc=False,
+        )
+
+        raise  # Send to Sentry
+    else:
+        email_send(
+            "eighth/emails/group_signup_complete.txt",
+            "eighth/emails/group_signup_complete.html",
+            data,
+            "Group signup complete",
+            [user.notification_email],
+            bcc=False,
         )
