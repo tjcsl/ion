@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.signage package &#8212; TJ Intranet v3 (Build #5725) documentation</title>
+    <title>intranet.apps.signage package &#8212; TJ Intranet v3 (Build #5734) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -99,6 +99,7 @@
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.admin">intranet.apps.signage.admin module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.signage.consumers">intranet.apps.signage.consumers module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.models">intranet.apps.signage.models module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.pages">intranet.apps.signage.pages module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.urls">intranet.apps.signage.urls module</a></li>
@@ -177,6 +178,30 @@
 <dl class="attribute">
 <dt id="intranet.apps.signage.admin.SignAdmin.list_display">
 <code class="sig-name descname">list_display</code><em class="property"> = ('name', 'display')</em><a class="headerlink" href="#intranet.apps.signage.admin.SignAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.signage.consumers">
+<span id="intranet-apps-signage-consumers-module"></span><h2>intranet.apps.signage.consumers module<a class="headerlink" href="#module-intranet.apps.signage.consumers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.signage.consumers.SignageConsumer">
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.signage.consumers.</code><code class="sig-name descname">SignageConsumer</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/consumers.html#SignageConsumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.consumers.SignageConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">channels.generic.websocket.JsonWebsocketConsumer</span></code></p>
+<dl class="method">
+<dt id="intranet.apps.signage.consumers.SignageConsumer.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/intranet/apps/signage/consumers.html#SignageConsumer.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.consumers.SignageConsumer.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.signage.consumers.SignageConsumer.disconnect">
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><em class="sig-param">code: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/intranet/apps/signage/consumers.html#SignageConsumer.disconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.consumers.SignageConsumer.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.signage.consumers.SignageConsumer.receive_json">
+<code class="sig-name descname">receive_json</code><span class="sig-paren">(</span><em class="sig-param">content</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/intranet/apps/signage/consumers.html#SignageConsumer.receive_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.consumers.SignageConsumer.receive_json" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -351,6 +376,12 @@ day_end_switch_minutes: The number of minutes before the end of the day to switc
 <blockquote>
 <div><p>to day_end_switch_page. Can be negative to switch after the end of the day.</p>
 </div></blockquote>
+<dl class="simple">
+<dt>latest_heartbeat_time: If the sign has an open websocket connection to a</dt><dd><p>SignageConsumer, this is the time at which the last message was received from
+it. If the sign does not have such a connection open, this is None (even if
+the sign previously had an open connection).</p>
+</dd>
+</dl>
 <p>pages: a list of pages</p>
 <dl class="exception">
 <dt id="intranet.apps.signage.models.Sign.DoesNotExist">
@@ -439,9 +470,21 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="intranet.apps.signage.models.Sign.is_offline">
+<em class="property">property </em><code class="sig-name descname">is_offline</code><a class="headerlink" href="#intranet.apps.signage.models.Sign.is_offline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="intranet.apps.signage.models.Sign.landscape">
 <code class="sig-name descname">landscape</code><a class="headerlink" href="#intranet.apps.signage.models.Sign.landscape" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.signage.models.Sign.latest_heartbeat_time">
+<code class="sig-name descname">latest_heartbeat_time</code><a class="headerlink" href="#intranet.apps.signage.models.Sign.latest_heartbeat_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -482,7 +525,7 @@ object the first time, the query is executed.</p>
 
 <dl class="attribute">
 <dt id="intranet.apps.signage.models.Sign.objects">
-<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.signage.models.Sign.objects" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.ManagerFromSignQuerySet object&gt;</em><a class="headerlink" href="#intranet.apps.signage.models.Sign.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -500,6 +543,22 @@ instances.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.signage.models.SignQuerySet">
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.signage.models.</code><code class="sig-name descname">SignQuerySet</code><span class="sig-paren">(</span><em class="sig-param">model=None</em>, <em class="sig-param">query=None</em>, <em class="sig-param">using=None</em>, <em class="sig-param">hints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/models.html#SignQuerySet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.models.SignQuerySet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/_objects/ref/models/querysets/#django.db.models.query.QuerySet" title="(in Django v3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.query.QuerySet</span></code></a></p>
+<dl class="method">
+<dt id="intranet.apps.signage.models.SignQuerySet.filter_offline">
+<code class="sig-name descname">filter_offline</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; models.query.QuerySet[Sign]<a class="reference internal" href="../_modules/intranet/apps/signage/models.html#SignQuerySet.filter_offline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.models.SignQuerySet.filter_offline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.signage.models.SignQuerySet.filter_online">
+<code class="sig-name descname">filter_online</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; models.query.QuerySet[Sign]<a class="reference internal" href="../_modules/intranet/apps/signage/models.html#SignQuerySet.filter_online"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.models.SignQuerySet.filter_online" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -542,6 +601,12 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 <code class="sig-prename descclassname">intranet.apps.signage.views.</code><code class="sig-name descname">eighth</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/views.html#eighth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.views.eighth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Displays the eighth period signage page. This cannot be a regular signage page because it needs to reload
 in order to switch blocks or update information..</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.signage.views.prometheus_metrics">
+<code class="sig-prename descclassname">intranet.apps.signage.views.</code><code class="sig-name descname">prometheus_metrics</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/views.html#prometheus_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.signage.views.prometheus_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prometheus metrics for signage displays. Currently just whether or not they are online.</p>
 </dd></dl>
 
 <dl class="function">

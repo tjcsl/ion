@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #5725) documentation</title>
+    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #5734) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,7 +125,11 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.signage.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 
 <div class="viewcode-block" id="PageQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.PageQuerySet">[docs]</a><span class="k">class</span> <span class="nc">PageQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
@@ -199,6 +203,20 @@
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="SignQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.SignQuerySet">[docs]</a><span class="k">class</span> <span class="nc">SignQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
+<div class="viewcode-block" id="SignQuerySet.filter_offline"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.SignQuerySet.filter_offline">[docs]</a>    <span class="k">def</span> <span class="nf">filter_offline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;models.query.QuerySet[Sign]&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">models</span><span class="o">.</span><span class="n">Q</span><span class="p">(</span><span class="n">latest_heartbeat_time__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="o">|</span> <span class="n">models</span><span class="o">.</span><span class="n">Q</span><span class="p">(</span><span class="n">latest_heartbeat_time__lte</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SignQuerySet.filter_online"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.SignQuerySet.filter_online">[docs]</a>    <span class="k">def</span> <span class="nf">filter_online</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;models.query.QuerySet[Sign]&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">latest_heartbeat_time__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">latest_heartbeat_time__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS</span><span class="p">),</span>
+        <span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="Sign"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Sign">[docs]</a><span class="k">class</span> <span class="nc">Sign</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        name: friendly display name [required]</span>
@@ -214,8 +232,14 @@
 <span class="sd">        day_end_switch_page: A page to switch to near the end of the day</span>
 <span class="sd">        day_end_switch_minutes: The number of minutes before the end of the day to switch</span>
 <span class="sd">            to day_end_switch_page. Can be negative to switch after the end of the day.</span>
+<span class="sd">        latest_heartbeat_time: If the sign has an open websocket connection to a</span>
+<span class="sd">            SignageConsumer, this is the time at which the last message was received from</span>
+<span class="sd">            it. If the sign does not have such a connection open, this is None (even if</span>
+<span class="sd">            the sign previously had an open connection).</span>
 <span class="sd">        pages: a list of pages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">SignQuerySet</span><span class="o">.</span><span class="n">as_manager</span><span class="p">()</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
     <span class="n">display</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -234,6 +258,15 @@
     <span class="n">day_end_switch_minutes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Switch pages this many minutes before the end of the day&quot;</span>
     <span class="p">)</span>
+
+    <span class="c1"># This can be set to None at any time if the</span>
+    <span class="n">latest_heartbeat_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_offline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_heartbeat_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_heartbeat_time</span> <span class="o">&gt;=</span> <span class="n">timedelta</span><span class="p">(</span>
+            <span class="n">seconds</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span></div>
