@@ -1,6 +1,7 @@
 import csv
 import logging
 import re
+from typing import Optional
 
 from cacheops import invalidate_model, invalidate_obj
 from formtools.wizard.views import SessionWizardView
@@ -10,7 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from ....auth.decorators import eighth_admin_required
@@ -20,6 +21,7 @@ from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMu
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
 from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ...tasks import eighth_admin_signup_group_task
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -416,26 +418,50 @@ eighth_admin_signup_group = eighth_admin_required(EighthAdminSignUpGroupWizard.a
 
 
 def eighth_admin_signup_group_action(request, group_id, schact_id):
-
-    try:
-        scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
-        group = Group.objects.get(id=group_id)
-    except (EighthScheduledActivity.DoesNotExist, Group.DoesNotExist):
-        raise http.Http404
+    scheduled_activity = get_object_or_404(EighthScheduledActivity, id=schact_id)
+    group = get_object_or_404(Group, id=group_id)
 
     users = group.user_set.all()
 
-    if "confirm" in request.POST:
-        for user in users:
-            scheduled_activity.add_user(user, request, force=True, no_after_deadline=True)
-        messages.success(request, "Successfully signed up group for activity.")
+    if not users.exists():
+        messages.info(request, "The group you have selected has no members.")
         return redirect("eighth_admin_dashboard")
+
+    if "confirm" in request.POST:
+        if request.POST.get("run_in_background"):
+            eighth_admin_signup_group_task.delay(user_id=request.user.id, group_id=group_id, schact_id=schact_id)
+            messages.success(request, "Group members are being signed up in the background.")
+            return redirect("eighth_admin_dashboard")
+        else:
+            eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=request)
+            messages.success(request, "Successfully signed up group for activity.")
+            return redirect("eighth_admin_dashboard")
 
     return render(
         request,
         "eighth/admin/sign_up_group.html",
         {"admin_page_title": "Confirm Group Signup", "scheduled_activity": scheduled_activity, "group": group, "users_num": users.count()},
     )
+
+
+def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request: Optional[http.HttpRequest]):
+    """Performs sign up of all users in a specific group up for a
+    specific scheduled activity.
+
+    Args:
+        group_id: The ID of the group that should be signed up for the activity.
+        schact_id: The ID of the EighthScheduledActivity all the users in the group
+            should be signed up for.
+        request: If possible, the request object associated with the operation.
+
+    """
+
+    # We assume these exist
+    scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
+    group = Group.objects.get(id=group_id)
+
+    for user in group.user_set.all():
+        scheduled_activity.add_user(user, request=request, force=True, no_after_deadline=True)
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):
