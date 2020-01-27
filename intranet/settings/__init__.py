@@ -532,6 +532,7 @@ INSTALLED_APPS = [
     "django_requestlogging",  # django-requestlogging-redux
     "rest_framework",  # django-rest-framework
     "maintenance_mode",  # django-maintenance-mode
+    "django_prometheus",  # django-prometheus
     "pipeline",  # django-pipeline
     "channels",
     # Intranet apps
