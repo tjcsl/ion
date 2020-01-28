@@ -446,7 +446,10 @@ CACHEOPS = {
 
 if not TESTING:
     # Settings for django-redis-sessions
-    SESSION_ENGINE = "redis_sessions.session"
+
+    # We use a custom "wrapper" session engine that inherits from django-redis-session's session engine.
+    # It allows customization of certain session-related behavior. See the comments in intranet/utils/session.py for more details.
+    SESSION_ENGINE = "intranet.utils.session"
 
     SESSION_REDIS_HOST = "127.0.0.1"
     SESSION_REDIS_PORT = 6379
