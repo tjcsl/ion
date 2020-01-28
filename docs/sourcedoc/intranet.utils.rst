@@ -68,6 +68,14 @@ intranet.utils.serialization module
    :undoc-members:
    :show-inheritance:
 
+intranet.utils.session module
+-----------------------------
+
+.. automodule:: intranet.utils.session
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
