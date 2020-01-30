@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 import tempfile
-from typing import List, Optional
+from typing import Dict, Optional
 
 import magic
 from sentry_sdk import add_breadcrumb, capture_exception
@@ -27,39 +27,59 @@ class InvalidInputPrintingError(Exception):
     """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message."""
 
 
-def get_printers() -> List[str]:
-    """ Returns the list of available printers.
+def get_printers() -> Dict[str, str]:
+    """Returns a dictionary mapping name:description for available printers.
 
     This requires that a CUPS client be configured on the server.
-    Otherwise, this returns an empty list.
+    Otherwise, this returns an empty dictionary.
 
     Returns:
-        A list of available printers.
+        A dictionary mapping name:description for available printers.
     """
 
     key = "printing:printers"
     cached = cache.get(key)
-    if cached:
+    if cached and isinstance(cached, dict):
         return cached
     else:
         try:
-            output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True, timeout=10)
+            output = subprocess.check_output(["lpstat", "-l", "-p"], universal_newlines=True, timeout=10)
         # Don't die if cups isn't installed.
         except FileNotFoundError:
             return []
-        # Don't die if lpstat -a fails
+        # Don't die if lpstat fails
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             return []
-        lines = output.splitlines()
-        names = []
-        for line in lines:
-            if "requests since" in line:
-                name = line.split(" ", 1)[0]
-                if name and name != "Please_Select_a_Printer":
-                    names.append(name)
 
-        cache.set(key, names, timeout=settings.CACHE_AGE["printers_list"])
-        return names
+        PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)", re.ASCII)
+        DESCRIPTION_LINE_RE = re.compile(r"^\s+Description:\s+(.*)\s*$", re.ASCII)
+
+        printers = {}
+        last_name = None
+        for line in output.splitlines():
+            match = PRINTER_LINE_RE.match(line)
+            if match is not None:
+                # Pull out the name of the printer
+                name = match.group(1)
+                if name != "Please_Select_a_Printer":
+                    # By default, use the name of the printer instead of the description
+                    printers[name] = name
+                    # Record the name of the printer so when we parse the rest of the
+                    # extended description we know which printer it's referring to.
+                    last_name = name
+            else:
+                # If we've seen a line with the name of a printer before
+                if last_name is not None:
+                    match = DESCRIPTION_LINE_RE.match(line)
+                    if match is not None:
+                        # Pull out the description
+                        description = match.group(1)
+                        # And make sure we don't set an empty description
+                        if description:
+                            printers[last_name] = description
+
+        cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
+        return printers
 
 
 def convert_soffice(tmpfile_name: str) -> Optional[str]:
@@ -231,7 +251,7 @@ def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
 
 def print_job(obj: PrintJob, do_print: bool = True):
     printer = obj.printer
-    if printer not in get_printers():
+    if printer not in get_printers().keys():
         raise Exception("Printer not authorized.")
 
     if not obj.file:

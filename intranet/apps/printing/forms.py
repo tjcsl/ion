@@ -18,7 +18,7 @@ class PrintJobForm(forms.ModelForm):
         super(PrintJobForm, self).__init__(*args, **kwargs)
 
         if printers:
-            self.fields["printer"].choices = [("", "Select a printer...")] + [(i, i) for i in printers]
+            self.fields["printer"].choices = [("", "Select a printer...")] + list(printers.items())
 
     def validate_size(self):
         filesize = self.file.__sizeof__()
