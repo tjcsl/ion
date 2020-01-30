@@ -54,13 +54,9 @@ def get_printers() -> List[str]:
         names = []
         for line in lines:
             if "requests since" in line:
-                names.append(line.split(" ", 1)[0])
-
-        if "Please_Select_a_Printer" in names:
-            names.remove("Please_Select_a_Printer")
-
-        if "" in names:
-            names.remove("")
+                name = line.split(" ", 1)[0]
+                if name and name != "Please_Select_a_Printer":
+                    names.append(name)
 
         cache.set(key, names, timeout=settings.CACHE_AGE["printers_list"])
         return names
@@ -309,7 +305,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
             )
 
         if do_print:
-            args = ["lpr", "-P", "{}".format(printer), "{}".format(final_filename)]
+            args = ["lpr", "-P", printer, final_filename]
 
             if obj.page_range:
                 args.extend(["-o", "page-ranges={}".format(obj.page_range)])
