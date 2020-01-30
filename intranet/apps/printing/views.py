@@ -245,84 +245,97 @@ def print_job(obj: PrintJob, do_print: bool = True):
 
     filebase = os.path.basename(fileobj.name)
     filebase_escaped = slugify(filebase)
-    tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
-    with open(tmpfile_name, "wb+") as dest:
-        for chunk in fileobj.chunks():
-            dest.write(chunk)
 
-    tmpfile_name = convert_file(tmpfile_name, filebase)
+    # The paths to files that we need to clean up at the end
+    # This needs to be a set because we may add duplicate entries to it
+    delete_filenames = set()
+    try:
+        tmpfile_fd, tmpfile_name = tempfile.mkstemp(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped), text=False)
+        delete_filenames.add(tmpfile_name)
 
-    if not tmpfile_name:
-        msg = "Error converting file to PDF for printing"
+        # This implicitly closes tmpfile_fd when it's done writing
+        with open(tmpfile_fd) as dest:
+            for chunk in fileobj.chunks():
+                dest.write(chunk)
 
-        if filebase.endswith((".doc", ".docx")):
-            msg += (
-                "<br>Note: It looks like you are trying to print a Word document. Word documents don't always print correctly, so we recommend "
-                "that you convert to a PDF before printing."
-            )
+        final_filename = convert_file(tmpfile_name, filebase)
+        delete_filenames.add(final_filename)
 
-        raise Exception(msg)
+        if not final_filename:
+            msg = "Error converting file to PDF for printing"
 
-    if get_mimetype(tmpfile_name) == "text/plain":
-        with open(tmpfile_name, "r") as f:
-            num_chars = sum(len(line) for line in f)
-        num_pages = num_chars // (settings.PRINTING_PAGES_LIMIT * 50 * 72)
-    else:
-        num_pages = get_numpages(tmpfile_name)
-        if num_pages < 0:
-            raise Exception("Could not get number of pages in {}".format(filebase))
-
-    if re.search(r"\d\s+\d", obj.page_range) is not None:
-        # Make sure that when removing spaces in the page range we don't accidentally combine two numbers
-        raise InvalidInputPrintingError(
-            "You specified an invalid page range (please separate page numbers with 1) commas to print selected pages or 2) dashes to print a range)."
-        )
-
-    obj.num_pages = num_pages
-    obj.page_range = "".join(obj.page_range.split())  # remove all spaces
-    obj.save()
-
-    range_count = check_page_range(obj.page_range, obj.num_pages)
-
-    if obj.page_range:
-        if not range_count:
-            raise InvalidInputPrintingError("You specified an invalid page range.")
-        elif range_count > settings.PRINTING_PAGES_LIMIT:
-            raise InvalidInputPrintingError(
-                "You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
-                    range_count, settings.PRINTING_PAGES_LIMIT
+            if filebase.endswith((".doc", ".docx")):
+                msg += (
+                    "<br>Note: It looks like you are trying to print a Word document. Word documents don't always print correctly, so we recommend "
+                    "that you convert to a PDF before printing."
                 )
-            )
-    elif num_pages > settings.PRINTING_PAGES_LIMIT:
-        raise InvalidInputPrintingError(
-            "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
-        )
 
-    if do_print:
-        args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
+            raise Exception(msg)
+
+        if get_mimetype(final_filename) == "text/plain":
+            with open(final_filename, "r") as f:
+                num_chars = sum(len(line) for line in f)
+            num_pages = num_chars // (settings.PRINTING_PAGES_LIMIT * 50 * 72)
+        else:
+            num_pages = get_numpages(final_filename)
+            if num_pages < 0:
+                raise Exception("Could not get number of pages in {}".format(filebase))
+
+        if re.search(r"\d\s+\d", obj.page_range) is not None:
+            # Make sure that when removing spaces in the page range we don't accidentally combine two numbers
+            raise InvalidInputPrintingError(
+                "You specified an invalid page range (please separate page numbers with 1) commas to print selected pages or 2) dashes to print a "
+                "range)."
+            )
+
+        obj.num_pages = num_pages
+        obj.page_range = "".join(obj.page_range.split())  # remove all spaces
+        obj.save()
+
+        range_count = check_page_range(obj.page_range, obj.num_pages)
 
         if obj.page_range:
-            args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+            if not range_count:
+                raise InvalidInputPrintingError("You specified an invalid page range.")
+            elif range_count > settings.PRINTING_PAGES_LIMIT:
+                raise InvalidInputPrintingError(
+                    "You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
+                        range_count, settings.PRINTING_PAGES_LIMIT
+                    )
+                )
+        elif num_pages > settings.PRINTING_PAGES_LIMIT:
+            raise InvalidInputPrintingError(
+                "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
+            )
 
-        if obj.duplex:
-            args.extend(["-o", "sides=two-sided-long-edge"])
-        else:
-            args.extend(["-o", "sides=one-sided"])
+        if do_print:
+            args = ["lpr", "-P", "{}".format(printer), "{}".format(final_filename)]
 
-        if obj.fit:
-            args.extend(["-o", "fit-to-page"])
+            if obj.page_range:
+                args.extend(["-o", "page-ranges={}".format(obj.page_range)])
 
-        try:
-            subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
-        except subprocess.CalledProcessError as e:
-            if "is not accepting jobs" in e.output:
-                raise Exception(e.output.strip())
+            if obj.duplex:
+                args.extend(["-o", "sides=two-sided-long-edge"])
+            else:
+                args.extend(["-o", "sides=one-sided"])
 
-            logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
-            raise Exception("An error occured while printing your file: {}".format(e.output.strip()))
+            if obj.fit:
+                args.extend(["-o", "fit-to-page"])
 
-    obj.printed = True
-    obj.save()
+            try:
+                subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
+            except subprocess.CalledProcessError as e:
+                if "is not accepting jobs" in e.output:
+                    raise Exception(e.output.strip())
+
+                logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
+                raise Exception("An error occured while printing your file: {}".format(e.output.strip()))
+
+        obj.printed = True
+        obj.save()
+    finally:
+        for filename in delete_filenames:
+            os.remove(filename)
 
 
 @login_required
