@@ -1,4 +1,5 @@
 import logging
+import math
 import os
 import re
 import subprocess
@@ -289,9 +290,23 @@ def print_job(obj: PrintJob, do_print: bool = True):
             raise Exception(msg)
 
         if get_mimetype(final_filename) == "text/plain":
+            # These numbers were obtained by printing a text file with 1) repetitive sequences of characters
+            # to see how many characters can fit on a line and 2) line numbers to see how many lines can fit
+            # on a page.
+            line_width = 81
+            lines_per_page = 62
+
             with open(final_filename, "r") as f:
-                num_chars = sum(len(line) for line in f)
-            num_pages = num_chars // (settings.PRINTING_PAGES_LIMIT * 50 * 72)
+                # Every newline-terminated line of the file will take up 1 printed line, plus an
+                # additional printed line for each time it wraps.
+                # We subtract 1 from the line length because having exactly `line_width` characters
+                # won't make it wrap; we need one more character to actually wrap. (More generally,
+                # to make n additional printed lines wrap you need at least `line_width * n + 1`
+                # characters).
+                # However, subtracting one also means we need to clamp it so it won't go below zero.
+                num_lines = sum(1 + (max(0, len(line.rstrip("\n")) - 1) // line_width) for line in f)
+
+            num_pages = math.ceil(num_lines / lines_per_page)
         else:
             num_pages = get_numpages(final_filename)
             if num_pages < 0:
