@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5739) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #5742) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -573,7 +573,10 @@
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="c1"># Settings for django-redis-sessions</span>
-    <span class="n">SESSION_ENGINE</span> <span class="o">=</span> <span class="s2">&quot;redis_sessions.session&quot;</span>
+
+    <span class="c1"># We use a custom &quot;wrapper&quot; session engine that inherits from django-redis-session&#39;s session engine.</span>
+    <span class="c1"># It allows customization of certain session-related behavior. See the comments in intranet/utils/session.py for more details.</span>
+    <span class="n">SESSION_ENGINE</span> <span class="o">=</span> <span class="s2">&quot;intranet.utils.session&quot;</span>
 
     <span class="n">SESSION_REDIS_HOST</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
     <span class="n">SESSION_REDIS_PORT</span> <span class="o">=</span> <span class="mi">6379</span>
@@ -659,6 +662,7 @@
     <span class="s2">&quot;django_requestlogging&quot;</span><span class="p">,</span>  <span class="c1"># django-requestlogging-redux</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>  <span class="c1"># django-rest-framework</span>
     <span class="s2">&quot;maintenance_mode&quot;</span><span class="p">,</span>  <span class="c1"># django-maintenance-mode</span>
+    <span class="s2">&quot;django_prometheus&quot;</span><span class="p">,</span>  <span class="c1"># django-prometheus</span>
     <span class="s2">&quot;pipeline&quot;</span><span class="p">,</span>  <span class="c1"># django-pipeline</span>
     <span class="s2">&quot;channels&quot;</span><span class="p">,</span>
     <span class="c1"># Intranet apps</span>
@@ -705,6 +709,8 @@
 <span class="n">CHANNEL_LAYERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;channels_redis.core.RedisChannelLayer&quot;</span><span class="p">,</span> <span class="s2">&quot;CONFIG&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hosts&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">)]}}}</span>
 
 <span class="n">ASGI_APPLICATION</span> <span class="o">=</span> <span class="s2">&quot;intranet.routing.application&quot;</span>
+
+<span class="n">PROMETHEUS_EXPORT_MIGRATIONS</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># Eighth period default block date format</span>
 <span class="c1"># Post Django 1.8.7, this can no longer be used in templates.</span>
