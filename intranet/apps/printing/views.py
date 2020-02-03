@@ -271,7 +271,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
         delete_filenames.add(tmpfile_name)
 
         # This implicitly closes tmpfile_fd when it's done writing
-        with open(tmpfile_fd) as dest:
+        with open(tmpfile_fd, "wb") as dest:
             for chunk in fileobj.chunks():
                 dest.write(chunk)
 
