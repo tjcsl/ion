@@ -92,6 +92,10 @@ rm -rf redis-stable redis-stable.tar.gz
 
 # RabbitMQ
 apt-get -y install rabbitmq-server
+# RabbitMQ starts epmd processes that don't get killed properly. This fixes it.
+# Source: https://bugs.archlinux.org/task/55842
+mkdir -p /etc/systemd/system/rabbitmq-server.service.d
+echo $'[Unit]\nRequires=epmd.service\nAfter=epmd.service' >/etc/systemd/system/rabbitmq-server.service.d/override.conf
 
 # Ion
 master_pwd='swordfish'
