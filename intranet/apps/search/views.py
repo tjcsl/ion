@@ -193,7 +193,7 @@ def get_search_results(q, admin=False):
         try:
             users += query(qu, admin)
         except ValueError:
-            return "Invalid query", None
+            return "Invalid query", []
 
     return False, users
 
