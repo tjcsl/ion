@@ -276,7 +276,8 @@ def print_job(obj: PrintJob, do_print: bool = True):
                 dest.write(chunk)
 
         final_filename = convert_file(tmpfile_name, filebase)
-        delete_filenames.add(final_filename)
+        if final_filename is not None:
+            delete_filenames.add(final_filename)
 
         if not final_filename:
             msg = "Error converting file to PDF for printing"
