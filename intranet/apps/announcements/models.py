@@ -167,7 +167,7 @@ class Announcement(models.Model):
 
     def is_visible_submitter(self, user):
         try:
-            return (self.announcementrequest and user == self.announcementrequest.user) or self.user == user
+            return (self.announcementrequest and user.id == self.announcementrequest.user_id) or self.user_id == user.id
         except get_user_model().DoesNotExist:
             return False
 
