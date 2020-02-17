@@ -131,8 +131,8 @@ def eighth_signup_view(request, block_id=None):
         surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
         schedule = []
 
-        signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
-        block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
+        signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
+        block_signup_map = {s.scheduled_activity.block_id: s.scheduled_activity for s in signups}
 
         waitlists = EighthWaitlist.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_waitlist_map = {w.scheduled_activity.block.id: w.scheduled_activity for w in waitlists}
