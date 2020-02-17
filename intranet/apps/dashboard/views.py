@@ -304,6 +304,10 @@ def get_announcements_list(request, context):
         else:
             announcements = Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now())
 
+    # Load information on the user who posted the announcement
+    # Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,
+    announcements = announcements.select_related("user")
+
     # We may query the announcement request multiple times while checking if the user submitted or approved the announcement.
     # prefetch_related() will still make a separate query for each request, but the results are cached if we check them multiple times
     announcements = announcements.prefetch_related("announcementrequest_set")
