@@ -94,13 +94,16 @@ def eighth_signup_view(request, block_id=None):
 
         return http.HttpResponse(success_message)
     else:
+        block = None
         if block_id is None:
             next_block = EighthBlock.objects.get_first_upcoming_block()
             if next_block is not None:
+                block = next_block
                 block_id = next_block.id
             else:
                 last_block = EighthBlock.objects.order_by("date").last()
                 if last_block is not None:
+                    block = last_block
                     block_id = last_block.id
 
         if "user" in request.GET and request.user.is_eighth_admin:
@@ -114,15 +117,16 @@ def eighth_signup_view(request, block_id=None):
             else:
                 return redirect("eighth_admin_dashboard")
 
-        try:
-            block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id)
-        except EighthBlock.DoesNotExist:
-            if EighthBlock.objects.count() == 0:
-                # No blocks have been added yet
-                return render(request, "eighth/signup.html", {"no_blocks": True})
-            else:
-                # The provided block_id is invalid
-                raise http.Http404
+        if block is None:
+            try:
+                block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id)
+            except EighthBlock.DoesNotExist:
+                if not EighthBlock.objects.exists():
+                    # No blocks have been added yet
+                    return render(request, "eighth/signup.html", {"no_blocks": True})
+                else:
+                    # The provided block_id is invalid
+                    raise http.Http404
 
         surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
         schedule = []
