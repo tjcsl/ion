@@ -144,20 +144,16 @@ class Announcement(models.Model):
     def is_visible(self, user):
         return self in Announcement.objects.visible_to_user(user)
 
-    _announcementrequest = None  # type: AnnouncementRequest
+    # False, not None. This can be None if no AnnouncementRequest exists for this Announcement,
+    # and we should not reevaluate in that case.
+    _announcementrequest = False  # type: AnnouncementRequest
 
     @property
     def announcementrequest(self):
-        if self._announcementrequest:
-            return self._announcementrequest
+        if self._announcementrequest is False:
+            self._announcementrequest = self.announcementrequest_set.first()
 
-        a = self.announcementrequest_set
-        if a.count() > 0:
-            ar = a.first()
-            self._announcementrequest = ar
-            return ar
-
-        return None
+        return self._announcementrequest
 
     def is_visible_requester(self, user):
         try:
