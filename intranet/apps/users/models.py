@@ -895,7 +895,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def recommended_activities(self):
         key = "{}:recommended_activities".format(self.username)
         cached = cache.get(key)
-        if cached:
+        if cached is not None:
             return cached
         acts = set()
         for signup in (
