@@ -6,6 +6,7 @@ import logging
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Count
@@ -147,12 +148,17 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
             "display_text": "",
-            "waitlist_count": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count(),
+            # TODO: Make waitlists more efficient or remove functionality completely
+            "waitlist_count": (EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count() if settings.ENABLE_WAITLIST else 0),
         }
 
         if user:
-            activity_info["waitlisted"] = EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
-            activity_info["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
+            if settings.ENABLE_WAITLIST:
+                activity_info["waitlisted"] = EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
+                activity_info["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
+            else:
+                activity_info["waitlisted"] = False
+                activity_info["waitlist_position"] = 0
             activity_info["is_recommended"] = activity in recommended_activities
 
         return activity_info
