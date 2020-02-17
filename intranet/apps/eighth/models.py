@@ -363,7 +363,7 @@ class EighthActivity(AbstractBaseEighthModel):
         return name
 
     @classmethod
-    def restricted_activities_available_to_user(cls, user: "get_user_model()") -> List["EighthActivity"]:
+    def restricted_activities_available_to_user(cls, user: "get_user_model()") -> List[int]:
         """Finds the restricted activities available to the given user.
 
         Args:
