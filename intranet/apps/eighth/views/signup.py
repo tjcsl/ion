@@ -134,8 +134,11 @@ def eighth_signup_view(request, block_id=None):
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block_id: s.scheduled_activity for s in signups}
 
-        waitlists = EighthWaitlist.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
-        block_waitlist_map = {w.scheduled_activity.block.id: w.scheduled_activity for w in waitlists}
+        if settings.ENABLE_WAITLIST:
+            waitlists = EighthWaitlist.objects.filter(user=user).select_related("scheduled_activity__activity")
+        else:
+            waitlists = EighthWaitlist.objects.none()
+        block_waitlist_map = {w.scheduled_activity.block_id: w.scheduled_activity for w in waitlists}
 
         today = timezone.localdate()
 
