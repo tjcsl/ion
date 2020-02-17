@@ -282,7 +282,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         roomings = EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity")
         overridden_roomings = EighthScheduledActivity.rooms.through.objects.filter(
             eighthscheduledactivity_id__in=scheduled_activity_ids
-        ).select_related("eighthroom", "eighthscheduledactivity")
+        ).select_related("eighthroom")
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
@@ -297,7 +297,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         activities_rooms_overridden = []
         for rooming in overridden_roomings:
-            scheduled_activity_id = rooming.eighthscheduledactivity.id
+            scheduled_activity_id = rooming.eighthscheduledactivity_id
 
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overridden:
