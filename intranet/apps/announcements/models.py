@@ -157,7 +157,7 @@ class Announcement(models.Model):
 
     def is_visible_requester(self, user):
         try:
-            return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())
+            return self.announcementrequest_set.filter(teachers_requested__id=user.id).exists()
         except get_user_model().DoesNotExist:
             return False
 
