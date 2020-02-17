@@ -376,15 +376,12 @@ class EighthActivity(AbstractBaseEighthModel):
         if not user:
             return []
 
-        activities = set(user.restricted_activity_set.values_list("id", flat=True))
+        q = Q(users_allowed=user.id) | Q(groups_allowed__user=user.id)
 
         if user and user.grade and user.grade.number and user.grade.name and 9 <= user.grade.number <= 12:
-            activities |= set(EighthActivity.objects.filter(**{"{}_allowed".format(user.grade.name_plural): True}).values_list("id", flat=True))
+            q |= Q(**{"{}_allowed".format(user.grade.name_plural): True})
 
-        for group in user.groups.all():
-            activities |= set(group.restricted_activity_set.values_list("id", flat=True))
-
-        return list(activities)
+        return EighthActivity.objects.filter(q).values_list("id", flat=True)
 
     @classmethod
     def available_ids(cls) -> List[int]:
