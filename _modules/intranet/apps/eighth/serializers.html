@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5771) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #5775) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -409,7 +409,7 @@
         <span class="n">roomings</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthactivity_id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthactivity&quot;</span><span class="p">)</span>
         <span class="n">overridden_roomings</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
             <span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">rooming</span> <span class="ow">in</span> <span class="n">roomings</span><span class="p">:</span>
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthactivity</span><span class="o">.</span><span class="n">id</span>
@@ -424,7 +424,7 @@
 
         <span class="n">activities_rooms_overridden</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">rooming</span> <span class="ow">in</span> <span class="n">overridden_roomings</span><span class="p">:</span>
-            <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthscheduledactivity</span><span class="o">.</span><span class="n">id</span>
+            <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthscheduledactivity_id</span>
 
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">scheduled_activity_to_activity_map</span><span class="p">[</span><span class="n">scheduled_activity_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">activity_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">activities_rooms_overridden</span><span class="p">:</span>

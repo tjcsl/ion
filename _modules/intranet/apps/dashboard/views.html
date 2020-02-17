@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #5771) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #5775) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -430,6 +430,14 @@
             <span class="n">announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+    <span class="c1"># Load information on the user who posted the announcement</span>
+    <span class="c1"># Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+
+    <span class="c1"># We may query the announcement request multiple times while checking if the user submitted or approved the announcement.</span>
+    <span class="c1"># prefetch_related() will still make a separate query for each request, but the results are cached if we check them multiple times</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;announcementrequest_set&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;events_admin&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>

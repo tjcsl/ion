@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #5771) documentation</title>
+    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #5775) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -271,24 +271,20 @@
 <div class="viewcode-block" id="Announcement.is_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.Announcement.is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
 
-    <span class="n">_announcementrequest</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: AnnouncementRequest</span>
+    <span class="c1"># False, not None. This can be None if no AnnouncementRequest exists for this Announcement,</span>
+    <span class="c1"># and we should not reevaluate in that case.</span>
+    <span class="n">_announcementrequest</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: AnnouncementRequest</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">announcementrequest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest_set</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
-        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest_set</span>
-        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ar</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span> <span class="o">=</span> <span class="n">ar</span>
-            <span class="k">return</span> <span class="n">ar</span>
-
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_announcementrequest</span>
 
 <div class="viewcode-block" id="Announcement.is_visible_requester"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.Announcement.is_visible_requester">[docs]</a>    <span class="k">def</span> <span class="nf">is_visible_requester</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span> <span class="ow">and</span> <span class="p">(</span><span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">announcementrequest_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teachers_requested__id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
