@@ -442,6 +442,7 @@ CACHEOPS = {
     "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
     "users.UserDarkModeProperties": {"ops": "get", "timeout": int(datetime.timedelta(minutes=10).total_seconds())},
     "features.FeatureAnnouncement": {"ops": "all", "timeout": int(datetime.timedelta(hours=1).total_seconds())},
+    "*.*": {"ops": (), "timeout": 5},  # Allow manual caching on everything else with a default timeout of 5 seconds
 }
 
 if not TESTING:

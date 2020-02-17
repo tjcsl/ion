@@ -286,7 +286,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         if isinstance(group, Group):
             group = group.name
-        return self.groups.filter(name=group).exists()
+        return self.groups.filter(name=group).cache(ops=["exists"], timeout=15).exists()
 
     def has_admin_permission(self, perm: str) -> bool:
         """Returns whether a user has an admin permission (explicitly, or implied by being in the
