@@ -203,7 +203,7 @@ def raw_roster_view(request, scheduled_activity_id):
     signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
 
     viewable_members = scheduled_activity.get_viewable_members(request.user)
-    num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
+    num_hidden_members = scheduled_activity.get_hidden_members(request.user).count()
 
     context = {
         "scheduled_activity": scheduled_activity,
