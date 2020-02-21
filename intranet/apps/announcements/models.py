@@ -28,11 +28,11 @@ class AnnouncementManager(Manager):
             return Announcement.objects.none()
 
         return Announcement.objects.filter(
-            Q(groups__in=user.groups.all())
+            Q(user=user)
             | Q(groups__isnull=True)
+            | Q(groups__user=user)
             | Q(announcementrequest__teachers_requested=user)
             | Q(announcementrequest__user=user)
-            | Q(user=user)
         ).distinct()
 
     def hidden_announcements(self, user):
