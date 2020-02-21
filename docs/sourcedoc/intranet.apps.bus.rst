@@ -44,6 +44,14 @@ intranet.apps.bus.serializers module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.bus.tasks module
+------------------------------
+
+.. automodule:: intranet.apps.bus.tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.bus.tests module
 ------------------------------
 
