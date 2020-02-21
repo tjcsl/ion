@@ -5,6 +5,7 @@ import re
 import sys
 from typing import Any, Dict, List, Tuple  # noqa
 
+import celery.schedules
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -789,6 +790,7 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL,
         "args": (),
     },
+    "reset-routes": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=8, minute=0), "args": ()},
 }
 
 MAINTENANCE_MODE = False
