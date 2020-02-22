@@ -1,3 +1,4 @@
+import enum
 import logging
 import os
 import re
@@ -20,6 +21,12 @@ kerberos_authenticate_post_failures = Counter(
     "Number of Kerberos authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not "
     "exist)",
 )
+
+
+class KerberosAuthenticationResult(enum.Enum):
+    FAILURE = 0  # Authentication failed
+    SUCCESS = 1  # Authentication succeeded
+    EXPIRED = -1  # Password expired; needs reset
 
 
 class KerberosAuthenticationBackend:
@@ -65,7 +72,7 @@ class KerberosAuthenticationBackend:
 
         # We should not try to authenticate with an empty password
         if password == "":
-            return False, False
+            return KerberosAuthenticationResult.FAILURE, False
 
         cache = "/tmp/ion-%s" % uuid.uuid4()
 
@@ -83,7 +90,7 @@ class KerberosAuthenticationBackend:
             returned = kinit.expect([pexpect.EOF, "password:"])
             if returned == 1:
                 logger.debug("Password for %s@%s expired, needs reset", username, realm)
-                return "reset", authenticated_through_AD
+                return KerberosAuthenticationResult.EXPIRED, authenticated_through_AD
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
@@ -100,7 +107,7 @@ class KerberosAuthenticationBackend:
                 kinit.sendline(password)
                 returned = kinit.expect([pexpect.EOF, "password:"])
                 if returned == 1:
-                    return False, authenticated_through_AD
+                    return KerberosAuthenticationResult.FAILURE, authenticated_through_AD
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
@@ -113,10 +120,10 @@ class KerberosAuthenticationBackend:
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
-            return True, authenticated_through_AD
+            return KerberosAuthenticationResult.SUCCESS, authenticated_through_AD
         else:
             logger.debug("Kerberos failed to authorize %s - %r", username, authenticated_through_AD)
-            return False, authenticated_through_AD
+            return KerberosAuthenticationResult.FALIURE, authenticated_through_AD
 
     @kerberos_authenticate.time()
     def authenticate(self, request, username=None, password=None):
@@ -141,16 +148,9 @@ class KerberosAuthenticationBackend:
         # remove all non-alphanumerics
         username = re.sub(r"\W", "", username).lower()
 
-        krb_ticket, ad_auth = self.get_kerberos_ticket(username, password)
+        result, ad_auth = self.get_kerberos_ticket(username, password)
 
-        if krb_ticket == "reset":
-            user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
-            return user
-
-        if not krb_ticket:
-            kerberos_authenticate_failures.inc()
-            return None
-        else:
+        if result == KerberosAuthenticationResult.SUCCESS:
             logger.debug("Authentication successful")
             try:
                 user = get_user_model().objects.get(username__iexact=username)
@@ -164,6 +164,12 @@ class KerberosAuthenticationBackend:
                 # Block authentication for students who authenticated via AD
                 return None
             return user
+        elif result == KerberosAuthenticationResult.EXPIRED:
+            user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
+            return user
+        else:
+            kerberos_authenticate_failures.inc()
+            return None
 
     def get_user(self, user_id):
         """Returns a user, given his or her user id. Required for a custom authentication backend.
