@@ -2,7 +2,6 @@ import enum
 import logging
 import os
 import re
-import subprocess
 import tempfile
 from typing import Union
 
@@ -78,27 +77,22 @@ class KerberosAuthenticationBackend:
         krb5cc_fd, krb5ccname = tempfile.mkstemp(prefix="ion-", text=False)
         os.close(krb5cc_fd)
 
-        logger.debug("Setting KRB5CCNAME to 'FILE:%s'", krb5ccname)
-        os.environ["KRB5CCNAME"] = "FILE:" + krb5ccname
+        # Attempt to authenticate against CSL Kerberos realm
+        realm = settings.CSL_REALM
+        result = KerberosAuthenticationBackend.try_single_kinit(
+            username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT, krb5ccname=krb5ccname
+        )
 
         authenticated_through_AD = False
 
-        try:
-            # Attempt to authenticate against CSL Kerberos realm
-            realm = settings.CSL_REALM
-            result = KerberosAuthenticationBackend.try_single_kinit(username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT)
+        if result == KerberosAuthenticationResult.FAILURE:
+            # Attempt to authenticate against the Active Directory Kerberos realm
+            authenticated_through_AD = True
 
-            if result == KerberosAuthenticationResult.FAILURE:
-                # Attempt to authenticate against the Active Directory Kerberos realm
-                authenticated_through_AD = True
-
-                realm = settings.AD_REALM
-                result = KerberosAuthenticationBackend.try_single_kinit(
-                    username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT,
-                )
-        finally:
-            subprocess.check_call(["kdestroy", "-c", krb5ccname])
-            os.environ.pop("KRB5CCNAME", None)
+            realm = settings.AD_REALM
+            result = KerberosAuthenticationBackend.try_single_kinit(
+                username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT, krb5ccname=krb5ccname
+            )
 
         if result == KerberosAuthenticationResult.SUCCESS:
             logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
@@ -108,9 +102,9 @@ class KerberosAuthenticationBackend:
         return result, authenticated_through_AD
 
     @staticmethod
-    def try_single_kinit(*, username: str, realm: str, password: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
+    def try_single_kinit(*, username: str, realm: str, password: str, krb5ccname: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
         try:
-            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, realm), timeout=timeout, encoding="utf-8")
+            kinit = pexpect.spawn("/usr/bin/kinit", ["-c", krb5ccname, "{}@{}".format(username, realm)], timeout=timeout, encoding="utf-8")
             kinit.expect(":")
             kinit.sendline(password)
             returned = kinit.expect([pexpect.EOF, "password:"])
