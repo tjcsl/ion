@@ -110,7 +110,7 @@ class KerberosAuthenticationBackend:
     @staticmethod
     def try_single_kinit(*, username: str, realm: str, password: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
         try:
-            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=timeout)
+            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, realm), timeout=timeout, encoding="utf-8")
             kinit.expect(":")
             kinit.sendline(password)
             returned = kinit.expect([pexpect.EOF, "password:"])
