@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import tempfile
+from typing import Union
 
 import pexpect
 from prometheus_client import Counter, Summary
@@ -76,6 +77,7 @@ class KerberosAuthenticationBackend:
 
         krb5cc_fd, krb5ccname = tempfile.mkstemp(prefix="ion-", text=False)
         os.close(krb5cc_fd)
+
         logger.debug("Setting KRB5CCNAME to 'FILE:%s'", krb5ccname)
         os.environ["KRB5CCNAME"] = "FILE:" + krb5ccname
 
@@ -83,47 +85,43 @@ class KerberosAuthenticationBackend:
 
         try:
             # Attempt to authenticate against CSL Kerberos realm
-            try:
-                realm = settings.CSL_REALM
-                kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
-                kinit.expect(":")
-                kinit.sendline(password)
-                returned = kinit.expect([pexpect.EOF, "password:"])
-                if returned == 1:
-                    logger.debug("Password for %s@%s expired, needs reset", username, realm)
-                    return KerberosAuthenticationResult.EXPIRED, authenticated_through_AD
-                kinit.close()
-                exitstatus = kinit.exitstatus
-            except pexpect.TIMEOUT:
-                KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
-                exitstatus = 1
+            realm = settings.CSL_REALM
+            result = KerberosAuthenticationBackend.try_single_kinit(username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT)
 
-            if exitstatus != 0:
+            if result == KerberosAuthenticationResult.FAILURE:
                 # Attempt to authenticate against the Active Directory Kerberos realm
                 authenticated_through_AD = True
-                try:
-                    realm = settings.AD_REALM
-                    kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
-                    kinit.expect(":")
-                    kinit.sendline(password)
-                    returned = kinit.expect([pexpect.EOF, "password:"])
-                    if returned == 1:
-                        return KerberosAuthenticationResult.FAILURE, authenticated_through_AD
-                    kinit.close()
-                    exitstatus = kinit.exitstatus
-                except pexpect.TIMEOUT:
-                    KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
-                    exitstatus = 1
+
+                realm = settings.AD_REALM
+                result = KerberosAuthenticationBackend.try_single_kinit(
+                    username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT,
+                )
         finally:
             subprocess.check_call(["kdestroy", "-c", krb5ccname])
             os.environ.pop("KRB5CCNAME", None)
 
-        if exitstatus == 0:
+        if result == KerberosAuthenticationResult.SUCCESS:
             logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
-            return KerberosAuthenticationResult.SUCCESS, authenticated_through_AD
         else:
             logger.debug("Kerberos failed to authorize %s - %r", username, authenticated_through_AD)
-            return KerberosAuthenticationResult.FALIURE, authenticated_through_AD
+
+        return result, authenticated_through_AD
+
+    @staticmethod
+    def try_single_kinit(*, username: str, realm: str, password: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
+        try:
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=timeout)
+            kinit.expect(":")
+            kinit.sendline(password)
+            returned = kinit.expect([pexpect.EOF, "password:"])
+            if returned == 1:
+                logger.debug("Password for %s@%s expired, needs reset", username, realm)
+                return KerberosAuthenticationResult.EXPIRED
+            kinit.close()
+            return KerberosAuthenticationResult.SUCCESS if kinit.exitstatus == 0 else KerberosAuthenticationResult.FAILURE
+        except pexpect.TIMEOUT:
+            KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
+            return KerberosAuthenticationResult.FAILURE
 
     @kerberos_authenticate.time()
     def authenticate(self, request, username=None, password=None):
