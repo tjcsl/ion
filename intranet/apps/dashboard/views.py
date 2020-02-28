@@ -1,11 +1,9 @@
 import logging
-from datetime import date, timedelta
+from datetime import timedelta
 from itertools import chain
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -164,89 +162,6 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     }
 
 
-def find_birthdays(request):
-    """Return information on user birthdays."""
-    today = timezone.localdate()
-    custom = False
-    yr_inc = 0
-    if "birthday_month" in request.GET and "birthday_day" in request.GET:
-        try:
-            mon = int(request.GET["birthday_month"])
-            day = int(request.GET["birthday_day"])
-            yr = today.year
-            """ If searching a date that already happened this year, skip to the next year. """
-            if mon < today.month or (mon == today.month and day < today.day):
-                yr += 1
-                yr_inc = 1
-
-            real_today = today
-            today = date(yr, mon, day)
-            if today:
-                custom = True
-            else:
-                today = real_today
-        except ValueError:
-            pass
-
-    key = "birthdays:{}".format(today)
-
-    cached = cache.get(key)
-
-    if cached:
-        return cached
-    else:
-        tomorrow = today + timedelta(days=1)
-        try:
-            data = {
-                "custom": custom,
-                "today": {
-                    "date": today,
-                    "users": [
-                        {
-                            "id": u.id,
-                            "full_name": u.full_name,
-                            "grade": {"name": u.grade.name},
-                            "age": (u.age + yr_inc) if u.age is not None else -1,
-                            "public": u.properties.attribute_is_public("show_birthday"),
-                        }
-                        if u
-                        else {}
-                        for u in get_user_model().objects.users_with_birthday(today.month, today.day)
-                    ],
-                    "inc": 0,
-                },
-                "tomorrow": {
-                    "date": tomorrow,
-                    "users": [
-                        {
-                            "id": u.id,
-                            "full_name": u.full_name,
-                            "grade": {"name": u.grade.name},
-                            "age": (u.age - 1) if u.age is not None else -1,
-                            "public": u.properties.attribute_is_public("show_birthday"),
-                        }
-                        for u in get_user_model().objects.users_with_birthday(tomorrow.month, tomorrow.day)
-                    ],
-                    "inc": 1,
-                },
-            }  # yapf: disable
-        except AttributeError:
-            return None
-        else:
-            cache.set(key, data, timeout=60 * 60 * 6)
-            return data
-
-
-def find_visible_birthdays(request, data):
-    """Return only the birthdays visible to current user.
-    """
-    if request.user and (request.user.is_teacher or request.user.is_eighthoffice or request.user.is_eighth_admin):
-        return data
-    data["today"]["users"] = [u for u in data["today"]["users"] if u["public"]]
-    data["tomorrow"]["users"] = [u for u in data["tomorrow"]["users"] if u["public"]]
-    return data
-
-
 def get_prerender_url(request):
     if request.user.is_eighth_admin:
         if request.user.is_student:
@@ -373,7 +288,6 @@ def add_widgets_context(request, context):
     * Eighth signup (STUDENT)
     * Eighth attendance (TEACHER or ADMIN)
     * Bell schedule (ALL)
-    * Birthdays (ALL)
     * Administration (ADMIN)
     * Links (ALL)
     * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)
@@ -411,9 +325,6 @@ def add_widgets_context(request, context):
         context.update(sponsor_sch)
         # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
         # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
-
-    birthdays = find_birthdays(request)
-    context["birthdays"] = find_visible_birthdays(request, birthdays)
 
     sched_ctx = schedule_context(request)
     context.update(sched_ctx)
