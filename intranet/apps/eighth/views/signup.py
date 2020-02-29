@@ -197,7 +197,7 @@ def eighth_multi_signup_view(request):
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
-            bid = request.POST.get("bid")
+            bids_comma = request.POST.get("bid")
             force = request.POST.get("force") == "true" and request.user.is_eighth_admin
 
             if not request.user.is_eighth_admin:
