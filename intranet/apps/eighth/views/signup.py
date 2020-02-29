@@ -47,7 +47,11 @@ def eighth_signup_view(request, block_id=None):
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
             bid = request.POST.get("bid")
-            force = request.POST.get("force") == "true"
+            force = request.POST.get("force") == "true" and request.user.is_eighth_admin
+
+            if not request.user.is_eighth_admin:
+                if uid != request.user.id:
+                    return http.HttpResponseNotFound()
 
             try:
                 user = get_user_model().objects.get(id=uid)
@@ -193,8 +197,12 @@ def eighth_multi_signup_view(request):
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
-            bids_comma = request.POST.get("bid")
-            force = request.POST.get("force") == "true"
+            bid = request.POST.get("bid")
+            force = request.POST.get("force") == "true" and request.user.is_eighth_admin
+
+            if not request.user.is_eighth_admin:
+                if uid != request.user.id:
+                    return http.HttpResponseNotFound()
 
             bids = bids_comma.split(",")
 
