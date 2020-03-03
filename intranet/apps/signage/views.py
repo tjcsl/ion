@@ -139,9 +139,7 @@ def prometheus_metrics(request):
     if remote_addr not in settings.ALLOWED_METRIC_SCRAPE_IPS and not is_admin:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
-    metrics = {
-        "intranet_signage_num_signs_online": Sign.objects.filter_online().count(),
-    }
+    metrics = {"intranet_signage_num_signs_online": Sign.objects.filter_online().count()}
 
     for sign in Sign.objects.all():
         metrics['intranet_signage_sign_is_online{{display="{}"}}'.format(sign.display)] = int(not sign.is_offline)

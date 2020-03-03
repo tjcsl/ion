@@ -179,9 +179,7 @@ def get_mimetype(tmpfile_name: str) -> str:
 def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     detected = get_mimetype(tmpfile_name)
 
-    add_breadcrumb(
-        category="printing", message="Detected file type {}".format(detected), level="debug",
-    )
+    add_breadcrumb(category="printing", message="Detected file type {}".format(detected), level="debug")
 
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
