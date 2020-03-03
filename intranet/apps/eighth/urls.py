@@ -53,7 +53,6 @@ eighth_admin_patterns = [
     re_path(r"^maintenance$", admin_maintenance.index_view, name="eighth_admin_maintenance"),
     re_path(r"^maintenance/clear_comments$", admin_maintenance.clear_comments_view, name="eighth_admin_maintenance_clear_comments"),
     re_path(r"^maintenance/start_of_year$", admin_maintenance.start_of_year_view, name="eighth_admin_maintenance_start_of_year"),
-    re_path(r"^maintenance/sis_import$", admin_maintenance.sis_import, name="eighth_admin_maintenance_sis_import"),
     # Blocks
     re_path(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
     re_path(r"^blocks/print_rosters/(?P<block_id>\d+)$", blocks.print_block_rosters_view, name="eighth_admin_print_block_rosters"),
