@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #5827) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #5832) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -126,13 +126,11 @@
       
   <h1>Source code for intranet.apps.dashboard.views</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
@@ -291,89 +289,6 @@
     <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="find_birthdays"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.find_birthdays">[docs]</a><span class="k">def</span> <span class="nf">find_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return information on user birthdays.&quot;&quot;&quot;</span>
-    <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
-    <span class="n">custom</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">yr_inc</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="s2">&quot;birthday_month&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="s2">&quot;birthday_day&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">mon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;birthday_month&quot;</span><span class="p">])</span>
-            <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;birthday_day&quot;</span><span class="p">])</span>
-            <span class="n">yr</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
-            <span class="sd">&quot;&quot;&quot; If searching a date that already happened this year, skip to the next year. &quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="n">mon</span> <span class="o">&lt;</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mon</span> <span class="o">==</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="ow">and</span> <span class="n">day</span> <span class="o">&lt;</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">):</span>
-                <span class="n">yr</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">yr_inc</span> <span class="o">=</span> <span class="mi">1</span>
-
-            <span class="n">real_today</span> <span class="o">=</span> <span class="n">today</span>
-            <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="n">yr</span><span class="p">,</span> <span class="n">mon</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">today</span><span class="p">:</span>
-                <span class="n">custom</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">today</span> <span class="o">=</span> <span class="n">real_today</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">pass</span>
-
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;birthdays:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">cached</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">tomorrow</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;custom&quot;</span><span class="p">:</span> <span class="n">custom</span><span class="p">,</span>
-                <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">today</span><span class="p">,</span>
-                    <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="s2">&quot;full_name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span>
-                            <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span><span class="p">},</span>
-                            <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">+</span> <span class="n">yr_inc</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_public</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">),</span>
-                        <span class="p">}</span>
-                        <span class="k">if</span> <span class="n">u</span>
-                        <span class="k">else</span> <span class="p">{}</span>
-                        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">users_with_birthday</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-                    <span class="p">],</span>
-                    <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="s2">&quot;tomorrow&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">tomorrow</span><span class="p">,</span>
-                    <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="s2">&quot;full_name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span>
-                            <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">name</span><span class="p">},</span>
-                            <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">attribute_is_public</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">),</span>
-                        <span class="p">}</span>
-                        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">users_with_birthday</span><span class="p">(</span><span class="n">tomorrow</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">tomorrow</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-                    <span class="p">],</span>
-                    <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="p">},</span>
-            <span class="p">}</span>  <span class="c1"># yapf: disable</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">data</span></div>
-
-
-<div class="viewcode-block" id="find_visible_birthdays"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.find_visible_birthdays">[docs]</a><span class="k">def</span> <span class="nf">find_visible_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return only the birthdays visible to current user.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">data</span>
-    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;today&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;today&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s2">&quot;public&quot;</span><span class="p">]]</span>
-    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tomorrow&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tomorrow&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s2">&quot;public&quot;</span><span class="p">]]</span>
-    <span class="k">return</span> <span class="n">data</span></div>
-
-
 <div class="viewcode-block" id="get_prerender_url"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_prerender_url">[docs]</a><span class="k">def</span> <span class="nf">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
@@ -500,7 +415,6 @@
 <span class="sd">    * Eighth signup (STUDENT)</span>
 <span class="sd">    * Eighth attendance (TEACHER or ADMIN)</span>
 <span class="sd">    * Bell schedule (ALL)</span>
-<span class="sd">    * Birthdays (ALL)</span>
 <span class="sd">    * Administration (ADMIN)</span>
 <span class="sd">    * Links (ALL)</span>
 <span class="sd">    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)</span>
@@ -538,9 +452,6 @@
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sponsor_sch</span><span class="p">)</span>
         <span class="c1"># &quot;sponsor_schedule&quot;, &quot;no_attendance_today&quot;, &quot;num_attendance_acts&quot;,</span>
         <span class="c1"># &quot;sponsor_schedule_cur_date&quot;, &quot;sponsor_schedule_prev_date&quot;, &quot;sponsor_schedule_next_date&quot;</span>
-
-    <span class="n">birthdays</span> <span class="o">=</span> <span class="n">find_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;birthdays&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_visible_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">birthdays</span><span class="p">)</span>
 
     <span class="n">sched_ctx</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sched_ctx</span><span class="p">)</span>
