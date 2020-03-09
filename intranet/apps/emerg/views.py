@@ -8,6 +8,8 @@ from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
 
+from ...utils.html import safe_fcps_emerg_html
+
 logger = logging.getLogger(__name__)
 
 
@@ -61,6 +63,10 @@ def check_emerg():
         for cd in soup.findAll(text=True):
             if isinstance(cd, CData):
                 body += cd
+
+        title = safe_fcps_emerg_html(title, settings.FCPS_EMERGENCY_PAGE)
+        body = safe_fcps_emerg_html(body, settings.FCPS_EMERGENCY_PAGE)
+
         message = "<h3>{}: </h3>{}".format(title, body)
         message = message.strip()
     else:
