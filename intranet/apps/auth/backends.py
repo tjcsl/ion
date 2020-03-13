@@ -112,6 +112,7 @@ class KerberosAuthenticationBackend:
                 logger.debug("Password for %s@%s expired, needs reset", username, realm)
                 return KerberosAuthenticationResult.EXPIRED
             kinit.close()
+
             return KerberosAuthenticationResult.SUCCESS if kinit.exitstatus == 0 else KerberosAuthenticationResult.FAILURE
         except pexpect.TIMEOUT:
             KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
@@ -144,17 +145,20 @@ class KerberosAuthenticationBackend:
 
         if result == KerberosAuthenticationResult.SUCCESS:
             logger.debug("Authentication successful")
+
             try:
                 user = get_user_model().objects.get(username__iexact=username)
             except get_user_model().DoesNotExist:
                 kerberos_authenticate_failures.inc()
                 kerberos_authenticate_post_failures.inc()
                 return None
+
             if user.user_type == "student" and ad_auth:
                 kerberos_authenticate_failures.inc()
                 kerberos_authenticate_post_failures.inc()
                 # Block authentication for students who authenticated via AD
                 return None
+
             return user
         elif result == KerberosAuthenticationResult.EXPIRED:
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
