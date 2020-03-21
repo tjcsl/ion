@@ -15,7 +15,7 @@ Note: if your host machine is running Windows, please run ``git config core.auto
     $ git clone git@github.com:tjcsl/ion.git intranet
     $ cd intranet
 
-In the ``config`` directory, copy the file ``devconfig.json.sample`` to ``devconfig.json`` and edit the properties in ``devconfig.json`` as appropriate. Ensure ``ssh_key`` is set to the same SSH key registered with GitHub (e.g. ``id_rsa``). Obtain the proper value for ``ldap_simple_bind_password`` from another Intranet developer of from the ``ion.tjhsst.edu`` VM.
+In the ``config`` directory, copy the file ``devconfig.json.sample`` to ``devconfig.json`` and edit the properties in ``devconfig.json`` as appropriate. Ensure ``ssh_key`` is set to the same SSH key registered with GitHub (e.g. ``id_rsa``).
 
 Run ``vagrant plugin install vagrant-vbguest``
 If you are on Windows, also run ``vagrant plugin install vagrant-winnfsd``
@@ -34,8 +34,6 @@ Troubleshooting
 If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant up``, you need to start the OpenVPN client.
 
 If you see a ``Adding routes to host computer...`` message, you probably forgot to start the OpenVPN client.
-
-If you are getting LDAP authentication errors or student information is missing, check to make sure you have a correct value for ``ldap_simple_bind_password``.
 
 If you get a message that begins with ``Vagrant failed to initialize at a very early stage``, run the commands in this list in order until one of them succeeds and Vagrant works again:
 
