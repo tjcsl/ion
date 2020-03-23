@@ -11,8 +11,9 @@ After you connect to your Vagrant box, make sure you are in the ``intranet`` dir
 
 You will then need to run ``python manage.py migrate`` to set up the Postgres database.
 
-You can then start the built-in Django web server with ``fab runserver``. Now that you are running the development server, open a browser to http://127.0.0.1:8080 and log in (the default master password is ``swordfish``). If it fails, check the output of ``python manage.py runserver``.
+You can then start the built-in Django web server with ``fab runserver``. Now that you are running the development server, open a browser to http://127.0.0.1:8080 and log in. If this is your first time attempting this, see :ref:`_setting-up-groups`, then use the default master password (``swordfish``) to login. If it fails, check the output of ``python manage.py runserver``.
 
+.. _setting-up-groups:
 Setting Up Groups
 =================
 
