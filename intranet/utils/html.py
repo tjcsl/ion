@@ -69,4 +69,6 @@ def safe_fcps_emerg_html(text: str, base_url: str) -> str:
 
         return attrs
 
-    return bleach.linkify(bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, styles=ALLOWED_STYLES), [translate_link_attr])
+    return bleach.linkify(
+        bleach.clean(text, strip=True, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, styles=ALLOWED_STYLES), [translate_link_attr]
+    )
