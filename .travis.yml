@@ -37,6 +37,7 @@ before_script:
 - sudo systemctl start rabbitmq-server
 - psql -U postgres -c 'create database ion'
 - ./scripts/build_ensure_no_changes.sh ./scripts/build_sources.sh
+- ./scripts/validate-commit-messages.py $TRAVIS_COMMIT_RANGE
 script:
 - if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then flake8 --max-line-length 150 --exclude=*/migrations/* .; fi
 - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init,cyclic-import intranet/; fi
