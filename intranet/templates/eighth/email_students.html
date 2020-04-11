@@ -1,0 +1,59 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - Email Students
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'eighth.common' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <div class="eighth-header">
+            <h2>
+                Email students<span class="extra-title">: {{ scheduled_activity }}</span>
+            </h2>
+
+            {% if request.user.is_eighth_admin %}
+                {% include "eighth/admin/start_date.html" %}
+            {% endif %}
+        </div>
+
+        <p>Please enter a message to be sent to all students signed up for this activity.</p>
+
+        <form method="POST" onsubmit="return confirm('Are you sure you want to email all students signed up for this activity?');">
+            {% csrf_token %}
+
+            <br>
+
+            <label for="id_subject" style="padding: 0 5px 0 0;">Subject:</label> <input type="text" id="id_subject" name="subject" required><br>
+
+            <textarea id="id_body" name="body" cols="40" rows="10" required></textarea>
+
+            <br>
+
+            {% if not scheduled_activity.block.locked %}
+            <br>
+            <h3>WARNING: Since signups have not yet closed, students who sign up for the activity after this email is sent will not receive it.</h3>
+            <h4>It is strongly recommended to wait until signups have closed to send emails.</h4>
+            <br>
+            {% endif %}
+
+            <input type="submit" value="Send email">
+        </form>
+    </div>
+{% endblock %}

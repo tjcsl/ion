@@ -5,6 +5,7 @@ from celery.utils.log import get_task_logger
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.mail import EmailMessage
 from django.utils import timezone
 
 from ...utils.helpers import join_nicely
@@ -166,3 +167,19 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
             [user.notification_email],
             bcc=False,
         )
+
+
+@shared_task
+def email_scheduled_activity_students_task(scheduled_activity_id: int, sender_id: int, subject: str, body: str,) -> None:
+    scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
+
+    emails = [signup.user.notification_email for signup in scheduled_activity.eighthsignup_set.all()]
+
+    sender = get_user_model().objects.get(id=sender_id)
+
+    msg = EmailMessage(subject=subject, body=body, from_email=settings.EMAIL_FROM, to=[], reply_to=[sender.notification_email], bcc=emails)
+
+    if settings.PRODUCTION or settings.FORCE_EMAIL_SEND:
+        msg.send()
+    else:
+        logger.debug("Refusing to email in non-production environments. To force email sending, enable settings.FORCE_EMAIL_SEND.")

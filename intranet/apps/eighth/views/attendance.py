@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -29,6 +30,7 @@ from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
+from ..tasks import email_scheduled_activity_students_task
 from ..utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -678,3 +680,32 @@ def sponsor_schedule_widget_view(request):
     context.update({"eighth_sponsor": eighth_sponsor})
 
     return render(request, "eighth/sponsor_widget.html", context)
+
+
+@login_required
+@deny_restricted
+def email_students_view(request, scheduled_activity_id):
+    scheduled_activity = get_object_or_404(EighthScheduledActivity, id=scheduled_activity_id)
+
+    if not scheduled_activity.user_is_sponsor(request.user) and not request.user.is_eighth_admin:
+        raise Http404
+
+    if request.method == "POST" and request.POST.get("body"):
+        subject = settings.EMAIL_SUBJECT_PREFIX + "{}: Message from {}".format(scheduled_activity, request.user.full_name)
+        if request.POST.get("subject"):
+            subject += ": " + request.POST["subject"]
+
+        body = """{} has requested to send you the following email regarding {}:\n\n{}""".format(
+            request.user.full_name, scheduled_activity.activity, request.POST["body"]
+        )
+
+        email_scheduled_activity_students_task.delay(
+            scheduled_activity_id=scheduled_activity_id, sender_id=request.user.id, subject=subject, body=body,
+        )
+
+        messages.success(request, "Email sent.")
+        return redirect("eighth_take_attendance", scheduled_activity_id)
+
+    context = {"scheduled_activity": scheduled_activity}
+
+    return render(request, "eighth/email_students.html", context)
