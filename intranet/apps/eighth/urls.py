@@ -23,6 +23,7 @@ urlpatterns = [
     re_path(r"^/attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
     re_path(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
     re_path(r"^/attendance/widget$", attendance.sponsor_schedule_widget_view, name="eighth_sponsor_schedule_widget"),
+    re_path(r"^/attendance/email/(?P<scheduled_activity_id>\d+)$", attendance.email_students_view, name="eighth_email_students"),
     # Profile
     re_path(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
     re_path(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),

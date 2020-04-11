@@ -456,6 +456,10 @@
                 &nbsp; &nbsp;
                 {% endif %}
                 <button class="print-hide" onclick="window.print()">Print</button>
+                {% if not no_edit_perm or edit_perm_cancelled %}
+                &nbsp; &nbsp;
+                <a class="button print-hide" href="{% url 'eighth_email_students' scheduled_activity.id %}">Email Students</a>
+                {% endif %}
                 {% if user.is_eighth_admin %}
                     <br>
                     <br>
