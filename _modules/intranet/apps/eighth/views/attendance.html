@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #5903) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #5918) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -145,6 +145,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
@@ -156,6 +157,7 @@
 <span class="kn">from</span> <span class="nn">..forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
 <span class="kn">from</span> <span class="nn">..forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
 <span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span>
+<span class="kn">from</span> <span class="nn">..tasks</span> <span class="kn">import</span> <span class="n">email_scheduled_activity_students_task</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -805,6 +807,35 @@
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/sponsor_widget.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">email_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+    <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">):</span>
+        <span class="n">subject</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMAIL_SUBJECT_PREFIX</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Message from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">):</span>
+            <span class="n">subject</span> <span class="o">+=</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span>
+
+        <span class="n">body</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="si">{}</span><span class="s2"> has requested to send you the following email regarding </span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{}</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">email_scheduled_activity_students_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span>
+            <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">,</span> <span class="n">sender_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Email sent.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_take_attendance&quot;</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/email_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </pre></div>
 
     </div>
