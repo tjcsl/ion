@@ -717,6 +717,29 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.has_admin_permission("board")
 
+    def can_manage_group(self, group: Union[Group, str]) -> bool:
+        """Checks whether this user has permission to edit/manage the given group (either
+        a Group or a group name).
+
+        WARNING: Granting permission to edit/manage "admin_" groups gives that user control
+        over nearly all data on Ion!
+
+        Args:
+            group: The group to check permissions for.
+
+        Returns:
+            Whether this user has permission to edit/manage the given group.
+
+        """
+
+        if isinstance(group, Group):
+            group = group.name
+
+        if group.startswith("admin_"):
+            return self.is_superuser
+
+        return self.is_eighth_admin
+
     @property
     def is_teacher(self) -> bool:
         """Checks if user is a teacher.

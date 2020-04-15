@@ -32,6 +32,10 @@ def add_group_view(request):
     if request.method == "POST":
         form = QuickGroupForm(request.POST)
         if form.is_valid():
+            if not request.user.can_manage_group(form.cleaned_data["name"]):
+                messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+                return redirect("eighth_admin_dashboard")
+
             group = form.save()
             messages.success(request, "Successfully added group.")
             return redirect("eighth_admin_edit_group", group_id=group.id)
@@ -48,6 +52,10 @@ def edit_group_view(request, group_id):
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         raise http.Http404
+
+    if not request.user.can_manage_group(group):
+        messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+        return redirect("eighth_admin_dashboard")
 
     if request.method == "POST":
         invalidate_model(Group)
@@ -242,6 +250,11 @@ def upload_group_members_view(request, group_id):
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         raise http.Http404
+
+    if not request.user.can_manage_group(group):
+        messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+        return redirect("eighth_admin_dashboard")
+
     stage = "upload"
     data = {}
     filetext = False
@@ -326,6 +339,10 @@ def delete_group_view(request, group_id):
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         raise http.Http404
+
+    if not request.user.can_manage_group(group):
+        messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+        return redirect("eighth_admin_dashboard")
 
     if request.method == "POST":
         group.delete()
@@ -646,6 +663,10 @@ def add_member_to_group_view(request, group_id):
     except Group.DoesNotExist:
         raise http.Http404
 
+    if not request.user.can_manage_group(group):
+        messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+        return redirect("eighth_admin_dashboard")
+
     next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
 
     if "user_id" in request.POST:
@@ -694,6 +715,10 @@ def remove_member_from_group_view(request, group_id, user_id):
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         raise http.Http404
+
+    if not request.user.can_manage_group(group):
+        messages.error(request, "You must be a superuser on Ion to manage administrative groups")
+        return redirect("eighth_admin_dashboard")
 
     uid = request.POST.get("profile_id", 0)
     if uid:
