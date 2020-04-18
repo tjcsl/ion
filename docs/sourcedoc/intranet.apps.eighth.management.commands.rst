@@ -28,6 +28,14 @@ intranet.apps.eighth.management.commands.dev\_create\_blocks module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.management.commands.dev\_generate\_signups module
+----------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.dev_generate_signups
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.eighth.management.commands.find\_duplicates module
 ----------------------------------------------------------------
 
