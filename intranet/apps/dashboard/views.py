@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 
+from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
@@ -305,8 +306,8 @@ def add_widgets_context(request, context):
                 "schedule": schedule,
                 "last_displayed_block": schedule[-1] if schedule else None,
                 "no_signup_today": no_signup_today,
-                "senior_graduation": settings.SENIOR_GRADUATION,
-                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+                "senior_graduation": get_senior_graduation_date().strftime("%B %d %Y %H:%M:%S"),
+                "senior_graduation_year": get_senior_graduation_year(),
             }
         )
 

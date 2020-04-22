@@ -1,9 +1,9 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 from django.urls import reverse
 
 from ...test.ion_test import IonTestCase
+from ...utils.date import get_senior_graduation_year
 from ..bus.models import Route
 from .forms import EmailForm
 from .views import save_bus_route
@@ -11,7 +11,7 @@ from .views import save_bus_route
 
 class PreferencesTest(IonTestCase):
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", id="99999", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", id="99999", graduation_year=get_senior_graduation_year() + 1)[0]
         route_names = ["JT-002", "JT-001"]
         for route_name in route_names:
             Route.objects.get_or_create(route_name=route_name, space="", bus_number="")

@@ -15,7 +15,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
-from ....utils.date import get_date_range_this_year
+from ....utils.date import get_date_range_this_year, get_senior_graduation_year
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
@@ -200,7 +200,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
 
     old_blocks = 0
 
-    if year is not None and year == settings.SENIOR_GRADUATION_YEAR:
+    if year is not None and year == get_senior_graduation_year():
         start_date = datetime.today()
 
     if start_date is None or future:
@@ -211,7 +211,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
         past_start_date = activities.count() - filtered_activities.count()
 
     if not all_years:
-        if year is None or year == settings.SENIOR_GRADUATION_YEAR:
+        if year is None or year == get_senior_graduation_year():
             year_start, year_end = get_date_range_this_year()
         else:
             year_start, year_end = get_date_range_this_year(datetime(year, 1, 1))

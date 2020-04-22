@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from ...test.ion_test import IonTestCase
+from ...utils.date import get_senior_graduation_year
 from .models import CarApplication, ParkingApplication
 
 
@@ -16,7 +16,7 @@ class ParkingTest(IonTestCase):
         return user
 
     def test_parking_form_junior(self):
-        user = self.login_with_args("awilliam", settings.SENIOR_GRADUATION_YEAR + 1)
+        user = self.login_with_args("awilliam", get_senior_graduation_year() + 1)
 
         response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
@@ -41,7 +41,7 @@ class ParkingTest(IonTestCase):
         self.assertTrue(parking_apps[0].cars.count(), 1)
 
     def test_invalid_user(self):
-        user = self.login_with_args("bwilliam", settings.SENIOR_GRADUATION_YEAR + 2)
+        user = self.login_with_args("bwilliam", get_senior_graduation_year() + 2)
 
         response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
