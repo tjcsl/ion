@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from ...settings import SENIOR_GRADUATION_YEAR
+from ...utils.date import get_senior_graduation_year
 from ..auth.decorators import deny_restricted
 from .forms import SeniorForm
 from .models import Senior
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def seniors_home_view(request):
     seniors = (
         Senior.objects.exclude(college=None, major=None)
-        .filter(user__graduation_year=SENIOR_GRADUATION_YEAR)
+        .filter(user__graduation_year=get_senior_graduation_year())
         .order_by("user__last_name", "user__first_name")
     )
     try:

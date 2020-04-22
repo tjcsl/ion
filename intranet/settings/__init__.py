@@ -737,11 +737,10 @@ GIT = {
     "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT),
 }
 
-# Senior graduation year
-SENIOR_GRADUATION_YEAR = 2019
-
-# Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=18, hour=19).strftime("%B %d %Y %H:%M:%S")
+# Senior graduation date.
+# The year will be replaced as appropriate (determined in
+# intranet/utils/date.py based on YEAR_TURNOVER_MONTH).
+SENIOR_GRADUATION_DATE = datetime.datetime(year=2000, month=6, day=18, hour=19)
 
 # Month (1-indexed) after which a new school year begins
 # July = 7

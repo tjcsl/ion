@@ -5,12 +5,12 @@ import urllib.parse
 from oauth2_provider.models import AccessToken, get_application_model
 from oauth2_provider.settings import oauth2_settings
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
 from ...test.ion_test import IonTestCase
+from ...utils.date import get_senior_graduation_year
 from ..bus.models import Route
 from ..eighth.models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ..schedule.models import Block, Day, DayType, Time
@@ -22,7 +22,7 @@ class ApiTest(IonTestCase):
     """Tests for the api module."""
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=(settings.SENIOR_GRADUATION_YEAR + 1))[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=(get_senior_graduation_year() + 1))[0]
         self.application = Application(
             name="Test Application",
             redirect_uris="http://localhost http://example.com http://example.it",
