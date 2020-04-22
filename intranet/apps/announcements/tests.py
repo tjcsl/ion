@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from ...test.ion_test import IonTestCase
+from ...utils.date import get_senior_graduation_year
 from ..users.models import Group
 
 
@@ -10,7 +10,7 @@ class AnnouncementTest(IonTestCase):
     """Tests for the announcements module."""
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=get_senior_graduation_year() + 1)[0]
 
     def test_get_announcements(self):
         self.login()

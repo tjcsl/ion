@@ -4,7 +4,6 @@ import logging
 from collections import OrderedDict
 
 from django import http
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -12,6 +11,7 @@ from django.core.serializers import serialize
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from ...utils.date import get_senior_graduation_year
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
 from .forms import PollForm
@@ -311,7 +311,7 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
     }
 
     for yr in range(9, 14):
-        yr_votes = votes.filter(user__graduation_year=settings.SENIOR_GRADUATION_YEAR + 12 - yr)
+        yr_votes = votes.filter(user__graduation_year=get_senior_graduation_year() + 12 - yr)
         choice["votes"][yr] = {
             "all": yr_votes.count(),
             "male": yr_votes.filter(user__gender=True).count() if do_gender else 0,

@@ -17,6 +17,7 @@ from django.utils.functional import cached_property
 
 from intranet.middleware import threadlocals
 
+from ...utils.date import get_senior_graduation_year
 from ...utils.helpers import is_entirely_digit
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
@@ -87,7 +88,7 @@ class UserManager(DjangoUserManager):
 
     def get_students(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
-        users = User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
+        users = User.objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
         users = users.exclude(id__in=EXTRA)
 
         return users
@@ -1317,7 +1318,7 @@ class Grade:
         if graduation_year is None:
             self._number = 13
         else:
-            self._number = settings.SENIOR_GRADUATION_YEAR - int(graduation_year) + 12
+            self._number = get_senior_graduation_year() - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
             self._name = [elem[1] for elem in GRADE_NUMBERS if elem[0] == self._number][0]

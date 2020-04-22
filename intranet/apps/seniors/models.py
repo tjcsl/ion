@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from ...utils.date import get_senior_graduation_year
+
 
 class College(models.Model):
     name = models.CharField(max_length=1000)
@@ -15,7 +17,7 @@ class College(models.Model):
 
 class SeniorManager(models.Manager):
     def filled(self):
-        return Senior.objects.exclude(college=None, major=None).filter(user__graduation_year=settings.SENIOR_GRADUATION_YEAR)
+        return Senior.objects.exclude(college=None, major=None).filter(user__graduation_year=get_senior_graduation_year())
 
 
 class Senior(models.Model):
