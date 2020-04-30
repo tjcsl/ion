@@ -264,4 +264,4 @@ class AnswerVote(models.Model):  # record of total selection of a given answer c
     is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers
 
     def __str__(self):
-        return self.choice
+        return str(self.choice)
