@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def set_historical_user(collector, field, sub_objs, using):
-    from intranet.apps.eighth.models import EighthSignup, EighthSponsor  # pylint: disable=import-outside-toplevel
+    from intranet.apps.eighth.models import EighthSignup, EighthSponsor  # pylint: disable=import-outside-toplevel,cyclic-import
 
     teststaff, _ = get_user_model().objects.get_or_create(id=7011)
     for obj in sub_objs:

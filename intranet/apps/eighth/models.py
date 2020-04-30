@@ -604,7 +604,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
         if letter and len(letter) >= 1:
@@ -1650,7 +1650,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.save(update_fields=["cancelled"])
 
             if not self.is_both_blocks or self.block.block_letter != "B":
-                from .notifications import activity_cancelled_email  # pylint: disable=import-outside-toplevel
+                from .notifications import activity_cancelled_email  # pylint: disable=import-outside-toplevel,cyclic-import
 
                 activity_cancelled_email(self)
 
@@ -1666,7 +1666,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.cancelled = False
             self.save(update_fields=["cancelled"])
 
-    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         super(EighthScheduledActivity, self).save(*args, **kwargs)
 
     class Meta:
@@ -1778,7 +1778,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     archived_was_absent = models.BooleanField(default=False, blank=True)
 
-    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         if self.has_conflict(nocache=True):
             logger.error(
                 "Duplicate signup while saving signup %d for user %d in activity %d, block %d, scheduled activity %d",
@@ -1795,7 +1795,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def validate_unique(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def validate_unique(self, *args, **kwargs):  # pylint: disable=signature-differs
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
