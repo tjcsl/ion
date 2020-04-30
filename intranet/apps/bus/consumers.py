@@ -33,13 +33,18 @@ class BusConsumer(JsonWebsocketConsumer):
 
         if self.user is not None and self.user.is_authenticated and self.user.is_bus_admin:
             try:
-                route = Route.objects.get(id=content["id"])
-                route.status = content["status"]
-                if route.status == "a":
-                    route.space = content["space"]
-                else:
-                    route.space = ""
-                route.save()
+                if content["time"] == "morning":
+                    route = Route.objects.get(route_name=content["id"])
+                    route.status = content["status"]
+                    route.save()
+                elif content["time"] == "afternoon":
+                    route = Route.objects.get(id=content["id"])
+                    route.status = content["status"]
+                    if route.status == "a":
+                        route.space = content["space"]
+                    else:
+                        route.space = ""
+                    route.save()
                 data = self._serialize()
                 async_to_sync(self.channel_layer.group_send)("bus", {"type": "bus.update", "data": data})
             except Exception as e:

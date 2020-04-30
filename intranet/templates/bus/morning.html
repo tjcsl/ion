@@ -1,0 +1,145 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load svg %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'polls' %}
+    {% stylesheet 'dashboard' %}
+    <style>
+        .primary_content {
+            padding-left: 90px;
+            padding-top: 10px;
+        }
+
+        .welcome_text {
+            font-size: 40px;
+        }
+
+        h2 {
+            font-size: 27px;
+            padding-top: 20px;
+        }
+
+        .bus_dropdown {
+            border-radius: 3px;
+            width: 130px;
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+        #buses {
+            width: 125px;
+            height: 35px;
+            font-size: 20px;
+            margin: 10px;
+            display: block;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+        .list-bus {
+            width: 33%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .admin-show {
+            width: 50%;
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        window.firstname = "{{ request.user.first_name }}";
+        window.isAdmin = {{ admin | yesno:"true,false" }};
+        window.isStudent = {{ request.user.is_student | yesno:"true,false" }}
+        window.enableBusDriver = {{ enable_bus_driver | yesno:"true,false" }}
+        window.label_status_strings = {
+            "a": {
+                empty_text: "No buses have arrived yet.",
+                name: "Arrived",
+                personal: "already here!"
+            },
+            "o": {
+                empty_text: "All buses have arrived or are delayed.",
+                name: "On Time",
+                personal: "on time."
+            },
+            "d": {
+                empty_text: "No delays.",
+                name: "Delayed",
+                personal: "delayed. 😢"
+            },
+        };
+    </script>
+    <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+    <script src="{% static 'js/vendor/svg.min.js' %}"></script>
+    {% if enable_bus_driver %}
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet'>
+    {% endif %}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/morningbus.js' %}"></script>
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/bus' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary_content">
+        <span class="welcome_text">Good morning!</span>
+        {% if admin %}
+            <div class="wrapper">
+                <div class="admin-show">
+                    <h2 style="display: inline-block;">Mark bus:</h2>
+                    <select style="display: inline-block;" id="buses">
+                        {% for bus in bus_list %}
+                            <option value="{{ bus.route_name }}">{{ bus.route_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="admin-show">
+                    <button style="display: inline-block;" onclick="sendMorningUpdate({'status':'a'})">Arrived</button>
+                    <button style="display: inline-block;" onclick="sendMorningUpdate({'status':'o'})">On Time</button>
+                    <button style="display: inline-block;" onclick="sendMorningUpdate({'status':'d'})">Delayed</button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="wrapper">
+            <div class="list-bus">   
+                <h2>Arrived Buses</h2>
+                <div id="arrived"></div>
+            </div>
+            <div class="list-bus">
+                <h2>On Time Buses</h2>
+                <div id="ontime"></div>
+            </div>
+            <div class="list-bus">
+                <h2>Delayed Buses</h2>
+                <div id="delayed"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

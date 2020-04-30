@@ -17,16 +17,33 @@ def announcements(page, sign, request):  # pylint: disable=unused-argument
 
 def bus(page, sign, request):  # pylint: disable=unused-argument
     now = timezone.localtime()
-    day = Day.objects.today()
-    if day is not None and day.end_time is not None:
-        end_of_day = day.end_time.date_obj(now.date())
-    else:
-        end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
-    return {
-        "admin": False,
-        "signage": True,
-        "ws_protocol": "ws" if request.scheme == "http" else "wss",
-        "ws_host": request.get_host(),
-        "school_end_hour": end_of_day.hour,
-        "school_end_time": end_of_day.minute,
-    }
+    if now.hour < 12:  # morning bus page,
+        day = Day.objects.today()
+        if day is not None and day.end_time is not None:
+            end_of_day = day.end_time.date_obj(now.date())
+        else:
+            end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
+        return {
+            "admin": False,
+            "signage": True,
+            "ws_protocol": "ws" if request.scheme == "http" else "wss",
+            "ws_host": request.get_host(),
+            "school_end_hour": end_of_day.hour,
+            "school_end_time": end_of_day.minute,
+            "time": "morning",
+        }
+    else:  # afternoon bus page
+        day = Day.objects.today()
+        if day is not None and day.end_time is not None:
+            end_of_day = day.end_time.date_obj(now.date())
+        else:
+            end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
+        return {
+            "admin": False,
+            "signage": True,
+            "ws_protocol": "ws" if request.scheme == "http" else "wss",
+            "ws_host": request.get_host(),
+            "school_end_hour": end_of_day.hour,
+            "school_end_time": end_of_day.minute,
+            "time": "afternoon",
+        }

@@ -785,7 +785,8 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL,
         "args": (),
     },
-    "reset-routes": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=8, minute=0), "args": ()},
+    "reset-routes-afternoon": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=8, minute=0), "args": ()},
+    "reset-routes-morning": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=12, minute=1), "args": ()},
 }
 
 MAINTENANCE_MODE = False
