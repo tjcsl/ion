@@ -1,0 +1,53 @@
+{% load static %}
+<script>
+    window.firstname = "{{ request.user.first_name }}";
+    window.isAdmin = {{ admin | yesno:"true,false" }};
+    window.isStudent = {{ request.user.is_student | yesno:"true,false" }}
+    window.enableBusDriver = {{ enable_bus_driver | yesno:"true,false" }}
+    window.label_status_strings = {
+        "a": {
+            empty_text: "No buses have arrived yet.",
+            name: "Arrived",
+            personal: "already here!"
+        },
+        "o": {
+            empty_text: "All buses have arrived or are delayed.",
+            name: "On Time",
+            personal: "on time."
+        },
+        "d": {
+            empty_text: "No delays.",
+            name: "Delayed",
+            personal: "delayed. 😢"
+        },
+    };
+    if (Boolean("{{ on_home }}")) {
+        var now = new Date();
+        var reloadTime = new Date();
+        var midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+        reloadTime.setHours(parseInt("{{ changeover_time }}", 10), 00, 0);
+        if (reloadTime > now) {
+            setTimeout(function() {
+                if (confirm("This page is out of date. Reload for updated information?")) {
+                    window.location.reload(true);
+                }
+            }, reloadTime - now);
+        } else if (reloadTime <= now) {
+            setTimeout(function() {
+                if (confirm("This page is out of date. Reload for updated information?")) {
+                    window.location.reload(true);
+                }
+            }, midnight - now);
+        }
+    }
+</script>
+<script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+<script src="{% static 'js/vendor/svg.min.js' %}"></script>
+{% if enable_bus_driver %}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet'>
+{% endif %}
+<script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+<script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+<script src="{% static 'js/vendor/backbone-min.js' %}"></script>

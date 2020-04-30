@@ -2,6 +2,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
 from django.conf import settings
+from django.utils import timezone
 
 from .models import Route
 
@@ -33,13 +34,14 @@ class BusConsumer(JsonWebsocketConsumer):
 
         if self.user is not None and self.user.is_authenticated and self.user.is_bus_admin:
             try:
-                route = Route.objects.get(id=content["id"])
-                route.status = content["status"]
-                if route.status == "a":
-                    route.space = content["space"]
-                else:
-                    route.space = ""
-                route.save()
+                if self.within_time_range(content["time"]):
+                    route = Route.objects.get(id=content["id"])
+                    route.status = content["status"]
+                    if content["time"] == "afternoon" and route.status == "a":
+                        route.space = content["space"]
+                    else:
+                        route.space = ""
+                    route.save()
                 data = self._serialize()
                 async_to_sync(self.channel_layer.group_send)("bus", {"type": "bus.update", "data": data})
             except Exception as e:
@@ -73,3 +75,9 @@ class BusConsumer(JsonWebsocketConsumer):
 
         data["allRoutes"] = route_list
         return data
+
+    def within_time_range(self, time):
+        now_hour = timezone.localtime().hour
+        within_morning = now_hour <= settings.BUS_PAGE_CHANGEOVER_HOUR and time == "morning"
+        within_afternoon = now_hour > settings.BUS_PAGE_CHANGEOVER_HOUR and time == "afternoon"
+        return within_morning or within_afternoon
