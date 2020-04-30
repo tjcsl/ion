@@ -769,6 +769,9 @@ if TJSTAR_MAP is None:
 
 SIMILAR_THRESHOLD = 5
 
+# Time that the bus page should change from morning to afternoon display
+BUS_PAGE_CHANGEOVER_HOUR = 12
+
 # Substrings of user agents to not log in the Ion access logs
 NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
 
@@ -784,7 +787,12 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL,
         "args": (),
     },
-    "reset-routes": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=8, minute=0), "args": ()},
+    "reset-routes-afternoon": {"task": "intranet.apps.bus.tasks.reset_routes", "schedule": celery.schedules.crontab(hour=0, minute=0), "args": ()},
+    "reset-routes-morning": {
+        "task": "intranet.apps.bus.tasks.reset_routes",
+        "schedule": celery.schedules.crontab(hour=BUS_PAGE_CHANGEOVER_HOUR, minute=1),
+        "args": (),
+    },
 }
 
 MAINTENANCE_MODE = False

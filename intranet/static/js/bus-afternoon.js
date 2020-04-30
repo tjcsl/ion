@@ -1,3 +1,5 @@
+import { getSocket } from "./bus-shared.js";
+
 /* globals Messenger */
 var bus = {};
 
@@ -6,6 +8,7 @@ $(function() {
 
     bus.sendUpdate = function (data) {
         //console.log('Sending data:', data);
+        data.time = "afternoon";
         socket.send(JSON.stringify(data));
     };
 
@@ -97,23 +100,23 @@ $(function() {
             let busList = [];
             if (action === 'search') {
                 busList = routeList.filter(bus => bus.attributes.status === 'a')
-                                   .filter(bus => bus.attributes.route_name.includes('JT'))
-                                   .map(bus => bus.attributes);
+                                    .filter(bus => bus.attributes.route_name.includes('JT'))
+                                    .map(bus => bus.attributes);
             } else if (action === 'arrive') {
                 busList = routeList.filter(bus => !bus.attributes.route_name.includes('JT'))
-                                   .map(bus => {
-                                       if (bus.attributes.status === 'a') {
-                                           // TODO: less hacky deep copy
-                                           let attr = JSON.parse(JSON.stringify(bus.attributes));
-                                           attr.route_name = `Mark ${bus.attributes.route_name} on time`;
-                                           return attr;
-                                       } else {
-                                           return bus.attributes;
-                                       }
-                                   });
+                                    .map(bus => {
+                                        if (bus.attributes.status === 'a') {
+                                            // TODO: less hacky deep copy
+                                            let attr = JSON.parse(JSON.stringify(bus.attributes));
+                                            attr.route_name = `Mark ${bus.attributes.route_name} on time`;
+                                            return attr;
+                                        } else {
+                                            return bus.attributes;
+                                        }
+                                    });
             } else if (action === 'assign') {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
-                                   .map(bus => bus.attributes);
+                                    .map(bus => bus.attributes);
             }
             container.find('select').selectize({
                 'options': busList,
@@ -550,7 +553,7 @@ $(function() {
                 // equatorial radius of Earth = 6,378.1370 km
                 // polar radius of Earth = 6,356.7523 km
 
-                 // length of 1 deg equatorial longitude
+                    // length of 1 deg equatorial longitude
                 let deg_lng_eq = 6378.1370 * 2 * Math.PI / 360;
                 // length of 1 deg equatorial latitude
                 let deg_lat_eq = 6356.7523 * 2 * Math.PI / 360;
@@ -698,88 +701,8 @@ $(function() {
         });
     }
 
-    const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
-    if (enableBusDriver) {
-        console.log('Bus Driver Enabled');
-    }
-    let socket;
-    if (base_url !== '') {
-        socket = new ReconnectingWebSocket(`${protocol}://${base_url}/bus/`);
-    } else {
-        socket = new ReconnectingWebSocket(`${websocketProtocol}://${websocketHost}/bus/`);
-    }
-    socket.automaticOpen = true;
-    socket.reconnectInterval = 2000;
-    socket.maxReconnectInterval = 10000;
-    socket.reconnectDecay = 1.25;
-    socket.timeoutInterval = 5000;
-    socket.maxReconnectAttempts = null;
-
-    let disconnected = false;
-    let disconnected_msg = null;
     window.appView = new bus.AppView();
-
-    socket.onopen = () => {
-        if(keepAliveTimeoutId != null) {
-            clearTimeout(keepAliveTimeoutId);
-            keepAliveTimeoutId = null;
-        }
-
-        if (disconnected_msg) {
-            disconnected_msg.update({
-                message: 'Connection Restored',
-                type: 'success',
-                hideAfter: 3
-            });
-        }
-    };
-
-    let keepAliveTimeoutId = null;
-
-    socket.onmessage = (event) => {
-        if(keepAliveTimeoutId != null) {
-            clearTimeout(keepAliveTimeoutId);
-            keepAliveTimeoutId = null;
-        }
-
-        var data = JSON.parse(event.data)
-
-        // Don't try and handle keepalives -- when handled, they effectively clear the bus board
-        if(data.type === "keepalive-response") {
-            return;
-        }
-
-        window.appView.trigger('wss:receive', data);
-    };
-
-    socket.onclose = () => {
-        console.log('Disconnected');
-        if(window.Messenger) {
-            disconnected_msg = Messenger().error({
-                message: 'Connection Lost',
-                hideAfter: 0,
-                showCloseButton: false
-            });
-        }
-        disconnected = true;
-
-        if(keepAliveTimeoutId != null) {
-            clearTimeout(keepAliveTimeoutId);
-            keepAliveTimeoutId = null;
-        }
-    };
-
-    setInterval(function() {
-        if(!disconnected) {
-            socket.send(JSON.stringify({"type": "keepalive"}));
-
-            keepAliveTimeoutId = setTimeout(function() {
-                if(!disconnected) {
-                    socket.refresh();
-                }
-            }, 10000);
-        }
-    }, 30000);
+    let socket = getSocket(base_url, location, document, window, 'afternoon');
 
     if (enableBusDriver) {
         $(window).unload(function () {

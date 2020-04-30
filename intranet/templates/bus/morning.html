@@ -1,0 +1,63 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load svg %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'polls' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "bus/bus_head.html" %}
+    <script type="module" src="{% static 'js/bus-morning.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/bus' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2 class="welcome-text">Good morning!</h2>
+        {% if admin %}
+            <h2 class="title">Mark bus:</h2>
+            <select id="buses">
+                {% for bus in bus_list %}
+                    <option value="{{ bus.id }}">{{ bus.route_name }}</option>
+                {% endfor %}
+            </select>
+            <div class="update-button">
+                <button id="a-button">Arrived</button>
+                <button id="o-button">On Time</button>
+                <button id="d-button">Delayed</button>
+            </div>
+        {% endif %}
+        <div class="list-bus">
+            <div class="display-column">
+                <h2 class="title" >Arrived</h2>
+                <div class="list" id="arrived"></div>
+            </div>
+            <div class="display-column">
+                <h2 class="title" >On Time</h2>
+                <div class="list" id="ontime"></div>
+            </div>
+            <div class="display-column">
+                <h2 class="title" >Delayed</h2>
+                <div class="list" id="delayed"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
