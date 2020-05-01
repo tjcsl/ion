@@ -48,7 +48,7 @@ for commit in commits:
         errors.append("First line does not match format")
 
     if len(lines) > 1 and lines[1]:
-        errors.append("Second line must be empty")
+        errors.append("Second line must be empty. Please put a blank line between the subject (first line) and the body/extended description (third line onward).")
 
     long_lines = [i + 1 for i, line in enumerate(lines) if len(line) > 72]
     if long_lines:
