@@ -41,10 +41,7 @@ for commit in commits:
 
     errors = []
 
-    if re.search(
-        r"^(build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\([a-z]+\))?: .*$",
-        lines[0],
-    ) is None:
+    if re.search(r"^(build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\([a-z]+\))?: .*$", lines[0],) is None:
         errors.append("First line does not match format")
 
     if len(lines) > 1 and lines[1]:
@@ -57,9 +54,7 @@ for commit in commits:
     if long_lines:
         errors.append(
             "Line{} {} {} too long. Please limit all lines to 72 characters.".format(
-                pluralize(len(long_lines)),
-                join_nicely(long_lines),
-                pluralize(len(long_lines), "is", "are"),
+                pluralize(len(long_lines)), join_nicely(long_lines), pluralize(len(long_lines), "is", "are"),
             )
         )
 
@@ -75,6 +70,5 @@ if failed:
     sys.exit(1)
 else:
     print(
-        "This commit message matches the correct format; *please review it for its content*.",
-        file=sys.stderr,
+        "This commit message matches the correct format; *please review it for its content*.", file=sys.stderr,
     )
