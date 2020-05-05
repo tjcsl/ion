@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5940) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5956) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -843,6 +843,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="User.can_manage_group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.can_manage_group">[docs]</a>    <span class="k">def</span> <span class="nf">can_manage_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether this user has permission to edit/manage the given group (either</span>
+<span class="sd">        a Group or a group name).</span>
+
+<span class="sd">        WARNING: Granting permission to edit/manage &quot;admin_&quot; groups gives that user control</span>
+<span class="sd">        over nearly all data on Ion!</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            group: The group to check permissions for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether this user has permission to edit/manage the given group.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">Group</span><span class="p">):</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;admin_&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_superuser</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_eighth_admin</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
