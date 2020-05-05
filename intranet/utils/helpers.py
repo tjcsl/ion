@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import ipaddress
 import logging
 import string
@@ -7,11 +7,13 @@ from typing import Collection, Set  # noqa
 from urllib import parse
 
 from django.conf import settings
-from django.template.loader import get_template
-from django.utils import timezone
 
 from ..apps.auth.helpers import get_login_theme_name
 from ..apps.emerg.views import get_emerg
+
+# from django.template.loader import get_template
+# from django.utils import timezone
+
 
 logger = logging.getLogger("intranet.settings")
 
