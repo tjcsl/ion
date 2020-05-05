@@ -54,8 +54,6 @@ def check_emerg():
             status = False
             break
 
-    # emerg_split = '<p><a href="https://youtu.be/jo_8QFIEf64'
-    # message = res.split(emerg_split)[0]
     soup = BeautifulSoup(res, "html.parser")
     if soup.title:
         title = soup.title.text
