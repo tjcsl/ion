@@ -166,6 +166,7 @@ def get_fcps_emerg(request):
 
 
 def get_ap_week_warning(request):
+    """
     ap_day = timezone.localtime()
     if ap_day.hour > 16:
         ap_day += datetime.timedelta(days=1)
@@ -176,6 +177,7 @@ def get_ap_week_warning(request):
     data = {"day": ap_day.day, "date": request.GET.get("date", None)}
     if ap_day.month == 5 and 4 <= ap_day.day <= 17:
         return get_template("auth/ap_week_schedule.html").render(data)
+    """
 
     return False
 
