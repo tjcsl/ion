@@ -95,7 +95,6 @@ class UserSerializer(serializers.ModelSerializer):
             "emails",
             "grade",
             "graduation_year",
-            "birthday",
             "user_type",
             "phones",
             "websites",

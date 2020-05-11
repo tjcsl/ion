@@ -249,34 +249,6 @@ class UserTest(IonTestCase):
         for user in users:
             user.delete()
 
-    def test_users_with_birthday(self):
-        user = self.login()
-        properties = user.properties
-
-        properties.birthday = datetime.date(2019, 1, 1)
-        properties.self_show_birthday = False
-        properties.parent_show_birthday = False
-        properties.save()
-
-        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
-
-        properties.parent_show_birthday = True
-        properties.save()
-        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
-
-        properties.parent_show_birthday = False
-        properties.self_show_birthday = True
-        properties.save()
-        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
-
-        properties.parent_show_birthday = True
-        properties.self_show_birthday = True
-        properties.save()
-        self.assertIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 1)])
-
-        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(1, 2)])
-        self.assertNotIn(user.id, [u.id for u in get_user_model().objects.users_with_birthday(2, 1)])
-
     def test_notification_email(self):
         # Test default user notification email property
         user = self.login()
@@ -642,13 +614,10 @@ class ProfileTest(IonTestCase):
     def test_privacy_options(self):
         self.assertEqual(set(PERMISSIONS_NAMES.keys()), {"self", "parent"})
         for k in ["self", "parent"]:
-            self.assertEqual(
-                set(PERMISSIONS_NAMES[k]), {"show_pictures", "show_address", "show_telephone", "show_birthday", "show_eighth", "show_schedule"}
-            )
+            self.assertEqual(set(PERMISSIONS_NAMES[k]), {"show_pictures", "show_address", "show_telephone", "show_eighth", "show_schedule"})
 
         self.assertEqual(set(self.user.permissions.keys()), {"self", "parent"})
         for k in ["self", "parent"]:
             self.assertEqual(
-                set(self.user.permissions[k].keys()),
-                {"show_pictures", "show_address", "show_telephone", "show_birthday", "show_eighth", "show_schedule"},
+                set(self.user.permissions[k].keys()), {"show_pictures", "show_address", "show_telephone", "show_eighth", "show_schedule"},
             )

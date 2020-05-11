@@ -1,7 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import logging
 from base64 import b64encode
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Collection, Dict, Optional, Union
 
 from dateutil.relativedelta import relativedelta
@@ -84,24 +84,6 @@ class UserManager(DjangoUserManager):
             return results.get()
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
-
-    def users_with_birthday(self, month: int, day: int) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
-        """Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
-
-        Args:
-            month: The month to check for a birthday.
-            day: The day to chack for a birthday.
-
-        Returns:
-            A ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
-
-        """
-        return User.objects.filter(
-            properties___birthday__month=month,
-            properties___birthday__day=day,
-            properties__self_show_birthday=True,
-            properties__parent_show_birthday=True,
-        )
 
     def get_students(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
@@ -248,18 +230,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return self.properties.address
-
-    @property
-    def birthday(self) -> Optional[datetime.date]:
-        """Returns a ``datetime.date`` representing this user's birthday, or ``None`` if it is not
-        set or the current user does not have permission to access it.
-
-        Returns:
-            A ``datetime.date`` representing this user's birthday, or ``None`` if it is not set or
-            the current user does not have permission to access it.
-
-        """
-        return self.properties.birthday
 
     @property
     def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:  # pylint: disable=unsubscriptable-object
@@ -594,20 +564,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return self.gender is False
-
-    @property
-    def age(self) -> Optional[int]:
-        """Returns a user's age, based on their birthday.
-
-        Returns:
-            The user's age as an integer, or None if their birthday is not set.
-
-        """
-        birthday = self.birthday
-        if birthday:
-            return (datetime.today().date() - birthday).days // 365
-
-        return None
 
     @property
     def can_view_eighth(self) -> bool:
@@ -1051,7 +1007,6 @@ class UserProperties(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="properties", on_delete=models.CASCADE)
 
     _address = models.OneToOneField("Address", null=True, blank=True, on_delete=models.SET_NULL)
-    _birthday = models.DateField(null=True)
     _schedule = models.ManyToManyField("Section", related_name="_students")
     """ User preference permissions (privacy options)
         When setting permissions, use set_permission(permission, value , parent=False)
@@ -1072,9 +1027,6 @@ class UserProperties(models.Model):
     self_show_telephone = models.BooleanField(default=False)
     parent_show_telephone = models.BooleanField(default=False)
 
-    self_show_birthday = models.BooleanField(default=False)
-    parent_show_birthday = models.BooleanField(default=False)
-
     self_show_eighth = models.BooleanField(default=False)
     parent_show_eighth = models.BooleanField(default=False)
 
@@ -1086,8 +1038,6 @@ class UserProperties(models.Model):
             return object.__getattribute__(self, name)
         if name == "address":
             return self._address if self.attribute_is_visible("show_address") else None
-        if name == "birthday":
-            return self._birthday if self.attribute_is_visible("show_birthday") else None
         if name == "schedule":
             return self._schedule if self.attribute_is_visible("show_schedule") else None
         raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
@@ -1096,9 +1046,6 @@ class UserProperties(models.Model):
         if name == "address":
             if self.attribute_is_visible("show_address"):
                 self._address = value
-        if name == "birthday":
-            if self.attribute_is_visible("show_birthday"):
-                self._birthday = value
         super(UserProperties, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __str__(self):
