@@ -18,7 +18,6 @@ class ProfileEditForm(forms.ModelForm):
     graduation_year = forms.IntegerField(label="Graduation Year")
     gender = forms.ChoiceField(choices=GENDERS, label="Sex (M or F)")
     counselor_id = forms.IntegerField(label="Counselor ID", required=False)
-    birthday = forms.DateField(label="Birth Date", required=False)
 
     class Meta:
         model = get_user_model()
