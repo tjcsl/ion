@@ -49,6 +49,9 @@ class ApiTest(IonTestCase):
         self.assertEqual(Question.objects.filter(poll=poll[0]).count(), 1)
         self.assertEqual(Choice.objects.filter(question__poll=poll[0]).count(), 3)
 
+        # Everyone can vote, no one has
+        self.assertEqual(poll[0].get_voted_string(), "{} out of {} ({}) eligible users voted in this poll.".format(0, 1, "0.0%"))
+
         # Make sure that the user can vote in the poll
         response = self.client.post(reverse("poll_vote", kwargs={"poll_id": poll.first().id}), data={"question-1": 3})
 
@@ -56,6 +59,9 @@ class ApiTest(IonTestCase):
 
         user_choice = Answer.objects.get(question=Question.objects.get(poll=poll[0]), user=user).choice
         self.assertEqual(user_choice, Choice.objects.get(question__poll=poll[0], info="Blue"))
+
+        # Everyone can vote, one person has
+        self.assertEqual(poll[0].get_voted_string(), "{} out of {} ({}) eligible users voted in this poll.".format(1, 1, "100.0%"))
 
         # Test poll deletion
         response = self.client.post(reverse("delete_poll", kwargs={"poll_id": poll.first().id}))
@@ -77,6 +83,9 @@ class ApiTest(IonTestCase):
         future_5 = timezone.localtime() + datetime.timedelta(minutes=5)
 
         poll = Poll.objects.create(title="Test", description="Test", start_time=ago_5, end_time=ago_5, visible=False)
+
+        # Everyone can vote, no one has
+        self.assertEqual(poll.get_voted_string(), "{} out of {} ({}) eligible users voted in this poll.".format(0, 1, "0.0%"))
 
         # Happened in the past, not visible
         self.assertFalse(poll.can_vote(user))
@@ -112,9 +121,15 @@ class ApiTest(IonTestCase):
         poll.groups.add(temp_group)
         self.assertFalse(poll.can_vote(user))
 
+        # temp_group can vote, no one in temp_group
+        self.assertEqual(poll.get_voted_string(), "{} out of {} ({}) eligible users voted in this poll.".format(0, 0, "0.0%"))
+
         # Happening now, visible, in poll group
         user.groups.add(temp_group)
         self.assertTrue(poll.can_vote(user))
+
+        # temp_group can vote, one in temp_group
+        self.assertEqual(poll.get_voted_string(), "{} out of {} ({}) eligible users voted in this poll.".format(0, 1, "0.0%"))
 
         # admin_all, happened in the past, not visible
         poll.end_time = ago_5
