@@ -50,18 +50,18 @@ def add_block_view(request):
             blocks_day = EighthBlock.objects.filter(date=fmtdate)
             for day in blocks_day:
                 current_letters.append(day.block_letter)
-            for l in letters:
-                if not l:
+            for ltr in letters:
+                if not ltr:
                     continue
-                if l not in current_letters:
-                    EighthBlock.objects.create(date=fmtdate, block_letter=l)
-                    messages.success(request, "Successfully added {} Block on {}".format(l, fmtdate))
-            for l in current_letters:
-                if not l:
+                if ltr not in current_letters:
+                    EighthBlock.objects.create(date=fmtdate, block_letter=ltr)
+                    messages.success(request, "Successfully added {} Block on {}".format(ltr, fmtdate))
+            for ltr in current_letters:
+                if not ltr:
                     continue
-                if l not in letters:
-                    EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
-                    messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
+                if ltr not in letters:
+                    EighthBlock.objects.get(date=fmtdate, block_letter=ltr).delete()
+                    messages.success(request, "Successfully removed {} Block on {}".format(ltr, fmtdate))
 
             invalidate_model(EighthBlock)
 
@@ -69,9 +69,9 @@ def add_block_view(request):
     visible_blocks = ["A", "B", "C", "D", "E", "F", "G", "H"]
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
-        for l in visible_blocks:
-            exists = onday.filter(block_letter=l)
-            letters.append({"name": l, "exists": exists})
+        for ltr in visible_blocks:
+            exists = onday.filter(block_letter=ltr)
+            letters.append({"name": ltr, "exists": exists})
         for blk in onday:
             if blk.block_letter not in visible_blocks:
                 visible_blocks.append(blk.block_letter)

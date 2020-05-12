@@ -47,9 +47,9 @@ def activity_view(request, activity_id=None):
     return render(request, "eighth/activity.html", context)
 
 
-def chunks(l, n):
-    for i in range(0, len(l), n):
-        yield l[i: i + n]
+def chunks(items, n):
+    for i in range(0, len(items), n):
+        yield items[i: i + n]
 
 
 def current_school_year():

@@ -41,14 +41,14 @@ class UserManager(DjangoUserManager):
 
     """
 
-    def user_with_student_id(self, student_id: Union[int, str]) -> Optional["get_user_model()"]:
+    def user_with_student_id(self, student_id: Union[int, str]) -> Optional["User"]:
         """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
         results = User.objects.filter(student_id=str(student_id))
         if len(results) == 1:
             return results.first()
         return None
 
-    def user_with_ion_id(self, student_id: Union[int, str]) -> Optional["get_user_model()"]:
+    def user_with_ion_id(self, student_id: Union[int, str]) -> Optional["User"]:
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
@@ -57,7 +57,7 @@ class UserManager(DjangoUserManager):
             return results.first()
         return None
 
-    def users_in_year(self, year: int) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def users_in_year(self, year: int) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
@@ -85,7 +85,7 @@ class UserManager(DjangoUserManager):
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    def users_with_birthday(self, month: int, day: int) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def users_with_birthday(self, month: int, day: int) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.
 
         Args:
@@ -103,14 +103,14 @@ class UserManager(DjangoUserManager):
             properties__parent_show_birthday=True,
         )
 
-    def get_students(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_students(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
         users = User.objects.filter(user_type="student", graduation_year__gte=settings.SENIOR_GRADUATION_YEAR)
         users = users.exclude(id__in=EXTRA)
 
         return users
 
-    def get_teachers(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
         users = users.exclude(id__in=EXTRA)
@@ -121,7 +121,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_attendance_users(self) -> "QuerySet[get_user_model()]":  # noqa
+    def get_teachers_attendance_users(self) -> "QuerySet[User]":  # noqa
         """Like ``get_teachers()``, but includes attendance-only users as well as
         teachers.
 
@@ -138,7 +138,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_sorted(self) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers_sorted(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
 
         Returns:
@@ -147,7 +147,7 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers().order_by("last_name", "first_name")
 
-    def get_teachers_attendance_users_sorted(self) -> "QuerySet[get_user_model()]":  # noqa
+    def get_teachers_attendance_users_sorted(self) -> "QuerySet[User]":  # noqa
         """Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by
         last name, then first name.
 
@@ -160,8 +160,8 @@ class UserManager(DjangoUserManager):
         return self.get_teachers_attendance_users().order_by("last_name", "first_name")
 
     def exclude_from_search(
-        self, existing_queryset: Optional[Union[Collection["get_user_model()"], QuerySet]] = None  # pylint: disable=unsubscriptable-object
-    ) -> Union[Collection["get_user_model()"], QuerySet]:  # pylint: disable=unsubscriptable-object
+        self, existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None  # pylint: disable=unsubscriptable-object
+    ) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
 
