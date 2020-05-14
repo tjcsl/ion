@@ -49,6 +49,9 @@ for commit in commits:
     if re.search(r"^(build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\([a-z]+\))?: .*$", lines[0],) is None:
         errors.append("First line does not match format")
 
+    if re.search(r"[^:]: [a-z].*$", lines[0]) is None:
+        errors.append("First letter in commit message description is not lowercase.")
+
     if len(lines) > 1 and lines[1]:
         errors.append(
             "Second line must be empty. Please put a blank line between the subject (first line) and the body/extended description (third line "
