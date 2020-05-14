@@ -3,6 +3,11 @@ import re
 import subprocess
 import sys
 
+"""
+This script attempts to verify that certain
+basic commit message conventions are followed.
+"""
+
 
 def get_output(cmd):
     return subprocess.run(cmd, stdout=subprocess.PIPE, check=True).stdout.decode()
