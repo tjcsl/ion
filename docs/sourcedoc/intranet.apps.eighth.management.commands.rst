@@ -60,6 +60,14 @@ intranet.apps.eighth.management.commands.remove\_withdrawn\_students module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.management.commands.signup\_statistics module
+------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.signup_statistics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.eighth.management.commands.signup\_status\_email module
 ---------------------------------------------------------------------
 
