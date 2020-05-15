@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -135,6 +135,7 @@
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">get_ap_week_warning</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
@@ -432,8 +433,8 @@
                 <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">schedule</span><span class="p">,</span>
                 <span class="s2">&quot;last_displayed_block&quot;</span><span class="p">:</span> <span class="n">schedule</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">schedule</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s2">&quot;no_signup_today&quot;</span><span class="p">:</span> <span class="n">no_signup_today</span><span class="p">,</span>
-                <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION</span><span class="p">,</span>
-                <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span>
+                <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
             <span class="p">}</span>
         <span class="p">)</span>
 

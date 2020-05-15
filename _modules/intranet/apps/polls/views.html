@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -131,7 +131,6 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
@@ -139,6 +138,7 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.html</span> <span class="kn">import</span> <span class="n">safe_html</span>
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">PollForm</span>
@@ -438,7 +438,7 @@
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
-        <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">yr</span><span class="p">)</span>
+        <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">yr</span><span class="p">)</span>
         <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="n">yr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
             <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">yr_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__gender</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_gender</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>

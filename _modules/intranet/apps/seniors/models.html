@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.seniors.models &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -128,6 +128,8 @@
 <span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
+
 
 <div class="viewcode-block" id="College"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.College">[docs]</a><span class="k">class</span> <span class="nc">College</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
@@ -142,7 +144,7 @@
 
 <div class="viewcode-block" id="SeniorManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager">[docs]</a><span class="k">class</span> <span class="nc">SeniorManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
 <div class="viewcode-block" id="SeniorManager.filled"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorManager.filled">[docs]</a>    <span class="k">def</span> <span class="nf">filled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">college</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">college</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">())</span></div></div>
 
 
 <div class="viewcode-block" id="Senior"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.Senior">[docs]</a><span class="k">class</span> <span class="nc">Senior</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>

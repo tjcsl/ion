@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.parking.tests &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.parking.tests &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,11 +125,11 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.parking.tests</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">CarApplication</span><span class="p">,</span> <span class="n">ParkingApplication</span>
 
 
@@ -143,7 +143,7 @@
         <span class="k">return</span> <span class="n">user</span></div>
 
 <div class="viewcode-block" id="ParkingTest.test_parking_form_junior"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.parking.html#intranet.apps.parking.tests.ParkingTest.test_parking_form_junior">[docs]</a>    <span class="k">def</span> <span class="nf">test_parking_form_junior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_with_args</span><span class="p">(</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_with_args</span><span class="p">(</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;parking_form&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span> <span class="s2">&quot;mentorship&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 
@@ -168,7 +168,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">parking_apps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cars</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ParkingTest.test_invalid_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.parking.html#intranet.apps.parking.tests.ParkingTest.test_invalid_user">[docs]</a>    <span class="k">def</span> <span class="nf">test_invalid_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_with_args</span><span class="p">(</span><span class="s2">&quot;bwilliam&quot;</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_with_args</span><span class="p">(</span><span class="s2">&quot;bwilliam&quot;</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;parking_form&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span> <span class="s2">&quot;mentorship&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 

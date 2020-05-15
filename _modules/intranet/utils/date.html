@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.date &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.utils.date &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -153,6 +153,14 @@
         <span class="n">date_start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">YEAR_TURNOVER_MONTH</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">date_end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">YEAR_TURNOVER_MONTH</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">date_start</span><span class="p">),</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">date_end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_senior_graduation_year"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.date.get_senior_graduation_year">[docs]</a><span class="k">def</span> <span class="nf">get_senior_graduation_year</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">get_date_range_this_year</span><span class="p">(</span><span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">year</span></div>
+
+
+<div class="viewcode-block" id="get_senior_graduation_date"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.date.get_senior_graduation_date">[docs]</a><span class="k">def</span> <span class="nf">get_senior_graduation_date</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_DATE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">())</span></div>
 </pre></div>
 
     </div>

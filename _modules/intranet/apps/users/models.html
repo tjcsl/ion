@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -128,7 +128,7 @@
 <span></span><span class="c1"># pylint: disable=too-many-lines; Allow more than 1000 lines</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
@@ -144,6 +144,7 @@
 
 <span class="kn">from</span> <span class="nn">intranet.middleware</span> <span class="kn">import</span> <span class="n">threadlocals</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">is_entirely_digit</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="kn">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
@@ -168,14 +169,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]:</span>
+<div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by FCPS student ID. (Ex. 1624472)&quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">student_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">student_id</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">]:</span>
+<div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by Ion ID. (Ex. 489)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">student_id</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -184,7 +185,7 @@
             <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
 
@@ -212,32 +213,14 @@
         <span class="k">except</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">MultipleObjectsReturned</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="UserManager.users_with_birthday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_with_birthday">[docs]</a>    <span class="k">def</span> <span class="nf">users_with_birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Return a ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            month: The month to check for a birthday.</span>
-<span class="sd">            day: The day to chack for a birthday.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A ``QuerySet`` of user objects who have a birthday on a given date and have made their birthday public.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">properties___birthday__month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span>
-            <span class="n">properties___birthday__day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span>
-            <span class="n">properties__self_show_birthday</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">properties__parent_show_birthday</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span></div>
-
-<div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
-        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">graduation_year__gte</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">graduation_year__gte</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">())</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">users</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are teachers (quickly).&quot;&quot;&quot;</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
@@ -248,7 +231,7 @@
 
         <span class="k">return</span> <span class="n">users</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers_attendance_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_attendance_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[get_user_model()]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
+<div class="viewcode-block" id="UserManager.get_teachers_attendance_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_attendance_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
         <span class="sd">&quot;&quot;&quot;Like ``get_teachers()``, but includes attendance-only users as well as</span>
 <span class="sd">        teachers.</span>
 
@@ -265,7 +248,7 @@
 
         <span class="k">return</span> <span class="n">users</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+<div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of teachers sorted by last name, then first name.</span>
 
 <span class="sd">        Returns:</span>
@@ -274,7 +257,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UserManager.get_teachers_attendance_users_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_attendance_users_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[get_user_model()]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
+<div class="viewcode-block" id="UserManager.get_teachers_attendance_users_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_attendance_users_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
         <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by</span>
 <span class="sd">        last name, then first name.</span>
 
@@ -287,8 +270,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers_attendance_users</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;get_user_model()&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="k">if</span> <span class="n">existing_queryset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">existing_queryset</span> <span class="o">=</span> <span class="bp">self</span>
 
@@ -375,18 +358,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">address</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``datetime.date`` representing this user&#39;s birthday, or ``None`` if it is not</span>
-<span class="sd">        set or the current user does not have permission to access it.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A ``datetime.date`` representing this user&#39;s birthday, or ``None`` if it is not set or</span>
-<span class="sd">            the current user does not have permission to access it.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;Section&quot;</span><span class="p">]]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
@@ -721,20 +692,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gender</span> <span class="ow">is</span> <span class="kc">False</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a user&#39;s age, based on their birthday.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            The user&#39;s age as an integer, or None if their birthday is not set.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">birthday</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span>
-        <span class="k">if</span> <span class="n">birthday</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">-</span> <span class="n">birthday</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">//</span> <span class="mi">365</span>
-
-        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">can_view_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -1178,7 +1135,6 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="n">_address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
-    <span class="n">_birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_schedule</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;Section&quot;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;_students&quot;</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot; User preference permissions (privacy options)</span>
 <span class="sd">        When setting permissions, use set_permission(permission, value , parent=False)</span>
@@ -1199,9 +1155,6 @@
     <span class="n">self_show_telephone</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parent_show_telephone</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">self_show_birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parent_show_birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
     <span class="n">self_show_eighth</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parent_show_eighth</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -1213,8 +1166,6 @@
             <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;address&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_address&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;birthday&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_birthday</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;schedule&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_schedule</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_schedule&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> object has no attribute </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
@@ -1223,9 +1174,6 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;address&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_address&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;birthday&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_birthday</span> <span class="o">=</span> <span class="n">value</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UserProperties</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-member; Pylint is wrong</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1497,7 +1445,7 @@
         <span class="k">if</span> <span class="n">graduation_year</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">=</span> <span class="mi">13</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">graduation_year</span><span class="p">)</span> <span class="o">+</span> <span class="mi">12</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">=</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">graduation_year</span><span class="p">)</span> <span class="o">+</span> <span class="mi">12</span>
 
         <span class="k">if</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">GRADE_NUMBERS</span> <span class="k">if</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>

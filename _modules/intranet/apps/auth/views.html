@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -146,6 +146,7 @@
 <span class="kn">from</span> <span class="nn">django.views.decorators.debug</span> <span class="kn">import</span> <span class="n">sensitive_post_parameters</span>
 <span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">View</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
@@ -262,8 +263,8 @@
             <span class="s2">&quot;bg_pattern&quot;</span><span class="p">:</span> <span class="n">get_bg_pattern</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
             <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">get_login_theme</span><span class="p">(),</span>
             <span class="s2">&quot;login_warning&quot;</span><span class="p">:</span> <span class="n">login_warning</span><span class="p">,</span>
-            <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION</span><span class="p">,</span>
-            <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span>
+            <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
             <span class="s2">&quot;sports_events&quot;</span><span class="p">:</span> <span class="n">sports_events</span><span class="p">,</span>
             <span class="s2">&quot;school_events&quot;</span><span class="p">:</span> <span class="n">school_events</span><span class="p">,</span>
             <span class="s2">&quot;should_not_index_page&quot;</span><span class="p">:</span> <span class="n">has_next_page</span><span class="p">,</span>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #5956) documentation</title>
+    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #6021) documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -125,7 +125,7 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.utils.helpers</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span></span><span class="c1"># import datetime</span>
 <span class="kn">import</span> <span class="nn">ipaddress</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">string</span>
@@ -134,11 +134,13 @@
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">parse</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">get_template</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">..apps.auth.helpers</span> <span class="kn">import</span> <span class="n">get_login_theme_name</span>
 <span class="kn">from</span> <span class="nn">..apps.emerg.views</span> <span class="kn">import</span> <span class="n">get_emerg</span>
+
+<span class="c1"># from django.template.loader import get_template</span>
+<span class="c1"># from django.utils import timezone</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet.settings&quot;</span><span class="p">)</span>
 
@@ -293,16 +295,18 @@
 
 
 <div class="viewcode-block" id="get_ap_week_warning"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_ap_week_warning">[docs]</a><span class="k">def</span> <span class="nf">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">ap_day</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">ap_day</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
-        <span class="n">ap_day</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ap_day = timezone.localtime()</span>
+<span class="sd">    if ap_day.hour &gt; 16:</span>
+<span class="sd">        ap_day += datetime.timedelta(days=1)</span>
 
-    <span class="k">while</span> <span class="n">ap_day</span><span class="o">.</span><span class="n">weekday</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># Saturday or Sunday</span>
-        <span class="n">ap_day</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="sd">    while ap_day.weekday() &gt;= 5:  # Saturday or Sunday</span>
+<span class="sd">        ap_day += datetime.timedelta(days=1)</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="n">ap_day</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
-    <span class="k">if</span> <span class="n">ap_day</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="n">ap_day</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">17</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;auth/ap_week_schedule.html&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="sd">    data = {&quot;day&quot;: ap_day.day, &quot;date&quot;: request.GET.get(&quot;date&quot;, None)}</span>
+<span class="sd">    if ap_day.month == 5 and 4 &lt;= ap_day.day &lt;= 17:</span>
+<span class="sd">        return get_template(&quot;auth/ap_week_schedule.html&quot;).render(data)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="kc">False</span></div>
 
