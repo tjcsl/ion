@@ -1,0 +1,48 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Account Management
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'page_base' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary_text">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="options">
+                Ion Username to Unlock: {{ form.user_account }}
+            </div>
+            <div class="options" style="font-size:20px;">
+                OR
+            </div>
+            <div class="options">
+                Unlock all accounts? {{ form.reset_all }}
+            </div>
+            <div class="options" style="color:red;">
+                {% if error %}
+                    That Ion Username doesn't exist.
+                {% endif %}
+            </div>
+            <input type='submit' name='Go' value='Go'/>
+        </form>
+    </div>
+{% endblock %}

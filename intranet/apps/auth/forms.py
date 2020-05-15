@@ -1,6 +1,7 @@
 import logging
 
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import widgets
 
@@ -48,4 +49,23 @@ class AuthenticateForm(AuthenticationForm):
                     message = "Invalid password"
                 self.fields["password"].widget.attrs.update({"class": "error", "placeholder": message})
 
+        return form
+
+
+class ResetLoginAttemptsEmailForm(forms.Form):
+    user_account = forms.CharField(max_length=30, required=True)
+
+    def is_valid(self):
+        form = super(ResetLoginAttemptsEmailForm, self).is_valid()
+        return get_user_model().objects.filter(username=self.cleaned_data["user_account"]).exists() and form
+
+
+class ResetLoginForm(forms.Form):
+    user_account = forms.CharField(max_length=30, required=False)
+    reset_all = forms.BooleanField(required=False)
+
+    def is_valid(self):
+        form = super(ResetLoginForm, self).is_valid()
+        if self.cleaned_data["user_account"] != "":
+            return get_user_model().objects.filter(username=self.cleaned_data["user_account"]).exists() and form
         return form

@@ -1,0 +1,54 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    TJ {{ block.super }} - Login
+{% endblock %}
+
+{% block meta %}
+  {{ block.super }}
+  {% if should_not_index_page %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'login' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/login.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/login' %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="primary_text">
+        You have exceeded your login attempts for this account.
+        <br>
+        Please wait {{ cooloff }} hours before trying again or fill out the form below to request unlocking from an administrator.
+        <br>
+        If you have forgotten your password, you can reset it on the login page after you account is unlocked.
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="options">
+                Your Ion Username: {{ form.user_account }}
+            </div>
+            <div class="options" style="color:red">
+                {% if error %}
+                    That Ion Username does not exist.
+                {% endif %}
+            </div>
+            <input type='submit' name='Submit' value='Submit'/>
+        </form>
+    </div>
+{% endblock %}

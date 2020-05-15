@@ -312,6 +312,7 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE["STYLESHEETS"].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = (
+    "axes.backends.AxesBackend",
     "django.contrib.auth.backends.ModelBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
@@ -397,6 +398,7 @@ MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # Django Prometheus after
     "intranet.middleware.dark_mode.DarkModeMiddleware",  # Dark mode-related middleware
     "django_referrer_policy.middleware.ReferrerPolicyMiddleware",  # Sets the Referrer-Policy header
+    "axes.middleware.AxesMiddleware",  # Django Axes, for login ratelimiting
 ]
 
 # URLconf at urls.py
@@ -534,6 +536,7 @@ INSTALLED_APPS = [
     "maintenance_mode",  # django-maintenance-mode
     "django_prometheus",  # django-prometheus
     "pipeline",  # django-pipeline
+    "axes",  # django-axes
     "channels",
     # Intranet apps
     "intranet.apps",
@@ -798,6 +801,18 @@ REFERRER_POLICY = "strict-origin-when-cross-origin"
 REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
 
 EIGHTH_COORDINATOR_NAME = "Laura Slonina"
+
+# Times a user can fail to login before being locked out
+AXES_FAILURE_LIMIT = 10
+
+# Lockout for a user will reset after this many hours
+AXES_COOLOFF_TIME = 2
+
+# Lock out based on username, not ip
+AXES_ONLY_USER_FAILURES = True
+
+# Redirect url for lockout
+AXES_LOCKOUT_URL = "/lockout"
 
 # How often the signage JS sends a heartbeat
 SIGNAGE_HEARTBEAT_INTERVAL = 60

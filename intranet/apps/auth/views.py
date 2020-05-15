@@ -4,16 +4,18 @@ import time
 from datetime import timedelta
 from typing import Container, Tuple
 
+from axes.utils import reset
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
@@ -21,14 +23,16 @@ from django.views.generic.base import View
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
+from ..auth.decorators import deny_restricted
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
+from ..notifications.tasks import email_send_task
 from ..schedule.views import schedule_context
 from ..sessionmgmt.helpers import trust_session
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
 from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
-from .forms import AuthenticateForm
+from .forms import AuthenticateForm, ResetLoginAttemptsEmailForm, ResetLoginForm
 from .helpers import change_password, get_login_theme
 
 logger = logging.getLogger(__name__)
@@ -103,6 +107,42 @@ def get_week_sports_school_events() -> Tuple[Container[Event], Container[Event]]
     return sports_events, school_events
 
 
+def lockout_view(request):
+    if request.method == "POST":
+        form = ResetLoginAttemptsEmailForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data["user_account"]
+            subject = "Account Unlock Requested for {}".format(user)
+            emails = [settings.FEEDBACK_EMAIL]
+            base_url = "https://ion.tjhsst.edu/unlock"
+            data = {"user": user, "url": base_url}
+            email_send_task.delay("auth/emails/reset_login.txt", "auth/emails/reset_login.html", data, subject, emails)
+            return HttpResponseRedirect("/")
+        return render(request, "auth/lockout.html", context={"cooloff": settings.AXES_COOLOFF_TIME, "form": form, "error": True})
+    form = ResetLoginAttemptsEmailForm()
+    return render(request, "auth/lockout.html", context={"cooloff": settings.AXES_COOLOFF_TIME, "form": form, "error": False})
+
+
+@login_required
+@deny_restricted
+def unlock_view(request):
+    is_admin_all = request.user.has_admin_permission("all")
+    if not is_admin_all:
+        return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
+    if request.method == "POST":
+        form = ResetLoginForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data["reset_all"]:
+                reset()
+            else:
+                reset(username=form.cleaned_data["user_account"])
+            return HttpResponseRedirect("/unlock")
+        return render(request, "auth/unlock.html", context={"form": form, "error": True})
+    else:
+        form = ResetLoginForm()
+        return render(request, "auth/unlock.html", context={"form": form, "error": False})
+
+
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None, has_next_page=False):
     """Process and show the main login page or dashboard if logged in."""
@@ -159,7 +199,7 @@ class LoginView(View):
         if request.POST.get("username", "").startswith(str(timezone.localdate().year + 4)) and timezone.localdate() < settings.SCHOOL_START_DATE:
             return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
 
-        form = AuthenticateForm(data=request.POST)
+        form = AuthenticateForm(request=request, data=request.POST)
 
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
@@ -258,7 +298,7 @@ def logout_view(request):
 def reauthentication_view(request):
     context = {"login_failed": False}
     if request.method == "POST":
-        if authenticate(username=request.user.username, password=request.POST.get("password", "")):
+        if authenticate(request=request, username=request.user.username, password=request.POST.get("password", "")):
             request.session["reauthenticated_at"] = time.time()
             return redirect(request.POST.get("next", request.GET.get("next", "/")))
         else:

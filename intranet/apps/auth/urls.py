@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     re_path(r"^$", views.index_view, name="index"),
     re_path(r"^login$", views.LoginView.as_view(), name="login"),
+    re_path(r"^lockout", views.lockout_view, name="lockout"),
+    re_path(r"^unlock", views.unlock_view, name="unlock"),
     re_path(r"^logout$", views.logout_view, name="logout"),
     re_path(r"^about$", views.about_view, name="about"),
     re_path(r"^reauthenticate$", views.reauthentication_view, name="reauth"),
