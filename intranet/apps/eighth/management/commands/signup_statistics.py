@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 ),
             )
             .filter(signup_count__gte=options["min_blocks"])
-            .order_by("-signup_count")
+            .order_by("-signup_count", "last_name", "username")
             .values_list("username", "first_name", "last_name", "signup_count"),
         ]
 
