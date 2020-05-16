@@ -1,12 +1,12 @@
 import datetime
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
 
 from ...test.ion_test import IonTestCase
+from ...utils.date import get_senior_graduation_year
 from ..groups.models import Group
 from ..users.models import Email
 from .exceptions import SignupException
@@ -39,7 +39,7 @@ class EighthTest(EighthAbstractTest):
     """
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1, id=8889)[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=get_senior_graduation_year() + 1, id=8889)[0]
 
     def create_sponsor(self):
         user = get_user_model().objects.get_or_create(username="ateacher", first_name="A", last_name="Teacher", user_type="teacher")[0]
@@ -140,7 +140,7 @@ class EighthTest(EighthAbstractTest):
         """Do some sample signups."""
 
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
         block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -154,7 +154,7 @@ class EighthTest(EighthAbstractTest):
         """Make sure users cannot sign up for blacklisted activities."""
 
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year())
         block1 = self.add_block(date="2015-01-01", block_letter="A")
         room1 = self.add_room(name="room1", capacity=1)
 
@@ -213,7 +213,7 @@ class EighthTest(EighthAbstractTest):
     def test_both_blocks(self):
         """Make sure that signing up for a both blocks activity works."""
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
         block1 = self.add_block(date="2015-01-01", block_letter="A")
@@ -245,7 +245,7 @@ class EighthTest(EighthAbstractTest):
 
     def test_signup_status_email(self):
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
         Email.objects.get_or_create(address="awilliam@tjhsst.edu", user=user1)
         block1 = self.add_block(date="2015-01-01", block_letter="A")
         block2 = self.add_block(date="2015-01-01", block_letter="B")
@@ -311,7 +311,7 @@ class EighthTest(EighthAbstractTest):
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
         block1 = self.add_block(date="3000-11-11", block_letter="A")
 
         room1 = self.add_room(name="room1", capacity=1)
@@ -343,7 +343,7 @@ class EighthTest(EighthAbstractTest):
     def test_switch_cancelled_sticky(self):
         """Make sure users can switch out of cancelled activities even if they are stickied in."""
         self.make_admin()
-        user1 = get_user_model().objects.create(username="user1", graduation_year=settings.SENIOR_GRADUATION_YEAR + 1)
+        user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
 
         EighthActivity.objects.all().delete()
         EighthBlock.objects.all().delete()

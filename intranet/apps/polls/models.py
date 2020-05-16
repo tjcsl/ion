@@ -31,7 +31,7 @@ class PollManager(Manager):
 
         """
 
-        return Poll.objects.filter(visible=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
+        return Poll.objects.filter(visible=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True)).distinct()
 
 
 class Poll(models.Model):
@@ -93,6 +93,21 @@ class Poll(models.Model):
             else:
                 users = list(q.get_users_voted())
         return users
+
+    def get_num_eligible_voters(self):
+        if self.groups.exists():
+            return get_user_model().objects.exclude(user_type="service").filter(groups__poll=self).distinct().count()
+        else:
+            return get_user_model().objects.exclude(user_type="service").count()
+
+    def get_percentage_voted(self, voted, able):
+        return "{:.1%}".format(0 if able == 0 else voted / able)
+
+    def get_voted_string(self):
+        users_voted = len(self.get_users_voted())
+        users_able = self.get_num_eligible_voters()
+        percent = self.get_percentage_voted(users_voted, users_able)
+        return "{} out of {} ({}) eligible users voted in this poll.".format(users_voted, users_able, percent)
 
     def has_user_voted(self, user):
         return Answer.objects.filter(question__in=self.question_set.all(), user=user).count() == self.question_set.count()
