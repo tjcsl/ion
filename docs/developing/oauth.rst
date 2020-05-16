@@ -38,7 +38,7 @@ To access the API, exchange this code for a (temporary) access token. The URL is
 Python-social-auth
 ------------------
 
-If you want to use *python-social-auth*, a plugin is available in the `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_ package. Note that it is not currently actively maintained by the Ion development team and thus may require modification to work properly.
+If you want to use ``python-social-auth``, a plugin is available in the `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_ package. Note that it is not currently actively maintained by the Ion development team and thus may require modification to work properly.
 
 For a Django project, add ``AUTHENTICATION_BACKENDS = ['ion_oauth.oauth.IonOauth2']`` and define ``SOCIAL_AUTH_ION_KEY`` and ``SOCIAL_AUTH_ION_SECRET`` in your settings.py file.
 
