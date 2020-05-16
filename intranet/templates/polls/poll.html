@@ -40,10 +40,15 @@
         for
         {% for group in poll.groups.all %}
             {{ group }}
-            {% if not forloop.last %},{% endif %}
+            {% if not forloop.last %},
+            {% else %}
+            {% endif %}
         {% empty %}
             everyone
         {% endfor %}
+        {% if is_polls_admin and not poll.before_start_time %}
+            &bull; {{ poll.get_voted_string }}
+        {% endif %}
     </div>
 
     {% if poll.announcement and not announcement %}

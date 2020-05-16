@@ -21,7 +21,6 @@
 {% else %}
 <form id="start-of-year" action="{% url 'eighth_admin_maintenance_start_of_year' %}" method="POST">
     {% csrf_token %}
-    <input type="hidden" name="confirm" value="true">
     <p><b>Are you sure? <span style="color:red">This action will DESTROY data!</span></b></p>
     <p>Pressing the button below will run the start of year scripts. This includes:</p>
     <ul style="margin-bottom:10px">
@@ -30,6 +29,10 @@
         <li>Removing signup information for graduated users</li>
         <li>Resetting the welcome notification for all users</li>
     </ul>
+
+    <h4>The current graduation year for seniors is <strong>{{ senior_graduation_year }}</strong>. Accounts for all students graduating up to and including this year, and all associated data, will be <strong>PERMANENTLY REMOVED</strong>.</h4>
+    <input type="checkbox" name="confirm" required> Confirm permanent data destruction
+
     <a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a> <button type="submit">Run Start of Year Scripts</button>
 </form>
 {% endif %}

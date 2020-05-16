@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
+from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
@@ -135,8 +136,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "bg_pattern": get_bg_pattern(request),
             "theme": get_login_theme(),
             "login_warning": login_warning,
-            "senior_graduation": settings.SENIOR_GRADUATION,
-            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+            "senior_graduation": get_senior_graduation_date().strftime("%B %d %Y %H:%M:%S"),
+            "senior_graduation_year": get_senior_graduation_year(),
             "sports_events": sports_events,
             "school_events": school_events,
             "should_not_index_page": has_next_page,
