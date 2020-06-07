@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    intranet.apps.eighth.forms
    intranet.apps.eighth.management
