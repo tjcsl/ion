@@ -1,0 +1,261 @@
+# Based off of:
+# - https://github.com/actions/starter-workflows/blob/master/ci/python-app.yml
+# - https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+# - https://help.github.com/en/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# - https://github.community/t/using-a-rabbitmq-service-to-test-npm-package/16265
+# - https://github.com/actions/example-services/
+
+# WARNING: After modifying this file, make sure to run ci/regen-workflow.py!
+
+name: CI
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PRODUCTION: 'TRUE'
+
+.anchors:
+  python_versions: &python_versions
+    - 3.6
+    - 3.7
+    - 3.8
+  node_versions: &node_versions
+    - 12.x
+
+  python_setup: &python_setup
+    name: Set up Python ${{ matrix.python-version }}
+    uses: actions/setup-python@v2
+    with:
+      python-version: ${{ matrix.python-version }}
+
+  repo_setup: &repo_setup
+    name: Set up repo
+    uses: actions/checkout@v2
+
+  repo_setup_fetch_all: &repo_setup_fetch_all
+    name: Set up repo (fetching all commits)
+    uses: actions/checkout@v2
+    with:
+      fetch-depth: 0
+
+  setup_pip_cache: &setup_pip_cache
+    name: Set up pip cache
+    uses: actions/cache@v2
+    with:
+      path: ~/.cache/pip
+      key: pip-${{ matrix.python-version }}
+
+  setup_venv: &setup_venv
+    name: Set up venv
+    run: |
+      set -e
+
+      pip install -U virtualenv
+      virtualenv venv
+
+      source venv/bin/activate
+
+      pip install -U pip setuptools
+      pip install -U \
+        flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \
+        coverage coveralls pyyaml
+      pip install -U -r requirements.txt
+
+      echo "::set-env name=PATH::$PATH"
+      echo "::set-env name=VIRTUAL_ENV::$VIRTUAL_ENV"
+
+  .copy_secret: &copy_secret
+    name: Copy secret.py
+    run: cp intranet/settings/ci_secret.py intranet/settings/secret.py
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+      fail-fast: false
+
+    steps:
+      - *repo_setup
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_venv
+      - *copy_secret
+
+      - name: Run flake8
+        run: 'flake8 --max-line-length 150 --exclude=*/migrations/* intranet/ scripts/ docs/ *.py'
+      - name: Run pylint
+        run: pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init,cyclic-import intranet/
+      - name: Run isort
+        run: isort --check --recursive intranet
+
+  formatting:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+      fail-fast: false
+
+    steps:
+      - *repo_setup
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_venv
+      - *copy_secret
+
+      - name: Format code
+        run: ./scripts/build_ensure_no_changes.sh ./scripts/format.sh
+      - name: Format static files and templates
+        run: ./scripts/build_ensure_no_changes.sh ./scripts/static_templates_format.sh
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+      fail-fast: false
+
+    steps:
+      # We need the full history so we can validate commit messages.
+      - *repo_setup_fetch_all
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_venv
+      - *copy_secret
+
+      - name: Regenerate workflow YAML file and check for changes
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+
+      # Build docs/sources
+      - name: Build docs
+        run: ./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh
+      - name: Build sources
+        run: ./scripts/build_ensure_no_changes.sh ./scripts/build_sources.sh
+
+      # Validate commit messages
+      - name: Validate PR commit messages
+        # Validate commit messages for PRs
+        if: "github.event_name == 'pull_request'"
+        run: ./scripts/validate-commit-messages.py ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+      - name: Validate push commit messages
+        # Validate commit messages for forks and branches that aren't dev or master
+        if: "github.event_name == 'push' && (github.repository_owner != 'tjcsl' || github.ref != 'refs/heads/master' || github.ref != 'refs/heads/dev')"
+        run: 'git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}'
+
+
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+        node-version: *node_versions
+      fail-fast: false
+
+    services:
+      rabbitmq:
+        image: rabbitmq:latest
+        ports:
+          - 5672:5672
+        options: --health-cmd "rabbitmqctl node_health_check" --health-interval 6s --health-timeout 5s --health-retries 10
+
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 6s --health-timeout 5s --health-retries 9
+
+    steps:
+      - *repo_setup
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_venv
+      - *copy_secret
+
+      # Node setup
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Sass and add Node modules bin to PATH
+        run: |
+          set -e
+          npm install sass
+          echo "::set-env name=PATH::${{ github.workspace }}/node_modules/.bin:$PATH"
+
+      # Postgres setup
+      - name: Set and create PGPASSFILE
+        run: |
+          set -e
+          PGPASSFILE=${{ runner.temp }}/.pgpass
+          echo "::set-env name=PGPASSFILE::$PGPASSFILE"
+          echo 127.0.0.1:5432:postgres:postgres:postgres >$PGPASSFILE
+          chmod 600 $PGPASSFILE
+      - name: Create database
+        run: psql -U postgres -h 127.0.0.1 -c 'create database ion'
+
+      # Tests
+      - name: Run tests
+        run: coverage run ./setup.py test
+      - name: Migrate database
+        run: coverage run -a ./manage.py migrate
+      - name: Collect static files
+        run: coverage run -a ./manage.py collectstatic --noinput -v 0
+
+      # Coveralls
+      - name: Report coverage to Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel: true
+
+      # Codacy
+      - name: Build coverage XML file
+        if: github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'
+        run: coverage xml
+      - name: Report coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@master
+        if: github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'
+        with:
+          coverage-reports: coverage.xml
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+      # Push docs
+      - name: Push docs
+        # Only run for pushes to the main Ion repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl'
+        run: ./scripts/push_docs.sh
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
+
+  finish_success:
+    needs:
+      - linting
+      - formatting
+      - build
+      - tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Tell Coveralls that parallel jobs have finished
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel-finished: true
