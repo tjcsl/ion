@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>simple_history.manager &#8212; TJ Intranet v3 (Build #6043) documentation</title>
+    <title>simple_history.manager &#8212; TJ Intranet v3 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -128,7 +128,9 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">now</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span> <span class="nn">simple_history.utils</span> <span class="kn">import</span> <span class="n">get_change_reason_from_object</span>
 
 
 <span class="k">class</span> <span class="nc">HistoryDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -225,16 +227,32 @@
                 <span class="k">continue</span>
             <span class="k">yield</span> <span class="n">last_change</span><span class="o">.</span><span class="n">instance</span>
 
-    <span class="k">def</span> <span class="nf">bulk_history_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Bulk create the history for the objects specified by objs&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">bulk_history_create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">objs</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">default_change_reason</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bulk create the history for the objects specified by objs.</span>
+<span class="sd">        If called by bulk_update_with_history, use the update boolean and</span>
+<span class="sd">        save the history_type accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">history_type</span> <span class="o">=</span> <span class="s2">&quot;+&quot;</span>
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="n">history_type</span> <span class="o">=</span> <span class="s2">&quot;~&quot;</span>
 
         <span class="n">historical_instances</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
-                <span class="n">history_date</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_date&quot;</span><span class="p">,</span> <span class="n">now</span><span class="p">()),</span>
-                <span class="n">history_user</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_user&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="n">history_change_reason</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;changeReason&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-                <span class="n">history_type</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+                <span class="n">history_date</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_date&quot;</span><span class="p">,</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()),</span>
+                <span class="n">history_user</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_history_user&quot;</span><span class="p">,</span> <span class="n">default_user</span><span class="p">),</span>
+                <span class="n">history_change_reason</span><span class="o">=</span><span class="n">get_change_reason_from_object</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">default_change_reason</span><span class="p">,</span>
+                <span class="n">history_type</span><span class="o">=</span><span class="n">history_type</span><span class="p">,</span>
                 <span class="o">**</span><span class="p">{</span>
                     <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span>

@@ -4,10 +4,10 @@ intranet.settings package
 Submodules
 ----------
 
-intranet.settings.travis\_secret module
----------------------------------------
+intranet.settings.ci\_secret module
+-----------------------------------
 
-.. automodule:: intranet.settings.travis_secret
+.. automodule:: intranet.settings.ci_secret
    :members:
    :undoc-members:
    :show-inheritance:
