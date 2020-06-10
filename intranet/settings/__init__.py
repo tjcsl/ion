@@ -68,7 +68,7 @@ HOCO_START_DATE = datetime.date(2017, 10, 2)
 HOCO_END_DATE = datetime.date(2017, 10, 14)
 
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
-TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
+IN_CI = any(os.getenv(key, "").upper() == "TRUE" for key in ["TRAVIS", "GITHUB_ACTIONS"])
 # FIXME: figure out a less-hacky way to do this.
 TESTING = "test" in sys.argv
 LOGGING_VERBOSE = PRODUCTION
@@ -594,7 +594,7 @@ if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
 
 
 def get_log(name):  # pylint: disable=redefined-outer-name; 'name' is used as the target of a for loop, so we can safely override it
-    return [name] if (PRODUCTION and not TRAVIS) else []
+    return [name] if (PRODUCTION and not IN_CI) else []
 
 
 # https://docs.djangoproject.com/en/dev/topics/logging/
