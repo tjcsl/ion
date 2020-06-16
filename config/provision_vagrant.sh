@@ -81,14 +81,8 @@ sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/10/main/pg_hba.con
 service postgresql restart
 
 # Redis
-wget --progress dot:giga http://download.redis.io/redis-stable.tar.gz
-tar xvzf redis-stable.tar.gz
-cd redis-stable
-make install
-cd utils
-echo | ./install_server.sh
-cd ../..
-rm -rf redis-stable redis-stable.tar.gz
+apt-get -y install redis-server
+systemctl enable --now redis-server
 
 # RabbitMQ
 apt-get -y install rabbitmq-server
