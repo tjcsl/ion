@@ -6,12 +6,11 @@ import logging
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Count
 
-from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
+from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 
 logger = logging.getLogger(__name__)
 
