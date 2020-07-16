@@ -77,7 +77,7 @@ sqlcmd(){
 }
 sqlcmd "CREATE DATABASE ion;" || echo Database already exists
 sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';" || echo Database user already exists
-sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/10/main/pg_hba.conf
+sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/12/main/pg_hba.conf
 service postgresql restart
 
 # Redis
