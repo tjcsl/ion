@@ -144,22 +144,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
             "sticky": scheduled_activity.get_sticky(),
-            "finance": scheduled_activity.get_finance(),
             "title": scheduled_activity.title,
-            "comments": scheduled_activity.comments,
             "display_text": "",
-            # TODO: Make waitlists more efficient or remove functionality completely
-            "waitlist_count": (EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).count() if settings.ENABLE_WAITLIST else 0),
         }
-
-        if user:
-            if settings.ENABLE_WAITLIST:
-                activity_info["waitlisted"] = EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id, user_id=user.id).exists()
-                activity_info["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(scheduled_activity.id, user.id)
-            else:
-                activity_info["waitlisted"] = False
-                activity_info["waitlist_position"] = 0
-            activity_info["is_recommended"] = activity in recommended_activities
 
         return activity_info
 
