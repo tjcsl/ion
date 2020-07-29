@@ -93,7 +93,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     comments = serializers.CharField(max_length=100)
 
     def process_scheduled_activity(
-        self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None, available_restricted_acts=None
+        self,
+        scheduled_activity,
+        request=None,
+        user=None,
+        favorited_activities=None,
+        recommended_activities=None,  # pylint: disable=unused-argument
+        available_restricted_acts=None,
     ):
         activity = scheduled_activity.activity
         if user:
