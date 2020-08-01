@@ -41,7 +41,7 @@ end
 
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "generic/ubuntu2004"
   config.vm.boot_timeout = 1000
   if devconfig["use_vpn"]
       config.vm.network "public_network", bridge: devconfig["network_interface"]
@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
     vb.name = "ion-vagrant"
     vb.memory = 2048 # the default of 512 gives us a OOM during setup.
-    # vb.gui = true
+    vb.gui = true
   end
 
 
