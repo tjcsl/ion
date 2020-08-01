@@ -145,7 +145,16 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "sticky": scheduled_activity.get_sticky(),
             "title": scheduled_activity.title,
             "display_text": "",
+            # TODO: Remove together with other eighth waitlist functionality
+            "waitlist_count": 0,
         }
+
+        if user:
+            # TODO: Remove together with other eighth waitlist functionality
+            activity_info["waitlisted"] = False
+            activity_info["waitlist_position"] = 0
+
+            activity_info["is_recommended"] = activity in recommended_activities
 
         return activity_info
 
