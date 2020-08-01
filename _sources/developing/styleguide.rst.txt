@@ -24,7 +24,7 @@ Main points
 What is enforced in the build
 =============================
 
-At the time of this writing, the Travis build runs the following commands:
+At the time of this writing, the GitHub Actions build runs the following commands:
 
 .. code-block:: sh
 

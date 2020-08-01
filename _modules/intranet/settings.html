@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.settings &#8212; TJ Intranet v3 documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #53) documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -195,7 +195,7 @@
 <span class="n">HOCO_END_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
-<span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
+<span class="n">IN_CI</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;GITHUB_ACTIONS&quot;</span><span class="p">])</span>
 <span class="c1"># FIXME: figure out a less-hacky way to do this.</span>
 <span class="n">TESTING</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
 <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
@@ -721,7 +721,7 @@
 
 
 <div class="viewcode-block" id="get_log"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.get_log">[docs]</a><span class="k">def</span> <span class="nf">get_log</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>  <span class="c1"># pylint: disable=redefined-outer-name; &#39;name&#39; is used as the target of a for loop, so we can safely override it</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IN_CI</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span></div>
 
 
 <span class="c1"># https://docs.djangoproject.com/en/dev/topics/logging/</span>
@@ -896,6 +896,9 @@
 
 <span class="n">SIMILAR_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
 
+<span class="c1"># Time that the bus page should change from morning to afternoon display</span>
+<span class="n">BUS_PAGE_CHANGEOVER_HOUR</span> <span class="o">=</span> <span class="mi">12</span>
+
 <span class="c1"># Substrings of user agents to not log in the Ion access logs</span>
 <span class="n">NONLOGGABLE_USER_AGENT_SUBSTRINGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Prometheus&quot;</span><span class="p">,</span> <span class="s2">&quot;GoogleBot&quot;</span><span class="p">,</span> <span class="s2">&quot;UptimeRobot&quot;</span><span class="p">]</span>
 
@@ -911,7 +914,12 @@
         <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL</span><span class="p">,</span>
         <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="p">},</span>
-    <span class="s2">&quot;reset-routes&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.apps.bus.tasks.reset_routes&quot;</span><span class="p">,</span> <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">celery</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">()},</span>
+    <span class="s2">&quot;reset-routes-afternoon&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.apps.bus.tasks.reset_routes&quot;</span><span class="p">,</span> <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">celery</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">()},</span>
+    <span class="s2">&quot;reset-routes-morning&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.apps.bus.tasks.reset_routes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">celery</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">(),</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
