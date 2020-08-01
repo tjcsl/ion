@@ -58,11 +58,6 @@ if [[ -x "$(which gem)" ]]; then
     echo "Uninstalling deprecated Ruby Sass (and Ruby)"
     echo
     gem uninstall sass
-    if dpkg -s rubygems; then
-        apt-get -y remove rubygems
-    else
-        apt-get -y remove rubygems-integration
-    fi
     apt-get -y remove ruby-dev
 fi
 apt-get -y install npm nodejs
