@@ -45,10 +45,12 @@ export function getSocket(base_url, location, document, window, time) {
             return;
         }
 
-        if (document.getElementById('morning').hidden === false) {
-            time = 'morning';
-        } else if (document.getElementById('afternoon').hidden === false) {
-            time = 'afternoon';
+        if (document.getElementById('morning') !== null && document.getElementById('afternoon') !== null) {
+            if (document.getElementById('morning').hidden === false) {
+                time = 'morning';
+            } else if (document.getElementById('afternoon').hidden === false) {
+                time = 'afternoon';
+            }
         }
 
         if (time === 'afternoon') {
