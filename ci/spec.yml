@@ -139,6 +139,14 @@ jobs:
       - name: Build sources
         run: ./scripts/build_ensure_no_changes.sh ./scripts/build_sources.sh
 
+      # Check for changes to CI spec
+      - name: Check for chenges to CI spec
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+
+      # Check for unmigrated changes
+      - name: Check for unmigrated changes
+        run: ./scripts/build_ensure_no_changes.sh ./manage.py migrate
+
       # Validate commit messages
       - name: Validate PR commit messages
         # Validate commit messages for PRs
