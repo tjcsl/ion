@@ -92,15 +92,25 @@
                     </div>
                     <ul class="dropdown-menu">
                         <div class="arrow"></div>
-                        <li><a href="{% url 'user_profile'%}"><i class="fas fa-user"></i> My Profile</a></li>
-                        <li><a href="{% url 'preferences' %}"><i class="fas fa-cog"></i> Preferences</a></li>
-                        {% if not request.user.is_restricted %}
-                        <li><a href="{% url 'itemreg' %}"><i class="fas fa-edit"></i> Item Registration</a></li>
-                        <li><a href="{% url 'lostfound' %}"><i class="far fa-compass"></i> Lost and Found</a></li>
-                        <li><a href="{% url 'oauth2_provider:list' %}"><i class="fas fa-key"></i> OAuth</a></li>
-                        {% endif %}
+                        <li>
+                            <div style="float:left;">
+                                <a href="{% url 'user_profile'%}"><i class="fas fa-user"></i> My Profile</a>
+                            </div>
+                            <div class="has-dropdown-subgroup">
+                                <a class="subgroup-arrow-parent" href="#"><i class="fas fa-caret-down subgroup-arrow"></i></a>
+                                <ul class="dropdown-subgroup" style="display:none;">
+                                    <li><a href="{% url 'preferences' %}"><i class="fas fa-cog"></i> Preferences</a></li>
+                                    {% if not request.user.is_restricted %}
+                                    <li><a href="{% url 'itemreg' %}"><i class="fas fa-edit"></i> Item Registration</a></li>
+                                    <li><a href="{% url 'lostfound' %}"><i class="far fa-compass"></i> Lost and Found</a></li>
+                                    <li><a href="{% url 'oauth2_provider:list' %}"><i class="fas fa-key"></i> OAuth</a></li>
+                                    {% endif %}
+                                    <li><a href="{% url 'sessionmgmt' %}"><i class="fas fa-desktop"></i> Session Management</a></li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
                         <li><a href="{% url 'send_feedback' %}" class="feedback"><i class="far fa-smile"></i> Send Feedback</a></li>
-                        <li><a href="{% url 'sessionmgmt' %}"><i class="fas fa-desktop"></i> Session Management</a></li>
                         <li><a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About/Credits</a></li>
                         <li><a href="{% url 'logout'%}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
