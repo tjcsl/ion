@@ -1,6 +1,7 @@
 from datetime import datetime
 from io import StringIO
 
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.utils import timezone
 
@@ -25,3 +26,30 @@ class YearCleanupTest(IonTestCase):
             "Archiving admin comments",
         ]
         self.assertEqual(out.getvalue().splitlines(), output)
+
+
+class DeleteUsersTest(IonTestCase):
+    """Tests deletion of users."""
+
+    def test_delete_users(self):
+        # Add some users
+        users = [
+            {"student_id": "12345", "username": "2021ttest", "first_name": "Test"},
+            {"student_id": "54321", "username": "2021ttest2", "first_name": "Testtwo"},
+            {"student_id": "11111", "username": "2021ttester", "first_name": "Testfive"},
+        ]
+        for user in users:
+            newuser = get_user_model().objects.get_or_create(**user)
+            newuser[0].save()
+
+        call_command("delete_users", student_ids=["12345", "54321", "55555"], run=True, confirm=True)
+
+        # Check if first and second users were deleted
+        with self.assertRaises(get_user_model().DoesNotExist):
+            get_user_model().objects.get(username="2021ttest")
+
+        with self.assertRaises(get_user_model().DoesNotExist):
+            get_user_model().objects.get(username="2021ttest2")
+
+        # Check if the third user was left intact
+        self.assertEqual("2021ttester", get_user_model().objects.get(username="2021ttester").username)
