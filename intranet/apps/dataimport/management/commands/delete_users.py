@@ -15,7 +15,6 @@ class Command(BaseCommand):
             dest="header",
             default="Student ID",
             type=str,
-            nargs=1,
             help="Header associated with the student ID column. Use with the 'filename' option",
         )
         parser.add_argument(
