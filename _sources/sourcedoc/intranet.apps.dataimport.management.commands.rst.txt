@@ -4,6 +4,14 @@ intranet.apps.dataimport.management.commands package
 Submodules
 ----------
 
+intranet.apps.dataimport.management.commands.delete\_users module
+-----------------------------------------------------------------
+
+.. automodule:: intranet.apps.dataimport.management.commands.delete_users
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.dataimport.management.commands.import\_eighth module
 ------------------------------------------------------------------
 
