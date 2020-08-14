@@ -831,16 +831,16 @@ class EighthCommandsTest(IonTestCase):
         file_contents = "Student ID,Counselor\n12345,CounselorOne\n54321,CounselorTwo\n55555,CounselorOne"
 
         # Make some counselors
-        counselorone = get_user_model().objects.get_or_create(username="counselorone", last_name="CounselorOne", user_type="counselor")[0]
+        get_user_model().objects.get_or_create(username="counselorone", last_name="CounselorOne", user_type="counselor")
         counselortwo = get_user_model().objects.get_or_create(username="counselortwo", last_name="CounselorTwo", user_type="counselor")[0]
 
         # Make some users
-        userone = get_user_model().objects.get_or_create(username="2021ttest", student_id=12345, user_type="student", counselor=counselortwo)[0]
-        usertwo = get_user_model().objects.get_or_create(username="2021ttest2", student_id=54321, user_type="student", counselor=counselortwo)[0]
-        userthree = get_user_model().objects.get_or_create(username="2021ttester", student_id=55555, user_type="student")[0]
+        get_user_model().objects.get_or_create(username="2021ttest", student_id=12345, user_type="student", counselor=counselortwo)
+        get_user_model().objects.get_or_create(username="2021ttest2", student_id=54321, user_type="student", counselor=counselortwo)
+        get_user_model().objects.get_or_create(username="2021ttester", student_id=55555, user_type="student")
 
         # Run command
-        with patch("intranet.apps.eighth.management.commands.update_counselors.open", mock_open(read_data=file_contents)) as m:
+        with patch("intranet.apps.eighth.management.commands.update_counselors.open", mock_open(read_data=file_contents)):
             call_command("update_counselors", "foo.csv", "--run")
 
         self.assertEqual("counselorone", get_user_model().objects.get(username="2021ttest").counselor.username)

@@ -1,5 +1,6 @@
 from datetime import datetime
 from io import StringIO
+from unittest.mock import mock_open, patch
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
@@ -95,3 +96,12 @@ class ImportStudentsTest(IonTestCase):
         # Now let's try using a set
         s = {"2021ttest5", "2021ttest6", "2021ttest7"}
         self.assertEqual("2021ttest8", import_students.find_next_available_username(None, "2021ttest", s))
+
+        # Test file input
+        file_contents = "Student ID\n11111\n55555"
+        with patch("intranet.apps.dataimport.management.commands.delete_users.open", mock_open(read_data=file_contents)) as m:
+            call_command("delete_users", filename="foo.csv", header="Student ID", run=True, confirm=True)
+
+        m.assert_called_with("foo.csv", "r")
+        with self.assertRaises(get_user_model().DoesNotExist):
+            get_user_model().objects.get(username="2021ttester")
