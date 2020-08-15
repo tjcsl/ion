@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.utils import timezone
 
 from ...test.ion_test import IonTestCase
+from .management.commands.import_students import Command as import_students
 
 
 class YearCleanupTest(IonTestCase):
@@ -53,3 +54,44 @@ class DeleteUsersTest(IonTestCase):
 
         # Check if the third user was left intact
         self.assertEqual("2021ttester", get_user_model().objects.get(username="2021ttester").username)
+
+
+class ImportStudentsTest(IonTestCase):
+    """Tests importing students."""
+
+    def test_generate_username(self):
+        valid_test_cases = [
+            ("2023jdoe", {"First Name": "John", "Last Name": "Doe", "grad_year": 2023}),
+            ("2023alongest", {"First Name": "Alice", "Last Name": "Longestlastnameintheworld", "grad_year": 2023}),
+            ("2023jdoe", {"First Name": "John", "Last Name": "Doe", "grad_year": 2023}),
+            ("2023jdoesome", {"First Name": "John", "Last Name": "Doe-Something-To-Trip-This-Up", "grad_year": 2023}),
+        ]
+        for expected, data in valid_test_cases:
+            self.assertEqual(expected, import_students.generate_single_username(None, data, data["grad_year"]))
+
+        with self.assertRaises(ValueError):
+            import_students.generate_single_username(None, valid_test_cases[0][1], 20394204)
+
+        with self.assertRaises(KeyError):
+            import_students.generate_single_username(None, valid_test_cases[0][1], 2021, first_name_header="Invalid First Name")
+
+        with self.assertRaises(KeyError):
+            import_students.generate_single_username(None, valid_test_cases[0][1], 2023, last_name_header="Invalid last Name")
+
+    def test_find_next_username(self):
+        # Make some users
+        get_user_model().objects.create(username="2021ttest")
+        get_user_model().objects.create(username="2021ttest1")
+        get_user_model().objects.create(username="2021ttest3")
+
+        self.assertEqual("2021ttest2", import_students.find_next_available_username(None, "2021ttest"))
+
+        # Make some more users
+        get_user_model().objects.create(username="2021ttest2")
+        get_user_model().objects.create(username="2021ttest4")
+
+        self.assertEqual("2021ttest5", import_students.find_next_available_username(None, "2021ttest"))
+
+        # Now let's try using a set
+        s = {"2021ttest5", "2021ttest6", "2021ttest7"}
+        self.assertEqual("2021ttest8", import_students.find_next_available_username(None, "2021ttest", s))

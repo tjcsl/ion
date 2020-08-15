@@ -28,6 +28,22 @@ intranet.apps.dataimport.management.commands.import\_photos module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.dataimport.management.commands.import\_staff module
+-----------------------------------------------------------------
+
+.. automodule:: intranet.apps.dataimport.management.commands.import_staff
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.dataimport.management.commands.import\_students module
+--------------------------------------------------------------------
+
+.. automodule:: intranet.apps.dataimport.management.commands.import_students
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.dataimport.management.commands.import\_users module
 -----------------------------------------------------------------
 
