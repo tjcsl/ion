@@ -218,11 +218,13 @@ def admin_approve_announcement_view(request, req_id):
                 announcement_posted_hook(request, announcement)
 
                 messages.success(request, "Successfully approved announcement request. It has been posted.")
+                logger.info("Admin %s approved announcement: %s (%s)", request.user, announcement, announcement.id)
             else:
                 req.rejected = True
                 req.rejected_by = request.user
                 req.save()
                 messages.success(request, "You did not approve this request. It will be hidden.")
+                logger.info("Admin %s rejected announcement: %s (%s)", request.user, req.title, req.id)
             return redirect("index")
 
     form = AnnouncementRequestForm(instance=req)
@@ -259,6 +261,7 @@ def add_announcement_view(request):
             obj.save()
             announcement_posted_hook(request, obj)
             messages.success(request, "Successfully added announcement.")
+            logger.info("Admin %s added announcement: %s (%s)", request.user, obj, obj.id)
             return redirect("index")
         else:
             messages.error(request, "Error adding announcement")
@@ -299,6 +302,7 @@ def modify_announcement_view(request, announcement_id=None):
             obj.content = safe_html(obj.content)
             obj.save()
             messages.success(request, "Successfully modified announcement.")
+            logger.info("Admin %s modified announcement: %s (%s)", request.user, announcement, announcement.id)
             return redirect("index")
         else:
             messages.error(request, "Error adding announcement")
@@ -329,10 +333,12 @@ def delete_announcement_view(request, announcement_id):
             if request.POST.get("full_delete", False):
                 a.delete()
                 messages.success(request, "Successfully deleted announcement.")
+                logger.info("Admin %s deleted announcement: %s (%s)", request.user, a, a.id)
             else:
                 a.expiration_date = timezone.localtime()
                 a.save()
                 messages.success(request, "Successfully expired announcement.")
+                logger.info("Admin %s expired announcement: %s (%s)", request.user, a, a.id)
         except Announcement.DoesNotExist:
             pass
 
