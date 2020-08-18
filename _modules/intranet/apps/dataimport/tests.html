@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #87) documentation</title>
+    <title>intranet.apps.dataimport.tests &#8212; TJ Intranet v3 (Build #98) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -133,6 +133,7 @@
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">.management.commands.import_students</span> <span class="kn">import</span> <span class="n">Command</span> <span class="k">as</span> <span class="n">import_students</span>
 
 
 <div class="viewcode-block" id="YearCleanupTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.YearCleanupTest">[docs]</a><span class="k">class</span> <span class="nc">YearCleanupTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
@@ -180,6 +181,47 @@
 
         <span class="c1"># Check if the third user was left intact</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;2021ttester&quot;</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttester&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">username</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ImportStudentsTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.ImportStudentsTest">[docs]</a><span class="k">class</span> <span class="nc">ImportStudentsTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests importing students.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ImportStudentsTest.test_generate_username"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.ImportStudentsTest.test_generate_username">[docs]</a>    <span class="k">def</span> <span class="nf">test_generate_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">valid_test_cases</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;2023jdoe&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;First Name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;grad_year&quot;</span><span class="p">:</span> <span class="mi">2023</span><span class="p">}),</span>
+            <span class="p">(</span><span class="s2">&quot;2023alongest&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;First Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Longestlastnameintheworld&quot;</span><span class="p">,</span> <span class="s2">&quot;grad_year&quot;</span><span class="p">:</span> <span class="mi">2023</span><span class="p">}),</span>
+            <span class="p">(</span><span class="s2">&quot;2023jdoe&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;First Name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;grad_year&quot;</span><span class="p">:</span> <span class="mi">2023</span><span class="p">}),</span>
+            <span class="p">(</span><span class="s2">&quot;2023jdoesome&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;First Name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Doe-Something-To-Trip-This-Up&quot;</span><span class="p">,</span> <span class="s2">&quot;grad_year&quot;</span><span class="p">:</span> <span class="mi">2023</span><span class="p">}),</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">expected</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">valid_test_cases</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">import_students</span><span class="o">.</span><span class="n">generate_single_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;grad_year&quot;</span><span class="p">]))</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">import_students</span><span class="o">.</span><span class="n">generate_single_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">20394204</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+            <span class="n">import_students</span><span class="o">.</span><span class="n">generate_single_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2021</span><span class="p">,</span> <span class="n">first_name_header</span><span class="o">=</span><span class="s2">&quot;Invalid First Name&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+            <span class="n">import_students</span><span class="o">.</span><span class="n">generate_single_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2023</span><span class="p">,</span> <span class="n">last_name_header</span><span class="o">=</span><span class="s2">&quot;Invalid last Name&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImportStudentsTest.test_find_next_username"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dataimport.html#intranet.apps.dataimport.tests.ImportStudentsTest.test_find_next_username">[docs]</a>    <span class="k">def</span> <span class="nf">test_find_next_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Make some users</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest&quot;</span><span class="p">)</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest1&quot;</span><span class="p">)</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest3&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;2021ttest2&quot;</span><span class="p">,</span> <span class="n">import_students</span><span class="o">.</span><span class="n">find_next_available_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;2021ttest&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Make some more users</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest2&quot;</span><span class="p">)</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest4&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;2021ttest5&quot;</span><span class="p">,</span> <span class="n">import_students</span><span class="o">.</span><span class="n">find_next_available_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;2021ttest&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Now let&#39;s try using a set</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;2021ttest5&quot;</span><span class="p">,</span> <span class="s2">&quot;2021ttest6&quot;</span><span class="p">,</span> <span class="s2">&quot;2021ttest7&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;2021ttest8&quot;</span><span class="p">,</span> <span class="n">import_students</span><span class="o">.</span><span class="n">find_next_available_username</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;2021ttest&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span></div></div>
 </pre></div>
 
     </div>
