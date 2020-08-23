@@ -1,6 +1,7 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load static %}
 {% load pipeline %}
+{% load paginationtags %}
 
 {% block js %}
     <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
@@ -51,8 +52,8 @@
     </form>
     <br>
     <br>
-    {% if delinquents != None %}
-        Click on column titles to sort. Showing {{ delinquents|length }} result{{ delinquents|length|pluralize }}.
+    {% if delinquents_page != None %}
+        {% comment %} Click on column titles to sort. Showing {{ delinquents|length }} result{{ delinquents|length|pluralize }}. {% endcomment %}
         <table data-sortable class="fancy-table">
             <thead>
                 <tr>
@@ -66,7 +67,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for delinquent in delinquents %}
+                {% for delinquent in delinquents_page %}
                     <tr>
                         <td>
                             <a href="{% url 'user_profile' delinquent.user.id %}">
@@ -107,6 +108,13 @@
             </tbody>
         </table>
         <br>
+        <div class="pagination">
+            <span class="step-links">
+                <a class="button" {% if delinquents_page.has_previous %} href="?{% update_page delinquents_page.previous_page_number %}" {% else %} disabled {% endif %}>Previous</a>
+                <span class="current">Page {{ delinquents_page.number }} of {{ delinquents_page.paginator.num_pages }}</span>
+                <a class="button" {% if delinquents_page.has_next %} href="?{% update_page delinquents_page.next_page_number%}"{% else %} disabled {% endif %}>Next</a>
+            </span>
+        </div>
         <a class="button" href="{% url 'eighth_admin_download_delinquent_students_csv' %}?{{ request.META.QUERY_STRING }}">Download as CSV</a>
     {% endif %}
 
