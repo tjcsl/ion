@@ -15,7 +15,7 @@ class PrintJobForm(forms.ModelForm):
             printers = kwargs["printers"]
             del kwargs["printers"]
 
-        super(PrintJobForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if printers:
             self.fields["printer"].choices = [("", "Select a printer...")] + list(printers.items())

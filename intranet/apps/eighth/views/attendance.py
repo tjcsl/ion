@@ -110,7 +110,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAttendanceSelectScheduledActivityWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
 
         block = self.get_cleaned_data_for_step("block")
@@ -153,8 +153,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         block = form_list[0].cleaned_data["block"]
         try:
             scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
-        except EighthScheduledActivity.DoesNotExist:
-            raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity))
+        except EighthScheduledActivity.DoesNotExist as e:
+            raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity)) from e
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
@@ -176,8 +176,8 @@ admin_choose_scheduled_activity_view = eighth_admin_required(_unsafe_choose_sche
 def roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
-    except EighthScheduledActivity.DoesNotExist:
-        raise http.Http404
+    except EighthScheduledActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
 
@@ -199,8 +199,8 @@ def roster_view(request, scheduled_activity_id):
 def raw_roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
-    except EighthScheduledActivity.DoesNotExist:
-        raise http.Http404
+    except EighthScheduledActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
 
@@ -222,8 +222,8 @@ def raw_roster_view(request, scheduled_activity_id):
 def raw_waitlist_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
-    except EighthScheduledActivity.DoesNotExist:
-        raise http.Http404
+    except EighthScheduledActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     context = {"ordered_waitlist": EighthWaitlist.objects.filter(scheduled_activity_id=scheduled_activity.id).order_by("time")}
     return render(request, "eighth/waitlist_list.html", context)
@@ -235,8 +235,8 @@ def take_attendance_view(request, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.select_related("activity", "block").get(
             activity__deleted=False, id=scheduled_activity_id
         )
-    except EighthScheduledActivity.DoesNotExist:
-        raise http.Http404
+    except EighthScheduledActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     # Attendance-only users can only see their own roster
     if request.user.is_restricted and not scheduled_activity.user_is_sponsor(request.user):
@@ -435,8 +435,8 @@ def accept_pass_view(request, signup_id):
 
     try:
         signup = EighthSignup.objects.get(id=signup_id)
-    except EighthSignup.DoesNotExist:
-        raise http.Http404
+    except EighthSignup.DoesNotExist as e:
+        raise http.Http404 from e
 
     sponsor = request.user.get_eighth_sponsor()
     can_accept = signup.scheduled_activity.block.locked and (
@@ -470,8 +470,8 @@ def accept_all_passes_view(request, scheduled_activity_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
-    except EighthScheduledActivity.DoesNotExist:
-        raise http.Http404
+    except EighthScheduledActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     sponsor = request.user.get_eighth_sponsor()
     can_accept = scheduled_activity.block.locked and (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or request.user.is_eighth_admin)

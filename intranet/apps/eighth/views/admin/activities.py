@@ -45,8 +45,8 @@ def add_activity_view(request):
 def edit_activity_view(request, activity_id):
     try:
         activity = EighthActivity.objects.get(id=activity_id)  # include deleted
-    except EighthActivity.DoesNotExist:
-        raise http.Http404
+    except EighthActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         form = ActivityForm(request.POST, instance=activity)
@@ -213,8 +213,8 @@ def edit_activity_view(request, activity_id):
 def delete_activity_view(request, activity_id=None):
     try:
         activity = EighthActivity.objects.get(id=activity_id)
-    except EighthActivity.DoesNotExist:
-        raise http.Http404
+    except EighthActivity.DoesNotExist as e:
+        raise http.Http404 from e
 
     perm_delete = False
     if activity.deleted and "perm" in request.GET:

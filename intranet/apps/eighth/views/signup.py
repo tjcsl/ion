@@ -113,8 +113,8 @@ def eighth_signup_view(request, block_id=None):
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
                 user = get_user_model().objects.get(id=request.GET["user"])
-            except (get_user_model().DoesNotExist, ValueError):
-                raise http.Http404
+            except (get_user_model().DoesNotExist, ValueError) as e:
+                raise http.Http404 from e
         else:
             if request.user.is_student:
                 user = request.user
@@ -124,13 +124,13 @@ def eighth_signup_view(request, block_id=None):
         if block is None:
             try:
                 block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id)
-            except EighthBlock.DoesNotExist:
+            except EighthBlock.DoesNotExist as e:
                 if not EighthBlock.objects.exists():
                     # No blocks have been added yet
                     return render(request, "eighth/signup.html", {"no_blocks": True})
                 else:
                     # The provided block_id is invalid
-                    raise http.Http404
+                    raise http.Http404 from e
 
         surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
         schedule = []
@@ -287,8 +287,8 @@ def eighth_multi_signup_view(request):
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
                 user = get_user_model().objects.get(id=request.GET["user"])
-            except (get_user_model().DoesNotExist, ValueError):
-                raise http.Http404
+            except (get_user_model().DoesNotExist, ValueError) as e:
+                raise http.Http404 from e
         else:
             if request.user.is_student:
                 user = request.user
@@ -298,8 +298,8 @@ def eighth_multi_signup_view(request):
         block_ids = list(filter(None, request.GET.getlist("block")))
         try:
             blocks = EighthBlock.objects.select_related().filter(id__in=block_ids)
-        except EighthBlock.DoesNotExist:
-            raise http.Http404
+        except EighthBlock.DoesNotExist as e:
+            raise http.Http404 from e
 
         serializer_context = {"request": request, "user": user}
         blocks_info = []

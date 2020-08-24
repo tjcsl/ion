@@ -15,7 +15,7 @@ class BlockDisplayField(forms.ModelChoiceField):
 
 class BlockSelectionForm(forms.Form):
     def __init__(self, *args, label="Block", exclude_before_date=None, only_locked=False, **kwargs):
-        super(BlockSelectionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         filter_params = {}
 

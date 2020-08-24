@@ -9,7 +9,7 @@ class AnnouncementForm(forms.ModelForm):
     """A form for generating an announcement."""
 
     def __init__(self, *args, **kwargs):
-        super(AnnouncementForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
 
         self.fields["notify_post"].help_text = (
@@ -41,7 +41,7 @@ class AnnouncementRequestForm(forms.ModelForm):
     """A form for generating an announcement request."""
 
     def __init__(self, *args, **kwargs):
-        super(AnnouncementRequestForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["title"].help_text = (
             "The title of the announcement that will appear on Intranet. Please enter "
             "a title more specific than just \"[Club name]'s Intranet Posting'."

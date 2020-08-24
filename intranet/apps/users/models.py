@@ -1047,7 +1047,7 @@ class UserProperties(models.Model):
         if name == "address":
             if self.attribute_is_visible("show_address"):
                 self._address = value
-        super(UserProperties, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
+        super().__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __str__(self):
         return self.user.__str__()
@@ -1215,7 +1215,7 @@ class Phone(models.Model):
                 self._number = value
                 self.save(update_fields=["_number"])
         else:
-            super(Phone, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
+            super().__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "number":
@@ -1280,7 +1280,7 @@ class Photo(models.Model):
                 self._binary = value
                 self.save(update_fields=["_binary"])
         else:
-            super(Photo, self).__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
+            super().__setattr__(name, value)  # pylint: disable=no-member; Pylint is wrong
 
     def __getattr__(self, name):
         if name == "binary":

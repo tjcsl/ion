@@ -86,8 +86,8 @@ def list_sponsor_view(request):
 def edit_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
-    except EighthSponsor.DoesNotExist:
-        raise http.Http404
+    except EighthSponsor.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         form = SponsorForm(request.POST, instance=sponsor)
@@ -108,8 +108,8 @@ def edit_sponsor_view(request, sponsor_id):
 def delete_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
-    except EighthSponsor.DoesNotExist:
-        raise http.Http404
+    except EighthSponsor.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         sponsor.delete()
@@ -132,8 +132,8 @@ def delete_sponsor_view(request, sponsor_id):
 def sponsor_schedule_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
-    except EighthSponsor.DoesNotExist:
-        raise http.Http404
+    except EighthSponsor.DoesNotExist as e:
+        raise http.Http404 from e
 
     start_date = get_start_date(request)
 

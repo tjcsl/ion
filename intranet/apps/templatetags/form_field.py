@@ -15,6 +15,6 @@ def field_(self, name):
     """
     try:
         field = self.fields[name]
-    except KeyError:
-        raise KeyError("Key %r not found in '%s'" % (name, self.__class__.__name__))
+    except KeyError as e:
+        raise KeyError("Key %r not found in '%s'" % (name, self.__class__.__name__)) from e
     return BoundField(self, field, name)

@@ -157,8 +157,8 @@ def delinquent_students_view(request):
 def no_signups_roster(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
-    except EighthBlock.DoesNotExist:
-        raise http.Http404
+    except EighthBlock.DoesNotExist as e:
+        raise http.Http404 from e
 
     unsigned = block.get_unsigned_students()
     unsigned = sorted(unsigned, key=lambda u: (u.last_name, u.first_name))
@@ -311,8 +311,8 @@ def migrate_outstanding_passes_view(request):
         try:
             block_id = request.POST.get("block", None)
             block = EighthBlock.objects.get(id=block_id)
-        except EighthBlock.DoesNotExist:
-            raise http.Http404
+        except EighthBlock.DoesNotExist as e:
+            raise http.Http404 from e
 
         activity, _ = EighthActivity.objects.get_or_create(name="Z - 8th Period Pass Not Received", deleted=False)
         activity.restricted = True
@@ -400,8 +400,8 @@ def clear_absence_view(request, signup_id):
     if request.method == "POST":
         try:
             signup = EighthSignup.objects.get(id=signup_id)
-        except (EighthSignup.DoesNotExist, ValueError):
-            raise http.Http404
+        except (EighthSignup.DoesNotExist, ValueError) as e:
+            raise http.Http404 from e
         signup.was_absent = False
         signup.save()
         invalidate_obj(signup)

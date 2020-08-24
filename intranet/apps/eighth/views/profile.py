@@ -58,8 +58,8 @@ def get_profile_context(request, user_id=None, date=None):
     if user_id:
         try:
             profile_user = get_user_model().objects.get(id=user_id)
-        except get_user_model().DoesNotExist:
-            raise http.Http404
+        except get_user_model().DoesNotExist as e:
+            raise http.Http404 from e
     else:
         profile_user = request.user
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
@@ -148,8 +148,8 @@ def profile_history_view(request, user_id=None):
     if user_id:
         try:
             profile_user = get_user_model().objects.get(id=user_id)
-        except get_user_model().DoesNotExist:
-            raise http.Http404
+        except get_user_model().DoesNotExist as e:
+            raise http.Http404 from e
     else:
         profile_user = request.user
 
@@ -186,8 +186,8 @@ def profile_often_view(request, user_id=None):
     if user_id:
         try:
             profile_user = get_user_model().objects.get(id=user_id)
-        except get_user_model().DoesNotExist:
-            raise http.Http404
+        except get_user_model().DoesNotExist as e:
+            raise http.Http404 from e
     else:
         profile_user = request.user
 
@@ -220,8 +220,8 @@ def profile_signup_view(request, user_id=None, block_id=None):
     if user_id:
         try:
             user = get_user_model().objects.get(id=user_id)
-        except get_user_model().DoesNotExist:
-            raise http.Http404
+        except get_user_model().DoesNotExist as e:
+            raise http.Http404 from e
     else:
         user = request.user
 
@@ -233,13 +233,13 @@ def profile_signup_view(request, user_id=None, block_id=None):
 
     try:
         block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id)
-    except EighthBlock.DoesNotExist:
+    except EighthBlock.DoesNotExist as e:
         if EighthBlock.objects.count() == 0:
             # No blocks have been added yet
             return render(request, "eighth/profile_signup.html", {"no_blocks": True})
         else:
             # The provided block_id is invalid
-            raise http.Http404
+            raise http.Http404 from e
 
     serializer_context = {"request": request, "user": user}
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data

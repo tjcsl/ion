@@ -362,7 +362,7 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     capacity = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
-        super(EighthScheduledActivitySerializer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if "context" in kwargs and "request" in kwargs["context"]:
             self.request = kwargs["context"]["request"]
         else:

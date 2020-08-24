@@ -5,7 +5,7 @@ from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistrat
 
 class CalculatorRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(CalculatorRegistrationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["calc_type"].label = "Calculator Type"
         self.fields["calc_serial"].label = "Calculator Serial"
         self.fields["calc_serial"].help_text = "Enter the calculator serial code (found engraved on the back of the calculator)"

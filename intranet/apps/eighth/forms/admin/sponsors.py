@@ -14,13 +14,13 @@ class AutoCreateUserField(forms.ChoiceField):
 
         try:
             id_value = int(value)
-        except (ValueError, TypeError):
-            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
+        except (ValueError, TypeError) as e:
+            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value}) from e
 
         try:
             user = get_user_model().objects.get(id=id_value)
-        except get_user_model().DoesNotExist:
-            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
+        except get_user_model().DoesNotExist as e:
+            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value}) from e
 
         return user
 

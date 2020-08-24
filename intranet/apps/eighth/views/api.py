@@ -81,8 +81,8 @@ class EighthBlockDetail(views.APIView):
     def get(self, request, pk):
         try:
             block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(pk=pk)
-        except EighthBlock.DoesNotExist:
-            raise Http404
+        except EighthBlock.DoesNotExist as e:
+            raise Http404 from e
 
         serializer = EighthBlockDetailSerializer(block, context={"request": request})
         return Response(serializer.data)

@@ -40,8 +40,8 @@ def add_room_view(request):
 def edit_room_view(request, room_id):
     try:
         room = EighthRoom.objects.get(id=room_id)
-    except EighthRoom.DoesNotExist:
-        raise http.Http404
+    except EighthRoom.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         form = RoomForm(request.POST, instance=room)
@@ -62,8 +62,8 @@ def edit_room_view(request, room_id):
 def delete_room_view(request, room_id):
     try:
         room = EighthRoom.objects.get(id=room_id)
-    except EighthRoom.DoesNotExist:
-        raise http.Http404
+    except EighthRoom.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         room.delete()
@@ -151,7 +151,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminRoomUtilizationWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Room Utilization"})
         this_yr = EighthBlock.objects.get_blocks_this_year()
         context.update({"first_block": this_yr.first().id, "last_block": this_yr.last().id, "all_rooms": EighthRoom.objects.all()})
@@ -171,8 +171,8 @@ def room_utilization_action(request, start_id, end_id):
         end_block = EighthBlock.objects.get(id=end_id)
 
         one_block = start_id == end_id
-    except EighthBlock.DoesNotExist:
-        raise http.Http404
+    except EighthBlock.DoesNotExist as e:
+        raise http.Http404 from e
 
     show_used_rooms = "show_used" in request.GET
     show_available_for_eighth = "show_available_for_eighth" in request.GET

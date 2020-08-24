@@ -356,10 +356,10 @@ def print_job(obj: PrintJob, do_print: bool = True):
                 subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 if "is not accepting jobs" in e.output:
-                    raise Exception(e.output.strip())
+                    raise Exception(e.output.strip()) from e
 
                 logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
-                raise Exception("An error occured while printing your file: {}".format(e.output.strip()))
+                raise Exception("An error occured while printing your file: {}".format(e.output.strip())) from e
 
         obj.printed = True
         obj.save()

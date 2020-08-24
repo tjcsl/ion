@@ -39,8 +39,8 @@ class Command(BaseCommand):
 
         try:
             activity = EighthActivity.objects.get(id=options["activity_id"])
-        except EighthActivity.DoesNotExist:
-            raise CommandError("Activity not found")
+        except EighthActivity.DoesNotExist as e:
+            raise CommandError("Activity not found") from e
 
         rows = [
             ("TJ Username", "First Name", "Last Name", "Number of Signups"),

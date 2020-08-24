@@ -92,8 +92,8 @@ def add_block_view(request):
 def edit_block_view(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
-    except EighthBlock.DoesNotExist:
-        raise http.Http404
+    except EighthBlock.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         form = BlockForm(request.POST, instance=block)
@@ -120,8 +120,8 @@ def edit_block_view(request, block_id):
 def copy_block_view(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
-    except EighthBlock.DoesNotExist:
-        raise http.Http404
+    except EighthBlock.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         copy_signups = request.POST.get("signups", False)
@@ -178,8 +178,8 @@ def copy_block_view(request, block_id):
 def delete_block_view(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
-    except EighthBlock.DoesNotExist:
-        raise http.Http404
+    except EighthBlock.DoesNotExist as e:
+        raise http.Http404 from e
 
     if request.method == "POST":
         block.delete()
@@ -212,7 +212,7 @@ def print_block_rosters_view(request, block_id):
             block = EighthBlock.objects.get(id=block_id)
             schacts = EighthScheduledActivity.objects.filter(block=block).order_by("sponsors")
             schacts = sorted(schacts, key=lambda x: "{}".format(x.get_true_sponsors()))
-        except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
-            raise http.Http404
+        except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist) as e:
+            raise http.Http404 from e
         context = {"eighthblock": block, "admin_page_title": "Choose activities to print", "schacts": schacts}
         return render(request, "eighth/admin/choose_roster_activities.html", context)
