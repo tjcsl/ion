@@ -7,7 +7,7 @@ from .models import Event
 
 class EventForm(forms.ModelForm):
     def __init__(self, *args, all_groups=False, **kwargs):
-        super(EventForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
             if not Group.objects.student_visible().exists():
@@ -26,7 +26,7 @@ class EventForm(forms.ModelForm):
 
 class AdminEventForm(forms.ModelForm):
     def __init__(self, *args, all_groups=False, **kwargs):
-        super(AdminEventForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not all_groups:
             self.fields["groups"].queryset = Group.objects.student_visible()
 

@@ -188,7 +188,7 @@ class EighthRoom(AbstractBaseEighthModel):
 
 class EighthActivityExcludeDeletedManager(models.Manager):
     def get_queryset(self):
-        return super(EighthActivityExcludeDeletedManager, self).get_queryset().exclude(deleted=True)
+        return super().get_queryset().exclude(deleted=True)
 
 
 class EighthActivity(AbstractBaseEighthModel):
@@ -610,7 +610,7 @@ class EighthBlock(AbstractBaseEighthModel):
         if letter and len(letter) >= 1:
             self.block_letter = letter[:1].upper() + letter[1:]
 
-        super(EighthBlock, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def next_blocks(self, quantity: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets future blocks this school year in order.
@@ -1667,7 +1667,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.save(update_fields=["cancelled"])
 
     def save(self, *args, **kwargs):  # pylint: disable=signature-differs
-        super(EighthScheduledActivity, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     class Meta:
         unique_together = (("block", "activity"),)
@@ -1789,7 +1789,7 @@ class EighthSignup(AbstractBaseEighthModel):
                 self.scheduled_activity.id,
             )
             raise ValidationError("EighthSignup already exists for this user on this block.")
-        super(EighthSignup, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     own_signup = models.BooleanField(default=False)
 
@@ -1797,7 +1797,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def validate_unique(self, *args, **kwargs):  # pylint: disable=signature-differs
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
-        super(EighthSignup, self).validate_unique(*args, **kwargs)
+        super().validate_unique(*args, **kwargs)
 
         if self.has_conflict(nocache=True):
             raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})

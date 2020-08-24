@@ -19,7 +19,7 @@ class ActivityDisplayField(forms.ModelChoiceField):
             block = kwargs.pop("block")
             self.cancelled_acts = [s.activity for s in EighthScheduledActivity.objects.filter(block=block, cancelled=True)]
 
-        super(ActivityDisplayField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def label_from_instance(self, obj):
         if self.cancelled_acts and obj in self.cancelled_acts:
@@ -35,7 +35,7 @@ class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
 
 class ActivitySelectionForm(forms.Form):
     def __init__(self, *args, label="Activity", block=None, sponsor=None, include_cancelled=False, **kwargs):
-        super(ActivitySelectionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if block is None:
             if sponsor is not None:
@@ -70,7 +70,7 @@ class ActivityMultiSelectForm(forms.Form):
     activities = ActivityMultiDisplayField(queryset=None)
 
     def __init__(self, *args, label="Activities", **kwargs):  # pylint: disable=unused-argument
-        super(ActivityMultiSelectForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
 
 
@@ -78,7 +78,7 @@ class ScheduledActivityMultiSelectForm(forms.Form):
     activities = ActivityMultiDisplayField(queryset=None)
 
     def __init__(self, *args, label="Activities", block=None, **kwargs):  # pylint: disable=unused-argument
-        super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if block is not None:
             activity_ids = (
                 EighthScheduledActivity.objects.exclude(activity__deleted=True)
@@ -94,7 +94,7 @@ class ScheduledActivityMultiSelectForm(forms.Form):
 
 class ActivityForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(ActivityForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed", "users_blacklisted"]:
             self.fields[fieldname].help_text = None

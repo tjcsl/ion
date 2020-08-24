@@ -317,7 +317,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminTransferStudentsWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Transfer Students"})
         return context
 
@@ -362,7 +362,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminUnsignupStudentsWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Clear Student Signups for Activity"})
         return context
 

@@ -12,7 +12,7 @@ class ScheduledActivityForm(forms.ModelForm):
     unschedule = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super(ScheduledActivityForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for fieldname in ["sponsors", "rooms"]:
             self.fields[fieldname].help_text = None

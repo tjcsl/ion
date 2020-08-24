@@ -50,8 +50,8 @@ def add_group_view(request):
 def edit_group_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     if not request.user.can_manage_group(group):
         messages.error(request, "You must be a superuser on Ion to manage administrative groups")
@@ -248,8 +248,8 @@ def find_users_input(lines):
 def upload_group_members_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     if not request.user.can_manage_group(group):
         messages.error(request, "You must be a superuser on Ion to manage administrative groups")
@@ -287,8 +287,8 @@ def upload_group_members_view(request, group_id):
         elif "import_group" in request.POST:
             try:
                 import_group = Group.objects.get(id=request.POST["import_group"])
-            except Group.DoesNotExist:
-                raise http.Http404
+            except Group.DoesNotExist as e:
+                raise http.Http404 from e
             num_users = 0
             if "import_confirm" in request.POST:
                 for member in import_group.user_set.all():
@@ -337,8 +337,8 @@ def upload_group_members_view(request, group_id):
 def delete_group_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     if not request.user.can_manage_group(group):
         messages.error(request, "You must be a superuser on Ion to manage administrative groups")
@@ -362,8 +362,8 @@ def delete_group_view(request, group_id):
 def download_group_csv_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     response = http.HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="{}.csv"'.format(group.name)
@@ -408,7 +408,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminSignUpGroupWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
 
         block = self.get_cleaned_data_for_step("block")
         if block:
@@ -425,8 +425,8 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         try:
             group = Group.objects.get(id=kwargs["group_id"])
-        except Group.DoesNotExist:
-            raise http.Http404
+        except Group.DoesNotExist as e:
+            raise http.Http404 from e
 
         return redirect(reverse("eighth_admin_signup_group_action", args=[group.id, scheduled_activity.id]))
 
@@ -497,13 +497,13 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         self.group_id = kwargs.get("group_id", None)  # pylint: disable=attribute-defined-outside-init
         try:
             self.group = Group.objects.get(id=self.group_id)  # pylint: disable=attribute-defined-outside-init
-        except Group.DoesNotExist:
+        except Group.DoesNotExist as e:
             if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
                 self.group = False  # pylint: disable=attribute-defined-outside-init
             else:
-                raise http.Http404
+                raise http.Http404 from e
 
-        return super(EighthAdminDistributeGroupWizard, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self, step=None):
         kwargs = {}
@@ -523,7 +523,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminDistributeGroupWizard, self).get_context_data(form=form, **kwargs)
+        context = super().get_context_data(form=form, **kwargs)
 
         block = self.get_cleaned_data_for_step("block")
 
@@ -554,8 +554,8 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
             try:
                 schact = EighthScheduledActivity.objects.get(block=block, activity=act)
                 schact_ids.append(schact.id)
-            except EighthScheduledActivity.DoesNotExist:
-                raise http.Http404
+            except EighthScheduledActivity.DoesNotExist as e:
+                raise http.Http404 from e
 
         args = ""
         for said in schact_ids:
@@ -608,8 +608,8 @@ def eighth_admin_distribute_action(request):
             try:
                 sch = EighthScheduledActivity.objects.get(id=schact)
                 schacts.append(sch)
-            except EighthScheduledActivity.DoesNotExist:
-                raise http.Http404
+            except EighthScheduledActivity.DoesNotExist as e:
+                raise http.Http404 from e
 
         users = []
         users_type = ""
@@ -660,8 +660,8 @@ def add_member_to_group_view(request, group_id):
 
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     if not request.user.can_manage_group(group):
         messages.error(request, "You must be a superuser on Ion to manage administrative groups")
@@ -713,8 +713,8 @@ def remove_member_from_group_view(request, group_id, user_id):
 
     try:
         group = Group.objects.get(id=group_id)
-    except Group.DoesNotExist:
-        raise http.Http404
+    except Group.DoesNotExist as e:
+        raise http.Http404 from e
 
     if not request.user.can_manage_group(group):
         messages.error(request, "You must be a superuser on Ion to manage administrative groups")

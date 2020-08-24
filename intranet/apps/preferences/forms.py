@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class BusRouteForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(BusRouteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.BUS_ROUTE_CHOICES = [(None, "Set bus route...")]
         routes = Route.objects.all().order_by("route_name")
         for route in routes:
@@ -21,7 +21,7 @@ class BusRouteForm(forms.Form):
 
 class PreferredPictureForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
-        super(PreferredPictureForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.PREFERRED_PICTURE_CHOICES = [("AUTO", "Auto-select the most recent photo")]
 
@@ -38,7 +38,7 @@ class PreferredPictureForm(forms.Form):
 
 class PrivacyOptionsForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
-        super(PrivacyOptionsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         def flag(label, default):
             return forms.BooleanField(initial=default, label=label, required=False)
@@ -79,7 +79,7 @@ class PrivacyOptionsForm(forms.Form):
 
 class NotificationOptionsForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
-        super(NotificationOptionsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         def flag(label, default):
             return forms.BooleanField(initial=default, label=label, required=False)
@@ -96,7 +96,7 @@ class NotificationOptionsForm(forms.Form):
 
 class DarkModeForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
-        super(DarkModeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["dark_mode_enabled"] = forms.BooleanField(
             initial=user.dark_mode_properties.dark_mode_enabled, label="Enable dark mode?", required=False
         )

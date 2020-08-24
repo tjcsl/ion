@@ -36,7 +36,7 @@ class AuthenticateForm(AuthenticationForm):
 
     def is_valid(self):
         """Validates the username and password in the form."""
-        form = super(AuthenticateForm, self).is_valid()
+        form = super().is_valid()
         for f, error in self.errors.items():
             if f != "__all__":
                 self.fields[f].widget.attrs.update({"class": "error", "placeholder": ", ".join(list(error))})

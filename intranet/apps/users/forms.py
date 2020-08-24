@@ -65,7 +65,7 @@ class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
         if "show_username" in kwargs:
             self.show_username = kwargs["show_username"]
             del kwargs["show_username"]
-        super(SortedTeacherMultipleChoiceField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def label_from_instance(self, obj):
         name = obj.last_first_initial
