@@ -18,6 +18,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--filename", dest="filename", type=str, required=True, help="Filename to import data from. Required.")
         parser.add_argument("--grad-year", dest="grad_year", type=str, required=True, help="Graduation year of this class. Required.")
+        parser.add_argument(
+            "--username-file", dest="username_file", type=str, default=None, help="If provided, write a CSV of usernames to this file."
+        )
         parser.add_argument("--run", action="store_true", dest="run", default=False, help="Actually run.")
         parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation.")
 
@@ -106,6 +109,9 @@ class Command(BaseCommand):
         # And for student IDs
         existing_student_ids = set(qs.values_list("student_id", flat=True))
 
+        # Used to store actual usernames (after they have been deduplicated) to output to that file
+        actual_username_list = []
+
         # Loop through our new users
         for new_user in data:
             # Prevent duplication of users
@@ -113,6 +119,9 @@ class Command(BaseCommand):
                 # Check to see if username already taken
                 if new_user["TJHSST_username"] in existing_usernames:
                     new_user["TJHSST_username"] = self.find_next_available_username(new_user["TJHSST_username"], existing_usernames)
+
+                # Append username to list
+                actual_username_list.append(new_user["TJHSST_username"])
 
                 # Now we can safely add this user
                 if do_run:
@@ -143,3 +152,10 @@ class Command(BaseCommand):
 
             else:
                 self.stdout.write(self.style.ERROR(f"User with SID {new_user['Student ID']} already exists."))
+
+        if options["username_file"] is not None:
+            with open(options["username_file"], "w") as file:
+                csv_writer = csv.DictWriter(file, fieldnames=["Username"])
+                csv_writer.writeheader()
+                for username in actual_username_list:
+                    csv_writer.writerow({"Username": username})
