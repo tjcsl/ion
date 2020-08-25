@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.dataimport.management.commands.import_students &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_students &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -145,6 +145,9 @@
 <div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--filename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filename to import data from. Required.&quot;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--grad-year&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;grad_year&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Graduation year of this class. Required.&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--username-file&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;username_file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If provided, write a CSV of usernames to this file.&quot;</span>
+        <span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--run&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Actually run.&quot;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--confirm&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;confirm&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip confirmation.&quot;</span><span class="p">)</span></div>
 
@@ -233,6 +236,9 @@
         <span class="c1"># And for student IDs</span>
         <span class="n">existing_student_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">qs</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
+        <span class="c1"># Used to store actual usernames (after they have been deduplicated) to output to that file</span>
+        <span class="n">actual_username_list</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># Loop through our new users</span>
         <span class="k">for</span> <span class="n">new_user</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="c1"># Prevent duplication of users</span>
@@ -240,6 +246,9 @@
                 <span class="c1"># Check to see if username already taken</span>
                 <span class="k">if</span> <span class="n">new_user</span><span class="p">[</span><span class="s2">&quot;TJHSST_username&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">existing_usernames</span><span class="p">:</span>
                     <span class="n">new_user</span><span class="p">[</span><span class="s2">&quot;TJHSST_username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_next_available_username</span><span class="p">(</span><span class="n">new_user</span><span class="p">[</span><span class="s2">&quot;TJHSST_username&quot;</span><span class="p">],</span> <span class="n">existing_usernames</span><span class="p">)</span>
+
+                <span class="c1"># Append username to list</span>
+                <span class="n">actual_username_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_user</span><span class="p">[</span><span class="s2">&quot;TJHSST_username&quot;</span><span class="p">])</span>
 
                 <span class="c1"># Now we can safely add this user</span>
                 <span class="k">if</span> <span class="n">do_run</span><span class="p">:</span>
@@ -269,7 +278,14 @@
                 <span class="n">existing_usernames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_user</span><span class="p">[</span><span class="s2">&quot;TJHSST_username&quot;</span><span class="p">])</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User with SID </span><span class="si">{</span><span class="n">new_user</span><span class="p">[</span><span class="s1">&#39;Student ID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> already exists.&quot;</span><span class="p">))</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User with SID </span><span class="si">{</span><span class="n">new_user</span><span class="p">[</span><span class="s1">&#39;Student ID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> already exists.&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;username_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;username_file&quot;</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">csv_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Username&quot;</span><span class="p">])</span>
+                <span class="n">csv_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">actual_username_list</span><span class="p">:</span>
+                    <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span><span class="s2">&quot;Username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">})</span></div></div>
 </pre></div>
 
     </div>

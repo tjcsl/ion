@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.preferences.fields &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -136,10 +136,10 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;max_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">17</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PhoneField.deconstruct"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneField.deconstruct">[docs]</a>    <span class="k">def</span> <span class="nf">deconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">deconstruct</span><span class="p">()</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deconstruct</span><span class="p">()</span>
         <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;max_length&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span></div>
 
@@ -151,7 +151,7 @@
         <span class="c1"># while letting the caller override them.</span>
         <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form_class&quot;</span><span class="p">:</span> <span class="n">PhoneFormField</span><span class="p">}</span>
         <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">PhoneField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">formfield</span><span class="p">(</span><span class="o">**</span><span class="n">defaults</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">formfield</span><span class="p">(</span><span class="o">**</span><span class="n">defaults</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="PhoneFormField"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField">[docs]</a><span class="k">class</span> <span class="nc">PhoneFormField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
@@ -159,7 +159,7 @@
     <span class="n">default_error_messages</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;incomplete&quot;</span><span class="p">:</span> <span class="s2">&quot;Please enter a phone number.&quot;</span><span class="p">,</span> <span class="s2">&quot;invalid&quot;</span><span class="p">:</span> <span class="s2">&quot;Please enter a valid phone number.&quot;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PhoneFormField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validators</span><span class="o">.</span><span class="n">RegexValidator</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[\dA-Z]</span><span class="si">{3}</span><span class="s2">-?[\dA-Z]</span><span class="si">{3}</span><span class="s2">-?[\dA-Z]</span><span class="si">{4}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="s2">&quot;Please enter a valid phone number.&quot;</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PhoneFormField.to_python"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.fields.PhoneFormField.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>

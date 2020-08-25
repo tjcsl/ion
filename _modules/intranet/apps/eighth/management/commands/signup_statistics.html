@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.management.commands.signup_statistics &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.management.commands.signup_statistics &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -166,8 +166,8 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">])</span>
-        <span class="k">except</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="s2">&quot;Activity not found&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="s2">&quot;Activity not found&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">&quot;TJ Username&quot;</span><span class="p">,</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Last Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of Signups&quot;</span><span class="p">),</span>

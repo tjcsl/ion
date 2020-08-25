@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -177,8 +177,8 @@
 <span class="k">def</span> <span class="nf">edit_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
@@ -375,8 +375,8 @@
 <span class="k">def</span> <span class="nf">upload_group_members_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
@@ -414,8 +414,8 @@
         <span class="k">elif</span> <span class="s2">&quot;import_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">import_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;import_group&quot;</span><span class="p">])</span>
-            <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+            <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="n">num_users</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">if</span> <span class="s2">&quot;import_confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">import_group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
@@ -464,8 +464,8 @@
 <span class="k">def</span> <span class="nf">delete_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
@@ -489,8 +489,8 @@
 <span class="k">def</span> <span class="nf">download_group_csv_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
     <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename=&quot;</span><span class="si">{}</span><span class="s1">.csv&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -535,7 +535,7 @@
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminSignUpGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
@@ -552,8 +552,8 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">])</span>
-        <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_signup_group_action&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span></div></div>
 
@@ -624,13 +624,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -650,7 +650,7 @@
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
 
@@ -681,8 +681,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act</span><span class="p">)</span>
                 <span class="n">schact_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+            <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">said</span> <span class="ow">in</span> <span class="n">schact_ids</span><span class="p">:</span>
@@ -735,8 +735,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sch</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">schact</span><span class="p">)</span>
                 <span class="n">schacts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+            <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">users_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -787,8 +787,8 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
@@ -840,8 +840,8 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>

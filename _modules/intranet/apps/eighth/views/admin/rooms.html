@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.rooms &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.views.admin.rooms &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -167,8 +167,8 @@
 <span class="k">def</span> <span class="nf">edit_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">room</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">RoomForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">room</span><span class="p">)</span>
@@ -189,8 +189,8 @@
 <span class="k">def</span> <span class="nf">delete_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">room</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">room</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -278,7 +278,7 @@
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminRoomUtilizationWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Room Utilization&quot;</span><span class="p">})</span>
         <span class="n">this_yr</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;first_block&quot;</span><span class="p">:</span> <span class="n">this_yr</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;last_block&quot;</span><span class="p">:</span> <span class="n">this_yr</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;all_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()})</span>
@@ -298,8 +298,8 @@
         <span class="n">end_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">end_id</span><span class="p">)</span>
 
         <span class="n">one_block</span> <span class="o">=</span> <span class="n">start_id</span> <span class="o">==</span> <span class="n">end_id</span>
-    <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">show_used_rooms</span> <span class="o">=</span> <span class="s2">&quot;show_used&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
     <span class="n">show_available_for_eighth</span> <span class="o">=</span> <span class="s2">&quot;show_available_for_eighth&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>

@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -345,11 +345,13 @@
                 <span class="n">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement</span><span class="p">)</span>
 
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully approved announcement request. It has been posted.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> approved announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">announcement</span><span class="p">,</span> <span class="n">announcement</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">rejected</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">rejected_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You did not approve this request. It will be hidden.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> rejected announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
     <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
@@ -386,6 +388,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added announcement.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> added announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement&quot;</span><span class="p">)</span>
@@ -426,6 +429,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified announcement.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> modified announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">announcement</span><span class="p">,</span> <span class="n">announcement</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement&quot;</span><span class="p">)</span>
@@ -456,10 +460,12 @@
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_delete&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted announcement.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> deleted announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">expiration_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully expired announcement.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> expired announcement: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">pass</span>
 

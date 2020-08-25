@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -315,7 +315,7 @@
 
 <div class="viewcode-block" id="EighthActivityExcludeDeletedManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivityExcludeDeletedManager">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityExcludeDeletedManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
 <div class="viewcode-block" id="EighthActivityExcludeDeletedManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivityExcludeDeletedManager.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthActivityExcludeDeletedManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity">[docs]</a><span class="k">class</span> <span class="nc">EighthActivity</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
@@ -737,7 +737,7 @@
         <span class="k">if</span> <span class="n">letter</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">=</span> <span class="n">letter</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">letter</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">EighthBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthBlock.next_blocks"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthBlock.next_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">next_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;EighthBlock&quot;</span><span class="p">]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
         <span class="sd">&quot;&quot;&quot;Gets future blocks this school year in order.</span>
@@ -1794,7 +1794,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivity.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivity.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=signature-differs</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">),)</span>
@@ -1916,7 +1916,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;EighthSignup already exists for this user on this block.&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EighthSignup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="n">own_signup</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -1924,7 +1924,7 @@
 
 <div class="viewcode-block" id="EighthSignup.validate_unique"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignup.validate_unique">[docs]</a>    <span class="k">def</span> <span class="nf">validate_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=signature-differs</span>
         <span class="sd">&quot;&quot;&quot;Checked whether more than one EighthSignup exists for a User on a given EighthBlock.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EighthSignup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate_unique</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate_unique</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conflict</span><span class="p">(</span><span class="n">nocache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">({</span><span class="n">NON_FIELD_ERRORS</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;EighthSignup already exists for the User and the EighthScheduledActivity&#39;s block&quot;</span><span class="p">,)})</span></div>

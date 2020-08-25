@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -237,7 +237,7 @@
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_context_data"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAttendanceSelectScheduledActivityWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Take Attendance&quot;</span><span class="p">})</span>
 
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
@@ -280,8 +280,8 @@
         <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">(</span><span class="s2">&quot;The scheduled activity with block </span><span class="si">{}</span><span class="s2"> and activity </span><span class="si">{}</span><span class="s2"> does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">(</span><span class="s2">&quot;The scheduled activity with block </span><span class="si">{}</span><span class="s2"> and activity </span><span class="si">{}</span><span class="s2"> does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">if</span> <span class="s2">&quot;admin&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="n">url_name</span> <span class="o">=</span> <span class="s2">&quot;eighth_admin_take_attendance&quot;</span>
@@ -303,8 +303,8 @@
 <span class="k">def</span> <span class="nf">roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
@@ -326,8 +326,8 @@
 <span class="k">def</span> <span class="nf">raw_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
@@ -349,8 +349,8 @@
 <span class="k">def</span> <span class="nf">raw_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ordered_waitlist&quot;</span><span class="p">:</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/waitlist_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -362,8 +362,8 @@
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">activity__deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span>
         <span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="c1"># Attendance-only users can only see their own roster</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
@@ -562,8 +562,8 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signup_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
     <span class="n">can_accept</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="p">(</span>
@@ -597,8 +597,8 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
     <span class="n">can_accept</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">in</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">())</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>

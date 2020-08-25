@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #98) documentation</title>
+    <title>intranet.apps.eighth.views.admin.attendance &#8212; TJ Intranet v3 (Build #110) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -284,8 +284,8 @@
 <span class="k">def</span> <span class="nf">no_signups_roster</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">unsigned</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get_unsigned_students</span><span class="p">()</span>
     <span class="n">unsigned</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unsigned</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
@@ -438,8 +438,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">activity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Z - 8th Period Pass Not Received&quot;</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="o">=</span> <span class="kc">True</span>
@@ -527,8 +527,8 @@
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signup_id</span><span class="p">)</span>
-        <span class="k">except</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="n">signup</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">signup</span><span class="p">)</span>
