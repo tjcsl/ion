@@ -14,11 +14,11 @@ from .notifications import event_approval_request
 
 
 class Link(models.Model):
-    """ A link about an item (Facebook event link, etc).
+    """A link about an item (Facebook event link, etc).
 
-        Attributes:
-            url (str): The URL to link to
-            title (str): The text associated with the link
+    Attributes:
+        url (str): The URL to link to
+        title (str): The text associated with the link
     """
 
     url = models.URLField(max_length=2000)
@@ -27,7 +27,7 @@ class Link(models.Model):
 
 class EventQuerySet(models.query.QuerySet):
     def this_year(self):
-        """ Get Events created during this school year.
+        """Get Events created during this school year.
 
         Returns:
             Events created during this school year.

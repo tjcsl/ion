@@ -352,10 +352,10 @@ def delete_announcement_view(request, announcement_id):
 @deny_restricted
 @transaction.atomic
 def show_announcement_view(request):
-    """ Unhide an announcement that was hidden by the logged-in user.
+    """Unhide an announcement that was hidden by the logged-in user.
 
-        announcements_hidden in the user model is the related_name for
-        "users_hidden" in the announcement model.
+    announcements_hidden in the user model is the related_name for
+    "users_hidden" in the announcement model.
     """
     if request.method == "POST":
         announcement_id = request.POST.get("announcement_id")
@@ -373,10 +373,10 @@ def show_announcement_view(request):
 @deny_restricted
 @transaction.atomic
 def hide_announcement_view(request):
-    """ Hide an announcement for the logged-in user.
+    """Hide an announcement for the logged-in user.
 
-        announcements_hidden in the user model is the related_name for
-        "users_hidden" in the announcement model.
+    announcements_hidden in the user model is the related_name for
+    "users_hidden" in the announcement model.
     """
     if request.method == "POST":
         announcement_id = request.POST.get("announcement_id")

@@ -29,13 +29,13 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractBaseEighthModel(models.Model):
-    """ Abstract base model that includes created
-        and last modified times.
+    """Abstract base model that includes created
+    and last modified times.
 
-        Attributes:
-            created_time (datetime): The time the model was created
-            last_modified_time (datetime): The time the model was
-                last modified.
+    Attributes:
+        created_time (datetime): The time the model was created
+        last_modified_time (datetime): The time the model was
+            last modified.
     """
 
     created_time = models.DateTimeField(auto_now_add=True, null=True)
@@ -46,7 +46,7 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
-    """ Represents a sponsor for an eighth period activity.
+    """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
 
@@ -119,7 +119,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 
 class EighthRoom(AbstractBaseEighthModel):
-    """ Represents a room in which an eighth period activity can be held.
+    """Represents a room in which an eighth period activity can be held.
 
     Attributes:
         name (str): The name of the room.
@@ -138,7 +138,7 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @staticmethod
     def total_capacity_of_rooms(rooms: Iterable["EighthRoom"]) -> int:
-        """ Returns the total capacity of the provided rooms.
+        """Returns the total capacity of the provided rooms.
 
         Args:
             rooms: Rooms to determine total capacity for.
@@ -192,7 +192,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 
 class EighthActivity(AbstractBaseEighthModel):
-    """ Represents an eighth period activity.
+    """Represents an eighth period activity.
 
     Attributes:
         name(str): The name of the activity, max length 100 characters.
@@ -331,10 +331,10 @@ class EighthActivity(AbstractBaseEighthModel):
     @property
     def name_with_flags_no_restricted(self) -> str:
         """Returns the activity's name with flags.
-       These flags indicate whether the activity is special, both blocks, administrative, sticky, and/or cancelled.
+        These flags indicate whether the activity is special, both blocks, administrative, sticky, and/or cancelled.
 
-        Returns:
-            The activity name with all flags except the "restricted" flag.
+         Returns:
+             The activity name with all flags except the "restricted" flag.
 
         """
         return self._name_with_flags(False)
@@ -412,9 +412,9 @@ class EighthActivity(AbstractBaseEighthModel):
     @property
     def is_active(self) -> bool:
         """Returns whether an activity is "active."
- An activity is considered to be active if it has been scheduled at all this year.
-        Returns:
-            Whether the activity is active.
+        An activity is considered to be active if it has been scheduled at all this year.
+               Returns:
+                   Whether the activity is active.
 
         """
         return self.get_active_schedulings().exists()

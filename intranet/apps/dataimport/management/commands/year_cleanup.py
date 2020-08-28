@@ -16,7 +16,11 @@ class Command(BaseCommand):
         parser.add_argument("--run", action="store_true", dest="run", default=False, help="Actually run.")
         parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation.")
         parser.add_argument(
-            "--senior-graduation-year", dest="senior_grad_year", type=int, default=get_senior_graduation_year(), help="The senior graduation year",
+            "--senior-graduation-year",
+            dest="senior_grad_year",
+            type=int,
+            default=get_senior_graduation_year(),
+            help="The senior graduation year",
         )
 
     def ask(self, q):

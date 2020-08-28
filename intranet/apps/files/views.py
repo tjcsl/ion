@@ -58,16 +58,16 @@ def files_auth(request):
     """Display authentication for filecenter."""
     if "password" in request.POST:
         """
-            Encrypt the password with AES mode CFB.
-            Create a random 32 char key, stored in a CLIENT-side cookie.
-            Create a random 32 char IV, stored in a SERVER-side session.
-            Store the encrypted ciphertext in a SERVER-side session.
+        Encrypt the password with AES mode CFB.
+        Create a random 32 char key, stored in a CLIENT-side cookie.
+        Create a random 32 char IV, stored in a SERVER-side session.
+        Store the encrypted ciphertext in a SERVER-side session.
 
-            This ensures that neither side can decrypt the password without
-            the information stored on the other end of the request.
+        This ensures that neither side can decrypt the password without
+        the information stored on the other end of the request.
 
-            Both the server-side session variables and the client-side cookies
-            are deleted when the user logs out.
+        Both the server-side session variables and the client-side cookies
+        are deleted when the user logs out.
         """
         key = Random.new().read(32)
         iv = Random.new().read(16)

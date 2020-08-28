@@ -21,18 +21,18 @@ class PageQuerySet(models.query.QuerySet):
 
 class Page(models.Model):
     """
-        iframe: True if page is just an iframe
-        url: url for iframe (if iframe is True)
-        sandbox: whether the iframe should be sandboxed
-                 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
+    iframe: True if page is just an iframe
+    url: url for iframe (if iframe is True)
+    sandbox: whether the iframe should be sandboxed
+             https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
 
-        template: the path to the template (for server side rendering)
-        button: the name of the fontawesome icon (ex: "fa-chrome")
-        order: index at which button should be placed
+    template: the path to the template (for server side rendering)
+    button: the name of the fontawesome icon (ex: "fa-chrome")
+    order: index at which button should be placed
 
-        strip_links: whether we strip the links in the iframe (to prevent navigation away)
+    strip_links: whether we strip the links in the iframe (to prevent navigation away)
 
-        signs: set of signs which display this Page
+    signs: set of signs which display this Page
     """
 
     objects = PageQuerySet.as_manager()
@@ -92,24 +92,24 @@ class SignQuerySet(models.query.QuerySet):
 
 class Sign(models.Model):
     """
-        name: friendly display name [required]
-        display: unique name (should match hostname of pi/compute stick) [required]
+    name: friendly display name [required]
+    display: unique name (should match hostname of pi/compute stick) [required]
 
-        eighth_block_increment: ...
-        landscape: if display is in landscape orientation
-        map_location: location of display on map
+    eighth_block_increment: ...
+    landscape: if display is in landscape orientation
+    map_location: location of display on map
 
-        lock_page: if set, the signage will only display this page
-        default_page: if set, the signage will revert to this page after a set
-                      amount of time
-        day_end_switch_page: A page to switch to near the end of the day
-        day_end_switch_minutes: The number of minutes before the end of the day to switch
-            to day_end_switch_page. Can be negative to switch after the end of the day.
-        latest_heartbeat_time: If the sign has an open websocket connection to a
-            SignageConsumer, this is the time at which the last message was received from
-            it. If the sign does not have such a connection open, this is None (even if
-            the sign previously had an open connection).
-        pages: a list of pages
+    lock_page: if set, the signage will only display this page
+    default_page: if set, the signage will revert to this page after a set
+                  amount of time
+    day_end_switch_page: A page to switch to near the end of the day
+    day_end_switch_minutes: The number of minutes before the end of the day to switch
+        to day_end_switch_page. Can be negative to switch after the end of the day.
+    latest_heartbeat_time: If the sign has an open websocket connection to a
+        SignageConsumer, this is the time at which the last message was received from
+        it. If the sign does not have such a connection open, this is None (even if
+        the sign previously had an open connection).
+    pages: a list of pages
     """
 
     objects = SignQuerySet.as_manager()

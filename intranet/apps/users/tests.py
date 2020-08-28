@@ -619,5 +619,6 @@ class ProfileTest(IonTestCase):
         self.assertEqual(set(self.user.permissions.keys()), {"self", "parent"})
         for k in ["self", "parent"]:
             self.assertEqual(
-                set(self.user.permissions[k].keys()), {"show_pictures", "show_address", "show_telephone", "show_eighth", "show_schedule"},
+                set(self.user.permissions[k].keys()),
+                {"show_pictures", "show_address", "show_telephone", "show_eighth", "show_schedule"},
             )

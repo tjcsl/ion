@@ -3,7 +3,7 @@ from django.db import models
 
 
 class PrintJob(models.Model):
-    """ Represents a submitted print job to Ion printing.
+    """Represents a submitted print job to Ion printing.
 
     Attributes:
         user (:obj:`User`): The user submitting the job.

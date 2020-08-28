@@ -84,7 +84,7 @@ def get_printers() -> Dict[str, str]:
 
 
 def convert_soffice(tmpfile_name: str) -> Optional[str]:
-    """ Converts a doc or docx to a PDF with soffice.
+    """Converts a doc or docx to a PDF with soffice.
 
     Args:
         tmpfile_name: The path to the file to print.

@@ -700,7 +700,10 @@ def email_students_view(request, scheduled_activity_id):
         )
 
         email_scheduled_activity_students_task.delay(
-            scheduled_activity_id=scheduled_activity_id, sender_id=request.user.id, subject=subject, body=body,
+            scheduled_activity_id=scheduled_activity_id,
+            sender_id=request.user.id,
+            subject=subject,
+            body=body,
         )
 
         messages.success(request, "Email sent.")

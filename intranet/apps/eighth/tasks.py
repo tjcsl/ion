@@ -170,7 +170,12 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
 
 
 @shared_task
-def email_scheduled_activity_students_task(scheduled_activity_id: int, sender_id: int, subject: str, body: str,) -> None:
+def email_scheduled_activity_students_task(
+    scheduled_activity_id: int,
+    sender_id: int,
+    subject: str,
+    body: str,
+) -> None:
     scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
 
     emails = [signup.user.notification_email for signup in scheduled_activity.eighthsignup_set.all()]
