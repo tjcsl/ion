@@ -335,12 +335,12 @@ def stats_global_view(request):
 @login_required
 @deny_restricted
 def stats_view(request, activity_id=None):
-    """ If a the GET parameter `year` is set, it uses stats from given year
-        with the following caveats:
-            - If it's the current year and start_date is set, start_date is ignored
-            - If it's the current year, stats will only show up to today - they won't
-              go into the future.
-        `all_years` (obviously) displays all years.
+    """If a the GET parameter `year` is set, it uses stats from given year
+    with the following caveats:
+        - If it's the current year and start_date is set, start_date is ignored
+        - If it's the current year, stats will only show up to today - they won't
+          go into the future.
+    `all_years` (obviously) displays all years.
     """
     if not (request.user.is_eighth_admin or request.user.is_teacher):
         return render(request, "error/403.html", {"reason": "You do not have permission to view statistics for this activity."}, status=403)

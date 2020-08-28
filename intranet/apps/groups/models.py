@@ -7,31 +7,30 @@ class GroupManager(auth_models.GroupManager):
     django.contrib.auth.models.GroupManager, just with an extra method."""
 
     def student_visible(self):
-        """Return a QuerySet of groups that are student-visible.
-        """
+        """Return a QuerySet of groups that are student-visible."""
         return Group.objects.filter(groupproperties__student_visible=True)
 
 
 class Group(auth_models.Group):
-    """ This Group model is really just the default Django
-        django.contrib.auth.models.Group, but with a "properties"
-        property which returns or creates the GroupProperties field
-        for that group. Because GroupProperties objects are only created
-        here when they are first accessed, and not on creation or edit,
-        you must *always* access them directly through the Group object,
-        and not through GroupProperties.
+    """This Group model is really just the default Django
+    django.contrib.auth.models.Group, but with a "properties"
+    property which returns or creates the GroupProperties field
+    for that group. Because GroupProperties objects are only created
+    here when they are first accessed, and not on creation or edit,
+    you must *always* access them directly through the Group object,
+    and not through GroupProperties.
 
-        This presents some complications. All model-level relationships for
-        a group should use the *Django contrib.auth.models.Group object*, and
-        not the custom one defined here. You will see this done, to avoid
-        confusion, like:
+    This presents some complications. All model-level relationships for
+    a group should use the *Django contrib.auth.models.Group object*, and
+    not the custom one defined here. You will see this done, to avoid
+    confusion, like:
 
-            from django.contrib.auth.models import Group as DjangoGroup
+        from django.contrib.auth.models import Group as DjangoGroup
 
-        with DjangoGroup being referenced in the OneToOne or ManyToMany relationship.
+    with DjangoGroup being referenced in the OneToOne or ManyToMany relationship.
 
-        e.x.:
-            Group.objects.get(id=9).properties.student_visible
+    e.x.:
+        Group.objects.get(id=9).properties.student_visible
     """
 
     objects = GroupManager()
@@ -50,15 +49,15 @@ class Group(auth_models.Group):
 
 
 class GroupProperties(models.Model):
-    """ The GroupProperties model contains a OneToOneField with the
-        intranet.apps.groups.models.Group object (really just the default
-        django.contrib.auth.models.Group), and contains properties and other
-        app-specific options about a group.
+    """The GroupProperties model contains a OneToOneField with the
+    intranet.apps.groups.models.Group object (really just the default
+    django.contrib.auth.models.Group), and contains properties and other
+    app-specific options about a group.
 
-        group
-            A OneToOneField with a Group object.
-        student_visible
-            Whether the group should be visible to students in group selections.
+    group
+        A OneToOneField with a Group object.
+    student_visible
+        Whether the group should be visible to students in group selections.
 
     """
 

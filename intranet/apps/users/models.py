@@ -152,8 +152,7 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Django User model subclass
-    """
+    """Django User model subclass"""
 
     TITLES = (("Mr.", "Mr."), ("Ms.", "Ms."), ("Mrs.", "Mrs."), ("Dr.", "Dr."))
 
@@ -308,14 +307,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def last_first(self) -> str:
         """Return a name in the format of:
-            Lastname, Firstname [(Nickname)]
+        Lastname, Firstname [(Nickname)]
         """
         return "{}, {}".format(self.last_name, self.first_name) + (" ({})".format(self.nickname) if self.nickname else "")
 
     @property
     def last_first_id(self) -> str:
         """Return a name in the format of:
-            Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
+        Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
         return (
             "{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "")
@@ -326,7 +325,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def last_first_initial(self) -> str:
         """Return a name in the format of:
-            Lastname, F [(Nickname)]
+        Lastname, F [(Nickname)]
         """
         return "{}{}".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + (
             " ({})".format(self.nickname) if self.nickname else ""

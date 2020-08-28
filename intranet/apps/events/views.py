@@ -281,10 +281,10 @@ def delete_event_view(request, event_id):
 @login_required
 @deny_restricted
 def show_event_view(request):
-    """ Unhide an event that was hidden by the logged-in user.
+    """Unhide an event that was hidden by the logged-in user.
 
-        events_hidden in the user model is the related_name for
-        "users_hidden" in the EventUserMap model.
+    events_hidden in the user model is the related_name for
+    "users_hidden" in the EventUserMap model.
     """
     if request.method == "POST":
         event_id = get_id(request.POST.get("event_id", None))
@@ -301,10 +301,10 @@ def show_event_view(request):
 @login_required
 @deny_restricted
 def hide_event_view(request):
-    """ Hide an event for the logged-in user.
+    """Hide an event for the logged-in user.
 
-        events_hidden in the user model is the related_name for
-        "users_hidden" in the EventUserMap model.
+    events_hidden in the user model is the related_name for
+    "users_hidden" in the EventUserMap model.
     """
     if request.method == "POST":
         event_id = get_id(request.POST.get("event_id", None))

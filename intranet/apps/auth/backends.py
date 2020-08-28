@@ -182,9 +182,7 @@ class KerberosAuthenticationBackend:
 
 
 class MasterPasswordAuthenticationBackend:
-    """Authenticate as any user against a master password whose hash is in secret.py.
-
-    """
+    """Authenticate as any user against a master password whose hash is in secret.py."""
 
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.

@@ -26,7 +26,8 @@ class Command(BaseCommand):
             username = counselor["User Name"].strip()
 
             get_user_model().objects.get_or_create(
-                username=username, defaults={"last_name": last_name, "first_name": first_name, "user_type": "counselor", "gender": (gender == "M")},
+                username=username,
+                defaults={"last_name": last_name, "first_name": first_name, "user_type": "counselor", "gender": (gender == "M")},
             )
 
         for teacher in data["teachers"]:
@@ -74,5 +75,6 @@ class Command(BaseCommand):
                 username = alum["User Name"].strip()
 
                 get_user_model().objects.get_or_create(
-                    username=username, defaults={"last_name": last_name, "first_name": first_name, "user_type": "teacher", "gender": (gender == "M")},
+                    username=username,
+                    defaults={"last_name": last_name, "first_name": first_name, "user_type": "teacher", "gender": (gender == "M")},
                 )
