@@ -356,6 +356,7 @@ def take_attendance_view(request, scheduled_activity_id):
             members.append(
                 {
                     "id": user.id,
+                    "student_id": user.student_id,
                     "name": user.last_first,  # includes nickname
                     "grade": user.grade.number if user.grade else None,
                     "present": (scheduled_activity.attendance_taken and (user.id not in absent_user_ids)),
@@ -393,6 +394,7 @@ def take_attendance_view(request, scheduled_activity_id):
                     "Block",
                     "Activity",
                     "Name",
+                    "FCPS ID",
                     "Student ID",
                     "Grade",
                     "Email",
@@ -409,6 +411,7 @@ def take_attendance_view(request, scheduled_activity_id):
                 row.append(str(scheduled_activity.block))
                 row.append(str(scheduled_activity.activity))
                 row.append(member["name"])
+                row.append(member["student_id"])
                 row.append(member["id"])
                 row.append(member["grade"])
                 row.append(member["email"])
