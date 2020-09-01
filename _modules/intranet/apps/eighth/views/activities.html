@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.activities &#8212; TJ Intranet v3 (Build #110) documentation</title>
+    <title>intranet.apps.eighth.views.activities &#8212; TJ Intranet v3 (Build #123) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -462,12 +462,12 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">stats_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">activity_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; If a the GET parameter `year` is set, it uses stats from given year</span>
-<span class="sd">        with the following caveats:</span>
-<span class="sd">            - If it&#39;s the current year and start_date is set, start_date is ignored</span>
-<span class="sd">            - If it&#39;s the current year, stats will only show up to today - they won&#39;t</span>
-<span class="sd">              go into the future.</span>
-<span class="sd">        `all_years` (obviously) displays all years.</span>
+    <span class="sd">&quot;&quot;&quot;If a the GET parameter `year` is set, it uses stats from given year</span>
+<span class="sd">    with the following caveats:</span>
+<span class="sd">        - If it&#39;s the current year and start_date is set, start_date is ignored</span>
+<span class="sd">        - If it&#39;s the current year, stats will only show up to today - they won&#39;t</span>
+<span class="sd">          go into the future.</span>
+<span class="sd">    `all_years` (obviously) displays all years.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You do not have permission to view statistics for this activity.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>

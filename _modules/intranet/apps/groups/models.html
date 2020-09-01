@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #110) documentation</title>
+    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #123) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -134,31 +134,30 @@
 <span class="sd">    django.contrib.auth.models.GroupManager, just with an extra method.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="GroupManager.student_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.GroupManager.student_visible">[docs]</a>    <span class="k">def</span> <span class="nf">student_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a QuerySet of groups that are student-visible.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a QuerySet of groups that are student-visible.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groupproperties__student_visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.Group">[docs]</a><span class="k">class</span> <span class="nc">Group</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; This Group model is really just the default Django</span>
-<span class="sd">        django.contrib.auth.models.Group, but with a &quot;properties&quot;</span>
-<span class="sd">        property which returns or creates the GroupProperties field</span>
-<span class="sd">        for that group. Because GroupProperties objects are only created</span>
-<span class="sd">        here when they are first accessed, and not on creation or edit,</span>
-<span class="sd">        you must *always* access them directly through the Group object,</span>
-<span class="sd">        and not through GroupProperties.</span>
+    <span class="sd">&quot;&quot;&quot;This Group model is really just the default Django</span>
+<span class="sd">    django.contrib.auth.models.Group, but with a &quot;properties&quot;</span>
+<span class="sd">    property which returns or creates the GroupProperties field</span>
+<span class="sd">    for that group. Because GroupProperties objects are only created</span>
+<span class="sd">    here when they are first accessed, and not on creation or edit,</span>
+<span class="sd">    you must *always* access them directly through the Group object,</span>
+<span class="sd">    and not through GroupProperties.</span>
 
-<span class="sd">        This presents some complications. All model-level relationships for</span>
-<span class="sd">        a group should use the *Django contrib.auth.models.Group object*, and</span>
-<span class="sd">        not the custom one defined here. You will see this done, to avoid</span>
-<span class="sd">        confusion, like:</span>
+<span class="sd">    This presents some complications. All model-level relationships for</span>
+<span class="sd">    a group should use the *Django contrib.auth.models.Group object*, and</span>
+<span class="sd">    not the custom one defined here. You will see this done, to avoid</span>
+<span class="sd">    confusion, like:</span>
 
-<span class="sd">            from django.contrib.auth.models import Group as DjangoGroup</span>
+<span class="sd">        from django.contrib.auth.models import Group as DjangoGroup</span>
 
-<span class="sd">        with DjangoGroup being referenced in the OneToOne or ManyToMany relationship.</span>
+<span class="sd">    with DjangoGroup being referenced in the OneToOne or ManyToMany relationship.</span>
 
-<span class="sd">        e.x.:</span>
-<span class="sd">            Group.objects.get(id=9).properties.student_visible</span>
+<span class="sd">    e.x.:</span>
+<span class="sd">        Group.objects.get(id=9).properties.student_visible</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">GroupManager</span><span class="p">()</span>
@@ -177,15 +176,15 @@
 
 
 <div class="viewcode-block" id="GroupProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.GroupProperties">[docs]</a><span class="k">class</span> <span class="nc">GroupProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; The GroupProperties model contains a OneToOneField with the</span>
-<span class="sd">        intranet.apps.groups.models.Group object (really just the default</span>
-<span class="sd">        django.contrib.auth.models.Group), and contains properties and other</span>
-<span class="sd">        app-specific options about a group.</span>
+    <span class="sd">&quot;&quot;&quot;The GroupProperties model contains a OneToOneField with the</span>
+<span class="sd">    intranet.apps.groups.models.Group object (really just the default</span>
+<span class="sd">    django.contrib.auth.models.Group), and contains properties and other</span>
+<span class="sd">    app-specific options about a group.</span>
 
-<span class="sd">        group</span>
-<span class="sd">            A OneToOneField with a Group object.</span>
-<span class="sd">        student_visible</span>
-<span class="sd">            Whether the group should be visible to students in group selections.</span>
+<span class="sd">    group</span>
+<span class="sd">        A OneToOneField with a Group object.</span>
+<span class="sd">    student_visible</span>
+<span class="sd">        Whether the group should be visible to students in group selections.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #110) documentation</title>
+    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #123) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -185,16 +185,16 @@
     <span class="sd">&quot;&quot;&quot;Display authentication for filecenter.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Encrypt the password with AES mode CFB.</span>
-<span class="sd">            Create a random 32 char key, stored in a CLIENT-side cookie.</span>
-<span class="sd">            Create a random 32 char IV, stored in a SERVER-side session.</span>
-<span class="sd">            Store the encrypted ciphertext in a SERVER-side session.</span>
+<span class="sd">        Encrypt the password with AES mode CFB.</span>
+<span class="sd">        Create a random 32 char key, stored in a CLIENT-side cookie.</span>
+<span class="sd">        Create a random 32 char IV, stored in a SERVER-side session.</span>
+<span class="sd">        Store the encrypted ciphertext in a SERVER-side session.</span>
 
-<span class="sd">            This ensures that neither side can decrypt the password without</span>
-<span class="sd">            the information stored on the other end of the request.</span>
+<span class="sd">        This ensures that neither side can decrypt the password without</span>
+<span class="sd">        the information stored on the other end of the request.</span>
 
-<span class="sd">            Both the server-side session variables and the client-side cookies</span>
-<span class="sd">            are deleted when the user logs out.</span>
+<span class="sd">        Both the server-side session variables and the client-side cookies</span>
+<span class="sd">        are deleted when the user logs out.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">Random</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
         <span class="n">iv</span> <span class="o">=</span> <span class="n">Random</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>

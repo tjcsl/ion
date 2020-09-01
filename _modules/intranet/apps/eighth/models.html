@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #110) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #123) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -156,13 +156,13 @@
 
 
 <div class="viewcode-block" id="AbstractBaseEighthModel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.AbstractBaseEighthModel">[docs]</a><span class="k">class</span> <span class="nc">AbstractBaseEighthModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Abstract base model that includes created</span>
-<span class="sd">        and last modified times.</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base model that includes created</span>
+<span class="sd">    and last modified times.</span>
 
-<span class="sd">        Attributes:</span>
-<span class="sd">            created_time (datetime): The time the model was created</span>
-<span class="sd">            last_modified_time (datetime): The time the model was</span>
-<span class="sd">                last modified.</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        created_time (datetime): The time the model was created</span>
+<span class="sd">        last_modified_time (datetime): The time the model was</span>
+<span class="sd">            last modified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">created_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -173,7 +173,7 @@
 
 
 <div class="viewcode-block" id="EighthSponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSponsor">[docs]</a><span class="k">class</span> <span class="nc">EighthSponsor</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Represents a sponsor for an eighth period activity.</span>
+    <span class="sd">&quot;&quot;&quot;Represents a sponsor for an eighth period activity.</span>
 
 <span class="sd">    A sponsor could be linked to an actual user or just a name.</span>
 
@@ -246,7 +246,7 @@
 
 
 <div class="viewcode-block" id="EighthRoom"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthRoom">[docs]</a><span class="k">class</span> <span class="nc">EighthRoom</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Represents a room in which an eighth period activity can be held.</span>
+    <span class="sd">&quot;&quot;&quot;Represents a room in which an eighth period activity can be held.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        name (str): The name of the room.</span>
@@ -265,7 +265,7 @@
 
 <div class="viewcode-block" id="EighthRoom.total_capacity_of_rooms"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthRoom.total_capacity_of_rooms">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">total_capacity_of_rooms</span><span class="p">(</span><span class="n">rooms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;EighthRoom&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns the total capacity of the provided rooms.</span>
+        <span class="sd">&quot;&quot;&quot;Returns the total capacity of the provided rooms.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            rooms: Rooms to determine total capacity for.</span>
@@ -319,7 +319,7 @@
 
 
 <div class="viewcode-block" id="EighthActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity">[docs]</a><span class="k">class</span> <span class="nc">EighthActivity</span><span class="p">(</span><span class="n">AbstractBaseEighthModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Represents an eighth period activity.</span>
+    <span class="sd">&quot;&quot;&quot;Represents an eighth period activity.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        name(str): The name of the activity, max length 100 characters.</span>
@@ -458,10 +458,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name_with_flags_no_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns the activity&#39;s name with flags.</span>
-<span class="sd">       These flags indicate whether the activity is special, both blocks, administrative, sticky, and/or cancelled.</span>
+<span class="sd">        These flags indicate whether the activity is special, both blocks, administrative, sticky, and/or cancelled.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The activity name with all flags except the &quot;restricted&quot; flag.</span>
+<span class="sd">         Returns:</span>
+<span class="sd">             The activity name with all flags except the &quot;restricted&quot; flag.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_with_flags</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -539,9 +539,9 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns whether an activity is &quot;active.&quot;</span>
-<span class="sd"> An activity is considered to be active if it has been scheduled at all this year.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            Whether the activity is active.</span>
+<span class="sd">        An activity is considered to be active if it has been scheduled at all this year.</span>
+<span class="sd">               Returns:</span>
+<span class="sd">                   Whether the activity is active.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_schedulings</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>

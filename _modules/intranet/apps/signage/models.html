@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #110) documentation</title>
+    <title>intranet.apps.signage.models &#8212; TJ Intranet v3 (Build #123) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -148,18 +148,18 @@
 
 <div class="viewcode-block" id="Page"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Page">[docs]</a><span class="k">class</span> <span class="nc">Page</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        iframe: True if page is just an iframe</span>
-<span class="sd">        url: url for iframe (if iframe is True)</span>
-<span class="sd">        sandbox: whether the iframe should be sandboxed</span>
-<span class="sd">                 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox</span>
+<span class="sd">    iframe: True if page is just an iframe</span>
+<span class="sd">    url: url for iframe (if iframe is True)</span>
+<span class="sd">    sandbox: whether the iframe should be sandboxed</span>
+<span class="sd">             https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox</span>
 
-<span class="sd">        template: the path to the template (for server side rendering)</span>
-<span class="sd">        button: the name of the fontawesome icon (ex: &quot;fa-chrome&quot;)</span>
-<span class="sd">        order: index at which button should be placed</span>
+<span class="sd">    template: the path to the template (for server side rendering)</span>
+<span class="sd">    button: the name of the fontawesome icon (ex: &quot;fa-chrome&quot;)</span>
+<span class="sd">    order: index at which button should be placed</span>
 
-<span class="sd">        strip_links: whether we strip the links in the iframe (to prevent navigation away)</span>
+<span class="sd">    strip_links: whether we strip the links in the iframe (to prevent navigation away)</span>
 
-<span class="sd">        signs: set of signs which display this Page</span>
+<span class="sd">    signs: set of signs which display this Page</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">PageQuerySet</span><span class="o">.</span><span class="n">as_manager</span><span class="p">()</span>
@@ -219,24 +219,24 @@
 
 <div class="viewcode-block" id="Sign"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Sign">[docs]</a><span class="k">class</span> <span class="nc">Sign</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        name: friendly display name [required]</span>
-<span class="sd">        display: unique name (should match hostname of pi/compute stick) [required]</span>
+<span class="sd">    name: friendly display name [required]</span>
+<span class="sd">    display: unique name (should match hostname of pi/compute stick) [required]</span>
 
-<span class="sd">        eighth_block_increment: ...</span>
-<span class="sd">        landscape: if display is in landscape orientation</span>
-<span class="sd">        map_location: location of display on map</span>
+<span class="sd">    eighth_block_increment: ...</span>
+<span class="sd">    landscape: if display is in landscape orientation</span>
+<span class="sd">    map_location: location of display on map</span>
 
-<span class="sd">        lock_page: if set, the signage will only display this page</span>
-<span class="sd">        default_page: if set, the signage will revert to this page after a set</span>
-<span class="sd">                      amount of time</span>
-<span class="sd">        day_end_switch_page: A page to switch to near the end of the day</span>
-<span class="sd">        day_end_switch_minutes: The number of minutes before the end of the day to switch</span>
-<span class="sd">            to day_end_switch_page. Can be negative to switch after the end of the day.</span>
-<span class="sd">        latest_heartbeat_time: If the sign has an open websocket connection to a</span>
-<span class="sd">            SignageConsumer, this is the time at which the last message was received from</span>
-<span class="sd">            it. If the sign does not have such a connection open, this is None (even if</span>
-<span class="sd">            the sign previously had an open connection).</span>
-<span class="sd">        pages: a list of pages</span>
+<span class="sd">    lock_page: if set, the signage will only display this page</span>
+<span class="sd">    default_page: if set, the signage will revert to this page after a set</span>
+<span class="sd">                  amount of time</span>
+<span class="sd">    day_end_switch_page: A page to switch to near the end of the day</span>
+<span class="sd">    day_end_switch_minutes: The number of minutes before the end of the day to switch</span>
+<span class="sd">        to day_end_switch_page. Can be negative to switch after the end of the day.</span>
+<span class="sd">    latest_heartbeat_time: If the sign has an open websocket connection to a</span>
+<span class="sd">        SignageConsumer, this is the time at which the last message was received from</span>
+<span class="sd">        it. If the sign does not have such a connection open, this is None (even if</span>
+<span class="sd">        the sign previously had an open connection).</span>
+<span class="sd">    pages: a list of pages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">SignQuerySet</span><span class="o">.</span><span class="n">as_manager</span><span class="p">()</span>
