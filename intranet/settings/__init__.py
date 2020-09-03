@@ -810,6 +810,9 @@ REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
 
 EIGHTH_COORDINATOR_NAME = "Laura Slonina"
 
+# Script provided to assist in importing users to BbCU
+BBCU_SCRIPT = None
+
 # How often the signage JS sends a heartbeat
 SIGNAGE_HEARTBEAT_INTERVAL = 60
 # No heartbeat after this many seconds means a sign will be considered offline
