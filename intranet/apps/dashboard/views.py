@@ -425,6 +425,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
             "dash_warning": dash_warning,
             "show_widgets": show_widgets,
             "show_expired": show_expired,
+            "show_near_graduation_message": is_senior
+            and (timezone.now().date() + timedelta(days=settings.NEAR_GRADUATION_DAYS) >= get_senior_graduation_date().date()),
             "view_announcements_url": view_announcements_url,
             "dashboard_title": dashboard_title,
             "dashboard_header": dashboard_header,
