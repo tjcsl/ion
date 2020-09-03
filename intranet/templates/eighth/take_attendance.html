@@ -51,6 +51,21 @@
     });
     </script>
     {% endif %}
+    <script>
+        function openBbcuTab() {
+            var student_list = [];
+            var mem_list = $('.bbcu-selector');
+            for (var i = 0; i < mem_list.length; i++) {
+                var name = $(mem_list[i]).find(".user-name")[0].outerText.split(" ").slice(0, 2).join(" ");
+                var email = $(mem_list[i]).find(".id")[0].outerText + "@fcpsschools.net";
+                student_list.push([name, email]);
+            }
+            var bbcu_script = $("#bbcu_script")[0].value;
+            bbcu_script = bbcu_script.replace("+=+=", JSON.stringify(student_list));
+            var new_window = window.open("", "_blank");
+            new_window.document.write("<p>" + bbcu_script + "</p>");
+        }
+    </script>
 {% endblock %}
 
 {% block head %}
@@ -284,13 +299,13 @@
                         </thead>
                         <tbody>
                             {% for pass in passes %}
-                            <tr class="pass-student">
+                            <tr class="bbcu-selector">
                                 <td class="user-link" data-user-id="{{ pass.user.id }}">
-                                    <a href="{% url 'user_profile' pass.user.id %}">
+                                    <a href="{% url 'user_profile' pass.user.id %}" class="user-name">
                                         {{ pass.user.last_name }}, {{ pass.user.first_name }}
                                     </a>
                                 </td>
-                                <td class="user-link">
+                                <td class="user-link id">
                                     {% if pass.user.student_id %}
                                         {{ pass.user.student_id }}
                                     {% else %}
@@ -357,7 +372,6 @@
                                     {% if not scheduled_activity.block.locked %}
                                         <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
                                     {% elif scheduled_activity.block.attendance_locked %}
-
                                         <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
                                     {% else %}
                                         <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
@@ -384,7 +398,7 @@
                         </thead>
                         <tbody>
                             {% for member in members %}
-                                <tr>
+                                <tr class="bbcu-selector">
                                     {% if show_checkboxes %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
                                     {% elif show_icons %}
@@ -396,11 +410,11 @@
                                             {% endif %}
                                     {% endif %}
                                     <td class="user-col user-link" data-user-id="{{ member.id }}">
-                                        <a href="{% url 'user_profile' member.id %}">
+                                        <a class="user-name" href="{% url 'user_profile' member.id %}">
                                             {{ member.name }}
                                         </a>
                                     </td>
-                                    <td class="sid-col">{% if member.student_id %}
+                                    <td class="sid-col id">{% if member.student_id %}
                                         {{ member.student_id }}
                                     {% else %}
                                         (Ion {{ member.id }})
@@ -461,6 +475,9 @@
                 <a class="button print-hide" href="{% url 'eighth_email_students' scheduled_activity.id %}">Email Students</a>
                 {% endif %}
                 {% if user.is_eighth_admin %}
+                    <a class="button print-hide" href="#" onclick="openBbcuTab()">View in BbCU Format</a>
+                    <input type="hidden" id="bbcu_script" value="{{ bbcu_script }}">
+                    &nbsp; &nbsp;
                     <br>
                     <br>
                     <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">

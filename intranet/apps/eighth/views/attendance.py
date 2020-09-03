@@ -378,6 +378,7 @@ def take_attendance_view(request, scheduled_activity_id):
             "edit_perm_cancelled": edit_perm_cancelled,
             "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin),
             "show_icons": (scheduled_activity.block.locked and scheduled_activity.block.attendance_locked() and not request.user.is_eighth_admin),
+            "bbcu_script": settings.BBCU_SCRIPT,
         }
 
         if request.user.is_eighth_admin:
