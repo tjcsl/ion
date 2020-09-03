@@ -746,6 +746,9 @@ SENIOR_GRADUATION_DATE = datetime.datetime(year=2000, month=6, day=18, hour=19)
 # July = 7
 YEAR_TURNOVER_MONTH = 7
 
+# The number of days out at which a user is deemed "near graduation".
+NEAR_GRADUATION_DAYS = 50
+
 # The hour on an eighth period day to lock teachers from
 # taking attendance (10PM)
 ATTENDANCE_LOCK_HOUR = 22
