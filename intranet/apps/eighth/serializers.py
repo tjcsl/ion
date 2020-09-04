@@ -143,7 +143,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
             "sticky": scheduled_activity.get_sticky(),
+            "finance": "",  # TODO: refactor JS to remove this
             "title": scheduled_activity.title,
+            "comments": scheduled_activity.comments,  # TODO: refactor JS to remove this
             "display_text": "",
             # TODO: Remove together with other eighth waitlist functionality
             "waitlist_count": 0,
