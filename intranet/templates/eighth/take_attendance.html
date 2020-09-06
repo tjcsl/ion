@@ -468,6 +468,9 @@
                 {% if not request.user.is_restricted %}
                 <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 &nbsp; &nbsp;
+                <a class="button print-hide" href="#" onclick="openBbcuTab()">View in BbCU Format</a>
+                <input type="hidden" id="bbcu_script" value="{{ bbcu_script }}">
+                &nbsp; &nbsp;
                 {% endif %}
                 <button class="print-hide" onclick="window.print()">Print</button>
                 {% if not no_edit_perm or edit_perm_cancelled %}
@@ -475,9 +478,6 @@
                 <a class="button print-hide" href="{% url 'eighth_email_students' scheduled_activity.id %}">Email Students</a>
                 {% endif %}
                 {% if user.is_eighth_admin %}
-                    <a class="button print-hide" href="#" onclick="openBbcuTab()">View in BbCU Format</a>
-                    <input type="hidden" id="bbcu_script" value="{{ bbcu_script }}">
-                    &nbsp; &nbsp;
                     <br>
                     <br>
                     <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
