@@ -71,3 +71,21 @@ class AnnouncementRequestForm(forms.ModelForm):
     class Meta:
         model = AnnouncementRequest
         fields = ["title", "author", "content", "expiration_date", "teachers_requested", "notes"]
+
+
+class AnnouncementAdminForm(forms.Form):
+    """ A form for allowing admin to edit notifications on requests. """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for notifications "
+            "will receive an email. If the announcement is public, a link will be posted on Twitter."
+        )
+        self.fields["notify_email_all"].help_text = (
+            "This will send an email notification to all of the users who can see this post. This option "
+            "does NOT take users' email notification preferences into account, so please use with care."
+        )
+
+    notify_post = forms.BooleanField(required=False, initial=True)
+    notify_email_all = forms.BooleanField(required=False, label="Send Email to All")

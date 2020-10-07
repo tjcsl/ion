@@ -13,7 +13,7 @@ from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-from .forms import AnnouncementForm, AnnouncementRequestForm
+from .forms import AnnouncementAdminForm, AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
                             request_announcement_email)
@@ -194,7 +194,8 @@ def admin_approve_announcement_view(request, req_id):
 
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST, instance=req)
-        if form.is_valid():
+        admin_form = AnnouncementAdminForm(request.POST)
+        if form.is_valid() and admin_form.is_valid():
             req = form.save(commit=True)
             # SAFE HTML
             req.content = safe_html(req.content)
@@ -204,7 +205,13 @@ def admin_approve_announcement_view(request, req_id):
                     group_ids = request.POST.getlist("groups")
                     groups = Group.objects.filter(id__in=group_ids)
                 announcement = Announcement.objects.create(
-                    title=req.title, content=req.content, author=req.author, user=req.user, expiration_date=req.expiration_date
+                    title=req.title,
+                    content=req.content,
+                    author=req.author,
+                    user=req.user,
+                    expiration_date=req.expiration_date,
+                    notify_post=admin_form.cleaned_data["notify_post"],
+                    notify_email_all=admin_form.cleaned_data["notify_email_all"],
                 )
                 for g in groups:
                     announcement.groups.add(g)
@@ -228,8 +235,9 @@ def admin_approve_announcement_view(request, req_id):
             return redirect("index")
 
     form = AnnouncementRequestForm(instance=req)
+    admin_form = AnnouncementAdminForm()
     all_groups = Group.objects.all()
-    context = {"form": form, "req": req, "admin_approve": True, "all_groups": all_groups}
+    context = {"form": form, "admin_form": admin_form, "req": req, "admin_approve": True, "all_groups": all_groups}
     return render(request, "announcements/approve.html", context)
 
 
