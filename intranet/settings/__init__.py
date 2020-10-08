@@ -42,7 +42,8 @@ NOMINATION_POSITION = ""
 ENABLE_WAITLIST = False  # WARNING: Enabling the waitlist causes severe performance issues
 ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
-ENABLE_PRE_EIGHTH_REDIRECT = False
+ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT = False
+ENABLE_PRE_EIGHTH_LOCATION_REDIRECT = True
 NOTIFY_ADMIN_EMAILS = None
 
 IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
