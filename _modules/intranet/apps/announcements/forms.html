@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.announcements.forms &#8212; TJ Intranet v3 (Build #155) documentation</title>
+    <title>intranet.apps.announcements.forms &#8212; TJ Intranet v3 (Build #165) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -198,6 +198,24 @@
 <div class="viewcode-block" id="AnnouncementRequestForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementRequestForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;expiration_date&quot;</span><span class="p">,</span> <span class="s2">&quot;teachers_requested&quot;</span><span class="p">,</span> <span class="s2">&quot;notes&quot;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="AnnouncementAdminForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementAdminForm">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementAdminForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A form for allowing admin to edit notifications on requests. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_post&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;If this box is checked, students who have signed up for notifications &quot;</span>
+            <span class="s2">&quot;will receive an email. If the announcement is public, a link will be posted on Twitter.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_email_all&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;This will send an email notification to all of the users who can see this post. This option &quot;</span>
+            <span class="s2">&quot;does NOT take users&#39; email notification preferences into account, so please use with care.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">notify_post</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">notify_email_all</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Send Email to All&quot;</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
