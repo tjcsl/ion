@@ -17,6 +17,7 @@ urlpatterns = [
     re_path(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
     re_path(r"^/absences$", attendance.eighth_absences_view, name="eighth_absences"),
     re_path(r"^/absences/(?P<user_id>\d+)$", attendance.eighth_absences_view, name="eighth_absences"),
+    re_path(r"^/glance$", signup.eighth_location, name="eighth_location"),
     # Teachers
     re_path(r"^/attendance$", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),
     re_path(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),

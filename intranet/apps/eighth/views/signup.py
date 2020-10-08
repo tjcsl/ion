@@ -6,6 +6,7 @@ from prometheus_client import Summary
 
 from django import http
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -363,6 +364,24 @@ def toggle_favorite_view(request):
         else:
             activity.favorites.add(request.user)
             return http.HttpResponse("Favorited activity.")
+
+
+@login_required
+def eighth_location(request):
+    blocks = EighthBlock.objects.get_blocks_today()
+    if blocks:
+        sch_acts = []
+        for b in blocks:
+            try:
+                act = request.user.eighthscheduledactivity_set.get(block=b)
+                sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
+            except EighthScheduledActivity.DoesNotExist:
+                sch_acts.append([b, None])
+
+        return render(request, "eighth/location.html", context={"sch_acts": sch_acts})
+    else:
+        messages.error(request, "There are no eighth period blocks scheduled today.")
+        return redirect("index")
 
 
 @require_POST

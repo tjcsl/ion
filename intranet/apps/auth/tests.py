@@ -61,7 +61,7 @@ class LoginViewTest(IonTestCase):
 
         activity = EighthActivity.objects.create(name="Test Activity 1")
 
-        with self.settings(ENABLE_PRE_EIGHTH_REDIRECT=True):
+        with self.settings(ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT=True):
             block_25 = self.create_block_by_signup_datetime(now + deltas[25], block_letter="A")
             self.assertTrue(self.does_login_redirect_to(reverse("index")))
             EighthSignup.objects.create(user=user, scheduled_activity=EighthScheduledActivity.objects.create(block=block_25, activity=activity))

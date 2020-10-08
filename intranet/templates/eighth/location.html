@@ -1,0 +1,48 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Eighth Location{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.schedule' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content" id="quick-schedule">
+    <h2>Your upcoming eighth periods are:</h2>
+    <br>
+    {% for s in sch_acts %}
+    <h3>{{ s.0.block_letter }} Block ({{ s.0.date }})</h3>
+        <div class="block-display">
+            {% if s.1 is not None %}
+            <h4><a href="{% url 'eighth_activity' s.1.activity.id %}">{{ s.1.full_title }}</a></h4>
+            <h5><strong>Room(s):</strong> {{ s.2 }}</h5>
+            <h5><strong>Sponsor(s):</strong> {{ s.3 }}</h5>
+            <br>
+            <p><strong>Comments:</strong> {% if s.1.comments %}{{ s.1.comments }}{% else %}None{% endif %}</p>
+            <br>
+            <p>{{ s.1.activity.description }}</p>
+            {% else %}
+            <p>You are not signed up for any activity.</p>
+            {% endif %}
+        </div>
+        <br><br>
+    {% endfor %}
+    <a class="button" href="{% url 'index' %}">Return to Dashboard</a>
+</div>
+{% endblock %}
