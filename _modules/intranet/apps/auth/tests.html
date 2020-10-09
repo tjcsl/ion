@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #165) documentation</title>
+    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #172) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -188,7 +188,7 @@
 
         <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity 1&quot;</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">ENABLE_PRE_EIGHTH_REDIRECT</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">block_25</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_block_by_signup_datetime</span><span class="p">(</span><span class="n">now</span> <span class="o">+</span> <span class="n">deltas</span><span class="p">[</span><span class="mi">25</span><span class="p">],</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">does_login_redirect_to</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)))</span>
             <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_25</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">))</span>

@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #165) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #172) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -127,8 +127,8 @@
   <h1>Source code for intranet.apps.auth.views</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">python_time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
@@ -151,6 +151,7 @@
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
+<span class="kn">from</span> <span class="nn">..schedule.models</span> <span class="kn">import</span> <span class="n">Day</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="kn">import</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">..sessionmgmt.helpers</span> <span class="kn">import</span> <span class="n">trust_session</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backends</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added</span>
@@ -306,7 +307,7 @@
 
             <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
 
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_REDIRECT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT</span><span class="p">:</span>
                 <span class="c1"># Redirect to eighth signup page if the user isn&#39;t signed up for eighth period activities</span>
                 <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
                 <span class="n">future_cutoff</span> <span class="o">=</span> <span class="n">now</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
@@ -319,6 +320,22 @@
                 <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">blocks</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthscheduledactivity__eighthsignup_set__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                     <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;eighth_signup&quot;</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span><span class="p">:</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">today_8</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">today_8</span><span class="p">:</span>
+                        <span class="n">first_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="n">today_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">today_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+                        <span class="n">first_start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">first_start_time</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">first_start_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                            <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">now</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+                            <span class="o">&lt;</span> <span class="n">first_start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                        <span class="p">):</span>
+                            <span class="n">default_next_page</span> <span class="o">=</span> <span class="s2">&quot;eighth_location&quot;</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="k">pass</span>
 
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
                 <span class="sd">&quot;&quot;&quot;Default to eighth admin view (for eighthoffice).&quot;&quot;&quot;</span>
@@ -386,7 +403,7 @@
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;login_failed&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)):</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;reauthenticated_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;reauthenticated_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">python_time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">&quot;login_failed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
