@@ -200,11 +200,13 @@ class LoginView(View):
                     today_8 = Day.objects.today().day_type.blocks.filter(name__contains="8")
                     if today_8:
                         first_start_time = time(today_8[0].start.hour, today_8[0].start.minute)
+                        last_start_time = time(today_8.last().start.hour, today_8.last().start.minute)
                         first_start_date = datetime.combine(now.today(), first_start_time)
+                        last_start_date = datetime.combine(now.today(), last_start_time)
                         if (
-                            first_start_date - timedelta(minutes=20)
+                            first_start_date - timedelta(minutes=30)
                             < datetime.combine(now.today(), now.time())
-                            < first_start_date + timedelta(minutes=20)
+                            < last_start_date + timedelta(minutes=20)
                         ):
                             default_next_page = "eighth_location"
                 except AttributeError:
