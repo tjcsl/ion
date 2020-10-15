@@ -556,6 +556,25 @@ class EighthAdminTest(EighthAbstractTest):
         self.assertEqual(response.context["admin_page_title"], "Eighth Period Admin")
         self.assertEqual(response.context["signup_users_count"], get_user_model().objects.get_students().count())
 
+    def test_transfer_students(self):
+        self.make_admin()
+        user = get_user_model().objects.get_or_create(username="awilliam")[0]
+        block_a = self.add_block(date="9001-4-20", block_letter="A")
+        block_b = self.add_block(date="9001-4-20", block_letter="B")
+        act1 = self.add_activity(name="Test1")
+        act2 = self.add_activity(name="Test2")
+        schact_a1 = EighthScheduledActivity.objects.create(block=block_a, activity=act1)
+        schact_a2 = EighthScheduledActivity.objects.create(block=block_a, activity=act2)
+        schact_b1 = EighthScheduledActivity.objects.create(block=block_b, activity=act1)
+        EighthSignup.objects.create(scheduled_activity=schact_a2, user=user)
+        EighthSignup.objects.create(scheduled_activity=schact_b1, user=user)
+
+        # Attempt move user from `schact_b1` to `schact_a1`, removing the signup for `schact_a2`
+        self.client.post(reverse("eighth_admin_transfer_students_action"), {"source_act": schact_b1.id, "dest_act": schact_a1.id})
+        self.assertEqual(len(user.eighthsignup_set.filter(scheduled_activity__block=block_a)), 1)
+        self.assertEqual(user.eighthsignup_set.get(scheduled_activity__block=block_a).scheduled_activity, schact_a1)
+        self.assertFalse(user.eighthsignup_set.filter(scheduled_activity__block=block_b).exists())
+
 
 class EighthExceptionTest(IonTestCase):
     def test_signup_exception(self):
