@@ -5,19 +5,21 @@ from formtools.wizard.views import SessionWizardView
 
 from django.contrib import messages
 from django.core.management import call_command
+from django.db import transaction
 from django.db.models import Count
 from django.db.models.manager import Manager
 from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
 
+from .....utils.locking import lock_on
 from .....utils.serialization import safe_json
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
-from ...tasks import room_changed_single_email
+from ...tasks import room_changed_single_email, transferred_activity_email
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -402,9 +404,18 @@ def transfer_students_action(request):
     else:
         raise Http404
 
+    send_emails = bool(request.POST.get("send_emails"))
     num = source_act.members.count()
 
-    context = {"admin_page_title": "Transfer Students", "source_act": source_act, "dest_act": dest_act, "dest_unsignup": dest_unsignup, "num": num}
+    context = {
+        "admin_page_title": "Transfer Students",
+        "source_act": source_act,
+        "dest_act": dest_act,
+        "dest_unsignup": dest_unsignup,
+        "num": num,
+        "moved_students": None,
+        "send_emails": send_emails,
+    }
 
     if request.method == "POST":
         if dest_unsignup and not dest_act:
@@ -412,14 +423,34 @@ def transfer_students_action(request):
             invalidate_obj(source_act)
             messages.success(request, "Successfully removed signups for {} students.".format(num))
         else:
-            source_act.eighthsignup_set.update(scheduled_activity=dest_act)
+            # In order to prevent duplicate signups when transferring students between activities in different blocks,
+            # we need to delete any `EighthSignup`s already present in the block of `dest_act` for transferred students.
+            duplicate_sign_up_users = []
+            duplicate_signups = []
+            with transaction.atomic():
+                lock_on(source_act.members.all())
+                for u in source_act.members.all():
+                    conflict_signup = u.eighthsignup_set.filter(scheduled_activity__block=dest_act.block)
+                    if conflict_signup.exists():
+                        duplicate_sign_up_users.append(u)
+                        duplicate_signups.extend(list(conflict_signup))
+                for signup in duplicate_signups:
+                    signup.delete()
+                    logger.debug("Deleted %s signup", signup)
+
+                source_act.eighthsignup_set.update(scheduled_activity=dest_act)
 
             invalidate_obj(source_act)
             invalidate_obj(dest_act)
             messages.success(request, "Successfully transfered {} students.".format(num))
-        return redirect("eighth_admin_dashboard")
-    else:
-        return render(request, "eighth/admin/transfer_students.html", context)
+
+            if duplicate_sign_up_users:
+                if send_emails:
+                    transferred_activity_email.delay(dest_act, source_act, duplicate_sign_up_users)
+                context["moved_students"] = duplicate_signups
+            else:
+                return redirect("eighth_admin_dashboard")
+    return render(request, "eighth/admin/transfer_students.html", context)
 
 
 @eighth_admin_required

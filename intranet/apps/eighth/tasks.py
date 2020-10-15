@@ -67,6 +67,52 @@ def room_changed_single_email(
 
 
 @shared_task
+def transferred_activity_email(
+    dest_act: EighthScheduledActivity, source_act: EighthScheduledActivity, duplicate_students  # pylint: disable=unsubscriptable-object
+):  # pylint: disable=unsubscriptable-object
+    """Notifies all the users already signed up for an EighthScheduledActivity that they have been transferred into a new activity.
+
+    Args:
+        dest_act: The activity that the students were transferred into.
+        dest_act: The activity that the students were transferred from.
+        duplicate_students: The students that were transferred into a new activity.
+
+    """
+    date_str = dest_act.block.date.strftime("%A, %B %-d")
+
+    # Emails are sent regardless of notification settings so that students have the chance to ensure that they are signed up for the correct place.
+    emails = [u.notification_email for u in duplicate_students]
+
+    if not emails:
+        return
+
+    base_url = "https://ion.tjhsst.edu"
+
+    data = {
+        "dest_act": dest_act,
+        "source_act": source_act,
+        "date_str": date_str,
+        "base_url": base_url,
+    }
+
+    logger.debug(
+        "Transferring students from %s to %s resulted in duplicate signups being deleted; emailing the %d affected users",
+        source_act,
+        dest_act.id,
+        len(emails),
+    )
+
+    email_send(
+        "eighth/emails/transferred_activity.txt",
+        "eighth/emails/transferred_activity.html",
+        data,
+        "8th Period Transfer to {} on {}".format(dest_act.activity.name, date_str),
+        emails,
+        bcc=True,
+    )
+
+
+@shared_task
 def room_changed_activity_email(
     act: EighthActivity, old_rooms: Collection[EighthRoom], new_rooms: Collection[EighthRoom]  # pylint: disable=unsubscriptable-object
 ):  # pylint: disable=unsubscriptable-object
