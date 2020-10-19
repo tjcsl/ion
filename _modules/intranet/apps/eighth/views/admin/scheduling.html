@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #177) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &#8212; TJ Intranet v3 (Build #192) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -132,19 +132,21 @@
 
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">call_command</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
 <span class="kn">from</span> <span class="nn">django.db.models.manager</span> <span class="kn">import</span> <span class="n">Manager</span>
 <span class="kn">from</span> <span class="nn">django.forms.formsets</span> <span class="kn">import</span> <span class="n">formset_factory</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 
+<span class="kn">from</span> <span class="nn">.....utils.locking</span> <span class="kn">import</span> <span class="n">lock_on</span>
 <span class="kn">from</span> <span class="nn">.....utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.scheduling</span> <span class="kn">import</span> <span class="n">ScheduledActivityForm</span>
 <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
-<span class="kn">from</span> <span class="nn">...tasks</span> <span class="kn">import</span> <span class="n">room_changed_single_email</span>
+<span class="kn">from</span> <span class="nn">...tasks</span> <span class="kn">import</span> <span class="n">room_changed_single_email</span><span class="p">,</span> <span class="n">transferred_activity_email</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -529,9 +531,18 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">Http404</span>
 
+    <span class="n">send_emails</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;send_emails&quot;</span><span class="p">))</span>
     <span class="n">num</span> <span class="o">=</span> <span class="n">source_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Transfer Students&quot;</span><span class="p">,</span> <span class="s2">&quot;source_act&quot;</span><span class="p">:</span> <span class="n">source_act</span><span class="p">,</span> <span class="s2">&quot;dest_act&quot;</span><span class="p">:</span> <span class="n">dest_act</span><span class="p">,</span> <span class="s2">&quot;dest_unsignup&quot;</span><span class="p">:</span> <span class="n">dest_unsignup</span><span class="p">,</span> <span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="n">num</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Transfer Students&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source_act&quot;</span><span class="p">:</span> <span class="n">source_act</span><span class="p">,</span>
+        <span class="s2">&quot;dest_act&quot;</span><span class="p">:</span> <span class="n">dest_act</span><span class="p">,</span>
+        <span class="s2">&quot;dest_unsignup&quot;</span><span class="p">:</span> <span class="n">dest_unsignup</span><span class="p">,</span>
+        <span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="n">num</span><span class="p">,</span>
+        <span class="s2">&quot;moved_students&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;send_emails&quot;</span><span class="p">:</span> <span class="n">send_emails</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dest_unsignup</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dest_act</span><span class="p">:</span>
@@ -539,14 +550,34 @@
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">source_act</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully removed signups for </span><span class="si">{}</span><span class="s2"> students.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">source_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">dest_act</span><span class="p">)</span>
+            <span class="c1"># In order to prevent duplicate signups when transferring students between activities in different blocks,</span>
+            <span class="c1"># we need to delete any `EighthSignup`s already present in the block of `dest_act` for transferred students.</span>
+            <span class="n">duplicate_sign_up_users</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">duplicate_signups</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">():</span>
+                <span class="n">lock_on</span><span class="p">(</span><span class="n">source_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">source_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                    <span class="n">conflict_signup</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">dest_act</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">conflict_signup</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">duplicate_sign_up_users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                        <span class="n">duplicate_signups</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conflict_signup</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">duplicate_signups</span><span class="p">:</span>
+                    <span class="n">signup</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleted </span><span class="si">%s</span><span class="s2"> signup&quot;</span><span class="p">,</span> <span class="n">signup</span><span class="p">)</span>
+
+                <span class="n">source_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">dest_act</span><span class="p">)</span>
 
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">source_act</span><span class="p">)</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">dest_act</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully transfered </span><span class="si">{}</span><span class="s2"> students.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+            <span class="k">if</span> <span class="n">duplicate_sign_up_users</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">send_emails</span><span class="p">:</span>
+                    <span class="n">transferred_activity_email</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">dest_act</span><span class="p">,</span> <span class="n">source_act</span><span class="p">,</span> <span class="n">duplicate_sign_up_users</span><span class="p">)</span>
+                <span class="n">context</span><span class="p">[</span><span class="s2">&quot;moved_students&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">duplicate_signups</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="remove_duplicates_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.remove_duplicates_view">[docs]</a><span class="nd">@eighth_admin_required</span>

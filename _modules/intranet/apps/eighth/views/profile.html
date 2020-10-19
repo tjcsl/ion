@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #177) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #192) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -163,7 +163,6 @@
             <span class="n">counselor_id</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">counselor_id</span><span class="p">:</span>
                 <span class="n">counselor</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">counselor_id</span><span class="p">)</span>
-                <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;birthday&quot;</span><span class="p">]</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="o">=</span> <span class="n">counselor</span>
             <span class="c1"># user.properties.address = address_form.save()</span>
             <span class="c1"># user.properties.save()</span>
@@ -172,9 +171,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;An error occurred updating the student profile.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span>
-            <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;birthday&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">birthday</span><span class="p">},</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span>
-        <span class="p">)</span>
+        <span class="n">user_form</span> <span class="o">=</span> <span class="n">ProfileEditForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;counselor_id&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">id</span><span class="p">},</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
         <span class="c1"># address_form = AddressForm(instance=user.properties.address)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">&quot;user_form&quot;</span><span class="p">:</span> <span class="n">user_form</span><span class="p">,</span> <span class="s2">&quot;address_form&quot;</span><span class="p">:</span> <span class="n">address_form</span><span class="p">}</span>
