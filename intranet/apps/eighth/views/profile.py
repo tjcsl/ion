@@ -36,7 +36,6 @@ def edit_profile_view(request, user_id=None):
             counselor_id = user_form.cleaned_data["counselor_id"]
             if counselor_id:
                 counselor = get_user_model().objects.get(id=counselor_id)
-                user.properties.birthday = user_form.cleaned_data["birthday"]
                 user.counselor = counselor
             # user.properties.address = address_form.save()
             # user.properties.save()
@@ -45,9 +44,7 @@ def edit_profile_view(request, user_id=None):
         else:
             messages.error(request, "An error occurred updating the student profile.")
     else:
-        user_form = ProfileEditForm(
-            initial={"counselor_id": "" if not user.counselor else user.counselor.id, "birthday": user.properties.birthday}, instance=user
-        )
+        user_form = ProfileEditForm(initial={"counselor_id": "" if not user.counselor else user.counselor.id}, instance=user)
         # address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}
