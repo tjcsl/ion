@@ -1,7 +1,7 @@
 import csv
 import logging
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
 from io import BytesIO
 
 from reportlab.lib.pagesizes import letter
@@ -10,15 +10,19 @@ from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
 from ....utils.date import get_date_range_this_year, get_senior_graduation_year
+from ....utils.helpers import is_entirely_digit
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ..forms.admin.activities import ActivityMultiSelectForm
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -330,6 +334,116 @@ def stats_global_view(request):
     context = {"years": list(reversed(range(earliest_year, current_year + 1)))}
 
     return render(request, "eighth/admin/global_statistics.html", context)
+
+
+@login_required
+@deny_restricted
+def stats_multiple_view(request):
+    if not request.user.is_eighth_admin:
+        return render(request, "error/403.html", {"reason": "You do not have permission to view eighth activity statistics."}, status=403)
+
+    form = None
+    context = None
+    if request.method == "POST":
+        form = ActivityMultiSelectForm(request.POST)
+
+        lower_absence_limit = request.POST.get("lower", "")
+        upper_absence_limit = request.POST.get("upper", "")
+
+        include_freshmen = request.POST.get("freshmen", "off") == "on"
+        include_sophomores = request.POST.get("sophomores", "off") == "on"
+        include_juniors = request.POST.get("juniors", "off") == "on"
+        include_seniors = request.POST.get("seniors", "off") == "on"
+
+        start_date = request.POST.get("start", "")
+        end_date = request.POST.get("end", "")
+
+        if lower_absence_limit == "" or not is_entirely_digit(lower_absence_limit):
+            lower_absence_limit = "1"
+            lower_absence_limit_filter = 1
+        else:
+            lower_absence_limit_filter = lower_absence_limit
+
+        if upper_absence_limit == "" or not is_entirely_digit(upper_absence_limit):
+            upper_absence_limit = "100"
+            upper_absence_limit_filter = 100
+        else:
+            upper_absence_limit_filter = upper_absence_limit
+
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            start_date_filter = start_date
+        except ValueError:
+            start_date = ""
+            start_date_filter = date(MINYEAR, 1, 1)
+
+        try:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+            end_date_filter = end_date
+        except ValueError:
+            end_date = ""
+            end_date_filter = date(MAXYEAR, 12, 31)
+
+        context = {
+            "lower_absence_limit": lower_absence_limit,
+            "upper_absence_limit": upper_absence_limit,
+            "include_freshmen": include_freshmen,
+            "include_sophomores": include_sophomores,
+            "include_juniors": include_juniors,
+            "include_seniors": include_seniors,
+            "start_date": start_date,
+            "end_date": end_date,
+            "form": form,
+            "admin_page_title": "View activity signup statistics",
+        }
+
+        if form.is_valid():
+            if int(upper_absence_limit_filter) > 0 and int(lower_absence_limit_filter) > 0:
+                act_ids = [act.id for act in form.cleaned_data["activities"]]
+
+                signed_up = (
+                    EighthSignup.objects.filter(
+                        scheduled_activity__block__date__gte=start_date_filter,
+                        scheduled_activity__block__date__lte=end_date_filter,
+                        scheduled_activity__activity__id__in=act_ids,
+                    )
+                    .values("user")
+                    .annotate(signups=Count("user"))
+                    .filter(signups__gte=lower_absence_limit_filter, signups__lte=upper_absence_limit_filter)
+                    .order_by("user")
+                    .values("user", "signups")
+                )
+
+                user_ids = [d["user"] for d in signed_up]
+                signed_up_users = get_user_model().objects.filter(id__in=user_ids).order_by("id")
+
+                for index, user in enumerate(signed_up_users):
+                    signed_up[index]["user"] = user
+
+                signed_up = list(signed_up)
+
+                def filter_by_grade(signed_up):
+                    grade = signed_up["user"].grade.number
+                    include = False
+                    if include_freshmen:
+                        include |= grade == 9
+                    if include_sophomores:
+                        include |= grade == 10
+                    if include_juniors:
+                        include |= grade == 11
+                    if include_seniors:
+                        include |= grade == 12
+                    return include
+
+                signed_up = list(filter(filter_by_grade, signed_up))
+                signed_up = sorted(signed_up, key=lambda x: (-1 * x["signups"], x["user"].last_name))
+
+                context["signed_up"] = signed_up
+    else:
+        form = ActivityMultiSelectForm()
+        context = {"form": form, "admin_page_title": "View activity signup statistics"}
+
+    return render(request, "eighth/admin/multiple_statistics.html", context=context)
 
 
 @login_required

@@ -575,6 +575,50 @@ class EighthAdminTest(EighthAbstractTest):
         self.assertEqual(user.eighthsignup_set.get(scheduled_activity__block=block_a).scheduled_activity, schact_a1)
         self.assertFalse(user.eighthsignup_set.filter(scheduled_activity__block=block_b).exists())
 
+    def test_activity_stats(self):
+        self.make_admin()
+        user = get_user_model().objects.get_or_create(username="user1", graduation_year=get_senior_graduation_year())[0]
+        block_a = self.add_block(date="2013-4-20", block_letter="A")
+        block_b = self.add_block(date="2013-4-20", block_letter="B")
+        act1 = self.add_activity(name="Test1")
+        act2 = self.add_activity(name="Test2")
+        schact_a = EighthScheduledActivity.objects.create(block=block_a, activity=act1)
+        schact_b = EighthScheduledActivity.objects.create(block=block_b, activity=act1)
+        EighthSignup.objects.create(scheduled_activity=schact_a, user=user)
+        EighthSignup.objects.create(scheduled_activity=schact_b, user=user)
+
+        response = self.client.post(
+            reverse("eighth_statistics_multiple"),
+            {
+                "activities": [act1.id, act2.id],
+                "lower": "",
+                "upper": "",
+                "start": "2020-10-01",
+                "end": "2020-10-24",
+                "freshmen": "on",
+                "sophmores": "on",
+                "juniors": "on",
+                "seniors": "on",
+            },
+        )
+        self.assertEqual(len(response.context["signed_up"]), 0)
+        response = self.client.post(
+            reverse("eighth_statistics_multiple"),
+            {
+                "activities": [act1.id, act2.id],
+                "lower": "",
+                "upper": "",
+                "start": "2013-01-01",
+                "end": "2020-10-24",
+                "freshmen": "on",
+                "sophmores": "on",
+                "juniors": "on",
+                "seniors": "on",
+            },
+        )
+        self.assertEqual(len(response.context["signed_up"]), 1)
+        self.assertEqual(response.context["signed_up"][0]["signups"], 2)
+
 
 class EighthExceptionTest(IonTestCase):
     def test_signup_exception(self):
