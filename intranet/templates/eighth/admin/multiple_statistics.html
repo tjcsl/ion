@@ -1,0 +1,116 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+    Filter student signups based on activities.
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <br>
+        <table>
+            <tr>
+                <th>Lower Signup Limit:</th>
+                <td><input type="text" name="lower" value="{{ lower_absence_limit }}" placeholder="1"></td>
+            </tr>
+            <tr>
+                <th>Upper Signup Limit:</th>
+                <td><input type="text" name="upper" value="{{ upper_absence_limit }}" placeholder="100"></td>
+            </tr>
+            <tr>
+                <th>Start Date:</th>
+                <td><input type="text" class="datepicker" name="start" value="{{ start_date|date:'Y-m-d' }}"></td>
+            </tr>
+            <tr>
+                <th>End Date:</th>
+                <td><input type="text" class="datepicker" name="end" value="{{ end_date|date:'Y-m-d' }}"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Include:</th>
+                <td><input type="checkbox" name="freshmen" {% if include_freshmen %}checked{% endif %}> Freshmen</td>
+                <td><input type="checkbox" name="sophomores" {% if include_sophomores %}checked{% endif %}> Sophomores</td>
+                <td><input type="checkbox" name="juniors" {% if include_juniors %}checked{% endif %}> Juniors</td>
+                <td><input type="checkbox" name="seniors" {% if include_seniors %}checked{% endif %}> Seniors</td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Search">
+    </form>
+    <br>
+    <br>
+
+    {% if signed_up != None %}
+        Click on column titles to sort. Showing {{ signed_up|length }} result{{ signed_up|length|pluralize }}.
+        <table data-sortable class="fancy-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>ID</th>
+                    <th>Signups</th>
+                    <th>Grade</th>
+                    <th>Counselor</th>
+                    <th>TJ Email</th>
+                    <th>Personal Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in signed_up %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' student.user.id %}">
+                                {{ student.user.last_name }}, {{ student.user.first_name }}
+                            </a>
+                        </td>
+                        <td>
+                            {% firstof student.user.student_id "" %}
+                        </td>
+                        <td>
+                            <a href="{% url 'eighth_absences' student.user.id %}">{{ student.signups }}</a>
+                        </td>
+                        <td>
+                            {{ student.user.grade_number }}
+                        </td>
+                        <td>
+                            {{ student.user.counselor.last_name }}
+                        </td>
+                        <td>
+                            <a href="mailto:{{ student.user.tj_email }}">
+                                {{ student.user.tj_email }}
+                            </a>
+                        <td>
+                            {% if student.user.non_tj_email %}
+                            <a href="mailto:{{ student.user.non_tj_email }}">
+                                {{ student.user.non_tj_email }}
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">
+                        There were no results.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}
