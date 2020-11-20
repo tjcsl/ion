@@ -2,11 +2,16 @@ import { getSocket } from "./bus-shared.js";
 
 $(function() {
     let base_url = window.location.host;
-    let socket = getSocket(base_url, location, document, window, 'morning');
+    let socket = getSocket(base_url, location, document, window, "morning");
 
     $("#a-button").click(function() {sendMorningUpdate({"status":"a"}, socket); });
     $("#o-button").click(function() {sendMorningUpdate({"status":"o"}, socket); });
     $("#d-button").click(function() {sendMorningUpdate({"status":"d"}, socket); });
+
+    $("select").selectize({
+        create: false,
+        sortField: "text"
+    });
 });
 
 function sendMorningUpdate(data, socket) {
