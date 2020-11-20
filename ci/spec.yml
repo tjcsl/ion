@@ -64,8 +64,8 @@ env:
         coverage coveralls pyyaml
       pip install -U -r requirements.txt
 
-      echo "::set-env name=PATH::$PATH"
-      echo "::set-env name=VIRTUAL_ENV::$VIRTUAL_ENV"
+      echo "PATH=$PATH" >> $GITHUB_ENV
+      echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
   .copy_secret: &copy_secret
     name: Copy secret.py
@@ -215,14 +215,14 @@ jobs:
         run: |
           set -e
           npm install sass
-          echo "::set-env name=PATH::${{ github.workspace }}/node_modules/.bin:$PATH"
+          echo "PATH=${{ github.workspace }}/node_modules/.bin:$PATH" >> $GITHUB_ENV
 
       # Postgres setup
       - name: Set and create PGPASSFILE
         run: |
           set -e
           PGPASSFILE=${{ runner.temp }}/.pgpass
-          echo "::set-env name=PGPASSFILE::$PGPASSFILE"
+          echo "PGPASSFILE=$PGPASSFILE" >> $GITHUB_ENV
           echo 127.0.0.1:5432:postgres:postgres:postgres >$PGPASSFILE
           chmod 600 $PGPASSFILE
       - name: Create database
