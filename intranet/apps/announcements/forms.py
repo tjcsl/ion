@@ -59,7 +59,7 @@ class AnnouncementRequestForm(forms.ModelForm):
             "to a specific group of students, such as the Class of 2016, enter that request here."
         )
         self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(
-            queryset=get_user_model().objects.get_teachers_attendance_users_sorted(), show_username=True
+            queryset=get_user_model().objects.get_approve_announcements_users_sorted(), show_username=True
         )
         self.fields["teachers_requested"].label = "Sponsor"
         self.fields["teachers_requested"].help_text = (

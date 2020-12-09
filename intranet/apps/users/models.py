@@ -134,13 +134,40 @@ class UserManager(DjangoUserManager):
         """Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by
         last name, then first name.
 
-        This is used for the announcement request page.
-
         Returns:
             A ``QuerySet`` of teachers sorted by last name, then first name.
 
         """
         return self.get_teachers_attendance_users().order_by("last_name", "first_name")
+
+    def get_approve_announcements_users(self) -> "QuerySet[User]":  # noqa
+        """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
+        alumni, service users and students.
+
+        Returns:
+            A ``QuerySet`` of all users except simple users, tjstar presenters, alumni,
+            service users and students.
+
+        """
+
+        users = User.objects.filter(user_type__in=["user", "teacher", "counselor"])
+        users = users.exclude(id__in=EXTRA)
+        users = users.exclude(Q(first_name=None) | Q(first_name="") | Q(last_name=None) | Q(last_name=""))
+
+        return users
+
+    def get_approve_announcements_users_sorted(self) -> "QuerySet[User]":  # noqa
+        """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
+        alumni, service users and students sorted by last name, then first name.
+
+        This is used for the announcement request page.
+
+        Returns:
+            A ``QuerySet`` of all users except simple users, tjstar presenters, alumni,
+            service users and students sorted by last name, then first name.
+
+        """
+        return self.get_approve_announcements_users().order_by("last_name", "first_name")
 
     def exclude_from_search(
         self, existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None  # pylint: disable=unsubscriptable-object
