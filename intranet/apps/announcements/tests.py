@@ -44,3 +44,9 @@ class AnnouncementTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse("show_announcement"))
         self.assertEqual(response.status_code, 404)
+
+    def test_announcement_approval(self):
+        teacher = get_user_model().objects.get_or_create(username="teacher", user_type="teacher", first_name="timmy", last_name="teacher")[0]
+        counselor = get_user_model().objects.get_or_create(username="counselor", user_type="counselor", first_name="c", last_name="c")[0]
+        user = get_user_model().objects.get_or_create(username="user", user_type="user", first_name="ursula", last_name="user")[0]
+        self.assertEqual(list(get_user_model().objects.get_approve_announcements_users_sorted()), [counselor, teacher, user])
