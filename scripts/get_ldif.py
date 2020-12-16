@@ -13,6 +13,7 @@ def run(*args):
         u.user_type = "staff"
     else:
         u.user_type = "students"
+    tj_email = u.tj_email
 
     ldiftemplate = """dn: uid={username},ou={graduation_year},ou={user_type},ou=people,dc=csl,dc=tjhsst,dc=edu
 cn: {first_name} {last_name}
@@ -30,8 +31,9 @@ uidNumber: {uidNum}
 gecos: {first_name} {last_name}
 gidNumber: {graduation_year}
 homeDirectory: /afs/csl.tjhsst.edu/{user_type}/{graduation_year}/{username}
+mail: {tj_email}
 loginShell: /bin/bash"""
-    out = ldiftemplate.format(uidNum=uidNum, **model_to_dict(u))
+    out = ldiftemplate.format(uidNum=uidNum, tj_email=tj_email, **model_to_dict(u))
     if u.user_type == "staff":
         out = out.replace("staff/1984", "staff")
         out = out.replace("ou=1984,", "")
