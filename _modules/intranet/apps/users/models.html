@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #222) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #230) documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -261,13 +261,40 @@
         <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by</span>
 <span class="sd">        last name, then first name.</span>
 
-<span class="sd">        This is used for the announcement request page.</span>
-
 <span class="sd">        Returns:</span>
 <span class="sd">            A ``QuerySet`` of teachers sorted by last name, then first name.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers_attendance_users</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserManager.get_approve_announcements_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_approve_announcements_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_approve_announcements_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
+<span class="sd">        alumni, service users and students.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``QuerySet`` of all users except simple users, tjstar presenters, alumni,</span>
+<span class="sd">            service users and students.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type__in</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;teacher&quot;</span><span class="p">,</span> <span class="s2">&quot;counselor&quot;</span><span class="p">])</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">users</span></div>
+
+<div class="viewcode-block" id="UserManager.get_approve_announcements_users_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_approve_announcements_users_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_approve_announcements_users_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
+<span class="sd">        alumni, service users and students sorted by last name, then first name.</span>
+
+<span class="sd">        This is used for the announcement request page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``QuerySet`` of all users except simple users, tjstar presenters, alumni,</span>
+<span class="sd">            service users and students sorted by last name, then first name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_approve_announcements_users</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.exclude_from_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.exclude_from_search">[docs]</a>    <span class="k">def</span> <span class="nf">exclude_from_search</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">existing_queryset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
