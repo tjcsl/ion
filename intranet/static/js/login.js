@@ -105,4 +105,19 @@ $(function() {
             });
         }
     });
+
+    function doneTyping () {
+        let re = /^(\d{4})?[a-zA-Z]+\d?$/;
+        if (re.exec($("#id_username").val()) == null) {
+            $("#username-warning").text("Username must be in the format 2016jwoglom for students or jbwoglom for staff.");
+        } else {
+            $("#username-warning").text("");
+        }
+    }
+
+    var typingTimer;
+    $("#id_username").on("keyup", function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, 2000);
+    });
 });
