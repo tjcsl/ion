@@ -1,5 +1,4 @@
 import csv
-import json
 import logging
 from collections import defaultdict
 
@@ -25,15 +24,18 @@ def add_room_view(request):
     if request.method == "POST":
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save()
+            for act in form.cleaned_data["activities"]:
+                act.rooms.add(room)
             messages.success(request, "Successfully added room.")
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding room.")
-            request.session["add_room_form"] = json.dumps(form.errors)
-            return redirect("eighth_admin_dashboard")
     else:
-        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+        form = RoomForm()
+
+    context = {"form": form, "admin_page_title": "Add Room"}
+    return render(request, "eighth/admin/edit_form.html", context)
 
 
 @eighth_admin_required
@@ -43,16 +45,29 @@ def edit_room_view(request, room_id):
     except EighthRoom.DoesNotExist as e:
         raise http.Http404 from e
 
+    current_activities = list(room.room_activity_set.all())
+
     if request.method == "POST":
         form = RoomForm(request.POST, instance=room)
         if form.is_valid():
-            form.save()
+            room = form.save()
+
+            new_activities = list(form.cleaned_data["activities"])
+            for act in current_activities:
+                if act in new_activities:
+                    new_activities.remove(act)
+                else:
+                    act.rooms.remove(room)
+            for act in new_activities:
+                act.rooms.add(room)
+
             messages.success(request, "Successfully edited room.")
             return redirect("eighth_admin_dashboard")
         else:
-            messages.error(request, "Error adding room.")
+            messages.error(request, "Error editing room.")
     else:
-        form = RoomForm(instance=room)
+        initial_dict = {"activities": current_activities}
+        form = RoomForm(instance=room, initial=initial_dict)
 
     context = {"form": form, "delete_url": reverse("eighth_admin_delete_room", args=[room_id]), "admin_page_title": "Edit Room"}
     return render(request, "eighth/admin/edit_form.html", context)

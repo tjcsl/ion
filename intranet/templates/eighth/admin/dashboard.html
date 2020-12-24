@@ -112,6 +112,7 @@
 
             <div class="right-buttons">
                 <a class="dynamic-link button" data-select="room-select" data-href-pattern="{% url 'eighth_admin_edit_room' url_id_placeholder %}" class="button">Edit Room</a>
+                <a class="button" href="{% url 'eighth_admin_add_room' %}">Add Room</a>
             </div>
 
             <ul class="fa-ul">
@@ -121,22 +122,6 @@
                 <li><a href="{% url 'eighth_admin_room_utilization' %}"><i class="fa-li fas fa-arrows-alt-h"></i><b>Room utilization</b> across blocks</a></li>
                 <li><a href="{% url 'eighth_admin_list_sponsor' %}"><i class="fa-li fas fa-list"></i><b>List</b> sponsor schedule</a></li>
             </ul>
-
-            <form id="add-room-form" action="{% url 'eighth_admin_add_room' %}" method="post" autocomplete="off">
-                <h4>Add Room</h4>
-                {% csrf_token %}
-                <table>
-                    <tr>
-                        <th><label>Name:</label></th>
-                        <td>{{ add_room_form.name }}</td>
-                        <th><label>Capacity:</label></th>
-                        <td>{{ add_room_form.capacity }}</td>
-                        <td class="right-buttons">
-                            <input type="submit" value="Add">
-                        </td>
-                    </tr>
-                </table>
-            </form>
         </td>
 
     </tr>

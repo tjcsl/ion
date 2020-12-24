@@ -619,6 +619,35 @@ class EighthAdminTest(EighthAbstractTest):
         self.assertEqual(len(response.context["signed_up"]), 1)
         self.assertEqual(response.context["signed_up"][0]["signups"], 2)
 
+    def test_room_change(self):
+        self.make_admin()
+        act1 = EighthActivity.objects.create(name="Act1")
+        act2 = EighthActivity.objects.create(name="Act2")
+        room1 = EighthRoom.objects.create(name="Room 1", capacity=1)
+        room2 = EighthRoom.objects.create(name="Room 2", capacity=1)
+        act1.rooms.add(room1)
+        act2.rooms.add(room2)
+        self.client.post(
+            reverse("eighth_admin_add_room"),
+            {
+                "name": "Room 3",
+                "capacity": 1,
+                "activities": [act2.id],
+            },
+        )
+        self.assertEqual(len(act1.rooms.all()), 1)
+        self.assertEqual(len(act2.rooms.all()), 2)
+        self.client.post(
+            reverse("eighth_admin_edit_room", args=[room2.id]),
+            {
+                "name": "Room 2",
+                "capacity": 1,
+                "activities": [act1.id],
+            },
+        )
+        self.assertEqual(len(act1.rooms.all()), 2)
+        self.assertEqual(len(act2.rooms.all()), 1)
+
 
 class EighthExceptionTest(IonTestCase):
     def test_signup_exception(self):
