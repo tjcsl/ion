@@ -296,15 +296,15 @@ def handle_sap(q):
     return {"question": q, "choices": choices, "user_scale": user_scale}
 
 
-def generate_choice(name, votes, total_count, do_gender=True, show_answers=False):
+def generate_choice(name, votes, total_count, show_answers=False):
     choice = {
         "choice": name,
         "votes": {
             "total": {
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), total_count),
-                "male": votes.filter(user__gender=True).count() if do_gender else 0,
-                "female": votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0,
+                "male": votes.filter(user__gender=True).count(),
+                "female": votes.filter(user__gender__isnull=False, user__gender=False).count(),
             }
         },
         "users": [v.user for v in votes] if show_answers else None,
@@ -314,13 +314,13 @@ def generate_choice(name, votes, total_count, do_gender=True, show_answers=False
         yr_votes = votes.filter(user__graduation_year=get_senior_graduation_year() + 12 - yr)
         choice["votes"][yr] = {
             "all": yr_votes.count(),
-            "male": yr_votes.filter(user__gender=True).count() if do_gender else 0,
-            "female": yr_votes.filter(user__gender__isnull=False, user__gender=False).count() if do_gender else 0,
+            "male": yr_votes.filter(user__gender=True).count(),
+            "female": yr_votes.filter(user__gender__isnull=False, user__gender=False).count(),
         }
     return choice
 
 
-def handle_choice(q, do_gender=True, show_answers=False):
+def handle_choice(q, show_answers=False):
     question_votes = votes = Answer.objects.filter(question=q)
     total_count = question_votes.count()
     users = q.get_users_voted()
@@ -329,14 +329,14 @@ def handle_choice(q, do_gender=True, show_answers=False):
     # Choices
     for c in q.choice_set.all().order_by("num"):
         votes = question_votes.filter(choice=c)
-        choices.append(generate_choice(c, votes, total_count, do_gender, show_answers))
+        choices.append(generate_choice(c, votes, total_count, show_answers))
 
     # Clear vote
     votes = question_votes.filter(clear_vote=True)
-    choices.append(generate_choice("Clear vote", votes, total_count, do_gender, show_answers))
+    choices.append(generate_choice("Clear vote", votes, total_count, show_answers))
 
     # Total
-    total_choice = generate_choice("Total", question_votes, total_count, do_gender, show_answers)
+    total_choice = generate_choice("Total", question_votes, total_count, show_answers)
     total_choice["votes"]["total"]["users_all"] = users.count()
     choices.append(total_choice)
 
@@ -353,7 +353,6 @@ def poll_results_view(request, poll_id):
         messages.error(request, "Poll results cannot be viewed while the poll is running.")
         return redirect("polls")
 
-    do_gender = "no_gender" not in request.GET
     show_answers = request.GET.get("show_answers", False)
 
     if show_answers and poll.is_secret:
@@ -365,13 +364,13 @@ def poll_results_view(request, poll_id):
         if q.type == "SAP":  # Split-approval; each person splits their one vote
             questions.append(handle_sap(q))
         elif q.is_choice():
-            questions.append(handle_choice(q, do_gender, show_answers))
+            questions.append(handle_choice(q, show_answers))
         elif q.is_writing():
             answers = Answer.objects.filter(question=q)
             question = {"question": q, "answers": answers}
             questions.append(question)
 
-    context = {"poll": poll, "grades": range(9, 13), "questions": questions, "show_answers": show_answers, "do_gender": do_gender}
+    context = {"poll": poll, "grades": range(9, 13), "questions": questions, "show_answers": show_answers}
     return render(request, "polls/results.html", context)
 
 
