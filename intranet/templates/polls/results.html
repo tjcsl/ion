@@ -38,10 +38,22 @@
     {{ block.super }}
     <script>
     $(function() {
+        $(".gender-results").hide();
         $("#user-sels").click(function() {
             $(".user-selections").toggle();
         });
-    })
+        $("#gender-toggle").click(function(){
+            if($(this).prop("checked") == true){
+                $(".gender-results").show();
+                $(".grade-header").attr('colSpan', 3);
+                $(".choice-header").attr('rowSpan', 2);
+            } else {
+                $(".gender-results").hide();
+                $(".grade-header").attr('colSpan', 1);
+                $(".choice-header").attr('rowSpan', 1);
+            }
+        });
+    });
     </script>
 {% endblock %}
 
@@ -68,8 +80,8 @@
             &nbsp; <a href="{% url 'poll_csv_results' poll.id %}" class="button small-button print-hide">Download as CSV</a>
         {% endif %}<br>
         <h2>Results: {{ poll }}</h2>
-        <p>&nbsp; {{ poll.get_voted_string }}</p>
-
+        <p>&nbsp; {{ poll.get_voted_string }}</p><br>
+        <p>&nbsp; Show results by gender?<input id="gender-toggle" type="checkbox"></p><br>
         <ol class="questions">
             {% for q in questions %}
                 <li id="question-{{ q.question.num }}"><b>{{ q.question.question|safe }}</b>
@@ -83,18 +95,18 @@
                     <table class="results-table choice-table fancy-table">
                     <thead>
                         <tr>
-                            <th rowspan="2" class="choice-header">Choice</th>
-                            <th colspan="3">Total Votes</th>
+                            <th rowspan="1" class="choice-header">Choice</th>
+                            <th class="grade-header" colspan="1">Total Votes</th>
                             {% for i in grades %}
-                                <th colspan="3">{{ i }}</th>
+                                <th class="grade-header" colspan="1">{{ i }}</th>
                             {% endfor %}
-                            <th colspan="3">Staff</th>
+                            <th class="grade-header" colspan="1">Staff</th>
                         </tr>
-                        <tr>
+                        <tr class="gender-results">
                         {% for i in "012345" %}
                             <th>T</th>
-                            <th>M</th>
-                            <th>F</th>
+                            <th class="gender-results">M</th>
+                            <th class="gender-results">F</th>
                         {% endfor %}
                         </tr>
                     </thead>
@@ -121,33 +133,33 @@
                             </td>
                             {% with t=c.votes.total %}
                                 <td>{{ t.all }} ({{ t.all_percent }}%)</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                             {% with t=c.votes.9 %}
                                 <td>{{ t.all }}</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                             {% with t=c.votes.10 %}
                                 <td>{{ t.all }}</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                             {% with t=c.votes.11 %}
                                 <td>{{ t.all }}</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                             {% with t=c.votes.12 %}
                                 <td>{{ t.all }}</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                             {% with t=c.votes.13 %}
                                 <td>{{ t.all }}</td>
-                                <td>{{ t.is_male }}</td>
-                                <td>{{ t.is_female }}</td>
+                                <td class="gender-results">{{ t.is_male }}</td>
+                                <td class="gender-results">{{ t.is_female }}</td>
                             {% endwith %}
                         </tr>
                         {% endfor %}
