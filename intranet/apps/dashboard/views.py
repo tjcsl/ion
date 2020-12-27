@@ -1,10 +1,10 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 
@@ -13,6 +13,7 @@ from ...utils.helpers import get_ap_week_warning, get_fcps_emerg
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..events.models import Event, TJStarUUIDMap
+from ..schedule.models import Day
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 
@@ -338,6 +339,20 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     """Process and show the dashboard, which includes activities, events, and widgets."""
 
     user = request.user
+
+    if user.is_student and settings.ENABLE_PRE_EIGHTH_LOCATION_REDIRECT and request.COOKIES.get("seen_eighth_location", "") != "1":
+        now = timezone.localtime()
+        try:
+            today_8 = Day.objects.today().day_type.blocks.filter(name__contains="8")
+            if today_8:
+                first_start_time = time(today_8[0].start.hour, today_8[0].start.minute)
+                last_start_time = time(today_8.last().start.hour, today_8.last().start.minute)
+                first_start_date = datetime.combine(now.today(), first_start_time)
+                last_start_date = datetime.combine(now.today(), last_start_time)
+                if first_start_date - timedelta(minutes=30) < datetime.combine(now.today(), now.time()) < last_start_date + timedelta(minutes=20):
+                    return redirect(reverse("eighth_location"))
+        except AttributeError:
+            pass
 
     announcements_admin = user.has_admin_permission("announcements")
     events_admin = user.has_admin_permission("events")

@@ -378,10 +378,13 @@ def eighth_location(request):
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
 
-        return render(request, "eighth/location.html", context={"sch_acts": sch_acts})
+        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts})
     else:
         messages.error(request, "There are no eighth period blocks scheduled today.")
-        return redirect("index")
+        response = redirect("index")
+
+    response.set_cookie("seen_eighth_location", "1", max_age=(3 * 60 * 60))
+    return response
 
 
 @require_POST

@@ -1,7 +1,7 @@
 import logging
 import random
-import time as python_time
-from datetime import datetime, time, timedelta
+import time
+from datetime import timedelta
 from typing import Container, Tuple
 
 from dateutil.relativedelta import relativedelta
@@ -24,7 +24,6 @@ from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
-from ..schedule.models import Day
 from ..schedule.views import schedule_context
 from ..sessionmgmt.helpers import trust_session
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
@@ -194,24 +193,6 @@ class LoginView(View):
                 if blocks.exclude(eighthscheduledactivity__eighthsignup_set__user=request.user).exists():
                     default_next_page = "eighth_signup"
 
-            if request.user.is_student and settings.ENABLE_PRE_EIGHTH_LOCATION_REDIRECT:
-                now = timezone.localtime()
-                try:
-                    today_8 = Day.objects.today().day_type.blocks.filter(name__contains="8")
-                    if today_8:
-                        first_start_time = time(today_8[0].start.hour, today_8[0].start.minute)
-                        last_start_time = time(today_8.last().start.hour, today_8.last().start.minute)
-                        first_start_date = datetime.combine(now.today(), first_start_time)
-                        last_start_date = datetime.combine(now.today(), last_start_time)
-                        if (
-                            first_start_date - timedelta(minutes=30)
-                            < datetime.combine(now.today(), now.time())
-                            < last_start_date + timedelta(minutes=20)
-                        ):
-                            default_next_page = "eighth_location"
-                except AttributeError:
-                    pass
-
             if request.user.is_eighthoffice:
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
@@ -278,7 +259,7 @@ def reauthentication_view(request):
     context = {"login_failed": False}
     if request.method == "POST":
         if authenticate(username=request.user.username, password=request.POST.get("password", "")):
-            request.session["reauthenticated_at"] = python_time.time()
+            request.session["reauthenticated_at"] = time.time()
             return redirect(request.POST.get("next", request.GET.get("next", "/")))
         else:
             context["login_failed"] = True
