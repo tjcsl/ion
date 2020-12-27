@@ -8,6 +8,7 @@ from django.utils.http import urlencode
 from ...test.ion_test import IonTestCase
 from ...utils.date import get_senior_graduation_year
 from ..groups.models import Group
+from ..schedule.models import Block, Day, DayType, Time
 from ..users.models import Email
 from .exceptions import SignupException
 from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
@@ -647,6 +648,29 @@ class EighthAdminTest(EighthAbstractTest):
         )
         self.assertEqual(len(act1.rooms.all()), 2)
         self.assertEqual(len(act2.rooms.all()), 1)
+
+    def test_eighth_location_view(self):
+        self.make_admin()
+        now = timezone.localtime()
+        time_start = Time.objects.create(hour=now.time().hour, minute=now.time().minute)
+        time_end = Time.objects.create(hour=now.time().hour + 1, minute=now.time().minute)
+        block = Block.objects.create(name="8A", start=time_start, end=time_end, order=1)
+        red_day = DayType.objects.create(name="red")
+        red_day.blocks.add(block)
+        Day.objects.create(date=now.today(), day_type=red_day)
+        # This part is a little hacky. We can't get the location of a response without redirecting, so we:
+
+        # first test that the redirect works
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("eighth_location"))
+
+        # then allow client to follow the redirect in order to add the "seen_eighth_location" cookie
+        response = self.client.get("/", follow=True)
+
+        # finally ensure that the "seen_eighth_location" cookie now prevents the redirect
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
 
 
 class EighthExceptionTest(IonTestCase):
