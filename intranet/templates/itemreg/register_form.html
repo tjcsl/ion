@@ -89,9 +89,20 @@
     <table>
     {% csrf_token %}
     {{ form.as_table }}
-    <tr><td>&nbsp;</td><td><br><input type="submit"></td></tr>
+    <tr><td>&nbsp;</td><td><br><input type="submit" value="Register Device"></td></tr>
     </table>
 
     </form>
+    {% if type == "phone" %}
+    <br>
+    <h2>Find your IMEI:</h2>
+    <p>The IMEI can generally be found by dialing <code>*#06#</code>.</p>
+    <p>For manufacturer specific instructions, see the following links:</p>
+    <ul>
+        <li><a href="https://support.apple.com/en-us/HT204073">Apple</a></li>
+        <li><a href="https://support.google.com/store/answer/3333000?hl=en">Google</a></li>
+        <li><a href="https://www.samsung.com/us/support/answer/ANS00048604/">Samsung</a></li>
+    </ul>
+    {% endif %}
 </div>
 {% endblock %}

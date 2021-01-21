@@ -63,7 +63,7 @@ def search_view(request):
     elif item_type == "phone":
         cresults = PhoneRegistration.objects.all()
 
-        for name in ["manufacturer", "model", "serial"]:
+        for name in ["manufacturer", "model", "imei"]:
             value = request.GET.get(name)
             if value:
                 cresults = cresults.filter(**{name: value})
