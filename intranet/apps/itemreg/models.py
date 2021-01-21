@@ -80,7 +80,7 @@ class PhoneRegistration(models.Model):
     )
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
-    serial = models.CharField(max_length=20)
+    imei = models.CharField(max_length=20)
     description = models.TextField(max_length=1000)
     added = models.DateTimeField(auto_now_add=True)
 

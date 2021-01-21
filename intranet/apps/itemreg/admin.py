@@ -18,7 +18,7 @@ class ComputerRegistrationAdmin(admin.ModelAdmin):
 
 
 class PhoneRegistrationAdmin(admin.ModelAdmin):
-    list_display = ("manufacturer", "model", "serial", "description", "user", "added")
+    list_display = ("manufacturer", "model", "imei", "description", "user", "added")
     list_filter = ("added", "manufacturer")
     ordering = ("-added",)
     raw_id_fields = ("user",)

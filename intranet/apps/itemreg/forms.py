@@ -24,6 +24,10 @@ class ComputerRegistrationForm(forms.ModelForm):
 
 
 class PhoneRegistrationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["imei"].label = "IMEI"
+
     class Meta:
         model = PhoneRegistration
-        fields = ["manufacturer", "model", "serial", "description"]
+        fields = ["manufacturer", "model", "imei", "description"]
