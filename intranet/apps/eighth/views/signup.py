@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from ....utils.date import get_date_range_this_year
 from ....utils.helpers import is_entirely_digit
 from ....utils.locking import lock_on
 from ....utils.serialization import safe_json
@@ -99,17 +100,36 @@ def eighth_signup_view(request, block_id=None):
 
         return http.HttpResponse(success_message)
     else:
-        block = None
-        if block_id is None:
-            next_block = EighthBlock.objects.get_first_upcoming_block()
-            if next_block is not None:
-                block = next_block
-                block_id = next_block.id
-            else:
-                last_block = EighthBlock.objects.order_by("date").last()
-                if last_block is not None:
-                    block = last_block
-                    block_id = last_block.id
+        #######
+        if settings.ENABLE_HYBRID_EIGHTH and not request.user.is_eighth_admin:
+            block = None
+            if block_id is None:
+                now = timezone.localtime()
+                if now.hour < 17:
+                    now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+                surrounding_blocks = EighthBlock.objects.exclude(
+                    eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky", members__in=[request.user])
+                ).order_by("date", "block_letter")
+                future_blocks = surrounding_blocks.filter(date__gte=now)
+                if future_blocks is not None:
+                    block = future_blocks[0]
+                elif surrounding_blocks is not None:
+                    block = surrounding_blocks[-1]
+                if block is not None:
+                    block_id = block.id
+        #######
+        else:
+            block = None
+            if block_id is None:
+                next_block = EighthBlock.objects.get_first_upcoming_block()
+                if next_block is not None:
+                    block = next_block
+                    block_id = next_block.id
+                else:
+                    last_block = EighthBlock.objects.order_by("date").last()
+                    if last_block is not None:
+                        block = last_block
+                        block_id = last_block.id
 
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
@@ -133,7 +153,21 @@ def eighth_signup_view(request, block_id=None):
                     # The provided block_id is invalid
                     raise http.Http404 from e
 
-        surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
+        #######
+        surrounding_blocks = []
+        if settings.ENABLE_HYBRID_EIGHTH and not request.user.is_eighth_admin:
+            date_start, date_end = get_date_range_this_year()
+            surrounding_blocks = (
+                EighthBlock.objects.exclude(
+                    eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky", members__in=[request.user])
+                )
+                .order_by("date", "block_letter")
+                .filter(date__gte=date_start, date__lte=date_end)
+            )
+        else:
+            #######
+            surrounding_blocks = EighthBlock.objects.get_blocks_this_year()
+
         schedule = []
 
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
@@ -159,6 +193,11 @@ def eighth_signup_view(request, block_id=None):
                 "within_few_days": b.date >= today and b.date <= today + datetime.timedelta(days=2),
                 "locked": b.locked,
             }
+
+            #######
+            if settings.ENABLE_HYBRID_EIGHTH:
+                info.update({"block_letter": b.hybrid_text, "block_letter_width": (len(b.hybrid_text) - 1) * 6 + 15})
+            #######
 
             if schedule and schedule[-1]["date"] == b.date:
                 schedule[-1]["blocks"].append(info)
@@ -186,6 +225,11 @@ def eighth_signup_view(request, block_id=None):
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
         }
+
+        #######
+        if settings.ENABLE_HYBRID_EIGHTH:
+            context.update({"hybrid": True})
+        #######
 
         eighth_signup_visits.observe(time.time() - start_time)
 

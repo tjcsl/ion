@@ -5,14 +5,16 @@ import re
 from cacheops import invalidate_model
 
 from django import http
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from ....auth.decorators import eighth_admin_required
+from ....users.models import Group
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
-from ...models import EighthBlock, EighthScheduledActivity, EighthSignup
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..attendance import generate_roster_pdf
 
 logger = logging.getLogger(__name__)
@@ -65,8 +67,85 @@ def add_block_view(request):
 
             invalidate_model(EighthBlock)
 
+    #######
+    if settings.ENABLE_HYBRID_EIGHTH:
+        if request.POST.get("assign_hybrid", "off") == "on":
+            blocks = EighthBlock.objects.filter(date=fmtdate)
+            block_names = {b.block_letter[4:] for b in blocks if "P1" in b.block_letter or "P2" in b.block_letter or "Virt" in b.block_letter}
+            sticky_act = EighthActivity.objects.get_or_create(name="z - Hybrid Sticky", sticky=True, administrative=True)[0]
+            failed_users = set()
+            if "P1" in block_names and "Virt" in block_names and "P2" not in block_names:
+                # sticky `virtual` and `in-person (l-z)` for `* - P1`
+                p1_blocks = {b for b in blocks if "P1" in b.block_letter}
+                for b in p1_blocks:
+                    sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
+                    for g in [Group.objects.get(name="virtual"), Group.objects.get(name="in-person (l-z)")]:
+                        for user in g.user_set.all():
+                            try:
+                                sch_act.add_user(user, request=request, force=True, no_after_deadline=True)
+                            except Exception:
+                                failed_users.add(user)
+
+                # sticky `in-person (a-k)` for `* - Virt`
+                virtual_blocks = {b for b in blocks if "Virt" in b.block_letter}
+                for b in virtual_blocks:
+                    sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
+                    for g in [Group.objects.get(name="in-person (a-k)")]:
+                        for user in g.user_set.all():
+                            try:
+                                sch_act.add_user(user, request=request, force=True, no_after_deadline=True)
+                            except Exception:
+                                failed_users.add(user)
+                messages.success(request, "Assigned groups successfully.")
+                if failed_users:  # this shouldn't happen because only students should be in the groups, but we don't want to 500
+                    messages.warning(
+                        request,
+                        "Some users could not be stickied. Please handle them manually and let the Ion devs know: {}".format(
+                            ", ".join(["{} {}".format(u.first_name, u.last_name) for u in failed_users])
+                        ),
+                    )
+            elif "P2" in block_names and "Virt" in block_names and "P1" not in block_names:
+                # sticky `virtual` and `in-person (a-k)` for `* - P2`
+                p2_blocks = {b for b in blocks if "P2" in b.block_letter}
+                for b in p2_blocks:
+                    sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
+                    for g in [Group.objects.get(name="virtual"), Group.objects.get(name="in-person (a-k)")]:
+                        for user in g.user_set.all():
+                            try:
+                                sch_act.add_user(user, request=request, force=True, no_after_deadline=True)
+                            except Exception:
+                                failed_users.add(user)
+
+                # sticky `in-person (l-z)` for `* - Virt`
+                virtual_blocks = {b for b in blocks if "Virt" in b.block_letter}
+                for b in virtual_blocks:
+                    sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
+                    for g in [Group.objects.get(name="in-person (l-z)")]:
+                        for user in g.user_set.all():
+                            try:
+                                sch_act.add_user(user, request=request, force=True, no_after_deadline=True)
+                            except Exception:
+                                failed_users.add(user)
+                messages.success(request, "Assigned groups successfully.")
+                if failed_users:  # this shouldn't happen because only students should be in the groups, but we don't want to 500
+                    messages.warning(
+                        request,
+                        "Some users could not be stickied. Please handle them manually and let the Ion devs know: {}".format(
+                            ", ".join(["{} {}".format(u.first_name, u.last_name) for u in failed_users])
+                        ),
+                    )
+            elif "Virt" in block_names and len(block_names) == 1:  # everyone is virtual
+                messages.warning(request, "Only virtual blocks have been created, so not assigning any groups.")
+            else:  # something is wrong
+                messages.error(request, "Created blocks successfully, but couldn't assign groups. Please do this manually.")
+    #######
+
     letters = []
     visible_blocks = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    #######
+    if settings.ENABLE_HYBRID_EIGHTH:
+        visible_blocks = ["A - Virt", "A - P1", "A - P2", "B - Virt", "B - P1", "B - P2"]
+    #######
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
         for ltr in visible_blocks:
@@ -85,6 +164,11 @@ def add_block_view(request):
         "add_block_form": QuickBlockForm,
     }
 
+    #######
+    if settings.ENABLE_HYBRID_EIGHTH:
+        context.update({"hybrid": True})
+    #######
+
     return render(request, "eighth/admin/add_block.html", context)
 
 
@@ -101,6 +185,14 @@ def edit_block_view(request, block_id):
             form.save()
             invalidate_model(EighthBlock)
             messages.success(request, "Successfully edited block.")
+            #######
+            if settings.ENABLE_HYBRID_EIGHTH:
+                messages.warning(
+                    request,
+                    """Changing the block name here did not change the groups that were assigned to it.
+                     If you need to do this, please delete this block and create the correct one.""",
+                )
+            #######
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")

@@ -113,6 +113,11 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         context = super().get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
 
+        #######
+        if settings.ENABLE_HYBRID_EIGHTH:
+            context.update({"hybrid": True})
+        #######
+
         block = self.get_cleaned_data_for_step("block")
         context.update({"show_all_blocks": ("show_all_blocks" in self.request.GET or "block" in self.request.GET)})
         context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block)})

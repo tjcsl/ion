@@ -1,9 +1,10 @@
+from django.conf import settings
 from django.urls import include, re_path
 
 from .views import activities, attendance, monitoring, profile, routers, signup
 from .views.admin import activities as admin_activities
 from .views.admin import attendance as admin_attendance
-from .views.admin import blocks, general, groups
+from .views.admin import blocks, general, groups, hybrid
 from .views.admin import maintenance as admin_maintenance
 from .views.admin import rooms, scheduling, sponsors, users
 
@@ -148,5 +149,14 @@ eighth_admin_patterns = [
     re_path(r"^startdate$", general.edit_start_date_view, name="eighth_admin_edit_start_date"),
     re_path(r"^cache$", general.cache_view, name="eighth_admin_cache"),
 ]
+
+#######
+if settings.ENABLE_HYBRID_EIGHTH:
+    hybrid_patterns = [
+        re_path(r"^hybrid/list$", hybrid.list_sponsor_view, name="eighth_admin_list_sponsor_hybrid"),
+        re_path(r"^hybrid/no_attendance$", hybrid.activities_without_attendance_view, name="eighth_admin_view_activities_without_attendance_hybrid"),
+    ]
+    eighth_admin_patterns.extend(hybrid_patterns)
+#######
 
 urlpatterns += [re_path(r"^/admin/", include(eighth_admin_patterns))]

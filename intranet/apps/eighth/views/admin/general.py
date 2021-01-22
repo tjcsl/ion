@@ -76,6 +76,11 @@ def eighth_admin_dashboard_view(request, **kwargs):
         else:
             context[form_name] = form_class()
 
+    #######
+    if settings.ENABLE_HYBRID_EIGHTH:
+        context.update({"hybrid": True})
+    #######
+
     return render(request, "eighth/admin/dashboard.html", context)
 
 

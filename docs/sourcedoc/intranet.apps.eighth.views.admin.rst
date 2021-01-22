@@ -44,6 +44,14 @@ intranet.apps.eighth.views.admin.groups module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.views.admin.hybrid module
+----------------------------------------------
+
+.. automodule:: intranet.apps.eighth.views.admin.hybrid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.eighth.views.admin.maintenance module
 ---------------------------------------------------
 

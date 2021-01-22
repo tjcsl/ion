@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import MultipleObjectsReturned
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from ..auth.decorators import deny_restricted
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
@@ -41,11 +42,26 @@ def profile_view(request, user_id=None):
     num_blocks = 6
 
     eighth_schedule = []
-    start_block = EighthBlock.objects.get_first_upcoming_block()
 
+    #######
     blocks = []
-    if start_block:
-        blocks = [start_block] + list(start_block.next_blocks(num_blocks - 1))
+    if settings.ENABLE_HYBRID_EIGHTH and not request.user.is_eighth_admin:
+        now = timezone.localtime()
+        if now.hour < 17:
+            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        blocks = (
+            EighthBlock.objects.exclude(
+                eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky", members__in=[request.user])
+            )
+            .order_by("date", "block_letter")
+            .filter(date__gte=now)[:num_blocks]
+        )
+    else:
+        #######
+        start_block = EighthBlock.objects.get_first_upcoming_block()
+
+        if start_block:
+            blocks = [start_block] + list(start_block.next_blocks(num_blocks - 1))
 
     for block in blocks:
         sch = {"block": block}

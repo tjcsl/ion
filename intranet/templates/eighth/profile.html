@@ -122,7 +122,11 @@
                 {{ sch.block.date|date:'D, N j, Y' }}
             </td>
             <td class="center block-name">
-                <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.block_letter }}
+                {% if hybrid %}
+                    <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.hybrid_text }}
+                {% else %}
+                    <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.block_letter }}
+                {% endif %}
             </td>
             {% if sch.signup %}
             <td>
@@ -199,7 +203,11 @@
                     {% for scheduled_activity in eighth_sponsor_schedule %}
                         <tr>
                             <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}</td>
-                            <td>{{ scheduled_activity.block.block_letter }}</td>
+                            {% if hybrid %}
+                                <td>{{ scheduled_activity.block.hybrid_text }}</td>
+                            {% else %}
+                                <td>{{ scheduled_activity.block.block_letter }}</td>
+                            {% endif %}
                             <td>{{ scheduled_activity.activity.id }}: {{ scheduled_activity.activity.name_with_flags }}</td>
                             <td>{{ scheduled_activity.comments }}</td>
                             <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>

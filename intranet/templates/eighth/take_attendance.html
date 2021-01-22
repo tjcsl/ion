@@ -78,6 +78,10 @@
 
 {% block main %}
     <div class="primary-content">
+        {% if hybrid and not request.user.is_eighth_admin %}
+            <strong style="color: red"><i class="fas fa-exclamation-triangle"></i>  Please remember to take attendance for both your In-Person and Virtual sections each block starting in March.</strong>
+            <br><br>
+        {% endif %}
         <div class="eighth-header">
             <h2>
                 {% if scheduled_activity %}
@@ -241,7 +245,11 @@
                     </tr>
                     <tr>
                         <th>Date:</th>
-                        <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                        {% if hybrid %}
+                            <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.hybrid_text }} Block</td>
+                        {% else %}
+                            <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                        {% endif %}
                     </tr>
                 {% endif %}
                     <tr>

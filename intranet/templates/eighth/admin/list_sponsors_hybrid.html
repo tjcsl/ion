@@ -1,0 +1,85 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    <style>
+    #sponsor-list {
+        margin-top: 5px;
+        width: 100%;
+    }
+    #sponsor-list tr.cont {
+        background-color: white;
+    }
+    #sponsor-list tr.nc {
+        background-color: #e6e6e6;
+    }
+    #sponsor-list tr.noacts {
+        font-weight: bold;
+        color: red;
+    }
+    #sponsor-list td, #sponsor-list th {
+        border: 1px solid #aaa;
+        padding: 3px;
+    }
+    #sponsor-list td:first-child {
+        text-align: center;
+        min-width: 33px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    {% if dark_mode_enabled %}
+        <style>
+            #sponsor-list tr.cont {
+                background-color: black;
+            }
+            #sponsor-list tr.nc {
+                background-color: #191919;
+            }
+            #sponsor-list tr.noacts {
+                color: red;
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block admin_main %}
+    <h4>Select a Block:</h4>
+
+    <select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+        <option value="">Select or search for a block</option>
+        {% for b in blocks %}
+            <option value="{{ b.0 }},{{ b.1 }}"{% if b == chosen_block %} selected{% endif %}>{{ b.0 }} ({{ b.1 }})</option>
+        {% endfor %}
+    </select>
+
+    {% if chosen_block %}
+    <table id="sponsor-list" data-sortable>
+        <thead>
+            <tr><th><i class="far fa-file-alt" title="Contracted for 8th Period"></i></th><th>Sponsor</th><th>Activity</th><th>Room</th><th>Signups</th><th>Capacity</th></tr>
+        </thead>
+        <tbody>
+            {% for sponsor, acts in sponsor_list %}
+            <tr class="{% if sponsor.contracted_eighth %}cont{% else %}nc{% endif %}{% if not acts %} noacts{% endif %}">
+                <td data-value="{% if sponsor.contracted_eighth %}t{% else %}f{% endif %}"><i class="fas fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
+                <td>{{ sponsor.name }}</td>
+                <td>{% for act in acts %}{{ act.activity }}{% if act.title %} - {{ act.title }}{% endif %} ({% if "Virtual" in act.block.hybrid_text %}Virtual{% else %}In Person{% endif %}){% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.get_true_rooms|join:", "|default:"None" }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.members.count }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+                <td>{% for act in acts %}{{ act.get_true_capacity }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

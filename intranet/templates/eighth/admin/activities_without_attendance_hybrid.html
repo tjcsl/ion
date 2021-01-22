@@ -1,0 +1,76 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+
+<h4>Select a Block:</h4>
+
+<select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+    <option value="">Select or search for a block</option>
+    {% for b in blocks %}
+        <option value="{{ b.0 }},{{ b.1 }}"{% if b == chosen_block %} selected{% endif %}>{{ b.0 }} ({{ b.1 }})</option>
+    {% endfor %}
+</select>
+
+{% if chosen_block %}
+    <br>
+    <form action="" name="form_take_attendance_zero" method="post" onsubmit="return confirm('Are you sure you want to modify attendance for activities with no students?')">
+        {% csrf_token %}
+        <input type="hidden" name="take_attendance_zero" value="1">
+        <input type="submit" value="Mark Attendance for Activities with No Students" class="small-button">
+    </form>
+    <form action="" name="form_take_attendance_cancelled" method="post" onsubmit="return confirm('Are you sure you want to modify attendance for cancelled activities?')">
+        {% csrf_token %}
+        <input type="hidden" name="take_attendance_cancelled" value="1">
+        <input type="submit" value="Mark Attendance for Cancelled Activities" class="small-button">
+    </form>
+    Click on column titles to sort. Showing {{ scheduled_activities|length }} result{{ scheduled_activities|length|pluralize }}.
+    <table data-sortable class="fancy-table">
+        <thead>
+            <tr>
+                <th>Activity ID</th>
+                <th>Activity</th>
+                <th>Block</th>
+                <th>Sponsors</th>
+                <th>Students</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scheduled_activity in scheduled_activities %}
+            <tr{% if scheduled_activity.cancelled %} style="color: red !important"{% endif %}>
+                    <td>{{ scheduled_activity.activity.aid }}</td>
+                    <td>
+                        <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">
+                            {{ scheduled_activity.activity.name_with_flags }}
+                        </a>
+                    </td>
+                    <td>{% if "Virtual" in scheduled_activity.block.hybrid_text %}Virtual{% else %}In Person{% endif %}</td>
+                    <td>{{ scheduled_activity.get_true_sponsors|join:", "}}</td>
+                    <td>{{ scheduled_activity.members.count }} / {{ scheduled_activity.get_true_capacity }}</td>
+                    <td>
+                        <a class="button" href="{% url 'eighth_admin_take_attendance' scheduled_activity.id %}?no_attendance={{ scheduled_activity.block.id }}">Take Attendance</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}
