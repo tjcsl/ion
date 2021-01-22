@@ -774,6 +774,28 @@ class EighthBlock(AbstractBaseEighthModel):
         """
         return "{} {}".format(self.date.strftime("%m/%d"), self.block_letter)
 
+    #######
+    @property
+    def hybrid_text(self) -> str:
+        """Returns the user friendly name of a hybrid block. See Hybrid-README.rst.
+
+         * - P1 and * - P2 are returned as * (In-Person)
+         * - Virt is returned as * (Virtual)
+         Any other names are returned as themselves.
+
+        Returns:
+            The user friendly name of a hybrid block.
+
+        """
+        name = self.block_letter
+        if "Virt" in name:
+            name = name[0] + " (Virtual)"
+        elif "P1" in name or "P2" in name:
+            name = name[0] + " (In-Person)"
+        return name
+
+    #######
+
     @property
     def is_this_year(self) -> bool:
         """Return whether the block occurs during this school year.
@@ -795,7 +817,12 @@ class EighthBlock(AbstractBaseEighthModel):
         return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
 
     def __str__(self):
-        return "{} ({})".format(self.formatted_date, self.block_letter)
+        #######
+        if settings.ENABLE_HYBRID_EIGHTH:
+            return "{} ({})".format(self.formatted_date, self.hybrid_text)
+        else:
+            #######
+            return "{} ({})".format(self.formatted_date, self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)

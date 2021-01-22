@@ -26,7 +26,11 @@
             <div class="block-header">
                 <span class="block-letter-date">
                     <span class="block-letter">
-                        {{ block.block_letter }}
+                        {% if hybrid %}
+                            {{ block.block.hybrid_text }}
+                        {% else %}
+                            {{ block.block_letter }}
+                        {% endif %}
                     </span>
                     <span class="block-date">
                         {{ block.date|date:"D, N j" }}

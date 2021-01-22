@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 from django import http
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -85,7 +86,19 @@ def get_profile_context(request, user_id=None, date=None):
     eighth_schedule = []
     skipped_ahead = False
 
-    blocks_all = EighthBlock.objects.order_by("date", "block_letter").filter(date__gte=date)
+    #######
+    blocks_all = []
+    if settings.ENABLE_HYBRID_EIGHTH and not request.user.is_eighth_admin:
+        blocks_all = (
+            EighthBlock.objects.exclude(
+                eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky", members__in=[request.user])
+            )
+            .order_by("date", "block_letter")
+            .filter(date__gte=date)
+        )
+    else:
+        #######
+        blocks_all = EighthBlock.objects.order_by("date", "block_letter").filter(date__gte=date)
     blocks = blocks_all.filter(date__lt=date_end)
 
     if not blocks:
@@ -114,6 +127,11 @@ def get_profile_context(request, user_id=None, date=None):
         "skipped_ahead": skipped_ahead,
         "custom_date_set": custom_date_set,
     }
+
+    #######
+    if settings.ENABLE_HYBRID_EIGHTH:
+        context.update({"hybrid": True})
+    #######
 
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)

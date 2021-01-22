@@ -412,7 +412,11 @@
                         {{ sch.block.date|date:'D, N j, Y' }}
                     </td>
                     <td class="center">
-                        {{ sch.block.block_letter }}
+                        {% if hybrid %}
+                            {{ sch.block.hybrid_text }}
+                        {% else %}
+                            {{ sch.block.block_letter }}
+                        {% endif %}
                     </td>
                     {% if sch.signup %}
                     <td>
