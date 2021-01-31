@@ -137,7 +137,7 @@ class Event(models.Model):
     added = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
-    time = models.DateTimeField()
+    time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=100)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=set_historical_user)
 
