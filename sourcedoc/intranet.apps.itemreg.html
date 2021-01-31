@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>intranet.apps.itemreg package &#8212; TJ Intranet v3 (Build #256) documentation</title>
+    <title>intranet.apps.itemreg package &#8212; TJ Intranet v3 (Build #272) documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -218,7 +218,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
 <dl class="py attribute">
 <dt id="intranet.apps.itemreg.admin.PhoneRegistrationAdmin.list_display">
-<code class="sig-name descname">list_display</code><em class="property"> = ('manufacturer', 'model', 'serial', 'description', 'user', 'added')</em><a class="headerlink" href="#intranet.apps.itemreg.admin.PhoneRegistrationAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">list_display</code><em class="property"> = ('manufacturer', 'model', 'imei', 'description', 'user', 'added')</em><a class="headerlink" href="#intranet.apps.itemreg.admin.PhoneRegistrationAdmin.list_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -313,7 +313,7 @@
 
 <dl class="py class">
 <dt id="intranet.apps.itemreg.forms.PhoneRegistrationForm">
-<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.itemreg.forms.</code><code class="sig-name descname">PhoneRegistrationForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">instance=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/itemreg/forms.html#PhoneRegistrationForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.itemreg.forms.PhoneRegistrationForm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.itemreg.forms.</code><code class="sig-name descname">PhoneRegistrationForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/itemreg/forms.html#PhoneRegistrationForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.itemreg.forms.PhoneRegistrationForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="py class">
 <dt id="intranet.apps.itemreg.forms.PhoneRegistrationForm.Meta">
@@ -321,7 +321,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py attribute">
 <dt id="intranet.apps.itemreg.forms.PhoneRegistrationForm.Meta.fields">
-<code class="sig-name descname">fields</code><em class="property"> = ['manufacturer', 'model', 'serial', 'description']</em><a class="headerlink" href="#intranet.apps.itemreg.forms.PhoneRegistrationForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fields</code><em class="property"> = ['manufacturer', 'model', 'imei', 'description']</em><a class="headerlink" href="#intranet.apps.itemreg.forms.PhoneRegistrationForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -565,7 +565,7 @@ object the first time, the query is executed.</p>
 
 <dl class="py class">
 <dt id="intranet.apps.itemreg.models.PhoneRegistration">
-<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.itemreg.models.</code><code class="sig-name descname">PhoneRegistration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">manufacturer</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">serial</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">added</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/itemreg/models.html#PhoneRegistration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.itemreg.models.PhoneRegistration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">intranet.apps.itemreg.models.</code><code class="sig-name descname">PhoneRegistration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">manufacturer</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">imei</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">added</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/itemreg/models.html#PhoneRegistration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.itemreg.models.PhoneRegistration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="py exception">
 <dt id="intranet.apps.itemreg.models.PhoneRegistration.DoesNotExist">
@@ -621,6 +621,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="intranet.apps.itemreg.models.PhoneRegistration.imei">
+<code class="sig-name descname">imei</code><a class="headerlink" href="#intranet.apps.itemreg.models.PhoneRegistration.imei" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="intranet.apps.itemreg.models.PhoneRegistration.manufacturer">
 <code class="sig-name descname">manufacturer</code><a class="headerlink" href="#intranet.apps.itemreg.models.PhoneRegistration.manufacturer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -648,13 +655,6 @@ object the first time, the query is executed.</p>
 <dd class="field-odd"><p>A nicely formatted description of the phone.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="intranet.apps.itemreg.models.PhoneRegistration.serial">
-<code class="sig-name descname">serial</code><a class="headerlink" href="#intranet.apps.itemreg.models.PhoneRegistration.serial" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py attribute">
