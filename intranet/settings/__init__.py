@@ -797,6 +797,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(hour=BUS_PAGE_CHANGEOVER_HOUR, minute=1),
         "args": (),
     },
+    "pull-sports-schedule": {
+        "task": "intranet.apps.events.tasks.pull_sports_schedules",
+        "schedule": celery.schedules.crontab(day_of_month=15, hour=1),
+        "args": (),
+    },
 }
 
 MAINTENANCE_MODE = False
