@@ -52,7 +52,6 @@ intranet.apps.emailfwd.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

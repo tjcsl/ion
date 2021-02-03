@@ -12,7 +12,6 @@ intranet.settings.ci\_secret module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

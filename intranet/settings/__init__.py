@@ -712,7 +712,7 @@ MAINTENANCE_MODE_TEMPLATE = "error/503.html"
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_ALL_ORIGINS = False
 
 # Uncomment to only allow XHR on API resources from TJ domains
 # CORS_URLS_REGEX = r'^/api/.*$'

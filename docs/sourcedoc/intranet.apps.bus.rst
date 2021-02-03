@@ -76,7 +76,6 @@ intranet.apps.bus.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

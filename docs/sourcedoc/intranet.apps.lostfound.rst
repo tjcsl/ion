@@ -52,7 +52,6 @@ intranet.apps.lostfound.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

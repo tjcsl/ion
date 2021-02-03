@@ -12,7 +12,6 @@ intranet.apps.itemreg.templatetags.texthighlight module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

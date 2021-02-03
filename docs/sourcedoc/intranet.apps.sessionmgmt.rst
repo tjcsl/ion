@@ -52,7 +52,6 @@ intranet.apps.sessionmgmt.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

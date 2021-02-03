@@ -60,7 +60,6 @@ intranet.apps.parking.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

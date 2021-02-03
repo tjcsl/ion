@@ -44,7 +44,6 @@ intranet.apps.notifications.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

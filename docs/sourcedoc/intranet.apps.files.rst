@@ -44,7 +44,6 @@ intranet.apps.files.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

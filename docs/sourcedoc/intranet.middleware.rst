@@ -92,7 +92,6 @@ intranet.middleware.url\_slashes module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

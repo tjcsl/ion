@@ -60,7 +60,6 @@ intranet.apps.dataimport.management.commands.year\_cleanup module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

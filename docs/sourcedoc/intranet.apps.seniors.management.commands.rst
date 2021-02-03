@@ -20,7 +20,6 @@ intranet.apps.seniors.management.commands.import\_colleges module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

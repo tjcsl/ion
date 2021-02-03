@@ -68,7 +68,6 @@ intranet.apps.templatetags.tests module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

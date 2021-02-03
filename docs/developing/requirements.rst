@@ -395,11 +395,21 @@ pexpect
 ----------
 https://github.com/pexpect/pexpect
 
-This package provides the ability to spawn child applications; controll them; and respond to expected patterns in their output. It allows your script to spawn a child application and control it as if a human were typing commands.
+This package provides the ability to spawn child applications; control them; and respond to expected patterns in their output. It allows your script to spawn a child application and control it as if a human were typing commands.
 
 It is used to help interact with Kerberos password authentications and changes.
 
 LICENSE: ISC License
+
+prometheus-client
+----------
+https://github.com/prometheus/client_python
+
+This package provides the ability to work with the prometheus monitoring system in Python.
+
+It is used by ``flower`` and ``django-prometheus``.
+
+LICENSE: Apache License 2.0
 
 psycopg2
 ----------
@@ -440,18 +450,6 @@ This package provides powerful extensions to the standard datetime module
 It (``datetime.relativedelta``) is used to compute deltas between datetime objects throughout the codebase.
 
 LICENSE: Apache License 2.0 (based on code that is 3-clause BSD)
-
-python-gssapi
----------------
-https://github.com/sigmaris/python-gssapi
-
-This package provides an object-oriented interface to GSSAPI for Python.
-
-It is used for Kerberos authentication.
-
-OBSOLETE: need to update is from 2015
-
-LICENSE: MIT
 
 python-magic
 --------------
@@ -536,3 +534,13 @@ This package provides a bootstrap theme for Sphinx.
 It is used as the theme for the Ion docs.
 
 LICENSE: MIT
+
+vine
+-------------------------
+https://github.com/celery/vine/
+
+This package provides functionality for Python promises.
+
+It is used by ``flower``.
+
+LICENSE: 3-clause BSD

@@ -76,7 +76,6 @@ intranet.apps.announcements.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
