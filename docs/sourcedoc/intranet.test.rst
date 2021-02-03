@@ -20,7 +20,6 @@ intranet.test.test\_suite module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -92,7 +92,6 @@ intranet.apps.auth.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

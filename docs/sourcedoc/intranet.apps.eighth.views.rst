@@ -68,7 +68,6 @@ intranet.apps.eighth.views.signup module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

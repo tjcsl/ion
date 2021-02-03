@@ -28,7 +28,6 @@ intranet.apps.users.templatetags.users module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

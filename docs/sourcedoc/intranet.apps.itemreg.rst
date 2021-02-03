@@ -60,7 +60,6 @@ intranet.apps.itemreg.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

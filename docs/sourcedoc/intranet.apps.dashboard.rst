@@ -12,7 +12,6 @@ intranet.apps.dashboard.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

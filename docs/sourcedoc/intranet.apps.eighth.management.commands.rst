@@ -84,7 +84,6 @@ intranet.apps.eighth.management.commands.update\_counselors module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

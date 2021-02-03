@@ -52,7 +52,6 @@ intranet.apps.polls.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

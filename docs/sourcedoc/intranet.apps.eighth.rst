@@ -94,7 +94,6 @@ intranet.apps.eighth.utils module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

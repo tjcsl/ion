@@ -12,7 +12,6 @@ intranet.apps.auth.management.commands.grant\_admin module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

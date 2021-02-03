@@ -12,7 +12,6 @@ intranet.apps.signage.templatetags.signage module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

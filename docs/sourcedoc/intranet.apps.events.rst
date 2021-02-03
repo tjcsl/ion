@@ -60,7 +60,6 @@ intranet.apps.events.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

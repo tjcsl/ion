@@ -52,7 +52,6 @@ intranet.apps.feedback.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

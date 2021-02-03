@@ -51,7 +51,6 @@ intranet.apps.context\_processors module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

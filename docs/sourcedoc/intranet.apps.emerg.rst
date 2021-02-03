@@ -28,7 +28,6 @@ intranet.apps.emerg.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
