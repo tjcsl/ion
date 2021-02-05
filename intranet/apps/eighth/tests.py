@@ -1,4 +1,6 @@
+import csv
 import datetime
+import tempfile
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -308,6 +310,37 @@ class EighthTest(EighthAbstractTest):
 
         # Make sure activity is marked as attendance taken.
         self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
+
+    def test_take_attendance_google_meet_csv(self):
+        """ Make sure taking attendence through an uploaded Google Meet file works. """
+        self.make_admin()
+        user1 = get_user_model().objects.create(
+            username="user1", graduation_year=get_senior_graduation_year() + 1, student_id=12345, first_name="Test", last_name="User"
+        )
+
+        block1 = self.add_block(date="3000-11-11", block_letter="A")
+        room1 = self.add_room(name="room1", capacity=1)
+
+        act1 = self.add_activity(name="Test Activity 1")
+        act1.rooms.add(room1)
+
+        schact1 = self.schedule_activity(act1.id, block1.id)
+        schact1.attendance_taken = False
+        schact1.add_user(user1)
+        schact1.save()
+
+        with tempfile.NamedTemporaryFile(mode="w+") as f:
+            writer = csv.DictWriter(f, fieldnames=["Name", "Email"])
+            writer.writeheader()
+            writer.writerow({"Name": "Test User", "Email": "12345@fcpsschools.net"})
+            f.seek(0)
+            self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), {"attendance": f})
+
+        # Make sure attendance has been marked as taken.
+        self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
+
+        # Make sure EighthSignup object hasn't been marked absent.
+        self.assertFalse(EighthSignup.objects.get(user=user1, scheduled_activity=schact1).was_absent)
 
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
