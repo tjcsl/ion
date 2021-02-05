@@ -362,7 +362,7 @@
                 {% endif %}
                 </div>
 
-                <form class="attendance-form" action="" method="post">
+                <form class="attendance-form" action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <table class="take-attendance-roster{% if not members %} no-members{% endif %}">
                         <thead>
@@ -432,6 +432,13 @@
                             {% endfor %}
                         </tbody>
                         <tfoot class="print-hide">
+                            <tr>
+                                <td colspan="5">
+                                    <br>
+                                    <b>Take Attendance with Google Meet CSV Report:</b>
+                                    <input type="file" name="attendance" accept=".csv">
+                                </td>
+                            </tr>
                             <tr>
                                 <td colspan="5">
                                 {% if no_edit_perm %}

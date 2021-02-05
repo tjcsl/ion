@@ -1,7 +1,7 @@
 import csv
+import io
 import logging
 from html import escape
-from io import BytesIO
 
 from cacheops import invalidate_obj
 from formtools.wizard.views import SessionWizardView
@@ -300,6 +300,29 @@ def take_attendance_view(request, scheduled_activity_id):
 
         present_user_ids = list(request.POST.keys())
 
+        if request.FILES["attendance"]:
+            try:
+                csv_file = request.FILES["attendance"].read().decode("utf-8")
+                data = csv.DictReader(io.StringIO(csv_file))
+
+                unfound_users = []
+                for u in data:
+                    name = u["Name"].split(" ")
+                    user = get_user_model().objects.filter(first_name=name[0], last_name=name[1], student_id=u["Email"].split("@")[0])
+                    if len(user) != 1:
+                        unfound_users.append(u["Name"])
+                    else:
+                        present_user_ids.append(user[0])
+                if unfound_users:
+                    messages.success(
+                        request,
+                        "Took attendance from file, but could not find signups for {} who were present according to the Google Meet file.".format(
+                            ", ".join(unfound_users)
+                        ),
+                    )
+            except (csv.Error, ValueError):
+                messages.error(request, "Could not interpret file. Did you upload a Google Meet attendance report without modification?")
+
         csrf = "csrfmiddlewaretoken"
         if csrf in present_user_ids:
             present_user_ids.remove(csrf)
@@ -507,7 +530,7 @@ def generate_roster_pdf(sched_act_ids):
 
     """
 
-    pdf_buffer = BytesIO()
+    pdf_buffer = io.BytesIO()
     h_margin = 1 * inch
     v_margin = 0.5 * inch
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter, rightMargin=h_margin, leftMargin=h_margin, topMargin=v_margin, bottomMargin=v_margin)
