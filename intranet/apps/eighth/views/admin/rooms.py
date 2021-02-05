@@ -45,7 +45,7 @@ def edit_room_view(request, room_id):
     except EighthRoom.DoesNotExist as e:
         raise http.Http404 from e
 
-    current_activities = list(room.room_activity_set.all())
+    current_activities = list(room.eighthactivity_set.all())
 
     if request.method == "POST":
         form = RoomForm(request.POST, instance=room)

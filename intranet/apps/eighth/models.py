@@ -258,7 +258,7 @@ class EighthActivity(AbstractBaseEighthModel):
     name = models.CharField(max_length=100, validators=[validators.MinLengthValidator(4)])  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
-    rooms = models.ManyToManyField(EighthRoom, blank=True, related_name="room_activity_set")
+    rooms = models.ManyToManyField(EighthRoom, blank=True)
     default_capacity = models.SmallIntegerField(null=True, blank=True)
 
     presign = models.BooleanField(default=False)
