@@ -12,7 +12,6 @@ intranet.apps.schedule.management.commands.schedule\_notify module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -60,7 +60,6 @@ intranet.apps.signage.views module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

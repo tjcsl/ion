@@ -20,7 +20,6 @@ intranet.apps.users.management.commands.lock module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

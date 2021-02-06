@@ -76,7 +76,6 @@ intranet.utils.session module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

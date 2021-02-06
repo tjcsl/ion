@@ -60,7 +60,6 @@ intranet.apps.eighth.forms.admin.sponsors module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
