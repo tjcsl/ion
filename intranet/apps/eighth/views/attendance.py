@@ -300,7 +300,7 @@ def take_attendance_view(request, scheduled_activity_id):
 
         present_user_ids = list(request.POST.keys())
 
-        if request.FILES["attendance"]:
+        if request.FILES.get("attendance"):
             try:
                 csv_file = request.FILES["attendance"].read().decode("utf-8")
                 data = csv.DictReader(io.StringIO(csv_file))
@@ -326,6 +326,9 @@ def take_attendance_view(request, scheduled_activity_id):
         csrf = "csrfmiddlewaretoken"
         if csrf in present_user_ids:
             present_user_ids.remove(csrf)
+
+        if "attendance" in present_user_ids:
+            present_user_ids.remove("attendance")
 
         absent_signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity).exclude(user__in=present_user_ids)
         absent_signups.update(was_absent=True)
