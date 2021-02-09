@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #297) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #299) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -126,9 +126,9 @@
       
   <h1>Source code for intranet.apps.eighth.views.attendance</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">html</span> <span class="kn">import</span> <span class="n">escape</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_obj</span>
 <span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
@@ -427,6 +427,29 @@
 
         <span class="n">present_user_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;attendance&quot;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">csv_file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;attendance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">csv_file</span><span class="p">))</span>
+
+                <span class="n">unfound_users</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">last_name</span><span class="o">=</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">student_id</span><span class="o">=</span><span class="n">u</span><span class="p">[</span><span class="s2">&quot;Email&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">unfound_users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">present_user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">unfound_users</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+                        <span class="n">request</span><span class="p">,</span>
+                        <span class="s2">&quot;Took attendance from file, but could not find signups for </span><span class="si">{}</span><span class="s2"> who were present according to the Google Meet file.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unfound_users</span><span class="p">)</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Could not interpret file. Did you upload a Google Meet attendance report without modification?&quot;</span><span class="p">)</span>
+
         <span class="n">csrf</span> <span class="o">=</span> <span class="s2">&quot;csrfmiddlewaretoken&quot;</span>
         <span class="k">if</span> <span class="n">csrf</span> <span class="ow">in</span> <span class="n">present_user_ids</span><span class="p">:</span>
             <span class="n">present_user_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">csrf</span><span class="p">)</span>
@@ -634,7 +657,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">pdf_buffer</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">pdf_buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
     <span class="n">h_margin</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">inch</span>
     <span class="n">v_margin</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">inch</span>
     <span class="n">doc</span> <span class="o">=</span> <span class="n">SimpleDocTemplate</span><span class="p">(</span><span class="n">pdf_buffer</span><span class="p">,</span> <span class="n">pagesize</span><span class="o">=</span><span class="n">letter</span><span class="p">,</span> <span class="n">rightMargin</span><span class="o">=</span><span class="n">h_margin</span><span class="p">,</span> <span class="n">leftMargin</span><span class="o">=</span><span class="n">h_margin</span><span class="p">,</span> <span class="n">topMargin</span><span class="o">=</span><span class="n">v_margin</span><span class="p">,</span> <span class="n">bottomMargin</span><span class="o">=</span><span class="n">v_margin</span><span class="p">)</span>
