@@ -18,19 +18,43 @@ from .notifications import absence_email, signup_status_email
 
 
 class EighthAbstractTest(IonTestCase):
-    def add_block(self, **args):
+    def add_block(self, date, block_letter, **kwargs) -> EighthBlock:
+        """
+        Adds an EighthBlock.
+        Arguments are passed to intranet.apps.eighth.forms.admin.blocks.QuickBlockForm.
+
+        Args:
+            date: Date in YYYY-MM-DD format
+            block_letter: The corresponding block letter
+
+        Returns:
+            The EighthBlock that was created.
+
+        """
         # Bypass the manual block creation form.
-        args.update({"custom_block": True})
-        response = self.client.post(reverse("eighth_admin_add_block"), args)
+        kwargs.update({"custom_block": True})
+        response = self.client.post(reverse("eighth_admin_add_block"), {"date": date, "block_letter": block_letter, **kwargs})
         self.assertEqual(response.status_code, 302)
-        return EighthBlock.objects.get(date=args["date"], block_letter=args["block_letter"])
+        return EighthBlock.objects.get(date=date, block_letter=block_letter)
 
-    def add_room(self, **args):
-        response = self.client.post(reverse("eighth_admin_add_room"), args)
+    def add_room(self, name: str, capacity: int = 1, **kwargs) -> EighthRoom:
+        """
+        Adds an EighthRoom.
+        Arguments are passed to intranet.apps.eighth.forms.admin.rooms.RoomForm.
+
+        Args:
+            name: The name of the room.
+            capacity: The room capacity.
+
+        Returns:
+            The EighthRoom created.
+
+        """
+        response = self.client.post(reverse("eighth_admin_add_room"), {"name": name, "capacity": capacity, **kwargs})
         self.assertEqual(response.status_code, 302)
-        return EighthRoom.objects.get(name=args["name"])
+        return EighthRoom.objects.get(name=name)
 
-    def add_activity(self, **args):
+    def add_activity(self, **args) -> EighthActivity:
         response = self.client.post(reverse("eighth_admin_add_activity"), args)
         self.assertEqual(response.status_code, 302)
         return EighthActivity.objects.get(name=args["name"])
@@ -55,7 +79,19 @@ class EighthTest(EighthAbstractTest):
         self.assertEqual(sponsor.name, "Sponsor, Eighth")
         self.assertEqual(str(sponsor), "Sponsor, Eighth")
 
-    def schedule_activity(self, block_id, activity_id):
+    def schedule_activity(self, block_id, activity_id, capacity: int = 1) -> EighthScheduledActivity:
+        """
+        Creates an EighthScheduledActivity; aka schedule an eighth period activity.
+
+        Args:
+            block_id: The block ID
+            activity_id: Activity ID
+            capacity: Maximum capacity for this activity
+
+        Returns:
+            The EighthScheduledActivity created.
+
+        """
         # FIXME: figure out a way to do this that involves less hard-coding.
         args = {
             "form-TOTAL_FORMS": "1",
@@ -64,7 +100,7 @@ class EighthTest(EighthAbstractTest):
             "form-0-block": block_id,
             "form-0-activity": activity_id,
             "form-0-scheduled": True,
-            "form-0-capacity": 1,
+            "form-0-capacity": capacity,
         }
         response = self.client.post(reverse("eighth_admin_schedule_activity"), args)
         self.assertEqual(response.status_code, 302)
@@ -290,6 +326,49 @@ class EighthTest(EighthAbstractTest):
         msg = absence_email(es1, use_celery=False)
         self.assertIn("Jan. 1, 2015 (A)", msg.body)
 
+    def test_take_attendance(self):
+        """ Makes sure that taking attendance for activites with multiple students signed up works. """
+        self.make_admin()
+
+        user1 = get_user_model().objects.create(
+            username="user1", graduation_year=get_senior_graduation_year() + 1, student_id=12345, first_name="Test", last_name="User"
+        )
+        user2 = get_user_model().objects.create(
+            username="user2", graduation_year=get_senior_graduation_year() + 1, student_id=12346, first_name="TestTwo", last_name="UserTwo"
+        )
+        user3 = get_user_model().objects.create(
+            username="user3", graduation_year=get_senior_graduation_year() + 1, student_id=12347, first_name="TestThree", last_name="UserThree"
+        )
+
+        block1 = self.add_block(date="3000-11-11", block_letter="A")
+        room1 = self.add_room(name="room1", capacity=5)
+
+        act1 = self.add_activity(name="Test Activity 1")
+        act1.rooms.add(room1)
+
+        schact1 = self.schedule_activity(act1.id, block1.id, capacity=5)
+        schact1.attendance_taken = False
+        schact1.add_user(user1)
+        schact1.add_user(user2)
+        schact1.add_user(user3)
+        schact1.save()
+
+        # Simulate taking attendance with user1 and user3 present, but user2 absent.
+        response = self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), data={user1.id: "on", user3.id: "on"})
+        self.assertEqual(response.status_code, 302)
+
+        # Make sure activity is marked as attendance taken.
+        self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
+
+        # Make sure EighthSignup object hasn't been marked absent for user1.
+        self.assertFalse(EighthSignup.objects.get(user=user1, scheduled_activity=schact1).was_absent)
+
+        # Make sure EighthSignup object was marked absent for user2.
+        self.assertTrue(EighthSignup.objects.get(user=user2, scheduled_activity=schact1).was_absent)
+
+        # Make sure EighthSignup object hasn't been marked absent for user3.
+        self.assertFalse(EighthSignup.objects.get(user=user3, scheduled_activity=schact1).was_absent)
+
     def test_take_attendance_zero(self):
         """ Make sure all activities with zero students are marked as having attendance taken when button is pressed. """
         self.make_admin()
@@ -317,16 +396,20 @@ class EighthTest(EighthAbstractTest):
         user1 = get_user_model().objects.create(
             username="user1", graduation_year=get_senior_graduation_year() + 1, student_id=12345, first_name="Test", last_name="User"
         )
+        user2 = get_user_model().objects.create(
+            username="user2", graduation_year=get_senior_graduation_year() + 1, student_id=12346, first_name="TestTwo", last_name="UserTwo"
+        )
 
         block1 = self.add_block(date="3000-11-11", block_letter="A")
-        room1 = self.add_room(name="room1", capacity=1)
+        room1 = self.add_room(name="room1", capacity=5)
 
         act1 = self.add_activity(name="Test Activity 1")
         act1.rooms.add(room1)
 
-        schact1 = self.schedule_activity(act1.id, block1.id)
+        schact1 = self.schedule_activity(act1.id, block1.id, capacity=5)
         schact1.attendance_taken = False
         schact1.add_user(user1)
+        schact1.add_user(user2)
         schact1.save()
 
         with tempfile.NamedTemporaryFile(mode="w+") as f:
@@ -339,8 +422,11 @@ class EighthTest(EighthAbstractTest):
         # Make sure attendance has been marked as taken.
         self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
 
-        # Make sure EighthSignup object hasn't been marked absent.
+        # Make sure EighthSignup object hasn't been marked absent for user1.
         self.assertFalse(EighthSignup.objects.get(user=user1, scheduled_activity=schact1).was_absent)
+
+        # Make sure EighthSignup object was marked absent for user2.
+        self.assertTrue(EighthSignup.objects.get(user=user2, scheduled_activity=schact1).was_absent)
 
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
