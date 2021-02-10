@@ -327,3 +327,35 @@ class EventsTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode(), "Unhidden")
         self.assertFalse(user in user_map.users_hidden.all())
+
+    def test_approve_event(self):
+        event = Event.objects.create(title="Test Event", description="test", approved=False, time=timezone.localtime())
+        event2 = Event.objects.create(title="Test Event2", description="test", approved=False, time=timezone.localtime())
+
+        response = self.client.post(reverse("events"), data={"approve": event.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Event.objects.get(id=event.id).approved)
+
+        self.make_admin()
+
+        response = self.client.post(reverse("events"), data={"approve": event.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Event.objects.get(id=event.id).approved)
+
+        self.assertFalse(Event.objects.get(id=event2.id).approved)
+
+    def test_reject_event(self):
+        event = Event.objects.create(title="Test Event", description="test", approved=False, time=timezone.localtime())
+        event2 = Event.objects.create(title="Test Event2", description="test", approved=False, time=timezone.localtime())
+
+        response = self.client.post(reverse("events"), data={"reject": event.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Event.objects.get(id=event.id).rejected)
+
+        self.make_admin()
+
+        response = self.client.post(reverse("events"), data={"reject": event.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Event.objects.get(id=event.id).rejected)
+
+        self.assertFalse(Event.objects.get(id=event2.id).rejected)
