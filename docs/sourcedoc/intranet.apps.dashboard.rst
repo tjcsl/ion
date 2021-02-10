@@ -4,6 +4,14 @@ intranet.apps.dashboard package
 Submodules
 ----------
 
+intranet.apps.dashboard.tests module
+------------------------------------
+
+.. automodule:: intranet.apps.dashboard.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.dashboard.views module
 ------------------------------------
 

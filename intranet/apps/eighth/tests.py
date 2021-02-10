@@ -17,6 +17,7 @@ from ..users.models import Email
 from .exceptions import SignupException
 from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
 from .notifications import absence_email, signup_status_email
+from .views.activities import calculate_statistics, generate_statistics_pdf
 
 
 class EighthAbstractTest(IonTestCase):
@@ -637,6 +638,81 @@ class EighthTest(EighthAbstractTest):
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
         EighthScheduledActivity.objects.create(activity=act, block=block_future)
         self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)])
+
+    def test_generate_statistics_pdf(self):
+        self.make_admin()
+        act = self.add_activity(name="Test Activity 1")
+
+        generate_statistics_pdf(activities=[act])
+        # There is no way AFAIK to interpret a PDF file without installing other dependencies.
+
+    def test_calculate_statistics(self):
+        self.make_admin()
+        act = self.add_activity(name="Test Activity 1")
+
+        stats = calculate_statistics(act)
+
+        expected = {
+            "members": [],
+            "students": 0,
+            "total_blocks": 0,
+            "total_signups": 0,
+            "average_signups": 0,
+            "average_user_signups": 0,
+            "old_blocks": 0,
+            "cancelled_blocks": 0,
+            "scheduled_blocks": 0,
+            "empty_blocks": 0,
+        }
+        subset = {key: value for key, value in stats.items() if key in expected}
+        self.assertDictEqual(subset, expected)
+
+    def test_stats_global_view(self):
+        # I am unauthorized; this should 403
+        self.login("awilliam")
+        response = self.client.get(reverse("eighth_statistics_global"))
+        self.assertEqual(403, response.status_code)
+
+        self.make_admin()
+
+        response = self.client.get(reverse("eighth_statistics_global"))
+        self.assertEqual(200, response.status_code)
+
+        # Generate PDF
+        response = self.client.post(reverse("eighth_statistics_global"), data={"year": get_senior_graduation_year(), "generate": "pdf"})
+        self.assertEqual(200, response.status_code)
+
+        # Generate CSV
+        response = self.client.post(reverse("eighth_statistics_global"), data={"year": get_senior_graduation_year(), "generate": "csv"})
+        self.assertEqual(200, response.status_code)
+
+        # Add an activity then do it again
+        act = self.add_activity(name="Test Activity 1")
+
+        # Generate PDF
+        response = self.client.post(reverse("eighth_statistics_global"), data={"year": get_senior_graduation_year(), "generate": "pdf"})
+        self.assertEqual(200, response.status_code)
+
+        # Generate CSV
+        response = self.client.post(reverse("eighth_statistics_global"), data={"year": get_senior_graduation_year(), "generate": "csv"})
+        self.assertEqual(200, response.status_code)
+
+        # Attempt to parse the CSV
+        reader = csv.DictReader(response.content.decode(encoding="UTF-8").split("\n"))
+
+        # Loop over all of them, but there should only be one
+        for row in reader:
+            self.assertEqual(act.name, row["Activity"])
+
+    def test_stats_view(self):
+        self.make_admin()
+        act = self.add_activity(name="Test Activity 2")
+
+        response = self.client.get(reverse("eighth_statistics", kwargs={"activity_id": act.id}))
+        self.assertEqual(200, response.status_code)
+
+        response = self.client.get(reverse("eighth_statistics", kwargs={"activity_id": act.id}) + f"?year={get_senior_graduation_year()}")
+        self.assertEqual(200, response.status_code)
 
 
 class EighthAdminTest(EighthAbstractTest):
