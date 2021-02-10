@@ -320,7 +320,7 @@ def take_attendance_view(request, scheduled_activity_id):
                             ", ".join(unfound_users)
                         ),
                     )
-            except (csv.Error, ValueError):
+            except (csv.Error, ValueError, KeyError, IndexError):
                 messages.error(request, "Could not interpret file. Did you upload a Google Meet attendance report without modification?")
 
         csrf = "csrfmiddlewaretoken"
