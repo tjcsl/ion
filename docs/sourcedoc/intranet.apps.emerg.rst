@@ -20,6 +20,14 @@ intranet.apps.emerg.tasks module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.emerg.tests module
+--------------------------------
+
+.. automodule:: intranet.apps.emerg.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.emerg.views module
 --------------------------------
 
