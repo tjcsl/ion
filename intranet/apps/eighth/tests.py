@@ -1,8 +1,10 @@
 import csv
 import datetime
 import tempfile
+from unittest.mock import mock_open, patch
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
@@ -822,3 +824,25 @@ class EighthExceptionTest(IonTestCase):
         # Test string representations
         self.assertEqual(str(signup_exception), "ScheduledActivityCancelled, SignupForbidden")
         self.assertEqual(repr(signup_exception), "SignupException({})".format(str(signup_exception)))
+
+
+class EighthCommandsTest(IonTestCase):
+    def test_update_counselor(self):
+        file_contents = "Student ID,Counselor\n12345,CounselorOne\n54321,CounselorTwo\n55555,CounselorOne"
+
+        # Make some counselors
+        counselorone = get_user_model().objects.get_or_create(username="counselorone", last_name="CounselorOne", user_type="counselor")[0]
+        counselortwo = get_user_model().objects.get_or_create(username="counselortwo", last_name="CounselorTwo", user_type="counselor")[0]
+
+        # Make some users
+        userone = get_user_model().objects.get_or_create(username="2021ttest", student_id=12345, user_type="student", counselor=counselortwo)[0]
+        usertwo = get_user_model().objects.get_or_create(username="2021ttest2", student_id=54321, user_type="student", counselor=counselortwo)[0]
+        userthree = get_user_model().objects.get_or_create(username="2021ttester", student_id=55555, user_type="student")[0]
+
+        # Run command
+        with patch("intranet.apps.eighth.management.commands.update_counselors.open", mock_open(read_data=file_contents)) as m:
+            call_command("update_counselors", "foo.csv", "--run")
+
+        self.assertEqual("counselorone", get_user_model().objects.get(username="2021ttest").counselor.username)
+        self.assertEqual("counselortwo", get_user_model().objects.get(username="2021ttest2").counselor.username)
+        self.assertEqual("counselorone", get_user_model().objects.get(username="2021ttester").counselor.username)
