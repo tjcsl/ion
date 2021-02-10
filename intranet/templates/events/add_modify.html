@@ -73,7 +73,7 @@
     <table>
     {% csrf_token %}
     <tr><td colspan="2">
-        {% if action == "add" %}
+        {% if action == "add" or action == "request" %}
             <p>
                 {% if is_events_admin %}
                     You can directly post an event to Intranet using this form.
@@ -89,7 +89,7 @@
     </td></tr>
     {{ form.as_table }}
     <tr><td>&nbsp;</td><td>
-        <input type="submit" style="width: 150px">
+        <input type="submit" style="width: 150px" value="{{ action|title }} Event">
         {% if id %}
             <a href="{% url 'delete_event' id %}" class="button delete-button">Delete</a>
         {% endif %}
