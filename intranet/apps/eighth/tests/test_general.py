@@ -1,23 +1,20 @@
 import csv
 import datetime
 import tempfile
-from unittest.mock import mock_open, patch
 
 from django.contrib.auth import get_user_model
-from django.core.management import call_command
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
 
-from ...test.ion_test import IonTestCase
-from ...utils.date import get_senior_graduation_year
-from ..groups.models import Group
-from ..schedule.models import Block, Day, DayType, Time
-from ..users.models import Email
-from .exceptions import SignupException
-from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
-from .notifications import absence_email, signup_status_email
-from .views.activities import calculate_statistics, generate_statistics_pdf
+from ....test.ion_test import IonTestCase
+from ....utils.date import get_senior_graduation_year
+from ...groups.models import Group
+from ...users.models import Email
+from ..exceptions import SignupException
+from ..models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor
+from ..notifications import absence_email, signup_status_email
+from ..views.activities import calculate_statistics, generate_statistics_pdf
 
 
 class EighthAbstractTest(IonTestCase):
@@ -191,6 +188,34 @@ class EighthTest(EighthAbstractTest):
         schact1 = self.schedule_activity(act1.id, block1.id)
 
         self.verify_signup(user1, schact1)
+
+    def test_signup_restricitons(self):
+        """Make sure users can't sign up for restricted activities or switch out of sticky activities."""
+        self.make_admin()
+        get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year())
+        user2 = get_user_model().objects.create(username="user2", graduation_year=get_senior_graduation_year())
+        block1 = self.add_block(date="2015-01-01", block_letter="A")
+        room1 = self.add_room(name="room1", capacity=1)
+
+        act1 = self.add_activity(name="Test Activity 1", sticky=True, restricted=True, users_allowed=[user2])
+        act1.rooms.add(room1)
+        schact1 = EighthScheduledActivity.objects.create(block=block1, activity=act1, capacity=5)
+
+        act2 = self.add_activity(name="Test Activity 2")
+        act2.rooms.add(room1)
+        EighthScheduledActivity.objects.create(block=block1, activity=act2, capacity=5)
+
+        # Ensure that user1 can't sign up for act1
+        self.client.post(reverse("eighth_signup", args=[block1.id]), {"aid": act1.id})
+        self.assertEqual(len(EighthScheduledActivity.objects.get(block=block1.id, activity=act1.id).members.all()), 0)
+
+        # Ensure that user2 can sign up for act1
+        self.verify_signup(user2, schact1)
+
+        # Now that user2 is signed up for act1, make sure they can't switch themselves out
+        self.client.post(reverse("eighth_signup", args=[block1.id]), {"aid": act2.id})
+        self.assertEqual(len(EighthScheduledActivity.objects.get(block=block1.id, activity=act1.id).members.all()), 1)
+        self.assertEqual(len(EighthScheduledActivity.objects.get(block=block1.id, activity=act2.id).members.all()), 0)
 
     def test_blacklist(self):
         """Make sure users cannot sign up for blacklisted activities."""
@@ -430,6 +455,46 @@ class EighthTest(EighthAbstractTest):
 
         # Make sure EighthSignup object was marked absent for user2.
         self.assertTrue(EighthSignup.objects.get(user=user2, scheduled_activity=schact1).was_absent)
+
+        # Make sure bad file fails nicely with KeyError
+        with tempfile.NamedTemporaryFile(mode="w+") as f:
+            writer = csv.DictWriter(f, fieldnames=["NotName", "NotEmail"])
+            writer.writeheader()
+            writer.writerow({"NotName": "Test User", "NotEmail": "12345@fcpsschools.net"})
+            f.seek(0)
+            response = self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), {"attendance": f}, follow=True)
+
+            self.assertIn(
+                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
+                list(map(str, list(response.context["messages"]))),
+            )
+            self.assertEqual(response.status_code, 200)
+
+        # Make sure bad file fails nicely with IndexError
+        with tempfile.NamedTemporaryFile(mode="w+") as f:
+            writer = csv.DictWriter(f, fieldnames=["Name", "Email"])
+            writer.writeheader()
+            writer.writerow({"Name": "User", "Email": "@fcpsschools.net"})
+            f.seek(0)
+            response = self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), {"attendance": f}, follow=True)
+
+            self.assertIn(
+                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
+                list(map(str, list(response.context["messages"]))),
+            )
+            self.assertEqual(response.status_code, 200)
+
+        # Make sure bad file fails nicely with ValueError
+        with tempfile.NamedTemporaryFile(mode="w+") as f:
+            writer = csv.DictWriter(f, fieldnames=["Name", "Email"])
+            writer.writeheader()
+            writer.writerow({"Name": 1, "Email": 5})
+            f.seek(0)
+            self.assertIn(
+                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
+                list(map(str, list(response.context["messages"]))),
+            )
+            self.assertEqual(response.status_code, 200)
 
     def test_take_attendance_cancelled(self):
         """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
@@ -713,212 +778,3 @@ class EighthTest(EighthAbstractTest):
 
         response = self.client.get(reverse("eighth_statistics", kwargs={"activity_id": act.id}) + f"?year={get_senior_graduation_year()}")
         self.assertEqual(200, response.status_code)
-
-
-class EighthAdminTest(EighthAbstractTest):
-    def add_activity(self, **args):
-        response = self.client.post(reverse("eighth_admin_add_activity"), args)
-        self.assertEqual(response.status_code, 302)
-        return EighthActivity.objects.get(name=args["name"])
-
-    def test_eighth_admin_dashboard_view(self):
-        user = self.login()
-        # Test as non-eighth admin
-        response = self.client.get(reverse("eighth_admin_dashboard"))
-        self.assertEqual(response.status_code, 302)
-
-        user = self.make_admin()
-
-        for i in range(1, 21):
-            self.add_activity(name="Test{}".format(i))
-            Group.objects.create(name="Test{}".format(i))
-            user = get_user_model().objects.create(username="awilliam{}".format(i))
-            EighthRoom.objects.create(name="Test{}".format(i))
-            EighthSponsor.objects.create(user=user, first_name="Angela{}".format(i), last_name="William")
-
-        self.add_block(date="9001-4-20", block_letter="A")
-
-        response = self.client.get(reverse("eighth_admin_dashboard"))
-        self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
-
-        self.assertEqual(response.context["start_date"], timezone.localdate())
-        self.assertQuerysetEqual(response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")])
-        self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()])
-        self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")])
-        self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()])
-        self.assertQuerysetEqual(
-            response.context["sponsors"], [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()]
-        )
-        self.assertQuerysetEqual(response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()])
-        self.assertEqual(response.context["blocks_next_date"], datetime.datetime(9001, 4, 20).date())
-        self.assertEqual(response.context["admin_page_title"], "Eighth Period Admin")
-        self.assertEqual(response.context["signup_users_count"], get_user_model().objects.get_students().count())
-
-    def test_transfer_students(self):
-        self.make_admin()
-        user = get_user_model().objects.get_or_create(username="awilliam")[0]
-        block_a = self.add_block(date="9001-4-20", block_letter="A")
-        block_b = self.add_block(date="9001-4-20", block_letter="B")
-        act1 = self.add_activity(name="Test1")
-        act2 = self.add_activity(name="Test2")
-        schact_a1 = EighthScheduledActivity.objects.create(block=block_a, activity=act1)
-        schact_a2 = EighthScheduledActivity.objects.create(block=block_a, activity=act2)
-        schact_b1 = EighthScheduledActivity.objects.create(block=block_b, activity=act1)
-        EighthSignup.objects.create(scheduled_activity=schact_a2, user=user)
-        EighthSignup.objects.create(scheduled_activity=schact_b1, user=user)
-
-        # Attempt move user from `schact_b1` to `schact_a1`, removing the signup for `schact_a2`
-        self.client.post(reverse("eighth_admin_transfer_students_action"), {"source_act": schact_b1.id, "dest_act": schact_a1.id})
-        self.assertEqual(len(user.eighthsignup_set.filter(scheduled_activity__block=block_a)), 1)
-        self.assertEqual(user.eighthsignup_set.get(scheduled_activity__block=block_a).scheduled_activity, schact_a1)
-        self.assertFalse(user.eighthsignup_set.filter(scheduled_activity__block=block_b).exists())
-
-    def test_activity_stats(self):
-        self.make_admin()
-        user = get_user_model().objects.get_or_create(username="user1", graduation_year=get_senior_graduation_year())[0]
-        block_a = self.add_block(date="2013-4-20", block_letter="A")
-        block_b = self.add_block(date="2013-4-20", block_letter="B")
-        act1 = self.add_activity(name="Test1")
-        act2 = self.add_activity(name="Test2")
-        schact_a = EighthScheduledActivity.objects.create(block=block_a, activity=act1)
-        schact_b = EighthScheduledActivity.objects.create(block=block_b, activity=act1)
-        EighthSignup.objects.create(scheduled_activity=schact_a, user=user)
-        EighthSignup.objects.create(scheduled_activity=schact_b, user=user)
-
-        response = self.client.post(
-            reverse("eighth_statistics_multiple"),
-            {
-                "activities": [act1.id, act2.id],
-                "lower": "",
-                "upper": "",
-                "start": "2020-10-01",
-                "end": "2020-10-24",
-                "freshmen": "on",
-                "sophmores": "on",
-                "juniors": "on",
-                "seniors": "on",
-            },
-        )
-        self.assertEqual(len(response.context["signed_up"]), 0)
-        response = self.client.post(
-            reverse("eighth_statistics_multiple"),
-            {
-                "activities": [act1.id, act2.id],
-                "lower": "",
-                "upper": "",
-                "start": "2013-01-01",
-                "end": "2020-10-24",
-                "freshmen": "on",
-                "sophmores": "on",
-                "juniors": "on",
-                "seniors": "on",
-            },
-        )
-        self.assertEqual(len(response.context["signed_up"]), 1)
-        self.assertEqual(response.context["signed_up"][0]["signups"], 2)
-
-    def test_room_change(self):
-        self.make_admin()
-        act1 = EighthActivity.objects.create(name="Act1")
-        act2 = EighthActivity.objects.create(name="Act2")
-        room1 = EighthRoom.objects.create(name="Room 1", capacity=1)
-        room2 = EighthRoom.objects.create(name="Room 2", capacity=1)
-        act1.rooms.add(room1)
-        act2.rooms.add(room2)
-        self.client.post(
-            reverse("eighth_admin_add_room"),
-            {
-                "name": "Room 3",
-                "capacity": 1,
-                "activities": [act2.id],
-            },
-        )
-        self.assertEqual(len(act1.rooms.all()), 1)
-        self.assertEqual(len(act2.rooms.all()), 2)
-        self.client.post(
-            reverse("eighth_admin_edit_room", args=[room2.id]),
-            {
-                "name": "Room 2",
-                "capacity": 1,
-                "activities": [act1.id],
-            },
-        )
-        self.assertEqual(len(act1.rooms.all()), 2)
-        self.assertEqual(len(act2.rooms.all()), 1)
-
-    def test_eighth_location_view(self):
-        self.make_admin()
-        now = timezone.localtime()
-        time_start = Time.objects.create(hour=now.time().hour, minute=now.time().minute)
-        time_end = Time.objects.create(hour=now.time().hour + 1, minute=now.time().minute)
-        block = Block.objects.create(name="8A", start=time_start, end=time_end, order=1)
-        red_day = DayType.objects.create(name="red")
-        red_day.blocks.add(block)
-        Day.objects.create(date=now.today(), day_type=red_day)
-        # This part is a little hacky. We can't get the location of a response without redirecting, so we:
-
-        # first test that the redirect works
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("eighth_location"))
-
-        # then allow client to follow the redirect in order to add the "seen_eighth_location" cookie
-        response = self.client.get("/", follow=True)
-
-        # finally ensure that the "seen_eighth_location" cookie now prevents the redirect
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-
-
-class EighthExceptionTest(IonTestCase):
-    def test_signup_exception(self):
-        signup_exception = SignupException()
-        # Test that response is plain with no errors
-        self.assertEqual(signup_exception.as_response()["Content-Type"], "text/plain")
-
-        signup_exception.SignupForbidden = True
-        self.assertEqual(len(signup_exception.errors), 1)
-
-        # Test that response is plain with 1 error
-        self.assertEqual(signup_exception.as_response()["Content-Type"], "text/plain")
-
-        signup_exception.ScheduledActivityCancelled = True
-        self.assertEqual(len(signup_exception.errors), 2)
-
-        # Test SignupException messages
-        expected_messages_no_admin = []
-        expected_messages_admin = []
-        for error in ["ScheduledActivityCancelled", "SignupForbidden"]:
-            expected_messages_no_admin.append(SignupException._messages[error][0])  # pylint: disable=protected-access
-            expected_messages_admin.append(SignupException._messages[error][1])  # pylint: disable=protected-access
-        self.assertEqual(signup_exception.messages(), expected_messages_no_admin)
-        self.assertEqual(signup_exception.messages(admin=True), expected_messages_admin)
-        response_plain = signup_exception.as_response(html=False)
-        self.assertEqual(response_plain.content.decode(), "\n".join(expected_messages_no_admin))
-        self.assertEqual(response_plain["Content-Type"], "text/plain")
-
-        # Test string representations
-        self.assertEqual(str(signup_exception), "ScheduledActivityCancelled, SignupForbidden")
-        self.assertEqual(repr(signup_exception), "SignupException({})".format(str(signup_exception)))
-
-
-class EighthCommandsTest(IonTestCase):
-    def test_update_counselor(self):
-        file_contents = "Student ID,Counselor\n12345,CounselorOne\n54321,CounselorTwo\n55555,CounselorOne"
-
-        # Make some counselors
-        get_user_model().objects.get_or_create(username="counselorone", last_name="CounselorOne", user_type="counselor")
-        counselortwo = get_user_model().objects.get_or_create(username="counselortwo", last_name="CounselorTwo", user_type="counselor")[0]
-
-        # Make some users
-        get_user_model().objects.get_or_create(username="2021ttest", student_id=12345, user_type="student", counselor=counselortwo)
-        get_user_model().objects.get_or_create(username="2021ttest2", student_id=54321, user_type="student", counselor=counselortwo)
-        get_user_model().objects.get_or_create(username="2021ttester", student_id=55555, user_type="student")
-
-        # Run command
-        with patch("intranet.apps.eighth.management.commands.update_counselors.open", mock_open(read_data=file_contents)):
-            call_command("update_counselors", "foo.csv", "--run")
-
-        self.assertEqual("counselorone", get_user_model().objects.get(username="2021ttest").counselor.username)
-        self.assertEqual("counselortwo", get_user_model().objects.get(username="2021ttest2").counselor.username)
-        self.assertEqual("counselorone", get_user_model().objects.get(username="2021ttester").counselor.username)

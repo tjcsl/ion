@@ -9,6 +9,7 @@ Subpackages
 
    intranet.apps.eighth.forms
    intranet.apps.eighth.management
+   intranet.apps.eighth.tests
    intranet.apps.eighth.views
 
 Submodules
@@ -66,14 +67,6 @@ intranet.apps.eighth.tasks module
 ---------------------------------
 
 .. automodule:: intranet.apps.eighth.tasks
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-intranet.apps.eighth.tests module
----------------------------------
-
-.. automodule:: intranet.apps.eighth.tests
    :members:
    :undoc-members:
    :show-inheritance:
