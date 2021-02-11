@@ -44,6 +44,14 @@ intranet.apps.itemreg.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.itemreg.tests module
+----------------------------------
+
+.. automodule:: intranet.apps.itemreg.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.itemreg.urls module
 ---------------------------------
 
