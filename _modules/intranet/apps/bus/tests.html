@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.bus.tests &#8212; TJ Intranet v3 (Build #302) documentation</title>
+    <title>intranet.apps.bus.tests &#8212; TJ Intranet v3 (Build #325) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -125,7 +125,12 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.bus.tests</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Route</span>
@@ -137,7 +142,25 @@
 <div class="viewcode-block" id="BusTest.test_bus"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest.test_bus">[docs]</a>    <span class="k">def</span> <span class="nf">test_bus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+        <span class="c1"># Test morning</span>
+        <span class="n">morning_tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django.utils.timezone.localtime&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">morning_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;bus/morning.html&quot;</span><span class="p">)</span>
+
+        <span class="n">m</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
+
+        <span class="c1"># Test afternoon</span>
+        <span class="n">afternoon_tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django.utils.timezone.localtime&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">afternoon_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;bus/home.html&quot;</span><span class="p">)</span>
+
+        <span class="n">m</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BusTest.test_routes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.tests.BusTest.test_routes">[docs]</a>    <span class="k">def</span> <span class="nf">test_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;JT-101&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>

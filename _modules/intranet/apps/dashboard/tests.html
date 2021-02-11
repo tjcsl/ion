@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>intranet.apps.dashboard.tests &#8212; TJ Intranet v3 (Build #325) documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#technologies">Technologies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/eighth-models.html">Understanding the Eighth models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../administration/index.html#running-manage-py">Running manage.py</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for intranet.apps.dashboard.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+
+<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">gen_schedule</span><span class="p">,</span> <span class="n">gen_sponsor_schedule</span>
+
+
+<div class="viewcode-block" id="DashboardTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.tests.DashboardTest">[docs]</a><span class="k">class</span> <span class="nc">DashboardTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Test for dashboard module&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DashboardTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.tests.DashboardTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DashboardTest.test_gen_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.tests.DashboardTest.test_gen_schedule">[docs]</a>    <span class="k">def</span> <span class="nf">test_gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests the gen_schedule method.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+
+        <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># There are no eighth blocks and no signups, so this should be None, False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">no_signup_today</span><span class="p">)</span>
+
+        <span class="c1"># Add some blocks</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+        <span class="n">block2</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+
+        <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># There are several eighth blocks but no signups, so this should be not None, then True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">no_signup_today</span><span class="p">)</span>
+
+        <span class="c1"># Add an activity and schedule it</span>
+        <span class="n">eighthactivity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Testing Ion&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;lol&quot;</span><span class="p">)</span>
+        <span class="n">act_block1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block1</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">eighthactivity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">act_block2</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block2</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">eighthactivity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Sign up this user for block1</span>
+        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">act_block1</span><span class="p">)</span>
+
+        <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># There are several eighth blocks but no signups, so this should be not None, then True for block2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">no_signup_today</span><span class="p">)</span>
+
+        <span class="c1"># The first item in `schedule` should be block1 and should be flagged &quot;open&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block1</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;block&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Testing Ion&quot;</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;current_signup&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
+
+        <span class="c1"># The second item in `schedule` should be block2 and should be flagged &quot;warning&quot; and &quot;open&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block2</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;block&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">schedule</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;current_signup&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Lock block1 and it should show as locked</span>
+        <span class="n">block1</span><span class="o">.</span><span class="n">locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">block1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;locked&quot;</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Sign up for block2, but then cancel the activity</span>
+        <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">act_block2</span><span class="p">)</span>
+        <span class="n">act_block2</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+        <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># block2 should show as &quot;warning&quot;, &quot;cancelled&quot;, and &quot;open&quot;</span>
+        <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">schedule</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Clean up: remove the blocks, signup, activity, etc.</span>
+        <span class="n">block1</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">block2</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">signup</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">act_block2</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">act_block1</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DashboardTest.test_gen_sponsor_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.tests.DashboardTest.test_gen_sponsor_schedule">[docs]</a>    <span class="k">def</span> <span class="nf">test_gen_sponsor_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test cases for the gen_sponsor_schedule method.&quot;&quot;&quot;</span>
+        <span class="c1"># Make the user a teacher, and make an EighthSponsor object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;teacher&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">sponsor</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;William&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">gen_sponsor_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># &quot;sponsor_schedule&quot; should be empty because there are no activities assigned to this sponsor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;sponsor_schedule&quot;</span><span class="p">]))</span>
+
+        <span class="c1"># Create two blocks and an activity, scheduled for both</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+        <span class="n">block2</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+        <span class="n">eighthactivity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Testing Ion&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;lol&quot;</span><span class="p">)</span>
+        <span class="n">act_block1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block1</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">eighthactivity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">act_block2</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block2</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">eighthactivity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">act_block1</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span>
+        <span class="n">act_block2</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">gen_sponsor_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="c1"># &quot;sponsor_schedule&quot; should have two activities because there are two activities assigned to this sponsor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;sponsor_schedule&quot;</span><span class="p">]))</span>
+
+        <span class="c1"># num_acts should be two</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;num_attendance_acts&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Lock block2, then no_attendance_today should be True</span>
+        <span class="n">block2</span><span class="o">.</span><span class="n">locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">block2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">gen_sponsor_schedule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;num_attendance_acts&quot;</span><span class="p">])</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
