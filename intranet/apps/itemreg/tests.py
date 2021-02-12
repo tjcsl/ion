@@ -93,8 +93,8 @@ class ItemRegTestCase(IonTestCase):
         self.login()
 
         # Load the page.
-        for type in ["computer", "calculator", "phone"]:
-            response = self.client.get(reverse("itemreg_register", kwargs={"item_type": type}))
+        for item_type in ["computer", "calculator", "phone"]:
+            response = self.client.get(reverse("itemreg_register", kwargs={"item_type": item_type}))
             self.assertEqual(200, response.status_code)
 
         # Register a phone.
