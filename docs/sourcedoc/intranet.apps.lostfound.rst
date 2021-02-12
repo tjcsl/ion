@@ -36,6 +36,14 @@ intranet.apps.lostfound.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.lostfound.tests module
+------------------------------------
+
+.. automodule:: intranet.apps.lostfound.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.lostfound.urls module
 -----------------------------------
 
