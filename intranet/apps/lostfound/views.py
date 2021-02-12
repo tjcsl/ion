@@ -65,10 +65,11 @@ def lostitem_add_view(request):
 @login_required
 @deny_restricted
 def lostitem_modify_view(request, item_id=None):
-    """Modify a lostitem.
+    """
+    Modify a LostItem.
 
-    id: lostitem id
-
+    Args:
+        item_id: LostItem ID
     """
     lostitem = get_object_or_404(LostItem, id=item_id)
     if lostitem.user != request.user and not request.user.has_admin_permission("all"):
@@ -95,10 +96,11 @@ def lostitem_modify_view(request, item_id=None):
 @login_required
 @deny_restricted
 def lostitem_delete_view(request, item_id):
-    """Delete a lostitem.
+    """
+    Delete a LostItem.
 
-    id: lostitem id
-
+    Args:
+        item_id: LostItem id
     """
     lostitem = get_object_or_404(LostItem, id=item_id)
     if lostitem.user != request.user and not request.user.has_admin_permission("all"):
@@ -121,10 +123,11 @@ def lostitem_delete_view(request, item_id):
 @login_required
 @deny_restricted
 def lostitem_view(request, item_id):
-    """View a lostitem.
+    """
+    View a LostItem.
 
-    id: lostitem id
-
+    Args:
+        item_id: LostItem id
     """
     lostitem = get_object_or_404(LostItem, id=item_id)
     return render(request, "lostfound/item_view.html", {"item": lostitem, "type": "lost"})
@@ -154,10 +157,11 @@ def founditem_add_view(request):
 @login_required
 @deny_restricted
 def founditem_modify_view(request, item_id=None):
-    """Modify a founditem.
+    """
+    Modify a FoundItem.
 
-    id: founditem id
-
+    Args:
+        item_id: FoundItem id
     """
     founditem = get_object_or_404(FoundItem, id=item_id)
     if founditem.user != request.user and not request.user.has_admin_permission("all"):
@@ -184,10 +188,11 @@ def founditem_modify_view(request, item_id=None):
 @login_required
 @deny_restricted
 def founditem_delete_view(request, item_id):
-    """Delete a founditem.
+    """
+    Delete a FoundItem.
 
-    id: founditem id
-
+    Args:
+        item_id: FoundItem id
     """
     founditem = get_object_or_404(FoundItem, id=item_id)
     if founditem.user != request.user and not request.user.has_admin_permission("all"):
@@ -210,10 +215,11 @@ def founditem_delete_view(request, item_id):
 @login_required
 @deny_restricted
 def founditem_view(request, item_id):
-    """View a founditem.
+    """
+    View a FoundItem.
 
-    id: founditem id
-
+    Args:
+        item_id: FoundItem id
     """
     founditem = get_object_or_404(FoundItem, id=item_id)
     return render(request, "lostfound/item_view.html", {"item": founditem, "type": "found"})
