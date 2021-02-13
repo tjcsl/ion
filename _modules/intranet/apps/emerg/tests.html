@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.signals &#8212; TJ Intranet v3 (Build #334) documentation</title>
+    <title>intranet.apps.emerg.tests &#8212; TJ Intranet v3 (Build #334) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -124,30 +124,23 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.auth.signals</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
+  <h1>Source code for intranet.apps.emerg.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth.signals</span> <span class="kn">import</span> <span class="n">user_logged_in</span><span class="p">,</span> <span class="n">user_logged_out</span>
-
-<span class="kn">from</span> <span class="nn">..sessionmgmt.models</span> <span class="kn">import</span> <span class="n">TrustedSession</span>
-
-
-<div class="viewcode-block" id="user_login"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.signals.user_login">[docs]</a><span class="k">def</span> <span class="nf">user_login</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="k">if</span> <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;login_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-    <span class="c1"># Delete all expired sessions</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">):</span>
-        <span class="n">TrustedSession</span><span class="o">.</span><span class="n">delete_expired_sessions</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></div>
+<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">check_emerg</span><span class="p">,</span> <span class="n">get_emerg</span><span class="p">,</span> <span class="n">get_emerg_result</span><span class="p">,</span> <span class="n">update_emerg_cache</span>
 
 
-<div class="viewcode-block" id="user_logout"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.signals.user_logout">[docs]</a><span class="k">def</span> <span class="nf">user_logout</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="c1"># Delete the associated TrustedSession if it exists</span>
-    <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+<div class="viewcode-block" id="EmergTestCase"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.tests.EmergTestCase">[docs]</a><span class="k">class</span> <span class="nc">EmergTestCase</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="EmergTestCase.test_emerg"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.tests.EmergTestCase.test_emerg">[docs]</a>    <span class="k">def</span> <span class="nf">test_emerg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;intranet.apps.emerg.views.settings.EMERGENCY_MESSAGE&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">),</span> <span class="n">check_emerg</span><span class="p">())</span>
 
-
-<span class="n">user_logged_in</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">user_login</span><span class="p">)</span>
-<span class="n">user_logged_out</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">user_logout</span><span class="p">)</span>
+        <span class="c1"># I don&#39;t have a way to check the output, but at least I can call them</span>
+        <span class="n">check_emerg</span><span class="p">()</span>
+        <span class="n">get_emerg</span><span class="p">()</span>
+        <span class="n">get_emerg_result</span><span class="p">()</span>
+        <span class="n">update_emerg_cache</span><span class="p">()</span></div></div>
 </pre></div>
 
     </div>
