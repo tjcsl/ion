@@ -18,6 +18,10 @@ env:
   PRODUCTION: 'TRUE'
 
 .anchors:
+  # WARNING: Adding a new Python version here?
+  # Go below to the push docs step (in the build job)
+  # and change that version in the "if" to the latest version
+  # you put here.
   python_versions: &python_versions
     - 3.7
     - 3.8
@@ -159,7 +163,7 @@ jobs:
       # Push docs
       - name: Push docs
         # Only run for pushes to the main Ion repo
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.8
         run: ./scripts/push_docs.sh
         env:
           GH_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
