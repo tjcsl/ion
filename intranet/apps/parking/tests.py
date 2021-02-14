@@ -1,3 +1,6 @@
+from unittest.mock import patch
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -18,6 +21,9 @@ class ParkingTest(IonTestCase):
     def test_parking_form_junior(self):
         user = self.login_with_args("awilliam", get_senior_graduation_year() + 1)
 
+        response = self.client.get(reverse("parking"))
+        self.assertEqual(200, response.status_code)
+
         response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
         self.assertEqual(response.status_code, 302)
@@ -26,6 +32,12 @@ class ParkingTest(IonTestCase):
         parking_apps = ParkingApplication.objects.filter(user=user)
         self.assertTrue(parking_apps.exists())
         self.assertEqual(parking_apps.count(), 1)
+
+        response = self.client.get(reverse("parking_joint"))
+        self.assertEqual(200, response.status_code)
+
+        response = self.client.get(reverse("parking_car"))
+        self.assertEqual(200, response.status_code)
 
         response = self.client.post(reverse("parking_car"), data={"license_plate": "TJCSL", "make": "Lamborghini", "model": "Veneno", "year": 2018})
 
@@ -43,6 +55,10 @@ class ParkingTest(IonTestCase):
     def test_invalid_user(self):
         user = self.login_with_args("bwilliam", get_senior_graduation_year() + 2)
 
+        response = self.client.get(reverse("parking"), follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn("You can't request a parking space.", list(map(str, list(response.context["messages"]))))
+
         response = self.client.post(reverse("parking_form"), data={"email": user.tj_email, "mentorship": False})
 
         # Check that parking application was not created
@@ -54,3 +70,12 @@ class ParkingTest(IonTestCase):
         # Check that car application is not created
         self.assertEqual(response.status_code, 302)
         self.assertFalse(ParkingApplication.objects.filter(user=user).exists())
+
+    def test_high_absences(self):
+        """Test the parking views with a user that has a high number of eighth period absences."""
+        self.login_with_args("bwilliam", get_senior_graduation_year())
+
+        with patch("intranet.apps.users.models.User.absence_count", return_value=settings.PARKING_MAX_ABSENCES + 1) as mock:
+            response = self.client.get(reverse("parking_form"))
+            self.assertEqual(302, response.status_code)
+            mock.assert_called()
