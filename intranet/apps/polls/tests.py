@@ -141,3 +141,71 @@ class ApiTest(IonTestCase):
         # admin_polls, happened in the past, not visible
         user.groups.add(admin_polls_group)
         self.assertTrue(poll.can_vote(user))
+
+    def test_polls_view(self):
+        """Tests the polls view (the index page)."""
+        self.login()
+        response = self.client.get(reverse("polls"))
+        self.assertEqual(200, response.status_code)
+
+        # Add a poll
+        poll = Poll.objects.create(
+            title="Test Poll 2",
+            description="hello",
+            start_time=timezone.localtime() - timezone.timedelta(days=1),
+            end_time=timezone.localtime() + timezone.timedelta(days=1),
+            visible=True,
+        )
+        response = self.client.get(reverse("polls"))
+        self.assertEqual(200, response.status_code)
+        self.assertIn(poll, response.context["polls"])
+
+        # End the poll
+        poll.end_time = timezone.localtime()
+        poll.save()
+
+        response = self.client.get(reverse("polls"))
+        self.assertEqual(200, response.status_code)
+        self.assertNotIn(poll, response.context["polls"])
+
+        response = self.client.get(reverse("polls"), data={"show_all": "1"})
+        self.assertEqual(200, response.status_code)
+        self.assertIn(poll, response.context["polls"])
+
+    def test_csv_results(self):
+        """Tests the view to generate a CSV of the results."""
+        self.login()
+
+        # Add a poll
+        poll = Poll.objects.create(
+            title="Test Poll 3", description="hello", start_time=timezone.localtime(), end_time=timezone.localtime() + timezone.timedelta(days=1)
+        )
+
+        # I am not an admin, this should 403
+        response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}))
+        self.assertEqual(403, response.status_code)
+
+        # Test secret poll failing
+        poll.is_secret = True
+        poll.save()
+
+        self.make_admin("awilliam")
+
+        response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}), follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn("CSV results cannot be generated for secret polls.", list(map(str, list(response.context["messages"]))))
+
+        poll.is_secret = False
+        poll.save()
+
+        # This should fail because we are still within the poll's active window
+        response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}), follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn("Poll results cannot be viewed while the poll is running.", list(map(str, list(response.context["messages"]))))
+
+        # End the poll
+        poll.end_time = timezone.localtime()
+
+        # Try again
+        response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}), follow=True)
+        self.assertEqual(200, response.status_code)
