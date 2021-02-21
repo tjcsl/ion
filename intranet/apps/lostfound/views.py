@@ -34,8 +34,8 @@ def home_view(request):
     context = {
         "lost": lost,
         "found": found,
-        "previous_page": lost.previous_page_number if lost.previous_page_number else found.previous_page_number,
-        "next_page": lost.next_page_number if lost.next_page_number else found.next_page_number,
+        "previous_page": lost.previous_page_number if lost.previous_page_number is not None else found.previous_page_number,
+        "next_page": lost.next_page_number if lost.next_page_number is not None else found.next_page_number,
         "is_lostfound_admin": request.user.has_admin_permission("lostfound"),
     }
     return render(request, "lostfound/home.html", context)
