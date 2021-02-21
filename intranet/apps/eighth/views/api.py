@@ -129,7 +129,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
         return Response(serialized.data)
 
-    def create(self, request, user_id=None):
+    def create(self, request, user_id=None):  # pylint: disable=arguments-differ
         if user_id and not request.user.is_eighth_admin:
             raise PermissionDenied
         elif user_id:
@@ -179,7 +179,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
         serialized = EighthActivityListSerializer(self.get_queryset(), context={"request": request}, many=True)
         return Response(serialized.data)
 
-    def create(self, request, user_id=None):
+    def create(self, request, user_id=None):  # pylint: disable=arguments-differ
         if user_id:
             user = get_user_model().objects.get(id=user_id)
         else:
@@ -240,7 +240,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
 
         return Response(serialized.data)
 
-    def create(self, request, user_id=None):
+    def create(self, request, user_id=None):  # pylint: disable=arguments-differ
         if user_id:
             user = get_user_model().objects.get(id=user_id)
         else:
