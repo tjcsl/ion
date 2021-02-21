@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #334) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #344) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -129,6 +129,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
@@ -212,7 +213,19 @@
     <span class="n">eighth_schedule</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">skipped_ahead</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">blocks_all</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+    <span class="c1">#######</span>
+    <span class="n">blocks_all</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_HYBRID_EIGHTH</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="n">blocks_all</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
+                <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">&quot;z - Hybrid Sticky&quot;</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#######</span>
+        <span class="n">blocks_all</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__lt</span><span class="o">=</span><span class="n">date_end</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">blocks</span><span class="p">:</span>
@@ -241,6 +254,11 @@
         <span class="s2">&quot;skipped_ahead&quot;</span><span class="p">:</span> <span class="n">skipped_ahead</span><span class="p">,</span>
         <span class="s2">&quot;custom_date_set&quot;</span><span class="p">:</span> <span class="n">custom_date_set</span><span class="p">,</span>
     <span class="p">}</span>
+
+    <span class="c1">#######</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_HYBRID_EIGHTH</span><span class="p">:</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;hybrid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="c1">#######</span>
 
     <span class="k">if</span> <span class="n">profile_user</span><span class="o">.</span><span class="n">is_eighth_sponsor</span><span class="p">:</span>
         <span class="n">sponsor</span> <span class="o">=</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">)</span>

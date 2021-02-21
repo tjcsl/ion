@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #334) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #344) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -901,6 +901,28 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
 
+    <span class="c1">#######</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hybrid_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the user friendly name of a hybrid block. See Hybrid-README.rst.</span>
+
+<span class="sd">         * - P1 and * - P2 are returned as * (In-Person)</span>
+<span class="sd">         * - Virt is returned as * (Virtual)</span>
+<span class="sd">         Any other names are returned as themselves.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The user friendly name of a hybrid block.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span>
+        <span class="k">if</span> <span class="s2">&quot;Virt&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; (Virtual)&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;P1&quot;</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;P2&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; (In-Person)&quot;</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="c1">#######</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return whether the block occurs during this school year.</span>
@@ -922,7 +944,12 @@
         <span class="k">return</span> <span class="n">formats</span><span class="o">.</span><span class="n">date_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EIGHTH_BLOCK_DATE_FORMAT</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
+        <span class="c1">#######</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_HYBRID_EIGHTH</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#######</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">),)</span>

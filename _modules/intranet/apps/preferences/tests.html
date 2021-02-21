@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #334) documentation</title>
+    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #344) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -132,8 +132,9 @@
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="kn">import</span> <span class="n">Route</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Phone</span><span class="p">,</span> <span class="n">Photo</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserProperties</span><span class="p">,</span> <span class="n">Website</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">EmailForm</span>
-<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">save_bus_route</span>
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">get_personal_info</span><span class="p">,</span> <span class="n">get_privacy_options</span><span class="p">,</span> <span class="n">save_bus_route</span>
 
 
 <div class="viewcode-block" id="PreferencesTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest">[docs]</a><span class="k">class</span> <span class="nc">PreferencesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
@@ -151,7 +152,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PreferencesTest.test_set_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_set_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_set_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">settings_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;pf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
             <span class="s2">&quot;ef-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
@@ -181,8 +182,25 @@
             <span class="s2">&quot;show_pictures&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
             <span class="s2">&quot;bus_route&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;JT-001&quot;</span><span class="p">],</span>
         <span class="p">}</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+
+        <span class="c1"># Add a photo and try to set it as preferred</span>
+        <span class="n">photo</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">photo</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">)</span>
+
+        <span class="c1"># Set it back to auto</span>
+        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PreferencesTest.test_clear_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_clear_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -250,7 +268,110 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route_names</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">route_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route_names</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route_name</span><span class="p">,</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PreferencesTest.test_get_personal_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_personal_info">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_personal_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Make a user</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Add some details</span>
+        <span class="n">phone</span> <span class="o">=</span> <span class="n">Phone</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">purpose</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">_number</span><span class="o">=</span><span class="s2">&quot;5551231234&quot;</span><span class="p">)</span>
+        <span class="n">phone2</span> <span class="o">=</span> <span class="n">Phone</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">purpose</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">_number</span><span class="o">=</span><span class="s2">&quot;5551243245&quot;</span><span class="p">)</span>
+
+        <span class="n">email</span> <span class="o">=</span> <span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">)</span>
+
+        <span class="n">website</span> <span class="o">=</span> <span class="n">Website</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;www.example.com&quot;</span><span class="p">)</span>
+
+        <span class="c1"># There are two phones, one email, and one website</span>
+        <span class="n">personal_info</span><span class="p">,</span> <span class="n">num_fields</span> <span class="o">=</span> <span class="n">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s2">&quot;phones&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;emails&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;websites&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">num_fields</span><span class="p">)</span>
+
+        <span class="c1"># It is unpredictable which order the phones appear in, so this will do</span>
+        <span class="k">for</span> <span class="n">user_object</span> <span class="ow">in</span> <span class="p">[</span><span class="n">phone</span><span class="p">,</span> <span class="n">phone2</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">website</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user_object</span><span class="p">,</span> <span class="n">personal_info</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Then, check the email and the website</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_0&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">website</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;website_0&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PreferencesTest.test_privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_privacy_options_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test the get privacy options views and associated methods.&quot;&quot;&quot;</span>
+        <span class="n">user_student</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Start by testing the get_privacy_options method</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user_student</span><span class="p">)</span>
+
+        <span class="n">PERMISSIONS_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">prefix</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">UserProperties</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">permission_type</span> <span class="ow">in</span> <span class="n">PERMISSIONS_NAMES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">PERMISSIONS_NAMES</span><span class="p">[</span><span class="n">permission_type</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">permission_type</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Now, test loading the view</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;teacher&quot;</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># This should fail b/c we&#39;re not an admin</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>  <span class="c1"># to login page</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+
+        <span class="c1"># Now, this should load</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+
+        <span class="c1"># However, since `awilliam` is not a student, this should have</span>
+        <span class="c1"># &quot;Student not found&quot; in the response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;Student not found&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="c1"># Load awilliam1&#39;s preferences</span>
+        <span class="c1"># first, by Ion ID</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="c1"># now, by student ID</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;student_id&quot;</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="c1"># Try saving the form</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;?student_id=</span><span class="si">{</span><span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;show_address&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;show_address-self&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="n">user_student_properties</span> <span class="o">=</span> <span class="n">UserProperties</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user_student</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_address</span><span class="p">)</span>
+
+        <span class="c1"># Assert the rest are still false</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_schedule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_pictures</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_eighth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_telephone</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_schedule</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_pictures</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_eighth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_telephone</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="PreferencesFormTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesFormTest">[docs]</a><span class="k">class</span> <span class="nc">PreferencesFormTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
