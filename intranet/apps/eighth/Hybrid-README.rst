@@ -29,6 +29,8 @@ Blocks
 
 * In ``intranet/apps/eighth/views/admin/blocks.py``, everything that has been changed is placed between two lines of comments and is behind an if statement checking if the ``ENABLE_HYBRID_EIGHTH`` setting is ``True``. In ``edit_block_view``, a simple warning is given that changing a block name will not change the students that are stickied for that block. Trying to to this here just creates conflicts. 8PO is encouraged to just delete the block and create a new one. In ``add_block_view``, different ``visable_blocks`` are shown and additional context is added. If the "assign_hybrid" checkbox is checked, the appropriate groups will be sticked into the correct admin acitivity according to comments provided throughout and the naming conventions above. As a note, ``attendance_taken`` is set to true, although ``was_absent`` in ``EighthSignup`` is left blank. This is so that 8PO doesn't have to manually take attendance and no one will be marked absent.
 
+* In ``intranet/apps/eighth/tasks.py``, a celery task for hybrid signups is added.
+
 ***********
 Signups
 ***********

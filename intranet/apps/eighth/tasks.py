@@ -169,6 +169,20 @@ def room_changed_activity_email(
 
 
 @shared_task
+def eighth_admin_assign_hybrid_sticky_blocks(fmtdate: str) -> None:
+    """Sign all users up for z - Hybrid Sticky according to their status.
+
+    Args:
+        fmtdate: The date where users should be signed up for blocks.
+
+    """
+    # Circular dependency
+    from .views.admin.blocks import perform_hybrid_block_signup  # pylint: disable=import-outside-toplevel
+
+    perform_hybrid_block_signup(fmtdate, logger)
+
+
+@shared_task
 def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: int) -> None:
     """Sign all users in a specific group up for a specific scheduled activity
     (in the background), sending an email to the user who requested the operation when
