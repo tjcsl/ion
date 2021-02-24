@@ -9,7 +9,7 @@ The motivation behind these changes was:
 2) Keep these changes as seperate as possible so that they can be reverted
 3) Not break ``eighth``
 
-First, this document assumes that all students have been sorted into three groups named ``virtual``, ``in-person (a-k)`` and ``in-person (l-z)``, that these groups are always correct and that each student is in only one group. It is on 8PO and/or the main office to ensure that these groups are accurate, not us. These groups NEED to be created for the code to work with ENABLE_HYBRID_EIGHTH set to True.
+First, this document assumes that all students have been sorted into four groups named ``virtual``, ``in-person (a-k)``, ``in-person (l-z)`` and ``in-person``, that these groups are always correct and that each student is in only one group. It is on 8PO and/or the main office to ensure that these groups are accurate, not us. These groups NEED to be created for the code to work with ENABLE_HYBRID_EIGHTH set to True.
 
 ###########
 Conventions
@@ -19,6 +19,7 @@ Block Names --> ``* - Virt``, ``* - P1``, ``* - P2`` where the * is the block le
 * ``virtual`` will always sign up for the ``* - Virt`` blocks
 * ``in-person (a-k)`` will sign up for ``* - P1`` blocks if they are present, else they will sign up for ``* - Virt`` blocks
 * ``in-person (l-z)`` will sign up for ``* - P2`` blocks if they are present, else they will sign up for ``* - Virt`` blocks
+* ``in-person`` will always sign up for the ``* - P1`` or ``* - P2`` blocks
 
 Most of the work is done in either the block creation process or the activity scheduling process. However, there is other work done to hide extra blocks for students, to ensure teachers remember to take attendance and to clean up some naming. There is a setting called ``ENABLE_HYBRID_EIGHTH`` which is used extensively to enable these changes. When this is ``False``, Ion should behave like normal. However, be careful when setting this to ``False`` because the hybrid blocks won't display correctly. Nothing will break per se, but it won't be very user friendly. Specifics are below.
 

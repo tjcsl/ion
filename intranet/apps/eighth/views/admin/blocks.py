@@ -131,11 +131,11 @@ def perform_hybrid_block_signup(fmtdate, celery_logger):
                     except Exception:
                         failed_users.add(user)
 
-        # sticky `in-person (a-k)` for `* - Virt`
+        # sticky `in-person (a-k)` and `in-person` for `* - Virt`
         virtual_blocks = {b for b in blocks if "Virt" in b.block_letter}
         for b in virtual_blocks:
             sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
-            for g in [Group.objects.get(name="in-person (a-k)")]:
+            for g in [Group.objects.get(name="in-person (a-k)"), Group.objects.get(name="in-person")]:
                 for user in g.user_set.all():
                     try:
                         sch_act.add_user(user, request=None, force=True, no_after_deadline=True)
@@ -159,11 +159,11 @@ def perform_hybrid_block_signup(fmtdate, celery_logger):
                     except Exception:
                         failed_users.add(user)
 
-        # sticky `in-person (l-z)` for `* - Virt`
+        # sticky `in-person (l-z)` and `in-person` for `* - Virt`
         virtual_blocks = {b for b in blocks if "Virt" in b.block_letter}
         for b in virtual_blocks:
             sch_act = EighthScheduledActivity.objects.create(block=b, activity=sticky_act, attendance_taken=True)
-            for g in [Group.objects.get(name="in-person (l-z)")]:
+            for g in [Group.objects.get(name="in-person (l-z)"), Group.objects.get(name="in-person")]:
                 for user in g.user_set.all():
                     try:
                         sch_act.add_user(user, request=None, force=True, no_after_deadline=True)
