@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #351) documentation</title>
+    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #363) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -129,16 +129,16 @@
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 
 
-<div class="viewcode-block" id="GroupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.GroupManager">[docs]</a><span class="k">class</span> <span class="nc">GroupManager</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">GroupManager</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager">[docs]</a><span class="k">class</span> <span class="nc">GroupManager</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">GroupManager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This GroupManager model is really just the default Django</span>
 <span class="sd">    django.contrib.auth.models.GroupManager, just with an extra method.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GroupManager.student_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.GroupManager.student_visible">[docs]</a>    <span class="k">def</span> <span class="nf">student_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupManager.student_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager.student_visible">[docs]</a>    <span class="k">def</span> <span class="nf">student_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a QuerySet of groups that are student-visible.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groupproperties__student_visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.Group">[docs]</a><span class="k">class</span> <span class="nc">Group</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+<div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.Group">[docs]</a><span class="k">class</span> <span class="nc">Group</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This Group model is really just the default Django</span>
 <span class="sd">    django.contrib.auth.models.Group, but with a &quot;properties&quot;</span>
 <span class="sd">    property which returns or creates the GroupProperties field</span>
@@ -175,7 +175,7 @@
         <span class="n">proxy</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="GroupProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.eighth.forms.admin.groups.GroupProperties">[docs]</a><span class="k">class</span> <span class="nc">GroupProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupProperties">[docs]</a><span class="k">class</span> <span class="nc">GroupProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The GroupProperties model contains a OneToOneField with the</span>
 <span class="sd">    intranet.apps.groups.models.Group object (really just the default</span>
 <span class="sd">    django.contrib.auth.models.Group), and contains properties and other</span>
