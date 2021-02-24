@@ -321,22 +321,25 @@ class EighthTest(EighthAbstractTest):
         act1.rooms.add(room1)
 
         msg = signup_status_email(user1, [block1, block2], use_celery=False)
-        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
-        self.assertIn("Jan. 1, 2015 (A): No activity selected", msg.body)
+        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg[0].body)
+        self.assertIn("Jan. 1, 2015 (A): No activity selected", msg[0].body)
+        self.assertEqual(len(msg), 1)
 
         sa1 = EighthScheduledActivity.objects.get_or_create(block=block1, activity=act1)[0]
         sa1.add_user(user1)
 
         msg = signup_status_email(user1, [block1, block2], use_celery=False)
-        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg.body)
-        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
+        self.assertIn("Jan. 1, 2015 (B): No activity selected", msg[0].body)
+        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg[0].body)
+        self.assertEqual(len(msg), 1)
 
         sa2 = EighthScheduledActivity.objects.get_or_create(block=block2, activity=act1)[0]
         sa2.add_user(user1)
 
         msg = signup_status_email(user1, [block1, block2], use_celery=False)
-        self.assertNotIn("Jan. 1, 2015 (B): No activity selected", msg.body)
-        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg.body)
+        self.assertNotIn("Jan. 1, 2015 (B): No activity selected", msg[0].body)
+        self.assertNotIn("Jan. 1, 2015 (A): No activity selected", msg[0].body)
+        self.assertEqual(len(msg), 1)
 
     def test_absence_email(self):
         self.make_admin()
@@ -352,7 +355,8 @@ class EighthTest(EighthAbstractTest):
         es1 = EighthSignup.objects.get_or_create(user=user1, was_absent=True, scheduled_activity=sa1)[0]
 
         msg = absence_email(es1, use_celery=False)
-        self.assertIn("Jan. 1, 2015 (A)", msg.body)
+        self.assertIn("Jan. 1, 2015 (A)", msg[0].body)
+        self.assertEqual(len(msg), 1)
 
     def test_take_attendance(self):
         """ Makes sure that taking attendance for activites with multiple students signed up works. """

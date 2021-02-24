@@ -44,22 +44,29 @@ def email_send(
     html_content = html.render(data)
     subject = settings.EMAIL_SUBJECT_PREFIX + subject
     headers = {} if headers is None else headers
-    if bcc:
-        msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [settings.EMAIL_FROM], headers=headers, bcc=emails)
-    else:
-        msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
-    msg.attach_alternative(html_content, "text/html")
 
     if not emails:
         logger.debug("Email list is empty; not sending")
-        return msg
+        return EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
 
-    logger.debug("Emailing %s to %s", subject, emails)
+    email_groups = [emails[i: i + 800] for i in range(0, len(emails), 800)]
+    email_msg = []
+
+    for group in email_groups:
+        if bcc:
+            msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [settings.EMAIL_FROM], headers=headers, bcc=group)
+        else:
+            msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, group, headers=headers)
+        msg.attach_alternative(html_content, "text/html")
+        email_msg.append(msg)
+
+    logger.debug("Emailing %s to %s in %d seperate emails", subject, emails, len(email_msg))
 
     # We only want to actually send emails if we are in production or explicitly force sending.
     if settings.PRODUCTION or settings.FORCE_EMAIL_SEND:
-        msg.send()
+        for msg in email_msg:
+            msg.send()
     else:
         logger.debug("Refusing to email in non-production environments. To force email sending, enable settings.FORCE_EMAIL_SEND.")
 
-    return msg
+    return email_msg
