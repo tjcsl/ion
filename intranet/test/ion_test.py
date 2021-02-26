@@ -15,6 +15,15 @@ class IonTestCase(TestCase):
         super().tearDownClass()
 
     def login(self, username: str = "awilliam") -> User:
+        """
+        Log the test client in as the given user.
+
+        Args:
+            username: the username to log in as
+
+        Return:
+            the ``User`` object corresponding to ``username``
+        """
         # We need to add the user to the db before trying to login as them.
         user = get_user_model().objects.get_or_create(username=username)[0]
         with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
@@ -22,6 +31,16 @@ class IonTestCase(TestCase):
         return user
 
     def make_admin(self, username: str = "awilliam") -> User:
+        """
+        Log in the test client as the given user, and make that
+        user an admin (i.e. give it the admin_all group).
+
+        Args:
+            username: the username to log in as and make an admin
+
+        Return:
+            the ``User`` object corresponding to ``username``
+        """
         user = self.login(username=username)
         # Make user an eighth admin
         group = Group.objects.get_or_create(name="admin_all")[0]
