@@ -1,8 +1,10 @@
 import datetime
 import logging
+from typing import Optional
 
 from django import http
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
@@ -17,7 +19,16 @@ from .models import Sign
 logger = logging.getLogger(__name__)
 
 
-def check_internal_ip(request):
+def check_internal_ip(request) -> Optional[HttpResponse]:
+    """
+    A method to determine if a request is allowed to load a signage page.
+
+    Denies access by returning None unless the user is authenticated and not restricted,
+    or the request IP address is in ``settings.INTERNAL_IPS``.
+
+    Returns:
+        a 403 if the request is unauthorized or None if the request is authorized
+    """
     remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
     if (not request.user.is_authenticated or request.user.is_restricted) and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
@@ -25,7 +36,7 @@ def check_internal_ip(request):
     return None
 
 
-def signage_display(request, display_id):
+def signage_display(request, display_id: str) -> HttpResponse:
     check_ip = check_internal_ip(request)
     if check_ip:
         return check_ip
