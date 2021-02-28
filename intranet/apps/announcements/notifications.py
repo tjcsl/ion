@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.core import exceptions
 from django.urls import reverse
 
+from ...utils.date import get_senior_graduation_year
 from ..notifications.tasks import email_send_task
 
 logger = logging.getLogger(__name__)
@@ -113,9 +114,18 @@ def announcement_posted_email(request, obj, send_all=False):
     if settings.EMAIL_ANNOUNCEMENTS:
         subject = "Announcement: {}".format(obj.title)
         if send_all:
-            users = get_user_model().objects.all()
+            users = (
+                get_user_model()
+                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"]))
+            )
         else:
-            users = get_user_model().objects.filter(receive_news_emails=True)
+            users = (
+                get_user_model()
+                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"]))
+                .filter(receive_news_emails=True)
+            )
 
         send_groups = obj.groups.all()
         emails = []
