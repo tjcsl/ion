@@ -122,9 +122,8 @@ def announcement_posted_email(request, obj, send_all=False):
         else:
             users = (
                 get_user_model()
-                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
-                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"]))
-                .filter(receive_news_emails=True)
+                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year(), receive_news_emails=True)
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"], receive_news_emails=True))
             )
 
         send_groups = obj.groups.all()
