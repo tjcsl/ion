@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.test.ion_test &#8212; TJ Intranet v3 (Build #363) documentation</title>
+    <title>intranet.test.ion_test &#8212; TJ Intranet v3 (Build #377) documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -142,6 +142,15 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tearDownClass</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="IonTestCase.login"><a class="viewcode-back" href="../../../sourcedoc/intranet.test.html#intranet.test.ion_test.IonTestCase.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log the test client in as the given user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username: the username to log in as</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            the ``User`` object corresponding to ``username``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># We need to add the user to the db before trying to login as them.</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">MASTER_PASSWORD</span><span class="o">=</span><span class="s2">&quot;pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw=&quot;</span><span class="p">):</span>
@@ -149,6 +158,16 @@
         <span class="k">return</span> <span class="n">user</span></div>
 
 <div class="viewcode-block" id="IonTestCase.make_admin"><a class="viewcode-back" href="../../../sourcedoc/intranet.test.html#intranet.test.ion_test.IonTestCase.make_admin">[docs]</a>    <span class="k">def</span> <span class="nf">make_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log in the test client as the given user, and make that</span>
+<span class="sd">        user an admin (i.e. give it the admin_all group).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username: the username to log in as and make an admin</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            the ``User`` object corresponding to ``username``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="c1"># Make user an eighth admin</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>

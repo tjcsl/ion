@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #363) documentation</title>
+    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #377) documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -101,6 +101,7 @@
 <li><a class="reference internal" href="#module-intranet.apps.events.forms">intranet.apps.events.forms module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.models">intranet.apps.events.models module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.notifications">intranet.apps.events.notifications module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.tasks">intranet.apps.events.tasks module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.tests">intranet.apps.events.tests module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.urls">intranet.apps.events.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.views">intranet.apps.events.views module</a></li>
@@ -580,11 +581,6 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="intranet.apps.events.models.Event.get_next_by_time">
-<code class="sig-name descname"><span class="pre">get_next_by_time</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">time&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt id="intranet.apps.events.models.Event.get_next_by_updated">
 <code class="sig-name descname"><span class="pre">get_next_by_updated</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">updated&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_updated" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -597,11 +593,6 @@ object the first time, the query is executed.</p>
 <dl class="py method">
 <dt id="intranet.apps.events.models.Event.get_previous_by_added">
 <code class="sig-name descname"><span class="pre">get_previous_by_added</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">added&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_added" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="intranet.apps.events.models.Event.get_previous_by_time">
-<code class="sig-name descname"><span class="pre">get_previous_by_time</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">time&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1417,6 +1408,9 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 </div>
+<div class="section" id="module-intranet.apps.events.tasks">
+<span id="intranet-apps-events-tasks-module"></span><h2>intranet.apps.events.tasks module<a class="headerlink" href="#module-intranet.apps.events.tasks" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-intranet.apps.events.tests">
 <span id="intranet-apps-events-tests-module"></span><h2>intranet.apps.events.tests module<a class="headerlink" href="#module-intranet.apps.events.tests" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -1426,7 +1420,7 @@ object the first time, the query is executed.</p>
 <p>Tests for the events module.</p>
 <dl class="py method">
 <dt id="intranet.apps.events.tests.EventsTest.create_random_event">
-<code class="sig-name descname"><span class="pre">create_random_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">user</span></em>, <em class="sig-param"><span class="pre">approved=False</span></em>, <em class="sig-param"><span class="pre">time=datetime.datetime(2021</span></em>, <em class="sig-param"><span class="pre">2</span></em>, <em class="sig-param"><span class="pre">24</span></em>, <em class="sig-param"><span class="pre">22</span></em>, <em class="sig-param"><span class="pre">48</span></em>, <em class="sig-param"><span class="pre">48</span></em>, <em class="sig-param"><span class="pre">766451</span></em>, <em class="sig-param"><span class="pre">tzinfo=&lt;UTC&gt;)</span></em>, <em class="sig-param"><span class="pre">show_attending=True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_random_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">user</span></em>, <em class="sig-param"><span class="pre">approved=False</span></em>, <em class="sig-param"><span class="pre">time=datetime.datetime(2021</span></em>, <em class="sig-param"><span class="pre">3</span></em>, <em class="sig-param"><span class="pre">2</span></em>, <em class="sig-param"><span class="pre">14</span></em>, <em class="sig-param"><span class="pre">26</span></em>, <em class="sig-param"><span class="pre">9</span></em>, <em class="sig-param"><span class="pre">947497</span></em>, <em class="sig-param"><span class="pre">tzinfo=&lt;UTC&gt;)</span></em>, <em class="sig-param"><span class="pre">show_attending=True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

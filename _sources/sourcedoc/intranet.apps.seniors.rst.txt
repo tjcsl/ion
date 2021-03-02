@@ -36,6 +36,14 @@ intranet.apps.seniors.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.seniors.tests module
+----------------------------------
+
+.. automodule:: intranet.apps.seniors.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.seniors.urls module
 ---------------------------------
 

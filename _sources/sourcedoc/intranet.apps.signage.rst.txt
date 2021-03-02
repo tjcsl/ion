@@ -44,6 +44,14 @@ intranet.apps.signage.pages module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.signage.tests module
+----------------------------------
+
+.. automodule:: intranet.apps.signage.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.signage.urls module
 ---------------------------------
 
