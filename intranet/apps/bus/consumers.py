@@ -78,6 +78,6 @@ class BusConsumer(JsonWebsocketConsumer):
 
     def within_time_range(self, time):
         now_hour = timezone.localtime().hour
-        within_morning = now_hour <= settings.BUS_PAGE_CHANGEOVER_HOUR and time == "morning"
-        within_afternoon = now_hour > settings.BUS_PAGE_CHANGEOVER_HOUR and time == "afternoon"
+        within_morning = now_hour < settings.BUS_PAGE_CHANGEOVER_HOUR and time == "morning"
+        within_afternoon = now_hour >= settings.BUS_PAGE_CHANGEOVER_HOUR and time == "afternoon"
         return within_morning or within_afternoon
