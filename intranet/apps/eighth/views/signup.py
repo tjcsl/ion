@@ -418,7 +418,8 @@ def eighth_location(request):
         for b in blocks:
             try:
                 act = request.user.eighthscheduledactivity_set.get(block=b)
-                sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
+                if act.activity.name != "z - Hybrid Sticky":
+                    sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
 
