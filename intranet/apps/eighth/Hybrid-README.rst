@@ -43,6 +43,8 @@ The block creation is all set up now, but let's improve user friendliness. For t
 
 * In ``intranet/apps/dashboard/views.py``, changes (between comment lines and behind an ENABLE_HYBRID_EIGHTH if statement) essentially filter out blocks where a student is signed up for the "Hybrid Sticky" activity that indicates that block isn't applicable to them. Context is also added to pass onto both the teacher and student dashboard widgets.
 
+* In ``intranet/apps/eighth/views/signup.py``, changes are made to ``eighth_location`` to filter out activities.
+
 * In ``intranet/apps/eighth/views/profile.py``, a section (between comment lines and behind an ENABLE_HYBRID_EIGHTH if statement) is changed to hide the stickied activities from students (but not eighth_admin). Context is passed in another section.
 
 * In ``intranet/apps/eighth/views/attendance.py``, context is added to the take_attendance view to pass into the template based on the ENABLE_HYBRID_EIGHTH setting.
@@ -52,6 +54,8 @@ The block creation is all set up now, but let's improve user friendliness. For t
 * In ``intranet/templates/eighth/sponsor_widget.html``, one line is changed to use ``block.hybrid_text`` instead of ``block.block_letter``.
 
 * In ``intranet/templates/eighth/signup_widget.html``, one line is changed to use ``block.hybrid_text`` instead of ``block.block_letter``.
+
+* In ``intranet/templates/eighth/location.html``, one line is changed to use ``block.hybrid_text`` instead of ``block.block_letter``.
 
 * In ``intranet/templates/eighth/signup.html``, one line is changed to use ``block.hybrid_text`` instead of ``block.block_letter``.
 
