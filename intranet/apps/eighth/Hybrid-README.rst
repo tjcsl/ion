@@ -78,8 +78,26 @@ At the request of 8PO, some normal eighth period admin actions that they use a l
 
 * In ``intranet/apps/eighth/urls.py``, urls are added for the new hybrid tools.
 
-* In ``intranet/apps/eighth/views/admin/hybrid.py``, the ``activities_without_attendance_view`` and ``list_sponsor_view`` from other admin views are rewritten with hybrid Ion in mind. This is a new file.
+* In ``intranet/apps/eighth/tasks.py``, a hybrid group signup task is added.
+
+* In ``intranet/apps/eighth/views/admin/hybrid.py``, the ``activities_without_attendance_view``, ``list_sponsor_view`` and ``group_signup_wizard`` from other admin views are rewritten with hybrid Ion in mind. This is a new file.
+
+* In ``intranet/templates/eighth/admin/hybrid_groups.html``, an entrypoint for the ``group_signup_wizard`` is provided. This is a new file.
+
+* In ``intranet/templates/eighth/admin/sign_up_group.html``, a section is changed based on context to make the text display hybrid blocks better.
 
 * In ``intranet/templates/eighth/admin/list_sponsors_hybrid.html``, the ``list_sponsor.html`` template is rewritten. This is a new file.
 
 * In ``intranet/templates/eighth/admin/activities_without_attendance_hybrid.html``, the ``activities_without_attendance.html`` template is rewritten. This is a new file.
+
+* In ``intranet/apps/eighth/forms/admin/activities.py``, a ``HybridActivitySelectionForm`` is added.
+
+* In ``intranet/apps/eighth/forms/admin/blocks.py``, a ``HybridBlockSelectionForm`` is added.
+
+* In ``intranet/templates/eighth/emails/group_signup_complete.txt``, the text is modified to send hybrid appropriate emails.
+
+* In ``intranet/templates/eighth/emails/group_signup_complete.html``, the text is modified to send hybrid appropriate emails.
+
+* In ``intranet/templates/eighth/emails/group_signup_error.html``, the text is modified to send hybrid appropriate emails.
+
+* In ``intranet/templates/eighth/emails/group_signup_error.txt``, the text is modified to send hybrid appropriate emails.

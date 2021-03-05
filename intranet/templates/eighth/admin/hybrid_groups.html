@@ -1,0 +1,25 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load dates %}
+{% load static %}
+{% load cacheops %}
+{% load pipeline %}
+
+{% block js %}
+<script>
+    window.urlIDPlaceholder = "{{ url_id_placeholder }}";
+</script>
+{% endblock %}
+
+{% block admin_main %}
+    This page will only allow you to register groups for activities that are already scheduled in both the virtual and in-person blocks. You will simply select the activity name and Ion will put students into the appropriate activity based on if they are virtual or in-person.
+    <br><br>
+    <select id="group-select" placeholder="Select or search for a group">
+        <option value="">Select or search for a group</option>
+        {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.name }}{% if group.properties.student_visible %} (Student-visible){% endif %} -- {{ group.user_count }} members</option>
+        {% endfor %}
+    </select>
+
+    <a class="button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_signup_group_hybrid' url_id_placeholder %}">Register Group for Activity</a>
+
+{% endblock %}
