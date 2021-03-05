@@ -1,11 +1,11 @@
 import logging
 from typing import List  # noqa
 
-from django import forms
+from django import forms, http
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
-from ...models import EighthActivity, EighthScheduledActivity
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +58,31 @@ class ActivitySelectionForm(forms.Form):
             queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
 
             self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity", block=block)
+
+
+class HybridActivitySelectionForm(forms.Form):
+    def __init__(self, *args, label="Activity", block, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        block_set = EighthBlock.objects.filter(date=block[2:12], block_letter__contains=block[16])
+
+        if len(block_set) != 2:
+            raise http.Http404
+
+        activity_ids_1 = (
+            EighthScheduledActivity.objects.exclude(Q(activity__deleted=True) | Q(cancelled=True))
+            .filter(block=block_set[0])
+            .values_list("activity__id", flat=True)
+        )
+        activity_ids_2 = (
+            EighthScheduledActivity.objects.exclude(Q(activity__deleted=True) | Q(cancelled=True))
+            .filter(block=block_set[1])
+            .values_list("activity__id", flat=True)
+        )
+        activity_ids = activity_ids_1.intersection(activity_ids_2)
+        queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
+
+        self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
 
 
 class QuickActivityForm(forms.ModelForm):

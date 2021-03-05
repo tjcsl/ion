@@ -230,6 +230,56 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
 
 
 @shared_task
+def eighth_admin_signup_group_task_hybrid(*, user_id: int, group_id: int, schact_virtual_id: int, schact_person_id: int) -> None:
+    """Sign all users in a specific group up for a specific scheduled activity
+    (in the background), sending an email to the user who requested the operation when
+    it is done.
+
+    Args:
+        user_id: The ID of the user who requested that this operation be performed.
+        group_id: The ID of the group to sign up for the activity.
+        schact_virtual_id: The ID of the EighthScheduledActivity to add the virtual group members to.
+        schact_person_id: The ID of the EighthScheduledActivity to add the in-person group members to.
+
+    """
+    # Circular dependency
+    from .views.admin.hybrid import eighth_admin_perform_group_signup  # pylint: disable=import-outside-toplevel
+
+    user = get_user_model().objects.get(id=user_id)
+
+    data = {
+        "group": Group.objects.get(id=group_id),
+        "hybrid": True,
+        "scheduled_activity_virtual": EighthScheduledActivity.objects.get(id=schact_virtual_id),
+        "scheduled_activity_person": EighthScheduledActivity.objects.get(id=schact_person_id),
+        "help_email": settings.FEEDBACK_EMAIL,
+    }
+
+    try:
+        eighth_admin_perform_group_signup(group_id=group_id, schact_virtual_id=schact_virtual_id, schact_person_id=schact_person_id, request=None)
+    except Exception:
+        email_send(
+            "eighth/emails/group_signup_error.txt",
+            "eighth/emails/group_signup_error.html",
+            data,
+            "Error during group signup",
+            [user.notification_email],
+            bcc=False,
+        )
+
+        raise  # Send to Sentry
+    else:
+        email_send(
+            "eighth/emails/group_signup_complete.txt",
+            "eighth/emails/group_signup_complete.html",
+            data,
+            "Group signup complete",
+            [user.notification_email],
+            bcc=False,
+        )
+
+
+@shared_task
 def email_scheduled_activity_students_task(
     scheduled_activity_id: int,
     sender_id: int,

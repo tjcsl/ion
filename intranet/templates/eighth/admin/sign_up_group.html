@@ -18,15 +18,21 @@
             {{ wizard.management_form }}
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 
-
-            {% if block_obj %}
-                <b>Block:</b> {{ block_obj }}
-                <br>
-                {% if block_obj.locked %}
-                This block is locked. This action would result in an after-deadline signup.
-                <br>
+            {% if hybrid %}
+                {% if block_obj %}
+                    <b>Block:</b> {{ block_obj.0 }} ({{ block_obj.1 }})
+                    <br><br>
                 {% endif %}
-                <br>
+            {% else %}
+                {% if block_obj %}
+                    <b>Block:</b> {{ block_obj }}
+                    <br>
+                    {% if block_obj.locked %}
+                    This block is locked. This action would result in an after-deadline signup.
+                    <br>
+                    {% endif %}
+                    <br>
+                {% endif %}
             {% endif %}
 
             {{ wizard.form }}
@@ -46,7 +52,11 @@
         <p>Are you sure you want to sign up <b>{{ users_num }} users</b> in group:</p>
         <p><b>{{ group }}</b></p>
         for:<br><br>
-        <p><b>{{ scheduled_activity }}</b></p>
+        {% if hybrid %}
+            <p><b>{{ scheduled_activity_virtual }}</b> (Virtual) and <b>{{ scheduled_activity_person }}</b> (In-Person)</p>
+        {% else %}
+            <p><b>{{ scheduled_activity }}</b></p>
+        {% endif %}
         <form action="" method="POST">
             {% csrf_token %}
             <input type="hidden" name="confirm" value="true">

@@ -155,6 +155,13 @@ if settings.ENABLE_HYBRID_EIGHTH:
     hybrid_patterns = [
         re_path(r"^hybrid/list$", hybrid.list_sponsor_view, name="eighth_admin_list_sponsor_hybrid"),
         re_path(r"^hybrid/no_attendance$", hybrid.activities_without_attendance_view, name="eighth_admin_view_activities_without_attendance_hybrid"),
+        re_path(r"^hybrid/groups$", hybrid.eighth_admin_groups_index_hybrid_view, name="eighth_admin_groups_index_hybrid"),
+        re_path(r"^hybrid/groups/signup/(?P<group_id>\d+)$", hybrid.eighth_admin_signup_group_hybrid_view, name="eighth_admin_signup_group_hybrid"),
+        re_path(
+            r"^hybrid/groups/signup/action/(?P<group_id>\d+)/(?P<schact_virtual_id>\d+)/(?P<schact_person_id>\d+)$",
+            hybrid.eighth_admin_signup_group_action_hybrid,
+            name="eighth_admin_signup_group_action_hybrid",
+        ),
     ]
     eighth_admin_patterns.extend(hybrid_patterns)
 #######
