@@ -56,7 +56,7 @@
             var student_list = [];
             var mem_list = $('.bbcu-selector');
             for (var i = 0; i < mem_list.length; i++) {
-                var name = $(mem_list[i]).find(".user-name")[0].innerText.split(" ").slice(0, 2).join(" ");
+                var name = $(mem_list[i]).find(".user-name-eighth")[0].innerText.split(" ").slice(0, 2).join(" ");
                 var email = $(mem_list[i]).find(".id")[0].innerText + "@fcpsschools.net";
                 student_list.push([name, email]);
             }
@@ -309,7 +309,7 @@
                             {% for pass in passes %}
                             <tr class="bbcu-selector">
                                 <td class="user-link" data-user-id="{{ pass.user.id }}">
-                                    <a href="{% url 'user_profile' pass.user.id %}" class="user-name">
+                                    <a href="{% url 'user_profile' pass.user.id %}" class="user-name-eighth">
                                         {{ pass.user.last_name }}, {{ pass.user.first_name }}
                                     </a>
                                 </td>
@@ -418,7 +418,7 @@
                                             {% endif %}
                                     {% endif %}
                                     <td class="user-col user-link" data-user-id="{{ member.id }}">
-                                        <a class="user-name" href="{% url 'user_profile' member.id %}">
+                                        <a class="user-name-eighth" href="{% url 'user_profile' member.id %}">
                                             {{ member.name }}
                                         </a>
                                     </td>
