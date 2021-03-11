@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 import time
 from datetime import timedelta
 from typing import Container, Tuple
@@ -155,9 +156,15 @@ class LoginView(View):
     @method_decorator(sensitive_post_parameters("password"))
     def post(self, request):
         """Validate and process the login POST request."""
+
+        username = request.POST.get("username", "")
+
         """Before September 1st, do not allow Class of [year+4] to log in."""
-        if request.POST.get("username", "").startswith(str(timezone.localdate().year + 4)) and timezone.localdate() < settings.SCHOOL_START_DATE:
+        if username.startswith(str(timezone.localdate().year + 4)) and timezone.localdate() < settings.SCHOOL_START_DATE:
             return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
+
+        if re.search(r"^(\d{4})?[a-zA-Z]+\d?$", username) is None:
+            return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
 
         form = AuthenticateForm(data=request.POST)
 
