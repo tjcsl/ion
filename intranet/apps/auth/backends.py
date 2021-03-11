@@ -1,7 +1,6 @@
 import enum
 import logging
 import os
-import re
 import tempfile
 from typing import Union
 
@@ -139,7 +138,7 @@ class KerberosAuthenticationBackend:
             return None
 
         # remove all non-alphanumerics
-        username = re.sub(r"\W", "", username).lower()
+        username = username.lower()
 
         result, ad_auth = self.get_kerberos_ticket(username, password)
 
