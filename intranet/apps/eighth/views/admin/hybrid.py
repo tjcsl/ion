@@ -121,14 +121,6 @@ def list_sponsor_view(request):
     return render(request, "eighth/admin/list_sponsors_hybrid.html", context)
 
 
-@eighth_admin_required
-def eighth_admin_groups_index_hybrid_view(request):
-    groups = Group.objects.all()
-    return render(
-        request, "eighth/admin/hybrid_groups.html", context={"groups": groups, "url_id_placeholder": "734784857438457843756435654645642343465"}
-    )
-
-
 class EighthAdminSignUpGroupWizard(SessionWizardView):
     FORMS = [("block", HybridBlockSelectionForm), ("activity", HybridActivitySelectionForm)]
 
