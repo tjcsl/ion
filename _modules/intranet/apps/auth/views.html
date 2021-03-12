@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #384) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #396) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -127,6 +127,7 @@
   <h1>Source code for intranet.apps.auth.views</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -282,9 +283,15 @@
 <div class="viewcode-block" id="LoginView.post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.LoginView.post">[docs]</a>    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Validate and process the login POST request.&quot;&quot;&quot;</span>
+
+        <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
         <span class="sd">&quot;&quot;&quot;Before September 1st, do not allow Class of [year+4] to log in.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_START_DATE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">username</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span> <span class="ow">and</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_START_DATE</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;auth_message&quot;</span><span class="p">:</span> <span class="s2">&quot;Your account is not yet active for use with this application.&quot;</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\d</span><span class="si">{4}</span><span class="s2">)?[a-zA-Z]+\d?$&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">added_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;auth_message&quot;</span><span class="p">:</span> <span class="s2">&quot;Your username format is incorrect.&quot;</span><span class="p">})</span>
 
         <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticateForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
 
