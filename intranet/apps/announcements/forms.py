@@ -37,6 +37,39 @@ class AnnouncementForm(forms.ModelForm):
         fields = ["title", "author", "content", "groups", "expiration_date", "notify_post", "notify_email_all", "update_added_date", "pinned"]
 
 
+class AnnouncementEditForm(forms.ModelForm):
+    """A form for generating an announcement."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
+
+        self.fields["notify_post_resend"].help_text = (
+            "If this box is checked, students who have signed up for notifications "
+            "will receive an email. If the announcement is public, a link will be posted on Twitter."
+        )
+
+        self.fields["notify_email_all_resend"].help_text = (
+            "This will resend an email notification to all of the users who can see this post. This option "
+            "does NOT take users' email notification preferences into account, so please use with care."
+        )
+
+        self.fields["update_added_date"].help_text = (
+            "If this announcement has already been added, update the added date to now so that the "
+            "announcement is pushed to the top. If this option is not selected, the announcement will stay in "
+            "its current position."
+        )
+
+    expiration_date = forms.DateTimeInput()
+    notify_post_resend = forms.BooleanField(required=False, label="Resend notification")
+    notify_email_all_resend = forms.BooleanField(required=False, label="Resend email to all users")
+    update_added_date = forms.BooleanField(required=False, label="Update Added Date")
+
+    class Meta:
+        model = Announcement
+        fields = ["title", "author", "content", "groups", "expiration_date", "update_added_date", "pinned"]
+
+
 class AnnouncementRequestForm(forms.ModelForm):
     """A form for generating an announcement request."""
 
