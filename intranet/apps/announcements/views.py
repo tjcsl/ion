@@ -13,7 +13,7 @@ from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-from .forms import AnnouncementAdminForm, AnnouncementForm, AnnouncementRequestForm
+from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
                             request_announcement_email)
@@ -301,11 +301,16 @@ def modify_announcement_view(request, announcement_id=None):
     """
     if request.method == "POST":
         announcement = get_object_or_404(Announcement, id=announcement_id)
-        form = AnnouncementForm(request.POST, instance=announcement)
+        form = AnnouncementEditForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
             if "update_added_date" in form.cleaned_data and form.cleaned_data["update_added_date"]:
                 obj.added = timezone.now()
+            if form.cleaned_data.get("notify_post_resend") or form.cleaned_data.get("notify_email_all_resend"):
+                obj.notify_post = form.cleaned_data["notify_post_resend"]
+                obj.notify_email_all = form.cleaned_data["notify_email_all_resend"]
+                obj.save()
+                announcement_posted_hook(request, obj)
             # SAFE HTML
             obj.content = safe_html(obj.content)
             obj.save()
@@ -316,7 +321,7 @@ def modify_announcement_view(request, announcement_id=None):
             messages.error(request, "Error adding announcement")
     else:
         announcement = get_object_or_404(Announcement, id=announcement_id)
-        form = AnnouncementForm(instance=announcement)
+        form = AnnouncementEditForm(instance=announcement)
 
     context = {"form": form, "action": "modify", "id": announcement_id, "announcement": announcement}
     return render(request, "announcements/add_modify.html", context)
