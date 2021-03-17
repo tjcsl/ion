@@ -101,3 +101,8 @@ At the request of 8PO, some normal eighth period admin actions that they use a l
 * In ``intranet/templates/eighth/emails/group_signup_error.html``, the text is modified to send hybrid appropriate emails.
 
 * In ``intranet/templates/eighth/emails/group_signup_error.txt``, the text is modified to send hybrid appropriate emails.
+
+**************
+Random Stuff
+**************
+* In ``intranet/static/css/dashboard.widgets.scss``, the eighth block schedule widget is messed with to make it display nicer.
