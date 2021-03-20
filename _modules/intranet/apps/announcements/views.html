@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #399) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #405) documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -140,7 +140,7 @@
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">announcements_admin_required</span><span class="p">,</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">AnnouncementAdminForm</span><span class="p">,</span> <span class="n">AnnouncementForm</span><span class="p">,</span> <span class="n">AnnouncementRequestForm</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">AnnouncementAdminForm</span><span class="p">,</span> <span class="n">AnnouncementEditForm</span><span class="p">,</span> <span class="n">AnnouncementForm</span><span class="p">,</span> <span class="n">AnnouncementRequestForm</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
 <span class="kn">from</span> <span class="nn">.notifications</span> <span class="kn">import</span> <span class="p">(</span><span class="n">admin_request_announcement_email</span><span class="p">,</span> <span class="n">announcement_approved_email</span><span class="p">,</span> <span class="n">announcement_posted_email</span><span class="p">,</span> <span class="n">announcement_posted_twitter</span><span class="p">,</span>
                             <span class="n">request_announcement_email</span><span class="p">)</span>
@@ -428,11 +428,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">announcement</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementEditForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">if</span> <span class="s2">&quot;update_added_date&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;update_added_date&quot;</span><span class="p">]:</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;notify_post_resend&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;notify_email_all_resend&quot;</span><span class="p">):</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">notify_post</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;notify_post_resend&quot;</span><span class="p">]</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">notify_email_all</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;notify_email_all_resend&quot;</span><span class="p">]</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
             <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -443,7 +448,7 @@
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">announcement</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementEditForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">announcement_id</span><span class="p">,</span> <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
