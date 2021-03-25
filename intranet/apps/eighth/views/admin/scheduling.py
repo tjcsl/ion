@@ -422,7 +422,7 @@ def transfer_students_action(request):
             source_act.eighthsignup_set.all().delete()
             invalidate_obj(source_act)
             messages.success(request, "Successfully removed signups for {} students.".format(num))
-        else:
+        elif dest_act.block != source_act.block:
             # In order to prevent duplicate signups when transferring students between activities in different blocks,
             # we need to delete any `EighthSignup`s already present in the block of `dest_act` for transferred students.
             duplicate_sign_up_users = []
@@ -450,6 +450,18 @@ def transfer_students_action(request):
                 context["moved_students"] = duplicate_signups
             else:
                 return redirect("eighth_admin_dashboard")
+        else:
+            # If we are moving students between activities in the same block, deleting signups is bad because we aren't
+            # able to then edit them. Duplicate signups are also not an issue.
+            with transaction.atomic():
+                source_act.eighthsignup_set.update(scheduled_activity=dest_act)
+
+            invalidate_obj(source_act)
+            invalidate_obj(dest_act)
+            messages.success(request, "Successfully transfered {} students.".format(num))
+
+            return redirect("eighth_admin_dashboard")
+
     return render(request, "eighth/admin/transfer_students.html", context)
 
 
