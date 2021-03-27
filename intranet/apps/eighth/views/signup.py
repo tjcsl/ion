@@ -110,11 +110,11 @@ def eighth_signup_view(request, block_id=None):
                 surrounding_blocks = EighthBlock.objects.exclude(
                     eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky", members__in=[request.user])
                 ).order_by("date", "block_letter")
-                future_blocks = surrounding_blocks.filter(date__gte=now)
-                if future_blocks is not None:
-                    block = future_blocks[0]
+                future_block = surrounding_blocks.filter(date__gte=now).first()
+                if future_block is not None:
+                    block = future_block
                 elif surrounding_blocks is not None:
-                    block = surrounding_blocks[-1]
+                    block = surrounding_blocks.last()
                 if block is not None:
                     block_id = block.id
         #######
