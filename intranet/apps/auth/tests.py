@@ -48,6 +48,43 @@ class LoginViewTest(IonTestCase):
     def test_authentication(self):
         self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
+    def test_login(self):
+        """Just test Kerberos login, but not really because Kerberos isn't accessible from here..."""
+
+        with self.settings(KINIT_TIMEOUT=1):
+            response = self.client.post(reverse("login"), data={"username": "awilliam", "password": "dankmemes123"})
+        self.assertEqual(200, response.status_code)
+
+    def test_logout_view(self):
+        self.login()
+        response = self.client.get(reverse("logout"))
+        self.assertEqual(302, response.status_code)
+
+    def test_reauthentication_view(self):
+        self.login()
+        response = self.client.get(reverse("reauth"))
+        self.assertEqual(200, response.status_code)
+
+        with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
+            response = self.client.post(reverse("reauth"), data={"password": "dankmemes"})
+            self.assertEqual(302, response.status_code)
+
+    def test_reset_password_view(self):
+        self.login()
+        response = self.client.get(reverse("reset_password"))
+        self.assertEqual(200, response.status_code)
+
+        response = self.client.post(
+            reverse("reset_password"),
+            data={
+                "username": "awilliam",
+                "old_password": "dankmemes",
+                "new_password": "dankmemes",
+                "new_password_confirm": "dankmemes",
+            },
+        )
+        self.assertEqual(200, response.status_code)
+
     def test_eighth_login_redirect(self):
         now = timezone.localtime(timezone.now())
 
