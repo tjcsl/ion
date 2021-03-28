@@ -231,6 +231,9 @@ jobs:
       - name: Create database
         run: psql -U postgres -h 127.0.0.1 -c 'create database ion'
 
+      - name: install Kerberos
+        run: sudo apt install -y krb5-user
+
       # Tests
       - name: Run tests
         run: coverage run ./setup.py test
