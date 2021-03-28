@@ -42,8 +42,8 @@ def eighth_signup_view(request, block_id=None):
         block_id = request.GET.get("block")
         args = ""
         if "user" in request.GET:
-            args = "user={}".format(request.GET.get("user"))
-        return redirect("/eighth/signup/{}?{}".format(block_id, args))
+            args = "?user={}".format(request.GET.get("user"))
+        return redirect("/eighth/signup/{}{}".format(block_id, args))
 
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
@@ -395,7 +395,7 @@ def toggle_favorite_view(request):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
     if not ("aid" in request.POST and is_entirely_digit(request.POST["aid"])):
-        http.HttpResponseBadRequest("Must specify an integer aid")
+        return http.HttpResponseBadRequest("Must specify an integer aid")
 
     aid = request.POST["aid"]
     with transaction.atomic():
