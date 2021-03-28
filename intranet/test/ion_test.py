@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from ..apps.groups.models import Group
 from ..apps.users.models import User
@@ -29,6 +30,15 @@ class IonTestCase(TestCase):
         with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
             self.client.login(username=username, password="dankmemes")
         return user
+
+    def reauth(self) -> None:
+        """
+        Reauthenticate the already logged in user.
+        """
+
+        with self.settings(MASTER_PASSWORD="pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw="):
+            response = self.client.post(reverse("reauth"), data={"password": "dankmemes"})
+            self.assertEqual(302, response.status_code)
 
     def make_admin(self, username: str = "awilliam") -> User:
         """
