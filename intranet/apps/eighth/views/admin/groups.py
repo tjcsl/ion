@@ -1,7 +1,7 @@
 import csv
 import logging
 import re
-from typing import Optional
+from typing import List, Optional
 
 from cacheops import invalidate_model, invalidate_obj
 from formtools.wizard.views import SessionWizardView
@@ -17,6 +17,7 @@ from django.urls import reverse
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ....search.views import get_search_results
+from ....users.models import User
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
@@ -154,7 +155,7 @@ def get_file_string(fileobj):
     return filetext
 
 
-def get_user_info(key, val):
+def get_user_info(key: str, val) -> Optional[List[User]]:
     if key in ["username", "id"]:
         try:
             u = get_user_model().objects.filter(**{key: val})
@@ -192,13 +193,13 @@ def get_user_info(key, val):
     return None
 
 
-def handle_group_input(filetext):
+def handle_group_input(filetext: str):
     lines = filetext.splitlines()
 
     return find_users_input(lines)
 
 
-def find_users_input(lines):
+def find_users_input(lines: List[str]):
     sure_users = []
     unsure_users = []
     for line in lines:
