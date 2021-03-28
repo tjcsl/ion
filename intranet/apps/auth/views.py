@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db.models import Q
 from django.shortcuts import redirect, render
@@ -262,6 +263,7 @@ def logout_view(request):
     return redirect("index")
 
 
+@login_required
 def reauthentication_view(request):
     context = {"login_failed": False}
     if request.method == "POST":
@@ -273,6 +275,7 @@ def reauthentication_view(request):
     return render(request, "auth/reauth.html", context)
 
 
+@login_required
 def reset_password_view(request):
     context = {"password_match": True, "unable_to_set": False, "password_expired": request.GET.get("expired", "false").lower() == "true"}
     if request.method == "POST":
