@@ -1,6 +1,5 @@
 import csv
 import datetime
-import sys
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
@@ -61,7 +60,7 @@ class Command(BaseCommand):
         ]
 
         if options.get("outfile") is None:
-            writer = csv.writer(sys.stdout)
+            writer = csv.writer(self.stdout)
             writer.writerows(rows)
         else:
             with open(options.get("outfile"), "w") as f:

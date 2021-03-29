@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -21,11 +19,11 @@ class Command(BaseCommand):
         try:
             group = Group.objects.get(name="Withdrawn from TJ", id=9)
         except Group.DoesNotExist:
-            sys.stdout.write("Withdrawn group could not be found.\n")
+            self.stdout.write("Withdrawn group could not be found.\n")
             return
 
         if not group.user_set.all().exists():
-            sys.stdout.write("No users found in withdrawn group.\n")
+            self.stdout.write("No users found in withdrawn group.\n")
             return
 
         base_url = "https://ion.tjhsst.edu"
@@ -36,7 +34,7 @@ class Command(BaseCommand):
             "base_url": base_url,
             "info_link": base_url,
         }
-        sys.stdout.write(str(data) + "\n")
+        self.stdout.write(str(data) + "\n")
 
         if NOTIFY_EMAILS:
             email_send_task.delay(
@@ -48,6 +46,6 @@ class Command(BaseCommand):
             )
 
         for user in group.user_set.all():
-            sys.stdout.write("Deleting {}\n".format(user))
+            self.stdout.write("Deleting {}\n".format(user))
             user.handle_delete()
-            sys.stdout.write(str(user.delete()) + "\n")
+            self.stdout.write(str(user.delete()) + "\n")
