@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #409) documentation</title>
+    <title>intranet.apps.eighth.views.admin.groups &#8212; TJ Intranet v3 (Build #422) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -128,7 +128,7 @@
 <span></span><span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_model</span><span class="p">,</span> <span class="n">invalidate_obj</span>
 <span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
@@ -144,6 +144,7 @@
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">....search.views</span> <span class="kn">import</span> <span class="n">get_search_results</span>
+<span class="kn">from</span> <span class="nn">....users.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.groups</span> <span class="kn">import</span> <span class="n">GroupForm</span><span class="p">,</span> <span class="n">QuickGroupForm</span><span class="p">,</span> <span class="n">UploadGroupForm</span>
@@ -281,7 +282,7 @@
     <span class="k">return</span> <span class="n">filetext</span></div>
 
 
-<div class="viewcode-block" id="get_user_info"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.get_user_info">[docs]</a><span class="k">def</span> <span class="nf">get_user_info</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<div class="viewcode-block" id="get_user_info"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.get_user_info">[docs]</a><span class="k">def</span> <span class="nf">get_user_info</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]]:</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>
@@ -319,13 +320,13 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="handle_group_input"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.handle_group_input">[docs]</a><span class="k">def</span> <span class="nf">handle_group_input</span><span class="p">(</span><span class="n">filetext</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_group_input"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.handle_group_input">[docs]</a><span class="k">def</span> <span class="nf">handle_group_input</span><span class="p">(</span><span class="n">filetext</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">filetext</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">find_users_input</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_users_input"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.find_users_input">[docs]</a><span class="k">def</span> <span class="nf">find_users_input</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+<div class="viewcode-block" id="find_users_input"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.find_users_input">[docs]</a><span class="k">def</span> <span class="nf">find_users_input</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="n">sure_users</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">unsure_users</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>

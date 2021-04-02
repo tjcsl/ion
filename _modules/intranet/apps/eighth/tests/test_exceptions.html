@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.test_others &#8212; TJ Intranet v3 (Build #409) documentation</title>
+    <title>intranet.apps.eighth.tests.test_exceptions &#8212; TJ Intranet v3 (Build #422) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -124,18 +124,13 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.eighth.tests.test_others</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">mock_open</span><span class="p">,</span> <span class="n">patch</span>
-
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">call_command</span>
-
-<span class="kn">from</span> <span class="nn">....test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+  <h1>Source code for intranet.apps.eighth.tests.test_exceptions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">....test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 <span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="n">SignupException</span>
 
 
-<div class="viewcode-block" id="EighthExceptionTest"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_others.EighthExceptionTest">[docs]</a><span class="k">class</span> <span class="nc">EighthExceptionTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="EighthExceptionTest.test_signup_exception"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_others.EighthExceptionTest.test_signup_exception">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthExceptionTest"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_exceptions.EighthExceptionTest">[docs]</a><span class="k">class</span> <span class="nc">EighthExceptionTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthExceptionTest.test_signup_exception"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_exceptions.EighthExceptionTest.test_signup_exception">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">signup_exception</span> <span class="o">=</span> <span class="n">SignupException</span><span class="p">()</span>
         <span class="c1"># Test that response is plain with no errors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
@@ -164,28 +159,6 @@
         <span class="c1"># Test string representations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">&quot;ScheduledActivityCancelled, SignupForbidden&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">&quot;SignupException(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">)))</span></div></div>
-
-
-<div class="viewcode-block" id="EighthCommandsTest"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_others.EighthCommandsTest">[docs]</a><span class="k">class</span> <span class="nc">EighthCommandsTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="EighthCommandsTest.test_update_counselor"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_others.EighthCommandsTest.test_update_counselor">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_counselor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">file_contents</span> <span class="o">=</span> <span class="s2">&quot;Student ID,Counselor</span><span class="se">\n</span><span class="s2">12345,CounselorOne</span><span class="se">\n</span><span class="s2">54321,CounselorTwo</span><span class="se">\n</span><span class="s2">55555,CounselorOne&quot;</span>
-
-        <span class="c1"># Make some counselors</span>
-        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;counselorone&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;CounselorOne&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;counselor&quot;</span><span class="p">)</span>
-        <span class="n">counselortwo</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;counselortwo&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;CounselorTwo&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;counselor&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="c1"># Make some users</span>
-        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">counselor</span><span class="o">=</span><span class="n">counselortwo</span><span class="p">)</span>
-        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest2&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">54321</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">counselor</span><span class="o">=</span><span class="n">counselortwo</span><span class="p">)</span>
-        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttester&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">55555</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Run command</span>
-        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;intranet.apps.eighth.management.commands.update_counselors.open&quot;</span><span class="p">,</span> <span class="n">mock_open</span><span class="p">(</span><span class="n">read_data</span><span class="o">=</span><span class="n">file_contents</span><span class="p">)):</span>
-            <span class="n">call_command</span><span class="p">(</span><span class="s2">&quot;update_counselors&quot;</span><span class="p">,</span> <span class="s2">&quot;foo.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;--run&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;counselorone&quot;</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;counselortwo&quot;</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;counselorone&quot;</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttester&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">counselor</span><span class="o">.</span><span class="n">username</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

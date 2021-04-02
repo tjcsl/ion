@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #409) documentation</title>
+    <title>intranet.apps.eighth.views.signup &#8212; TJ Intranet v3 (Build #422) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -169,8 +169,8 @@
         <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
         <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;user=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/signup/</span><span class="si">{}</span><span class="s2">?</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_id</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;?user=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/signup/</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_id</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;unsignup&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="s2">&quot;aid&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
@@ -237,11 +237,11 @@
                 <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
                     <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">&quot;z - Hybrid Sticky&quot;</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">])</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
-                <span class="n">future_blocks</span> <span class="o">=</span> <span class="n">surrounding_blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">future_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">block</span> <span class="o">=</span> <span class="n">future_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">future_block</span> <span class="o">=</span> <span class="n">surrounding_blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">future_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">block</span> <span class="o">=</span> <span class="n">future_block</span>
                 <span class="k">elif</span> <span class="n">surrounding_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">block</span> <span class="o">=</span> <span class="n">surrounding_blocks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">block</span> <span class="o">=</span> <span class="n">surrounding_blocks</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">block_id</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span>
         <span class="c1">#######</span>
@@ -522,7 +522,7 @@
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;aid&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;aid&quot;</span><span class="p">])):</span>
-        <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseBadRequest</span><span class="p">(</span><span class="s2">&quot;Must specify an integer aid&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseBadRequest</span><span class="p">(</span><span class="s2">&quot;Must specify an integer aid&quot;</span><span class="p">)</span>
 
     <span class="n">aid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;aid&quot;</span><span class="p">]</span>
     <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">():</span>
