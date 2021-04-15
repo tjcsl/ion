@@ -68,6 +68,25 @@ def add_block_view(request):
 
             invalidate_model(EighthBlock)
 
+        if request.POST.get("assign_withdrawn", "off") == "on":
+            try:
+                grp = Group.objects.get(name="Withdrawn from TJ")
+                act = EighthActivity.objects.get(name="Z - Withdrawn from TJ")
+                for block in EighthBlock.objects.filter(date=fmtdate):
+                    sch_act = EighthScheduledActivity.objects.update_or_create(
+                        block=block,
+                        activity=act,
+                        defaults={"attendance_taken": True, "administrative": True, "sticky": True, "capacity": 100, "restricted": True},
+                    )[0]
+                    for u in grp.user_set.all():
+                        sch_act.add_user(u, request=None, force=True)
+                messages.success(request, "Successfully signed withdrawn students up for the withdrawn activity.")
+            except (Group.DoesNotExist, EighthActivity.DoesNotExist):
+                messages.error(
+                    request,
+                    'Unable to assign withdrawn students; either the "Withdrawn from TJ" group or "Z - Withdrawn from TJ" activity does not exist.',
+                )
+
     #######
     if settings.ENABLE_HYBRID_EIGHTH:
         if request.POST.get("assign_hybrid", "off") == "on":
