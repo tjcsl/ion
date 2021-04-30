@@ -478,9 +478,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             if self.user_type == "teacher":
                 current_grade = 12
             else:
-                current_grade = int(self.grade)
-                if current_grade > 12:
-                    current_grade = 12
+                current_grade = min(int(self.grade), 12)
             for i in reversed(range(9, current_grade + 1)):
                 data = None
                 if self.photos.filter(grade_number=i).exists():
