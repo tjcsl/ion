@@ -216,21 +216,20 @@ def files_type(request, fstype=None):
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped))
+            with tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped)) as tmpfile:
+                try:
+                    sftp.getfo(filepath, tmpfile)
+                except exceptions as e:
+                    messages.error(request, e)
+                    return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            try:
-                sftp.getfo(filepath, tmpfile)
-            except exceptions as e:
-                messages.error(request, e)
-                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
-
-            content_len = tmpfile.tell()
-            tmpfile.seek(0)
-            chunk_size = 8192
-            response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
-            response["Content-Length"] = content_len
-            response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
-            return response
+                content_len = tmpfile.tell()
+                tmpfile.seek(0)
+                chunk_size = 8192
+                response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+                response["Content-Length"] = content_len
+                response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
+                return response
 
     fsdir = request.GET.get("dir")
     if fsdir:
@@ -248,9 +247,10 @@ def files_type(request, fstype=None):
     if "zip" in request.GET:
         dirbase_escaped = os.path.basename(fsdir)
         dirbase_escaped = slugify(dirbase_escaped)
-        tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
 
-        with tempfile.TemporaryDirectory(prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)) as tmpdir:
+        with tempfile.TemporaryDirectory(
+            prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)
+        ) as tmpdir, tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped)) as tmpfile:
             remote_directories = [fsdir]
             totalsize = 0
             while remote_directories:
@@ -292,15 +292,15 @@ def files_type(request, fstype=None):
                     for f in files:
                         zf.write(os.path.join(root, f), os.path.join(os.path.relpath(root, tmpdir), f))
 
-        content_len = tmpfile.tell()
-        tmpfile.seek(0)
-        chunk_size = 8192
-        response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
-        response["Content-Length"] = content_len
-        if not dirbase_escaped:
-            dirbase_escaped = "files"
-        response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
-        return response
+            content_len = tmpfile.tell()
+            tmpfile.seek(0)
+            chunk_size = 8192
+            response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+            response["Content-Length"] = content_len
+            if not dirbase_escaped:
+                dirbase_escaped = "files"
+            response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
+            return response
 
     try:
         listdir = sftp.listdir()
