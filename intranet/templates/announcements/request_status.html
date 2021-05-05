@@ -63,12 +63,14 @@
 
     {% if approved %}
         <h3><i class="fas fa-info-circle"></i> {{ approved|length }} already approved</h3>
+        <ul>
         {% for req in approved %}
             <li>
                 {{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">
                 {{ req }}</a> -- requested by {{ req.user.full_name }}, approved by {% for u in req.teachers_approved.all %}{{ u.full_name }}, {% empty %}None, {% endfor %}posted by {{ req.posted_by }}
             </li>
         {% endfor %}
+        </ul>
     {% else %}
         <h3><i class="fas fa-info-circle"></i> 0 announcements approved</h3>
         <p>No announcements have been approved!</p>
@@ -79,12 +81,14 @@
 
     {% if rejected %}
         <h3><i class="fas fa-info-circle"></i> {{ rejected|length }} already rejected</h3>
+        <ul>
         {% for req in rejected %}
             <li>
                 {{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">
                 {{ req }}</a> -- requested by {{ req.user.full_name }}, approved by {% for u in req.teachers_approved.all %}{{ u.full_name }}, {% empty %}None, {% endfor %}rejected by {{ req.rejected_by }}
             </li>
         {% endfor %}
+        </ul>
     {% else %}
         <h3><i class="fas fa-info-circle"></i> 0 announcements rejected</h3>
     {% endif %}
