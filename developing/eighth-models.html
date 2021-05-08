@@ -3,9 +3,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
-    <title>Understanding the Eighth models &#8212; TJ Intranet v3 (Build #443) documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding the Eighth models &#8212; TJ Intranet v3 (Build #447) documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -133,7 +132,7 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="understanding-the-eighth-models">
+  <div class="section" id="understanding-the-eighth-models">
 <h1>Understanding the Eighth models<a class="headerlink" href="#understanding-the-eighth-models" title="Permalink to this headline">¶</a></h1>
 <p>Most of Ion’s apps either do not have models or only have very basic models. The <code class="docutils literal notranslate"><span class="pre">eighth</span></code> app, however, has a complicated system of models.</p>
 <p>What follows is a brief list of the eighth models with a description of each. More information is available in comments of the source code.</p>
@@ -153,7 +152,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">EighthWaitlist</span></code>: Ion has all of the backend logic to implement waitlists for each activity, but it is not enabled in production (<code class="docutils literal notranslate"><span class="pre">settings.ENABLE_WAITLIST</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>). When the waitlist is enabled, an <code class="docutils literal notranslate"><span class="pre">EighthWaitlist</span></code> object represents that a user signed up for the waitlist for a particular <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> at a particular time. The user’s position in the waitlist is calculated dynamically by finding the number of users who signed up for the waitlist before them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">EighthActivitySimilarity</span></code>: Keeps track of the similarity index of two activities, based on which users attend which activities. Used to recommend activities.</p></li>
 </ul>
-<section id="more-details-on-eighthactivity-and-eighthscheduledactivity">
+<div class="section" id="more-details-on-eighthactivity-and-eighthscheduledactivity">
 <h2>More details on <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code> and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code><a class="headerlink" href="#more-details-on-eighthactivity-and-eighthscheduledactivity" title="Permalink to this headline">¶</a></h2>
 <p>There are a number of fields (the sponsor list, the room list, the activity capacity, whether the activity runs both blocks, whether it is restricted, etc.) that are usually the same for all schedulings of an <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>, but sometimes change on a per-activity basis. Hence, both <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code> and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> have fields that record this information, and <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code> has helper methods that check both fields to determine the “real” value.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">BooleanField</span></code>s, this is simple: if either of the <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code>’s field and the <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>’s field is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the activity is considered to have that property. For the room list and the sponsor list, the <code class="docutils literal notranslate"><span class="pre">EighthScheduledActivity</span></code>’s list is used if it has at least one room/sponsor; otherwise, the <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>’s list is used.</p>
@@ -165,8 +164,8 @@
 <li><p>Finally, the sum of all of the capacities of the <code class="docutils literal notranslate"><span class="pre">EighthActivity</span></code>’s rooms is used.</p></li>
 </ul>
 <p>Note that if the capacity is -1, it denotes unrestricted capacity. If the capacity calculation ends up using the sum of the capacities of a set of rooms and one of the room’s capacities is -1, the activity’s capacity will also be -1.</p>
-</section>
-</section>
+</div>
+</div>
 
 
     </div>

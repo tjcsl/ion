@@ -3,9 +3,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
-    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #443) documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #447) documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -136,14 +135,14 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="post-install-steps">
+  <div class="section" id="post-install-steps">
 <h1>Post-Install Steps<a class="headerlink" href="#post-install-steps" title="Permalink to this headline">¶</a></h1>
 <p>After successfully <a class="reference internal" href="vagrant.html"><span class="doc">setting up the Vagrant environment</span></a>, you will want to actually access your sandbox.</p>
 <p>Start by connecting to the Vagrant box using <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">ssh</span></code>. (Consider running all of the following in a <code class="docutils literal notranslate"><span class="pre">screen</span></code> or <code class="docutils literal notranslate"><span class="pre">tmux</span></code> session.)</p>
 <p>After you connect to your Vagrant box, make sure you are in the <code class="docutils literal notranslate"><span class="pre">intranet</span></code> directory and run <code class="docutils literal notranslate"><span class="pre">workon</span> <span class="pre">ion</span></code> to access your Python virtual environment.</p>
 <p>You will then need to run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">migrate</span></code> to set up the Postgres database.</p>
 <p>You can then start the built-in Django web server with <code class="docutils literal notranslate"><span class="pre">fab</span> <span class="pre">runserver</span></code>. Now that you are running the development server, open a browser to <a class="reference external" href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> and log in. If this is your first time attempting this, see <span class="xref std std-ref">_setting-up-groups</span>, then use the default master password (<code class="docutils literal notranslate"><span class="pre">swordfish</span></code>) to login. If it fails, check the output of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">runserver</span></code>.</p>
-<section id="id1">
+<div class="section" id="id1">
 <h2>Setting Up Groups<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Currently, there are no default groups set up when you first install Ion. In order to grant yourself administrative privileges, you must be a member of the <code class="docutils literal notranslate"><span class="pre">admin_all</span></code> group.</p>
 <p>To create and add yourself to this group, run the following commands (substituting your username for <code class="docutils literal notranslate"><span class="pre">&lt;USERNAME&gt;</span></code>):</p>
@@ -155,20 +154,20 @@
 &gt;&gt;&gt; user.save<span class="o">()</span>
 </pre></div>
 </div>
-</section>
-<section id="connecting-and-disconnecting-from-the-vm">
+</div>
+<div class="section" id="connecting-and-disconnecting-from-the-vm">
 <h2>Connecting and Disconnecting from the VM<a class="headerlink" href="#connecting-and-disconnecting-from-the-vm" title="Permalink to this headline">¶</a></h2>
 <p>When you want to close the VM environment, make sure you have exited out of the ssh session and then run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">suspend</span></code>. To resume the session, run <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">resume</span></code>. Suspending and resuming is significantly faster than halting and starting, and also dumps the contents of the machine’s RAM to disk.</p>
-</section>
-<section id="setting-up-files">
+</div>
+<div class="section" id="setting-up-files">
 <h2>Setting up Files<a class="headerlink" href="#setting-up-files" title="Permalink to this headline">¶</a></h2>
 <p>You can find a list of file systems at <code class="docutils literal notranslate"><span class="pre">intranet/apps/files/models.py</span></code>. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
 &gt;&gt;&gt; Host.objects.create<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Computer Systems Lab&quot;</span>, <span class="nv">code</span><span class="o">=</span><span class="s2">&quot;csl&quot;</span>, <span class="nv">address</span><span class="o">=</span><span class="s2">&quot;remote.tjhsst.edu&quot;</span>, <span class="nv">linux</span><span class="o">=</span>True<span class="o">)</span>
 </pre></div>
 </div>
-</section>
-<section id="changing-master-password">
+</div>
+<div class="section" id="changing-master-password">
 <h2>Changing Master Password<a class="headerlink" href="#changing-master-password" title="Permalink to this headline">¶</a></h2>
 <p>The master password for development enviornments is <code class="docutils literal notranslate"><span class="pre">swordfish</span></code>.</p>
 <p>In non-Vagrant environments, you should set a master password different from the default. Ideally, this password should have many bits of entropy and should be randomly generated.</p>
@@ -187,8 +186,8 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
     </div>

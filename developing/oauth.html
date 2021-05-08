@@ -3,9 +3,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #443) documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #447) documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -139,12 +138,12 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="using-oauth">
+  <div class="section" id="using-oauth">
 <h1>Using OAuth<a class="headerlink" href="#using-oauth" title="Permalink to this headline">¶</a></h1>
 <p>With the Django OAuth Toolkit, Ion supports accessing API and other resources via OAuth2. This allows for applications to be written using the Ion API without the need to prompt for user credentials from within the application. Instead, access tokens are used to gain access to Ion API resources.</p>
 <p>For more details on OAuth, please refer to <a class="reference external" href="https://oauth.net">https://oauth.net</a>.</p>
 <p><strong>Note</strong>: All of the examples on the page are targeted towards web applications. They will not work for the purposes of, for example, allowing a program running on your computer to access the Ion API.</p>
-<section id="register-an-application">
+<div class="section" id="register-an-application">
 <h2>Register an application<a class="headerlink" href="#register-an-application" title="Permalink to this headline">¶</a></h2>
 <p>Go to <a class="reference external" href="https://ion.tjhsst.edu/oauth/applications/">https://ion.tjhsst.edu/oauth/applications/</a> and log in to create and register a client application. Specify the following values in the form, as prompted:</p>
 <dl class="simple">
@@ -171,18 +170,18 @@
 <ul class="simple">
 <li><p>These are the recommended settings. For a better understanding of which settings you should choose, read this <a class="reference external" href="https://aaronparecki.com/oauth-2-simplified/">introduction to OAuth</a> and this <a class="reference external" href="https://alexbilbie.com/guide-to-oauth-2-grants/">guide to grant types</a>.</p></li>
 </ul>
-</section>
-<section id="requesting-authorization">
+</div>
+<div class="section" id="requesting-authorization">
 <h2>Requesting authorization<a class="headerlink" href="#requesting-authorization" title="Permalink to this headline">¶</a></h2>
 <p>Inside your application, redirect to the OAuth authorization endpoint to receive an authorization code. The URL is <a class="reference external" href="https://ion.tjhsst.edu/oauth/authorize/">https://ion.tjhsst.edu/oauth/authorize/</a></p>
 <p>To access the API, exchange this code for a (temporary) access token. The URL is <a class="reference external" href="https://ion.tjhsst.edu/oauth/token/">https://ion.tjhsst.edu/oauth/token/</a>.</p>
-<section id="python-social-auth">
+<div class="section" id="python-social-auth">
 <h3>Python-social-auth<a class="headerlink" href="#python-social-auth" title="Permalink to this headline">¶</a></h3>
 <p>If you want to use <code class="docutils literal notranslate"><span class="pre">python-social-auth</span></code>, a plugin is available in the <a class="reference external" href="https://pypi.python.org/pypi/ion_oauth">ion_oauth</a> package. Note that it is not currently actively maintained by the Ion development team and thus may require modification to work properly.</p>
 <p>For a Django project, add <code class="docutils literal notranslate"><span class="pre">AUTHENTICATION_BACKENDS</span> <span class="pre">=</span> <span class="pre">['ion_oauth.oauth.IonOauth2']</span></code> and define <code class="docutils literal notranslate"><span class="pre">SOCIAL_AUTH_ION_KEY</span></code> and <code class="docutils literal notranslate"><span class="pre">SOCIAL_AUTH_ION_SECRET</span></code> in your settings.py file.</p>
 <p>For additional guidance, refer to <a class="reference external" href="https://python-social-auth.readthedocs.io/en/latest/">the official documentation</a>, using <em>Ion</em> as the OAuth backend.</p>
-</section>
-<section id="python">
+</div>
+<div class="section" id="python">
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p>For a Python client, use requests with requests-oauthlib.</p>
 <p>If running locally (without HTTPS), override the SSL requirement for OAuth2.</p>
@@ -224,8 +223,8 @@
 <span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="node-js">
+</div>
+<div class="section" id="node-js">
 <h3>Node.js<a class="headerlink" href="#node-js" title="Permalink to this headline">¶</a></h3>
 <p>You can use the <a class="reference external" href="https://github.com/lelylan/simple-oauth2">simple-oauth2</a> library to perform authentication. Below is some sample code.</p>
 <p><strong>Note</strong>: This code will not work out of the box. Read the comments carefully to determine how to integrate it into your application.</p>
@@ -286,9 +285,9 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
     </div>
