@@ -1,3 +1,4 @@
+import datetime
 import logging
 import pickle
 import re
@@ -35,11 +36,13 @@ def add_block_view(request):
 
     date = None
     show_letters = None
+    signup_time = request.POST.get("signup_time") if "signup_time" in request.POST else datetime.time(12, 40)
 
     if "date" in request.GET:
         date = request.GET.get("date")
     if "date" in request.POST:
         date = request.POST.get("date")
+
     title_suffix = ""
     if date:
         date_format = re.compile(r"([0-9]{2})\/([0-9]{2})\/([0-9]{4})")
@@ -57,8 +60,10 @@ def add_block_view(request):
                 if not ltr:
                     continue
                 if ltr not in current_letters:
-                    EighthBlock.objects.create(date=fmtdate, block_letter=ltr)
-                    messages.success(request, "Successfully added {} Block on {}".format(ltr, fmtdate))
+                    EighthBlock.objects.create(date=fmtdate, block_letter=ltr, signup_time=signup_time)
+                    messages.success(
+                        request, "Successfully added {} Block on {} with signups shown to students as closing at {}".format(ltr, fmtdate, signup_time)
+                    )
             for ltr in current_letters:
                 if not ltr:
                     continue
@@ -122,6 +127,7 @@ def add_block_view(request):
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
+        "signup_time": signup_time,
         "add_block_form": QuickBlockForm,
     }
 
