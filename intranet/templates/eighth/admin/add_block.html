@@ -46,6 +46,12 @@
                 <input type="text" name="blocks" size="12" maxlength="10">
             </td>
         </tr>
+        <tr>
+            <th><label>Signup locking time:</label></th>
+            <td>
+                <input type="time" name="signup_time" size="12" maxlength="10" value="{{ signup_time }}">
+            </td>
+        </tr>
         {% if hybrid %}
             <tr>
                 <th><label>Sticky Groups for Hybrid:</label></th>
@@ -106,8 +112,12 @@ check_submit = function() {
         }
     }
     console.debug(txt);
+
+    var time = $("input[name=signup_time][type=time]").val();
+    console.debug(time, "time");
+
     if(txt.length > 0) {
-        if(!confirm("The following changes are about to be made for "+date+".\n\n"+txt+"\nShould these actions be completed?")) {
+        if(!confirm("The following changes are about to be made for "+date+".\n\n"+txt+"Set signup locking time to "+time+"\nShould these actions be completed?")) {
             if(val) delete current_letters[val];
             return false;
         }
