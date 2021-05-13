@@ -149,6 +149,7 @@ def edit_activity_view(request, activity_id):
 
                 if set(old_room_ids) != set(new_room_ids):
                     # Notify people that the activities they're signed up for have changed rooms
+                    messages.success(request, "Notifying students of this room change.")
                     room_changed_activity_email.delay(activity, old_rooms, EighthRoom.objects.filter(id__in=new_room_ids))
 
                 form.save()

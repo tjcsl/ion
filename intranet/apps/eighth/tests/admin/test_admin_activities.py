@@ -204,6 +204,44 @@ class EighthAdminActivitiesTest(EighthAbstractTest):
         self.assertEqual([room1, room2], list(EighthActivity.objects.get(id=activity.id).rooms.all()))
         self.assertEqual([room1], list(EighthScheduledActivity.objects.get(id=scheduled.id).get_true_rooms()))
 
+        # Now, follow the request to ensure that notification emails are sent
+        response = self.client.post(
+            reverse("eighth_admin_edit_activity", kwargs={"activity_id": activity.id}),
+            data={
+                "name": "test activity 2",
+                "description": "haha",
+                "default_capacity": 7,
+                "sticky": "sticky",
+                "wed_a": "on",
+                "fri_b": "on",
+                "restricted": "on",
+                "sponsors": [sponsor.id],
+                "rooms": [room2.id],
+                "change_room_history": "yes",
+            },
+            follow=True,
+        )
+        self.assertIn("Notifying students of this room change.", list(map(str, list(response.context["messages"]))))
+
+        # Now, make sure room emails aren't sent if the room doesn't change by making sure nothing is logged
+        response = self.client.post(
+            reverse("eighth_admin_edit_activity", kwargs={"activity_id": activity.id}),
+            data={
+                "name": "test activity 2",
+                "description": "haha",
+                "default_capacity": 7,
+                "sticky": "sticky",
+                "wed_a": "on",
+                "fri_b": "on",
+                "restricted": "on",
+                "sponsors": [sponsor.id],
+                "rooms": [room2.id],
+                "change_room_history": "yes",
+            },
+            follow=True,
+        )
+        self.assertNotIn("Notifying students of this room change.", list(map(str, list(response.context["messages"]))))
+
         # Now, say "no" - i.e. have the change propagate
         response = self.client.post(
             reverse("eighth_admin_edit_activity", kwargs={"activity_id": activity.id}),
