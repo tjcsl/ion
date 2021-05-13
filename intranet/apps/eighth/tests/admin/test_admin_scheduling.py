@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from intranet.utils.date import get_senior_graduation_year
 
-from ...models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup
 from ..eighth_test import EighthAbstractTest
 
 
@@ -172,6 +172,68 @@ class EighthAdminSchedulingTest(EighthAbstractTest):
         self.assertEqual(
             0, EighthScheduledActivity.objects.filter(block=block, activity=activity, capacity=5, cancelled=True, both_blocks=True).count()
         )
+
+    def test_room_change_notification_view(self):
+        """Tests room change notifications in :func:`~intranet.apps.eighth.views.admin.scheduling.schedule_activity_view`."""
+
+        self.make_admin()
+
+        # Add a block, a room and an activity
+        today = timezone.localtime().date()
+        block = EighthBlock.objects.get_or_create(date=today, block_letter="A")[0]
+        EighthBlock.objects.get_or_create(date=today, block_letter="B")
+        activity = EighthActivity.objects.get_or_create(name="Test Activity")[0]
+        room1 = EighthRoom.objects.get_or_create(name="Room 1")[0]
+        room2 = EighthRoom.objects.get_or_create(name="Room 2")[0]
+
+        # Schedule this activity
+        self.client.post(
+            reverse("eighth_admin_schedule_activity"),
+            data={
+                "form-TOTAL_FORMS": "1",
+                "form-INITIAL_FORMS": "0",
+                "form-MAX_NUM_FORMS": "",
+                "form-0-block": block.id,
+                "form-0-activity": activity.id,
+                "form-0-scheduled": True,
+                "form-0-rooms": [room1.id],
+                "form-0-capacity": 5,
+            },
+        )
+
+        # Change the room and ensure emails are sent
+        response = self.client.post(
+            reverse("eighth_admin_schedule_activity"),
+            data={
+                "form-TOTAL_FORMS": "1",
+                "form-INITIAL_FORMS": "0",
+                "form-MAX_NUM_FORMS": "",
+                "form-0-block": block.id,
+                "form-0-activity": activity.id,
+                "form-0-scheduled": True,
+                "form-0-rooms": [room2.id],
+                "form-0-capacity": 5,
+            },
+            follow=True,
+        )
+        self.assertIn("Notifying students of this room change.", list(map(str, list(response.context["messages"]))))
+
+        # Keep the room constant and ensure emails aren't sent
+        response = self.client.post(
+            reverse("eighth_admin_schedule_activity"),
+            data={
+                "form-TOTAL_FORMS": "1",
+                "form-INITIAL_FORMS": "0",
+                "form-MAX_NUM_FORMS": "",
+                "form-0-block": block.id,
+                "form-0-activity": activity.id,
+                "form-0-scheduled": True,
+                "form-0-rooms": [room2.id],
+                "form-0-capacity": 5,
+            },
+            follow=True,
+        )
+        self.assertNotIn("Notifying students of this room change.", list(map(str, list(response.context["messages"]))))
 
     def test_show_activity_schedule_view(self):
         """Tests :func:`~intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view`."""

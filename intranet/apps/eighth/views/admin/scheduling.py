@@ -104,6 +104,7 @@ def schedule_activity_view(request):
                             and set(obj) != set(instance.rooms.all())
                             and (not instance.is_both_blocks or instance.block.block_letter == "A")
                         ):
+                            messages.success(request, "Notifying students of this room change.")
                             room_changed_single_email.delay(instance, instance.rooms.all(), obj)
 
                         # Properly handle ManyToMany relations in django 1.10+
