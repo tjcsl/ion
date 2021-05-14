@@ -8,11 +8,14 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
+from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from ...utils.date import get_senior_graduation_year
 from ...utils.html import safe_html
+from ...utils.locking import lock_on
 from ..auth.decorators import deny_restricted
 from .forms import PollForm
 from .models import Answer, Choice, Poll, Question
@@ -115,8 +118,7 @@ def poll_vote_view(request, poll_id):
                     choices = question_obj.choice_set.all()
                     if question_obj.is_single_choice():
                         if choice_num and choice_num == "CLEAR":
-                            Answer.objects.filter(user=user, question=question_obj).delete()
-                            Answer.objects.create(user=user, question=question_obj, clear_vote=True)
+                            Answer.objects.update_or_create(user=user, question=question_obj, defaults={"clear_vote": True, "choice": None})
                             messages.success(request, "Clear Vote for {}".format(question_obj))
                         else:
                             try:
@@ -125,51 +127,48 @@ def poll_vote_view(request, poll_id):
                                 messages.error(request, "Invalid answer choice with num {}".format(choice_num))
                                 continue
                             else:
-                                Answer.objects.filter(user=user, question=question_obj).delete()
-                                Answer.objects.create(user=user, question=question_obj, choice=choice_obj)
+                                Answer.objects.update_or_create(user=user, question=question_obj, defaults={"clear_vote": False, "choice": choice_obj})
                                 messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
                     elif question_obj.is_many_choice():
-                        total_choices = request.POST.getlist(name)
-                        if len(total_choices) == 1 and total_choices[0] == "CLEAR":
-                            Answer.objects.filter(user=user, question=question_obj).delete()
-                            Answer.objects.create(user=user, question=question_obj, clear_vote=True)
-                            messages.success(request, "Clear Vote for {}".format(question_obj))
-                        elif "CLEAR" in total_choices:
+                        updated_choices = request.POST.getlist(name)
+                        print(updated_choices)
+                        if len(updated_choices) == 1 and updated_choices[0] == "CLEAR":
+                            with transaction.atomic():
+                                # Lock on the user's answers to prevent duplicates.
+                                lock_on(user.answer_set.all())
+                                Answer.objects.filter(user=user, question=question_obj).delete()
+                                Answer.objects.create(user=user, question=question_obj, clear_vote=True)
+                                messages.success(request, "Clear Vote for {}".format(question_obj))
+                        elif "CLEAR" in updated_choices:
                             messages.error(request, "Cannot select other options with Clear Vote.")
+                        elif len(updated_choices) > question_obj.max_choices:
+                            messages.error(request, "You have voted on too many options for {}".format(question_obj))
                         else:
-                            current_choices = Answer.objects.filter(user=user, question=question_obj)
-                            current_choices_nums = [c.choice.num if c.choice else None for c in current_choices]
-                            # delete entries that weren't checked but in db
-                            for c in current_choices_nums:
-                                if c and c not in total_choices:
-                                    ch = choices.get(num=c)
-                                    logger.info("Deleting choice for %s", ch)
-                                    Answer.objects.filter(user=user, question=question_obj, choice=ch).delete()
-                            for c in total_choices:
-                                # gets re-checked on each loop
-                                current_choices = Answer.objects.filter(user=user, question=question_obj)
-                                try:
-                                    choice_obj = choices.get(num=c)
-                                except Choice.DoesNotExist:
-                                    messages.error(request, "Invalid answer choice with num {}".format(choice_num))
-                                    continue
-                                else:
-                                    if (current_choices.count() + 1) <= question_obj.max_choices:
-                                        Answer.objects.filter(user=user, question=question_obj, clear_vote=True).delete()
+                            print(choices)
+                            with transaction.atomic():
+                                # Lock on the question's answers to prevent duplicates.
+                                lock_on(user.answer_set.all())
+                                
+                                available_answers = [c.num for c in choices]
+                                updated_answers = [int(c) for c in updated_choices if int(c) in available_answers]
+                                current_answers = [c.choice.num for c in Answer.objects.filter(user=user, question=question_obj) if c.choice]
+                                print(updated_answers)
+                                print(current_answers)
 
-                                        # Duplicate Answers have caused errors here, so let's make sure to delete any duplicates
-                                        if Answer.objects.filter(user=user, question=question_obj, choice=choice_obj).count() != 1:
-                                            Answer.objects.filter(user=user, question=question_obj, choice=choice_obj).delete()
-                                            Answer.objects.get_or_create(user=user, question=question_obj, choice=choice_obj)
+                                to_create = [choices.get(num=c) for c in updated_answers if c not in current_answers]
+                                print(to_create)
+                                for c in to_create:
+                                    Answer.objects.create(user=user, question=question_obj, choice=c)
+                                    messages.success(request, "Voted for {} on {}".format(c, question_obj))
 
-                                        messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
-                                    else:
-                                        messages.error(request, "You have voted on too many options for {}".format(question_obj))
-                                        current_choices.delete()
+                                to_delete = [choices.get(num=c) for c in current_answers if c not in updated_answers]
+                                print(to_delete)
+                                for c in to_delete:
+                                    logger.info("Deleting choice for %s", c)
+                                Answer.objects.filter(user=user, question=question_obj).filter(Q(clear_vote=True) | Q(choice__in=to_delete)).delete()
 
                 elif question_obj.is_writing():
-                    Answer.objects.filter(user=user, question=question_obj).delete()
-                    Answer.objects.create(user=user, question=question_obj, answer=choice_num)
+                    Answer.objects.update_or_create(user=user, question=question_obj, defaults={"answer": choice_num})
                     messages.success(request, "Answer saved for {}".format(question_obj))
 
     questions = []
