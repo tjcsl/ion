@@ -127,11 +127,12 @@ def poll_vote_view(request, poll_id):
                                 messages.error(request, "Invalid answer choice with num {}".format(choice_num))
                                 continue
                             else:
-                                Answer.objects.update_or_create(user=user, question=question_obj, defaults={"clear_vote": False, "choice": choice_obj})
+                                Answer.objects.update_or_create(
+                                    user=user, question=question_obj, defaults={"clear_vote": False, "choice": choice_obj}
+                                )
                                 messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
                     elif question_obj.is_many_choice():
                         updated_choices = request.POST.getlist(name)
-                        print(updated_choices)
                         if len(updated_choices) == 1 and updated_choices[0] == "CLEAR":
                             with transaction.atomic():
                                 # Lock on the user's answers to prevent duplicates.
@@ -144,19 +145,15 @@ def poll_vote_view(request, poll_id):
                         elif len(updated_choices) > question_obj.max_choices:
                             messages.error(request, "You have voted on too many options for {}".format(question_obj))
                         else:
-                            print(choices)
                             with transaction.atomic():
                                 # Lock on the question's answers to prevent duplicates.
                                 lock_on(user.answer_set.all())
-                                
+
                                 available_answers = [c.num for c in choices]
                                 updated_answers = [int(c) for c in updated_choices if int(c) in available_answers]
                                 current_answers = [c.choice.num for c in Answer.objects.filter(user=user, question=question_obj) if c.choice]
-                                print(updated_answers)
-                                print(current_answers)
 
                                 to_create = [choices.get(num=c) for c in updated_answers if c not in current_answers]
-                                print(to_create)
                                 for c in to_create:
                                     Answer.objects.create(user=user, question=question_obj, choice=c)
                                     messages.success(request, "Voted for {} on {}".format(c, question_obj))
