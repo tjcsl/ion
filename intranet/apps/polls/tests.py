@@ -209,3 +209,253 @@ class ApiTest(IonTestCase):
         # Try again
         response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}), follow=True)
         self.assertEqual(200, response.status_code)
+
+    def test_single_select_voting(self):
+        self.make_admin()
+
+        question_data = json.dumps(
+            [
+                {
+                    "question": "What is your favorite color?",
+                    "type": "STD",
+                    "max_choices": "1",
+                    "choices": [{"info": "Red"}, {"info": "Green"}, {"info": "Blue"}],
+                }
+            ]
+        )
+
+        response = self.client.post(
+            reverse("add_poll"),
+            data={
+                "title": "Single Select Poll",
+                "description": "This is a test poll!",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "visible": True,
+                "question_data": question_data,
+            },
+        )
+        self.assertEqual(302, response.status_code)
+
+        poll = Poll.objects.get(title="Single Select Poll")
+        questions = poll.question_set.all()
+        self.assertEqual(questions.count(), 1)
+        question = questions[0]
+        self.assertEqual(question.type, "STD")
+        self.assertEqual(question.choice_set.all().count(), 3)
+
+        # Vote for "Red"
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "1"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].choice.num, 1)
+        self.assertEqual(answer_set[0].choice.info, "Red")
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+        # Vote for "Red" again
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "1"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].choice.num, 1)
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+        # Clear vote
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "CLEAR"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].clear_vote, True)
+
+        # Vote for "Blue"
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "3"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].choice.num, 3)
+        self.assertEqual(answer_set[0].choice.info, "Blue")
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+    def test_multi_select_voting(self):
+        self.make_admin()
+
+        question_data = json.dumps(
+            [
+                {
+                    "question": "What is your favorite color?",
+                    "type": "APP",
+                    "max_choices": "2",
+                    "choices": [{"info": "Red"}, {"info": "Green"}, {"info": "Blue"}],
+                }
+            ]
+        )
+
+        response = self.client.post(
+            reverse("add_poll"),
+            data={
+                "title": "Multi Select Poll",
+                "description": "This is a test poll!",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "visible": True,
+                "question_data": question_data,
+            },
+        )
+        self.assertEqual(302, response.status_code)
+
+        poll = Poll.objects.get(title="Multi Select Poll")
+        questions = poll.question_set.all()
+        self.assertEqual(questions.count(), 1)
+        question = questions[0]
+        self.assertEqual(question.type, "APP")
+        self.assertEqual(question.choice_set.all().count(), 3)
+
+        # Vote for "Red" and "Blue"
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": ["1", "3"]},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 2)
+        self.assertEqual(answer_set[0].choice.num, 1)
+        self.assertEqual(answer_set[0].choice.info, "Red")
+        self.assertEqual(answer_set[1].choice.num, 3)
+        self.assertEqual(answer_set[1].choice.info, "Blue")
+        self.assertEqual(answer_set[0].clear_vote, False)
+        self.assertEqual(answer_set[1].clear_vote, False)
+
+        # Vote for "Red" and "Blue" again
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": ["1", "3"]},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 2)
+        self.assertEqual(answer_set[0].choice.num, 1)
+        self.assertEqual(answer_set[0].choice.info, "Red")
+        self.assertEqual(answer_set[1].choice.num, 3)
+        self.assertEqual(answer_set[1].choice.info, "Blue")
+        self.assertEqual(answer_set[0].clear_vote, False)
+        self.assertEqual(answer_set[1].clear_vote, False)
+
+        # Vote for "Red", "Blue" and "Green" which should exceed max_choices and nothing should change
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": ["1", "2", "3"]},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertIn(
+            "You have voted on too many options for Question #1: 'What is your favorite color?'", list(map(str, list(response.context["messages"])))
+        )
+        self.assertEqual(answer_set.count(), 2)
+        self.assertEqual(answer_set[0].choice.num, 1)
+        self.assertEqual(answer_set[0].choice.info, "Red")
+        self.assertEqual(answer_set[1].choice.num, 3)
+        self.assertEqual(answer_set[1].choice.info, "Blue")
+        self.assertEqual(answer_set[0].clear_vote, False)
+        self.assertEqual(answer_set[1].clear_vote, False)
+
+        # Clear vote
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "CLEAR"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].clear_vote, True)
+
+        # Vote for "Green"
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": ["2"]},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].choice.num, 2)
+        self.assertEqual(answer_set[0].choice.info, "Green")
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+    def test_free_response_voting(self):
+        self.make_admin()
+
+        question_data = json.dumps(
+            [
+                {
+                    "question": "What is your favorite color?",
+                    "type": "FRE",
+                    "max_choices": "1",
+                    "choices": [],
+                }
+            ]
+        )
+
+        response = self.client.post(
+            reverse("add_poll"),
+            data={
+                "title": "Free Response Poll",
+                "description": "This is a test poll!",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "visible": True,
+                "question_data": question_data,
+            },
+        )
+        self.assertEqual(302, response.status_code)
+
+        poll = Poll.objects.get(title="Free Response Poll")
+        questions = poll.question_set.all()
+        self.assertEqual(questions.count(), 1)
+        question = questions[0]
+        self.assertEqual(question.type, "FRE")
+        self.assertEqual(question.choice_set.all().count(), 0)
+
+        # Submit vote
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "test content"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].answer, "test content")
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+        # Submit vote again
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "test content"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].answer, "test content")
+        self.assertEqual(answer_set[0].clear_vote, False)
+
+        # Submit different vote
+        response = self.client.post(
+            reverse("poll_vote", kwargs={"poll_id": poll.id}),
+            data={"question-1": "different test content"},
+        )
+        self.assertEqual(200, response.status_code)
+        answer_set = question.answer_set.all()
+        self.assertEqual(answer_set.count(), 1)
+        self.assertEqual(answer_set[0].answer, "different test content")
+        self.assertEqual(answer_set[0].clear_vote, False)
