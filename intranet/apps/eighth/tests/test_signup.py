@@ -1,18 +1,20 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.test.client import RequestFactory
 from django.urls import reverse
 from django.utils import timezone
 
 from intranet.utils.date import get_senior_graduation_year
 
 from ...schedule.models import Block, Day, DayType, Time
+from ..exceptions import SignupException
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from .eighth_test import EighthAbstractTest
 
 
 class EighthSignupTest(EighthAbstractTest):
-    def test_add_user(self):
+    def test_signup_user_view(self):
         """Tests adding a user to a EighthScheduledActivity."""
 
         user = self.make_admin()
@@ -36,6 +38,139 @@ class EighthSignupTest(EighthAbstractTest):
         response = self.client.get(reverse("eighth_signup"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(user, schact.members.all())
+
+    def test_add_user_method(self):
+        """Tests the EighthScheduledActivity add_user() method."""
+
+        request = RequestFactory().post("/")
+        request.user = get_user_model().objects.create(username="user_not_admin")
+
+        self.make_admin()
+
+        user = get_user_model().objects.create(username="user", graduation_year=get_senior_graduation_year() - 1)
+
+        # Create two blocks
+        blockA = self.add_block(date="9001-4-20", block_letter="A")
+        self.assertEqual(blockA.formatted_date, "Mon, April 20, 9001")
+
+        # Create an activity
+        activity = self.add_activity(name="Club")
+
+        # Schedule activity
+        schactA = EighthScheduledActivity.objects.create(block=blockA, activity=activity, capacity=1)
+
+        # Attempt to make a request from user_not_admin to signup user (this should fail)
+        with self.assertRaisesMessage(SignupException, "SignupForbidden"):
+            schactA.add_user(user, request=request, force=False)
+        self.assertNotIn(user, schactA.members.all())
+
+        # Add user with grade 13 to schactA (this should fail)
+        with self.assertRaisesMessage(SignupException, "SignupForbidden"):
+            schactA.add_user(user, request=None, force=False)
+
+        user.graduation_year = get_senior_graduation_year()
+        user.save()
+
+        # Add user to a deleted activity (this should fail)
+        activity.deleted = True
+        activity.save()
+
+        with self.assertRaisesMessage(SignupException, "ActivityDeleted"):
+            schactA.add_user(user, request=None, force=False)
+
+        activity.deleted = False
+        activity.save()
+
+        # Add user to a locked block (this should fail)
+        blockA.locked = True
+        blockA.save()
+
+        with self.assertRaisesMessage(SignupException, "BlockLocked"):
+            schactA.add_user(user, request=None, force=False)
+
+        blockA.locked = False
+        blockA.save()
+
+        # Add user to a cancelled activity (this should fail)
+        schactA.cancel()
+
+        with self.assertRaisesMessage(SignupException, "ScheduledActivityCancelled"):
+            schactA.add_user(user, request=None, force=False)
+
+        schactA.uncancel()
+
+        # Add user to a full activity (this should fail)
+        schactA.capacity = 0
+        schactA.save()
+
+        with self.assertRaisesMessage(SignupException, "ActivityFull"):
+            schactA.add_user(user, request=None, force=False)
+
+        schactA.capacity = 1
+        schactA.save()
+
+        # Add user to an activity with 48 hour presign before 48 hours (this should fail)
+        activity.presign = True
+        activity.save()
+
+        with self.assertRaisesMessage(SignupException, "Presign"):
+            schactA.add_user(user, request=None, force=False)
+
+        activity.presign = False
+        activity.save()
+
+        # Add user to an activity that they aren't on the restricted list for (this should fail)
+        activity.restricted = True
+        activity.save()
+
+        with self.assertRaisesMessage(SignupException, "Restricted"):
+            schactA.add_user(user, request=None, force=False)
+
+        activity.restricted = False
+        activity.save()
+
+        # Add user to an activity
+        schactA.add_user(user, request=None, force=False)
+        self.assertIn(user, schactA.members.all())
+
+        # Create a new block and schedule activity
+        blockB = self.add_block(date="9001-4-20", block_letter="B")
+        schactB = EighthScheduledActivity.objects.create(block=blockB, activity=activity, both_blocks=True, capacity=1)
+
+        # Create a new activity and schedule it during blockA and blockB
+        new_activity = self.add_activity(name="New Club")
+        new_schactA = EighthScheduledActivity.objects.create(block=blockA, activity=new_activity, capacity=1)
+        new_schactB = EighthScheduledActivity.objects.create(block=blockB, activity=new_activity, capacity=1)
+
+        # Switch user to a new activity
+        new_schactA.add_user(user, request=None, force=False)
+        self.assertIn(user, new_schactA.members.all())
+        self.assertNotIn(user, schactA.members.all())
+
+        # Add user to a second one-a-day activity (this should fail)
+        new_activity.one_a_day = True
+        new_activity.save()
+
+        with self.assertRaisesMessage(SignupException, "OneADay"):
+            new_schactB.add_user(user, request=None, force=False)
+        self.assertNotIn(user, new_schactB.members.all())
+
+        new_activity.one_a_day = False
+        new_activity.save()
+
+        # Switch user into a both_block activity
+        schactA.both_blocks = True
+        schactA.save()
+
+        schactA.add_user(user, request=None, force=False)
+        self.assertIn(user, schactA.members.all())
+        self.assertIn(user, schactB.members.all())
+
+        # Switch user out of both_block activity
+        new_schactA.add_user(user, request=None, force=False)
+        self.assertIn(user, new_schactA.members.all())
+        self.assertNotIn(user, schactA.members.all())
+        self.assertNotIn(user, schactB.members.all())
 
     def test_signup_restricitons(self):
         """Make sure users can't sign up for restricted activities or switch out of sticky activities."""
