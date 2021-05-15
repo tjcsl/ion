@@ -69,19 +69,20 @@ def pull_sports_schedules(month=None) -> None:
     reader = csv.DictReader(r.content.decode("UTF-8").splitlines())
 
     for line in reader:
-        event = Event.objects.get_or_create(
-            title=line.get("Subject").split("(")[0].strip(),
-            description=line.get("Description")[line.get("Description").index("Opponent:") + 10:],
-            location=line.get("Location"),
-            show_attending=False,
-            show_on_dashboard=False,
-            approved=True,
-            public=True,
-            category="sports",
-            open_to="everyone",
-        )[0]
         try:
-            event.time = timezone.make_aware(datetime.strptime("{} {}".format(line.get("Start Date"), line.get("Start Time")), "%m/%d/%Y %I:%M%p"))
-            event.save()
-        except ValueError:
+            time = timezone.make_aware(datetime.strptime("{} {}".format(line.get("Start Date"), line.get("Start Time")), "%m/%d/%Y %I:%M%p"))
+            assert time is not None
+            Event.objects.get_or_create(
+                title=line.get("Subject").split("(")[0].strip(),
+                description=line.get("Description")[line.get("Description").index("Opponent:") + 10:],
+                location=line.get("Location"),
+                show_attending=False,
+                show_on_dashboard=False,
+                approved=True,
+                public=True,
+                category="sports",
+                open_to="everyone",
+                time=time,
+            )
+        except [ValueError, AssertionError]:
             pass
