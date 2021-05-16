@@ -51,7 +51,7 @@
     </h3>
 
     <div class="event-metadata">
-        by {{ event.user.full_name_nick|escape }} {% if event.show_fuzzy_date %}&bull; <time class="timeago" datetime="{{ event.time|date:'c' }}">{{ event.time|fuzzy_date|capfirst }}</time>{% endif %} &bull; {{ event.time|date:"l, F j, Y"}}{% if event.time|date:"P" != "midnight" %} {{ event.time|date:"P" }}{% endif %} @ {{ event.location }} &bull; for
+        {% if event.user is not None %} by {{ event.user.full_name_nick|escape }} &bull;{% endif %} {% if event.show_fuzzy_date %} <time class="timeago" datetime="{{ event.time|date:'c' }}">{{ event.time|fuzzy_date|capfirst }}</time>{% endif %} &bull; {{ event.time|date:"l, F j, Y"}}{% if event.time|date:"P" != "midnight" %} {{ event.time|date:"P" }}{% endif %} @ {{ event.location }} &bull; for
         {% for group in event.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}
@@ -98,7 +98,7 @@
                             <input type="submit" value="Approve" class="small-button">
                         </form>
                     {% else %}
-                        Approved by {{ event.approved_by.full_name }}.
+                        {% if event.approved_by is not None %} Approved by {{ event.approved_by.full_name }}. {% endif %}
                     {% endif %}
                     </td>
                     <td>
@@ -109,7 +109,7 @@
                             <input type="submit" value="Reject" class="small-button">
                         </form>
                     {% elif event.rejected %}
-                        Rejected by {{ event.rejected_by.full_name }}.
+                        {% if event.rejected_by is not None %} Rejected by {{ event.rejected_by.full_name }}. {% endif %}
                     {% endif %}
                     </td>
                 </tr>
