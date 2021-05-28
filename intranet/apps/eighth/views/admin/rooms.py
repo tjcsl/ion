@@ -254,7 +254,10 @@ def room_utilization_action(request, start_id, end_id):
         sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
 
         if show_all_rooms or show_available_for_eighth:
-            unused = rooms.exclude(Q(eighthscheduledactivity__in=sched_acts) | Q(eighthactivity__eighthscheduledactivity__in=sched_acts))
+            used_rooms_ids = []
+            for s in sched_acts:
+                used_rooms_ids.extend([r.id for r in s.get_true_rooms()])
+            unused = rooms.exclude(id__in=used_rooms_ids)
             for room in unused:
                 sched_acts.append({"room": room, "empty": True})
 
