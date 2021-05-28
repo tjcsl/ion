@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.admin.test_admin_activities &#8212; TJ Intranet v3 (Build #447) documentation</title>
+    <title>intranet.apps.eighth.tests.admin.test_admin_activities &#8212; TJ Intranet v3 (Build #481) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -330,6 +330,44 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">room1</span><span class="p">,</span> <span class="n">room2</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">room1</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()))</span>
+
+        <span class="c1"># Now, follow the request to ensure that notification emails are sent</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;activity_id&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test activity 2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;haha&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default_capacity&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wed_a&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fri_b&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">sponsor</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;change_room_history&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;Notifying students of this room change.&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))))</span>
+
+        <span class="c1"># Now, make sure room emails aren&#39;t sent if the room doesn&#39;t change by making sure nothing is logged</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;activity_id&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">}),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test activity 2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;haha&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default_capacity&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wed_a&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fri_b&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">sponsor</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;change_room_history&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">&quot;Notifying students of this room change.&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))))</span>
 
         <span class="c1"># Now, say &quot;no&quot; - i.e. have the change propagate</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>

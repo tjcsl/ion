@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.test_signup &#8212; TJ Intranet v3 (Build #447) documentation</title>
+    <title>intranet.apps.eighth.tests.test_signup &#8212; TJ Intranet v3 (Build #481) documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
@@ -128,18 +128,20 @@
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.test.client</span> <span class="kn">import</span> <span class="n">RequestFactory</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span> <span class="nn">intranet.utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 
 <span class="kn">from</span> <span class="nn">...schedule.models</span> <span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Day</span><span class="p">,</span> <span class="n">DayType</span><span class="p">,</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="n">SignupException</span>
 <span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">.eighth_test</span> <span class="kn">import</span> <span class="n">EighthAbstractTest</span>
 
 
 <div class="viewcode-block" id="EighthSignupTest"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_signup.EighthSignupTest">[docs]</a><span class="k">class</span> <span class="nc">EighthSignupTest</span><span class="p">(</span><span class="n">EighthAbstractTest</span><span class="p">):</span>
-<div class="viewcode-block" id="EighthSignupTest.test_add_user"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_signup.EighthSignupTest.test_add_user">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthSignupTest.test_signup_user_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_signup.EighthSignupTest.test_signup_user_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_user_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tests adding a user to a EighthScheduledActivity.&quot;&quot;&quot;</span>
 
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -163,6 +165,139 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_signup&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schact</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="EighthSignupTest.test_add_user_method"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_signup.EighthSignupTest.test_add_user_method">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_user_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests the EighthScheduledActivity add_user() method.&quot;&quot;&quot;</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_not_admin&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Create two blocks</span>
+        <span class="n">blockA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;9001-4-20&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">blockA</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="s2">&quot;Mon, April 20, 9001&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create an activity</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Club&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Schedule activity</span>
+        <span class="n">schactA</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blockA</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Attempt to make a request from user_not_admin to signup user (this should fail)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;SignupForbidden&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+        <span class="c1"># Add user with grade 13 to schactA (this should fail)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;SignupForbidden&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">graduation_year</span> <span class="o">=</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to a deleted activity (this should fail)</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;ActivityDeleted&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to a locked block (this should fail)</span>
+        <span class="n">blockA</span><span class="o">.</span><span class="n">locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">blockA</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;BlockLocked&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">blockA</span><span class="o">.</span><span class="n">locked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">blockA</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to a cancelled activity (this should fail)</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;ScheduledActivityCancelled&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">schactA</span><span class="o">.</span><span class="n">uncancel</span><span class="p">()</span>
+
+        <span class="c1"># Add user to a full activity (this should fail)</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;ActivityFull&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">schactA</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to an activity with 48 hour presign before 48 hours (this should fail)</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">presign</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;Presign&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">activity</span><span class="o">.</span><span class="n">presign</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to an activity that they aren&#39;t on the restricted list for (this should fail)</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;Restricted&quot;</span><span class="p">):</span>
+            <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Add user to an activity</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+        <span class="c1"># Create a new block and schedule activity</span>
+        <span class="n">blockB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;9001-4-20&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+        <span class="n">schactB</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blockB</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">both_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Create a new activity and schedule it during blockA and blockB</span>
+        <span class="n">new_activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Club&quot;</span><span class="p">)</span>
+        <span class="n">new_schactA</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blockA</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">new_activity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">new_schactB</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blockB</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">new_activity</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Switch user to a new activity</span>
+        <span class="n">new_schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">new_schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+        <span class="c1"># Add user to a second one-a-day activity (this should fail)</span>
+        <span class="n">new_activity</span><span class="o">.</span><span class="n">one_a_day</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">new_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesMessage</span><span class="p">(</span><span class="n">SignupException</span><span class="p">,</span> <span class="s2">&quot;OneADay&quot;</span><span class="p">):</span>
+            <span class="n">new_schactB</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">new_schactB</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+        <span class="n">new_activity</span><span class="o">.</span><span class="n">one_a_day</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">new_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Switch user into a both_block activity</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">both_blocks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">schactA</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactB</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+
+        <span class="c1"># Switch user out of both_block activity</span>
+        <span class="n">new_schactA</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">new_schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactA</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schactB</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthSignupTest.test_signup_restricitons"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_signup.EighthSignupTest.test_signup_restricitons">[docs]</a>    <span class="k">def</span> <span class="nf">test_signup_restricitons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make sure users can&#39;t sign up for restricted activities or switch out of sticky activities.&quot;&quot;&quot;</span>
