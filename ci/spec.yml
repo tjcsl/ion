@@ -59,7 +59,7 @@ env:
       pip install -U pip setuptools
       pip install -U \
         flake8 pylint pylint-django pylint-plugin-utils isort black==20.8b1 autopep8 \
-        coverage coveralls pyyaml
+        coveralls pyyaml pytest-django
       pip install -U -r requirements.txt
 
       echo "PATH=$PATH" >> $GITHUB_ENV
@@ -230,7 +230,7 @@ jobs:
 
       # Tests
       - name: Run tests
-        run: coverage run ./setup.py test
+        run: coverage run -m pytest
       - name: Migrate database
         run: coverage run -a ./manage.py migrate
       - name: Collect static files

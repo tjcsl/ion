@@ -1,6 +1,14 @@
 intranet.apps.bus package
 =========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   intranet.apps.bus.management
+
 Submodules
 ----------
 

@@ -7,7 +7,7 @@ from django.core import exceptions
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ...utils.helpers import get_id
+from ...utils.helpers import awaredate, get_id
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
 from .forms import AdminEventForm, EventForm
@@ -60,7 +60,7 @@ def events_view(request):
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
     # get date objects for week and month
-    today = timezone.localtime().date()
+    today = awaredate()
     delta = today - timezone.timedelta(days=today.weekday())
     this_week = (delta, delta + timezone.timedelta(days=7))
     this_month = (this_week[1], this_week[1] + timezone.timedelta(days=31))

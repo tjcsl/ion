@@ -36,7 +36,7 @@ class BusTest(IonTestCase):
         m.assert_called()
 
     def test_routes(self):
-        route = Route.objects.get_or_create(route_name="JT-101", bus_number="JT-101")[0]
+        route = Route.objects.get_or_create(route_name="JT-01", bus_number="JT-01")[0]
         route.status = "a"
         route.space = "_1"
         route.save()
@@ -47,7 +47,7 @@ class BusTest(IonTestCase):
         self.assertEqual(route.space, "")
 
     def test_route_representation(self):
-        route = Route.objects.get_or_create(route_name="JT-101", bus_number="JT-101")[0]
+        route = Route.objects.get_or_create(route_name="JT-01", bus_number="JT-01")[0]
         route_str = str(route)
 
         self.assertEqual(route.route_name, route_str)

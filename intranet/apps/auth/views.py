@@ -22,7 +22,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
-from ...utils.helpers import dark_mode_enabled, get_ap_week_warning
+from ...utils.helpers import awaredate, dark_mode_enabled, get_ap_week_warning
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
@@ -92,9 +92,7 @@ def get_week_sports_school_events() -> Tuple[Container[Event], Container[Event]]
     """
     cache_result = cache.get("sports_school_events")
     if not isinstance(cache_result, tuple):
-        events = Event.objects.filter(
-            time__gte=timezone.localtime(), time__lte=(timezone.localdate() + relativedelta(weeks=1)), public=True
-        ).this_year()
+        events = Event.objects.filter(time__gte=timezone.localtime(), time__lte=(awaredate() + relativedelta(weeks=1)), public=True).this_year()
         sports_events = list(events.filter(approved=True, category="sports").order_by("time")[:3])
         school_events = list(events.filter(approved=True, category="school").order_by("time")[:3])
 

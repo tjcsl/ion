@@ -19,3 +19,6 @@ class Route(models.Model):
 
     def __str__(self):
         return self.route_name
+
+    class Meta:
+        ordering = ["route_name"]

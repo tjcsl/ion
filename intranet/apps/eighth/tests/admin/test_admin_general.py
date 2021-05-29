@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from intranet.apps.groups.models import Group
 
+from .....utils.helpers import awaredate
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ..eighth_test import EighthAbstractTest
 
@@ -33,7 +34,7 @@ class EighthAdminGeneralTest(EighthAbstractTest):
         response = self.client.get(reverse("eighth_admin_dashboard"))
         self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
 
-        self.assertEqual(response.context["start_date"], timezone.localdate())
+        self.assertEqual(response.context["start_date"], awaredate())
         self.assertQuerysetEqual(response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")])
         self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()])
         self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")])

@@ -166,7 +166,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         group = Group.objects.get_or_create(name="test group 5")[0]
         user1 = get_user_model().objects.get_or_create(username="2021ttest", first_name="Tommy", last_name="Test", student_id=1234568)[0]
         user2 = get_user_model().objects.get_or_create(username="2021ttest1", first_name="Thomas", last_name="Test", student_id=1234567)[0]
-        user3 = get_user_model().objects.get_or_create(username="2021awilliam", first_name="A", last_name="William", student_id=12345679)[0]
+        user3 = get_user_model().objects.get_or_create(username="2021awilliam", first_name="A", last_name="William", student_id=1234569)[0]
         for member in [user1, user2, user3]:
             member.groups.add(group)
             member.save()
@@ -205,7 +205,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
             username="2021awilliam",
             first_name="A",
             last_name="William",
-            student_id=12345679,
+            student_id=1234569,
             user_type="student",
             graduation_year=get_senior_graduation_year(),
         )[0]
@@ -281,7 +281,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
             username="2021awilliam",
             first_name="A",
             last_name="William",
-            student_id=12345679,
+            student_id=1234569,
             user_type="student",
             graduation_year=get_senior_graduation_year(),
         )[0]
@@ -352,7 +352,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
             username="2021awilliam",
             first_name="A",
             last_name="William",
-            student_id=12345679,
+            student_id=1234569,
             user_type="student",
             graduation_year=get_senior_graduation_year(),
         )[0]
@@ -417,7 +417,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
             username="2021awilliam",
             first_name="A",
             last_name="William",
-            student_id=12345679,
+            student_id=1234569,
             user_type="student",
             graduation_year=get_senior_graduation_year(),
         )[0]

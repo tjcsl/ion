@@ -75,7 +75,8 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
             binary = user.default_photo
         if binary is None:
             default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
-            binary = io.open(default_image_path, mode="rb").read()
+            with io.open(default_image_path, mode="rb") as f:
+                binary = f.read()
 
         return Response(binary, content_type="image/jpeg")
 
