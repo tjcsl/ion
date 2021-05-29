@@ -507,7 +507,7 @@ class ApiTest(IonTestCase):
 
     def test_api_bus_list(self):
         self.make_token()
-        route = Route.objects.create(route_name="JT-001", bus_number="JT-001")
+        route = Route.objects.create(route_name="JT-01", bus_number="JT-01")
         response = self.client.get(reverse("api_bus_list"), HTTP_AUTHORIZATION=self.auth)
 
         self.assertEqual(response.status_code, 200)
@@ -517,7 +517,7 @@ class ApiTest(IonTestCase):
 
     def test_api_bus_detail(self):
         self.make_token()
-        route_1 = Route.objects.create(route_name="JT-001", bus_number="JT-001")
+        route_1 = Route.objects.create(route_name="JT-01", bus_number="JT-01")
         response = self.client.get(reverse("api_bus_detail", args=[route_1.pk]), HTTP_AUTHORIZATION=self.auth)
 
         self.assertEqual(response.status_code, 200)

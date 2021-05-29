@@ -71,7 +71,7 @@ HOCO_END_DATE = datetime.date(2017, 10, 14)
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
 IN_CI = any(os.getenv(key, "").upper() == "TRUE" for key in ["TRAVIS", "GITHUB_ACTIONS"])
 # FIXME: figure out a less-hacky way to do this.
-TESTING = "test" in sys.argv
+TESTING = any("test" in arg for arg in sys.argv)
 LOGGING_VERBOSE = PRODUCTION
 
 # Whether to report master password attempts
@@ -240,9 +240,18 @@ PIPELINE = {
     "CSS_COMPRESSOR": None,
     "COMPILERS": ["pipeline.compilers.sass.SASSCompiler"],
     "STYLESHEETS": {
-        "base": {"source_filenames": ["css/base.scss", "css/themes.scss", "css/responsive.scss"], "output_filename": "css/base.css"},
-        "eighth.admin": {"source_filenames": ["css/eighth.common.scss", "css/eighth.admin.scss"], "output_filename": "css/eighth.admin.css"},
-        "eighth.signup": {"source_filenames": ["css/eighth.common.scss", "css/eighth.signup.scss"], "output_filename": "css/eighth.signup.css"},
+        "base": {
+            "source_filenames": ["css/base.scss", "css/themes.scss", "css/responsive.scss"],
+            "output_filename": "css/base.css",
+        },
+        "eighth.admin": {
+            "source_filenames": ["css/eighth.common.scss", "css/eighth.admin.scss"],
+            "output_filename": "css/eighth.admin.css",
+        },
+        "eighth.signup": {
+            "source_filenames": ["css/eighth.common.scss", "css/eighth.signup.scss"],
+            "output_filename": "css/eighth.signup.css",
+        },
     },
 }  # type: Dict[str,Any]
 
@@ -665,7 +674,6 @@ LOGGING = {
         "sentry.errors": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
     },
 }
-
 
 # The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"

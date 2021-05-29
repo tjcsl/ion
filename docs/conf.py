@@ -297,7 +297,7 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects"),
+    "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects/"),
 }
 autodoc_inherit_docstrings = False
 

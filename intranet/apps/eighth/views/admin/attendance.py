@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from .....utils.helpers import is_entirely_digit
 from ....auth.decorators import eighth_admin_required
@@ -198,12 +199,12 @@ def after_deadline_signup_view(request):
     end_date = request.GET.get("end", "")
 
     try:
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        start_date = timezone.make_aware(datetime.strptime(start_date, "%Y-%m-%d"))
     except ValueError:
         start_date = get_start_date(request)
 
     try:
-        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        end_date = timezone.make_aware(datetime.strptime(end_date, "%Y-%m-%d"))
     except ValueError:
         end_date = start_date + timedelta(days=7)
 

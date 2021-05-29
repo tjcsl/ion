@@ -36,6 +36,7 @@ def metrics_view(request):
         )
         .filter(unique_signups__lt=F("total_signups"))
         .values_list("id", F("total_signups") - F("unique_signups"))
+        .order_by("date", "block_letter")
         .nocache()
     ):
         metrics['intranet_eighth_duplicate_signups{{block_id="{}"}}'.format(block_id)] = num_duplicates
