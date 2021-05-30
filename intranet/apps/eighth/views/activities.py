@@ -65,7 +65,7 @@ def current_school_year():
 
 
 def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):
-    """ Accepts EighthActivity objects and outputs a PDF file. """
+    """Accepts EighthActivity objects and outputs a PDF file."""
     if activities is None:
         activities = EighthActivity.objects.all().order_by("name")
     if year is None:

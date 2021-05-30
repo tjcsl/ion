@@ -46,7 +46,7 @@ class AnnouncementManager(Manager):
         return Announcement.objects.filter(id__in=ids)
 
     def this_year(self):
-        """ Get AnnouncementRequests from this school year only. """
+        """Get AnnouncementRequests from this school year only."""
         start_date, end_date = get_date_range_this_year()
         return Announcement.objects.filter(added__gte=start_date, added__lte=end_date)
 
@@ -187,7 +187,7 @@ class Announcement(models.Model):
 
 class AnnouncementRequestQuerySet(models.query.QuerySet):
     def this_year(self):
-        """ Get AnnouncementRequests from this school year only. """
+        """Get AnnouncementRequests from this school year only."""
         start_date, end_date = get_date_range_this_year()
         return self.filter(added__gte=start_date, added__lte=end_date)
 

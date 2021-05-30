@@ -194,12 +194,12 @@ class Event(models.Model):
 
     @property
     def dashboard_type(self):
-        """Return what type of object it is """
+        """Return what type of object it is"""
         return "event"
 
     @property
     def pinned(self):
-        """ TODO: implement event pinning """
+        """TODO: implement event pinning"""
         return False
 
     @property
