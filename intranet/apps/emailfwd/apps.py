@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class EmailfwdConfig(AppConfig):
-    name = "emailfwd"
+    name = "intranet.apps.emailfwd"

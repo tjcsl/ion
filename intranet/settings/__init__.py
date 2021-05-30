@@ -358,7 +358,7 @@ TEMPLATES = [
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
             "loaders": ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
-            "libraries": {"staticfiles": "django.contrib.staticfiles.templatetags.staticfiles"},
+            "libraries": {"staticfiles": "django.templatetags.static"},
         },
     }
 ]  # type: List[Dict[str,Any]]
@@ -832,6 +832,8 @@ SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS = 2 * 60
 
 # Shows a warning message with yellow background on the login and all interior pages
 # GLOBAL_WARNING = "This is a message to display throughout the application."
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 try:
     from .secret import *  # noqa
