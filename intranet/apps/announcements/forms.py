@@ -101,7 +101,7 @@ class AnnouncementRequestForm(forms.ModelForm):
 
 
 class AnnouncementAdminForm(forms.Form):
-    """ A form for allowing admin to edit notifications on requests. """
+    """A form for allowing admin to edit notifications on requests."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -2,7 +2,6 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 
-
 """
     Sample TJ configuration:
 
