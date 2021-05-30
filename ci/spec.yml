@@ -128,10 +128,7 @@ jobs:
       - *copy_secret
 
       - name: Regenerate workflow YAML file and check for changes
-        run: |
-          set -e
-          pip install pyyaml
-          ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
 
       # Build docs/sources
       - name: Build docs
