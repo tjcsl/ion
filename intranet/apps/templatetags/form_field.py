@@ -1,5 +1,5 @@
 from django import template
-from django.forms.forms import BoundField
+from django.forms.boundfield import BoundField
 
 register = template.Library()
 

@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ItemregConfig(AppConfig):
-    name = "itemreg"
+    name = "intranet.apps.itemreg"

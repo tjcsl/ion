@@ -225,7 +225,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     middle_name = models.CharField(max_length=70, null=True)
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
-    gender = models.NullBooleanField()
+    gender = models.BooleanField(null=True)
     preferred_photo = models.OneToOneField("Photo", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     primary_email = models.OneToOneField("Email", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True)

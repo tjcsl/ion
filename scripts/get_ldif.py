@@ -1,6 +1,8 @@
-from django.forms.models import model_to_dict
-from intranet.apps.users.models import User
 import sys
+
+from django.forms.models import model_to_dict
+
+from intranet.apps.users.models import User
 
 
 def run(*args):
