@@ -51,15 +51,10 @@ env:
       path: ~/.cache/pip
       key: pip-${{ matrix.python-version }}
 
-  setup_venv: &setup_venv
-    name: Set up venv
+  setup_packages: &setup_packages
+    name: Set up packages
     run: |
       set -e
-
-      pip install -U virtualenv
-      virtualenv venv
-
-      source venv/bin/activate
 
       pip install -U pip setuptools
       pip install -U \
@@ -68,7 +63,6 @@ env:
       pip install -U -r requirements.txt
 
       echo "PATH=$PATH" >> $GITHUB_ENV
-      echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
   .copy_secret: &copy_secret
     name: Copy secret.py
@@ -87,7 +81,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Run flake8
@@ -109,7 +103,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Format code
@@ -130,7 +124,7 @@ jobs:
       - *repo_setup_fetch_all
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Regenerate workflow YAML file and check for changes
@@ -209,7 +203,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       # Node setup
