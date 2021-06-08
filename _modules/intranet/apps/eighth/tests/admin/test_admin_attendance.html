@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.admin.test_admin_attendance &#8212; TJ Intranet v3 (Build #481) documentation</title>
+    <title>intranet.apps.eighth.tests.admin.test_admin_attendance &#8212; TJ Intranet v3 (Build #520) documentation</title>
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
@@ -140,7 +140,7 @@
 
 <div class="viewcode-block" id="EighthAdminAttendanceTest"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_attendance.EighthAdminAttendanceTest">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminAttendanceTest</span><span class="p">(</span><span class="n">EighthAbstractTest</span><span class="p">):</span>
 <div class="viewcode-block" id="EighthAdminAttendanceTest.test_take_attendance_zero"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_attendance.EighthAdminAttendanceTest.test_take_attendance_zero">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Make sure all activities with zero students are marked as having attendance taken when button is pressed. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Make sure all activities with zero students are marked as having attendance taken when button is pressed.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
         <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;3000-11-11&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
 
@@ -161,7 +161,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">attendance_taken</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAdminAttendanceTest.test_take_attendance_cancelled"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_attendance.EighthAdminAttendanceTest.test_take_attendance_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Make sure students in a cancelled activity are marked as absent when the button is pressed. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Make sure students in a cancelled activity are marked as absent when the button is pressed.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
         <span class="n">user1</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">block1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;3000-11-11&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
