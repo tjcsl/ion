@@ -113,7 +113,7 @@ class UserTest(IonTestCase):
             ]
         ]
 
-        self.assertQuerysetEqual(get_user_model().objects.get_teachers(), list(map(repr, users)), ordered=False)
+        self.assertQuerysetEqual(get_user_model().objects.get_teachers(), list(map(repr, users)), transform=repr, ordered=False)
 
         self.assertEqual(list(get_user_model().objects.get_teachers_sorted()), sorted(users, key=lambda u: (u.last_name, u.first_name)))
 
