@@ -31,10 +31,10 @@ application = ProtocolTypeRouter(
         "websocket": AuthMiddlewareStack(
             URLRouter(
                 [
-                    re_path(r"^bus/$", BusConsumer),
+                    re_path(r"^bus/$", BusConsumer.as_asgi()),
                     # This MUST match the signage_display entry in intranet/apps/signage/urls.py
-                    re_path(r"^signage/display/(?P<display_name>[-_\w]+)?$", SignageConsumer),
-                    re_path(r"^.*$", WebsocketCloseConsumer),
+                    re_path(r"^signage/display/(?P<display_name>[-_\w]+)?$", SignageConsumer.as_asgi()),
+                    re_path(r"^.*$", WebsocketCloseConsumer.as_asgi()),
                 ]
             )
         )
