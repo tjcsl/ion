@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.routing &#8212; TJ Intranet v3 (Build #537) documentation</title>
+    <title>intranet.routing &#8212; TJ Intranet v3 (Build #548) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -158,10 +158,10 @@
         <span class="s2">&quot;websocket&quot;</span><span class="p">:</span> <span class="n">AuthMiddlewareStack</span><span class="p">(</span>
             <span class="n">URLRouter</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^bus/$&quot;</span><span class="p">,</span> <span class="n">BusConsumer</span><span class="p">),</span>
+                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^bus/$&quot;</span><span class="p">,</span> <span class="n">BusConsumer</span><span class="o">.</span><span class="n">as_asgi</span><span class="p">()),</span>
                     <span class="c1"># This MUST match the signage_display entry in intranet/apps/signage/urls.py</span>
-                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^signage/display/(?P&lt;display_name&gt;[-_\w]+)?$&quot;</span><span class="p">,</span> <span class="n">SignageConsumer</span><span class="p">),</span>
-                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*$&quot;</span><span class="p">,</span> <span class="n">WebsocketCloseConsumer</span><span class="p">),</span>
+                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^signage/display/(?P&lt;display_name&gt;[-_\w]+)?$&quot;</span><span class="p">,</span> <span class="n">SignageConsumer</span><span class="o">.</span><span class="n">as_asgi</span><span class="p">()),</span>
+                    <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*$&quot;</span><span class="p">,</span> <span class="n">WebsocketCloseConsumer</span><span class="o">.</span><span class="n">as_asgi</span><span class="p">()),</span>
                 <span class="p">]</span>
             <span class="p">)</span>
         <span class="p">)</span>
