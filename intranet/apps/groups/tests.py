@@ -20,19 +20,19 @@ class GroupsTest(IonTestCase):
         response = self.client.get(reverse("groups"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["group_admin"], False)
-        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), ordered=False)
+        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), transform=repr, ordered=False)
 
         user.groups.set([admin_all_group])
         response = self.client.get(reverse("groups"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["group_admin"], True)
-        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), ordered=False)
+        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), transform=repr, ordered=False)
 
         user.groups.set([admin_groups_group])
         response = self.client.get(reverse("groups"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["group_admin"], True)
-        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), ordered=False)
+        self.assertQuerysetEqual(response.context["all_groups"], list(map(repr, Group.objects.all())), transform=repr, ordered=False)
 
     def test_add_group_view(self):
         admin_all_group = Group.objects.get_or_create(name="admin_all")[0]

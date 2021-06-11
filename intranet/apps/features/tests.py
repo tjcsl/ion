@@ -34,7 +34,7 @@ class FeaturesTest(IonTestCase):
         for view_name in ["index", "login"]:
             response = self.client.get(reverse(view_name))
             self.assertEqual(response.status_code, 200)
-            self.assertQuerysetEqual(response.context["feature_announcements"], list(map(repr, [fa2, fa3, fa4])), ordered=False)
+            self.assertQuerysetEqual(response.context["feature_announcements"], list(map(repr, [fa2, fa3, fa4])), transform=repr, ordered=False)
 
     def test_login_feature_list(self):
         """Tests listing features on the login/dashboard/eighth signup pages as an authenticated user."""
@@ -65,7 +65,7 @@ class FeaturesTest(IonTestCase):
 
             response = self.client.get(reverse(view_name))
             self.assertEqual(response.status_code, 200)
-            self.assertQuerysetEqual(response.context["feature_announcements"], [repr(announcement)], ordered=False)
+            self.assertQuerysetEqual(response.context["feature_announcements"], [repr(announcement)], transform=repr, ordered=False)
 
             self.assertTrue(announcement.users_seen.filter(id=user.id).exists())
 
