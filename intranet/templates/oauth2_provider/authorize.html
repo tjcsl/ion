@@ -59,9 +59,17 @@
                         <li>{{ scope }}</li>
                     {% endfor %}
                 </ul>
+                <p>
+                    {% if application.sanctioned %}
+                        This application is sanctioned by the tjCSL.
+                    {% else %}
+                        This application is not sanctioned by the tjCSL. Please ensure that you trust it before continuing.
+                    {% endif %}
+                </p>
 
                 {{ form.errors }}
                 {{ form.non_field_errors }}
+
 
                 <div class="control-group">
                     <div class="controls">

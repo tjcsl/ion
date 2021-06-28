@@ -576,6 +576,7 @@ INSTALLED_APPS = [
     "intranet.apps.nomination",
     "intranet.apps.sessionmgmt",
     "intranet.apps.features",
+    "intranet.apps.oauth",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit
