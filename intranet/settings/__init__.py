@@ -520,6 +520,8 @@ REST_FRAMEWORK = {
 
 # Django OAuth Toolkit configuration
 OAUTH2_PROVIDER = {
+    # this disables OIDC
+    "OIDC_ENABLED": False,
     # this is the list of available scopes
     "SCOPES": {"read": "Read scope", "write": "Write scope"},
     # OAuth refresh tokens expire in 30 days

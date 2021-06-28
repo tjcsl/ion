@@ -27,7 +27,8 @@
             "authorization-code": "Your application will redirect the user to Ion to login.",
             "implicit": "The application does authentication purely on the client, and there is no server backend.",
             "password": "Your application will collect the user's username and password and pass it to Ion.",
-            "client-credentials": "Your application does not have a user login. Must be confidential type."
+            "client-credentials": "Your application does not have a user login. Must be confidential type.",
+            "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
         };
 
         $("#id_name").prop("required", true);
@@ -47,6 +48,9 @@
                 }
             }
         });
+
+        $("label[for='id_algorithm']").prop('hidden', true)
+        $("#id_algorithm").prop('hidden', true)
     });
     </script>
 {% endblock %}
