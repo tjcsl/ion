@@ -1,3 +1,4 @@
+# pylint: disable=consider-using-with
 import io
 import logging
 import os

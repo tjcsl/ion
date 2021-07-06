@@ -25,7 +25,7 @@ def set_historical_user(collector, field, sub_objs, using):
             handle_eighth_sponsor_deletion(obj, EighthSponsor)
             sub_objs = sub_objs.exclude(pk=obj.pk)
         else:
-            attribute = str(field).rsplit(".")[-1]  # FIXME: Is there a better way to do this?
+            attribute = str(field).rsplit(".", maxsplit=1)[-1]  # FIXME: Is there a better way to do this?
             setattr(obj, attribute, teststaff)
             obj.save()
             sub_objs = sub_objs.exclude(pk=obj.pk)
