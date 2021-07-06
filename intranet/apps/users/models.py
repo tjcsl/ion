@@ -1398,7 +1398,7 @@ class Grade:
     @classmethod
     def year_from_grade(cls, grade: int) -> int:
         today = timezone.localdate()
-        if today.month >= settings.YEAR_TURNOVER_MONTH:
+        if today.month > settings.YEAR_TURNOVER_MONTH:
             current_senior_year = today.year + 1
         else:
             current_senior_year = today.year

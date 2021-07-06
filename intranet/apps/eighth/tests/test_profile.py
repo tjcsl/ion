@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
+from ....utils.date import get_senior_graduation_year
 from ...users.models import Grade
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from .eighth_test import EighthAbstractTest
@@ -189,7 +190,7 @@ class EighthProfileTest(EighthAbstractTest):
                 "last_name": "William",
                 "middle_name": "Hello",
                 "nickname": "A",
-                "graduation_year": 2021,
+                "graduation_year": get_senior_graduation_year(),
                 "gender": False,
             },
             follow=True,
@@ -202,5 +203,5 @@ class EighthProfileTest(EighthAbstractTest):
         self.assertEqual("William", user2.last_name)
         self.assertEqual("Hello", user2.middle_name)
         self.assertEqual("A", user2.nickname)
-        self.assertEqual(2021, Grade.year_from_grade(user2.grade.number))
+        self.assertEqual(get_senior_graduation_year(), Grade.year_from_grade(user2.grade.number))
         self.assertFalse(user2.gender)
