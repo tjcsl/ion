@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #548) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #581) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -198,7 +198,7 @@
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">IN_CI</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;GITHUB_ACTIONS&quot;</span><span class="p">])</span>
 <span class="c1"># FIXME: figure out a less-hacky way to do this.</span>
-<span class="n">TESTING</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
 
 <span class="c1"># Whether to report master password attempts</span>
@@ -367,9 +367,18 @@
     <span class="s2">&quot;CSS_COMPRESSOR&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;COMPILERS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pipeline.compilers.sass.SASSCompiler&quot;</span><span class="p">],</span>
     <span class="s2">&quot;STYLESHEETS&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/base.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/themes.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/responsive.scss&quot;</span><span class="p">],</span> <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/base.css&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;eighth.admin&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.admin.scss&quot;</span><span class="p">],</span> <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.admin.css&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;eighth.signup&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.signup.scss&quot;</span><span class="p">],</span> <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.signup.css&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/base.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/themes.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/responsive.scss&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/base.css&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;eighth.admin&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.admin.scss&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.admin.css&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;eighth.signup&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.signup.scss&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.signup.css&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">},</span>
 <span class="p">}</span>  <span class="c1"># type: Dict[str,Any]</span>
 
@@ -792,7 +801,6 @@
         <span class="s2">&quot;sentry.errors&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">],</span> <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
     <span class="p">},</span>
 <span class="p">}</span>
-
 
 <span class="c1"># The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR</span>
 <span class="n">SHOW_DEBUG_TOOLBAR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SHOW_DEBUG_TOOLBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;YES&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span>

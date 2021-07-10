@@ -1,6 +1,14 @@
 intranet.apps.emailfwd package
 ==============================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   intranet.apps.emailfwd.management
+
 Submodules
 ----------
 

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #548) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #581) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -149,7 +149,7 @@
 <span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">View</span>
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
-<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
+<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">awaredate</span><span class="p">,</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -219,9 +219,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cache_result</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sports_school_events&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache_result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">time__gte</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(),</span> <span class="n">time__lte</span><span class="o">=</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(),</span> <span class="n">time__lte</span><span class="o">=</span><span class="p">(</span><span class="n">awaredate</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
         <span class="n">sports_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;sports&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span>
         <span class="n">school_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s2">&quot;school&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span>
 
