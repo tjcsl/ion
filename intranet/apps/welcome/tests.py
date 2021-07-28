@@ -28,3 +28,11 @@ class WelcomeTest(IonTestCase):
         response = self.client.get(reverse("welcome_done"))
         self.assertRedirects(response, reverse("index"))
         self.assertEqual(get_user_model().objects.get(seen_welcome=True), user)
+
+    def test_oauth_welcome(self):
+        # When a user logs in and is expected to be redirected to an oauth application, they shouldn't see the welcome
+        user = self.login()
+        user.seen_welcome = False
+        user.save()
+        self.client.get(reverse("oauth_redirect"))
+        self.assertFalse(user.seen_welcome)
