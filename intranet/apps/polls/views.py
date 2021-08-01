@@ -11,6 +11,7 @@ from django.core.serializers import serialize
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
 from ...utils.date import get_senior_graduation_year
@@ -409,7 +410,12 @@ def modify_poll_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
 
     if not poll.before_end_time():
-        return redirect("polls")
+        messages.error(request, "Closed polls may not be edited!")
+
+        if "show_all" in request.GET:
+            return redirect(reverse("polls") + "?show_all=1")
+        else:
+            return redirect("polls")
 
     if request.method == "POST":
         form = PollForm(data=request.POST, instance=poll)
