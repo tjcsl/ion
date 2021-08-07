@@ -19,7 +19,6 @@
 {% block js %}
     {{ block.super }}
     <script src="{% static 'js/vendor/jquery.formset.js' %}" charset="utf-8"></script>
-    <script src="{% static 'js/mailforwarding.js' %}" charset="utf-8"></script>
     <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script src="{% static 'js/vendor/spin.min.js' %}"></script>
     <script>
@@ -78,42 +77,8 @@
         <br>
         {% if request.user.is_student %}
         <h2>Mail Forwarding</h2>
-        <p>Enter your password and the email you wish to forward to below.</p>
-        <p>Do <b>NOT</b> put down your @fcpsschools.net address.  We cannot forward to it.</p>
-        <table>
-          <form id="mail-forwarding-form">
-            <tr>
-              <td>
-                <label for="username">Username: </label>
-              </td>
-              <td>
-                <input id="username" type="text" name="username" value="{{ request.user.username }}" disabled>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="password">Password: </label>
-              </td>
-              <td>
-                <input id="password" type="password" name="password">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="forwarding_email">Email Address: </label>
-              </td>
-              <td>
-                <input id="forwarding_email" type="text" name="forwarding_email">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a id="mail-forwarding-submit" href="#" class="button">Forward Email</a>
-                <div class="spinner-container"></div>
-              </td>
-            </tr>
-          </form>
-        </table>
+        <p>Set up email forwarding from your @tjhsst.edu email <a href="https://mailforwarding.tjhsst.edu" target="_blank">here</a>.</p>
+        <p>Do <b>NOT</b> put down your @fcpsschools.net address. We cannot forward to it.</p>
         {% endif %}
         <form action="" method="post">
             {% csrf_token %}
