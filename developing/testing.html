@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Testing Ion &#8212; TJ Intranet v3 (Build #581) documentation</title>
+    <title>Testing Ion &#8212; TJ Intranet v3 (Build #596) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -101,6 +101,7 @@
 <li><a class="reference internal" href="#running-tests">Running Tests</a></li>
 <li><a class="reference internal" href="#coverage">Coverage</a></li>
 <li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+<li><a class="reference internal" href="#good-testing-examples">Good Testing Examples</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -139,29 +140,22 @@
       
   <section id="testing-ion">
 <h1>Testing Ion<a class="headerlink" href="#testing-ion" title="Permalink to this headline">¶</a></h1>
+<p>Unit tests are hugely important to ensuring that Ion functions as expected. By writing and running tests before deploying every change, we can be much more confident that our new changes don’t break the existing design in Ion. As such, every change that introduces a new feature should also include at least one unit test that corresponding to that feature.</p>
 <section id="unit-tests">
 <h2>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h2>
-<p>You will want to write your tests for each module in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>.
-Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code>.</p>
+<p>For most modules, the unit tests go in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>. Currently, the sole exception is <code class="docutils literal notranslate"><span class="pre">eighth</span></code>, where tests are broken out into several different files under <code class="docutils literal notranslate"><span class="pre">intranet/apps/eighth/tests/</span></code>. Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code>.</p>
 </section>
 <section id="running-tests">
 <h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
-<p>To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">./setup.py</span> <span class="pre">test</span></code>.
-Note that this deletes and re-creates the db from scratch each time,
-so you may want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
+<p>To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> inside your vagrant environment. If you want to only test a specific app, you can run <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">&lt;apps_name&gt;</span></code>. Do note that this deletes and re-creates the db from scratch each time, so you may want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
 </section>
 <section id="coverage">
 <h2>Coverage<a class="headerlink" href="#coverage" title="Permalink to this headline">¶</a></h2>
-<p>Coverage information is auto-generated at <a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Coveralls</a>
-This is useful for finding files with insufficient coverage,
-so you can focus your test writing more accurately.</p>
+<p>Coverage information is auto-generated at <cite>Coveralls &lt;https://coveralls.io/github/tjcsl/ion&gt;</cite>. This is useful for finding files with insufficient coverage, so you can focus your test writing more accurately.</p>
 </section>
 <section id="writing-tests">
 <h2>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
-<p>Looking at pre-existing tests can give you a good idea how to structure your tests.
-The <code class="docutils literal notranslate"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class.
-It handles some ion-specific logic, such as mocking out ldap queries.
-Here is an bare-bones example of the basic layout for a test:</p>
+<p>Looking at pre-existing tests can give you a good idea how to structure your tests. The <code class="docutils literal notranslate"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class. It handles some ion-specific logic, such as mocking out ldap queries. Here is an bare-bones example of the basic layout for a test:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 
 <span class="k">class</span> <span class="nc">ModuleTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
@@ -170,13 +164,26 @@ Here is an bare-bones example of the basic layout for a test:</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Every test should include comments that explain, almost in narrative form, what the test is doing and what the expected results are.</p>
+<p>Generally, there are two ways that you test Ion’s code. These are not comprehensive, but should work for most cases. The first is calling methods directly; the second is making a GET or POST request to the view that you are interested in testing. The best tests utilize both. After you do either/both of these to call the code, you should use assertions to see if the code behaved as expected. A list of assertion options can be found <a href="#id1"><span class="problematic" id="id2">`here &lt;https://docs.python.org/3/library/unittest`_</span></a>.html#assert-methods&gt;`. A useful tool for making requests to the view is <code class="docutils literal notranslate"><span class="pre">self.client</span></code>. More documentation on that can be found <a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing/tools/">here</a>. Alternatively, just search through Ion’s testing files for examples of using <cite>self.client</cite>.</p>
+</section>
+<section id="good-testing-examples">
+<h2>Good Testing Examples<a class="headerlink" href="#good-testing-examples" title="Permalink to this headline">¶</a></h2>
+<p>Ion has lots of tests; the following are examples of very well-written ones. Note the abundance of comments and the attention to detail. Test everything.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/tjcsl/ion/blob/dev/intranet/apps/polls/tests.py">Polls</a> - Note the throughness of the checks; assertions are made even when nothing should have changed.</p></li>
+<li><p><a class="reference external" href="https://github.com/tjcsl/ion/blob/dev/intranet/apps/emailfwd/tests.py">Emailfwd</a> - Note the use of <cite>self.client</cite> and checking <cite>messages</cite> generated by the page.</p></li>
+<li><p><a class="reference external" href="https://github.com/tjcsl/ion/tree/dev/intranet/apps/eighth/tests">Eighth</a> - <code class="docutils literal notranslate"><span class="pre">eighth</span></code> is the most complicated app in Ion and thus has the most varied examples of testing methods to check out.</p></li>
+</ul>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.djangoproject.com/en/1.11/topics/testing">Django Testing Guide</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing">Django Testing Guide</a>.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html">Python unittest documentation</a>.</p></li>
 <li><p><a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Code Coverage</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html#assert-methods">Python Unit Testing Frameworkgood</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing/tools/#exceptions">Testing Exceptions</a>.</p></li>
 </ul>
 </section>
 </section>
