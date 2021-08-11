@@ -84,5 +84,5 @@ def pull_sports_schedules(month=None) -> None:
                 open_to="everyone",
                 time=time,
             )
-        except [ValueError, AssertionError]:
-            pass
+        except (ValueError, AssertionError) as e:
+            print(e)
