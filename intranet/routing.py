@@ -8,6 +8,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.generic.websocket import WebsocketConsumer
 from channels.routing import ProtocolTypeRouter, URLRouter
 
+from django.core.asgi import get_asgi_application
 from django.urls import re_path
 
 from .apps.bus.consumers import BusConsumer
@@ -28,6 +29,7 @@ class WebsocketCloseConsumer(WebsocketConsumer):
 
 application = ProtocolTypeRouter(
     {
+        "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
             URLRouter(
                 [
@@ -37,6 +39,6 @@ application = ProtocolTypeRouter(
                     re_path(r"^.*$", WebsocketCloseConsumer.as_asgi()),
                 ]
             )
-        )
+        ),
     }
 )
