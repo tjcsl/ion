@@ -55,7 +55,7 @@ In non-Vagrant environments, you should set a master password different from the
 
 We use the secure Argon2 hashing algorithim to secure our master password. To set the master password, set ``MASTER_PASSWORD`` to the string output of the below script (after changing values as appropriate) in ``secret.py``. After changing this value, restart Ion. 
 
-Currently, Ion requires that you use Argon2i to create the hash. You also must prepend ``argon2`` to the hash before putting it into ``secret.py``.
+Currently, Ion requires that you use Argon2id to create the hash. You also must prepend ``argon2`` to the hash before putting it into ``secret.py``.
 
 .. code-block:: python
 
@@ -68,5 +68,5 @@ Currently, Ion requires that you use Argon2i to create the hash. You also must p
     time_cost = 2
     memory_cost = 512
     parallelism = 2
-    h=PasswordHasher(time_cost=time_cost, memory_cost=memory_cost, parallelism=parallelism, type=low_level.Type.I)
+    h=PasswordHasher(time_cost=time_cost, memory_cost=memory_cost, parallelism=parallelism, type=low_level.Type.ID)
     print(h.hash(password))
