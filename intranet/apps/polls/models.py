@@ -13,7 +13,7 @@ from ...utils.date import get_date_range_this_year
 
 class PollQuerySet(models.query.QuerySet):
     def this_year(self):
-        """ Get AnnouncementRequests from this school year only. """
+        """Get AnnouncementRequests from this school year only."""
         start_date, end_date = get_date_range_this_year()
         return self.filter(start_time__gte=start_date, start_time__lte=end_date)
 

@@ -17,8 +17,9 @@ import sys
 from datetime import datetime
 from unittest import mock
 
-import django
 import sphinx_bootstrap_theme
+
+import django
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -296,7 +297,7 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects"),
+    "django": ("https://docs.djangoproject.com/en/dev", "https://docs.djangoproject.com/en/dev/_objects/"),
 }
 autodoc_inherit_docstrings = False
 

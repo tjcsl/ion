@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
     vb.name = "ion-vagrant"
     vb.memory = 2048 # the default of 512 gives us a OOM during setup.
-    vb.gui = true
+    vb.gui = false
   end
 
 

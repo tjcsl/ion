@@ -1,6 +1,14 @@
 intranet.apps.events package
 ============================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   intranet.apps.events.management
+
 Submodules
 ----------
 

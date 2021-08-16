@@ -5,7 +5,6 @@ from django.utils.safestring import mark_safe
 from ...utils.admin_helpers import export_csv_action
 from .models import CarApplication, ParkingApplication
 
-
 """
 Give parking group admin privileges:
 group = Group.objects.get(name="admin_parking")

@@ -17,7 +17,7 @@
         {% if not poll.visible %} (HIDDEN){% endif %}
         {% if is_polls_admin %}
             <div class="poll-icon-wrapper">
-                <a href="{% url 'modify_poll' poll.id %}">
+                <a href="{% url 'modify_poll' poll.id %}?show_all={{ request.GET.show_all }}">
                     <i class="poll-icon fas fa-pencil-alt"></i>
                 </a>
                 <a href="{% url 'delete_poll' poll.id %}" class="poll-delete">

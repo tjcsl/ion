@@ -7,15 +7,17 @@ from typing import Collection, Set  # noqa
 from urllib import parse
 
 from django.conf import settings
+from django.utils import timezone
 
 from ..apps.auth.helpers import get_login_theme_name
 from ..apps.emerg.views import get_emerg
 
-# from django.template.loader import get_template
-# from django.utils import timezone
-
-
 logger = logging.getLogger("intranet.settings")
+
+
+def awaredate():
+    # Note that date objects are always naive, so we have to use datetime for proper timezone support.
+    return timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def get_id(obj):
@@ -42,7 +44,7 @@ def debug_toolbar_callback(request):
     """Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
     office."""
 
-    if request.is_ajax():
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return False
 
     if not hasattr(request, "user"):

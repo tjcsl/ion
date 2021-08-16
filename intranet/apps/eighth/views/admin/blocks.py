@@ -1,3 +1,4 @@
+import datetime
 import logging
 import pickle
 import re
@@ -35,11 +36,13 @@ def add_block_view(request):
 
     date = None
     show_letters = None
+    signup_time = request.POST.get("signup_time") if "signup_time" in request.POST else datetime.time(12, 40)
 
     if "date" in request.GET:
         date = request.GET.get("date")
     if "date" in request.POST:
         date = request.POST.get("date")
+
     title_suffix = ""
     if date:
         date_format = re.compile(r"([0-9]{2})\/([0-9]{2})\/([0-9]{4})")
@@ -57,14 +60,21 @@ def add_block_view(request):
                 if not ltr:
                     continue
                 if ltr not in current_letters:
-                    EighthBlock.objects.create(date=fmtdate, block_letter=ltr)
-                    messages.success(request, "Successfully added {} Block on {}".format(ltr, fmtdate))
+                    EighthBlock.objects.create(date=fmtdate, block_letter=ltr, signup_time=signup_time)
+                    messages.success(
+                        request, "Successfully added {} Block on {} with signups shown to students as closing at {}".format(ltr, fmtdate, signup_time)
+                    )
             for ltr in current_letters:
                 if not ltr:
                     continue
                 if ltr not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=ltr).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(ltr, fmtdate))
+                else:
+                    blk = EighthBlock.objects.get(date=fmtdate, block_letter=ltr)
+                    blk.signup_time = signup_time
+                    blk.save()
+                    messages.success(request, "Successfully changed the signup time of {} Block on {}".format(ltr, fmtdate))
 
             invalidate_model(EighthBlock)
 
@@ -109,6 +119,8 @@ def add_block_view(request):
     #######
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
+        if onday:
+            signup_time = onday[0].signup_time
         for ltr in visible_blocks:
             exists = onday.filter(block_letter=ltr)
             letters.append({"name": ltr, "exists": exists})
@@ -122,6 +134,7 @@ def add_block_view(request):
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
+        "signup_time": str(signup_time)[:5],
         "add_block_form": QuickBlockForm,
     }
 

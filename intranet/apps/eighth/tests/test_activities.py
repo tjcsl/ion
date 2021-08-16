@@ -32,7 +32,7 @@ class EighthActivitiesTestCase(EighthAbstractTest):
         response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [])
         response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)], transform=repr)
 
         block_today = self.add_block(date=today_date_str, block_letter="A")
         block_future = self.add_block(date=future_date_str, block_letter="A")
@@ -40,19 +40,21 @@ class EighthActivitiesTestCase(EighthAbstractTest):
         response = self.client.get(reverse("eighth_activity", args=[activity.id]))
         self.assertQuerysetEqual(response.context["scheduled_activities"], [])
         response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)])
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past)], transform=repr)
 
         schact_today = self.schedule_activity(block_today.id, activity.id)
         response = self.client.get(reverse("eighth_activity", args=[activity.id]))
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today)])
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today)], transform=repr)
         response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today)])
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today)], transform=repr)
 
         schact_future = self.schedule_activity(block_future.id, activity.id)
         response = self.client.get(reverse("eighth_activity", args=[activity.id]))
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today), repr(schact_future)])
+        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_today), repr(schact_future)], transform=repr)
         response = self.client.get(reverse("eighth_activity", args=[activity.id]), {"show_all": 1})
-        self.assertQuerysetEqual(response.context["scheduled_activities"], [repr(schact_past), repr(schact_today), repr(schact_future)])
+        self.assertQuerysetEqual(
+            response.context["scheduled_activities"], [repr(schact_past), repr(schact_today), repr(schact_future)], transform=repr
+        )
 
     def test_stats_global_view(self):
         # I am unauthorized; this should 403

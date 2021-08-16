@@ -8,6 +8,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.generic.websocket import WebsocketConsumer
 from channels.routing import ProtocolTypeRouter, URLRouter
 
+from django.core.asgi import get_asgi_application
 from django.urls import re_path
 
 from .apps.bus.consumers import BusConsumer
@@ -28,15 +29,16 @@ class WebsocketCloseConsumer(WebsocketConsumer):
 
 application = ProtocolTypeRouter(
     {
+        "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
             URLRouter(
                 [
-                    re_path(r"^bus/$", BusConsumer),
+                    re_path(r"^bus/$", BusConsumer.as_asgi()),
                     # This MUST match the signage_display entry in intranet/apps/signage/urls.py
-                    re_path(r"^signage/display/(?P<display_name>[-_\w]+)?$", SignageConsumer),
-                    re_path(r"^.*$", WebsocketCloseConsumer),
+                    re_path(r"^signage/display/(?P<display_name>[-_\w]+)?$", SignageConsumer.as_asgi()),
+                    re_path(r"^.*$", WebsocketCloseConsumer.as_asgi()),
                 ]
             )
-        )
+        ),
     }
 )

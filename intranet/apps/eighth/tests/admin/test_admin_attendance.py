@@ -13,7 +13,7 @@ from ..eighth_test import EighthAbstractTest
 
 class EighthAdminAttendanceTest(EighthAbstractTest):
     def test_take_attendance_zero(self):
-        """ Make sure all activities with zero students are marked as having attendance taken when button is pressed. """
+        """Make sure all activities with zero students are marked as having attendance taken when button is pressed."""
         self.make_admin()
         block1 = self.add_block(date="3000-11-11", block_letter="A")
 
@@ -34,7 +34,7 @@ class EighthAdminAttendanceTest(EighthAbstractTest):
         self.assertTrue(EighthScheduledActivity.objects.get(id=schact1.id).attendance_taken)
 
     def test_take_attendance_cancelled(self):
-        """ Make sure students in a cancelled activity are marked as absent when the button is pressed. """
+        """Make sure students in a cancelled activity are marked as absent when the button is pressed."""
         self.make_admin()
         user1 = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year() + 1)
         block1 = self.add_block(date="3000-11-11", block_letter="A")

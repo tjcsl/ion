@@ -51,24 +51,18 @@ env:
       path: ~/.cache/pip
       key: pip-${{ matrix.python-version }}
 
-  setup_venv: &setup_venv
-    name: Set up venv
+  setup_packages: &setup_packages
+    name: Set up packages
     run: |
       set -e
 
-      pip install -U virtualenv
-      virtualenv venv
-
-      source venv/bin/activate
-
       pip install -U pip setuptools
       pip install -U \
-        flake8 pylint pylint-django pylint-plugin-utils isort~=4.3 black==20.8b1 autopep8 \
-        coverage coveralls pyyaml
+        flake8 pylint pylint-django pylint-plugin-utils isort black==20.8b1 autopep8 \
+        coveralls pyyaml pytest-django
       pip install -U -r requirements.txt
 
       echo "PATH=$PATH" >> $GITHUB_ENV
-      echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
   .copy_secret: &copy_secret
     name: Copy secret.py
@@ -87,7 +81,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Run flake8
@@ -109,7 +103,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Format code
@@ -130,14 +124,11 @@ jobs:
       - *repo_setup_fetch_all
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       - name: Regenerate workflow YAML file and check for changes
-        run: |
-          set -e
-          pip install pyyaml
-          ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
 
       # Build docs/sources
       - name: Build docs
@@ -146,7 +137,7 @@ jobs:
         run: ./scripts/build_ensure_no_changes.sh ./scripts/build_sources.sh
 
       # Check for changes to CI spec
-      - name: Check for chenges to CI spec
+      - name: Check for changes to CI spec
         run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
 
       # Check for unmigrated changes
@@ -209,7 +200,7 @@ jobs:
       - *repo_setup
       - *python_setup
       - *setup_pip_cache
-      - *setup_venv
+      - *setup_packages
       - *copy_secret
 
       # Node setup
@@ -239,7 +230,7 @@ jobs:
 
       # Tests
       - name: Run tests
-        run: coverage run ./setup.py test
+        run: coverage run -m pytest
       - name: Migrate database
         run: coverage run -a ./manage.py migrate
       - name: Collect static files

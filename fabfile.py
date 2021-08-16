@@ -1,10 +1,9 @@
 import os
 import traceback
 
+import pkg_resources
 from fabric.api import abort, env, hide, lcd, local, prefix, prompt, puts, shell_env
 from fabric.contrib.console import confirm
-
-import pkg_resources
 
 PRODUCTION_DOCUMENT_ROOT = "/usr/local/www/intranet3"
 REDIS_SESSION_DB = 0

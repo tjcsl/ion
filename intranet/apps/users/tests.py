@@ -113,7 +113,7 @@ class UserTest(IonTestCase):
             ]
         ]
 
-        self.assertQuerysetEqual(get_user_model().objects.get_teachers(), list(map(repr, users)), ordered=False)
+        self.assertQuerysetEqual(get_user_model().objects.get_teachers(), list(map(repr, users)), transform=repr, ordered=False)
 
         self.assertEqual(list(get_user_model().objects.get_teachers_sorted()), sorted(users, key=lambda u: (u.last_name, u.first_name)))
 
@@ -556,7 +556,8 @@ class ProfileTest(IonTestCase):
         response = self.client.get(reverse("api_user_profile_picture_default", args=[user.pk]), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.content_type, "image/jpeg")
         image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
-        self.assertEqual(response.content, io.open(image_path, mode="rb").read())
+        with io.open(image_path, mode="rb") as f:
+            self.assertEqual(response.content, f.read())
         response_with_username = self.client.get(
             reverse("api_user_profile_picture_default_by_username", args=[user.username]), HTTP_AUTHORIZATION=self.auth
         )

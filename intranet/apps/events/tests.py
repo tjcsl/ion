@@ -108,8 +108,8 @@ class EventsTest(IonTestCase):
         # Test with no attendees
         response = self.client.get(reverse("event_roster", args=[event.id]))
         expected_context = {"event": event, "viewable_roster": [], "num_hidden_members": 0, "is_events_admin": False}
-        for key in expected_context:
-            self.assertEqual(response.context[key], expected_context[key])
+        for key, item in expected_context.items():
+            self.assertEqual(response.context[key], item)
         self.assertQuerysetEqual(response.context["full_roster"], get_user_model().objects.none())
 
         # Test with a few attendees
@@ -132,8 +132,8 @@ class EventsTest(IonTestCase):
         # Test GET of valid event id
         response = self.client.get(reverse("add_event"))
         expected_context = {"action": "add", "action_title": "Add", "is_events_admin": True}
-        for key in expected_context:
-            self.assertEqual(response.context[key], expected_context[key])
+        for key, item in expected_context.items():
+            self.assertEqual(response.context[key], item)
 
         # Test POST of valid form
         data = {
@@ -143,7 +143,7 @@ class EventsTest(IonTestCase):
             "location": "Location",
             "scheduled_activity": "",
             "announcement": "",
-            "groups": 1,
+            "groups": [],
             "show_attending": "on",
             "show_on_dashboard": "on",
             "category": "sports",
@@ -168,8 +168,8 @@ class EventsTest(IonTestCase):
         # Test GET context
         response = self.client.get(reverse("request_event"))
         expected_context = {"action": "request", "action_title": "Submit", "is_events_admin": False}
-        for key in expected_context:
-            self.assertEqual(response.context[key], expected_context[key])
+        for key, item in expected_context.items():
+            self.assertEqual(response.context[key], item)
 
         # Test POST of valid form
         data = {
@@ -217,8 +217,8 @@ class EventsTest(IonTestCase):
         # Test GET of valid event id
         response = self.client.get(reverse("modify_event", args=[event.id]))
         expected_context = {"action": "modify", "action_title": "Modify", "id": str(event.id), "is_events_admin": True}
-        for key in expected_context:
-            self.assertEqual(response.context[key], expected_context[key])
+        for key, item in expected_context.items():
+            self.assertEqual(response.context[key], item)
 
         # Test POST of valid form
         data = {
@@ -228,7 +228,7 @@ class EventsTest(IonTestCase):
             "location": "New location",
             "scheduled_activity": "",
             "announcement": "",
-            "groups": 1,
+            "groups": [],
             "show_attending": "on",
             "show_on_dashboard": "on",
             "category": "sports",

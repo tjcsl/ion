@@ -136,12 +136,12 @@ class Day(models.Model):
 
     @property
     def start_time(self):
-        """Return time the school day begins """
+        """Return time the school day begins"""
         return self.day_type.start_time
 
     @property
     def end_time(self):
-        """Return time the school day ends """
+        """Return time the school day ends"""
         return self.day_type.end_time
 
     def __str__(self):

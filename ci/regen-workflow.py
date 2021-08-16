@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
+import json
 import os
 import sys
-import json
 
 try:
     import yaml

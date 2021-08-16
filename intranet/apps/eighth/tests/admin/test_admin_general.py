@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from intranet.apps.groups.models import Group
 
+from .....utils.helpers import awaredate
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ..eighth_test import EighthAbstractTest
 
@@ -33,15 +34,21 @@ class EighthAdminGeneralTest(EighthAbstractTest):
         response = self.client.get(reverse("eighth_admin_dashboard"))
         self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
 
-        self.assertEqual(response.context["start_date"], timezone.localdate())
-        self.assertQuerysetEqual(response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")])
-        self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()])
-        self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")])
-        self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()])
+        self.assertEqual(response.context["start_date"], awaredate())
         self.assertQuerysetEqual(
-            response.context["sponsors"], [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()]
+            response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")], transform=repr
         )
-        self.assertQuerysetEqual(response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()])
+        self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()], transform=repr)
+        self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")], transform=repr)
+        self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()], transform=repr)
+        self.assertQuerysetEqual(
+            response.context["sponsors"],
+            [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()],
+            transform=repr,
+        )
+        self.assertQuerysetEqual(
+            response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()], transform=repr
+        )
         self.assertEqual(response.context["blocks_next_date"], datetime.datetime(9001, 4, 20).date())
         self.assertEqual(response.context["admin_page_title"], "Eighth Period Admin")
         self.assertEqual(response.context["signup_users_count"], get_user_model().objects.get_students().count())
