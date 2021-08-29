@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #606) documentation</title>
+    <title>Post-Install Steps &#8212; TJ Intranet v3 (Build #618) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -173,7 +173,7 @@
 <p>The master password for development enviornments is <code class="docutils literal notranslate"><span class="pre">swordfish</span></code>.</p>
 <p>In non-Vagrant environments, you should set a master password different from the default. Ideally, this password should have many bits of entropy and should be randomly generated.</p>
 <p>We use the secure Argon2 hashing algorithim to secure our master password. To set the master password, set <code class="docutils literal notranslate"><span class="pre">MASTER_PASSWORD</span></code> to the string output of the below script (after changing values as appropriate) in <code class="docutils literal notranslate"><span class="pre">secret.py</span></code>. After changing this value, restart Ion.</p>
-<p>Currently, Ion requires that you use Argon2i to create the hash. You also must prepend <code class="docutils literal notranslate"><span class="pre">argon2</span></code> to the hash before putting it into <code class="docutils literal notranslate"><span class="pre">secret.py</span></code>.</p>
+<p>Currently, Ion requires that you use Argon2id to create the hash. You also must prepend <code class="docutils literal notranslate"><span class="pre">argon2</span></code> to the hash before putting it into <code class="docutils literal notranslate"><span class="pre">secret.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">argon2</span> <span class="kn">import</span> <span class="n">PasswordHasher</span><span class="p">,</span> <span class="n">low_level</span>
 
 <span class="c1"># Change this password to the new master password.</span>
@@ -183,7 +183,7 @@
 <span class="n">time_cost</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">memory_cost</span> <span class="o">=</span> <span class="mi">512</span>
 <span class="n">parallelism</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">h</span><span class="o">=</span><span class="n">PasswordHasher</span><span class="p">(</span><span class="n">time_cost</span><span class="o">=</span><span class="n">time_cost</span><span class="p">,</span> <span class="n">memory_cost</span><span class="o">=</span><span class="n">memory_cost</span><span class="p">,</span> <span class="n">parallelism</span><span class="o">=</span><span class="n">parallelism</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">low_level</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+<span class="n">h</span><span class="o">=</span><span class="n">PasswordHasher</span><span class="p">(</span><span class="n">time_cost</span><span class="o">=</span><span class="n">time_cost</span><span class="p">,</span> <span class="n">memory_cost</span><span class="o">=</span><span class="n">memory_cost</span><span class="p">,</span> <span class="n">parallelism</span><span class="o">=</span><span class="n">parallelism</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">low_level</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
 </pre></div>
 </div>
