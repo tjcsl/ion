@@ -44,7 +44,7 @@ class Command(BaseCommand):
             print(message)
             messages.append(message)
             Photo.objects.create(user=user, grade_number=grade_number, _binary=value)
-        with open("photos_created.txt", "w") as f:
+        with open("photos_created.txt", "w", encoding="utf-8") as f:
             f.write("\n".join(messages))
 
         sys.stdout.write("Completed photo import.\n")

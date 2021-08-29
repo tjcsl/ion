@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
         """
         ids = []
-        with open(filename, "r") as csvfile:
+        with open(filename, "r", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 ids.append(row[column_header])

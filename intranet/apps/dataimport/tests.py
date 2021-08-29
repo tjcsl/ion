@@ -106,7 +106,7 @@ class DeleteUsersTest(IonTestCase):
         with patch("intranet.apps.dataimport.management.commands.delete_users.open", mock_open(read_data=file_contents)) as m:
             call_command("delete_users", filename="foo.csv", header="Student ID", run=True, confirm=True)
 
-        m.assert_called_with("foo.csv", "r")
+        m.assert_called_with("foo.csv", "r", encoding="utf-8")
         with self.assertRaises(get_user_model().DoesNotExist):
             get_user_model().objects.get(username="2021ttester")
 

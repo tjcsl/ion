@@ -63,6 +63,6 @@ class Command(BaseCommand):
             writer = csv.writer(self.stdout)
             writer.writerows(rows)
         else:
-            with open(options.get("outfile"), "w") as f:
+            with open(options.get("outfile"), "w", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 writer.writerows(rows)

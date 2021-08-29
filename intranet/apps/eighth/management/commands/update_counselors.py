@@ -29,7 +29,7 @@ class Command(BaseCommand):
             sys.stdout.write("Please MAKE SURE you have updated info before running this script.\n")
             sys.stdout.write("Actually running is a destructive operation.\n")
 
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             contents = csv.DictReader(f)
             data = list(contents)
 

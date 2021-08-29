@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         try:
-            with open(kwargs["data_fname"]) as f_obj:
+            with open(kwargs["data_fname"], encoding="utf-8") as f_obj:
                 data = json.load(f_obj)
         except OSError as ex:
             raise CommandError(str(ex)) from ex
