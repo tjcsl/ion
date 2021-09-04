@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>intranet.apps.oauth package &#8212; TJ Intranet v3 (Build #618) documentation</title>
+    <title>intranet.apps.oauth package &#8212; TJ Intranet v3 (Build #623) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -155,7 +155,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.oauth.apps.OauthConfig.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'oauth'</span></em><a class="headerlink" href="#intranet.apps.oauth.apps.OauthConfig.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'intranet.apps.oauth'</span></em><a class="headerlink" href="#intranet.apps.oauth.apps.OauthConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -163,6 +163,96 @@
 </section>
 <section id="module-intranet.apps.oauth.models">
 <span id="intranet-apps-oauth-models-module"></span><h2>intranet.apps.oauth.models module<a class="headerlink" href="#module-intranet.apps.oauth.models" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.models.</span></span><span class="sig-name descname"><span class="pre">CSLApplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/models.html#CSLApplication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">oauth2_provider.models.AbstractApplication</span></code></p>
+<p>Extends the default OAuth Application model to add CSL-specific information about an OAuth application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.sanctioned">
+<span class="sig-name descname"><span class="pre">sanctioned</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.sanctioned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the application is sanctioned by the tjCSL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_algorithm_display">
+<span class="sig-name descname"><span class="pre">get_algorithm_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">algorithm&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_algorithm_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_authorization_grant_type_display">
+<span class="sig-name descname"><span class="pre">get_authorization_grant_type_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">authorization_grant_type&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_authorization_grant_type_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_client_type_display">
+<span class="sig-name descname"><span class="pre">get_client_type_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">client_type&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_client_type_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_next_by_created">
+<span class="sig-name descname"><span class="pre">get_next_by_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_next_by_updated">
+<span class="sig-name descname"><span class="pre">get_next_by_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">updated&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=True</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_next_by_updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_previous_by_created">
+<span class="sig-name descname"><span class="pre">get_previous_by_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.get_previous_by_updated">
+<span class="sig-name descname"><span class="pre">get_previous_by_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">updated&gt;</span></em>, <em class="sig-param"><span class="pre">is_next=False</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.get_previous_by_updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">sanctioned</span></span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-intranet.apps.oauth.tests">
 <span id="intranet-apps-oauth-tests-module"></span><h2>intranet.apps.oauth.tests module<a class="headerlink" href="#module-intranet.apps.oauth.tests" title="Permalink to this headline">¶</a></h2>
