@@ -739,3 +739,21 @@ def remove_member_from_group_view(request, group_id, user_id):
     messages.success(request, 'Successfully removed user "{}" from the group.'.format(user.full_name))
 
     return redirect(next_url)
+
+
+@eighth_admin_required
+def delete_empty_groups_view(request):
+    empty_groups = [g for g in Group.objects.all() if g.user_set.all().count() == 0]
+
+    if request.method == "POST":
+        for g in empty_groups:
+            g.delete()
+        messages.success(request, "Successfully removed empty groups.")
+        return redirect(reverse("eighth_admin_dashboard"))
+
+    context = {
+        "admin_page_title": "Delete Empty Groups",
+        "groups": empty_groups,
+    }
+
+    return render(request, "eighth/admin/delete_empty_groups.html", context=context)

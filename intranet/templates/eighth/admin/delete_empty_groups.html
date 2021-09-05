@@ -1,0 +1,25 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block admin_main %}
+    {% if groups %}
+        <h4>Are you sure you want to <b style="color: red">permanently delete</b> these empty groups?</h4>
+        <ul>
+            {% for g in groups %}
+                <li>{{ g }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        <br>
+        These groups are all empty - the users in them have either graduated or been taken out.
+        <br>
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Delete">
+        </form>
+    {% else %}
+        <h4>There are no empty groups.</h4>
+    {% endif %}
+{% endblock %}

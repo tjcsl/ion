@@ -128,6 +128,7 @@ eighth_admin_patterns = [
     re_path(r"^groups/distribute_action$", groups.eighth_admin_distribute_action, name="eighth_admin_distribute_action"),
     re_path(r"^groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
     re_path(r"^groups/upload/(?P<group_id>\d+)$", groups.upload_group_members_view, name="eighth_admin_upload_group_members"),
+    re_path(r"^groups/delete_empty$", groups.delete_empty_groups_view, name="eighth_admin_delete_empty_groups_view"),
     # Rooms
     re_path(r"^rooms/add$", rooms.add_room_view, name="eighth_admin_add_room"),
     re_path(r"^rooms/edit/(?P<room_id>\d+)$", rooms.edit_room_view, name="eighth_admin_edit_room"),
