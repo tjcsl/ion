@@ -1,0 +1,65 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    <style>
+    #sponsor-list {
+        margin-top: 5px;
+        width: 100%;
+    }
+    #sponsor-list tr.cont {
+        background-color: white;
+    }
+    #sponsor-list tr.nc {
+        background-color: #e6e6e6;
+    }
+    #sponsor-list td, #sponsor-list th {
+        border: 1px solid #aaa;
+        padding: 3px;
+    }
+    #sponsor-list td:first-child {
+        text-align: center;
+        min-width: 33px;
+    }
+    </style>
+{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    {% if dark_mode_enabled %}
+        <style>
+            #sponsor-list tr.cont {
+                background-color: black;
+            }
+            #sponsor-list tr.nc {
+                background-color: #191919;
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block admin_main %}
+<table id="sponsor-list" data-sortable>
+    <thead>
+        <tr><th><i class="far fa-file-alt" title="Contracted for 8th Period"></i></th><th>Sponsor</th><th>Activities</th></tr>
+    </thead>
+    <tbody>
+        {% for sponsor, acts in sponsors.items %}
+        <tr class="{% if sponsor.contracted_eighth %}cont{% else %}nc{% endif %}">
+            <td data-value="{% if sponsor.contracted_eighth %}t{% else %}f{% endif %}"><i class="fas fa-fw fa-{% if sponsor.contracted_eighth %}check{% else %}times{% endif %}"></i></td>
+            <td>{{ sponsor.name }}</td>
+            <td>{% for act in acts %}{{ act.name }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
