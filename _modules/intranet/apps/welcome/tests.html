@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.welcome.tests &#8212; TJ Intranet v3 (Build #626) documentation</title>
+    <title>intranet.apps.welcome.tests &#8212; TJ Intranet v3 (Build #642) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -154,7 +154,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;welcome_done&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seen_welcome</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">user</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seen_welcome</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WelcomeTest.test_oauth_welcome"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.welcome.html#intranet.apps.welcome.tests.WelcomeTest.test_oauth_welcome">[docs]</a>    <span class="k">def</span> <span class="nf">test_oauth_welcome</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># When a user logs in and is expected to be redirected to an oauth application, they shouldn&#39;t see the welcome</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;oauth_redirect&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
