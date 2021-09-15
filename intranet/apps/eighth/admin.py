@@ -6,19 +6,19 @@ from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActi
 
 
 class EighthSponsorAdmin(SimpleHistoryAdmin):
-    list_display = ("first_name", "last_name", "user", "online_attendance", "show_full_name")
-    list_filter = ("online_attendance", "show_full_name")
+    list_display = ("first_name", "last_name", "user", "department", "full_time", "contracted_eighth", "online_attendance", "show_full_name")
+    list_filter = ("department", "full_time", "contracted_eighth", "online_attendance", "show_full_name")
     ordering = ("last_name", "first_name")
 
 
 class EighthRoomAdmin(SimpleHistoryAdmin):
-    list_display = ("name", "capacity")
+    list_display = ("name", "capacity", "available_for_eighth")
     ordering = ("name",)
 
 
 class EighthActivityAdmin(SimpleHistoryAdmin):
-    list_display = ("name", "special", "administrative", "deleted")
-    list_filter = ("special", "administrative", "deleted")
+    list_display = ("name", "special", "administrative", "deleted", "sticky", "wed_a", "wed_b", "fri_a", "fri_b")
+    list_filter = ("special", "administrative", "deleted", "sticky", "wed_a", "wed_b", "fri_a", "fri_b")
     ordering = ("name",)
 
 
@@ -29,8 +29,8 @@ class EighthBlockAdmin(SimpleHistoryAdmin):
 
 
 class EighthScheduledActivityAdmin(SimpleHistoryAdmin):
-    list_display = ("activity", "block", "comments", "admin_comments", "cancelled")
-    list_filter = ("block", "cancelled")
+    list_display = ("activity", "block", "comments", "admin_comments", "cancelled", "attendance_taken")
+    list_filter = ("block", "cancelled", "attendance_taken")
     ordering = ("block", "activity")
 
 
