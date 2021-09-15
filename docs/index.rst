@@ -18,7 +18,6 @@ Contents
     architecture/index
     developing/index
     sourcedoc/modules
-    administration/index
 
 Setup
 -----
