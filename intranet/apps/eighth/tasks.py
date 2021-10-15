@@ -1,3 +1,5 @@
+import calendar
+import datetime
 from typing import Collection
 
 from celery import shared_task
@@ -298,3 +300,33 @@ def email_scheduled_activity_students_task(
         msg.send()
     else:
         logger.debug("Refusing to email in non-production environments. To force email sending, enable settings.FORCE_EMAIL_SEND.")
+
+
+@shared_task
+def follow_up_absence_emails():
+    """Send emails to all students with uncleared absences from the past month."""
+    month = datetime.datetime.now().month
+    year = datetime.datetime.now().year
+    if month == 1:
+        month = 12
+        year -= 1
+    else:
+        month -= 1
+    first_day = datetime.date(year, month, 1)
+    last_day = datetime.date(year, month, calendar.monthrange(year, month)[1])
+
+    for student in get_user_model().objects.filter(user_type="student"):
+        absences = student.absence_info().filter(scheduled_activity__date__gte=first_day, scheduled_activity__date__lte=last_day)
+        num_absences = absences.count()
+
+        if num_absences > 0:
+            data = {"absences": absences, "info_link": "https://ion.tjhsst.edu/eighth/absences", "num_absences": num_absences}
+
+            email_send(
+                "eighth/emails/absence_monthly.txt",
+                "eighth/emails/absence_monthly.html",
+                data,
+                "{} Uncleared Eighth Period Absences".format(num_absences),
+                [student.notification_email],
+                bcc=True,
+            )
