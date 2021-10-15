@@ -813,6 +813,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(day_of_month=15, hour=1),
         "args": (),
     },
+    "follow-up-absence-emails": {
+        "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
+        "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
 }
 
 MAINTENANCE_MODE = False
