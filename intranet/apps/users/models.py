@@ -210,8 +210,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_global_logout_time = models.DateTimeField(null=True)
 
     # Local preference fields
-    receive_news_emails = models.BooleanField(default=False)
-    receive_eighth_emails = models.BooleanField(default=False)
+    receive_news_emails = models.BooleanField(default=True)
+    receive_eighth_emails = models.BooleanField(default=True)
 
     receive_schedule_notifications = models.BooleanField(default=False)
 
