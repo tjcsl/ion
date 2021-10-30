@@ -729,7 +729,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Whether this user is a teacher.
 
         """
-        return self.user_type == "teacher" or self.user_type == "counselor"
+        return self.user_type in ("teacher", "counselor")
 
     @property
     def is_student(self) -> bool:
