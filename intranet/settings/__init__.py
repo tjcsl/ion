@@ -520,12 +520,14 @@ REST_FRAMEWORK = {
 
 # Django OAuth Toolkit configuration
 OAUTH2_PROVIDER = {
+    # this disables OIDC
+    "OIDC_ENABLED": False,
     # this is the list of available scopes
     "SCOPES": {"read": "Read scope", "write": "Write scope"},
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
 }
-OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
 
 INSTALLED_APPS = [
     # internal Django
@@ -574,6 +576,7 @@ INSTALLED_APPS = [
     "intranet.apps.nomination",
     "intranet.apps.sessionmgmt",
     "intranet.apps.features",
+    "intranet.apps.oauth",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit

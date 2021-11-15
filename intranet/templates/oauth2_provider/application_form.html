@@ -27,8 +27,11 @@
             "authorization-code": "Your application will redirect the user to Ion to login.",
             "implicit": "The application does authentication purely on the client, and there is no server backend.",
             "password": "Your application will collect the user's username and password and pass it to Ion.",
-            "client-credentials": "Your application does not have a user login. Must be confidential type."
+            "client-credentials": "Your application does not have a user login. Must be confidential type.",
+            "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
         };
+
+        $("#id_name").prop("required", true);
 
         $("#id_client_type").selectize({
             render: {
@@ -45,6 +48,9 @@
                 }
             }
         });
+
+        $("label[for='id_algorithm']").prop('hidden', true)
+        $("#id_algorithm").prop('hidden', true)
     });
     </script>
 {% endblock %}
@@ -59,7 +65,7 @@
             </h3>
 
             {% block app-form-description %}
-            <p>For more information on how to use Ion OAuth, click <a target="_blank" href="https://tjcsl.github.io/ion/developing/oauth.html">here</a>.</p>
+            <p>For more information on how to use Ion OAuth, click <a target="_blank" href="https://guides.tjhsst.edu/ion/using-ion-oauth">here</a>.</p>
             {% endblock %}
 
             {% csrf_token %}

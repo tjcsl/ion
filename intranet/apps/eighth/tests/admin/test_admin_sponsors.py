@@ -49,6 +49,22 @@ class EighthAdminSponsorsTest(EighthAbstractTest):
         # Make sure that new EighthSponsor is created
         self.assertTrue(EighthSponsor.objects.filter(user=user).exists())
 
+    def test_list_sponsor_activity_view(self):
+        """Tests :func:`~intranet.apps.eighth.views.admin.sponsors.list_sponsor_activity_view`."""
+
+        user = self.make_admin()
+
+        # Create sponsor and activity
+        sponsor = EighthSponsor.objects.get_or_create(first_name="A", last_name="William", user=user)[0]
+        activity = EighthActivity.objects.get_or_create(name="Test Activity")[0]
+        activity.sponsors.add(sponsor)
+        activity.save()
+
+        response = self.client.get(reverse("eighth_admin_list_sponsor_activity"))
+        self.assertEqual(200, response.status_code)
+        self.assertIn(sponsor, response.context["sponsors"])
+        self.assertIn(activity.name, str(response.context["sponsors"]))
+
     def test_list_sponsor_view(self):
         """Tests :func:`~intranet.apps.eighth.views.admin.sponsors.list_sponsor_view`."""
 

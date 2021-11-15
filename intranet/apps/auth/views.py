@@ -207,13 +207,15 @@ class LoginView(View):
             #    """Eighthoffice's session should (almost) never expire."""
             #    request.session.set_expiry(timezone.now() + timedelta(days=30))
 
+            is_oauth_login = "/oauth/authorize" in request.POST.get("next", "")
+
             if not request.user.first_login:
                 logger.info("First login")
                 request.user.first_login = timezone.localtime()
                 request.user.save()
                 request.session["first_login"] = True
 
-                if request.user.is_student or request.user.is_teacher:
+                if (request.user.is_student or request.user.is_teacher) and (not is_oauth_login):  # don't send oauth to welcome page
                     default_next_page = "welcome"
                 else:
                     pass  # exclude eighth office/special accounts
@@ -222,7 +224,7 @@ class LoginView(View):
                 trust_session(request)
 
             # if the student has not seen the 8th agreement yet, redirect them
-            if request.user.is_student and not request.user.seen_welcome:
+            if request.user.is_student and not request.user.seen_welcome and not is_oauth_login:  # don't send oauth to welcome page
                 return redirect("welcome")
 
             next_page = request.POST.get("next", request.GET.get("next", default_next_page))

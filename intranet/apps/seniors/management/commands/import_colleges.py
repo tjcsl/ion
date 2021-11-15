@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = "Import colleges from ceeb.csv file"
 
     def handle(self, *args, **options):
-        with open("ceeb.csv", "r") as f:
+        with open("ceeb.csv", "r", encoding="utf-8") as f:
             reader = csv.reader(f)
             for row in reader:
                 ceeb, name, city, state = row

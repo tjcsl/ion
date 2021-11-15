@@ -124,7 +124,7 @@ class EighthRoom(AbstractBaseEighthModel):
     Attributes:
         name (str): The name of the room.
         capacity (int): The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
-        available_for_eighth (bool): Whehther the room is available for eighth period signups.
+        available_for_eighth (bool): Whether the room is available for eighth period signups.
 
     """
 

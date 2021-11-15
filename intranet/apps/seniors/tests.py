@@ -121,6 +121,6 @@ class SeniorsCommandsTestCase(IonTestCase):
         with patch("intranet.apps.seniors.management.commands.import_colleges.open", mock_open(read_data=file_contents)) as m:
             call_command("import_colleges")
 
-        m.assert_called_with("ceeb.csv", "r")
+        m.assert_called_with("ceeb.csv", "r", encoding="utf-8")
         self.assertEqual(1, College.objects.filter(ceeb=1234, name="Computer Systems Lab University - Alexandria, Virginia").count())
         self.assertEqual(1, College.objects.filter(ceeb=1235, name="Other University - Anytown, Virginia").count())

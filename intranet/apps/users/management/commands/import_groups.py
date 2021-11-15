@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         mappings = {}
-        with open("groups_name.csv", "r") as namesopen:
+        with open("groups_name.csv", "r", encoding="utf-8") as namesopen:
             names = csv.reader(namesopen)
             for gid, gname, _ in names:
                 gname = gname.replace("eighth_", "")
@@ -24,7 +24,7 @@ class Command(BaseCommand):
                     mappings[gid] = ngrp
 
         self.stdout.write("{}".format(mappings))
-        with open("groups_static.csv", "r") as staticopen:
+        with open("groups_static.csv", "r", encoding="utf-8") as staticopen:
             static = csv.reader(staticopen)
             for uid, gid in static:
                 try:

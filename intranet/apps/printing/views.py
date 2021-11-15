@@ -295,7 +295,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
             line_width = 81
             lines_per_page = 62
 
-            with open(final_filename, "r") as f:
+            with open(final_filename, "r", encoding="utf-8") as f:
                 # Every newline-terminated line of the file will take up 1 printed line, plus an
                 # additional printed line for each time it wraps.
                 # We subtract 1 from the line length because having exactly `line_width` characters

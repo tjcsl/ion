@@ -81,7 +81,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Read the data file
-        with open(options["filename"], "r") as csvfile:
+        with open(options["filename"], "r", encoding="utf-8") as csvfile:
             data = list(csv.DictReader(csvfile))
 
         do_run = options["run"]
@@ -154,7 +154,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f"User with SID {new_user['Student ID']} already exists."))
 
         if options["username_file"] is not None:
-            with open(options["username_file"], "w") as file:
+            with open(options["username_file"], "w", encoding="utf-8") as file:
                 csv_writer = csv.DictWriter(file, fieldnames=["Username"])
                 csv_writer.writeheader()
                 for username in actual_username_list:

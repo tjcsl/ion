@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = "Import Routes from routes.csv"
 
     def handle(self, *args, **options):
-        with open("routes.csv", "r") as f:
+        with open("routes.csv", "r", encoding="utf-8") as f:
             reader = csv.reader(f)
             print("Deleting preexisting buses")
             for row in reader:

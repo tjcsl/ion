@@ -52,7 +52,7 @@ def csv_results(request, poll_id):
     if not is_polls_admin:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
-    dict_list = list()
+    dict_list = []
     p = get_object_or_404(Poll, id=poll_id)
 
     if p.is_secret:

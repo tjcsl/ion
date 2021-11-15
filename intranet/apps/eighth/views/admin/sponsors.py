@@ -31,6 +31,19 @@ def add_sponsor_view(request):
 
 
 @eighth_admin_required
+def list_sponsor_activity_view(request):
+    lst = {}
+    for sponsor in EighthSponsor.objects.all():
+        lst[sponsor] = sponsor.eighthactivity_set.all()
+
+    context = {
+        "admin_page_title": "View Sponsors by Activity",
+        "sponsors": lst,
+    }
+    return render(request, "eighth/admin/list_sponsor_by_activity.html", context)
+
+
+@eighth_admin_required
 def list_sponsor_view(request):
     blocks = EighthBlock.objects.all()
     block_id = request.GET.get("block", None)

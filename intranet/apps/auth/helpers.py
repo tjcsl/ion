@@ -57,7 +57,7 @@ def get_login_theme_name() -> str:
 
     """
     today = timezone.localdate()
-    if today.month == 12 or today.month == 1:
+    if today.month in (12, 1):
         # Snow
         return "snow"
     elif today.month == 3 and (14 <= today.day <= 16):

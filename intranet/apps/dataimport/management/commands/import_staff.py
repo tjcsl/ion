@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Read the data file
-        with open(options["filename"], "r") as csvfile:
+        with open(options["filename"], "r", encoding="utf-8") as csvfile:
             data = list(csv.DictReader(csvfile))
 
         do_run = options["run"]
