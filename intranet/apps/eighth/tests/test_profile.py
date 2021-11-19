@@ -204,4 +204,4 @@ class EighthProfileTest(EighthAbstractTest):
         self.assertEqual("Hello", user2.middle_name)
         self.assertEqual("A", user2.nickname)
         self.assertEqual(get_senior_graduation_year(), Grade.year_from_grade(user2.grade.number))
-        self.assertFalse(user2.gender)
+        self.assertEqual("female", user2.gender)

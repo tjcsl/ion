@@ -181,7 +181,7 @@ class UserManager(DjangoUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass"""
 
-    TITLES = (("Mr.", "Mr."), ("Ms.", "Ms."), ("Mrs.", "Mrs."), ("Dr.", "Dr."))
+    TITLES = (("Mr.", "Mr."), ("Ms.", "Ms."), ("Mrs.", "Mrs."), ("Dr.", "Dr."), ("Mx.", "Mx."))
 
     USER_TYPES = (
         ("student", "Student"),
@@ -194,7 +194,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         ("service", "Service Account"),
     )
 
-    TITLES = (("mr", "Mr."), ("ms", "Ms."), ("mrs", "Mrs."), ("dr", "Dr."))
+    GENDER = (
+        ("male", "Male"),
+        ("female", "Female"),
+        ("non-binary", "Non-Binary"),
+    )
+
+    TITLES = (("mr", "Mr."), ("ms", "Ms."), ("mrs", "Mrs."), ("dr", "Dr."), ("mx", "Mx."))
+
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
 
@@ -225,7 +232,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     middle_name = models.CharField(max_length=70, null=True)
     last_name = models.CharField(max_length=70, null=True)
     nickname = models.CharField(max_length=35, null=True)
-    gender = models.BooleanField(null=True)
+    gender = models.CharField(max_length=35, choices=GENDER, null=True, blank=True)
     preferred_photo = models.OneToOneField("Photo", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     primary_email = models.OneToOneField("Email", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True)
@@ -562,33 +569,43 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def sex(self) -> str:
-        """Returns "Male" if this user is male, "Female" otherwise.
+        """Returns the gender of this user (male, female, or non-binary).
 
         Returns:
-            "Male" if this user is male, "Female" otherwise.
+            The gender of this user (male, female, or non-binary).
 
         """
-        return "Male" if self.is_male else "Female"
+        return self.gender
 
     @property
     def is_male(self) -> bool:
         """Returns whether the user is male.
 
         Returns:
-            Whether the user is male.
+            Whether this user is male.
 
         """
-        return self.gender is True
+        return self.gender == "male"
 
     @property
     def is_female(self) -> bool:
         """Returns whether the user is female.
 
         Returns:
-            Whether the user is female.
+            Whether this user is female.
 
         """
-        return self.gender is False
+        return self.gender == "female"
+
+    @property
+    def is_nonbinary(self) -> bool:
+        """Returns whether the user is non-binary.
+
+        Returns:
+            Whether this user is non-binary.
+
+        """
+        return self.gender == "non-binary"
 
     @property
     def can_view_eighth(self) -> bool:
@@ -729,7 +746,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Whether this user is a teacher.
 
         """
-        return self.user_type in ("teacher", "counselor")
+        return self.user_type == "teacher" or self.user_type == "counselor"
 
     @property
     def is_student(self) -> bool:
