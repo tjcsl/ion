@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
 
 
 
-  config.vm.network :private_network, ip: '192.168.50.50'
+  config.vm.network :private_network, ip: '192.168.56.50'
   if devconfig["use_nfs"]
       config.vm.synced_folder ".", "/home/vagrant/intranet", type: :nfs, nfs_udp: false
       config.nfs.map_uid = Process.uid
