@@ -197,7 +197,7 @@ class EighthProfileTest(EighthAbstractTest):
         )
         self.assertEqual(200, response.status_code)
         user2 = get_user_model().objects.get(id=user2.id)
-        self.assertEqual("===2020-2021===\nNone", user2.admin_comments)
+        self.assertEqual('===2020-2021===\nNone', user2.admin_comments)
         self.assertEqual("1234678", user2.student_id)
         self.assertEqual("Angela", user2.first_name)
         self.assertEqual("William", user2.last_name)

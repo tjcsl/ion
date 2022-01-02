@@ -20,4 +20,10 @@ class Migration(migrations.Migration):
             name='receive_news_emails',
             field=models.BooleanField(default=True),
         ),
+        migrations.AlterField(
+            model_name='user',
+            name='gender',
+            field=models.CharField(
+                max_length=35, choices=[("male", "Male"), ("female", "Female"), ("non-binary", "Non-binary")], null=True, blank=True),
+        ),
     ]
