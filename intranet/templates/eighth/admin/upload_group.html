@@ -3,7 +3,7 @@
 {% load pipeline %}
 
 {% block js %}
-    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
     {{ block.super }}
     <script>
         $(function() {
@@ -83,7 +83,7 @@ textarea[name=filetext] {
     <form action="" method="post">
     {% csrf_token %}
     <input type="submit" value="Add Users">
-    <table data-sortable class="fancy-table">
+    <table data-sortable class="sortable fancy-table">
     <thead>
         <tr>
             <th>Input line</th>
@@ -111,7 +111,7 @@ textarea[name=filetext] {
     <br><br>
     <h3>There {% if unsure_users|length == 1 %}was {{ unsure_users|length }} user{% else %}were {{ unsure_users|length }} users{% endif %} not matched:</h3>
     Click on column titles to sort.
-    <table data-sortable class="fancy-table">
+    <table data-sortable class="sortable fancy-table">
     <thead>
         <tr>
             <th>Input line</th>
