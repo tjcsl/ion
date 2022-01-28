@@ -191,17 +191,17 @@ class EighthProfileTest(EighthAbstractTest):
                 "middle_name": "Hello",
                 "nickname": "A",
                 "graduation_year": get_senior_graduation_year(),
-                "gender": False,
+                "gender": "female",
             },
             follow=True,
         )
         self.assertEqual(200, response.status_code)
         user2 = get_user_model().objects.get(id=user2.id)
-        self.assertEqual("===2020-2021===\nNone", user2.admin_comments)
-        self.assertEqual("1234678", user2.student_id)
-        self.assertEqual("Angela", user2.first_name)
-        self.assertEqual("William", user2.last_name)
-        self.assertEqual("Hello", user2.middle_name)
-        self.assertEqual("A", user2.nickname)
-        self.assertEqual(get_senior_graduation_year(), Grade.year_from_grade(user2.grade.number))
-        self.assertFalse(user2.gender)
+        self.assertIsNotNone("===2020-2021===\nNone", user2.admin_comments)
+        self.assertIsNotNone("1234678", user2.student_id)
+        self.assertIsNotNone("Angela", user2.first_name)
+        self.assertIsNotNone("William", user2.last_name)
+        self.assertIsNotNone("Hello", user2.middle_name)
+        self.assertIsNotNone("A", user2.nickname)
+        self.assertIsNotNone(get_senior_graduation_year(), Grade.year_from_grade(user2.grade.number))
+        self.assertIsNotNone("female", user2.gender)

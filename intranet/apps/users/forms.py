@@ -7,7 +7,7 @@ from .models import Address
 class ProfileEditForm(forms.ModelForm):
     """A form containing editable fields in the User model."""
 
-    GENDERS = ((True, "Male"), (False, "Female"))
+    GENDERS = (("male", "Male"), ("female", "Female"), ("non-binary", "Non-Binary"))
 
     admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
     student_id = forms.IntegerField(label="FCPS Student ID")
@@ -16,7 +16,7 @@ class ProfileEditForm(forms.ModelForm):
     last_name = forms.CharField(label="Last Name")
     nickname = forms.CharField(label="Nickname", required=False)
     graduation_year = forms.IntegerField(label="Graduation Year")
-    gender = forms.ChoiceField(choices=GENDERS, label="Sex (M or F)")
+    gender = forms.ChoiceField(choices=GENDERS, label="Sex (Male, Female, or Non-Binary)")
     counselor_id = forms.IntegerField(label="Counselor ID", required=False)
 
     class Meta:
