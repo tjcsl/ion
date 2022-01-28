@@ -477,17 +477,25 @@ class UserTest(IonTestCase):
         """Tests all possible values of is_male/is_female."""
         user = self.login()
 
-        user.gender = None
+        user.gender = ""
         self.assertFalse(user.is_male)
         self.assertFalse(user.is_female)
+        self.assertFalse(user.is_nonbinary)
 
-        user.gender = True
+        user.gender = "male"
         self.assertTrue(user.is_male)
         self.assertFalse(user.is_female)
+        self.assertFalse(user.is_nonbinary)
 
-        user.gender = False
+        user.gender = "female"
         self.assertFalse(user.is_male)
         self.assertTrue(user.is_female)
+        self.assertFalse(user.is_nonbinary)
+
+        user.gender = "non-binary"
+        self.assertFalse(user.is_male)
+        self.assertFalse(user.is_female)
+        self.assertTrue(user.is_nonbinary)
 
 
 class ProfileTest(IonTestCase):
