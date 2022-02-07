@@ -2,6 +2,7 @@ $(document).ready(function() {
     console.log('hello');
     $.get("https://homecoming.tjhsst.edu/api/", function(data) {
         console.log(data.senior_total ? data.senior_total : 0);
+        $("#score-staff").text(data.staff_total ? data.staff_total : 0);
         $("#score-senior").text(data.senior_total ? data.senior_total : 0);
         $("#score-sophomore").text(data.sophomore_total ? data.sophomore_total : 0);
         $("#score-junior").text(data.junior_total ? data.junior_total : 0);
