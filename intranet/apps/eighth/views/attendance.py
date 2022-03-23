@@ -312,12 +312,14 @@ def take_attendance_view(request, scheduled_activity_id):
 
                 unfound_users = []
                 for u in data:
-                    name = u["Name"].split(" ")
-                    user = get_user_model().objects.filter(first_name=name[0], last_name=name[1], student_id=u["Email"].split("@")[0])
-                    if len(user) != 1:
-                        unfound_users.append(u["Name"])
-                    else:
-                        present_user_ids.append(user[0])
+                    try:
+                        user = get_user_model().objects.filter(student_id=u["Email"].split("@")[0].strip())
+                        if len(user) != 1:
+                            unfound_users.append(u["Name"])
+                        else:
+                            present_user_ids.append(user[0])
+                    except KeyError:
+                        messages.info(request, "Error on line containing {}. If this line isn't blank, please contact an admin.".format(u))
                 if unfound_users:
                     messages.success(
                         request,

@@ -119,46 +119,6 @@ class EighthAttendanceTestCase(EighthAbstractTest):
         # Make sure EighthSignup object was marked absent for user2.
         self.assertTrue(EighthSignup.objects.get(user=user2, scheduled_activity=schact1).was_absent)
 
-        # Make sure bad file fails nicely with KeyError
-        with tempfile.NamedTemporaryFile(mode="w+") as f:
-            writer = csv.DictWriter(f, fieldnames=["NotName", "NotEmail"])
-            writer.writeheader()
-            writer.writerow({"NotName": "Test User", "NotEmail": "12345@fcpsschools.net"})
-            f.seek(0)
-            response = self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), {"attendance": f}, follow=True)
-
-            self.assertIn(
-                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
-                list(map(str, list(response.context["messages"]))),
-            )
-            self.assertEqual(response.status_code, 200)
-
-        # Make sure bad file fails nicely with IndexError
-        with tempfile.NamedTemporaryFile(mode="w+") as f:
-            writer = csv.DictWriter(f, fieldnames=["Name", "Email"])
-            writer.writeheader()
-            writer.writerow({"Name": "User", "Email": "@fcpsschools.net"})
-            f.seek(0)
-            response = self.client.post(reverse("eighth_take_attendance", args=[schact1.id]), {"attendance": f}, follow=True)
-
-            self.assertIn(
-                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
-                list(map(str, list(response.context["messages"]))),
-            )
-            self.assertEqual(response.status_code, 200)
-
-        # Make sure bad file fails nicely with ValueError
-        with tempfile.NamedTemporaryFile(mode="w+") as f:
-            writer = csv.DictWriter(f, fieldnames=["Name", "Email"])
-            writer.writeheader()
-            writer.writerow({"Name": 1, "Email": 5})
-            f.seek(0)
-            self.assertIn(
-                "Could not interpret file. Did you upload a Google Meet attendance report without modification?",
-                list(map(str, list(response.context["messages"]))),
-            )
-            self.assertEqual(response.status_code, 200)
-
     def test_roster_view(self):
         """Tests :func:`~intranet.apps.eighth.views.attendance.roster_view`."""
 
