@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.test_attendance &#8212; TJ Intranet v3 (Build #850) documentation</title>
+    <title>intranet.apps.eighth.tests.test_attendance &#8212; TJ Intranet v3 (Build #875) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -18,10 +18,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../../../../_static/js/jquery-1.12.4.min.js "></script>
-<script type="text/javascript" src="../../../../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -240,47 +240,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user1</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span>
 
         <span class="c1"># Make sure EighthSignup object was marked absent for user2.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user2</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span>
-
-        <span class="c1"># Make sure bad file fails nicely with KeyError</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NotName&quot;</span><span class="p">,</span> <span class="s2">&quot;NotEmail&quot;</span><span class="p">])</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span><span class="s2">&quot;NotName&quot;</span><span class="p">:</span> <span class="s2">&quot;Test User&quot;</span><span class="p">,</span> <span class="s2">&quot;NotEmail&quot;</span><span class="p">:</span> <span class="s2">&quot;12345@fcpsschools.net&quot;</span><span class="p">})</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_take_attendance&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{</span><span class="s2">&quot;attendance&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">},</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
-                <span class="s2">&quot;Could not interpret file. Did you upload a Google Meet attendance report without modification?&quot;</span><span class="p">,</span>
-                <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))),</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-
-        <span class="c1"># Make sure bad file fails nicely with IndexError</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">])</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">:</span> <span class="s2">&quot;@fcpsschools.net&quot;</span><span class="p">})</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_take_attendance&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">schact1</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{</span><span class="s2">&quot;attendance&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">},</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
-                <span class="s2">&quot;Could not interpret file. Did you upload a Google Meet attendance report without modification?&quot;</span><span class="p">,</span>
-                <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))),</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-
-        <span class="c1"># Make sure bad file fails nicely with ValueError</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">])</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
-                <span class="s2">&quot;Could not interpret file. Did you upload a Google Meet attendance report without modification?&quot;</span><span class="p">,</span>
-                <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))),</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user2</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_roster_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_roster_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.roster_view`.&quot;&quot;&quot;</span>
