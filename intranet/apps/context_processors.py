@@ -12,7 +12,7 @@ from django.utils import timezone
 
 from intranet.apps.notifications.models import NotificationConfig
 
-from ..utils.helpers import dark_mode_enabled
+from ..utils.helpers import dark_mode_enabled, is_april_fools_day
 from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
@@ -109,6 +109,9 @@ def global_custom_theme(request):
 
     if today.month == 3 and (14 <= today.day <= 16):
         theme = {"css": "themes/piday/piday.css"}
+    elif is_april_fools_day():
+        if request.resolver_match is not None and request.resolver_match.url_name == "eighth_signup":
+            theme = {"css": "themes/aprilfools/aprilfools.css", "js": "themes/aprilfools/aprilfools.js"}
 
     return {"theme": theme}
 

@@ -201,3 +201,8 @@ def dark_mode_enabled(request):
         return request.user.dark_mode_properties.dark_mode_enabled
     else:
         return request.COOKIES.get("dark-mode-enabled", "") == "1"
+
+
+def is_april_fools_day() -> bool:
+    today = timezone.localdate()
+    return (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and today.day == 1)

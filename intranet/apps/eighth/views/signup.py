@@ -1,5 +1,6 @@
 import datetime
 import logging
+import random
 import time
 
 from prometheus_client import Summary
@@ -15,7 +16,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from ....utils.date import get_date_range_this_year
-from ....utils.helpers import is_entirely_digit
+from ....utils.helpers import is_april_fools_day, is_entirely_digit
 from ....utils.locking import lock_on
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_admin_required
@@ -217,11 +218,17 @@ def eighth_signup_view(request, block_id=None):
         except KeyError:
             active_block_current_signup = None
 
+        activities_list = block_info["activities"]
+        print(activities_list)
+
+        if is_april_fools_day():
+            sorted(activities_list, key=lambda x: random.random())
+
         context = {
             "user": user,
             "real_user": request.user,
             "block_info": block_info,
-            "activities_list": safe_json(block_info["activities"]),
+            "activities_list": safe_json(activities_list),
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
         }
