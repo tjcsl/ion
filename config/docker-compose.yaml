@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  redis:
+    container_name: server
+    image: redis:latest
+    networks:
+    - intranet_net
+    ports:
+    - 6379:6379
+  postgres:
+    container_name: database
+    image: postgres:latest
+    networks:
+    - intranet_net
+    ports:
+    - 5432:5432
+    environment:
+    - POSTGRES_DB=ion
+    - POSTGRES_USER=ion
+    - POSTGRES_PASSWORD=pwd
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+  application:
+    container_name: intranet
+    image: application
+    networks:
+    - intranet_net
+    ports:
+    - 8080:8080
+    build: 
+      context: ../
+      dockerfile: ./config/Dockerfile
+    volumes: 
+    - <DEFAULT_VOLUME_NAME>:/ion
+    depends_on:
+    - redis
+    - postgres
+networks:
+  intranet_net:
+      driver: bridge
+volumes:
+  pgdata:
+  <DEFAULT_VOLUME_NAME>:
+    external: true
