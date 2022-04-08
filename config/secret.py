@@ -1,4 +1,4 @@
-SECRET_DATABASE_URL="postgres://ion:pwd@postgres:5432/ion"
+SECRET_DATABASE_URL = "postgres://ion:pwd@postgres:5432/ion"
 SESSION_REDIS_HOST = "redis"
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
@@ -14,6 +14,6 @@ CACHES = {
     }
 }
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer", "CONFIG": {"hosts": [("redis", 6379)]}}}
-#notfish
-MASTER_PASSWORD='argon2$argon2id$v=19$m=512,t=2,p=2$1JlK3UX2Ho1we5W8MPo2hA$cCXDGVyPD6olv/PbxdDTlA'
-CELERY_BROKER_URL="redis://redis:6379/0"
+# notfish
+MASTER_PASSWORD = "argon2$argon2id$v=19$m=512,t=2,p=2$1JlK3UX2Ho1we5W8MPo2hA$cCXDGVyPD6olv/PbxdDTlA"
+CELERY_BROKER_URL = "redis://redis:6379/0"
