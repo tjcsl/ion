@@ -9,8 +9,7 @@
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
 2. Clone the Ion repositiory from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git``.
 3. Inside the Ion repository, edit the ``config/make_admin.py`` file, replacing "\<YOURUSERNAME\>" with your Ion username.
-4. Inside the Ion repository, edit the ``config/docker-compose.yml`` file, replacing \<PATH_TO_ION_REPO\> with the path to where your Ion repository lives on your host machine.
-5. Run ``cd config``.
+4. Run ``cd config``.
 5. Run ``docker-compose up -d``.
 
 
