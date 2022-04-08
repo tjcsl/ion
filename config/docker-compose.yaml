@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
   redis:
     container_name: server
@@ -6,14 +7,14 @@ services:
     networks:
     - intranet_net
     ports:
-    - 6379:6379
+    - 6379
   postgres:
     container_name: database
     image: postgres:latest
     networks:
     - intranet_net
-    ports:
-    - 5432:5432
+    expose:
+    - 5432
     environment:
     - POSTGRES_DB=ion
     - POSTGRES_USER=ion
@@ -25,20 +26,39 @@ services:
     image: application
     networks:
     - intranet_net
+    entrypoint: ["/bin/sh", "-c" , "chmod +x config/entrypoint.sh && config/entrypoint.sh"]
     ports:
     - 8080:8080
     build: 
       context: ../
       dockerfile: ./config/Dockerfile
     volumes: 
-    - <DEFAULT_VOLUME_NAME>:/ion
+    - ../:/ion
     depends_on:
     - redis
     - postgres
+  celery:
+    container_name: celery
+    image: application
+    networks:
+    - intranet_net
+    command: pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair
+    depends_on:
+    - application
+    volumes:
+    - ../:/ion
+  celerybeat:
+    container_name: celerybeat
+    image: application
+    networks:
+    - intranet_net
+    command: pipenv run celery --app intranet beat -l info
+    depends_on:
+    - application
+    volumes:
+    - ../:/ion
 networks:
   intranet_net:
       driver: bridge
 volumes:
   pgdata:
-  <DEFAULT_VOLUME_NAME>:
-    external: true
