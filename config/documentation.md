@@ -14,7 +14,7 @@
 
 
 ## Post Set Up
-Navigate to http://localhost:8000 in the web browser of your choice. You might have to wait up to 60 seconds the first time that you create the container. When presented with the login page, log in with your Ion username and the password "nofish" (without the quotes).
+Navigate to http://localhost:8080 in the web browser of your choice. You might have to wait up to 60 seconds the first time that you create the container. When presented with the login page, log in with your Ion username and the password "nofish" (without the quotes).
 
 
 ## Useful Commands
