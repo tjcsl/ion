@@ -1,7 +1,7 @@
 # Create an Ion Development Enviornment
 
 ## Prerequisites
-- [Docker](https://www.docker.com) is the containization framework that runs Ion's individual services. Installation is OS-specific and instructions can be found [here](ttps://www.docker.com/products/docker-desktop/). On Windows and Mac, install Docker Desktop.
+- [Docker](https://www.docker.com) is the containerization framework that runs Ion's individual services. Installation is OS-specific and instructions can be found [here](ttps://www.docker.com/products/docker-desktop/). On Windows and Mac, install Docker Desktop.
 - [GitHub](https://github.com) is the version control system used by the CSL. Make sure that you have an account and an SSH key tied to that account that will allow you to push and pull code.
 
 
