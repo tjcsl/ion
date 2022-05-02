@@ -1,5 +1,6 @@
 import logging
 import time
+import warnings
 
 import requests
 from bs4 import BeautifulSoup, CData
@@ -55,6 +56,7 @@ def check_emerg():
             status = False
             break
 
+    warnings.filterwarnings("ignore", category=UserWarning, module="bs4")
     soup = BeautifulSoup(res, "html.parser")
     if soup.title:
         title = soup.title.text
