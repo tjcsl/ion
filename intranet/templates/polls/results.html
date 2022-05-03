@@ -89,6 +89,9 @@
                 {% if q.question.type == "SAP" %}
                     <b>Note: Because this is a split approval question, each user has one vote to split for up to {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br>
                 {% endif %}
+                {% if q.question.type == "RAN" %}
+                    <b>Note: Because this is a rank choice question, the values will not reflect the number of users that voted. The individual with the lowest total is the winner.</b><br>
+                {% endif %}
                 {% if q.question.type == "APP" %}
                     <b>Note: Because this is an approval question, values will not sum to 100%. Each user can vote for {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br>
                 {% endif %}
@@ -118,6 +121,8 @@
                                 {% if c.choice == "Total" %}
                                     {% if q.question.type == "SAP" %}
                                         Votes: {{ c.votes.total.votes_all }}
+                                    {% elif q.question.type == "RAN" %}
+                                        Rank Sum: {{ c.votes.total.votes_all }}
                                     {% else %}
                                         Users: {{ c.votes.total.users_all }}
                                     {% endif %}

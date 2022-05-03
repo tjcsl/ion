@@ -95,6 +95,28 @@
                                 </label>
                             </li>
                         </ul>
+                    {% elif q.is_rank_choice %}
+                        Rank the following options, with 1 being the most desirable. Every option must be given a rank and no rank can be repeated.
+                        <br>
+                        <ul class="answers">
+                        {% for choice_and_value in q.choices_and_values %}
+                            <li>
+                                <input type="hidden"
+                                       name="helper-question-{{ q.num }}"
+                                       value="{{ choice_and_value.0.num }}">
+                                <input type="number"
+                                       id="question-{{ q.num }}-{{ choice_and_value.0.num }}"
+                                       name="question-{{ q.num }}"
+                                       value="{{ choice_and_value.1 }}"
+                                       min="1"
+                                       max="{{ q.num_choices }}">
+
+                                <label for="question-{{ q.num }}-{{ choice_and_value.0.num }}">
+                                    {{ choice_and_value.0.info|safe }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                        </ul>
                     {% elif q.is_many_choice %}
                         {% if q.type == "SAP" %}
                             You have 1 vote, that will be split for up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:

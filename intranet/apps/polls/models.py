@@ -146,6 +146,7 @@ class Question(models.Model):
             One of:
                 Question.STD: Standard
                 Question.ELECTION: Election (randomized choice order)
+                Question.RANK: Rank choice election
                 Question.APP: Approval (can select up to max_choices entries)
                 Question.SPLIT_APP: Split approval
                 Question.FREE_RESP: Free response
@@ -162,6 +163,7 @@ class Question(models.Model):
     num = models.IntegerField()
     STD = "STD"
     ELECTION = "ELC"
+    RANK = "RAN"
     APP = "APP"
     SPLIT_APP = "SAP"
     FREE_RESP = "FRE"
@@ -170,6 +172,7 @@ class Question(models.Model):
     TYPE = (
         (STD, "Standard"),
         (ELECTION, "Election"),
+        (RANK, "Rank choice"),
         (APP, "Approval"),
         (SPLIT_APP, "Split approval"),
         (FREE_RESP, "Free response"),
@@ -185,11 +188,14 @@ class Question(models.Model):
     def is_single_choice(self):
         return self.type in [Question.STD, Question.ELECTION]
 
+    def is_rank_choice(self):
+        return self.type in [Question.RANK]
+
     def is_many_choice(self):
         return self.type in [Question.APP, Question.SPLIT_APP]
 
     def is_choice(self):
-        return self.type in [Question.STD, Question.ELECTION, Question.APP, Question.SPLIT_APP]
+        return self.type in [Question.STD, Question.ELECTION, Question.RANK, Question.APP, Question.SPLIT_APP]
 
     def trunc_question(self):
         comp = strip_tags(self.question)
@@ -227,7 +233,7 @@ class Choice(models.Model):  # individual answer choices
         question
             A ForeignKey to the question this choice is for.
         num
-            An integer order in which the question should appear; the primary sort.
+            An integer order in which the choice should appear; the primary sort.
         info
             Textual information about this answer choice.
 
@@ -259,6 +265,7 @@ class Answer(models.Model):  # individual answer choices selected
     answer = models.CharField(max_length=10000, null=True)  # for free response
     clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
+    rank = models.IntegerField(null=True)  # for rank choice
 
     def __str__(self):
         if self.choice:

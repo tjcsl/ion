@@ -132,6 +132,28 @@ def poll_vote_view(request, poll_id):
                                     user=user, question=question_obj, defaults={"clear_vote": False, "choice": choice_obj}
                                 )
                                 messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
+                    elif question_obj.is_rank_choice():
+                        updated_nums = request.POST.getlist(f"helper-{name}")
+                        updated_choices = request.POST.getlist(name)
+                        choice_value_map = {int(updated_nums[c]): int(updated_choices[c]) for c in range(0, len(updated_choices))}
+                        if len(choice_value_map.keys()) != len(choices):
+                            messages.error(request, "Must provide a rank for each choice.")
+                        else:
+                            ranks_chosen = choice_value_map.values()
+                            valid = True
+                            for i in range(1, len(choices) + 1):
+                                if i not in ranks_chosen:
+                                    messages.error(request, "Each rank must be different and between 1 and {}.".format(len(choices)))
+                                    valid = False
+                            if valid:
+                                with transaction.atomic():
+                                    lock_on(user.answer_set.all())
+
+                                    for num in choice_value_map:
+                                        choice = Choice.objects.get(question=question_obj, num=num)
+                                        answer = Answer.objects.get_or_create(user=user, choice=choice, question=question_obj)[0]
+                                        answer.rank = choice_value_map[num]
+                                        answer.save()
                     elif question_obj.is_many_choice():
                         updated_choices = request.POST.getlist(name)
                         if len(updated_choices) == 1 and updated_choices[0] == "CLEAR":
@@ -178,20 +200,31 @@ def poll_vote_view(request, poll_id):
         else:
             choices = q.choice_set.all()
 
+        if q.type == Question.RANK:
+            if current_votes.count() == len(choices):
+                choices_and_values = [(a.choice, a.rank) for a in current_votes]
+            else:
+                choices_and_values = [(c, -1) for c in choices]
+        else:
+            choices_and_values = []
+
         question = {
             "num": q.num,
             "type": q.type,
             "question": q.question,
             "choices": choices,
             "is_single_choice": q.is_single_choice(),
+            "is_rank_choice": q.is_rank_choice(),
             "is_many_choice": q.is_many_choice(),
             "is_writing": q.is_writing(),
             "max_choices": q.max_choices,
+            "num_choices": len(choices),
             "current_votes": current_votes,
             "current_vote": current_votes[0] if current_votes else None,
             "current_choices": [v.choice for v in current_votes],
             "current_vote_none": (len(current_votes) < 1),
             "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
+            "choices_and_values": choices_and_values,
         }
         questions.append(question)
 
@@ -293,6 +326,37 @@ def handle_sap(q):
     return {"question": q, "choices": choices, "user_scale": user_scale}
 
 
+def handle_rank_choice(q):
+    question_votes = votes = Answer.objects.filter(question=q)
+    choices = []
+    for c in q.choice_set.all().order_by("num"):
+        votes = question_votes.filter(choice=c)
+        choice = {
+            "choice": c,
+            "votes": {
+                "total": {
+                    "all": sum([v.rank for v in votes]),
+                    "all_percent": "N/A",
+                    "male": sum([v.rank if v.user.is_male else 0 for v in votes]),
+                    "female": sum([v.rank if v.user.is_female else 0 for v in votes]),
+                }
+            },
+            "users": [v.user for v in votes],
+        }
+        for yr in range(9, 14):
+            yr_votes = [v if v.user.grade and v.user.grade.number == yr else None for v in votes]
+            yr_votes = list(filter(None, yr_votes))
+            choice["votes"][yr] = {
+                "all": sum([v.rank for v in yr_votes]),
+                "male": sum([v.rank if v.user.is_male else 0 for v in yr_votes]),
+                "female": sum([v.rank if v.user.is_female else 0 for v in yr_votes]),
+            }
+
+        choices.append(choice)
+
+    return {"question": q, "choices": choices}
+
+
 def generate_choice(name, votes, total_count, show_answers=False):
     choice = {
         "choice": name,
@@ -360,6 +424,8 @@ def poll_results_view(request, poll_id):
     for q in poll.question_set.all():
         if q.type == "SAP":  # Split-approval; each person splits their one vote
             questions.append(handle_sap(q))
+        elif q.is_rank_choice():
+            questions.append(handle_rank_choice(q))
         elif q.is_choice():
             questions.append(handle_choice(q, show_answers))
         elif q.is_writing():
