@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #920) documentation</title>
+    <title>intranet.apps.polls package &#8212; TJ Intranet v3 (Build #979) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -199,7 +199,7 @@
 <span id="intranet-apps-polls-models-module"></span><h2>intranet.apps.polls.models module<a class="headerlink" href="#module-intranet.apps.polls.models" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Answer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.polls.models.</span></span><span class="sig-name descname"><span class="pre">Answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">question</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">answer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_vote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.polls.models.</span></span><span class="sig-name descname"><span class="pre">Answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">question</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">answer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_vote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Answer.DoesNotExist">
@@ -274,6 +274,13 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Answer.question_id">
 <span class="sig-name descname"><span class="pre">question_id</span></span><a class="headerlink" href="#intranet.apps.polls.models.Answer.question_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.polls.models.Answer.rank">
+<span class="sig-name descname"><span class="pre">rank</span></span><a class="headerlink" href="#intranet.apps.polls.models.Answer.rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Answer.user">
@@ -478,7 +485,7 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Choice.num">
 <span class="sig-name descname"><span class="pre">num</span></span><a class="headerlink" href="#intranet.apps.polls.models.Choice.num" title="Permalink to this definition">¶</a></dt>
-<dd><p>An integer order in which the question should appear; the primary sort.</p>
+<dd><p>An integer order in which the choice should appear; the primary sort.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -925,6 +932,7 @@ the user can make.</p>
 <dd><dl class="simple">
 <dt>One of:</dt><dd><p>Question.STD: Standard
 Question.ELECTION: Election (randomized choice order)
+Question.RANK: Rank choice election
 Question.APP: Approval (can select up to max_choices entries)
 Question.SPLIT_APP: Split approval
 Question.FREE_RESP: Free response
@@ -972,6 +980,11 @@ Question.STD_OTHER: Standard Other field</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.polls.models.Question.RANK">
+<span class="sig-name descname"><span class="pre">RANK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RAN'</span></em><a class="headerlink" href="#intranet.apps.polls.models.Question.RANK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Question.SHORT_RESP">
 <span class="sig-name descname"><span class="pre">SHORT_RESP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SRE'</span></em><a class="headerlink" href="#intranet.apps.polls.models.Question.SHORT_RESP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -993,7 +1006,7 @@ Question.STD_OTHER: Standard Other field</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Question.TYPE">
-<span class="sig-name descname"><span class="pre">TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('STD',</span> <span class="pre">'Standard'),</span> <span class="pre">('ELC',</span> <span class="pre">'Election'),</span> <span class="pre">('APP',</span> <span class="pre">'Approval'),</span> <span class="pre">('SAP',</span> <span class="pre">'Split</span> <span class="pre">approval'),</span> <span class="pre">('FRE',</span> <span class="pre">'Free</span> <span class="pre">response'),</span> <span class="pre">('SRE',</span> <span class="pre">'Short</span> <span class="pre">response'),</span> <span class="pre">('STO',</span> <span class="pre">'Standard</span> <span class="pre">other'))</span></em><a class="headerlink" href="#intranet.apps.polls.models.Question.TYPE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('STD',</span> <span class="pre">'Standard'),</span> <span class="pre">('ELC',</span> <span class="pre">'Election'),</span> <span class="pre">('RAN',</span> <span class="pre">'Rank</span> <span class="pre">choice'),</span> <span class="pre">('APP',</span> <span class="pre">'Approval'),</span> <span class="pre">('SAP',</span> <span class="pre">'Split</span> <span class="pre">approval'),</span> <span class="pre">('FRE',</span> <span class="pre">'Free</span> <span class="pre">response'),</span> <span class="pre">('SRE',</span> <span class="pre">'Short</span> <span class="pre">response'),</span> <span class="pre">('STO',</span> <span class="pre">'Standard</span> <span class="pre">other'))</span></em><a class="headerlink" href="#intranet.apps.polls.models.Question.TYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1071,6 +1084,11 @@ object the first time, the query is executed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="intranet.apps.polls.models.Question.is_many_choice">
 <span class="sig-name descname"><span class="pre">is_many_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_many_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_many_choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.polls.models.Question.is_rank_choice">
+<span class="sig-name descname"><span class="pre">is_rank_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_rank_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_rank_choice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1212,6 +1230,11 @@ object the first time, the query is executed.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="intranet.apps.polls.views.handle_choice">
 <span class="sig-prename descclassname"><span class="pre">intranet.apps.polls.views.</span></span><span class="sig-name descname"><span class="pre">handle_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_answers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#handle_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.views.handle_choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="intranet.apps.polls.views.handle_rank_choice">
+<span class="sig-prename descclassname"><span class="pre">intranet.apps.polls.views.</span></span><span class="sig-name descname"><span class="pre">handle_rank_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#handle_rank_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.polls.views.handle_rank_choice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">

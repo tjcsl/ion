@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Using OAuth &#8212; TJ Intranet v3 (Build #920) documentation</title>
+    <title>Using OAuth &#8212; TJ Intranet v3 (Build #979) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -225,61 +225,61 @@
 <h3>Node.js<a class="headerlink" href="#node-js" title="Permalink to this headline">¶</a></h3>
 <p>You can use the <a class="reference external" href="https://github.com/lelylan/simple-oauth2">simple-oauth2</a> library to perform authentication. Below is some sample code.</p>
 <p><strong>Note</strong>: This code will not work out of the box. Read the comments carefully to determine how to integrate it into your application.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">simpleoauth2</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;simple-oauth2&quot;</span><span class="p">);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">simpleoauth2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;simple-oauth2&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="c1">// make sure these variables are set</span>
-<span class="kd">var</span> <span class="nx">ion_client_id</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_CLIENT_ID</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">ion_client_secret</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_CLIENT_SECRET</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">ion_redirect_uri</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_REDIRECT_URI</span><span class="p">;</span>
+<span class="c1">// make sure these variables are set</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">ion_client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_CLIENT_ID</span><span class="p">;</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">ion_client_secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_CLIENT_SECRET</span><span class="p">;</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">ion_redirect_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_REDIRECT_URI</span><span class="p">;</span><span class="w"></span>
 
-<span class="kd">var</span> <span class="nx">oauth</span> <span class="o">=</span> <span class="nx">simpleoauth2</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">client</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="nx">ion_client_id</span><span class="p">,</span>
-        <span class="nx">secret</span><span class="o">:</span> <span class="nx">ion_client_secret</span>
-    <span class="p">},</span>
-    <span class="nx">auth</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">tokenHost</span><span class="o">:</span>     <span class="s1">&#39;https://ion.tjhsst.edu/oauth/&#39;</span><span class="p">,</span>
-        <span class="nx">authorizePath</span><span class="o">:</span> <span class="s1">&#39;https://ion.tjhsst.edu/oauth/authorize&#39;</span><span class="p">,</span>
-        <span class="nx">tokenPath</span><span class="o">:</span>     <span class="s1">&#39;https://ion.tjhsst.edu/oauth/token/&#39;</span>
-    <span class="p">}</span>
-<span class="p">});</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">oauth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">simpleoauth2</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="w"></span>
+<span class="w">    </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_client_id</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">secret</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_client_secret</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">tokenHost</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">authorizePath</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/authorize&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nx">tokenPath</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/token/&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 
-<span class="c1">// 1) when the user visits the site, redirect them to login_url to begin authentication</span>
-<span class="kd">var</span> <span class="nx">login_url</span> <span class="o">=</span> <span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">authorizeURL</span><span class="p">({</span>
-    <span class="nx">scope</span><span class="o">:</span> <span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="c1">// remove scope: read if you also want write access</span>
-    <span class="nx">redirect_uri</span><span class="o">:</span> <span class="nx">ion_redirect_uri</span>
-<span class="p">});</span>
+<span class="c1">// 1) when the user visits the site, redirect them to login_url to begin authentication</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">login_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">authorizeURL</span><span class="p">({</span><span class="w"></span>
+<span class="w">    </span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// remove scope: read if you also want write access</span><span class="w"></span>
+<span class="w">    </span><span class="nx">redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_redirect_uri</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 
-<span class="c1">// 2) on the ion_redirect_uri endpoint, add the following code to process the authentication</span>
-<span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">];</span> <span class="c1">// GET parameter</span>
-<span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">getToken</span><span class="p">({</span><span class="nx">code</span><span class="o">:</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">redirect_uri</span><span class="o">:</span> <span class="nx">ion_redirect_uri</span><span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="c1">// 2) on the ion_redirect_uri endpoint, add the following code to process the authentication</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// GET parameter</span><span class="w"></span>
+<span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">getToken</span><span class="p">({</span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="nx">code</span><span class="p">,</span><span class="w"> </span><span class="nx">redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_redirect_uri</span><span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span><span class="w"></span>
 
-    <span class="c1">// you will want to save these variables in your session if you want to make API requests</span>
-    <span class="kd">var</span> <span class="nx">refresh_token</span> <span class="o">=</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">refresh_token</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">access_token</span> <span class="o">=</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">access_token</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">expires_in</span> <span class="o">=</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_in</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// you will want to save these variables in your session if you want to make API requests</span><span class="w"></span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">refresh_token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">refresh_token</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">access_token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">access_token</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">expires_in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_in</span><span class="p">;</span><span class="w"></span>
 
-    <span class="c1">// log the user in</span>
-<span class="p">});</span>
+<span class="w">    </span><span class="c1">// log the user in</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 
-<span class="c1">// 3) when making an API request, add the following header:</span>
-<span class="c1">// Authorization: Bearer {{ INSERT ACCESS TOKEN }}</span>
+<span class="c1">// 3) when making an API request, add the following header:</span><span class="w"></span>
+<span class="c1">// Authorization: Bearer {{ INSERT ACCESS TOKEN }}</span><span class="w"></span>
 
-<span class="c1">// 4) to refresh the access_token, use the following code</span>
-<span class="kd">var</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="s2">&quot;access_token&quot;</span><span class="o">:</span> <span class="nx">access_token</span><span class="p">,</span>
-    <span class="s2">&quot;refresh_token&quot;</span><span class="o">:</span> <span class="nx">refresh_token</span><span class="p">,</span>
-    <span class="s2">&quot;expires_in&quot;</span><span class="o">:</span> <span class="nx">expires_in</span>
-<span class="p">});</span>
+<span class="c1">// 4) to refresh the access_token, use the following code</span><span class="w"></span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;access_token&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">access_token</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;refresh_token&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">refresh_token</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;expires_in&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">expires_in</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 
-<span class="k">if</span> <span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">expired</span><span class="p">())</span> <span class="p">{</span>
-    <span class="nx">token</span><span class="p">.</span><span class="nx">refresh</span><span class="p">((</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">token</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>
-        <span class="c1">// the new access token</span>
-        <span class="kd">var</span> <span class="nx">access_token</span> <span class="o">=</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">access_token</span><span class="p">;</span>
-    <span class="p">});</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">expired</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nx">token</span><span class="p">.</span><span class="nx">refresh</span><span class="p">((</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// the new access token</span><span class="w"></span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">access_token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">token</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">access_token</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">});</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
