@@ -8,22 +8,22 @@ services:
     networks:
     - intranet_net
     ports:
-    - 6379
-  
+    - "6379"
+
   postgres:
     container_name: database
     image: postgres:latest
     networks:
     - intranet_net
     expose:
-    - 5432
+    - "5432"
     environment:
     - POSTGRES_DB=ion
     - POSTGRES_USER=ion
     - POSTGRES_PASSWORD=pwd
     volumes:
     - pgdata:/var/lib/postgresql/data
-  
+
   application:
     container_name: intranet
     image: application
@@ -32,15 +32,15 @@ services:
     entrypoint: ["/bin/sh", "-c" , "chmod +x config/entrypoint.sh && config/entrypoint.sh"]
     ports:
     - 8080:8080
-    build: 
+    build:
       context: ../
       dockerfile: ./config/Dockerfile
-    volumes: 
-    - ../:/ion
+    volumes:
+    - ../:/ion:z
     depends_on:
     - redis
     - postgres
-  
+
   celery:
     container_name: celery
     image: application
@@ -50,8 +50,8 @@ services:
     depends_on:
     - application
     volumes:
-    - ../:/ion
-  
+    - ../:/ion:z
+
   celerybeat:
     container_name: celerybeat
     image: application
@@ -61,7 +61,7 @@ services:
     depends_on:
     - application
     volumes:
-    - ../:/ion
+    - ../:/ion:z
 
 
 networks:
