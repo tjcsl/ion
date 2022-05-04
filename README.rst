@@ -27,5 +27,3 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 Please read our `contributing guide <https://github.com/tjcsl/ion/blob/master/CONTRIBUTING.md>`_ for more information.
 
 Current Intranet maintainer: `Laur04 <https://github.com/Laur04>`_
-
-Intranet maintainer emiriti: `Theo Ouzhinski <https://github.com/theo-o>`_ (TJ 2020) & `anonymoose2 <https://github.com/anonymoose2>`_
