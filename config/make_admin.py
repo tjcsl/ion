@@ -2,11 +2,11 @@ import os
 
 import django
 
-from intranet.apps.groups.models import Group
-from intranet.apps.users.models import User
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 django.setup()
+
+from intranet.apps.groups.models import Group
+from intranet.apps.users.models import User
 
 USERNAME = "<YOUR_USERNAME>"
 if not User.objects.filter(username=USERNAME).exists():
