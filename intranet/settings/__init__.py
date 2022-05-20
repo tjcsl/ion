@@ -772,7 +772,9 @@ CLEAR_ABSENCE_DAYS = 14
 FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 
 # The timeout for the request to FCPS' emergency page (in seconds)
-FCPS_EMERGENCY_TIMEOUT = 5
+EMERGENCY_TIMEOUT = 5
+
+CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
 
 # How frequently the emergency announcement cache should be updated by the Celerybeat task.
 # This should be less than CACHE_AGE["emerg"].
