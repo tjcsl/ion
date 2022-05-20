@@ -1,6 +1,6 @@
+import json
 import logging
 import time
-import warnings
 
 import requests
 from bs4 import BeautifulSoup, CData
@@ -15,21 +15,20 @@ logger = logging.getLogger(__name__)
 
 
 def check_emerg():
-    """Fetch from FCPS' emergency announcement page.
+    """Fetch from FCPS' and CSL emergency announcement page.
 
     URL defined in settings.FCPS_EMERGENCY_PAGE
 
     Request timeout defined in settings.FCPS_EMERGENCY_TIMEOUT
 
     """
-    status = True
-    message = None
+    announcements = []
     if settings.EMERGENCY_MESSAGE:
         return True, settings.EMERGENCY_MESSAGE
-    if not settings.FCPS_EMERGENCY_PAGE:
+    if not settings.FCPS_EMERGENCY_PAGE or not settings.CSL_STATUS_PAGE:
         return None, None
 
-    timeout = settings.FCPS_EMERGENCY_TIMEOUT
+    timeout = settings.EMERGENCY_TIMEOUT
 
     try:
         r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
@@ -37,8 +36,6 @@ def check_emerg():
         return False, None
 
     res = r.text
-    if not res:
-        status = False
 
     # Keep this list up to date with whatever wording FCPS decides to use each time...
     bad_strings = [
@@ -51,14 +48,15 @@ def check_emerg():
         "Site under maintenance",  # We don't want to get people's attention like this just to tell them that fcps.edu is under maintenance
         "502 Bad Gateway",
     ]
+
+    status = True
     for b in bad_strings:
         if b in res:
             status = False
             break
 
-    warnings.filterwarnings("ignore", category=UserWarning, module="bs4")
-    soup = BeautifulSoup(res, "html.parser")
-    if soup.title:
+    soup = BeautifulSoup(res, "xml")
+    if soup.title and status is True:
         title = soup.title.text
         body = ""
         for cd in soup.findAll(text=True):
@@ -68,10 +66,31 @@ def check_emerg():
         title = safe_fcps_emerg_html(title, settings.FCPS_EMERGENCY_PAGE)
         body = safe_fcps_emerg_html(body, settings.FCPS_EMERGENCY_PAGE)
 
-        message = "<h3>{}: </h3>{}".format(title, body)
-        message = message.strip()
-    else:
-        status = False
+        announcements.append({"title": title, "body": body})
+
+    try:
+        r = requests.get(settings.CSL_STATUS_PAGE, timeout=timeout)
+    except requests.exceptions.Timeout:
+        pass
+
+    try:
+        csl_status = json.loads(r.text)
+    except json.decoder.JSONDecodeError:
+        return False, None
+
+    for system in csl_status['systems']:
+        if system['status'] != 'ok':
+            status = True
+            issues = system['unresolvedIssues']
+            for issue in issues:
+                desc = requests.get(issue['permalink']).text
+                soup = BeautifulSoup(desc, "html.parser")
+                desc = soup.find_all('p')[1].text
+                a = {"title": issue['title'], "body": desc}
+                if a not in announcements and issue['severity'] != 'notice':
+                    announcements.append(a)
+
+    message = ''.join([f"<h3>{announcement['title']}: </h3>{announcement['body']}\n" for announcement in announcements])
 
     return status, message
 
@@ -82,12 +101,12 @@ def get_emerg_result(*, custom_logger=None):
         custom_logger = logger
 
     status, message = check_emerg()
-    custom_logger.debug("Fetched emergency info from FCPS")
+    custom_logger.debug("Fetched emergency info from FCPS and CSL status")
     return {"status": status, "message": message}
 
 
 def get_emerg():
-    """Get the cached FCPS emergency page, or check it again.
+    """Get the cached FCPS emergency page and CSL status page, or check it again.
 
     Timeout defined in settings.CACHE_AGE["emerg"]
 

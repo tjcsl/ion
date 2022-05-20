@@ -164,7 +164,7 @@ def get_fcps_emerg(request):
 
     if emerg["status"] or ("show_emerg" in request.GET):
         msg = emerg["message"]
-        return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
+        return msg
 
     return False
 
