@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="arrow-container week-table" style="border-spacing:0;">
+    <a href="?date={{ week_data.last_week }}" class="button chevron schedule-left" title="Previous Week" id="left-button">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    &nbsp;
+    <b class="week-month-title">Week of {{ week_data.days.0.events_ctx.date|date:"N j" }}</b>
+    &nbsp;
+    <a href="?date={{ week_data.next_week }}" class="button chevron schedule-right" title="Next Week" id="right-button">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+</div>
+<div class="schedule" data-prev-date="{{ week_data.last_week }}" data-next-date="{{ week_data.next_week }}" data-date="{{ week_data.today }}">
+    <table class="week-table">
+        <tbody>
+        <tr>
+            {% for day in week_data.days %}
+                {% if day.events_ctx.display == True %}
+                <td id="{{ day.events_ctx.date_today }}">
+                    <h2 class="schedule-date">{{ day.events_ctx.date|date:"D, N j" }}</h2>
+                    {% if day.events_ctx.has_events %}
+                        {% for event in day.events_ctx.events %}
+                            {% if not event.show_attending and not event.scheduled_activity and not event.announcement %}
+                                {% include "events/event.html" %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <b>No events.</b>
+                    {% endif %}
+                </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</div>
