@@ -45,19 +45,23 @@
         <a href="{% url 'polls' %}" class="button print-hide">
             <i class="fas fa-arrow-left"></i> Polls
         </a>
-        <h2>Vote: {{ poll }}</h2>
+        <div class="poll-head">
+            <h2>Vote: {{ poll }}</h2>
 
-            <p>{{ poll.description|safe }}</p>
-        {% if user != request.user %}<b>Voting as: {{ user }}</b><br>{% endif %}
-        {% if user in poll.get_users_voted %}
-            <span class="voted-status voted">
-                <i class="fas fa-check"></i> You have voted in this poll.
-            </span>
-        {% else %}
-            <span class="voted-status not-voted">
-                <i class="fas fa-exclamation-triangle"></i> You have not voted in this poll.
-            </span>
-        {% endif %}
+                <p>{{ poll.description|safe }}</p>
+            {% if user != request.user %}<b>Voting as: {{ user }}</b><br>{% endif %}
+            <div class="desc">
+            {% if user in poll.get_users_voted %}
+                <span class="voted-status voted">
+                    <i class="fas fa-check desc"></i> You have voted in this poll.
+                </span>
+            {% else %}
+                <span class="voted-status not-voted">
+                    <i class="fas fa-exclamation-triangle"></i> You have not voted in this poll.
+                </span>
+            {% endif %}
+            </div>
+        </div>
 
         <form action="{% url 'poll_vote' poll.id %}{% if user != request.user %}?user={{ user.id }}{% endif %}" method="post">
             {% csrf_token %}
@@ -66,90 +70,101 @@
             <ol class="questions">
             {% for q in questions %}
                 <li>
-                    {{ q.question|safe }}
+                    <div class="q">{{ q.question|safe }}</div>
                     <div class="question">
                     {% if q.is_single_choice %}
+                        <br>
                         <ul class="answers">
                         {% for choice in q.choices %}
-                            <li>
+                            <li class="choice-item">
                                 <input type="radio"
                                        id="question-{{ q.num }}-{{ choice.num }}"
                                        name="question-{{ q.num }}"
                                        value="{{ choice.num }}"
                                        {% if choice in q.current_choices %} checked {% endif %}>
-
+                                <div class="choice-desc">
                                 <label for="question-{{ q.num }}-{{ choice.num }}">
                                     {{ choice.info|safe }}
                                 </label>
+                                </div>
                             </li>
                         {% endfor %}
-                            <li>
+                            <li class="choice-item">
                                 <input type="radio"
                                        id="question-{{ q.num }}-clear"
                                        name="question-{{ q.num }}"
                                        value="CLEAR"
                                        {% if q.current_vote_clear %} checked {% endif %}>
-
+                                <div class="choice-desc">
                                 <label for="question-{{ q.num }}-clear" class="clear-vote">
                                     Clear Vote
                                 </label>
+                                </div>
                             </li>
                         </ul>
                     {% elif q.is_rank_choice %}
-                        Rank the following options, with 1 being the most desirable. Every option must be given a rank and no rank can be repeated.
+                        <div class="directions">Rank each of the following options from 1 to {{ q.num_choices }} (1 is most desirable). You must give each choice a different rank.</div>
                         <br>
                         <ul class="answers">
                         {% for choice_and_value in q.choices_and_values %}
-                            <li>
+                            <li class="choice-item">
+                                <div class="box">
                                 <input type="hidden"
                                        name="helper-question-{{ q.num }}"
                                        value="{{ choice_and_value.0.num }}">
-                                <input type="number"
+                                <input class="rank-input"
+                                       type="number"
                                        id="question-{{ q.num }}-{{ choice_and_value.0.num }}"
                                        name="question-{{ q.num }}"
                                        value="{{ choice_and_value.1 }}"
                                        min="1"
                                        max="{{ q.num_choices }}">
-
+                                 </div>
+                                 <div class="rank-choice-desc">
                                 <label for="question-{{ q.num }}-{{ choice_and_value.0.num }}">
                                     {{ choice_and_value.0.info|safe }}
                                 </label>
+                                </div>
                             </li>
                         {% endfor %}
                         </ul>
                     {% elif q.is_many_choice %}
+                    <div class="directions">
                         {% if q.type == "SAP" %}
                             You have 1 vote, that will be split for up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
                         {% else %}
                             You may select up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
                         {% endif %}
+                    </div>
                         <br>
                         <ul class="answers">
                         {% for choice in q.choices %}
-                            <li>
+                            <li class="choice-item">
                                 <input type="checkbox"
                                        id="question-{{ q.num }}-{{ choice.num }}"
                                        name="question-{{ q.num }}"
                                        value="{{ choice.num }}"
                                        {% if choice in q.current_choices %} checked {% endif %}
                                        {% if q.current_vote_clear %} disabled {% endif %}>
-
+                                <div class="choice-desc">
                                 <label for="question-{{ q.num }}-{{ choice.num }}">
                                     {{ choice.info|safe }}
                                 </label>
+                                </div>
                             </li>
                         {% endfor %}
-                            <li>
+                            <li class="choice-item">
                                 <input type="checkbox"
                                        id="question-{{ q.num }}-clear"
                                        class="question-clear-action"
                                        name="question-{{ q.num }}"
                                        value="CLEAR"
                                        {% if q.current_vote_clear %} checked {% endif %}>
-
+                                <div class="choice-desc">
                                 <label for="question-{{ q.num }}-clear" class="clear-vote clear-vote">
                                     Clear Vote
                                 </label>
+                                </div>
                             </li>
                         </ul>
                     {% elif q.is_writing %}
@@ -176,7 +191,7 @@
             {% endfor %}
             </ol>
             {% if can_vote %}
-                <input type="submit" value="Vote!">
+                <input class="vote-button" type="submit" value="Vote!">
             {% else %}
                 You can't vote in this poll.
             {% endif %}
