@@ -1,4 +1,7 @@
 import logging
+from datetime import datetime, timedelta
+
+from dateutil.relativedelta import relativedelta
 
 from django import http
 from django.contrib import messages
@@ -7,13 +10,123 @@ from django.core import exceptions
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ...utils.helpers import awaredate, get_id
+from ...utils.helpers import get_id
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
 from .forms import AdminEventForm, EventForm
 from .models import Event
 
 logger = logging.getLogger(__name__)
+
+
+def date_format(date):
+    try:
+        d = date.strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+    return d
+
+
+def decode_date(date):
+    try:
+        d = datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        return None
+    return d
+
+
+def is_weekday(date):
+    return date.isoweekday() in range(1, 6)
+
+
+def events_context(request, date=None):
+    local_time = timezone.localtime()
+
+    if date is None:
+        date = local_time
+
+    date_today = date.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if timezone.is_naive(date_today):
+        date_today = timezone.make_aware(date_today)
+
+    date_tomorrow = date_today + timedelta(days=1)
+    viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
+    events = viewable_events.filter(time__range=[date_today, date_tomorrow])
+
+    display = True
+    has_events = True
+
+    if not events:
+        has_events = False
+
+    if not events and not is_weekday(date):  # don't display if there are no events and it is a weekend
+        display = False
+
+    data = {
+        "events_ctx": {
+            "date": date,
+            "date_today": date_format(date_today),
+            "events": events,
+            "display": display,
+            "has_events": has_events,
+        }
+    }
+    return data
+
+
+def week_data(request, date=None):
+    if date:
+        start_date = date
+    elif "date" in request.GET:
+        start_date = decode_date(request.GET["date"])
+    else:
+        start_date = events_context(request)["events_ctx"]["date"]
+
+    delta = start_date.isoweekday() - 1
+    start_date -= timedelta(days=delta)
+
+    days = []
+    for i in range(7):
+        new_date = start_date + timedelta(days=i)
+        days.append(events_context(request, date=new_date))
+
+    next_week = date_format(start_date + timedelta(days=7))
+    last_week = date_format(start_date - timedelta(days=7))
+    today = date_format(timezone.localtime())
+
+    data = {
+        "days": days,
+        "next_week": next_week,
+        "last_week": last_week,
+        "today": today,
+    }
+    return data
+
+
+def month_data(request):
+
+    if "date" in request.GET:
+        start_date = decode_date(request.GET["date"])
+    else:
+        start_date = timezone.localtime()
+
+    delta = (int(date_format(start_date)[8:]) // 7) * 7
+    start_date -= timedelta(days=delta)
+
+    week1 = week_data(request, start_date)
+    week2 = week_data(request, date=decode_date(week1["next_week"]))
+    week3 = week_data(request, date=decode_date(week2["next_week"]))
+    week4 = week_data(request, date=decode_date(week3["next_week"]))
+    week5 = week_data(request, date=decode_date(week4["next_week"]))
+
+    month = start_date.strftime("%B")
+    one_month = relativedelta(months=1)
+    next_month = date_format(start_date + one_month)
+    last_month = date_format(start_date - one_month)
+
+    data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month, "current_month": month}
+    return data
 
 
 @login_required
@@ -54,37 +167,67 @@ def events_view(request):
             else:
                 raise http.Http404
 
+    show_all = False
     if is_events_admin and "show_all" in request.GET:
         viewable_events = Event.objects.all().this_year().prefetch_related("groups")
+        show_all = True
     else:
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
+    classic = False  # show classic view
+    if "classic" in request.GET:
+        classic = True
+
     # get date objects for week and month
-    today = awaredate()
+    today = timezone.localtime()
     delta = today - timezone.timedelta(days=today.weekday())
     this_week = (delta, delta + timezone.timedelta(days=7))
     this_month = (this_week[1], this_week[1] + timezone.timedelta(days=31))
 
+    def has_attending_event(events):
+        for event in events:
+            if event.show_attending or event.scheduled_activity or event.announcement:
+                return True
+        return False
+
     events_categories = [
         {"title": "This week", "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])},
         {"title": "This month", "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1])},
-        {"title": "Future", "events": viewable_events.filter(time__gte=this_month[1])},
     ]
+
+    if not show_all and not classic:
+        events_categories.append(
+            {"title": "Week and month",
+             "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1]),
+             "has_attending_event": has_attending_event(viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1])), }, )
 
     if is_events_admin:
         unapproved_events = Event.objects.filter(approved=False, rejected=False).prefetch_related("groups")
-        events_categories = [{"title": "Awaiting Approval", "events": unapproved_events}] + events_categories
+        past_events = Event.objects.filter(time__lt=this_week[0])
+        future_events = Event.objects.filter(time__gte=this_month[1])
 
-    if is_events_admin and "show_all" in request.GET:
-        events_categories.append({"title": "Past", "events": viewable_events.filter(time__lt=this_week[0])})
+        events_categories = [{"title": "Awaiting Approval", "events": unapproved_events}] + events_categories
+        if show_all:
+            events_categories.append({"title": "Future", "events": future_events})
+            events_categories.append({"title": "Past", "events": past_events})
+
+    num_events = viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1]).count()
 
     context = {
         "events": events_categories,
-        "num_events": sum([x["events"].count() for x in events_categories]),
+        "num_events": num_events,
         "is_events_admin": is_events_admin,
         "show_attend": True,
         "show_icon": True,
+        "show_all": show_all,
+        "classic": classic,
     }
+    context["week_data"] = week_data(request)
+    context["month_data"] = month_data(request)
+    if "view" in request.GET and request.GET["view"] == "month":
+        context["view"] = "month"
+    else:
+        context["view"] = "week"
     return render(request, "events/home.html", context)
 
 
