@@ -29,14 +29,14 @@ services:
     image: application
     networks:
     - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "chmod +x config/entrypoint.sh && config/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c" , "chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
     ports:
     - 8080:8080
     build:
-      context: ../
-      dockerfile: ./config/Dockerfile
+      context: ../../
+      dockerfile: ./config/docker/Dockerfile
     volumes:
-    - ../:/ion:z
+    - ../../:/ion:z
     depends_on:
     - redis
     - postgres
@@ -50,7 +50,7 @@ services:
     depends_on:
     - application
     volumes:
-    - ../:/ion:z
+    - ../../:/ion:z
 
   celerybeat:
     container_name: celerybeat
@@ -61,7 +61,7 @@ services:
     depends_on:
     - application
     volumes:
-    - ../:/ion:z
+    - ../../:/ion:z
 
 
 networks:
