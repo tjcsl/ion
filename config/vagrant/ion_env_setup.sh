@@ -12,7 +12,7 @@ export PATH=$PATH:/usr/lib/postgresql/9.5/bin
 function devconfig() {
     python3 -c "
 import json
-with open('/home/vagrant/intranet/config/devconfig.json', 'r') as f:
+with open('/home/vagrant/intranet/config/vagrant/devconfig.json', 'r') as f:
 	print(json.load(f)['$1'])"
 }
 

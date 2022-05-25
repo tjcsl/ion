@@ -6,7 +6,7 @@ Vagrant.require_version ">= 2.2.7"
 require "json"
 require "time"
 
-devconfig = JSON.parse(File.read("config/devconfig.json"))
+devconfig = JSON.parse(File.read("config/vagrant/devconfig.json"))
 
 def setup_host
   return unless ["up", "resume", "ssh", "reload"].include? ARGV[0]
@@ -84,7 +84,7 @@ Vagrant.configure("2") do |config|
     source: "~/.ssh/#{devconfig['ssh_key']}.pub",
     destination: ".ssh/#{devconfig['ssh_key']}.pub"
 
-  config.vm.provision "shell", path: "config/provision_vagrant.sh"
+  config.vm.provision "shell", path: "config/vagrant/provision_vagrant.sh"
 
   config.ssh.username = "vagrant"
 end

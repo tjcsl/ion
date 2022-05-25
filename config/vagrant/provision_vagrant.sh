@@ -4,7 +4,7 @@ set -e
 function devconfig() {
     python3 -c "
 import json
-with open('/home/vagrant/intranet/config/devconfig.json', 'r') as f:
+with open('/home/vagrant/intranet/config/vagrant/devconfig.json', 'r') as f:
     print(json.load(f)['$1'])"
 }
 
@@ -41,11 +41,11 @@ apt-get -y install cups-client
 echo "ServerName cups2.csl.tjhsst.edu" > /etc/cups/client.conf
 
 # Shell
-cp intranet/config/bash_completion.d/fab /etc/bash_completion.d/fab
+cp intranet/config/vagrant/bash_completion.d/fab /etc/bash_completion.d/fab
 if ! grep "ion_env_setup.sh" /etc/bash.bashrc > /dev/null; then
     echo "source /etc/ion_env_setup.sh" >> /etc/bash.bashrc
 fi
-cp intranet/config/ion_env_setup.sh /etc/ion_env_setup.sh
+cp intranet/config/vagrant/ion_env_setup.sh /etc/ion_env_setup.sh
 touch .bash_history
 
 # Utils
