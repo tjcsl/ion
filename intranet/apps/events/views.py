@@ -184,9 +184,9 @@ def events_view(request):
     this_week = (delta, delta + timezone.timedelta(days=7))
     this_month = (this_week[1], this_week[1] + timezone.timedelta(days=31))
 
-    def has_attending_event(events):
+    def has_special_event(events):
         for event in events:
-            if event.show_attending or event.scheduled_activity or event.announcement:
+            if event.show_attending or event.scheduled_activity or event.announcement or event.show_on_dashboard:
                 return True
         return False
 
@@ -199,7 +199,7 @@ def events_view(request):
         events_categories.append(
             {"title": "Week and month",
              "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1]),
-             "has_attending_event": has_attending_event(viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1])), }, )
+             "has_special_event": has_special_event(viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1])), }, )
 
     if is_events_admin:
         unapproved_events = Event.objects.filter(approved=False, rejected=False).prefetch_related("groups")
@@ -218,7 +218,7 @@ def events_view(request):
         "num_events": num_events,
         "is_events_admin": is_events_admin,
         "show_attend": True,
-        "show_icon": True,
+        "show_icon": False,
         "show_all": show_all,
         "classic": classic,
     }
