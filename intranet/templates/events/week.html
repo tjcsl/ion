@@ -21,9 +21,11 @@
                     <h2 class="schedule-date">{{ day.events_ctx.date|date:"D, N j" }}</h2>
                     {% if day.events_ctx.has_events %}
                         {% for event in day.events_ctx.events %}
-                            {% if not event.show_attending and not event.scheduled_activity and not event.announcement %}
+
+                            {% with not_show_attend_form=True %}
                                 {% include "events/event.html" %}
-                            {% endif %}
+                            {% endwith %}
+
                         {% endfor %}
                     {% else %}
                         <b>No events.</b>

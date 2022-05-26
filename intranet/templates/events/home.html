@@ -73,7 +73,7 @@
                 </a>
             {% endif %}
 
-            {% if is_events_admin and not show_all %}
+            {% if not show_all %}
                 <a href="?show_all=1" class="button">
                     Show All
                 </a>
@@ -98,7 +98,7 @@
                 </a>
             {% endif %}
 
-            {% if not show_all %}
+            {% if not show_all and not classic %}
                 &nbsp;
                 <a id="month-button" class="button" href="#">Month</a>
                 <a id="week-button" class="button" href="#">Week</a>
@@ -107,7 +107,7 @@
 
         </div>
         <div class="events-container">
-            {% if show_all or classic %}
+        {% if show_all or classic %}
             <div class="events-container">
                 {% for category in events %}
                     {% if category.events %}
@@ -115,7 +115,9 @@
                     {% endif %}
 
                     {% for event in category.events %}
-                        {% include "events/event.html" %}
+                        {% with show_date_icon=True %}
+                            {% include "events/event.html" %}
+                        {% endwith %}
                     {% endfor %}
                 {% endfor %}
             </div>
@@ -124,18 +126,26 @@
                 {% if category.title == "Awaiting Approval" and category.events %}
                     <h2 class="category">{{ category.title }}:</h2>
                     {% for event in category.events %}
-                        {% include "events/event.html" %}
+
+                        {% with show_date_icon=True %}
+                            {% include "events/event.html" %}
+                        {% endwith %}
+
                     {% endfor %}
-                {% elif category.title == "Week and month" and category.events and category.has_attending_event %}
+                {% elif category.title == "Week and month" and category.events and category.has_special_event %}
                     <h2 class="category">Special:</h2>
                     {% for event in category.events %}
-                        {% if event.show_attending or event.scheduled_activity or event.announcement %}
-                            {% include "events/event.html" %}
+                        {% if event.show_attending or event.scheduled_activity or event.announcement or event.show_on_dashboard %}
+
+                            {% with show_date_icon=True %}
+                                {% include "events/event.html" %}
+                            {% endwith %}
+
                         {% endif %}
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-            {% endif %}
+        {% endif %}
 
             {% if num_events == 0 %}
                 There are no events to display at this time.
@@ -145,7 +155,7 @@
             <br />
         </div>
 
-        {% if not show_all or classic %}
+        {% if not show_all and not classic %}
             <div class="events-container" id="view-div"></div>
         {% endif %}
 
