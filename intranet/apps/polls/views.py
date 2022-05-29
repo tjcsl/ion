@@ -100,7 +100,7 @@ def poll_vote_view(request, poll_id):
         except (get_user_model().DoesNotExist, ValueError):
             user = request.user
 
-    if request.method == "POST":
+    if request.method == "POST" and poll.can_vote(user):
         questions = poll.question_set.all()
         entries = request.POST
         for name in entries:
@@ -190,47 +190,51 @@ def poll_vote_view(request, poll_id):
                 elif question_obj.is_writing():
                     Answer.objects.update_or_create(user=user, question=question_obj, defaults={"answer": choice_num})
                     messages.success(request, "Answer saved for {}".format(question_obj))
+    if poll.can_vote(user):
+        questions = []
+        for q in poll.question_set.all():
+            current_votes = Answer.objects.filter(user=user, question=q)
 
-    questions = []
-    for q in poll.question_set.all():
-        current_votes = Answer.objects.filter(user=user, question=q)
-
-        if q.type == Question.ELECTION:
-            choices = q.random_choice_set
-        else:
-            choices = q.choice_set.all()
-
-        if q.type == Question.RANK:
-            if current_votes.count() == len(choices):
-                choices_and_values = [(a.choice, a.rank) for a in current_votes]
+            if q.type == Question.ELECTION:
+                choices = q.random_choice_set
             else:
-                choices_and_values = [(c, -1) for c in choices]
-        else:
-            choices_and_values = []
+                choices = q.choice_set.all()
 
-        question = {
-            "num": q.num,
-            "type": q.type,
-            "question": q.question,
-            "choices": choices,
-            "is_single_choice": q.is_single_choice(),
-            "is_rank_choice": q.is_rank_choice(),
-            "is_many_choice": q.is_many_choice(),
-            "is_writing": q.is_writing(),
-            "max_choices": q.max_choices,
-            "num_choices": len(choices),
-            "current_votes": current_votes,
-            "current_vote": current_votes[0] if current_votes else None,
-            "current_choices": [v.choice for v in current_votes],
-            "current_vote_none": (len(current_votes) < 1),
-            "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
-            "choices_and_values": choices_and_values,
-        }
-        questions.append(question)
+            if q.type == Question.RANK:
+                if current_votes.count() == len(choices):
+                    choices_and_values = [(a.choice, a.rank) for a in current_votes]
+                else:
+                    choices_and_values = [(c, -1) for c in choices]
+            else:
+                choices_and_values = []
 
-    can_vote = poll.can_vote(user)
-    context = {"poll": poll, "can_vote": can_vote, "user": user, "questions": questions, "question_types": Question.get_question_types()}
-    return render(request, "polls/vote.html", context)
+            question = {
+                "num": q.num,
+                "type": q.type,
+                "question": q.question,
+                "choices": choices,
+                "is_single_choice": q.is_single_choice(),
+                "is_rank_choice": q.is_rank_choice(),
+                "is_many_choice": q.is_many_choice(),
+                "is_writing": q.is_writing(),
+                "max_choices": q.max_choices,
+                "num_choices": len(choices),
+                "current_votes": current_votes,
+                "current_vote": current_votes[0] if current_votes else None,
+                "current_choices": [v.choice for v in current_votes],
+                "current_vote_none": (len(current_votes) < 1),
+                "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
+                "choices_and_values": choices_and_values,
+            }
+            questions.append(question)
+
+        can_vote = poll.can_vote(user)
+        context = {"poll": poll, "can_vote": can_vote, "user": user, "questions": questions, "question_types": Question.get_question_types()}
+        return render(request, "polls/vote.html", context)
+
+    else:
+        messages.error(request, "You cannot view this poll.")
+        return redirect("polls")
 
 
 def fmt(num):
