@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #979) documentation</title>
+    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #1077) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -53,9 +53,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../setup/index.html">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../setup/postinstall.html">Post-Install Steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../setup/server.html">Setting up the Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../setup/vagrant.html">Setting up Vagrant</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Architecture</a><ul>
@@ -125,10 +123,11 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">bleach</span>
+<span class="kn">from</span> <span class="nn">bleach.css_sanitizer</span> <span class="kn">import</span> <span class="n">CSSSanitizer</span>
 
-<span class="n">ALLOWED_TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">,</span> <span class="s2">&quot;acronym&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">,</span> <span class="s2">&quot;blockquote&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="s2">&quot;ol&quot;</span><span class="p">,</span> <span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;ul&quot;</span><span class="p">,</span> <span class="s2">&quot;iframe&quot;</span><span class="p">,</span> <span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">,</span> <span class="s2">&quot;acronym&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">,</span> <span class="s2">&quot;blockquote&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="s2">&quot;ol&quot;</span><span class="p">,</span> <span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;ul&quot;</span><span class="p">,</span> <span class="s2">&quot;iframe&quot;</span><span class="p">,</span> <span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
 
-<span class="n">ALLOWED_ATTRIBUTES</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">att</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;acronym&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span>
     <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">],</span>
     <span class="s2">&quot;abbr&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span>
@@ -136,23 +135,14 @@
     <span class="s2">&quot;img&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;alt&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 
-<span class="n">ALLOWED_STYLES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;width&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;height&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;margin-left&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;margin-right&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;margin-top&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;margin-bottom&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;margin&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;border&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;border-style&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;border-width&quot;</span><span class="p">,</span>
-<span class="p">]</span>
+<span class="n">css_sanitizer</span> <span class="o">=</span> <span class="n">CSSSanitizer</span><span class="p">(</span><span class="n">allowed_css_properties</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+                                                     <span class="s2">&quot;margin-left&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-right&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-top&quot;</span><span class="p">,</span>
+                                                     <span class="s2">&quot;margin-bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;margin&quot;</span><span class="p">,</span> <span class="s2">&quot;border&quot;</span><span class="p">,</span>
+                                                     <span class="s2">&quot;border-style&quot;</span><span class="p">,</span> <span class="s2">&quot;border-width&quot;</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="safe_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_html">[docs]</a><span class="k">def</span> <span class="nf">safe_html</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">ALLOWED_TAGS</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">ALLOWED_ATTRIBUTES</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="n">ALLOWED_STYLES</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">att</span><span class="p">,</span> <span class="n">css_sanitizer</span><span class="o">=</span><span class="n">css_sanitizer</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="link_removal_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.link_removal_callback">[docs]</a><span class="k">def</span> <span class="nf">link_removal_callback</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
@@ -193,7 +183,7 @@
         <span class="k">return</span> <span class="n">attrs</span>
 
     <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span>
-        <span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">ALLOWED_TAGS</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">ALLOWED_ATTRIBUTES</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="n">ALLOWED_STYLES</span><span class="p">),</span> <span class="p">[</span><span class="n">translate_link_attr</span><span class="p">]</span>
+        <span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">att</span><span class="p">,</span> <span class="n">css_sanitizer</span><span class="o">=</span><span class="n">css_sanitizer</span><span class="p">),</span> <span class="p">[</span><span class="n">translate_link_attr</span><span class="p">]</span>
     <span class="p">)</span></div>
 </pre></div>
 

@@ -12,7 +12,7 @@ For most modules, the unit tests go in ``intranet/apps/<module>/tests.py``. Curr
 Running Tests
 =============
 
-To actually execute tests, run ``pytest`` inside your vagrant environment. If you want to only test a specific app, you can run ``pytest <apps_name>``. Do note that this deletes and re-creates the db from scratch each time, so you may want to pass the ``-k`` option when developing tests as it significantly reduces run-time.
+To actually execute tests, run ``pytest`` inside your dev environment. If you want to only test a specific app, you can run ``pytest <apps_name>``. Do note that this deletes and re-creates the db from scratch each time, so you may want to pass the ``-k`` option when developing tests as it significantly reduces run-time.
 
 Coverage
 ========

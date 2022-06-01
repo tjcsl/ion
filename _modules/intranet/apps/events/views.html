@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>intranet.apps.events.views &#8212; TJ Intranet v3 (Build #1077) documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#technologies">Technologies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/eighth-models.html">Understanding the Eighth models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for intranet.apps.events.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
+
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">get_id</span>
+<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="kn">import</span> <span class="n">safe_html</span>
+<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">deny_restricted</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">AdminEventForm</span><span class="p">,</span> <span class="n">EventForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Event</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="date_format"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.date_format">[docs]</a><span class="k">def</span> <span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="decode_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.decode_date">[docs]</a><span class="k">def</span> <span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="is_weekday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.is_weekday">[docs]</a><span class="k">def</span> <span class="nf">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="events_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.events_context">[docs]</a><span class="k">def</span> <span class="nf">events_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">local_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">local_time</span>
+
+    <span class="n">date_today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">timezone</span><span class="o">.</span><span class="n">is_naive</span><span class="p">(</span><span class="n">date_today</span><span class="p">):</span>
+        <span class="n">date_today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">date_today</span><span class="p">)</span>
+
+    <span class="n">date_tomorrow</span> <span class="o">=</span> <span class="n">date_today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">viewable_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__range</span><span class="o">=</span><span class="p">[</span><span class="n">date_today</span><span class="p">,</span> <span class="n">date_tomorrow</span><span class="p">])</span>
+
+    <span class="n">display</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_events</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">has_events</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>  <span class="c1"># don&#39;t display if there are no events and it is a weekend</span>
+        <span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;events_ctx&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;date_today&quot;</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date_today</span><span class="p">),</span>
+            <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
+            <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="n">display</span><span class="p">,</span>
+            <span class="s2">&quot;has_events&quot;</span><span class="p">:</span> <span class="n">has_events</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="week_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.week_data">[docs]</a><span class="k">def</span> <span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">date</span>
+    <span class="k">elif</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">events_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;events_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
+
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">start_date</span> <span class="o">-=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
+
+    <span class="n">days</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+        <span class="n">new_date</span> <span class="o">=</span> <span class="n">start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">days</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">events_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">new_date</span><span class="p">))</span>
+
+    <span class="n">next_week</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+    <span class="n">last_week</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">())</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;days&quot;</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span>
+        <span class="s2">&quot;next_week&quot;</span><span class="p">:</span> <span class="n">next_week</span><span class="p">,</span>
+        <span class="s2">&quot;last_week&quot;</span><span class="p">:</span> <span class="n">last_week</span><span class="p">,</span>
+        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">today</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="month_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.month_data">[docs]</a><span class="k">def</span> <span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+
+    <span class="n">delta</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span><span class="p">)[</span><span class="mi">8</span><span class="p">:])</span> <span class="o">//</span> <span class="mi">7</span><span class="p">)</span> <span class="o">*</span> <span class="mi">7</span>
+    <span class="n">start_date</span> <span class="o">-=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
+
+    <span class="n">week1</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span>
+    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
+    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
+    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
+    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
+
+    <span class="n">month</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)</span>
+    <span class="n">one_month</span> <span class="o">=</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">next_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">+</span> <span class="n">one_month</span><span class="p">)</span>
+    <span class="n">last_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">-</span> <span class="n">one_month</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weeks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">week1</span><span class="p">,</span> <span class="n">week2</span><span class="p">,</span> <span class="n">week3</span><span class="p">,</span> <span class="n">week4</span><span class="p">,</span> <span class="n">week5</span><span class="p">],</span> <span class="s2">&quot;next_month&quot;</span><span class="p">:</span> <span class="n">next_month</span><span class="p">,</span> <span class="s2">&quot;last_month&quot;</span><span class="p">:</span> <span class="n">last_month</span><span class="p">,</span> <span class="s2">&quot;current_month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">events_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Events homepage.</span>
+
+<span class="sd">    Shows a list of events occurring in the next week, month, and</span>
+<span class="sd">    future.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_events_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;approve&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="n">is_events_admin</span><span class="p">:</span>
+            <span class="n">event_id</span> <span class="o">=</span> <span class="n">get_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;approve&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">rejected</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">approved_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Approved event </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> approved event: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+        <span class="k">if</span> <span class="s2">&quot;reject&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="n">is_events_admin</span><span class="p">:</span>
+            <span class="n">event_id</span> <span class="o">=</span> <span class="n">get_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reject&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">rejected</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">rejected_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Rejected event </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> rejected event: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="n">show_all</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">is_events_admin</span> <span class="ow">and</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">viewable_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+        <span class="n">show_all</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">viewable_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+
+    <span class="n">classic</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># show classic view</span>
+    <span class="k">if</span> <span class="s2">&quot;classic&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">classic</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># get date objects for week and month</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">today</span> <span class="o">-</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">today</span><span class="o">.</span><span class="n">weekday</span><span class="p">())</span>
+    <span class="n">this_week</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">delta</span> <span class="o">+</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+    <span class="n">this_month</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">31</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">has_special_event</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">show_attending</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">announcement</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">show_on_dashboard</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">events_categories</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;This week&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
+        <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;This month&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show_all</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">classic</span><span class="p">:</span>
+        <span class="n">events_categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Week and month&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+             <span class="s2">&quot;has_special_event&quot;</span><span class="p">:</span> <span class="n">has_special_event</span><span class="p">(</span><span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="p">},</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_events_admin</span><span class="p">:</span>
+        <span class="n">unapproved_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rejected</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+        <span class="n">past_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__lt</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">future_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">events_categories</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Awaiting Approval&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">unapproved_events</span><span class="p">}]</span> <span class="o">+</span> <span class="n">events_categories</span>
+        <span class="k">if</span> <span class="n">show_all</span><span class="p">:</span>
+            <span class="n">events_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Future&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">future_events</span><span class="p">})</span>
+            <span class="n">events_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Past&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">past_events</span><span class="p">})</span>
+
+    <span class="n">num_events</span> <span class="o">=</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events_categories</span><span class="p">,</span>
+        <span class="s2">&quot;num_events&quot;</span><span class="p">:</span> <span class="n">num_events</span><span class="p">,</span>
+        <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">,</span>
+        <span class="s2">&quot;show_attend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;show_icon&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
+        <span class="s2">&quot;classic&quot;</span><span class="p">:</span> <span class="n">classic</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;week_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;month_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;view&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;week&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">join_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">event_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The join event page.</span>
+
+<span class="sd">    If a POST request, actually add or remove the attendance of the current</span>
+<span class="sd">    user. Otherwise, display a page with confirmation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_id (int): event id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">show_attending</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;attending&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">attending</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attending&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">attending</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/join_event.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">event_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">event_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show the event roster.</span>
+
+<span class="sd">    Users with hidden eighth period permissions will not be displayed in the public roster.</span>
+<span class="sd">    Users will be able to view all other viewable users, along with a count of the number of hidden users.</span>
+<span class="sd">    Event admins will see both the public and full roster.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_id (int): the Event id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+
+    <span class="n">full_roster</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">viewable_roster</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_hidden_members</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">full_roster</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">can_view_eighth</span><span class="p">:</span>
+            <span class="n">viewable_roster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_hidden_members</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+        <span class="s2">&quot;viewable_roster&quot;</span><span class="p">:</span> <span class="n">viewable_roster</span><span class="p">,</span>
+        <span class="s2">&quot;full_roster&quot;</span><span class="p">:</span> <span class="n">full_roster</span><span class="p">,</span>
+        <span class="s2">&quot;num_hidden_members&quot;</span><span class="p">:</span> <span class="n">num_hidden_members</span><span class="p">,</span>
+        <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/roster.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">add_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add event page.</span>
+
+<span class="sd">    An events administrator can create an event directly without</span>
+<span class="sd">    approval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_events_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_events_admin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;request_event&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="c1"># SAFE HTML</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+            <span class="c1"># auto-approve</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">approved_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Because you are an administrator, this event was auto-approved.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> added event: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">created_hook</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding event.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">request_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Request event page.</span>
+
+<span class="sd">    The event is added in the system but must be approved by</span>
+<span class="sd">    an administrator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="c1"># SAFE HTML</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+                <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">created_hook</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding event.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Submit&quot;</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">modify_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">event_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Modify event page. You may only modify an event if you are an</span>
+<span class="sd">    administrator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_id (int): event id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+    <span class="n">is_events_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_events_admin</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PermissionDenied</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AdminEventForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">event</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="c1"># SAFE HTML</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified event.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> modified event: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error modifying event.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AdminEventForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">event</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Modify&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">event_id</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">delete_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">event_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete event page. You may only delete an event if you are an</span>
+<span class="sd">    administrator. Confirmation page if not POST.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_id: event id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PermissionDenied</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted event.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> deleted event: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span><span class="p">})</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">show_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unhide an event that was hidden by the logged-in user.</span>
+
+<span class="sd">    events_hidden in the user model is the related_name for</span>
+<span class="sd">    &quot;users_hidden&quot; in the EventUserMap model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">event_id</span> <span class="o">=</span> <span class="n">get_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Unhidden&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@deny_restricted</span>
+<span class="k">def</span> <span class="nf">hide_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Hide an event for the logged-in user.</span>
+
+<span class="sd">    events_hidden in the user model is the related_name for</span>
+<span class="sd">    &quot;users_hidden&quot; in the EventUserMap model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">event_id</span> <span class="o">=</span> <span class="n">get_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
