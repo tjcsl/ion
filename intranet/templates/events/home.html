@@ -73,7 +73,7 @@
                 </a>
             {% endif %}
 
-            {% if not show_all %}
+            {% if not show_all  and is_events_admin %}
                 <a href="?show_all=1" class="button">
                     Show All
                 </a>
@@ -99,7 +99,7 @@
             {% endif %}
 
             {% if not show_all and not classic %}
-                &nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a id="month-button" class="button" href="#">Month</a>
                 <a id="week-button" class="button" href="#">Week</a>
                 &nbsp;
@@ -125,6 +125,7 @@
             {% for category in events %}
                 {% if category.title == "Awaiting Approval" and category.events %}
                     <h2 class="category">{{ category.title }}:</h2>
+
                     {% for event in category.events %}
 
                         {% with show_date_icon=True %}
@@ -132,8 +133,10 @@
                         {% endwith %}
 
                     {% endfor %}
+
                 {% elif category.title == "Week and month" and category.events and category.has_special_event %}
                     <h2 class="category">Special:</h2>
+
                     {% for event in category.events %}
                         {% if event.show_attending or event.scheduled_activity or event.announcement or event.show_on_dashboard %}
 
@@ -143,13 +146,10 @@
 
                         {% endif %}
                     {% endfor %}
+
                 {% endif %}
             {% endfor %}
         {% endif %}
-
-            {% if num_events == 0 %}
-                There are no events to display at this time.
-            {% endif %}
 
             <br />
             <br />

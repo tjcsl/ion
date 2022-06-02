@@ -244,10 +244,19 @@ def join_event_view(request, event_id):
     """
 
     event = get_object_or_404(Event, id=event_id)
+    is_events_admin = request.user.has_admin_permission("events")
+
+    if not event.approved and not is_events_admin:
+        raise http.Http404
+
     if not event.show_attending:
         return redirect("events")
 
     if request.method == "POST":
+        if not event.approved:
+            messages.error(request, "You cannot attend this event because it has not been approved yet.")
+            return redirect("events")
+
         if "attending" in request.POST:
             attending = request.POST.get("attending")
 
@@ -258,7 +267,7 @@ def join_event_view(request, event_id):
 
             return redirect("events")
 
-    context = {"event": event, "is_events_admin": request.user.has_admin_permission("events")}
+    context = {"event": event, "is_events_admin": is_events_admin}
     return render(request, "events/join_event.html", context)
 
 
@@ -276,6 +285,10 @@ def event_roster_view(request, event_id):
     """
 
     event = get_object_or_404(Event, id=event_id)
+    is_events_admin = request.user.has_admin_permission("events")
+
+    if not event.approved and not is_events_admin:
+        raise http.Http404
 
     full_roster = event.attending.all()
     viewable_roster = []
@@ -291,7 +304,7 @@ def event_roster_view(request, event_id):
         "viewable_roster": viewable_roster,
         "full_roster": full_roster,
         "num_hidden_members": num_hidden_members,
-        "is_events_admin": request.user.has_admin_permission("events"),
+        "is_events_admin": is_events_admin,
     }
     return render(request, "events/roster.html", context)
 

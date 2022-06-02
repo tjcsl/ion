@@ -22,7 +22,8 @@ class EventsTest(IonTestCase):
 
     def test_event_model(self):
         user = self.login()
-        event = self.create_random_event(user)
+        event = self.create_random_event(user, approved=True)
+        unapproved_event = self.create_random_event(user)
 
         # Check event properties
         self.assertTrue(event.is_this_year)
@@ -32,15 +33,15 @@ class EventsTest(IonTestCase):
         # Test creating/fetching EventUserMap
         self.assertFalse(EventUserMap.objects.exists())
         user_map = event.user_map
+
         # Test that EventUserMap was created
         self.assertTrue(EventUserMap.objects.filter(event=event).count(), 1)
         self.assertEqual(event.user_map, user_map)
 
         self.assertEqual(str(event.user_map), "UserMap: {}".format(event.title))
 
-        self.assertEqual("UNAPPROVED - {} - {}".format(event.title, event.time), str(event))
+        self.assertEqual("UNAPPROVED - {} - {}".format(unapproved_event.title, unapproved_event.time), str(unapproved_event))
 
-        event = self.create_random_event(user, approved=True)
         self.assertEqual("{} - {}".format(event.title, event.time), str(event))
 
         next_event = self.create_random_event(user, time=timezone.now() + timezone.timedelta(days=15))
@@ -63,7 +64,7 @@ class EventsTest(IonTestCase):
 
     def test_join_event(self):
         user = self.login()
-        event = self.create_random_event(user)
+        event = self.create_random_event(user, approved=True)
 
         # Test GET of valid event
         response = self.client.get(reverse("join_event", args=[event.id]))
@@ -99,7 +100,7 @@ class EventsTest(IonTestCase):
         # Test as a regular person
         user = self.login()
 
-        event = self.create_random_event(user)
+        event = self.create_random_event(user, approved=True)
 
         # Test with non-existent event
         response = self.client.get(reverse("event_roster", args=[9999]))

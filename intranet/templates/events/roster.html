@@ -3,7 +3,7 @@
 {% load pipeline %}
 
 {% block title %}
-    {{ block.super }} - Event Roster
+    {{ block.super }} - Event Detail
 {% endblock %}
 
 {% block css %}
@@ -14,6 +14,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static 'js/events.js' %}"></script>
 {% endblock %}
 
 {% block head %}
@@ -29,7 +30,7 @@
     <div class="primary-content events">
 
         <div class="events-container">
-        {% with show_attend=1 %}
+        {% with show_attend=1 show_date_icon=True %}
             {% include "events/event.html" %}
         {% endwith %}
         </div>
