@@ -262,8 +262,8 @@ def handle_sap(q):
                 "total": {
                     "all": len(vote_users),
                     "all_percent": perc(len(vote_users), users.count()),
-                    "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
-                    "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes])),
+                    "male": fmt(sum(v.user.is_male * user_scale[v.user.id] for v in votes)),
+                    "female": fmt(sum(v.user.is_female * user_scale[v.user.id] for v in votes)),
                 }
             },
             "users": [v.user for v in votes],
@@ -273,8 +273,8 @@ def handle_sap(q):
             yr_votes = list(filter(None, yr_votes))
             choice["votes"][yr] = {
                 "all": len(set(yr_votes)),
-                "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-                "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
+                "male": fmt(sum(u.is_male * user_scale[u.id] for u in yr_votes)),
+                "female": fmt(sum(u.is_female * user_scale[u.id] for u in yr_votes)),
             }
 
         choices.append(choice)
@@ -287,8 +287,8 @@ def handle_sap(q):
             "total": {
                 "all": len(clr_users),
                 "all_percent": perc(len(clr_users), users.count()),
-                "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
-                "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes])),
+                "male": fmt(sum(v.user.is_male * user_scale[v.user.id] for v in votes)),
+                "female": fmt(sum(v.user.is_female * user_scale[v.user.id] for v in votes)),
             }
         },
         "users": clr_users,
@@ -298,8 +298,8 @@ def handle_sap(q):
         yr_votes = list(filter(None, yr_votes))
         choice["votes"][yr] = {
             "all": len(yr_votes),
-            "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
+            "male": fmt(sum(u.is_male * user_scale[u.id] for u in yr_votes)),
+            "female": fmt(sum(u.is_female * user_scale[u.id] for u in yr_votes)),
         }
 
     choices.append(choice)
@@ -321,8 +321,8 @@ def handle_sap(q):
         yr_votes = list(filter(None, yr_votes))
         choice["votes"][yr] = {
             "all": len(set(yr_votes)),
-            "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-            "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
+            "male": fmt(sum(u.is_male * user_scale[u.id] for u in yr_votes)),
+            "female": fmt(sum(u.is_female * user_scale[u.id] for u in yr_votes)),
         }
 
     choices.append(choice)
@@ -339,10 +339,10 @@ def handle_rank_choice(q):
             "choice": c,
             "votes": {
                 "total": {
-                    "all": sum([v.rank for v in votes]),
+                    "all": sum(v.rank for v in votes),
                     "all_percent": "N/A",
-                    "male": sum([v.rank if v.user.is_male else 0 for v in votes]),
-                    "female": sum([v.rank if v.user.is_female else 0 for v in votes]),
+                    "male": sum(v.rank if v.user.is_male else 0 for v in votes),
+                    "female": sum(v.rank if v.user.is_female else 0 for v in votes),
                 }
             },
             "users": [v.user for v in votes],
@@ -351,9 +351,9 @@ def handle_rank_choice(q):
             yr_votes = [v if v.user.grade and v.user.grade.number == yr else None for v in votes]
             yr_votes = list(filter(None, yr_votes))
             choice["votes"][yr] = {
-                "all": sum([v.rank for v in yr_votes]),
-                "male": sum([v.rank if v.user.is_male else 0 for v in yr_votes]),
-                "female": sum([v.rank if v.user.is_female else 0 for v in yr_votes]),
+                "all": sum(v.rank for v in yr_votes),
+                "male": sum(v.rank if v.user.is_male else 0 for v in yr_votes),
+                "female": sum(v.rank if v.user.is_female else 0 for v in yr_votes),
             }
 
         choices.append(choice)

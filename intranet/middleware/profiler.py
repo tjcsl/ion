@@ -157,7 +157,7 @@ class ProfileMiddleware:
         stats["utime"] = self._elapsed_ru("ru_utime")
         stats["stime"] = self._elapsed_ru("ru_stime")
         queries = connections["DATABASE_CONNECTION"].queries
-        stats["query_time"] = sum([float(query["time"]) for query in queries])
+        stats["query_time"] = sum(float(query["time"]) for query in queries)
         stats["query_count"] = len(queries)
         return stats
 
