@@ -17,12 +17,13 @@
         function setView(view_name){
             if(view_name == "month") {
                 $("#view-div").html(`{% include "events/month.html" %}`);
-                $("#{{ week_data.today }}").attr("class", "today");
             }
             else {
-                $("#view-div").html(`{% include "events/week.html" %}`);
-                $("#{{ week_data.today }}").attr("class", "today");
+                $("#view-div").html(`{% include "events/week.html"  %}`);
             }
+
+            toggleTouchEvents(view_name);
+            $("#{{ week_data.today }}").attr("class", "today");
         }
 
         $(document).ready(function() {
@@ -46,6 +47,16 @@
     {{ block.super }}
     {% stylesheet 'dashboard' %}
     {% stylesheet 'events' %}
+
+    {% if is_events_admin %}
+    <style>
+        @media (max-width: 1080px) {
+            .events-container > .event:nth-child(2) {
+                margin-top: 80px !important;
+            }
+        }
+    </style>
+    {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -61,6 +72,7 @@
     <div class="primary-content events">
         <h2>Events</h2>
         <div class="button-container">
+            <div class="button-subcontainer">
 
             {% if not classic %}
                 <a href="?classic=1" class="button">
@@ -98,11 +110,13 @@
                 </a>
             {% endif %}
 
+            </div>
+
             {% if not show_all and not classic %}
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a id="month-button" class="button" href="#">Month</a>
-                <a id="week-button" class="button" href="#">Week</a>
-                &nbsp;
+                <div class="button-subcontainer">
+                    <a id="month-button" class="button" href="#">Month</a>
+                    <a id="week-button" class="button" href="#">Week</a>
+                </div>
             {% endif %}
 
         </div>

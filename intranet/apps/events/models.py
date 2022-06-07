@@ -210,6 +210,13 @@ class Event(models.Model):
         except EventUserMap.DoesNotExist:
             return EventUserMap.objects.create(event=self)
 
+    @property
+    def happened(self):
+        """Return whether an event has happened."""
+        if self.time <= timezone.localtime():
+            return True
+        return False
+
     def __str__(self):
         if not self.approved:
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
