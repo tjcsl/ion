@@ -51,7 +51,7 @@ def events_context(request, date=None):
         date_today = timezone.make_aware(date_today)
 
     date_tomorrow = date_today + timedelta(days=1)
-    viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
+    viewable_events = Event.objects.visible_to_user(request.user).prefetch_related("groups")
     events = viewable_events.filter(time__range=[date_today, date_tomorrow])
 
     display = True
@@ -168,9 +168,10 @@ def events_view(request):
                 raise http.Http404
 
     show_all = False
-    if is_events_admin and "show_all" in request.GET:
-        viewable_events = Event.objects.all().this_year().prefetch_related("groups")
-        show_all = True
+    if is_events_admin:
+        viewable_events = Event.objects.all().filter(rejected=False).this_year().prefetch_related("groups")
+        if "show_all" in request.GET:
+            show_all = True
     else:
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
@@ -191,22 +192,26 @@ def events_view(request):
         return False
 
     events_categories = [
-        {"title": "This week", "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])},
-        {"title": "This month", "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1])},
+        {"title": "This week", "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1], approved=True)},
+        {"title": "This month", "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1], approved=True)},
     ]
 
     if not show_all and not classic:
         events_categories.append(
-            {"title": "Week and month",
-             "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1]),
-             "has_special_event": has_special_event(viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1])), }, )
+            {
+                "title": "Week and month",
+                "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1], approved=True),
+                "has_special_event": has_special_event(viewable_events.filter(time__gte=this_week[0], time__lt=this_month[1])),
+            }
+        )
 
     if is_events_admin:
-        unapproved_events = Event.objects.filter(approved=False, rejected=False).prefetch_related("groups")
-        past_events = Event.objects.filter(time__lt=this_week[0])
-        future_events = Event.objects.filter(time__gte=this_month[1])
+        unapproved_events = viewable_events.filter(approved=False).prefetch_related("groups")
+        past_events = viewable_events.filter(time__lt=this_week[0], approved=True)
+        future_events = viewable_events.filter(time__gte=this_month[1], approved=True)
 
         events_categories = [{"title": "Awaiting Approval", "events": unapproved_events}] + events_categories
+
         if show_all:
             events_categories.append({"title": "Future", "events": future_events})
             events_categories.append({"title": "Past", "events": past_events})
@@ -224,10 +229,12 @@ def events_view(request):
     }
     context["week_data"] = week_data(request)
     context["month_data"] = month_data(request)
+
     if "view" in request.GET and request.GET["view"] == "month":
         context["view"] = "month"
     else:
         context["view"] = "week"
+
     return render(request, "events/home.html", context)
 
 

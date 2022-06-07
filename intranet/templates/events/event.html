@@ -83,17 +83,17 @@
         <div class="event-content" style="font-size:14px;">
             {{ event.description|safe }}
         </div>
+        {% if not event.happened %}
+            <form action="{% url 'join_event' event.id %}" method="post" data-form-no-attend="{{ event.id }}" name="no-attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="false">
+            </form>
 
-        <form action="{% url 'join_event' event.id %}" method="post" data-form-no-attend="{{ event.id }}" name="no-attend-form-{{ event.id }}">
-            {% csrf_token %}
-            <input type="hidden" name="attending" value="false">
-        </form>
-
-        <form action="{% url 'join_event' event.id %}" method="post" data-form-attend="{{ event.id }}" name="attend-form-{{ event.id }}">
-            {% csrf_token %}
-            <input type="hidden" name="attending" value="true">
-        </form>
-
+            <form action="{% url 'join_event' event.id %}" method="post" data-form-attend="{{ event.id }}" name="attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="true">
+            </form>
+        {% endif %}
         {% if is_events_admin %}
             {% if not event.approved %}
                 <form action="{% url 'events' %}" method="post" style="display:inline">
@@ -122,27 +122,48 @@
         {% if event.show_attending and not not_show_attend_form %}
         <div class="bottom-row show-attend">
             <span class="signup-status">
-                People attending: {{ event.attending.count }}
+                People
+                {% if event.happened %}
+                    attended:
+                {% else %}
+                    attending:
+                {% endif %}
+                {{ event.attending.count }}
             </span>
-
             {% if request.user in event.attending.all %}
                 <span class="attend-status">
-                    You are <b style="color: green">attending</b> this event.
+                    You
+                    {% if event.happened %}
+                        attended
+                    {% else %}
+                        <b style="color: green"> are attending </b>
+                    {% endif %}
+                    this event.
 
+                    {% if not event.happened %}
                         <a href="#" data-form-no-attend="{{ event.id }}" class="button small-button no-attend-button">
                             <i class="fas fa-times"></i>
                             Don't Attend
                         </a>
+                    {% endif %}
 
                 </span>
             {% else %}
                 <span class="attend-status">
-                    You are <b style="color: red">not attending</b> this event.
+                    You
+                    {% if event.happened %}
+                        did not attend
+                    {% else %}
+                        <b style="color: red"> are not attending </b>
+                    {% endif %}
+                    this event.
 
+                    {% if not event.happened %}
                         <a href="#" data-form-attend="{{ event.id }}" class="button small-button attend-button">
                             <i class="fas fa-check"></i>
                             Attend
                         </a>
+                    {% endif %}
 
                 </span>
             {% endif %}
