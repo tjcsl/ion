@@ -1,34 +1,59 @@
 {% load static %}
 
-<div class="schedule" data-endpoint="{% url 'calendar' %}" data-prev-date="{{ week_data.last_week }}" data-next-date="{{ week_data.next_week }}" data-date="{{ week_data.today }}">
+<div class="arrow-container week-table" style="border-spacing:0;">
+    {% if not hide_arrows %}
+        <a href="?date={{ week_data.last_week }}" class="button chevron schedule-left" title="Previous Week" id="left-button">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        &nbsp;
+    {% endif %}
 
-            <table class="week-table">
+    <b class="week-month-title">Week of {{ week_data.days.0.sched_ctx.date|date:"N j" }}</b>
+
+    {% if not hide_arrows %}
+    &nbsp;
+    <a href="?date={{ week_data.next_week }}" class="button chevron schedule-right" title="Next Week" id="right-button">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+
+    <table class="week-table week-only">
         <tr>
-            <td{% if not hide_arrows %} class="chevron"><a href="?date={{ week_data.last_week }}" class="chevron schedule-left" title="Previous Week"><i class="fas fa-chevron-left"></i></a>{% else %}>{% endif %}</td>
-    {% for day in week_data.days %}
-    <td {% if today == day.sched_ctx.date_today %}class="today"{% endif %}>
-            <h2 class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
-        {% if day.sched_ctx.dayobj %}
-        <h2 class="day-name {{ day.sched_ctx.dayobj.day_type.class_name }}">{{ day.sched_ctx.dayobj.day_type.name|safe }}{% if day.sched_ctx.comment %} {{ day.sched_ctx.comment }}{% endif %}</h2>
-            <table class="bellschedule-table" data-date="{{ day.sched_ctx.date|date:'Y-m-d' }}">
-            {% for block in day.sched_ctx.blocks %}
-                <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}" data-block-order="{{ block.order }}">
-                    <th class="block">{{ block.name|safe }}:</th>
-                    <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
-                </tr>
-            {% endfor %}
-            </table>
-        {% else %}
-            {% if day.sched_ctx.is_weekday %}
-                <h3 class="day-name">No schedule available</h3>
-            {% else %}
-                <h3 class="day-name">No school</h3>
-            {% endif %}
-        {% endif %}
-    </td>
-    {% endfor %}
-    <td{% if not hide_arrows %} class="chevron"><a href="?date={{ week_data.next_week }}" class="chevron schedule-right" title="Next Week"><i class="fas fa-chevron-right"></i></a>{% else %}>{% endif %}</td>
-    </tr>
+            {% for day in week_data.days %}
+            <td id="{{ day.sched_ctx.date }}">
+                <h2 class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
 
-</table>
+                {% if day.sched_ctx.dayobj %}
+                <h2 class="day-name {{ day.sched_ctx.dayobj.day_type.class_name }}">
+                    {{ day.sched_ctx.dayobj.day_type.name|safe }}
+
+                    {% if day.sched_ctx.comment %}
+                        {{ day.sched_ctx.comment }}
+                    {% endif %}
+                </h2>
+
+                <table class="bellschedule-table" data-date="{{ day.sched_ctx.date|date:'Y-m-d' }}">
+                    {% for block in day.sched_ctx.blocks %}
+                    <tr class="schedule-block" data-block-name="{{ block.name|safe }}"
+                        data-block-start="{{ block.start.str_12_hr }}"
+                        data-block-end="{{ block.end.str_12_hr }}"
+                        data-block-order="{{ block.order }}">
+
+                        <th class="block">{{ block.name|safe }}:</th>
+                        <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                {% else %}
+                    {% if day.sched_ctx.is_weekday %}
+                        <h3 class="day-name">No schedule available</h3>
+                    {% else %}
+                        <h3 class="day-name">No school</h3>
+                    {% endif %}
+                {% endif %}
+            </td>
+            {% endfor %}
+    </table>
 </div>
