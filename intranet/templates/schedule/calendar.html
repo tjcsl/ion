@@ -14,12 +14,11 @@
     <script>
         var view = "{{ view }}";
         function setView(view_name){
-            if(view_name == "month") {
-                $("#view-div").html(`{% include "schedule/month.html" %}`);
-            }
-            else {
-                $("#view-div").html(`{% include "schedule/week.html" %}`);
-            }
+            if(view_name == "month") $("#view-div").html(`{% include "schedule/month.html" %}`);
+            else                     $("#view-div").html(`{% include "schedule/week.html" %}`);
+
+            toggleTouchEvents(view_name);
+            $("#{{ day.sched_ctx.date }}").attr("class", "today");
         }
         $(document).ready(function() {
             setView(view);
@@ -68,10 +67,12 @@
 {% endblock %}
 
 {% block main %}
-    <div class="change-view">
-        <a id="week-button" class="button" href="#">Week</a>
-        <a id="month-button" class="button" href="#">Month</a>
-    </div>
-    <div class="primary-content" id="view-div">
+    <div class="primary-content">
+        <h2>Calendar</h2>
+        <div class="button-container">
+            <a id="month-button" class="button" href="#">Month</a>
+            <a id="week-button" class="button" href="#">Week</a>
+        </div>
+        <div id="view-div"></div>
     </div>
 {% endblock %}
