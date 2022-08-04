@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #1077) documentation</title>
+    <title>Coding Style Guide &#8212; TJ Intranet v3 (Build #1165) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -134,12 +135,12 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="coding-style-guide">
-<h1>Coding Style Guide<a class="headerlink" href="#coding-style-guide" title="Permalink to this headline">¶</a></h1>
+<h1>Coding Style Guide<a class="headerlink" href="#coding-style-guide" title="Permalink to this heading">¶</a></h1>
 <p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> (the official style guide for Python). Most PEP8 formatting conventions are enforced in the build by <code class="docutils literal notranslate"><span class="pre">pylint</span></code>, <code class="docutils literal notranslate"><span class="pre">flake8</span></code>, and a combination of <code class="docutils literal notranslate"><span class="pre">black</span></code>, <code class="docutils literal notranslate"><span class="pre">autopep8</span></code>, and <code class="docutils literal notranslate"><span class="pre">isort</span></code>. Therefore, if you do not follow them, the build may not pass.</p>
 <p>However, for Ion, we limit the lengths of lines to 150 characters, not 80 characters.</p>
 <p>Note: CSS/JS/template formatting is enforced by <code class="docutils literal notranslate"><span class="pre">scripts/static_templates_format.sh</span></code>. Currently, this just strips trailing whitespace.</p>
 <section id="main-points">
-<h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this headline">¶</a></h2>
+<h2>Main points<a class="headerlink" href="#main-points" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Indent using 4 spaces.</p></li>
 <li><p>Use underscores in favor of camel case for all names except the names of classes.</p></li>
@@ -153,7 +154,7 @@
 </ul>
 </section>
 <section id="what-is-enforced-in-the-build">
-<h2>What is enforced in the build<a class="headerlink" href="#what-is-enforced-in-the-build" title="Permalink to this headline">¶</a></h2>
+<h2>What is enforced in the build<a class="headerlink" href="#what-is-enforced-in-the-build" title="Permalink to this heading">¶</a></h2>
 <p>At the time of this writing, the GitHub Actions build runs the following commands:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>flake8 --max-line-length <span class="m">150</span> --exclude<span class="o">=</span>*/migrations/* .
 pylint --jobs<span class="o">=</span><span class="m">0</span> --disable<span class="o">=</span>fixme,broad-except,global-statement,attribute-defined-outside-init intranet/
@@ -169,7 +170,7 @@ isort --check --recursive intranet
 <p>If <code class="docutils literal notranslate"><span class="pre">flake8</span></code> or <code class="docutils literal notranslate"><span class="pre">pylint</span></code> throw errors, the error messages are usually human-readable. if <code class="docutils literal notranslate"><span class="pre">isort</span></code> gives any errors, you can have it automatically correct the order of all imports by running <code class="docutils literal notranslate"><span class="pre">isort</span> <span class="pre">--recursive</span> <span class="pre">intranet</span></code>. If the build fails because running <code class="docutils literal notranslate"><span class="pre">scripts/format.sh</span></code> resulted in changes, you can simply run  <code class="docutils literal notranslate"><span class="pre">./scripts/format.sh</span></code> to fix your formatting.</p>
 </section>
 <section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
 <dt>Group imports in the following order:</dt><dd><ol class="arabic simple">
@@ -187,7 +188,7 @@ isort --check --recursive intranet
 <li><p>Use relative imports to avoid hardcoding a module’s package name. This greatly improves portability and is useful when importing from another module in the current app.</p></li>
 </ul>
 <section id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h3>
 <p>Standard library imports:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span>
@@ -214,7 +215,7 @@ isort --check --recursive intranet
 </section>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a>.</p></li>
 <li><p><a class="reference external" href="https://google.github.io/styleguide/htmlcssguide.html">Google HTML/CSS Style Guide</a>.</p></li>
