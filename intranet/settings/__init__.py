@@ -526,6 +526,7 @@ OAUTH2_PROVIDER = {
     "SCOPES": {"read": "Read scope", "write": "Write scope"},
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
+    "PKCE_REQUIRED": False
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
 
