@@ -29,7 +29,7 @@ services:
     image: application
     networks:
     - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
     ports:
     - 8080:8080
     build:
@@ -46,7 +46,7 @@ services:
     image: application
     networks:
     - intranet_net
-    command: pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair
+    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"]
     depends_on:
     - application
     volumes:
@@ -57,7 +57,7 @@ services:
     image: application
     networks:
     - intranet_net
-    command: pipenv run celery --app intranet beat -l info
+    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && pipenv run celery --app intranet beat -l info"]
     depends_on:
     - application
     volumes:
