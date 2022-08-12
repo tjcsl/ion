@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.users.tests &#8212; TJ Intranet v3 (Build #1199) documentation</title>
+    <title>intranet.apps.users.tests &#8212; TJ Intranet v3 (Build #1204) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -599,17 +599,25 @@
         <span class="sd">&quot;&quot;&quot;Tests all possible values of is_male/is_female.&quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
-        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_nonbinary</span><span class="p">)</span>
 
-        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="s2">&quot;male&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_nonbinary</span><span class="p">)</span>
 
-        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="s2">&quot;female&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_nonbinary</span><span class="p">)</span>
+
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="s2">&quot;non-binary&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_nonbinary</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ProfileTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.tests.ProfileTest">[docs]</a><span class="k">class</span> <span class="nc">ProfileTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>

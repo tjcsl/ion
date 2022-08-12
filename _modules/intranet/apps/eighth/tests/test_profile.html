@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.test_profile &#8212; TJ Intranet v3 (Build #1199) documentation</title>
+    <title>intranet.apps.eighth.tests.test_profile &#8212; TJ Intranet v3 (Build #1204) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -313,20 +313,20 @@
                 <span class="s2">&quot;middle_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
-                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;female&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
         <span class="n">user2</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;===2020-2021===</span><span class="se">\n</span><span class="s2">None&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;1234678&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">student_id</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Angela&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;William&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">middle_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">nickname</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">get_senior_graduation_year</span><span class="p">(),</span> <span class="n">Grade</span><span class="o">.</span><span class="n">year_from_grade</span><span class="p">(</span><span class="n">user2</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user2</span><span class="o">.</span><span class="n">gender</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;===2020-2021===</span><span class="se">\n</span><span class="s2">None&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;1234678&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">student_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;Angela&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;William&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">middle_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">nickname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">get_senior_graduation_year</span><span class="p">(),</span> <span class="n">Grade</span><span class="o">.</span><span class="n">year_from_grade</span><span class="p">(</span><span class="n">user2</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="s2">&quot;female&quot;</span><span class="p">,</span> <span class="n">user2</span><span class="o">.</span><span class="n">gender</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
