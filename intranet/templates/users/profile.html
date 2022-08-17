@@ -63,6 +63,33 @@
         });
         </script>
     {% endif %}
+    {% if request.user.is_eighth_admin or request.user.is_teacher %}
+        <script>
+        $(function() {
+            let counter = 0;
+            $('body').keydown(function(e) {
+                if (e.keyCode === 9) {
+                    if(counter === 0) {
+                        e.preventDefault();
+                        $("#searchbox").focus();
+                    }
+                    else if(counter === 1) {
+                        e.preventDefault();
+                        $("#eighth-profile").focus();
+                    }
+                    else if (counter === 2) {
+                        e.preventDefault();
+                        $("ul.nav li a").first().focus();
+                    }
+                    counter ++;
+                }
+                else {
+                    $("#searchbox").focus();
+                }
+            });
+        });
+        </script>
+    {% endif %}
     <script src="{% static 'vendor/sorttable.js' %}"></script>
 {% endblock %}
 
@@ -113,7 +140,7 @@
             {% if request.user.is_eighth_admin or request.user.is_teacher %}
                 <div style="text-align: center">
                     <br>
-                    <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
+                    <a id="eighth-profile" href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
                     {% if request.user.is_eighth_admin %}
                         <br>
                         <a href="/profile/{{ profile_user.id }}?clear_cache=1&amp;full=1" class="button small-button" title="Clear cached information for this user.">Clear Cache</a> &nbsp;
