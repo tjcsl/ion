@@ -1,5 +1,9 @@
 @import "colors";
 
+body {
+    overflow-x: hidden;
+}
+
 svg {
     width: 100%;
     max-height: 80vh;
@@ -11,6 +15,7 @@ svg {
 
 .action-view {
     width: 60vw;
+    height: 40px;
 
     color: #424242;
     cursor: pointer;
@@ -19,6 +24,8 @@ svg {
         display: inline-block;
         vertical-align: middle;
         width: 80%;
+        position: relative;
+        top: 1px;
 
         .selectize-input {
             border: none !important;
@@ -30,6 +37,89 @@ svg {
         vertical-align: middle;
         font-size: 18px;
     }
+}
+
+@media (max-width: 550px) {
+    h2.personal-status {
+        width: 95% !important;
+    }
+
+    svg {
+        position: relative;
+        top: 5vh;
+    }
+
+    .action-view {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 65px;
+
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+
+        font-size: 14pt;
+        line-height: 8vh;
+
+        .action-button {
+            position: relative;
+            top: 0 !important;
+        }
+
+        .selectize-control.single {
+            position: relative;
+            top: 5px !important;
+        }
+
+        &.search-widget {
+            top: 40px;
+            height: calc(100vh - 40px);
+            background-color: #ffffff94;
+            z-index: 100;
+
+            .search-widget {
+                background-color: white;
+            }
+
+            .selectize-input {
+                padding: 4px 0;
+            }
+
+            .selectize-dropdown-content {
+                max-height: 80vh;
+
+                .option {
+                    height: 30px;
+                    line-height: 30px;
+                    border-bottom: 1px solid #eee;
+                }
+            }
+        }
+
+        i {
+            vertical-align: middle;
+            padding: 0 8px 3px 12px;
+        }
+    }
+
+}
+
+@media (max-width: 380px) {
+    .action-view {
+        height: 50px;
+    }
+
+    svg {
+        top: 3vh;
+    }
+}
+
+.action-button {
+    position: relative;
+    top: 10px;
 }
 
 .bus {
@@ -66,58 +156,6 @@ span.bus-number {
     color: #898989;
 }
 
-@media (max-width: 550px) {
-    h2.personal-status {
-        width: auto;
-    }
-
-    .action-view {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        height: 8vh;
-
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        border: none;
-
-        font-size: 28px;
-        line-height: 8vh;
-
-        &.search-widget {
-            top: 40px;
-            height: calc(100vh - 40px);
-            background-color: #0048ab;
-
-            .search-widget {
-                background-color: white;
-            }
-
-            .selectize-input {
-                padding: 4px 0;
-            }
-
-            .selectize-dropdown-content {
-                max-height: 80vh;
-
-                .option {
-                    height: 30px;
-                    line-height: 30px;
-                    border-bottom: 1px solid #eee;
-                }
-            }
-        }
-
-        i {
-            vertical-align: middle;
-            padding: 0 8px 3px 12px;
-        }
-    }
-
-}
-
 .busdriver-map#map {
     width: 100vw;
     height: 100vh;
@@ -152,16 +190,19 @@ h2.welcome-text {
 
 h2.title {
     font-size: 22px;
-    padding-top: 20px;
+    padding: 5px;
+    padding-left: 10px;
+    width: 95%;
     display: inline-block;
 }
 
-.list {
-    p {
-        display: inline-block;
-        padding: 10px;
-        font-size: 16px;
-    }
+.list p {
+    display: inline-block;
+    padding: 3px 5px;
+    font-size: 14pt;
+    width: 80px;
+    overflow: hidden;
+    height: 30px;
 }
 
 #buses {
@@ -178,3 +219,36 @@ h2.title {
         display: inline-block;
     }
 }
+
+.green {
+    background-color: rgb(9, 255, 0) !important;
+}
+
+.blue {
+    background-color: rgb(89, 230, 255) !important;
+}
+
+.red {
+    background-color: rgb(255, 75, 75) !important;
+}
+
+.orange {
+    background-color: rgb(235, 157, 23) !important;
+}
+
+.dark-red {
+    background-color: rgb(153, 0, 0) !important;
+    color: white;
+}
+
+svg text {
+    font-weight: bold;
+    font-size: 110%;
+}
+
+/*  TODO: flip bus map to be horizontal
+svg text {
+    transform: rotate(180deg) translate(87%, 18%);
+    transform-origin: center;
+}
+*/

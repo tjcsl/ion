@@ -49,18 +49,13 @@ $(function() {
             this.model = [];
             this.busDriver = false;
             if (!window.isAdmin) {
-                console.log('Not admin');
-            } else {
-                console.log('Admin');
-            }
-            if (!window.isAdmin) {
                 this.icon = 'fas fa-search';
-                this.text = 'search for bus';
-                this.action = 'search';
+                this.text = '&nbsp;&nbsp;&nbsp;Search for a bus';
+                this.action = 'Search for a bus';
             } else {
                 this.icon = 'fas fa-check-square';
-                this.text = 'mark bus arrived';
-                this.action = 'arrive';
+                this.text = '&nbsp;&nbsp;&nbsp;Mark a bus as arrived or on time';
+                this.action = 'Mark a bus as arrived or on time';
             }
 
             this.clicked = false;
@@ -98,23 +93,23 @@ $(function() {
             container.addClass('search-widget');
             container.html(renderedContent);
             let busList = [];
-            if (action === 'search') {
+            if (action === 'Search for a bus') {
                 busList = routeList.filter(bus => bus.attributes.status === 'a')
                                     .filter(bus => bus.attributes.route_name.includes('JT'))
                                     .map(bus => bus.attributes);
-            } else if (action === 'arrive') {
+            } else if (action === 'Mark a bus as arrived or on time') {
                 busList = routeList.filter(bus => !bus.attributes.route_name.includes('JT'))
                                     .map(bus => {
                                         if (bus.attributes.status === 'a') {
                                             // TODO: less hacky deep copy
                                             let attr = JSON.parse(JSON.stringify(bus.attributes));
-                                            attr.route_name = `Mark ${bus.attributes.route_name} on time`;
+                                            attr.route_name = `Mark ${bus.attributes.route_name} as on time`;
                                             return attr;
                                         } else {
                                             return bus.attributes;
                                         }
                                     });
-            } else if (action === 'assign') {
+            } else if (action === 'Assign a bus to this space') {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
                                     .map(bus => bus.attributes);
             }
@@ -143,10 +138,10 @@ $(function() {
             if (!isAdmin && this.busDriver) {
                 return;
             }
-            if (this.action === 'search') {
+            if (this.action === 'Search for a bus') {
                 Backbone.trigger('searchForBus', e.target.value);
                 this.hlBus = e.target.value;
-            } else if (this.action === 'assign') {
+            } else if (this.action === 'Assign a bus to this space') {
                 if (!this.selected) {
                     return;
                 }
@@ -154,7 +149,7 @@ $(function() {
                 route.space = this.selected.id;
                 route.status = 'a';
                 bus.sendUpdate(route);
-            } else if (this.action === 'arrive') {
+            } else if (this.action === 'Mark a bus as arrived or on time') {
                 let route_name = '';
                 let st = '';
                 // TODO: this is also super hacky
@@ -187,16 +182,16 @@ $(function() {
                 return;
             }
             switch (this.action) {
-                case 'search':
+                case 'Search for a bus':
                     this.searchBus();
                     break;
-                case 'assign':
+                case 'Assign a bus to this space':
                     this.assignBus();
                     break;
-                case 'unassign':
+                case 'Unassign bus from this space':
                     this.unassignBus();
                     break;
-                case 'arrive':
+                case 'Mark a bus as arrived or on time':
                     this.arriveBus();
                     break;
                 case 'vroom':
@@ -235,7 +230,7 @@ $(function() {
         vroom: function () {
             this.busDriver = true;
             this.icon = 'fas fa-arrow-left';
-            this.text = 'run out of gas?';
+            this.text = 'Run out of gas?';
             this.action = 'stop-bus';
             Messenger().post('Use the arrow keys or WASD to drive!');
             this.render();
@@ -250,8 +245,8 @@ $(function() {
                 return this.render();
             }
             this.icon = 'fas fa-plus-square';
-            this.text = 'assign bus';
-            this.action = 'assign';
+            this.text = '&nbsp;&nbsp;&nbsp;Assign a bus to this space';
+            this.action = 'Assign a bus to this space';
             this.selected = space;
             return this.render();
         },
@@ -264,27 +259,27 @@ $(function() {
                 return this.render();
             }
             this.icon = 'fas fa-minus-square';
-            this.text = 'unassign bus';
-            this.action = 'unassign';
+            this.text = '&nbsp;&nbsp;&nbsp;Unassign bus from this space'
+            this.action = 'Unassign bus from this space';
             this.selected = space;
             this.render();
         },
         handleDeselectSpace: function () {
             if (this.busDriver) {
                 this.icon = 'fas fa-arrow-left';
-                this.text = 'ran out of gas?';
+                this.text = 'Ran out of gas?';
                 this.action = 'stop-bus';
                 this.render();
                 return;
             }
             if (!window.isAdmin) {
                 this.icon = 'fas fa-search';
-                this.text = 'search for bus';
-                this.action = 'search';
+                this.text = '&nbsp;&nbsp;&nbsp;Search for a bus';
+                this.action = 'Search for a bus';
             } else {
                 this.icon = 'fas fa-check-square';
-                this.text = 'mark bus arrived';
-                this.action = 'arrive';
+                this.text = '&nbsp;&nbsp;&nbsp;Mark a bus as arrived or on time';
+                this.action = 'Mark a bus as arrived or on time';
             }
             this.render();
         }
@@ -404,8 +399,8 @@ $(function() {
                         }
 
                         if (route.attributes.route_name === userRoute && hlRouteNames.length === 0) {
-                            space.style.fill = '#e00000';
-                            text.fill('white');
+                            space.style.fill = '#09ff00';
+                            text.fill('black');
                         }
                     }
                 }
@@ -713,3 +708,16 @@ $(function() {
     }
 // window.personalStatusView = new bus.personalStatusView();
 });
+
+/*  TODO: flip bus map to be horizontal
+$(function() {
+    setTimeout(function() {
+        $("text").each(function(){
+            console.log($(this));
+            var pos = $(this).position();
+            console.log("transform ," + "rotate\(-90deg, " + pos.left + "px, " + pos.top + "px\)")
+            $(this).css("transform","rotate\(-90deg, " + pos.left + "px, " + pos.top + "px\)");
+        });
+    }, 1000);
+});
+*/

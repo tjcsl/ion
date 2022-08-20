@@ -13,11 +13,6 @@
     {% stylesheet 'bus' %}
     {% stylesheet 'polls' %}
     {% stylesheet 'dashboard' %}
-    <style>
-        svg text.extra-small {
-            font-size: 90%;
-        }
-    </style>
 {% endblock %}
 
 {% block js %}
@@ -38,11 +33,20 @@
     {% verbatim %}
     <script type="text/template" id="personal-status">
         <% if (route_name !== "Empty route") { %>
-            <h2 class="personal-status bordered-element">Hi <%= firstname %>, your bus (<strong><%= route_name %></strong>) is <%= label_status_strings[status].personal %> Have a great day!</h2>
+            <h2 class="personal-status bordered-element <%= label_status_strings[status].color %>">
+                <i class="fas fa-regular fa-<%= label_status_strings[status].icon %>"></i>&nbsp;
+                <strong> <%= route_name %> </strong>
+                <%= label_status_strings[status].personal %>
+            </h2>
         <% } else { %>
-        {% endverbatim %}
-            <h2 class="personal-status bordered-element">It looks like you don't have a bus registered. <a href="{% url 'preferences' %}#id_bus_route" target="_blank">Register.</a></h2>
-        {% verbatim %}
+    {% endverbatim %}
+        <h2 class="personal-status bordered-element">
+            <i class="fas fa-info-circle"></i>
+            <a href="{% url 'preferences' %}#id_bus_route" target="_blank">
+                Register your bus route for faster access to arrival information.
+            </a>
+        </h2>
+    {% verbatim %}
         <% } %>
     </script>
     <script type="text/template" id="route-view">
@@ -70,12 +74,14 @@
     </script>
     <script type="text/template" id="action-button-view">
         <div class="action-button">
-            <i class="<%= icon %>"></i><span class="action-button-text"> <%= text %></span>
+            <i class="<%= icon %>"></i>
+            <span class="action-button-text"> <%= text %></span>
         </div>
     </script>
     <script type="text/template" id="search-widget-view">
         <div class="search-widget">
-            <i class="back-button fas fa-arrow-left"></i><select name="buses" id="buses"></select>
+            <i class="back-button fas fa-arrow-left"></i>
+            <select name="buses" id="buses"></select>
         </div>
     </script>
     {% endverbatim %}

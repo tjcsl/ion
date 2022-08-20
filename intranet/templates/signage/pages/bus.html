@@ -32,17 +32,23 @@
             "a": {
                 empty_text: "No buses have arrived yet.",
                 name: "Arrived",
-                personal: "already here!"
+                personal: "has arrived.",
+                icon: "check",
+                color: "green",
             },
             "o": {
                 empty_text: "All buses have arrived or are delayed.",
                 name: "On Time",
-                personal: "on time."
+                personal: "is on time.",
+                icon: "clock",
+                color: "blue",
             },
             "d": {
                 empty_text: "No delays.",
                 name: "Delayed",
-                personal: "delayed. 😢"
+                personal: "is delayed.",
+                icon: "exclamation-circle",
+                color: "red",
             },
         };
 
@@ -61,6 +67,24 @@
                 document.getElementById('morning').hidden = true;
                 document.getElementById('afternoon').hidden = false;
             }
+
+            setInterval(function() {
+                var now = new Date();
+                var hr = now.getHours();
+                var ampm = 'AM';
+                if (hr >= 12) {
+                    hr -= 12;
+                    ampm = 'PM';
+                }
+                if (hr === 0) {
+                    hr = 12;
+                }
+                var min = now.getMinutes();
+                if (min < 10) {
+                    min = '0' + min;
+                }
+                $('.time').html(hr + ':' + min + ' ' + ampm);
+            }, 1000);
         }
     </script>
     <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
@@ -84,13 +108,17 @@
 
     .text {
         position: absolute;
-        right: calc(5vw + 20px);
-        width: calc(50% - 5vw - 20px);
+        top: 42%;
+        right: 6%;
+        width: 50%;
+        padding: 20px !important;
+
         font-size: 36px;
+        text-align: center;
         background-color: white;
         padding: 20px;
-        top: 200px;
         display: inline-block;
+
         background-color: white;
         border-radius: 5px;
         border: 1px solid #d8d8d8;
@@ -119,9 +147,10 @@
 
     .bus-col {
         display: inline-block;
-        width: 33%;
+        width: 33.333333%;
         height: 100%;
         vertical-align: top;
+        margin-right: -4px;
     }
 
     .bus-heading {
@@ -130,7 +159,6 @@
     }
 
     .bus-heading {
-        margin-top: 15px;
         width: 100%;
         height: 100%;
     }
@@ -149,32 +177,85 @@
         font-size: 20px;
         padding: 15px;
     }
+
+    .logo-ion {
+        position: absolute;
+        top: 30px;
+        right: 280px;
+        width: 48px;
+    }
+
+    .logo-bus {
+        position: absolute;
+        top: 33px;
+        right: 230px;
+        font-size: 30pt;
+    }
+
+    .bus-title {
+        position: absolute;
+        top: 30px;
+        right: 60px;
+        font-size: 24pt;
+    }
+
+    .time {
+        font-size: 36px;
+        font-weight: bold;
+        position: fixed;
+        bottom: 30px;
+        right: 3%;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .list p {
+        padding: 10px 15px;
+        font-size: 18pt;
+    }
     </style>
 {% endblock %}
 
 {% block body %}
+    <div id="title-container">
+        <img class="logo-ion" src="/static/img/logos/Icon-96@2x.png" alt="Ion">
+        <i class="fa-2x fas fa-bus logo-bus"></i>
+        <h2 class="bus-title">Bus Board</h2>
+    </div>
+    <div class="time">&nbsp;</div>
     <div id="morning">
         <h1 class="welcome-text">Good morning!</h1>
         <div class="bus-heading">
             <div class="bus-col">
-                <h2 class="bus-header">Arrived Buses</h2>
+                <h2 class="green bus-header">
+                    <i class="fas fa-regular fa-check"></i>
+                    Arrived
+                </h2>
             </div>
             <div class="bus-col">
-                <h2 class="bus-header">On Time Buses</h2>
+                <h2 class="blue bus-header">
+                    <i class="fas fa-regular fa-clock"></i>
+                    On Time
+                </h2>
             </div>
             <div class="bus-col">
-                <h2 class="bus-header">Delayed Buses</h2>
+                <h2 class="red bus-header">
+                    <i class="fas fa-regular fa-exclamation-circle"></i>
+                    Delayed
+                </h2>
             </div>
         </div>
         <div class="bus-body">
             <div class="bus-col">
-                <div class="list-bus" id="arrived"></div>
+                <div class="list" id="arrived"></div>
             </div>
             <div class="bus-col">
-                <div class="list-bus" id="ontime"></div>
+                <div class="list" id="ontime"></div>
             </div>
             <div class="bus-col">
-                <div class="list-bus" id="delayed"></div>
+                <div class="list" id="delayed"></div>
             </div>
         </div>
     </div>
@@ -208,7 +289,8 @@
         </script>
         <script type="text/template" id="search-widget-view">
             <div class="search-widget">
-                <i class="back-button fas fa-arrow-left"></i><select name="buses" id="buses"></select>
+                <i class="back-button fas fa-arrow-left"></i>
+                <select name="buses" id="buses"></select>
             </div>
         </script>
         {% endverbatim %}
@@ -216,13 +298,14 @@
             {% svg 'optimized_bus_map_v2' %}
         </script>
         <div class="primary-content">
-            <div class="info"> </div>
+            <div class="info">  </div>
             <div class="text">
-                <i class="fas fa-bus"></i> Bus Board
+                <i class="fas fa-info-circle"></i>
+                Trying to connect...
             </div>
-            <div class="logo">
+            <!--<div class="logo">
                 <img src="{% static 'img/csl_logo.png' %}">
-            </div>
+            </div>-->
         </div>
     </div>
 {% endblock %}

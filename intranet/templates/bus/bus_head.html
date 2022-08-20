@@ -4,23 +4,44 @@
     window.isAdmin = {{ admin | yesno:"true,false" }};
     window.isStudent = {{ request.user.is_student | yesno:"true,false" }}
     window.enableBusDriver = {{ enable_bus_driver | yesno:"true,false" }}
+    window.endHour = "{{ school_end_hour }}";
+    window.endMinute = "{{ school_end_time }}";
+
     window.label_status_strings = {
         "a": {
             empty_text: "No buses have arrived yet.",
             name: "Arrived",
-            personal: "already here!"
+            personal: "has arrived.",
+            icon: "check",
+            color: "green",
         },
         "o": {
             empty_text: "All buses have arrived or are delayed.",
             name: "On Time",
-            personal: "on time."
+            personal: "is on time.",
+            icon: "clock",
+            color: "blue",
         },
         "d": {
             empty_text: "No delays.",
             name: "Delayed",
-            personal: "delayed. 😢"
+            personal: "is delayed.",
+            icon: "exclamation-triangle",
+            color: "red",
         },
     };
+
+    var now = new Date();
+    var end_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(endHour), parseInt(endMinute), 0, 0);
+    var ten_min_before_end = new Date(end_time.getFullYear(), end_time.getMonth(), end_time.getDate(), parseInt(endHour), parseInt(endMinute) - 10, 0, 0);
+
+    if(now.getTime() >= end_time.getTime()) {
+        var o = window.label_status_strings.o;
+        o.personal = "has not arrived yet.";
+        o.icon = "exclamation-triangle";
+        o.color = "orange";
+    }
+
     if (Boolean("{{ on_home }}")) {
         var now = new Date();
         var reloadTime = new Date();
