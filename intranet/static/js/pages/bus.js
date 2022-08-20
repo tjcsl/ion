@@ -6,14 +6,59 @@ let checkDisplayWarning = function () {
 
     let txt = document.querySelector('.text');
     if(now.getTime() < end_time.getTime()) {
-        txt.innerText = 'School has not ended yet.';
+        txt.innerHTML = '<i class="fas fa-clock"></i> School is in session.';
+        txt.classList.add("blue");
+
+        txt.classList.remove("red");
+        txt.classList.remove("green");
+        txt.classList.remove("orange");
+        txt.classList.remove("dark-red");
     }
     else if(now.getTime() < departure_time.getTime()) {
         let remaining = Math.ceil((departure_time.getTime() - now.getTime()) / (60 * 1000));
-        txt.innerText = `${remaining} minute${remaining == 1 ? "" : "s"} left until buses depart. Have a great day!`;
+
+        if(remaining <= 2) {
+            txt.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Buses depart in ${remaining} minute${remaining === 1 ? "" : "s"}.`;
+            txt.classList.add("dark-red");
+
+            txt.classList.remove("green");
+            txt.classList.remove("orange");
+        }
+        else if(remaining <= 5) {
+            txt.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Buses depart in ${remaining} minute${remaining === 1 ? "" : "s"}.`;
+            txt.classList.add("orange");
+
+            txt.classList.remove("dark-red");
+            txt.classList.remove("green");
+        }
+        else {
+            txt.innerHTML = `<i class="fas fa-exclamation-circle"></i> Buses depart in ${remaining} minute${remaining === 1 ? "" : "s"}.`;
+            txt.classList.add("green");
+
+            txt.classList.remove("dark-red");
+            txt.classList.remove("orange");
+        }
+
+        txt.classList.remove("blue");
+        txt.classList.remove("red");
     }
     else {
-        txt.innerText = 'School buses have already departed.';
+        let remaining = Math.ceil((departure_time.getTime() - now.getTime()) / (60 * 1000));
+
+        if(remaining > -10) {
+            txt.innerHTML = "<i class='fas fa-exclamation-triangle'></i> Buses have departed.";
+            txt.classList.add("red");
+            txt.classList.remove("blue");
+        }
+        else {
+            txt.innerHTML = "<i class='fas fa-info-circle'></i> School has ended.";
+            txt.classList.add("blue");
+            txt.classList.remove("red");
+        }
+
+        txt.classList.remove("dark-red");
+        txt.classList.remove("green");
+        txt.classList.remove("orange");
     }
 };
 

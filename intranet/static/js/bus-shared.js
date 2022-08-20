@@ -25,9 +25,9 @@ export function getSocket(base_url, location, document, window, time) {
 
         if (disconnected_msg) {
             disconnected_msg.update({
-                message: 'Connection Restored',
+                message: 'Connection established',
                 type: 'success',
-                hideAfter: 3
+                hideAfter: 2
             });
         }
     };
@@ -81,7 +81,7 @@ export function getSocket(base_url, location, document, window, time) {
         console.log('Disconnected');
         if(window.Messenger) {
             disconnected_msg = Messenger().error({
-                message: 'Connection Lost',
+                message: 'No connection',
                 hideAfter: 0,
                 showCloseButton: false
             });
@@ -108,3 +108,5 @@ export function getSocket(base_url, location, document, window, time) {
 
     return socket;
 }
+
+
