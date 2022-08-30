@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import make_aware
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, is_april_fools_day
@@ -382,6 +383,26 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
                 last_start_date = datetime.combine(now.today(), last_start_time)
                 if first_start_date - timedelta(minutes=30) < datetime.combine(now.today(), now.time()) < last_start_date + timedelta(minutes=20):
                     return redirect(reverse("eighth_location"))
+        except AttributeError:
+            pass
+
+    if user.is_student and settings.ENABLE_PRE_DISMISSAL_BUS_REDIRECT and request.COOKIES.get("seen_bus_redirect", "") != "1":
+        now = timezone.localtime()
+        try:
+            day = Day.objects.today()
+            if day is not None and day.end_time is not None:
+                end_of_day = make_aware(day.end_time.date_obj(now.date()))
+                if end_of_day - timedelta(minutes=5) <= now <= end_of_day + timedelta(minutes=20):
+                    response = redirect(reverse("afternoon_bus"))
+                    response.set_cookie("seen_bus_redirect", "1", max_age=(60 * 60))
+                    return response
+            elif settings.IS_SUMMER_SCHOOL:
+                end_of_day = datetime.datetime(now.year, now.month, now.day, settings.SCHOOL_END_HOUR, settings.SCHOOL_END_MINUTE)
+                if end_of_day - timedelta(minutes=5) <= now <= end_of_day + timedelta(minutes=20):
+                    response = redirect(reverse("afternoon_bus"))
+                    response.set_cookie("seen_bus_redirect", "1", max_age=(60 * 60))
+                    return response
+
         except AttributeError:
             pass
 
