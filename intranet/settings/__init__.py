@@ -81,6 +81,7 @@ ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
 ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT = False  # Redirect to eighth signup page after login if the user isn't signed up for activities
 ENABLE_PRE_EIGHTH_LOCATION_REDIRECT = True  # Redirect to eighth_location around eighth period (increase performance during peak times)
+ENABLE_PRE_DISMISSAL_BUS_REDIRECT = True  # Redirect to bus page around dismissal
 NOTIFY_ADMIN_EMAILS = None
 
 IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
