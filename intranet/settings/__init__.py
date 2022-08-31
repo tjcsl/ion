@@ -17,6 +17,43 @@ if sys.version_info < (3, 5):
     # Require Python 3.5+
     raise Exception("Python 3.5 or higher is required.")
 
+# Month (1-indexed) after which a new school year begins
+# July = 7
+YEAR_TURNOVER_MONTH = 7
+
+start_school_year = datetime.date.today().year - 1 if datetime.date.today().month < YEAR_TURNOVER_MONTH else datetime.date.today().year
+end_school_year = start_school_year if datetime.date.today().month < YEAR_TURNOVER_MONTH else start_school_year + 1
+
+
+""" !! -------- UPDATE ANNUALLY -------- !!
+Update this section annually after summer school ends and before school starts.
+Last updated: 2022-08-30. """
+
+# When school is scheduled to start and end
+SCHOOL_START_DATE = datetime.date(start_school_year, 8, 22)
+SCHOOL_END_DATE = datetime.date(end_school_year, 6, 16)
+
+# Dates when hoco starts and ends
+HOCO_START_DATE = datetime.date(start_school_year, 9, 19)
+HOCO_END_DATE = datetime.date(start_school_year, 9, 24)
+
+"""  -------- END UPDATE ANNUALLY --------  """
+
+# Default fallback time for start and end of school if no schedule is available
+SCHOOL_START_HOUR = 8  # Not currently used
+SCHOOL_START_MINUTE = 40  # Not currently used
+SCHOOL_END_HOUR = 16
+SCHOOL_END_MINUTE = 0
+
+# Adjust for summer school:
+IS_SUMMER_SCHOOL = False
+
+if datetime.date.today() < SCHOOL_START_DATE - datetime.timedelta(weeks=2):
+    IS_SUMMER_SCHOOL = True
+    SCHOOL_START_HOUR = 8
+    SCHOOL_START_MINUTE = 0
+    SCHOOL_END_HOUR = 15
+    SCHOOL_END_MINUTE = 0
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY, SECRET_DATABASE_URL. !!
@@ -42,8 +79,8 @@ NOMINATION_POSITION = ""
 ENABLE_WAITLIST = False  # WARNING: Enabling the waitlist causes severe performance issues
 ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
-ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT = False
-ENABLE_PRE_EIGHTH_LOCATION_REDIRECT = True
+ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT = False  # Redirect to eighth signup page after login if the user isn't signed up for activities
+ENABLE_PRE_EIGHTH_LOCATION_REDIRECT = True  # Redirect to eighth_location around eighth period (increase performance during peak times)
 NOTIFY_ADMIN_EMAILS = None
 
 IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
@@ -60,13 +97,6 @@ EMERGENCY_MESSAGE = None  # type: str
 # not done, a notification gets sent whenever someone messes with
 # the HTTP Host header.
 ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
-
-# When school is scheduled to start
-SCHOOL_START_DATE = datetime.date(2017, 8, 28)
-
-# Dates when hoco starts and ends
-HOCO_START_DATE = datetime.date(2017, 10, 2)
-HOCO_END_DATE = datetime.date(2017, 10, 14)
 
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
 IN_CI = any(os.getenv(key, "").upper() == "TRUE" for key in ["TRAVIS", "GITHUB_ACTIONS"])
@@ -755,11 +785,9 @@ GIT = {
 # Senior graduation date.
 # The year will be replaced as appropriate (determined in
 # intranet/utils/date.py based on YEAR_TURNOVER_MONTH).
-SENIOR_GRADUATION_DATE = datetime.datetime(year=2000, month=6, day=18, hour=19)
-
-# Month (1-indexed) after which a new school year begins
-# July = 7
-YEAR_TURNOVER_MONTH = 7
+SENIOR_GRADUATION_YEAR = end_school_year
+SENIOR_GRADUATION_DATE = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=3, hour=9)
+SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=3, hour=9).strftime('%B %d %Y %H:%M:%S')
 
 # The number of days out at which a user is deemed "near graduation".
 NEAR_GRADUATION_DAYS = 50
