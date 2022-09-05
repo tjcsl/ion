@@ -11,6 +11,7 @@ Subpackages
    intranet.apps.api
    intranet.apps.auth
    intranet.apps.bus
+   intranet.apps.cslapps
    intranet.apps.dashboard
    intranet.apps.dataimport
    intranet.apps.eighth

@@ -11,6 +11,7 @@ from django.urls import Resolver404, resolve
 from django.utils import timezone
 
 from intranet.apps.notifications.models import NotificationConfig
+from intranet.apps.cslapps.models import App
 
 from ..utils.helpers import dark_mode_enabled
 from .schedule.models import Day
@@ -98,6 +99,10 @@ def mobile_app(request):
         ctx["android_client_register"] = False
 
     return ctx
+
+
+def csl_apps(request):
+    return {"csl_apps": App.objects.visible_to_user(request.user).order_by("order")}
 
 
 def global_custom_theme(request):

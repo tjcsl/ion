@@ -86,6 +86,30 @@
                     </li>
                 {% endif %}
 
+                {% if csl_apps|length > 0%}
+                <li class="csl-apps has-dropdown">
+                    <div class="dropdown-item-wrapper">
+                        <i class="fas fa-th"></i><span class="user-name">Apps</span><i class="fas fa-caret-down"></i>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <div class="arrow"></div>
+                        {% for app in csl_apps %}
+                        <a href="{% url 'apps' %}?id={{ app.id }}" title="{{ app.description }}" target="_blank">
+                            <span class="image-container">
+                                {% if not app.image_url == '' %}
+                                    <img src="{{ app.image_url }}" class="csl-app-icon">
+                                {% endif %}
+                                {{ app.html_icon|safe }}
+                                &nbsp;
+                            </span>
+                            <span>{{ app.name }}</span>
+                        </a>
+
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+
                 <li class="username has-dropdown">
                     <div class="dropdown-item-wrapper">
                         <i class="fas fa-user"></i><span class="user-name">{{ request.user.first_name }}</span><i class="fas fa-caret-down"></i>
@@ -116,7 +140,7 @@
                     </ul>
                 </li>
             </ul>
-            <a href="{% url 'logout'%}" style="color:rgb(242,242,244);"><i class="fas fa-sign-out-alt"></i></a>
+            <a class="logout-button" href="{% url 'logout'%}" style="color:rgb(242,242,244);"><i class="fas fa-sign-out-alt"></i></a>
         </div>
     </div>
     <div class="main">

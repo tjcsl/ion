@@ -18,6 +18,7 @@ urlpatterns = [
     re_path(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     re_path(r"^", include("intranet.apps.auth.urls")),
     re_path(r"^announcements", include("intranet.apps.announcements.urls")),
+    re_path(r"^apps", include("intranet.apps.cslapps.urls")),
     re_path(r"^eighth", include("intranet.apps.eighth.urls")),
     re_path(r"^events", include("intranet.apps.events.urls")),
     re_path(r"^files", include("intranet.apps.files.urls")),
