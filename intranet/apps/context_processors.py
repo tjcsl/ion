@@ -10,8 +10,8 @@ from django.conf import settings
 from django.urls import Resolver404, resolve
 from django.utils import timezone
 
-from intranet.apps.notifications.models import NotificationConfig
 from intranet.apps.cslapps.models import App
+from intranet.apps.notifications.models import NotificationConfig
 
 from ..utils.helpers import dark_mode_enabled
 from .schedule.models import Day
